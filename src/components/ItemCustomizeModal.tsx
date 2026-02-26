@@ -1,18 +1,19 @@
 import { useState, useMemo } from "react";
 import { X, Minus, Plus, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { MenuItem, Supplement } from "@/data/mockData";
+import type { DbMenuItem, Supplement } from "@/types/database";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  item: MenuItem;
+  item: DbMenuItem;
   open: boolean;
   onClose: () => void;
   restaurantSlug: string;
+  restaurantId: string;
 }
 
-export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Props) => {
+export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restaurantId }: Props) => {
   const { addItem } = useCart();
   const [selectedSauces, setSelectedSauces] = useState<string[]>([]);
   const [selectedSupplements, setSelectedSupplements] = useState<Supplement[]>([]);
@@ -38,7 +39,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Prop
 
   const handleAdd = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem(item, selectedSauces, selectedSupplements, restaurantSlug);
+      addItem(item, selectedSauces, selectedSupplements, restaurantSlug, restaurantId);
     }
     setSelectedSauces([]);
     setSelectedSupplements([]);
@@ -63,7 +64,6 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Prop
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
-            {/* Header */}
             <div className="sticky top-0 bg-card/90 backdrop-blur-xl z-10 p-4 flex items-center justify-between border-b border-border">
               <h3 className="text-lg font-semibold text-foreground">{item.name}</h3>
               <button onClick={onClose} className="p-2 rounded-full hover:bg-secondary transition-colors">
@@ -72,7 +72,6 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Prop
             </div>
 
             <div className="p-4 space-y-6">
-              {/* Image */}
               {item.image && (
                 <div className="w-full h-48 rounded-2xl overflow-hidden">
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
@@ -81,7 +80,6 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Prop
 
               {item.description && <p className="text-muted-foreground text-sm">{item.description}</p>}
 
-              {/* Sauces */}
               {item.sauces.length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-foreground mb-2">
@@ -109,7 +107,6 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Prop
                 </div>
               )}
 
-              {/* Supplements */}
               {item.supplements.length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-foreground mb-2">Suppléments</h4>
@@ -133,7 +130,6 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Prop
                 </div>
               )}
 
-              {/* Quantity */}
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-foreground">Quantité</span>
                 <div className="flex items-center gap-4">
@@ -154,7 +150,6 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Prop
               </div>
             </div>
 
-            {/* Footer */}
             <div className="sticky bottom-0 p-4 bg-card border-t border-border">
               <Button onClick={handleAdd} className="w-full h-14 text-base font-semibold rounded-2xl" size="lg">
                 Ajouter — {total.toFixed(2)} €

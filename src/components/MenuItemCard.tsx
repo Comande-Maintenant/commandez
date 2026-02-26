@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
-import type { MenuItem } from "@/data/mockData";
+import type { DbMenuItem } from "@/types/database";
 import { ItemCustomizeModal } from "./ItemCustomizeModal";
 
 interface Props {
-  item: MenuItem;
+  item: DbMenuItem;
   restaurantSlug: string;
+  restaurantId: string;
 }
 
-export const MenuItemCard = ({ item, restaurantSlug }: Props) => {
+export const MenuItemCard = ({ item, restaurantSlug, restaurantId }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -52,7 +53,7 @@ export const MenuItemCard = ({ item, restaurantSlug }: Props) => {
         )}
       </motion.button>
 
-      <ItemCustomizeModal item={item} open={open} onClose={() => setOpen(false)} restaurantSlug={restaurantSlug} />
+      <ItemCustomizeModal item={item} open={open} onClose={() => setOpen(false)} restaurantSlug={restaurantSlug} restaurantId={restaurantId} />
     </>
   );
 };

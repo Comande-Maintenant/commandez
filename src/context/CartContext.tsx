@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import type { MenuItem, Supplement } from "@/data/mockData";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import type { DbMenuItem, Supplement } from "@/types/database";
 
 export interface CartItem {
   id: string;
-  menuItem: MenuItem;
+  menuItem: DbMenuItem;
   quantity: number;
   selectedSauces: string[];
   selectedSupplements: Supplement[];
@@ -13,7 +13,8 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   restaurantSlug: string | null;
-  addItem: (item: MenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string) => void;
+  restaurantId: string | null;
+  addItem: (item: DbMenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string, restaurantId: string) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -23,50 +24,65 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const CART_KEY = "resto-order-cart";
+
+function loadCart(): { items: CartItem[]; restaurantSlug: string | null; restaurantId: string | null } {
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { items: [], restaurantSlug: null, restaurantId: null };
+}
+
+function saveCart(items: CartItem[], restaurantSlug: string | null, restaurantId: string | null) {
+  localStorage.setItem(CART_KEY, JSON.stringify({ items, restaurantSlug, restaurantId }));
+}
+
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [restaurantSlug, setRestaurantSlug] = useState<string | null>(null);
+  const [state, setState] = useState(loadCart);
 
-  const addItem = useCallback((menuItem: MenuItem, sauces: string[], supplements: Supplement[], slug: string) => {
-    setRestaurantSlug((prev) => {
-      if (prev && prev !== slug) {
-        setItems([]);
+  useEffect(() => {
+    saveCart(state.items, state.restaurantSlug, state.restaurantId);
+  }, [state]);
+
+  const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string) => {
+    setState((prev) => {
+      let items = prev.items;
+      if (prev.restaurantSlug && prev.restaurantSlug !== slug) {
+        items = [];
       }
-      return slug;
+      const suppTotal = supplements.reduce((sum, s) => sum + s.price, 0);
+      const totalPrice = menuItem.price + suppTotal;
+      const cartId = `${menuItem.id}-${Date.now()}`;
+      return {
+        items: [...items, { id: cartId, menuItem, quantity: 1, selectedSauces: sauces, selectedSupplements: supplements, totalPrice }],
+        restaurantSlug: slug,
+        restaurantId: restId,
+      };
     });
-
-    const suppTotal = supplements.reduce((sum, s) => sum + s.price, 0);
-    const totalPrice = menuItem.price + suppTotal;
-    const cartId = `${menuItem.id}-${Date.now()}`;
-
-    setItems((prev) => [
-      ...prev,
-      { id: cartId, menuItem, quantity: 1, selectedSauces: sauces, selectedSupplements: supplements, totalPrice },
-    ]);
   }, []);
 
   const removeItem = useCallback((id: string) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    setState((prev) => ({ ...prev, items: prev.items.filter((i) => i.id !== id) }));
   }, []);
 
   const updateQuantity = useCallback((id: string, quantity: number) => {
-    if (quantity <= 0) {
-      setItems((prev) => prev.filter((i) => i.id !== id));
-      return;
-    }
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
+    setState((prev) => ({
+      ...prev,
+      items: quantity <= 0 ? prev.items.filter((i) => i.id !== id) : prev.items.map((i) => (i.id === id ? { ...i, quantity } : i)),
+    }));
   }, []);
 
   const clearCart = useCallback(() => {
-    setItems([]);
-    setRestaurantSlug(null);
+    setState({ items: [], restaurantSlug: null, restaurantId: null });
+    localStorage.removeItem(CART_KEY);
   }, []);
 
-  const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
-  const subtotal = items.reduce((sum, i) => sum + i.totalPrice * i.quantity, 0);
+  const totalItems = state.items.reduce((sum, i) => sum + i.quantity, 0);
+  const subtotal = state.items.reduce((sum, i) => sum + i.totalPrice * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, restaurantSlug, addItem, removeItem, updateQuantity, clearCart, totalItems, subtotal }}>
+    <CartContext.Provider value={{ items: state.items, restaurantSlug: state.restaurantSlug, restaurantId: state.restaurantId, addItem, removeItem, updateQuantity, clearCart, totalItems, subtotal }}>
       {children}
     </CartContext.Provider>
   );
