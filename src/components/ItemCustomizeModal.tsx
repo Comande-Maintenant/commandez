@@ -1,0 +1,168 @@
+import { useState, useMemo } from "react";
+import { X, Minus, Plus, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { MenuItem, Supplement } from "@/data/mockData";
+import { useCart } from "@/context/CartContext";
+import { Button } from "@/components/ui/button";
+
+interface Props {
+  item: MenuItem;
+  open: boolean;
+  onClose: () => void;
+  restaurantSlug: string;
+}
+
+export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug }: Props) => {
+  const { addItem } = useCart();
+  const [selectedSauces, setSelectedSauces] = useState<string[]>([]);
+  const [selectedSupplements, setSelectedSupplements] = useState<Supplement[]>([]);
+  const [quantity, setQuantity] = useState(1);
+
+  const toggleSauce = (sauce: string) => {
+    setSelectedSauces((prev) =>
+      prev.includes(sauce) ? prev.filter((s) => s !== sauce) : prev.length < 3 ? [...prev, sauce] : prev
+    );
+  };
+
+  const toggleSupplement = (sup: Supplement) => {
+    setSelectedSupplements((prev) =>
+      prev.find((s) => s.id === sup.id) ? prev.filter((s) => s.id !== sup.id) : [...prev, sup]
+    );
+  };
+
+  const unitPrice = useMemo(() => {
+    return item.price + selectedSupplements.reduce((sum, s) => sum + s.price, 0);
+  }, [item.price, selectedSupplements]);
+
+  const total = unitPrice * quantity;
+
+  const handleAdd = () => {
+    for (let i = 0; i < quantity; i++) {
+      addItem(item, selectedSauces, selectedSupplements, restaurantSlug);
+    }
+    setSelectedSauces([]);
+    setSelectedSupplements([]);
+    setQuantity(1);
+    onClose();
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
+          <motion.div
+            className="relative w-full max-w-md max-h-[85vh] bg-card rounded-t-3xl sm:rounded-3xl overflow-y-auto"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          >
+            {/* Header */}
+            <div className="sticky top-0 bg-card/90 backdrop-blur-xl z-10 p-4 flex items-center justify-between border-b border-border">
+              <h3 className="text-lg font-semibold text-foreground">{item.name}</h3>
+              <button onClick={onClose} className="p-2 rounded-full hover:bg-secondary transition-colors">
+                <X className="h-5 w-5 text-muted-foreground" />
+              </button>
+            </div>
+
+            <div className="p-4 space-y-6">
+              {/* Image */}
+              {item.image && (
+                <div className="w-full h-48 rounded-2xl overflow-hidden">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                </div>
+              )}
+
+              {item.description && <p className="text-muted-foreground text-sm">{item.description}</p>}
+
+              {/* Sauces */}
+              {item.sauces.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">
+                    Sauces <span className="text-muted-foreground font-normal">(max 3)</span>
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {item.sauces.map((sauce) => {
+                      const selected = selectedSauces.includes(sauce);
+                      return (
+                        <button
+                          key={sauce}
+                          onClick={() => toggleSauce(sauce)}
+                          className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                            selected
+                              ? "bg-foreground text-primary-foreground"
+                              : "bg-secondary text-foreground hover:bg-secondary/80"
+                          }`}
+                        >
+                          {selected && <Check className="inline h-3 w-3 mr-1" />}
+                          {sauce}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Supplements */}
+              {item.supplements.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">Suppléments</h4>
+                  <div className="space-y-2">
+                    {item.supplements.map((sup) => {
+                      const selected = selectedSupplements.find((s) => s.id === sup.id);
+                      return (
+                        <button
+                          key={sup.id}
+                          onClick={() => toggleSupplement(sup)}
+                          className={`w-full flex items-center justify-between p-3 rounded-xl transition-all text-left ${
+                            selected ? "bg-foreground text-primary-foreground" : "bg-secondary text-foreground"
+                          }`}
+                        >
+                          <span className="text-sm font-medium">{sup.name}</span>
+                          <span className="text-sm">+{sup.price.toFixed(2)} €</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Quantity */}
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-foreground">Quantité</span>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    className="p-2 rounded-full bg-secondary hover:bg-secondary/70 transition-colors"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <span className="text-lg font-semibold w-6 text-center">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity((q) => q + 1)}
+                    className="p-2 rounded-full bg-secondary hover:bg-secondary/70 transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="sticky bottom-0 p-4 bg-card border-t border-border">
+              <Button onClick={handleAdd} className="w-full h-14 text-base font-semibold rounded-2xl" size="lg">
+                Ajouter — {total.toFixed(2)} €
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
