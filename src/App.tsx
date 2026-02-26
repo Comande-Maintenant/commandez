@@ -7,7 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import Index from "./pages/Index";
 import RestaurantPage from "./pages/RestaurantPage";
 import OrderPage from "./pages/OrderPage";
-import DashboardPage from "./pages/DashboardPage";
+import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,7 +22,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/order" element={<OrderPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/admin/:slug" element={<AdminPage />} />
             <Route path="/:slug" element={<RestaurantPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
