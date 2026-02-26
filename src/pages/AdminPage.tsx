@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, LayoutGrid, UtensilsCrossed, Clock, Loader2, Copy, Check } from "lucide-react";
+import { ArrowLeft, LayoutGrid, UtensilsCrossed, Clock, BarChart3, Loader2, Copy, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
 import { DashboardOrders } from "@/components/dashboard/DashboardOrders";
 import { DashboardMenu } from "@/components/dashboard/DashboardMenu";
 import { DashboardHours } from "@/components/dashboard/DashboardHours";
+import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { Button } from "@/components/ui/button";
 
 const tabs = [
   { id: "orders", label: "Commandes", icon: LayoutGrid },
   { id: "menu", label: "Menu", icon: UtensilsCrossed },
   { id: "hours", label: "Horaires", icon: Clock },
+  { id: "stats", label: "Statistiques", icon: BarChart3 },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -109,6 +111,7 @@ const AdminPage = () => {
             {activeTab === "orders" && <DashboardOrders restaurant={restaurant} />}
             {activeTab === "menu" && <DashboardMenu restaurant={restaurant} />}
             {activeTab === "hours" && <DashboardHours restaurant={restaurant} />}
+            {activeTab === "stats" && <DashboardStats restaurant={restaurant} />}
           </motion.div>
         </AnimatePresence>
       </main>
