@@ -12,6 +12,7 @@ import {
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
 import { updateRestaurant, uploadRestaurantImage } from "@/lib/api";
+import { validateImageSize, resizeImage } from "@/lib/image";
 import type { DbRestaurant } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,10 +114,16 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: "logo" | "cover") => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: "logo" | "cover") => {
     const file = e.target.files?.[0];
     if (!file) return;
-    handleUpload(file, type);
+    const sizeError = validateImageSize(file);
+    if (sizeError) {
+      toast.error(sizeError);
+      return;
+    }
+    const resized = await resizeImage(file);
+    handleUpload(resized, type);
   };
 
   const downloadQrPng = () => {
@@ -274,7 +281,7 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
               className="w-full aspect-square rounded-xl border-2 border-dashed border-border hover:border-foreground/30 flex items-center justify-center overflow-hidden transition-colors"
             >
               {logoPreview ? (
-                <img src={logoPreview} alt="Logo" className="w-full h-full object-cover" />
+                <img src={logoPreview} alt="Logo" className="w-full h-full object-cover" loading="lazy" />
               ) : (
                 <div className="text-center text-muted-foreground">
                   <Upload className="h-6 w-6 mx-auto mb-1" />
@@ -292,7 +299,7 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
               className="w-full aspect-square rounded-xl border-2 border-dashed border-border hover:border-foreground/30 flex items-center justify-center overflow-hidden transition-colors"
             >
               {coverPreview ? (
-                <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
+                <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" loading="lazy" />
               ) : (
                 <div className="text-center text-muted-foreground">
                   <Upload className="h-6 w-6 mx-auto mb-1" />

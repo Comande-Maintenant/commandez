@@ -35,7 +35,9 @@ export const MenuItemCard = ({ item, restaurantSlug, restaurantId }: Props) => {
           {translated.description && (
             <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">{translated.description}</p>
           )}
-          <p className="text-sm font-semibold text-foreground mt-1.5">{item.price.toFixed(2)} €</p>
+          {item.price > 0 && (
+            <p className="text-sm font-semibold text-foreground mt-1.5">{item.price.toFixed(2)} €</p>
+          )}
         </div>
 
         {item.image && (

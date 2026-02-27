@@ -71,13 +71,27 @@ export async function createRestaurantFromOnboarding(data: {
 }
 
 // Generate a URL-safe slug from restaurant name
-export function generateSlug(name: string): string {
+function slugify(name: string): string {
   return name
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+// Generate a unique slug, appending -2, -3 etc. if needed
+export async function generateSlug(name: string): Promise<string> {
+  const base = slugify(name);
+  const { data } = await supabase
+    .from('restaurants')
+    .select('slug')
+    .like('slug', `${base}%`);
+  const existing = new Set((data ?? []).map((r: any) => r.slug));
+  if (!existing.has(base)) return base;
+  let i = 2;
+  while (existing.has(`${base}-${i}`)) i++;
+  return `${base}-${i}`;
 }
 
 // Create menu items from analyzed OCR data

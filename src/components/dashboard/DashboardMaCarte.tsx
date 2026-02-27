@@ -74,7 +74,7 @@ function SortableItemRow({
         <GripVertical className="h-4 w-4 text-muted-foreground" />
       </button>
       {item.image && (
-        <img src={item.image} alt={item.name} className="h-10 w-10 rounded-lg object-cover shrink-0" />
+        <img src={item.image} alt={item.name} className="h-10 w-10 rounded-lg object-cover shrink-0" loading="lazy" />
       )}
       {!item.image && (
         <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">

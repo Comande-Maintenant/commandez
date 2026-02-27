@@ -17,6 +17,7 @@ import { MenuReviewEditor } from '@/components/onboarding/MenuReviewEditor';
 import { QuickColorPicker } from '@/components/onboarding/QuickColorPicker';
 import { PricingCards } from '@/components/onboarding/PricingCards';
 import { OnboardingSuccess } from '@/components/onboarding/OnboardingSuccess';
+import { toast } from 'sonner';
 import {
   createOwner,
   createRestaurantFromOnboarding,
@@ -110,7 +111,12 @@ const InscriptionPage = () => {
       }
       setStep(2);
     } catch (err: any) {
-      setAccountError(err.message || 'Erreur lors de l\'inscription.');
+      const msg = err.message || '';
+      if (msg.includes('already registered') || msg.includes('already been registered')) {
+        setAccountError('Cet email est deja utilise. Connectez-vous ou utilisez un autre email.');
+      } else {
+        setAccountError(msg || 'Erreur lors de l\'inscription.');
+      }
     } finally {
       setAccountLoading(false);
     }
@@ -162,7 +168,7 @@ const InscriptionPage = () => {
     setCreating(true);
 
     try {
-      const slug = generateSlug(restaurantData?.name ?? 'restaurant');
+      const slug = await generateSlug(restaurantData?.name ?? 'restaurant');
 
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();
@@ -194,8 +200,8 @@ const InscriptionPage = () => {
       setCreatedSlug(slug);
       setCreatedName(restaurantData?.name ?? '');
       setStep(6);
-    } catch (err) {
-      console.error('Creation error:', err);
+    } catch (err: any) {
+      toast.error(err.message || 'Erreur lors de la creation. Veuillez reessayer.');
     } finally {
       setCreating(false);
     }

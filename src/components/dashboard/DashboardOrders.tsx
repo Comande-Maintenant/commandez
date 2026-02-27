@@ -1,25 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Phone, MapPin, ShoppingBag, ChevronRight, Package, Bell } from "lucide-react";
+import { Phone, MapPin, ShoppingBag, ChevronRight, Package, WifiOff } from "lucide-react";
 import { fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
 const statusConfig: Record<OrderStatus, { label: string; color: string; next?: OrderStatus; nextLabel?: string }> = {
   new: { label: "Nouvelle", color: "bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))]", next: "preparing", nextLabel: "Accepter" },
-  preparing: { label: "En préparation", color: "bg-foreground text-primary-foreground", next: "ready", nextLabel: "Prête" },
-  ready: { label: "Prête", color: "bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]", next: "done", nextLabel: "Terminée" },
-  done: { label: "Terminée", color: "bg-muted text-muted-foreground" },
+  preparing: { label: "En preparation", color: "bg-foreground text-primary-foreground", next: "ready", nextLabel: "Prete" },
+  ready: { label: "Prete", color: "bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]", next: "done", nextLabel: "Terminee" },
+  done: { label: "Terminee", color: "bg-muted text-muted-foreground" },
 };
 
 const filterTabs: { id: OrderStatus | "all"; label: string }[] = [
   { id: "all", label: "Toutes" },
   { id: "new", label: "Nouvelles" },
   { id: "preparing", label: "En cours" },
-  { id: "ready", label: "Prêtes" },
-  { id: "done", label: "Terminées" },
+  { id: "ready", label: "Pretes" },
+  { id: "done", label: "Terminees" },
 ];
 
 interface Props {
@@ -30,6 +31,8 @@ export const DashboardOrders = ({ restaurant }: Props) => {
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
   const [loading, setLoading] = useState(true);
+  const [disconnected, setDisconnected] = useState(false);
+  const [advancing, setAdvancing] = useState<string | null>(null);
 
   const loadOrders = useCallback(async () => {
     const data = await fetchOrders(restaurant.id);
@@ -40,10 +43,48 @@ export const DashboardOrders = ({ restaurant }: Props) => {
   useEffect(() => {
     loadOrders();
     const unsub = subscribeToOrders(restaurant.id, (newOrder) => {
-      setOrders((prev) => [newOrder, ...prev]);
+      setOrders((prev) => {
+        // Update existing or prepend new
+        const exists = prev.find((o) => o.id === newOrder.id);
+        if (exists) {
+          return prev.map((o) => (o.id === newOrder.id ? newOrder : o));
+        }
+        return [newOrder, ...prev];
+      });
+      setDisconnected(false);
     });
-    return unsub;
+
+    // Connection health check - reload orders every 60s to catch missed events
+    const healthCheck = setInterval(() => {
+      loadOrders().catch(() => setDisconnected(true));
+    }, 60000);
+
+    return () => {
+      unsub();
+      clearInterval(healthCheck);
+    };
   }, [restaurant.id, loadOrders]);
+
+  // Auto-cancel stale pending orders for "always open" mode
+  useEffect(() => {
+    if (restaurant.availability_mode !== "always") return;
+    const interval = setInterval(() => {
+      const now = Date.now();
+      setOrders((prev) =>
+        prev.map((o) => {
+          if (o.status !== "new") return o;
+          const elapsed = now - new Date(o.created_at).getTime();
+          if (elapsed > 15 * 60 * 1000) {
+            // Auto-cancel after 15 min
+            updateOrderStatus(o.id, "done").catch(() => {});
+            return { ...o, status: "done" as const };
+          }
+          return o;
+        })
+      );
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [restaurant.availability_mode]);
 
   const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
   const newCount = orders.filter((o) => o.status === "new").length;
@@ -51,13 +92,18 @@ export const DashboardOrders = ({ restaurant }: Props) => {
   const advanceStatus = async (orderId: string, currentStatus: OrderStatus) => {
     const cfg = statusConfig[currentStatus];
     if (!cfg.next) return;
-    await updateOrderStatus(orderId, cfg.next);
-    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: cfg.next! } : o)));
+    setAdvancing(orderId);
+    try {
+      await updateOrderStatus(orderId, cfg.next);
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: cfg.next! } : o)));
+    } finally {
+      setAdvancing(null);
+    }
   };
 
   const timeSince = (dateStr: string) => {
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return "À l'instant";
+    if (mins < 1) return "A l'instant";
     if (mins < 60) return `Il y a ${mins} min`;
     return `Il y a ${Math.floor(mins / 60)}h`;
   };
@@ -68,18 +114,39 @@ export const DashboardOrders = ({ restaurant }: Props) => {
     return d.toDateString() === now.toDateString();
   });
 
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-20 rounded-2xl" />)}
+        </div>
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => <Skeleton key={i} className="h-40 rounded-2xl" />)}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
+      {/* Connection lost banner */}
+      {disconnected && (
+        <div className="mb-4 p-3 bg-destructive/10 rounded-xl flex items-center gap-2 text-sm text-destructive">
+          <WifiOff className="h-4 w-4 flex-shrink-0" />
+          Connexion perdue. Reconnexion en cours...
+        </div>
+      )}
+
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
           { label: "Nouvelles", value: orders.filter((o) => o.status === "new").length, accent: true },
           { label: "En cours", value: orders.filter((o) => o.status === "preparing").length },
-          { label: "Prêtes", value: orders.filter((o) => o.status === "ready").length },
+          { label: "Pretes", value: orders.filter((o) => o.status === "ready").length },
           { label: "CA du jour", value: `${todayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2)} €` },
         ].map((stat) => (
-          <div key={stat.label} className="bg-card rounded-2xl border border-border p-4">
+          <div key={stat.label} className="bg-card rounded-2xl border border-border p-3 sm:p-4">
             <p className="text-xs text-muted-foreground">{stat.label}</p>
-            <p className={`text-2xl font-bold mt-1 ${stat.accent ? "text-[hsl(var(--warning))]" : "text-foreground"}`}>{stat.value}</p>
+            <p className={`text-xl sm:text-2xl font-bold mt-1 ${stat.accent ? "text-[hsl(var(--warning))]" : "text-foreground"}`}>{stat.value}</p>
           </div>
         ))}
       </div>
@@ -89,7 +156,7 @@ export const DashboardOrders = ({ restaurant }: Props) => {
           <button
             key={tab.id}
             onClick={() => setFilter(tab.id)}
-            className={`px-3.5 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${filter === tab.id ? "bg-foreground text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:text-foreground"}`}
+            className={`px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all min-h-[44px] ${filter === tab.id ? "bg-foreground text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:text-foreground"}`}
           >
             {tab.label}
             {tab.id === "new" && newCount > 0 && (
@@ -100,11 +167,12 @@ export const DashboardOrders = ({ restaurant }: Props) => {
       </div>
 
       <div className="space-y-3">
-        {loading && <div className="text-center py-16 text-muted-foreground text-sm">Chargement...</div>}
-        {!loading && filtered.length === 0 && (
+        {filtered.length === 0 && (
           <div className="text-center py-16 text-muted-foreground">
             <Package className="h-10 w-10 mx-auto mb-3 opacity-40" />
-            <p className="text-sm">Aucune commande</p>
+            <p className="text-sm">
+              {filter === "all" ? "Pas encore de commande aujourd'hui. Ca va venir !" : "Aucune commande"}
+            </p>
           </div>
         )}
         {filtered.map((order) => {
@@ -119,7 +187,7 @@ export const DashboardOrders = ({ restaurant }: Props) => {
                 </div>
                 <span className="text-xs text-muted-foreground">{timeSince(order.created_at)}</span>
               </div>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mb-3">
                 <span className="font-medium text-foreground">{order.customer_name}</span>
                 <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{order.customer_phone}</span>
                 <span className="flex items-center gap-1">
@@ -129,21 +197,26 @@ export const DashboardOrders = ({ restaurant }: Props) => {
               <div className="space-y-1 mb-3">
                 {orderItems.map((item: any, i: number) => (
                   <div key={i} className="flex items-start justify-between text-sm">
-                    <div>
-                      <span className="text-foreground font-medium">{item.quantity}× {item.name}</span>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-foreground font-medium">{item.quantity}x {item.name}</span>
                       {((item.sauces?.length > 0) || (item.supplements?.length > 0)) && (
-                        <p className="text-xs text-muted-foreground">{[...(item.sauces || []), ...(item.supplements || [])].join(", ")}</p>
+                        <p className="text-xs text-muted-foreground truncate">{[...(item.sauces || []), ...(item.supplements || [])].join(", ")}</p>
                       )}
                     </div>
-                    <span className="text-foreground font-medium">{(item.price * item.quantity).toFixed(2)} €</span>
+                    <span className="text-foreground font-medium ml-2 flex-shrink-0">{(item.price * item.quantity).toFixed(2)} €</span>
                   </div>
                 ))}
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
                 <span className="text-base font-bold text-foreground">{Number(order.total).toFixed(2)} €</span>
                 {cfg.next && (
-                  <Button size="sm" onClick={() => advanceStatus(order.id, order.status as OrderStatus)} className="rounded-xl gap-1">
-                    {cfg.nextLabel}<ChevronRight className="h-4 w-4" />
+                  <Button
+                    size="sm"
+                    onClick={() => advanceStatus(order.id, order.status as OrderStatus)}
+                    disabled={advancing === order.id}
+                    className="rounded-xl gap-1 min-h-[44px]"
+                  >
+                    {advancing === order.id ? "..." : cfg.nextLabel}<ChevronRight className="h-4 w-4" />
                   </Button>
                 )}
               </div>

@@ -78,7 +78,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
             <div className="p-4 space-y-6">
               {item.image && (
                 <div className="w-full h-48 rounded-2xl overflow-hidden">
-                  <img src={item.image} alt={translated.name} className="w-full h-full object-cover" />
+                  <img src={item.image} alt={translated.name} className="w-full h-full object-cover" loading="lazy" />
                 </div>
               )}
 
