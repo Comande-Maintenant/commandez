@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer } from "lucide-react";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug, fetchMenuItems } from "@/lib/api";
 import { checkRestaurantAvailability, canPlaceOrder } from "@/lib/schedule";
@@ -75,6 +75,9 @@ const RestaurantPage = () => {
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [cartOpen, setCartOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const navScrollRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
   const { totalItems, subtotal } = useCart();
   const { t, tCategory, isRTL } = useLanguage();
 
@@ -91,6 +94,49 @@ const RestaurantPage = () => {
       setLoading(false);
     });
   }, [slug]);
+
+  // IntersectionObserver: highlight active category on scroll
+  useEffect(() => {
+    if (loading || !restaurant || menuItems.length === 0) return;
+    const sections = Object.entries(sectionRefs.current).filter(([, el]) => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isScrollingRef.current) return;
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const cat = entry.target.getAttribute("data-category");
+            if (cat) setActiveCategory(cat);
+          }
+        }
+      },
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+    );
+
+    sections.forEach(([, el]) => { if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, [loading, restaurant, menuItems]);
+
+  // Auto-scroll the tab bar to keep active tab visible
+  useEffect(() => {
+    if (!activeCategory) return;
+    const tab = tabRefs.current[activeCategory];
+    const nav = navScrollRef.current;
+    if (!tab || !nav) return;
+    const navRect = nav.getBoundingClientRect();
+    const tabRect = tab.getBoundingClientRect();
+    const scrollLeft = tab.offsetLeft - navRect.width / 2 + tabRect.width / 2;
+    nav.scrollTo({ left: scrollLeft, behavior: "smooth" });
+  }, [activeCategory]);
+
+  const scrollToCategory = useCallback((cat: string) => {
+    setActiveCategory(cat);
+    isScrollingRef.current = true;
+    sectionRefs.current[cat]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Re-enable observer after scroll settles
+    setTimeout(() => { isScrollingRef.current = false; }, 800);
+  }, []);
 
   const primary = restaurant?.primary_color || DEFAULT_PRIMARY;
   const bg = restaurant?.bg_color || DEFAULT_BG;
@@ -150,11 +196,6 @@ const RestaurantPage = () => {
   const activeCategories = categories.filter((cat) =>
     menuItems.some((m) => m.category === cat)
   );
-
-  const scrollToCategory = (cat: string) => {
-    setActiveCategory(cat);
-    sectionRefs.current[cat]?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
   const initial = restaurant.name?.charAt(0)?.toUpperCase() || "R";
 
@@ -312,10 +353,11 @@ const RestaurantPage = () => {
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
               <div className="sticky top-0 z-30 mt-6 -mx-4 px-4 py-3 border-b border-gray-200/50 backdrop-blur-xl" style={{ backgroundColor: `${bg}ee` }}>
-                <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                <div ref={navScrollRef} className="flex gap-2 overflow-x-auto no-scrollbar">
                   {activeCategories.map((cat) => (
                     <button
                       key={cat}
+                      ref={(el) => { tabRefs.current[cat] = el; }}
                       onClick={() => scrollToCategory(cat)}
                       className="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all min-h-[44px]"
                       style={
@@ -337,7 +379,7 @@ const RestaurantPage = () => {
                 const catItems = menuItems.filter((m) => m.category === cat);
                 if (catItems.length === 0) return null;
                 return (
-                  <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} className="scroll-mt-20">
+                  <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} data-category={cat} className="scroll-mt-20">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">{tCategory(cat, catTranslations)}</h3>
                     <div className="space-y-1">
                       {catItems.map((item, idx) => (
