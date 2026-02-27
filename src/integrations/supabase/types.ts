@@ -29,7 +29,10 @@ export type Database = {
           sauces: string[] | null
           sort_order: number | null
           supplements: Json | null
+          tags: string[] | null
+          translations: Json | null
           updated_at: string
+          variants: Json | null
         }
         Insert: {
           category: string
@@ -45,7 +48,10 @@ export type Database = {
           sauces?: string[] | null
           sort_order?: number | null
           supplements?: Json | null
+          tags?: string[] | null
+          translations?: Json | null
           updated_at?: string
+          variants?: Json | null
         }
         Update: {
           category?: string
@@ -61,7 +67,10 @@ export type Database = {
           sauces?: string[] | null
           sort_order?: number | null
           supplements?: Json | null
+          tags?: string[] | null
+          translations?: Json | null
           updated_at?: string
+          variants?: Json | null
         }
         Relationships: [
           {
@@ -72,6 +81,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      owners: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          phone: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          phone: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          phone?: string
+        }
+        Relationships: []
       }
       orders: {
         Row: {
@@ -173,7 +203,9 @@ export type Database = {
       restaurants: {
         Row: {
           address: string | null
+          bg_color: string | null
           categories: string[] | null
+          category_translations: Json | null
           city: string | null
           cover_image: string | null
           created_at: string
@@ -181,6 +213,8 @@ export type Database = {
           delivery_fee: number | null
           description: string | null
           estimated_time: string | null
+          features: Json | null
+          google_place_id: string | null
           hours: string | null
           id: string
           image: string | null
@@ -188,14 +222,25 @@ export type Database = {
           is_open: boolean | null
           minimum_order: number | null
           name: string
+          owner_id: string | null
+          payment_methods: string[] | null
+          primary_color: string | null
           rating: number | null
+          restaurant_phone: string | null
           review_count: number | null
           slug: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_plan: string | null
+          subscription_start_date: string | null
           updated_at: string
+          website: string | null
         }
         Insert: {
           address?: string | null
+          bg_color?: string | null
           categories?: string[] | null
+          category_translations?: Json | null
           city?: string | null
           cover_image?: string | null
           created_at?: string
@@ -203,6 +248,8 @@ export type Database = {
           delivery_fee?: number | null
           description?: string | null
           estimated_time?: string | null
+          features?: Json | null
+          google_place_id?: string | null
           hours?: string | null
           id?: string
           image?: string | null
@@ -210,14 +257,25 @@ export type Database = {
           is_open?: boolean | null
           minimum_order?: number | null
           name: string
+          owner_id?: string | null
+          payment_methods?: string[] | null
+          primary_color?: string | null
           rating?: number | null
+          restaurant_phone?: string | null
           review_count?: number | null
           slug: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_plan?: string | null
+          subscription_start_date?: string | null
           updated_at?: string
+          website?: string | null
         }
         Update: {
           address?: string | null
+          bg_color?: string | null
           categories?: string[] | null
+          category_translations?: Json | null
           city?: string | null
           cover_image?: string | null
           created_at?: string
@@ -225,6 +283,8 @@ export type Database = {
           delivery_fee?: number | null
           description?: string | null
           estimated_time?: string | null
+          features?: Json | null
+          google_place_id?: string | null
           hours?: string | null
           id?: string
           image?: string | null
@@ -232,10 +292,19 @@ export type Database = {
           is_open?: boolean | null
           minimum_order?: number | null
           name?: string
+          owner_id?: string | null
+          payment_methods?: string[] | null
+          primary_color?: string | null
           rating?: number | null
+          restaurant_phone?: string | null
           review_count?: number | null
           slug?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_plan?: string | null
+          subscription_start_date?: string | null
           updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }
