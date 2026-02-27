@@ -4,6 +4,30 @@ export interface Supplement {
   price: number;
 }
 
+export interface CustomizationOption {
+  id: string;
+  name: string;
+  name_translations?: Record<string, string>;
+  price_modifier: number;
+  image: string | null;
+}
+
+export interface CustomizationStep {
+  id: string;
+  title: string;
+  title_translations?: Record<string, string>;
+  type: "single" | "multiple";
+  required: boolean;
+  max_selections?: number;
+  options: CustomizationOption[];
+}
+
+export interface CustomizationConfig {
+  enabled: boolean;
+  base_price: number;
+  steps: CustomizationStep[];
+}
+
 export interface DbRestaurant {
   id: string;
   slug: string;
@@ -38,6 +62,7 @@ export interface DbRestaurant {
     per_item_minutes: number;
     max_minutes: number;
   };
+  customization_config: CustomizationConfig | null;
 }
 
 export interface DbMenuItem {

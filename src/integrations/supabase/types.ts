@@ -211,6 +211,7 @@ export type Database = {
           cover_image: string | null
           created_at: string
           cuisine: string | null
+          customization_config: Json | null
           delivery_fee: number | null
           description: string | null
           estimated_time: string | null
@@ -251,6 +252,7 @@ export type Database = {
           cover_image?: string | null
           created_at?: string
           cuisine?: string | null
+          customization_config?: Json | null
           delivery_fee?: number | null
           description?: string | null
           estimated_time?: string | null
@@ -291,6 +293,7 @@ export type Database = {
           cover_image?: string | null
           created_at?: string
           cuisine?: string | null
+          customization_config?: Json | null
           delivery_fee?: number | null
           description?: string | null
           estimated_time?: string | null

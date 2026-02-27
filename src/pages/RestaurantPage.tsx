@@ -10,6 +10,7 @@ import { CartSheet } from "@/components/CartSheet";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
+import { CustomOrderBuilder } from "@/components/CustomOrderBuilder";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const DEFAULT_PRIMARY = "#FF6B00";
@@ -194,7 +195,9 @@ const RestaurantPage = () => {
   const payments = restaurant.payment_methods ?? [];
 
   const activeCategories = categories.filter((cat) =>
-    menuItems.some((m) => m.category === cat)
+    cat === "Personnalisation" && restaurant.customization_config?.enabled
+      ? true
+      : menuItems.some((m) => m.category === cat)
   );
 
   const initial = restaurant.name?.charAt(0)?.toUpperCase() || "R";
@@ -206,10 +209,23 @@ const RestaurantPage = () => {
         {restaurant.cover_image ? (
           <img src={restaurant.cover_image} alt={restaurant.name} className="w-full h-full object-cover" loading="lazy" />
         ) : (
-          <div
-            className="w-full h-full"
-            style={{ background: `linear-gradient(135deg, ${primary} 0%, ${primaryLight} 100%)` }}
-          />
+          <div className="w-full h-full relative">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `
+                  radial-gradient(ellipse at 20% 50%, ${lighten(primary, 0.3)} 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, ${lighten(primary, 0.5)} 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 80%, ${darken(primary, 0.2)} 0%, transparent 60%),
+                  linear-gradient(135deg, ${primary} 0%, ${darken(primary, 0.3)} 100%)
+                `
+              }}
+            />
+            <div className="absolute inset-0 opacity-[0.08]" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+              backgroundSize: "128px 128px"
+            }} />
+          </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
@@ -376,6 +392,23 @@ const RestaurantPage = () => {
             {/* Menu Sections */}
             <div className="mt-6 space-y-8">
               {activeCategories.map((cat) => {
+                // Personnalisation category: render the custom order builder
+                if (cat === "Personnalisation" && restaurant.customization_config?.enabled) {
+                  return (
+                    <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} data-category={cat} className="scroll-mt-20">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{tCategory(cat, catTranslations)}</h3>
+                      <CustomOrderBuilder
+                        config={restaurant.customization_config}
+                        restaurantSlug={restaurant.slug}
+                        restaurantId={restaurant.id}
+                        primaryColor={primary}
+                        primaryLight={primaryLight}
+                        primaryDark={primaryDark}
+                      />
+                    </div>
+                  );
+                }
+
                 const catItems = menuItems.filter((m) => m.category === cat);
                 if (catItems.length === 0) return null;
                 return (

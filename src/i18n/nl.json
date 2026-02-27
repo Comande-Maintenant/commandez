@@ -73,5 +73,16 @@
   "how.order_from_phone": "Bestel vanaf uw telefoon.",
   "footer.powered_by": "Mogelijk gemaakt door Commande Maintenant",
   "nav.back_home": "Terug naar home",
-  "language.selector": "Taal"
+  "language.selector": "Taal",
+  "custom.title": "Stel uw kebab samen",
+  "custom.step_of": "Stap {current} van {total}",
+  "custom.next": "Volgende",
+  "custom.previous": "Vorige",
+  "custom.required": "Verplicht",
+  "custom.optional": "Optioneel",
+  "custom.max_selections": "max {max}",
+  "custom.add_to_cart": "Toevoegen aan winkelwagen - {price} \u20ac",
+  "custom.your_selection": "Uw selectie",
+  "custom.base_price": "Basis: {price} \u20ac",
+  "custom.total": "Totaal: {price} \u20ac"
 }

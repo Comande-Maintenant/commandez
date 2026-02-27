@@ -73,5 +73,16 @@
   "how.order_from_phone": "\u30b9\u30de\u30db\u304b\u3089\u6ce8\u6587\u3002",
   "footer.powered_by": "Commande Maintenant \u63d0\u4f9b",
   "nav.back_home": "\u30db\u30fc\u30e0\u306b\u623b\u308b",
-  "language.selector": "\u8a00\u8a9e"
+  "language.selector": "\u8a00\u8a9e",
+  "custom.title": "\u30b1\u30d0\u30d6\u3092\u30ab\u30b9\u30bf\u30de\u30a4\u30ba",
+  "custom.step_of": "\u30b9\u30c6\u30c3\u30d7 {current}/{total}",
+  "custom.next": "\u6b21\u3078",
+  "custom.previous": "\u623b\u308b",
+  "custom.required": "\u5fc5\u9808",
+  "custom.optional": "\u4efb\u610f",
+  "custom.max_selections": "\u6700\u5927 {max}",
+  "custom.add_to_cart": "\u30ab\u30fc\u30c8\u306b\u8ffd\u52a0 - {price} \u20ac",
+  "custom.your_selection": "\u9078\u629e\u5185\u5bb9",
+  "custom.base_price": "\u57fa\u672c\u4fa1\u683c: {price} \u20ac",
+  "custom.total": "\u5408\u8a08: {price} \u20ac"
 }

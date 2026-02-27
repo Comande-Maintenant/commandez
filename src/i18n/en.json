@@ -73,5 +73,16 @@
   "how.order_from_phone": "Order from your phone.",
   "footer.powered_by": "Powered by Commande Maintenant",
   "nav.back_home": "Back to home",
-  "language.selector": "Language"
+  "language.selector": "Language",
+  "custom.title": "Build your kebab",
+  "custom.step_of": "Step {current} of {total}",
+  "custom.next": "Next",
+  "custom.previous": "Previous",
+  "custom.required": "Required",
+  "custom.optional": "Optional",
+  "custom.max_selections": "max {max}",
+  "custom.add_to_cart": "Add to cart - {price} \u20ac",
+  "custom.your_selection": "Your selection",
+  "custom.base_price": "Base: {price} \u20ac",
+  "custom.total": "Total: {price} \u20ac"
 }

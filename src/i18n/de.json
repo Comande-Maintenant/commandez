@@ -73,5 +73,16 @@
   "how.order_from_phone": "Bestellen Sie von Ihrem Handy aus.",
   "footer.powered_by": "Bereitgestellt von Commande Maintenant",
   "nav.back_home": "Zurueck zur Startseite",
-  "language.selector": "Sprache"
+  "language.selector": "Sprache",
+  "custom.title": "Stellen Sie Ihren Kebab zusammen",
+  "custom.step_of": "Schritt {current} von {total}",
+  "custom.next": "Weiter",
+  "custom.previous": "Zurueck",
+  "custom.required": "Pflichtfeld",
+  "custom.optional": "Optional",
+  "custom.max_selections": "max {max}",
+  "custom.add_to_cart": "In den Warenkorb - {price} \u20ac",
+  "custom.your_selection": "Ihre Auswahl",
+  "custom.base_price": "Basis: {price} \u20ac",
+  "custom.total": "Gesamt: {price} \u20ac"
 }

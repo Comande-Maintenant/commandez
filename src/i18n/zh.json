@@ -73,5 +73,16 @@
   "how.order_from_phone": "\u7528\u624b\u673a\u4e0b\u5355\u3002",
   "footer.powered_by": "\u7531 Commande Maintenant \u63d0\u4f9b\u652f\u6301",
   "nav.back_home": "\u8fd4\u56de\u9996\u9875",
-  "language.selector": "\u8bed\u8a00"
+  "language.selector": "\u8bed\u8a00",
+  "custom.title": "\u5b9a\u5236\u60a8\u7684\u70e4\u8089",
+  "custom.step_of": "\u7b2c {current} \u6b65\uff0c\u5171 {total} \u6b65",
+  "custom.next": "\u4e0b\u4e00\u6b65",
+  "custom.previous": "\u4e0a\u4e00\u6b65",
+  "custom.required": "\u5fc5\u9009",
+  "custom.optional": "\u53ef\u9009",
+  "custom.max_selections": "\u6700\u591a {max} \u9879",
+  "custom.add_to_cart": "\u52a0\u5165\u8d2d\u7269\u8f66 - {price} \u20ac",
+  "custom.your_selection": "\u60a8\u7684\u9009\u62e9",
+  "custom.base_price": "\u57fa\u7840\u4ef7: {price} \u20ac",
+  "custom.total": "\u603b\u8ba1: {price} \u20ac"
 }
