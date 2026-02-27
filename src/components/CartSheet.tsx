@@ -5,38 +5,44 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 
-export const CartSheet = () => {
+interface CartSheetProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
   const { items, totalItems, subtotal, updateQuantity, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [open, setOpen] = useState(false);
 
   const handleOrder = () => {
-    setOpen(false);
+    onOpenChange?.(false);
     navigate("/order");
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <button className="relative p-2">
-          <ShoppingBag className="h-6 w-6 text-foreground" />
-          <AnimatePresence>
-            {totalItems > 0 && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="absolute -top-1 -right-1 bg-foreground text-primary-foreground text-[11px] font-bold rounded-full h-5 w-5 flex items-center justify-center"
-              >
-                {totalItems}
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
-      </SheetTrigger>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      {/* Only render trigger when used standalone (not controlled) */}
+      {open === undefined && (
+        <SheetTrigger asChild>
+          <button className="relative p-2">
+            <ShoppingBag className="h-6 w-6 text-foreground" />
+            <AnimatePresence>
+              {totalItems > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -top-1 -right-1 bg-foreground text-primary-foreground text-[11px] font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                >
+                  {totalItems}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        </SheetTrigger>
+      )}
       <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
         <SheetHeader className="p-4 border-b border-border">
           <SheetTitle className="text-lg font-semibold">
