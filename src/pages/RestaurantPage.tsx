@@ -26,7 +26,7 @@ const RestaurantPage = () => {
         const items = await fetchMenuItems(r.id);
         setMenuItems(items);
         // SEO
-        document.title = `${r.name} – Commande en ligne | ${r.city}`;
+        document.title = `${r.name} - Commande en ligne | ${r.city}`;
       }
       setLoading(false);
     });

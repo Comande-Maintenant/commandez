@@ -139,7 +139,7 @@ export const DashboardStats = ({ restaurant }: Props) => {
 
       <Card className="rounded-2xl border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">Chiffre d'affaires – {periodLabels[period]}</CardTitle>
+          <CardTitle className="text-base font-semibold">Chiffre d'affaires - {periodLabels[period]}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-64">
@@ -158,7 +158,7 @@ export const DashboardStats = ({ restaurant }: Props) => {
 
       <Card className="rounded-2xl border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">Nombre de commandes – {periodLabels[period]}</CardTitle>
+          <CardTitle className="text-base font-semibold">Nombre de commandes - {periodLabels[period]}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-52">

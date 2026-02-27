@@ -12,7 +12,7 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "resto.order – Commande en ligne pour restaurants";
+    document.title = "resto.order - Commande en ligne pour restaurants";
     fetchRestaurants().then((data) => {
       setRestaurants(data);
       setLoading(false);
@@ -43,7 +43,7 @@ const Index = () => {
             <span className="text-muted-foreground">resto préféré.</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Kebab, tacos, burger — en 3 clics, sans commission.
+            Kebab, tacos, burger - en 3 clics, sans commission.
           </p>
         </motion.div>
 

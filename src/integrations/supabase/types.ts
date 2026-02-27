@@ -203,6 +203,7 @@ export type Database = {
       restaurants: {
         Row: {
           address: string | null
+          availability_mode: string | null
           bg_color: string | null
           categories: string[] | null
           category_translations: Json | null
@@ -222,12 +223,16 @@ export type Database = {
           is_open: boolean | null
           minimum_order: number | null
           name: string
+          notification_sound: string | null
+          order_mode: string | null
           owner_id: string | null
           payment_methods: string[] | null
+          prep_time_config: Json | null
           primary_color: string | null
           rating: number | null
           restaurant_phone: string | null
           review_count: number | null
+          schedule: Json | null
           slug: string
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
@@ -238,6 +243,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          availability_mode?: string | null
           bg_color?: string | null
           categories?: string[] | null
           category_translations?: Json | null
@@ -257,12 +263,16 @@ export type Database = {
           is_open?: boolean | null
           minimum_order?: number | null
           name: string
+          notification_sound?: string | null
+          order_mode?: string | null
           owner_id?: string | null
           payment_methods?: string[] | null
+          prep_time_config?: Json | null
           primary_color?: string | null
           rating?: number | null
           restaurant_phone?: string | null
           review_count?: number | null
+          schedule?: Json | null
           slug: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
@@ -273,6 +283,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          availability_mode?: string | null
           bg_color?: string | null
           categories?: string[] | null
           category_translations?: Json | null
@@ -292,12 +303,16 @@ export type Database = {
           is_open?: boolean | null
           minimum_order?: number | null
           name?: string
+          notification_sound?: string | null
+          order_mode?: string | null
           owner_id?: string | null
           payment_methods?: string[] | null
+          prep_time_config?: Json | null
           primary_color?: string | null
           rating?: number | null
           restaurant_phone?: string | null
           review_count?: number | null
+          schedule?: Json | null
           slug?: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null

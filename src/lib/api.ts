@@ -138,6 +138,51 @@ export async function upsertRestaurantHours(restaurantId: string, hours: { day_o
   if (error) throw error;
 }
 
+export async function batchUpdateSortOrder(items: { id: string; sort_order: number }[]) {
+  for (const item of items) {
+    const { error } = await supabase
+      .from("menu_items")
+      .update({ sort_order: item.sort_order })
+      .eq("id", item.id);
+    if (error) throw error;
+  }
+}
+
+export async function updateRestaurantCategories(restaurantId: string, categories: string[]) {
+  const { error } = await supabase
+    .from("restaurants")
+    .update({ categories })
+    .eq("id", restaurantId);
+  if (error) throw error;
+}
+
+export async function renameCategory(restaurantId: string, oldName: string, newName: string) {
+  const { data, error: fetchError } = await supabase
+    .from("menu_items")
+    .select("id")
+    .eq("restaurant_id", restaurantId)
+    .eq("category", oldName);
+  if (fetchError) throw fetchError;
+  for (const item of data ?? []) {
+    const { error } = await supabase
+      .from("menu_items")
+      .update({ category: newName })
+      .eq("id", item.id);
+    if (error) throw error;
+  }
+}
+
+export async function uploadRestaurantImage(restaurantId: string, file: File, type: "logo" | "cover"): Promise<string> {
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `${restaurantId}/${type}.${ext}`;
+  const { error: uploadError } = await supabase.storage
+    .from("restaurant-images")
+    .upload(path, file, { upsert: true });
+  if (uploadError) throw uploadError;
+  const { data } = supabase.storage.from("restaurant-images").getPublicUrl(path);
+  return data.publicUrl;
+}
+
 export function subscribeToOrders(restaurantId: string, callback: (order: DbOrder) => void) {
   const channel = supabase
     .channel(`orders-${restaurantId}`)

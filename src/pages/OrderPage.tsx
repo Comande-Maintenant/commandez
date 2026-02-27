@@ -123,7 +123,7 @@ const OrderPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <div><p className="font-medium text-foreground">{m === "collect" ? "Click & Collect" : "Livraison"}</p>
-                    <p className="text-sm text-muted-foreground">{m === "collect" ? "Récupérez sur place — Gratuit" : `À domicile — ${deliveryFee.toFixed(2)} €`}</p></div>
+                    <p className="text-sm text-muted-foreground">{m === "collect" ? "Recuperez sur place - Gratuit" : `A domicile - ${deliveryFee.toFixed(2)} \u20ac`}</p></div>
                   </div>
                 </button>
               ))}
@@ -162,7 +162,7 @@ const OrderPage = () => {
                 className="w-full h-14 text-base font-semibold rounded-2xl"
                 size="lg"
               >
-                {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : `Confirmer la commande — ${total.toFixed(2)} €`}
+                {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : `Confirmer la commande - ${total.toFixed(2)} \u20ac`}
               </Button>
             </motion.div>
           )}

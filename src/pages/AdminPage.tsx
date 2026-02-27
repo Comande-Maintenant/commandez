@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, LayoutGrid, UtensilsCrossed, Clock, BarChart3, Loader2, Copy, Check } from "lucide-react";
+import { ArrowLeft, ClipboardList, UtensilsCrossed, Palette, Settings, Loader2, Copy, Check, BarChart3 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
 import { DashboardOrders } from "@/components/dashboard/DashboardOrders";
-import { DashboardMenu } from "@/components/dashboard/DashboardMenu";
-import { DashboardHours } from "@/components/dashboard/DashboardHours";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
+import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
+import { DashboardMaPage } from "@/components/dashboard/DashboardMaPage";
+import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
 import { Button } from "@/components/ui/button";
 
 const tabs = [
-  { id: "orders", label: "Commandes", icon: LayoutGrid },
-  { id: "menu", label: "Menu", icon: UtensilsCrossed },
-  { id: "hours", label: "Horaires", icon: Clock },
-  { id: "stats", label: "Statistiques", icon: BarChart3 },
+  { id: "orders", label: "Commandes", icon: ClipboardList },
+  { id: "carte", label: "Ma Carte", icon: UtensilsCrossed },
+  { id: "page", label: "Ma Page", icon: Palette },
+  { id: "settings", label: "Parametres", icon: Settings },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -24,6 +25,7 @@ const AdminPage = () => {
   const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>("orders");
+  const [showStats, setShowStats] = useState(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const AdminPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Restaurant introuvable</h1>
-          <Link to="/" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">← Retour</Link>
+          <Link to="/" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">Retour</Link>
         </div>
       </div>
     );
@@ -75,11 +77,11 @@ const AdminPage = () => {
           <div className="flex items-center gap-3">
             <Button variant="outline" size="sm" className="rounded-xl gap-1.5 text-xs" onClick={copyLink}>
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-              {copied ? "Copié !" : "Copier le lien"}
+              {copied ? "Copie !" : "Copier le lien"}
             </Button>
             <div className="flex items-center gap-2">
               <span className={`h-2 w-2 rounded-full ${restaurant.is_open ? "bg-[hsl(var(--success))]" : "bg-muted-foreground"}`} />
-              <span className="text-xs font-medium text-muted-foreground">{restaurant.is_open ? "Ouvert" : "Fermé"}</span>
+              <span className="text-xs font-medium text-muted-foreground">{restaurant.is_open ? "Ouvert" : "Ferme"}</span>
             </div>
           </div>
         </div>
@@ -91,11 +93,11 @@ const AdminPage = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => { setActiveTab(tab.id); setShowStats(false); }}
                 className={`relative flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
               >
                 <tab.icon className="h-4 w-4" />
-                {tab.label}
+                <span className="hidden sm:inline">{tab.label}</span>
                 {activeTab === tab.id && (
                   <motion.div layoutId="admin-tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-full" />
                 )}
@@ -107,11 +109,30 @@ const AdminPage = () => {
 
       <main className="max-w-6xl mx-auto px-4 py-6">
         <AnimatePresence mode="wait">
-          <motion.div key={activeTab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-            {activeTab === "orders" && <DashboardOrders restaurant={restaurant} />}
-            {activeTab === "menu" && <DashboardMenu restaurant={restaurant} />}
-            {activeTab === "hours" && <DashboardHours restaurant={restaurant} />}
-            {activeTab === "stats" && <DashboardStats restaurant={restaurant} />}
+          <motion.div key={activeTab + (showStats ? "-stats" : "")} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            {activeTab === "orders" && !showStats && (
+              <div>
+                <div className="flex items-center justify-end mb-4">
+                  <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={() => setShowStats(true)}>
+                    <BarChart3 className="h-4 w-4" />Statistiques
+                  </Button>
+                </div>
+                <DashboardOrders restaurant={restaurant} />
+              </div>
+            )}
+            {activeTab === "orders" && showStats && (
+              <div>
+                <div className="flex items-center justify-end mb-4">
+                  <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={() => setShowStats(false)}>
+                    <ClipboardList className="h-4 w-4" />Commandes
+                  </Button>
+                </div>
+                <DashboardStats restaurant={restaurant} />
+              </div>
+            )}
+            {activeTab === "carte" && <DashboardMaCarte restaurant={restaurant} />}
+            {activeTab === "page" && <DashboardMaPage restaurant={restaurant} />}
+            {activeTab === "settings" && <DashboardParametres restaurant={restaurant} />}
           </motion.div>
         </AnimatePresence>
       </main>

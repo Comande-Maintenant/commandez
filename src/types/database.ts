@@ -23,6 +23,21 @@ export interface DbRestaurant {
   is_accepting_orders: boolean;
   hours: string;
   categories: string[];
+  primary_color: string;
+  bg_color: string;
+  payment_methods: string[];
+  website: string;
+  category_translations: Record<string, Record<string, string>> | null;
+  restaurant_phone: string;
+  availability_mode: string;
+  schedule: any;
+  order_mode: string;
+  notification_sound: string;
+  prep_time_config: {
+    default_minutes: number;
+    per_item_minutes: number;
+    max_minutes: number;
+  };
 }
 
 export interface DbMenuItem {

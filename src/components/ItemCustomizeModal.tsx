@@ -152,7 +152,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
 
             <div className="sticky bottom-0 p-4 bg-card border-t border-border">
               <Button onClick={handleAdd} className="w-full h-14 text-base font-semibold rounded-2xl" size="lg">
-                Ajouter — {total.toFixed(2)} €
+                Ajouter - {total.toFixed(2)} €
               </Button>
             </div>
           </motion.div>

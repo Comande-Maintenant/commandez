@@ -98,7 +98,7 @@ export const CartSheet = () => {
                 <span className="font-semibold text-foreground">{subtotal.toFixed(2)} €</span>
               </div>
               <Button onClick={handleOrder} className="w-full h-14 text-base font-semibold rounded-2xl" size="lg">
-                Commander — {subtotal.toFixed(2)} €
+                Commander - {subtotal.toFixed(2)} €
               </Button>
               <button onClick={clearCart} className="w-full text-center text-sm text-muted-foreground hover:text-destructive transition-colors">
                 Vider le panier
