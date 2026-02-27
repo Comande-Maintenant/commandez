@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import type { DbMenuItem } from "@/types/database";
+import { useLanguage } from "@/context/LanguageContext";
 import { ItemCustomizeModal } from "./ItemCustomizeModal";
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
 
 export const MenuItemCard = ({ item, restaurantSlug, restaurantId }: Props) => {
   const [open, setOpen] = useState(false);
+  const { t, tMenu } = useLanguage();
+  const translated = tMenu(item);
 
   return (
     <>
@@ -22,22 +25,22 @@ export const MenuItemCard = ({ item, restaurantSlug, restaurantId }: Props) => {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className="font-medium text-foreground text-[15px] leading-snug">{item.name}</h4>
+            <h4 className="font-medium text-foreground text-[15px] leading-snug">{translated.name}</h4>
             {item.popular && (
               <span className="text-[10px] font-semibold uppercase tracking-wider bg-foreground text-primary-foreground px-1.5 py-0.5 rounded-full">
-                Populaire
+                {t("menu.popular")}
               </span>
             )}
           </div>
-          {item.description && (
-            <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">{item.description}</p>
+          {translated.description && (
+            <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">{translated.description}</p>
           )}
           <p className="text-sm font-semibold text-foreground mt-1.5">{item.price.toFixed(2)} €</p>
         </div>
 
         {item.image && (
           <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-            <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+            <img src={item.image} alt={translated.name} className="w-full h-full object-cover" loading="lazy" />
             <div className="absolute bottom-1 right-1 bg-foreground text-primary-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <Plus className="h-3.5 w-3.5" />
             </div>

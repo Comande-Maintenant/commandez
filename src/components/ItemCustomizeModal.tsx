@@ -3,6 +3,7 @@ import { X, Minus, Plus, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DbMenuItem, Supplement } from "@/types/database";
 import { useCart } from "@/context/CartContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -15,9 +16,12 @@ interface Props {
 
 export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restaurantId }: Props) => {
   const { addItem } = useCart();
+  const { t, tMenu } = useLanguage();
   const [selectedSauces, setSelectedSauces] = useState<string[]>([]);
   const [selectedSupplements, setSelectedSupplements] = useState<Supplement[]>([]);
   const [quantity, setQuantity] = useState(1);
+
+  const translated = tMenu(item);
 
   const toggleSauce = (sauce: string) => {
     setSelectedSauces((prev) =>
@@ -65,7 +69,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             <div className="sticky top-0 bg-card/90 backdrop-blur-xl z-10 p-4 flex items-center justify-between border-b border-border">
-              <h3 className="text-lg font-semibold text-foreground">{item.name}</h3>
+              <h3 className="text-lg font-semibold text-foreground">{translated.name}</h3>
               <button onClick={onClose} className="p-2 rounded-full hover:bg-secondary transition-colors">
                 <X className="h-5 w-5 text-muted-foreground" />
               </button>
@@ -74,16 +78,16 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
             <div className="p-4 space-y-6">
               {item.image && (
                 <div className="w-full h-48 rounded-2xl overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  <img src={item.image} alt={translated.name} className="w-full h-full object-cover" />
                 </div>
               )}
 
-              {item.description && <p className="text-muted-foreground text-sm">{item.description}</p>}
+              {translated.description && <p className="text-muted-foreground text-sm">{translated.description}</p>}
 
               {item.sauces.length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-foreground mb-2">
-                    Sauces <span className="text-muted-foreground font-normal">(max 3)</span>
+                    {t("item.sauces")} <span className="text-muted-foreground font-normal">({t("item.sauces_max", { max: 3 })})</span>
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {item.sauces.map((sauce) => {
@@ -109,7 +113,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
 
               {item.supplements.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-2">Suppléments</h4>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">{t("item.supplements")}</h4>
                   <div className="space-y-2">
                     {item.supplements.map((sup) => {
                       const selected = selectedSupplements.find((s) => s.id === sup.id);
@@ -131,7 +135,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
               )}
 
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-foreground">Quantité</span>
+                <span className="text-sm font-semibold text-foreground">{t("item.quantity")}</span>
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -152,7 +156,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
 
             <div className="sticky bottom-0 p-4 bg-card border-t border-border">
               <Button onClick={handleAdd} className="w-full h-14 text-base font-semibold rounded-2xl" size="lg">
-                Ajouter - {total.toFixed(2)} €
+                {t("item.add_to_cart", { price: total.toFixed(2) })}
               </Button>
             </div>
           </motion.div>

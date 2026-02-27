@@ -53,6 +53,7 @@ export interface DbMenuItem {
   supplements: Supplement[];
   sauces: string[];
   sort_order: number;
+  translations?: Record<string, { name: string; description?: string }>;
 }
 
 export interface DbOrder {

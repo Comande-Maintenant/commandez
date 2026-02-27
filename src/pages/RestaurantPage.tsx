@@ -7,6 +7,8 @@ import type { DbRestaurant, DbMenuItem } from "@/types/database";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { CartSheet } from "@/components/CartSheet";
 import { useCart } from "@/context/CartContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
 
 const RestaurantPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -16,6 +18,7 @@ const RestaurantPage = () => {
   const [activeCategory, setActiveCategory] = useState<string>("");
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { totalItems } = useCart();
+  const { t, tCategory, isRTL } = useLanguage();
 
   useEffect(() => {
     if (!slug) return;
@@ -25,8 +28,7 @@ const RestaurantPage = () => {
       if (r) {
         const items = await fetchMenuItems(r.id);
         setMenuItems(items);
-        // SEO
-        document.title = `${r.name} - Commande en ligne | ${r.city}`;
+        document.title = `${r.name} - ${r.city}`;
       }
       setLoading(false);
     });
@@ -46,7 +48,7 @@ const RestaurantPage = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Restaurant introuvable</h1>
           <Link to="/" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">
-            ← Retour à l'accueil
+            {t("nav.back_home")}
           </Link>
         </div>
       </div>
@@ -55,6 +57,7 @@ const RestaurantPage = () => {
 
   const categories = restaurant.categories ?? [];
   const currentCategory = activeCategory || categories[0];
+  const catTranslations = restaurant.category_translations;
 
   const scrollToCategory = (cat: string) => {
     setActiveCategory(cat);
@@ -62,7 +65,7 @@ const RestaurantPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-24" dir={isRTL ? "rtl" : "ltr"}>
       {/* Cover */}
       <div className="relative h-48 sm:h-64 overflow-hidden">
         <img src={restaurant.cover_image} alt={restaurant.name} className="w-full h-full object-cover" />
@@ -71,7 +74,10 @@ const RestaurantPage = () => {
           <Link to="/" className="p-2 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors">
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </Link>
-          <CartSheet />
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+            <CartSheet />
+          </div>
         </div>
       </div>
 
@@ -84,9 +90,9 @@ const RestaurantPage = () => {
                 <p className="text-sm text-muted-foreground mt-0.5">{restaurant.cuisine}</p>
               </div>
               {restaurant.is_open ? (
-                <span className="text-xs font-semibold bg-foreground text-primary-foreground px-2.5 py-1 rounded-full">Ouvert</span>
+                <span className="text-xs font-semibold bg-foreground text-primary-foreground px-2.5 py-1 rounded-full">{t("status.open")}</span>
               ) : (
-                <span className="text-xs font-semibold bg-muted text-muted-foreground px-2.5 py-1 rounded-full">Fermé</span>
+                <span className="text-xs font-semibold bg-muted text-muted-foreground px-2.5 py-1 rounded-full">{t("status.closed")}</span>
               )}
             </div>
             <p className="text-sm text-muted-foreground mt-3">{restaurant.description}</p>
@@ -94,7 +100,7 @@ const RestaurantPage = () => {
               <span className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-foreground text-foreground" />
                 <span className="font-semibold text-foreground">{restaurant.rating}</span>
-                ({restaurant.review_count} avis)
+                ({t("info.reviews", { count: restaurant.review_count })})
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />{restaurant.estimated_time}
@@ -105,7 +111,7 @@ const RestaurantPage = () => {
             </div>
             <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
               <Info className="h-3.5 w-3.5" />
-              <span>Horaires : {restaurant.hours} · Livraison {Number(restaurant.delivery_fee).toFixed(2)} € · Min. {Number(restaurant.minimum_order)} €</span>
+              <span>{t("info.hours")} : {restaurant.hours} · {t("info.delivery_fee", { fee: Number(restaurant.delivery_fee).toFixed(2) })} · {t("info.minimum_order", { min: Number(restaurant.minimum_order) })}</span>
             </div>
           </div>
         </motion.div>
@@ -123,7 +129,7 @@ const RestaurantPage = () => {
                     : "bg-secondary text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {cat}
+                {tCategory(cat, catTranslations)}
               </button>
             ))}
           </div>
@@ -136,7 +142,7 @@ const RestaurantPage = () => {
             if (catItems.length === 0) return null;
             return (
               <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} className="scroll-mt-20">
-                <h3 className="text-lg font-semibold text-foreground mb-3">{cat}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-3">{tCategory(cat, catTranslations)}</h3>
                 <div className="space-y-1">
                   {catItems.map((item) => (
                     <MenuItemCard key={item.id} item={item} restaurantSlug={restaurant.slug} restaurantId={restaurant.id} />

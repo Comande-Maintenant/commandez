@@ -1,6 +1,7 @@
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +10,7 @@ import { useState } from "react";
 export const CartSheet = () => {
   const { items, totalItems, subtotal, updateQuantity, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   const handleOrder = () => {
@@ -38,14 +40,14 @@ export const CartSheet = () => {
       <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
         <SheetHeader className="p-4 border-b border-border">
           <SheetTitle className="text-lg font-semibold">
-            Votre panier {totalItems > 0 && `(${totalItems})`}
+            {t("cart.your_cart")} {totalItems > 0 && `(${totalItems})`}
           </SheetTitle>
         </SheetHeader>
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-3 p-8">
             <ShoppingBag className="h-12 w-12 text-muted-foreground/30" />
-            <p className="text-muted-foreground text-sm">Votre panier est vide</p>
+            <p className="text-muted-foreground text-sm">{t("cart.empty")}</p>
           </div>
         ) : (
           <>
@@ -94,14 +96,14 @@ export const CartSheet = () => {
 
             <div className="p-4 border-t border-border space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Sous-total</span>
+                <span className="text-muted-foreground">{t("cart.subtotal")}</span>
                 <span className="font-semibold text-foreground">{subtotal.toFixed(2)} €</span>
               </div>
               <Button onClick={handleOrder} className="w-full h-14 text-base font-semibold rounded-2xl" size="lg">
-                Commander - {subtotal.toFixed(2)} €
+                {t("cart.order")} - {subtotal.toFixed(2)} €
               </Button>
               <button onClick={clearCart} className="w-full text-center text-sm text-muted-foreground hover:text-destructive transition-colors">
-                Vider le panier
+                {t("cart.clear")}
               </button>
             </div>
           </>
