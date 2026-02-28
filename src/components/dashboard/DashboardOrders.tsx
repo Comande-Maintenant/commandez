@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Phone, MapPin, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed } from "lucide-react";
-import { fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
-import type { DbRestaurant, DbOrder } from "@/types/database";
+import { Phone, MapPin, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus } from "lucide-react";
+import { fetchOrders, fetchMenuItems, updateOrderStatus, subscribeToOrders } from "@/lib/api";
+import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { POSAddItemModal } from "./pos/POSAddItemModal";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
@@ -29,15 +30,21 @@ interface Props {
 
 export const DashboardOrders = ({ restaurant }: Props) => {
   const [orders, setOrders] = useState<DbOrder[]>([]);
+  const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
   const [loading, setLoading] = useState(true);
   const [disconnected, setDisconnected] = useState(false);
   const [advancing, setAdvancing] = useState<string | null>(null);
+  const [addItemOrder, setAddItemOrder] = useState<DbOrder | null>(null);
 
   const loadOrders = useCallback(async () => {
     const data = await fetchOrders(restaurant.id);
     setOrders(data);
     setLoading(false);
+  }, [restaurant.id]);
+
+  useEffect(() => {
+    fetchMenuItems(restaurant.id).then(setMenuItems);
   }, [restaurant.id]);
 
   useEffect(() => {
@@ -208,7 +215,10 @@ export const DashboardOrders = ({ restaurant }: Props) => {
                   <div key={i} className="flex items-start justify-between text-sm">
                     <div className="min-w-0 flex-1">
                       <span className="text-foreground font-medium">{item.quantity}x {item.name}</span>
-                      {((item.sauces?.length > 0) || (item.supplements?.length > 0)) && (
+                      {item.summary && (
+                        <p className="text-xs text-muted-foreground truncate">{item.summary}</p>
+                      )}
+                      {!item.summary && ((item.sauces?.length > 0) || (item.supplements?.length > 0)) && (
                         <p className="text-xs text-muted-foreground truncate">{[...(item.sauces || []), ...(item.supplements || [])].join(", ")}</p>
                       )}
                     </div>
@@ -218,21 +228,45 @@ export const DashboardOrders = ({ restaurant }: Props) => {
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
                 <span className="text-base font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} €</span>
-                {cfg.next && (
-                  <Button
-                    size="sm"
-                    onClick={() => advanceStatus(order.id, order.status as OrderStatus)}
-                    disabled={advancing === order.id}
-                    className="rounded-xl gap-1 min-h-[44px]"
-                  >
-                    {advancing === order.id ? "..." : cfg.nextLabel}<ChevronRight className="h-4 w-4" />
-                  </Button>
-                )}
+                <div className="flex items-center gap-2">
+                  {(order.status === "new" || order.status === "preparing") && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setAddItemOrder(order)}
+                      className="rounded-xl gap-1 min-h-[36px] text-xs text-muted-foreground"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Ajouter
+                    </Button>
+                  )}
+                  {cfg.next && (
+                    <Button
+                      size="sm"
+                      onClick={() => advanceStatus(order.id, order.status as OrderStatus)}
+                      disabled={advancing === order.id}
+                      className="rounded-xl gap-1 min-h-[44px]"
+                    >
+                      {advancing === order.id ? "..." : cfg.nextLabel}<ChevronRight className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
             </motion.div>
           );
         })}
       </div>
+
+      {/* Add item modal */}
+      {addItemOrder && (
+        <POSAddItemModal
+          open={!!addItemOrder}
+          onClose={() => setAddItemOrder(null)}
+          order={addItemOrder}
+          menuItems={menuItems}
+          config={restaurant.customization_config}
+          onUpdated={loadOrders}
+        />
+      )}
     </div>
   );
 };

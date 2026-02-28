@@ -10,16 +10,25 @@ export interface CustomizationOption {
   name_translations?: Record<string, string>;
   price_modifier: number;
   image: string | null;
+  allow_multi_meat?: boolean;
+  portion_options?: { id: string; label: string; price_modifier: number }[];
+  has_sub_sauce?: boolean;
 }
 
 export interface CustomizationStep {
   id: string;
   title: string;
   title_translations?: Record<string, string>;
-  type: "single" | "multiple";
+  type: "single" | "multiple" | "custom_garniture" | "multiple_with_quantity" | "single_or_multi";
   required: boolean;
   max_selections?: number;
   options: CustomizationOption[];
+  levels?: string[];
+  shortcut_label?: string;
+  shortcut_sets?: Record<string, { include: string[]; exclude?: string[] }>;
+  max_qty_per_option?: number;
+  skip_label?: string;
+  sub_sauce_step?: string;
 }
 
 export interface CustomizationConfig {

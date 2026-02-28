@@ -158,7 +158,7 @@ const AdminPage = () => {
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-          {isOpsView(activeView) && (
+          {isOpsView(activeView) && activeView !== "caisse" && (
             <LiveSummaryBanner
               visitors={visitors}
               alerts={alerts}

@@ -2,11 +2,20 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { ChevronDown, Check } from "lucide-react";
 import { fetchMenuItems, createOrder, fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
+import { buildOrderItems, calculateGrandTotal } from "@/lib/posHelpers";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
-import type { POSOrderType as POSOrderTypeValue, POSScreen, POSPersonOrder, POSItem } from "@/types/pos";
+import type {
+  POSOrderType as POSOrderTypeValue,
+  POSScreen,
+  POSPersonOrder,
+  POSDrinkItem,
+  POSDessertItem,
+  POSCustomization,
+} from "@/types/pos";
 import { POSOrderType } from "./POSOrderType";
-import { POSItemBuilder } from "./POSItemBuilder";
-import { POSUpsell } from "./POSUpsell";
+import { POSPersonBuilder } from "./POSPersonBuilder";
+import { POSBoissons } from "./POSBoissons";
+import { POSDesserts } from "./POSDesserts";
 import { POSRecap } from "./POSRecap";
 import { POSSuccess } from "./POSSuccess";
 import { Button } from "@/components/ui/button";
@@ -16,15 +25,24 @@ interface Props {
   restaurant: DbRestaurant;
 }
 
+const createEmptyPerson = (index: number): POSPersonOrder => ({
+  personIndex: index,
+  label: `Personne ${index + 1}`,
+  customization: null,
+  itemPrice: 0,
+});
+
 const initialState = {
   screen: "order_type" as POSScreen,
   orderType: "sur_place" as POSOrderTypeValue,
-  covers: 1,
   persons: [] as POSPersonOrder[],
   currentPerson: 0,
-  upsellItems: [] as POSItem[],
+  drinks: [] as POSDrinkItem[],
+  desserts: [] as POSDessertItem[],
+  dessertPending: false,
   notes: "",
   customerName: "",
+  tableNumber: "",
   orderNumber: 0,
   submitting: false,
 };
@@ -52,7 +70,6 @@ export const DashboardPOS = ({ restaurant }: Props) => {
           if (exists) return prev.map((o) => (o.id === order.id ? order : o));
           return [order, ...prev];
         }
-        // Remove if status changed away from ready
         return prev.filter((o) => o.id !== order.id);
       });
     });
@@ -60,79 +77,93 @@ export const DashboardPOS = ({ restaurant }: Props) => {
     return unsub;
   }, [restaurant.id]);
 
-  const categories = useMemo(
-    () => {
-      const cats = restaurant.categories || [];
-      const itemCats = new Set(menuItems.map((i) => i.category));
-      return cats.filter((c) => itemCats.has(c));
-    },
-    [restaurant.categories, menuItems]
-  );
-
   const setScreen = (screen: POSScreen) =>
     setState((s) => ({ ...s, screen }));
 
   const reset = useCallback(() => setState(initialState), []);
 
   const handleSelectOrderType = (orderType: POSOrderTypeValue) => {
-    const persons: POSPersonOrder[] = [{ personIndex: 0, label: "Personne 1", items: [] }];
-    setState((s) => ({ ...s, orderType, covers: 1, persons, currentPerson: 0, screen: "builder" }));
+    const persons: POSPersonOrder[] = [createEmptyPerson(0)];
+    setState((s) => ({
+      ...s,
+      orderType,
+      persons,
+      currentPerson: 0,
+      drinks: [],
+      desserts: [],
+      dessertPending: false,
+      notes: "",
+      customerName: "",
+      tableNumber: "",
+      screen: "person_builder",
+    }));
   };
 
-  const handleUpdatePersons = (persons: POSPersonOrder[]) => {
-    setState((s) => ({ ...s, persons }));
-  };
+  const handleSavePerson = useCallback(
+    (customization: POSCustomization, price: number) => {
+      setState((s) => {
+        const persons = [...s.persons];
+        persons[s.currentPerson] = {
+          ...persons[s.currentPerson],
+          customization,
+          itemPrice: price,
+        };
+        return { ...s, persons };
+      });
+    },
+    []
+  );
 
-  const handleSetCurrentPerson = (index: number) => {
-    setState((s) => ({ ...s, currentPerson: index }));
-  };
+  const handleAddPerson = useCallback(() => {
+    setState((s) => {
+      const newIndex = s.persons.length;
+      const persons = [...s.persons, createEmptyPerson(newIndex)];
+      return { ...s, persons, currentPerson: newIndex, screen: "person_builder" };
+    });
+  }, []);
 
-  const handleUpdateUpsell = (upsellItems: POSItem[]) => {
-    setState((s) => ({ ...s, upsellItems }));
-  };
+  const handleEditPerson = useCallback((index: number) => {
+    setState((s) => ({ ...s, currentPerson: index, screen: "person_builder" }));
+  }, []);
+
+  const handleGoBoissons = useCallback(() => {
+    setScreen("boissons");
+  }, []);
+
+  const handleUpdateDrinks = useCallback((drinks: POSDrinkItem[]) => {
+    setState((s) => ({ ...s, drinks }));
+  }, []);
+
+  const handleUpdateDesserts = useCallback((desserts: POSDessertItem[]) => {
+    setState((s) => ({ ...s, desserts }));
+  }, []);
+
+  const handleSetDessertPending = useCallback((pending: boolean) => {
+    setState((s) => ({ ...s, dessertPending: pending }));
+  }, []);
 
   const handleSubmit = async () => {
     setState((s) => ({ ...s, submitting: true }));
     try {
-      const allItems: any[] = [];
-      for (const person of state.persons) {
-        for (const item of person.items) {
-          allItems.push({
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            category: item.category,
-            personLabel: person.label,
-          });
-        }
-      }
-      for (const item of state.upsellItems) {
-        allItems.push({
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          category: item.category,
-          personLabel: "Extras",
-        });
-      }
+      const allItems = buildOrderItems(state.persons, state.drinks, state.desserts);
+      const total = calculateGrandTotal(state.persons, state.drinks, state.desserts);
 
-      const subtotal =
-        state.persons.reduce(
-          (sum, p) => sum + p.items.reduce((s, i) => s + i.price * i.quantity, 0),
-          0
-        ) + state.upsellItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+      const personCount = state.persons.filter((p) => p.customization).length;
+      const customerName =
+        state.customerName ||
+        `Caisse${state.tableNumber ? ` T${state.tableNumber}` : ""} (${personCount} pers.)`;
 
       const order = await createOrder({
         restaurant_id: restaurant.id,
-        customer_name: state.customerName || `Caisse (${state.covers} couv.)`,
+        customer_name: customerName,
         customer_phone: "",
         order_type: state.orderType,
         source: "pos",
-        covers: state.covers,
+        covers: personCount,
         items: allItems,
-        subtotal,
+        subtotal: total,
         delivery_fee: 0,
-        total: subtotal,
+        total,
         notes: state.notes || undefined,
       });
 
@@ -157,6 +188,8 @@ export const DashboardPOS = ({ restaurant }: Props) => {
       toast.error("Erreur lors de la mise a jour");
     }
   };
+
+  const config = restaurant.customization_config;
 
   return (
     <div className="relative">
@@ -205,45 +238,69 @@ export const DashboardPOS = ({ restaurant }: Props) => {
           <POSOrderType
             key="order_type"
             onSelect={handleSelectOrderType}
-            onClose={() => {}}
           />
         )}
-        {state.screen === "builder" && (
-          <POSItemBuilder
-            key="builder"
-            persons={state.persons}
-            currentPerson={state.currentPerson}
-            menuItems={menuItems}
-            categories={categories}
-            onUpdatePersons={handleUpdatePersons}
-            onSetCurrentPerson={handleSetCurrentPerson}
-            onNext={() => setScreen("upsell")}
-            onBack={() => setScreen("order_type")}
+        {state.screen === "person_builder" && config && (
+          <POSPersonBuilder
+            key={`person_builder_${state.currentPerson}`}
+            config={config}
+            personIndex={state.currentPerson}
+            personLabel={state.persons[state.currentPerson]?.label || "Personne 1"}
+            totalPersons={state.persons.length}
+            existingCustomization={state.persons[state.currentPerson]?.customization}
+            onSave={handleSavePerson}
+            onAddPerson={handleAddPerson}
+            onGoBoissons={handleGoBoissons}
+            onBack={() => {
+              if (state.currentPerson > 0) {
+                setState((s) => ({ ...s, currentPerson: s.currentPerson - 1 }));
+              } else {
+                setScreen("order_type");
+              }
+            }}
           />
         )}
-        {state.screen === "upsell" && (
-          <POSUpsell
-            key="upsell"
-            upsellItems={state.upsellItems}
+        {state.screen === "boissons" && (
+          <POSBoissons
+            key="boissons"
+            drinks={state.drinks}
             menuItems={menuItems}
-            onUpdateUpsell={handleUpdateUpsell}
+            onUpdateDrinks={handleUpdateDrinks}
+            onNext={() => setScreen("desserts")}
+            onBack={() => {
+              const lastPerson = state.persons.length - 1;
+              setState((s) => ({ ...s, currentPerson: lastPerson, screen: "person_builder" }));
+            }}
+          />
+        )}
+        {state.screen === "desserts" && (
+          <POSDesserts
+            key="desserts"
+            desserts={state.desserts}
+            menuItems={menuItems}
+            onUpdateDesserts={handleUpdateDesserts}
+            onSetDessertPending={handleSetDessertPending}
             onNext={() => setScreen("recap")}
-            onBack={() => setScreen("builder")}
+            onBack={() => setScreen("boissons")}
           />
         )}
         {state.screen === "recap" && (
           <POSRecap
             key="recap"
             orderType={state.orderType}
-            covers={state.covers}
             persons={state.persons}
-            upsellItems={state.upsellItems}
+            drinks={state.drinks}
+            desserts={state.desserts}
+            dessertPending={state.dessertPending}
             customerName={state.customerName}
+            tableNumber={state.tableNumber}
             notes={state.notes}
             onSetCustomerName={(name) => setState((s) => ({ ...s, customerName: name }))}
+            onSetTableNumber={(num) => setState((s) => ({ ...s, tableNumber: num }))}
             onSetNotes={(notes) => setState((s) => ({ ...s, notes }))}
+            onEditPerson={handleEditPerson}
             onSubmit={handleSubmit}
-            onBack={() => setScreen("upsell")}
+            onBack={() => setScreen("desserts")}
             submitting={state.submitting}
           />
         )}

@@ -103,6 +103,14 @@ export async function updateOrderStatus(orderId: string, status: string) {
   if (error) throw error;
 }
 
+export async function updateOrderItems(orderId: string, items: any[], total: number) {
+  const { error } = await supabase
+    .from("orders")
+    .update({ items, subtotal: total, total })
+    .eq("id", orderId);
+  if (error) throw error;
+}
+
 export async function updateMenuItem(id: string, updates: Record<string, any>) {
   const { error } = await supabase
     .from("menu_items")

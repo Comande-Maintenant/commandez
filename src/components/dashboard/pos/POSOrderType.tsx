@@ -1,10 +1,9 @@
-import { UtensilsCrossed, ShoppingBag, Phone, X } from "lucide-react";
+import { UtensilsCrossed, ShoppingBag, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import type { POSOrderType as POSOrderTypeValue } from "@/types/pos";
 
 interface Props {
   onSelect: (type: POSOrderTypeValue) => void;
-  onClose: () => void;
 }
 
 const options: { type: POSOrderTypeValue; label: string; icon: typeof UtensilsCrossed }[] = [
@@ -13,7 +12,7 @@ const options: { type: POSOrderTypeValue; label: string; icon: typeof UtensilsCr
   { type: "telephone", label: "Telephone", icon: Phone },
 ];
 
-export const POSOrderType = ({ onSelect, onClose }: Props) => {
+export const POSOrderType = ({ onSelect }: Props) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -21,13 +20,6 @@ export const POSOrderType = ({ onSelect, onClose }: Props) => {
       exit={{ opacity: 0, y: -20 }}
       className="flex flex-col items-center justify-center min-h-[80vh] px-4"
     >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 p-3 rounded-full hover:bg-secondary transition-colors"
-      >
-        <X className="h-6 w-6 text-foreground" />
-      </button>
-
       <h2 className="text-2xl font-bold text-foreground mb-8">Type de commande</h2>
 
       <div className="grid gap-4 w-full max-w-md">

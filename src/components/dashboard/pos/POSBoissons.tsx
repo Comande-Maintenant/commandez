@@ -1,32 +1,27 @@
-import { ArrowLeft, Minus, Plus } from "lucide-react";
 import { useMemo } from "react";
+import { ArrowLeft, Minus, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import type { DbMenuItem } from "@/types/database";
-import type { POSItem } from "@/types/pos";
+import type { POSDrinkItem } from "@/types/pos";
 
 interface Props {
-  upsellItems: POSItem[];
+  drinks: POSDrinkItem[];
   menuItems: DbMenuItem[];
-  onUpdateUpsell: (items: POSItem[]) => void;
+  onUpdateDrinks: (drinks: POSDrinkItem[]) => void;
   onNext: () => void;
   onBack: () => void;
 }
 
-const UPSELL_CATEGORIES = ["boissons", "desserts"];
-
-export const POSUpsell = ({ upsellItems, menuItems, onUpdateUpsell, onNext, onBack }: Props) => {
-  const filteredMenu = useMemo(
-    () =>
-      menuItems.filter((item) =>
-        UPSELL_CATEGORIES.some((cat) => item.category.toLowerCase().includes(cat))
-      ),
+export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack }: Props) => {
+  const drinkItems = useMemo(
+    () => menuItems.filter((item) => item.category.toLowerCase().includes("boisson")),
     [menuItems]
   );
 
-  const addItem = (menuItem: DbMenuItem) => {
-    const updated = [...upsellItems];
-    const existing = updated.findIndex((i) => i.menuItemId === menuItem.id);
+  const addDrink = (menuItem: DbMenuItem) => {
+    const updated = [...drinks];
+    const existing = updated.findIndex((d) => d.menuItemId === menuItem.id);
     if (existing >= 0) {
       updated[existing] = { ...updated[existing], quantity: updated[existing].quantity + 1 };
     } else {
@@ -35,24 +30,23 @@ export const POSUpsell = ({ upsellItems, menuItems, onUpdateUpsell, onNext, onBa
         name: menuItem.name,
         price: menuItem.price,
         quantity: 1,
-        category: menuItem.category,
       });
     }
-    onUpdateUpsell(updated);
+    onUpdateDrinks(updated);
   };
 
-  const updateQuantity = (itemIndex: number, delta: number) => {
-    const updated = [...upsellItems];
-    const newQty = updated[itemIndex].quantity + delta;
+  const updateQuantity = (index: number, delta: number) => {
+    const updated = [...drinks];
+    const newQty = updated[index].quantity + delta;
     if (newQty <= 0) {
-      updated.splice(itemIndex, 1);
+      updated.splice(index, 1);
     } else {
-      updated[itemIndex] = { ...updated[itemIndex], quantity: newQty };
+      updated[index] = { ...updated[index], quantity: newQty };
     }
-    onUpdateUpsell(updated);
+    onUpdateDrinks(updated);
   };
 
-  const upsellTotal = upsellItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const drinksTotal = drinks.reduce((sum, d) => sum + d.price * d.quantity, 0);
 
   return (
     <motion.div
@@ -66,22 +60,22 @@ export const POSUpsell = ({ upsellItems, menuItems, onUpdateUpsell, onNext, onBa
         <button onClick={onBack} className="p-2 rounded-full hover:bg-secondary transition-colors">
           <ArrowLeft className="h-5 w-5 text-foreground" />
         </button>
-        <h2 className="text-xl font-bold text-foreground">Boissons & Desserts</h2>
+        <h2 className="text-xl font-bold text-foreground">Boissons</h2>
       </div>
 
       {/* Items grid */}
       <div className="flex-1 overflow-y-auto px-4 py-3">
-        {filteredMenu.length === 0 ? (
-          <p className="text-center text-muted-foreground py-12">Aucun item dans ces categories</p>
+        {drinkItems.length === 0 ? (
+          <p className="text-center text-muted-foreground py-12">Aucune boisson dans le menu</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {filteredMenu.map((item) => {
-              const inCart = upsellItems.find((i) => i.menuItemId === item.id);
+            {drinkItems.map((item) => {
+              const inCart = drinks.find((d) => d.menuItemId === item.id);
               return (
                 <button
                   key={item.id}
-                  onClick={() => addItem(item)}
-                  className={`relative bg-card border rounded-2xl p-4 text-left hover:shadow-md transition-all active:scale-[0.97] min-h-[80px] ${
+                  onClick={() => addDrink(item)}
+                  className={`relative bg-card border-2 rounded-2xl p-4 text-left hover:shadow-md transition-all active:scale-[0.97] min-h-[80px] ${
                     inCart ? "border-foreground" : "border-border"
                   }`}
                 >
@@ -99,15 +93,15 @@ export const POSUpsell = ({ upsellItems, menuItems, onUpdateUpsell, onNext, onBa
         )}
       </div>
 
-      {/* Upsell recap */}
-      {upsellItems.length > 0 && (
+      {/* Recap */}
+      {drinks.length > 0 && (
         <div className="border-t border-border bg-card px-4 py-3">
           <div className="space-y-1 mb-2 max-h-24 overflow-y-auto">
-            {upsellItems.map((item, i) => (
-              <div key={item.menuItemId} className="flex items-center justify-between text-sm">
-                <span className="text-foreground">{item.quantity}x {item.name}</span>
+            {drinks.map((d, i) => (
+              <div key={d.menuItemId} className="flex items-center justify-between text-sm">
+                <span className="text-foreground">{d.quantity}x {d.name}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-foreground font-medium">{(item.price * item.quantity).toFixed(2)} €</span>
+                  <span className="text-foreground font-medium">{(d.price * d.quantity).toFixed(2)} €</span>
                   <button onClick={() => updateQuantity(i, -1)} className="p-1 rounded-full hover:bg-secondary">
                     <Minus className="h-3.5 w-3.5" />
                   </button>
@@ -118,7 +112,7 @@ export const POSUpsell = ({ upsellItems, menuItems, onUpdateUpsell, onNext, onBa
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground">Total extras : {upsellTotal.toFixed(2)} €</p>
+          <p className="text-sm text-muted-foreground">Total boissons : {drinksTotal.toFixed(2)} €</p>
         </div>
       )}
 
@@ -127,14 +121,13 @@ export const POSUpsell = ({ upsellItems, menuItems, onUpdateUpsell, onNext, onBa
         <Button
           variant="outline"
           className="flex-1 rounded-xl min-h-[56px] text-base"
-          onClick={onNext}
+          onClick={() => { onUpdateDrinks([]); onNext(); }}
         >
-          Passer
+          Pas de boisson
         </Button>
         <Button
           className="flex-1 rounded-xl min-h-[56px] text-base font-semibold"
           onClick={onNext}
-          disabled={upsellItems.length === 0}
         >
           Suivant
         </Button>
