@@ -8,6 +8,7 @@ import {
   ExternalLink,
   Loader2,
   ImageIcon,
+  Receipt,
 } from "lucide-react";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
@@ -37,12 +38,15 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
   const [saving, setSaving] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [qrSvg, setQrSvg] = useState("");
+  const [posQrDataUrl, setPosQrDataUrl] = useState("");
+  const [posQrSvg, setPosQrSvg] = useState("");
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [logoPreview, setLogoPreview] = useState(restaurant.image || "");
   const [coverPreview, setCoverPreview] = useState(restaurant.cover_image || "");
 
   const pageUrl = typeof window !== "undefined" ? `${window.location.origin}/${restaurant.slug}` : "";
+  const posUrl = typeof window !== "undefined" ? `${window.location.origin}/admin/${restaurant.slug}?tab=caisse` : "";
 
   const generateQR = useCallback(async () => {
     try {
@@ -59,10 +63,25 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
         color: { dark: primaryColor, light: "#ffffff" },
       });
       setQrSvg(svg);
+
+      // POS QR Code
+      const posDataUrl = await QRCode.toDataURL(posUrl, {
+        width: 512,
+        margin: 2,
+        color: { dark: "#1d4ed8", light: "#ffffff" },
+      });
+      setPosQrDataUrl(posDataUrl);
+      const posSvgStr = await QRCode.toString(posUrl, {
+        type: "svg",
+        width: 512,
+        margin: 2,
+        color: { dark: "#1d4ed8", light: "#ffffff" },
+      });
+      setPosQrSvg(posSvgStr);
     } catch (e) {
       console.error("QR generation error:", e);
     }
-  }, [pageUrl, primaryColor]);
+  }, [pageUrl, posUrl, primaryColor]);
 
   useEffect(() => { generateQR(); }, [generateQR]);
 
@@ -378,6 +397,59 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
                 <FileDown className="h-4 w-4" />PNG
               </Button>
               <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={downloadQrSvg}>
+                <FileDown className="h-4 w-4" />SVG
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* QR Code Caisse */}
+      <section className="bg-card rounded-2xl border border-border p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Receipt className="h-5 w-5 text-foreground" />
+          <h3 className="text-base font-semibold text-foreground">QR Code Caisse</h3>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center gap-6">
+          {posQrDataUrl && (
+            <div className="bg-white p-4 rounded-xl border border-border">
+              <img src={posQrDataUrl} alt="QR Code Caisse" className="w-48 h-48" />
+            </div>
+          )}
+          <div className="flex-1 space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Ce QR code ouvre directement la caisse sur tablette :<br />
+              <span className="font-medium text-foreground">{posUrl}</span>
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl gap-1.5"
+                onClick={() => {
+                  if (!posQrDataUrl) return;
+                  const link = document.createElement("a");
+                  link.download = `qr-caisse-${restaurant.slug}.png`;
+                  link.href = posQrDataUrl;
+                  link.click();
+                }}
+              >
+                <FileDown className="h-4 w-4" />PNG
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl gap-1.5"
+                onClick={() => {
+                  if (!posQrSvg) return;
+                  const blob = new Blob([posQrSvg], { type: "image/svg+xml" });
+                  const link = document.createElement("a");
+                  link.download = `qr-caisse-${restaurant.slug}.svg`;
+                  link.href = URL.createObjectURL(blob);
+                  link.click();
+                }}
+              >
                 <FileDown className="h-4 w-4" />SVG
               </Button>
             </div>

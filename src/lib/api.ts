@@ -46,7 +46,9 @@ export async function createOrder(order: {
   customer_name: string;
   customer_phone: string;
   customer_address?: string;
-  order_type: "collect" | "delivery";
+  order_type: string;
+  source?: string;
+  covers?: number | null;
   items: any;
   subtotal: number;
   delivery_fee: number;

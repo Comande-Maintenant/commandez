@@ -116,6 +116,8 @@ export type Database = {
           order_number: number
           order_type: string
           restaurant_id: string
+          source: string | null
+          covers: number | null
           status: string
           subtotal: number
           total: number
@@ -133,6 +135,8 @@ export type Database = {
           order_number?: number
           order_type: string
           restaurant_id: string
+          source?: string | null
+          covers?: number | null
           status?: string
           subtotal: number
           total: number
@@ -150,6 +154,8 @@ export type Database = {
           order_number?: number
           order_type?: string
           restaurant_id?: string
+          source?: string | null
+          covers?: number | null
           status?: string
           subtotal?: number
           total?: number

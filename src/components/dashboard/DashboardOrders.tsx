@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Phone, MapPin, ShoppingBag, ChevronRight, Package, WifiOff } from "lucide-react";
+import { Phone, MapPin, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed } from "lucide-react";
 import { fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
@@ -181,9 +181,12 @@ export const DashboardOrders = ({ restaurant }: Props) => {
           return (
             <motion.div key={order.id} layout initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="bg-card rounded-2xl border border-border p-4 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <span className="text-lg font-bold text-foreground">#{order.order_number}</span>
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.color}`}>{cfg.label}</span>
+                  {(order as any).source === "pos" && (
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Caisse</span>
+                  )}
                 </div>
                 <span className="text-xs text-muted-foreground">{timeSince(order.created_at)}</span>
               </div>
@@ -191,8 +194,14 @@ export const DashboardOrders = ({ restaurant }: Props) => {
                 <span className="font-medium text-foreground">{order.customer_name}</span>
                 <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{order.customer_phone}</span>
                 <span className="flex items-center gap-1">
-                  {order.order_type === "collect" ? <><ShoppingBag className="h-3.5 w-3.5" /> Click & Collect</> : <><MapPin className="h-3.5 w-3.5" /> Livraison</>}
+                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> A emporter</>}
+                  {order.order_type === "delivery" && <><MapPin className="h-3.5 w-3.5" /> Livraison</>}
+                  {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> Sur place</>}
+                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> Telephone</>}
                 </span>
+                {(order as any).covers && (
+                  <span className="text-xs text-muted-foreground">({(order as any).covers} couvert{(order as any).covers > 1 ? "s" : ""})</span>
+                )}
               </div>
               <div className="space-y-1 mb-3">
                 {orderItems.map((item: any, i: number) => (

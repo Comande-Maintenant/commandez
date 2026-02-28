@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, ClipboardList, UtensilsCrossed, Palette, Settings, Loader2, Copy, Check, BarChart3 } from "lucide-react";
+import { ArrowLeft, ClipboardList, UtensilsCrossed, Palette, Settings, Loader2, Copy, Check, BarChart3, Receipt } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
@@ -9,6 +9,7 @@ import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
 import { DashboardMaPage } from "@/components/dashboard/DashboardMaPage";
 import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
+import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -17,6 +18,7 @@ const tabs = [
   { id: "carte", label: "Ma Carte", icon: UtensilsCrossed },
   { id: "page", label: "Ma Page", icon: Palette },
   { id: "settings", label: "Parametres", icon: Settings },
+  { id: "caisse", label: "Caisse", icon: Receipt },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -25,7 +27,12 @@ const AdminPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabId>("orders");
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    if (tab && tabs.some((t) => t.id === tab)) return tab as TabId;
+    return "orders";
+  });
   const [showStats, setShowStats] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -138,6 +145,7 @@ const AdminPage = () => {
             {activeTab === "carte" && <DashboardMaCarte restaurant={restaurant} />}
             {activeTab === "page" && <DashboardMaPage restaurant={restaurant} />}
             {activeTab === "settings" && <DashboardParametres restaurant={restaurant} />}
+            {activeTab === "caisse" && <DashboardPOS restaurant={restaurant} onClose={() => setActiveTab("orders")} />}
           </motion.div>
         </AnimatePresence>
       </main>
