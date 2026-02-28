@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
-import { fetchMenuItems, createOrder } from "@/lib/api";
-import type { DbRestaurant, DbMenuItem } from "@/types/database";
+import { ChevronDown, Check } from "lucide-react";
+import { fetchMenuItems, createOrder, fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
+import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import type { POSOrderType as POSOrderTypeValue, POSScreen, POSPersonOrder, POSItem } from "@/types/pos";
 import { POSOrderType } from "./POSOrderType";
 import { POSCovers } from "./POSCovers";
@@ -9,11 +10,11 @@ import { POSItemBuilder } from "./POSItemBuilder";
 import { POSUpsell } from "./POSUpsell";
 import { POSRecap } from "./POSRecap";
 import { POSSuccess } from "./POSSuccess";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface Props {
   restaurant: DbRestaurant;
-  onClose?: () => void;
 }
 
 const initialState = {
@@ -29,18 +30,40 @@ const initialState = {
   submitting: false,
 };
 
-export const DashboardPOS = ({ restaurant, onClose }: Props) => {
+export const DashboardPOS = ({ restaurant }: Props) => {
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [state, setState] = useState(initialState);
+  const [readyOrders, setReadyOrders] = useState<DbOrder[]>([]);
+  const [readyExpanded, setReadyExpanded] = useState(true);
 
   useEffect(() => {
     fetchMenuItems(restaurant.id).then(setMenuItems);
   }, [restaurant.id]);
 
+  // Fetch and subscribe to ready orders for "A encaisser" panel
+  useEffect(() => {
+    fetchOrders(restaurant.id).then((orders) => {
+      setReadyOrders(orders.filter((o) => o.status === "ready"));
+    });
+
+    const unsub = subscribeToOrders(restaurant.id, (order) => {
+      setReadyOrders((prev) => {
+        if (order.status === "ready") {
+          const exists = prev.find((o) => o.id === order.id);
+          if (exists) return prev.map((o) => (o.id === order.id ? order : o));
+          return [order, ...prev];
+        }
+        // Remove if status changed away from ready
+        return prev.filter((o) => o.id !== order.id);
+      });
+    });
+
+    return unsub;
+  }, [restaurant.id]);
+
   const categories = useMemo(
     () => {
       const cats = restaurant.categories || [];
-      // Filter to only categories that have enabled items
       const itemCats = new Set(menuItems.map((i) => i.category));
       return cats.filter((c) => itemCats.has(c));
     },
@@ -80,7 +103,6 @@ export const DashboardPOS = ({ restaurant, onClose }: Props) => {
   const handleSubmit = async () => {
     setState((s) => ({ ...s, submitting: true }));
     try {
-      // Build flat items array for the order
       const allItems: any[] = [];
       for (const person of state.persons) {
         for (const item of person.items) {
@@ -135,18 +157,64 @@ export const DashboardPOS = ({ restaurant, onClose }: Props) => {
     }
   };
 
-  const handleClose = () => {
-    if (onClose) onClose();
+  const markAsDone = async (orderId: string) => {
+    try {
+      await updateOrderStatus(orderId, "done");
+      setReadyOrders((prev) => prev.filter((o) => o.id !== orderId));
+      toast.success("Commande terminee");
+    } catch {
+      toast.error("Erreur lors de la mise a jour");
+    }
   };
 
   return (
     <div className="relative">
+      {/* A encaisser panel - visible on order_type screen */}
+      {state.screen === "order_type" && readyOrders.length > 0 && (
+        <div className="mb-6 bg-card rounded-2xl border border-border overflow-hidden">
+          <button
+            onClick={() => setReadyExpanded(!readyExpanded)}
+            className="w-full flex items-center justify-between px-4 py-3 hover:bg-secondary/50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-foreground">A encaisser</span>
+              <span className="bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))] text-xs font-bold px-2 py-0.5 rounded-full">
+                {readyOrders.length}
+              </span>
+            </div>
+            <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${readyExpanded ? "rotate-180" : ""}`} />
+          </button>
+          {readyExpanded && (
+            <div className="px-4 pb-3 space-y-2">
+              {readyOrders.map((order) => (
+                <div key={order.id} className="flex items-center justify-between bg-secondary/50 rounded-xl px-3 py-2">
+                  <div className="min-w-0">
+                    <span className="text-sm font-bold text-foreground">#{order.order_number}</span>
+                    <span className="text-sm text-muted-foreground ml-2">{order.customer_name}</span>
+                    <span className="text-sm font-medium text-foreground ml-2">{Number(order.total).toFixed(2)} EUR</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="rounded-xl gap-1 min-h-[36px] flex-shrink-0"
+                    onClick={() => markAsDone(order.id)}
+                  >
+                    <Check className="h-4 w-4" />
+                    Paye
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       <AnimatePresence mode="wait">
         {state.screen === "order_type" && (
           <POSOrderType
             key="order_type"
             onSelect={handleSelectOrderType}
-            onClose={handleClose}
+            onClose={() => {}}
           />
         )}
         {state.screen === "covers" && (

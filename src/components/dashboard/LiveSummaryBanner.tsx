@@ -7,9 +7,10 @@ interface Props {
   alerts: VisitorAlert[];
   orderCounts: { newCount: number; preparingCount: number };
   onNavigate: (tab: string) => void;
+  compact?: boolean;
 }
 
-export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate }: Props) => {
+export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, compact = false }: Props) => {
   const activeVisitors = visitors.filter((v) => v.activity === "active").length;
   const cartsWithItems = visitors.filter((v) => v.cart_count > 0);
   const totalCartValue = cartsWithItems.reduce((s, v) => s + v.cart_total, 0);
@@ -23,12 +24,25 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate }:
   const currentIntensity = isLunch ? pattern.midi : isDinner ? pattern.soir : Math.min(pattern.midi, pattern.soir) * 0.3;
   const demandLabel = getIntensityLabel(currentIntensity);
 
+  if (compact) {
+    return (
+      <div className="bg-card rounded-xl border border-border px-3 py-2 mb-4">
+        <div className="flex items-center gap-4 text-xs">
+          <span>En ligne: {visitors.length}</span>
+          <span>Paniers: {cartsWithItems.length}</span>
+          <span>En prep: {orderCounts.preparingCount}</span>
+          <span className="font-semibold">{demandLabel}</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-card rounded-2xl border border-border p-3 mb-4">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Visitors online */}
         <button
-          onClick={() => onNavigate("orders")}
+          onClick={() => onNavigate("en-direct")}
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-secondary/50 transition-colors text-left"
         >
           <div className={`p-2 rounded-lg ${hasRush ? "bg-red-100" : "bg-emerald-100"}`}>
@@ -47,7 +61,7 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate }:
 
         {/* Active carts */}
         <button
-          onClick={() => onNavigate("orders")}
+          onClick={() => onNavigate("en-direct")}
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-secondary/50 transition-colors text-left"
         >
           <div className="p-2 rounded-lg bg-amber-100">
@@ -66,7 +80,7 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate }:
 
         {/* Preparing */}
         <button
-          onClick={() => onNavigate("orders")}
+          onClick={() => onNavigate("cuisine")}
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-secondary/50 transition-colors text-left"
         >
           <div className="p-2 rounded-lg bg-blue-100">
@@ -85,7 +99,7 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate }:
 
         {/* Current demand */}
         <button
-          onClick={() => onNavigate("orders")}
+          onClick={() => onNavigate("en-direct")}
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-secondary/50 transition-colors text-left"
         >
           <div className="p-2 rounded-lg bg-purple-100">
