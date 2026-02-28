@@ -26,9 +26,10 @@ const filterTabs: { id: OrderStatus | "all"; label: string }[] = [
 
 interface Props {
   restaurant: DbRestaurant;
+  onNewOrderSound?: () => void;
 }
 
-export const DashboardOrders = ({ restaurant }: Props) => {
+export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
@@ -51,10 +52,13 @@ export const DashboardOrders = ({ restaurant }: Props) => {
     loadOrders();
     const unsub = subscribeToOrders(restaurant.id, (newOrder) => {
       setOrders((prev) => {
-        // Update existing or prepend new
         const exists = prev.find((o) => o.id === newOrder.id);
         if (exists) {
           return prev.map((o) => (o.id === newOrder.id ? newOrder : o));
+        }
+        // New order - play notification sound
+        if (newOrder.status === "new" && onNewOrderSound) {
+          onNewOrderSound();
         }
         return [newOrder, ...prev];
       });

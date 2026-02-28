@@ -10,6 +10,9 @@ import {
   Loader2,
   AlertTriangle,
   ShoppingBag,
+  Volume2,
+  VolumeX,
+  Play,
 } from "lucide-react";
 import { updateRestaurant, fetchRestaurantHours, upsertRestaurantHours } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
@@ -20,8 +23,21 @@ import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface SoundControls {
+  audioUnlocked: boolean;
+  unlockAudio: () => void;
+  play: () => void;
+  testPlay: () => void;
+  volume: number;
+  setVolume: (v: number) => void;
+  muted: boolean;
+  setMuted: (m: boolean) => void;
+  toggleMuted: () => void;
+}
+
 interface Props {
   restaurant: DbRestaurant;
+  sound?: SoundControls;
 }
 
 const availabilityModes = [
@@ -42,16 +58,10 @@ const paymentOptions = [
   { id: "apple_google_pay", label: "Apple Pay / Google Pay" },
 ];
 
-const notificationSounds = [
-  { id: "default", label: "Par defaut" },
-  { id: "bip", label: "Bip" },
-  { id: "bell", label: "Cloche" },
-  { id: "ding", label: "Ding" },
-];
 
 const orderedDays = [1, 2, 3, 4, 5, 6, 0];
 
-export const DashboardParametres = ({ restaurant }: Props) => {
+export const DashboardParametres = ({ restaurant, sound }: Props) => {
   const [saving, setSaving] = useState(false);
   const [isAccepting, setIsAccepting] = useState(restaurant.is_accepting_orders);
   const [availabilityMode, setAvailabilityMode] = useState(restaurant.availability_mode || "manual");
@@ -60,7 +70,6 @@ export const DashboardParametres = ({ restaurant }: Props) => {
   const [estimatedTime, setEstimatedTime] = useState(restaurant.estimated_time || "20-30 min");
   const [paymentMethods, setPaymentMethods] = useState<string[]>(restaurant.payment_methods ?? []);
   const [prepTime, setPrepTime] = useState(restaurant.prep_time_config ?? { default_minutes: 20, per_item_minutes: 3, max_minutes: 90 });
-  const [notificationSound, setNotificationSound] = useState(restaurant.notification_sound || "default");
   const [phoneNumber, setPhoneNumber] = useState(restaurant.restaurant_phone || "");
   const [schedule, setSchedule] = useState<ScheduleDay[]>([]);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
@@ -122,7 +131,6 @@ export const DashboardParametres = ({ restaurant }: Props) => {
         estimated_time: estimatedTime,
         payment_methods: paymentMethods,
         prep_time_config: prepTime,
-        notification_sound: notificationSound,
         restaurant_phone: phoneNumber,
       } as any);
 
@@ -319,18 +327,59 @@ export const DashboardParametres = ({ restaurant }: Props) => {
           <h3 className="text-base font-semibold text-foreground">Notifications</h3>
         </div>
 
-        <div>
-          <label className="text-sm text-muted-foreground">Son de notification</label>
-          <select
-            value={notificationSound}
-            onChange={(e) => setNotificationSound(e.target.value)}
-            className="mt-1 w-full h-10 rounded-xl border border-input bg-background px-3 text-sm"
-          >
-            {notificationSounds.map((s) => (
-              <option key={s.id} value={s.id}>{s.label}</option>
-            ))}
-          </select>
-        </div>
+        {sound ? (
+          <div className="space-y-4">
+            {/* Mute toggle */}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-foreground">Son des notifications</p>
+                <p className="text-xs text-muted-foreground">{sound.muted ? "Desactive" : "Joue un son a chaque nouvelle commande"}</p>
+              </div>
+              <Switch checked={!sound.muted} onCheckedChange={(val) => sound.setMuted(!val)} />
+            </div>
+
+            {/* Volume slider */}
+            {!sound.muted && (
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-sm text-muted-foreground flex items-center gap-1.5">
+                    {sound.volume === 0 ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                    Volume
+                  </label>
+                  <span className="text-sm font-medium text-foreground">{sound.volume}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={sound.volume}
+                  onChange={(e) => sound.setVolume(parseInt(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+            )}
+
+            {/* Test button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={sound.testPlay}
+              className="rounded-xl gap-2"
+            >
+              <Play className="h-3.5 w-3.5" />
+              Tester le son
+            </Button>
+
+            {!sound.audioUnlocked && (
+              <p className="text-xs text-amber-600">
+                Le son sera active au premier appui sur "Tester le son" ou via le bouton en haut de page.
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">Chargement...</p>
+        )}
       </section>
 
       {/* Save button */}

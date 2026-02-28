@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX } from "lucide-react";
+import { useNotificationSound } from "@/hooks/useNotificationSound";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug, updateRestaurant } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
@@ -46,6 +47,7 @@ const AdminPage = () => {
     return "cuisine";
   });
   const [blurred, setBlurred] = useState(() => localStorage.getItem("dashboard-blur") === "true");
+  const sound = useNotificationSound();
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
   const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
 
@@ -131,6 +133,26 @@ const AdminPage = () => {
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              {/* Sound toggle (cuisine view) */}
+              {isOpsView(activeView) && (
+                <button
+                  onClick={() => {
+                    if (!sound.audioUnlocked) {
+                      sound.unlockAudio();
+                    }
+                    sound.toggleMuted();
+                  }}
+                  className="p-2 rounded-xl hover:bg-secondary transition-colors"
+                  title={sound.muted ? "Activer le son" : "Couper le son"}
+                >
+                  {sound.muted || !sound.audioUnlocked ? (
+                    <VolumeX className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Volume2 className="h-4 w-4 text-foreground" />
+                  )}
+                </button>
+              )}
+
               {/* Blur toggle */}
               <button
                 onClick={toggleBlur}
@@ -158,6 +180,17 @@ const AdminPage = () => {
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
+          {/* Audio unlock banner for mobile */}
+          {isOpsView(activeView) && !sound.audioUnlocked && (
+            <button
+              onClick={sound.unlockAudio}
+              className="w-full mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center gap-2 text-sm font-medium text-amber-800 hover:bg-amber-100 transition-colors"
+            >
+              <Volume2 className="h-4 w-4" />
+              Appuyez pour activer le son des notifications
+            </button>
+          )}
+
           {isOpsView(activeView) && activeView !== "caisse" && (
             <LiveSummaryBanner
               visitors={visitors}
@@ -176,12 +209,12 @@ const AdminPage = () => {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
             >
-              {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} />}
+              {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} onNewOrderSound={sound.play} />}
               {activeView === "caisse" && <DashboardPOS restaurant={restaurant} />}
               {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} />}
               {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} />}
               {activeView === "page" && <DashboardMaPage restaurant={restaurant} />}
-              {activeView === "parametres" && <DashboardParametres restaurant={restaurant} />}
+              {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} />}
               {activeView === "stats" && <DashboardStats restaurant={restaurant} />}
               {activeView === "gerer" && <GererMenu onViewChange={handleViewChange} />}
             </motion.div>
