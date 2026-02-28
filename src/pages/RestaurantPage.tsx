@@ -16,7 +16,7 @@ import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
 
 const DEFAULT_PRIMARY = "#FF6B00";
-const DEFAULT_BG = "#FFF8F0";
+const UNIVERSAL_BG = "#FFF8F0";
 
 function parseHexToHSL(hex: string): { h: number; s: number; l: number } {
   let r = 0, g = 0, b = 0;
@@ -218,7 +218,7 @@ const RestaurantPage = () => {
   }, []);
 
   const primary = useMemo(() => softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color]);
-  const bg = restaurant?.bg_color || DEFAULT_BG;
+  const bg = UNIVERSAL_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
   const primaryDark = useMemo(() => darken(primary, 0.15), [primary]);
 
@@ -282,13 +282,13 @@ const RestaurantPage = () => {
 
   return (
     <div className="relative min-h-screen pb-28" dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
-      {/* Full-page background gradient: immersive primary -> bg */}
+      {/* Full-page background gradient: warm beige only, no restaurant color */}
       <div
         className="absolute inset-x-0 top-0 pointer-events-none"
         style={{
           height: "max(100vh, 900px)",
           zIndex: 0,
-          background: `linear-gradient(to bottom, ${primary} 0%, ${hexToRgba(primary, 0.7)} 20%, ${hexToRgba(primary, 0.35)} 35%, ${hexToRgba(primary, 0.15)} 50%, ${hexToRgba(primary, 0.05)} 65%, ${bg} 85%)`,
+          background: `linear-gradient(to bottom, #F5EDE4 0%, #FAF3EB 30%, ${UNIVERSAL_BG} 70%)`,
         }}
       />
 
@@ -303,7 +303,7 @@ const RestaurantPage = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(to bottom, transparent 40%, ${primary} 100%)`
+            background: `linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.25) 70%, #F5EDE4 100%)`
           }}
         />
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
