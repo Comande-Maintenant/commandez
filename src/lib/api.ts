@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
+import type { DbRestaurant, DbMenuItem, DbOrder, DbTablet } from "@/types/database";
 
 export async function fetchRestaurants(): Promise<DbRestaurant[]> {
   const { data, error } = await supabase
@@ -288,6 +288,42 @@ export async function fetchActiveOrderCount(restaurantId: string): Promise<numbe
     .in("status", ["new", "preparing"]);
   if (error) return 0;
   return count ?? 0;
+}
+
+// --- Tablets ---
+
+export async function fetchTablets(restaurantId: string): Promise<DbTablet[]> {
+  const { data, error } = await supabase
+    .from("restaurant_tablets")
+    .select("*")
+    .eq("restaurant_id", restaurantId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as DbTablet[];
+}
+
+export async function insertTablet(tablet: {
+  restaurant_id: string;
+  serial_number: string;
+  name?: string;
+  usage_type: string;
+  notes?: string;
+}): Promise<DbTablet> {
+  const { data, error } = await supabase
+    .from("restaurant_tablets")
+    .insert(tablet)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as unknown as DbTablet;
+}
+
+export async function updateTablet(id: string, updates: Partial<DbTablet>) {
+  const { error } = await supabase
+    .from("restaurant_tablets")
+    .update(updates)
+    .eq("id", id);
+  if (error) throw error;
 }
 
 export function subscribeToOrders(restaurantId: string, callback: (order: DbOrder) => void) {

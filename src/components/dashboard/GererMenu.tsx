@@ -1,6 +1,6 @@
-import { UtensilsCrossed, Palette, QrCode, Settings, BarChart3 } from "lucide-react";
+import { UtensilsCrossed, Palette, QrCode, Tablet, Settings, BarChart3 } from "lucide-react";
 
-type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "parametres" | "stats" | "gerer";
+type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "tablettes" | "parametres" | "stats" | "gerer";
 
 interface Props {
   onViewChange: (view: DashboardView) => void;
@@ -10,6 +10,7 @@ const items = [
   { id: "carte" as DashboardView, label: "Ma Carte", desc: "Modifier les plats, prix, categories", icon: UtensilsCrossed },
   { id: "page" as DashboardView, label: "Ma Page", desc: "Logo, couleurs, informations", icon: Palette },
   { id: "qrcodes" as DashboardView, label: "QR Codes", desc: "Generer et telecharger vos QR codes", icon: QrCode },
+  { id: "tablettes" as DashboardView, label: "Mes tablettes", desc: "Gerer vos tablettes", icon: Tablet },
   { id: "parametres" as DashboardView, label: "Parametres", desc: "Horaires, modes, paiement", icon: Settings },
   { id: "stats" as DashboardView, label: "Statistiques", desc: "Historique, tendances, exports", icon: BarChart3 },
 ];

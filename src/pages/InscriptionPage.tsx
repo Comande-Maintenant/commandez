@@ -197,6 +197,11 @@ const InscriptionPage = () => {
         await createMenuItemsFromAnalysis(restaurant.id, menuCategories);
       }
 
+      // Send welcome email (fire-and-forget, non-blocking)
+      supabase.functions.invoke("send-welcome-email", {
+        body: { restaurantName: restaurantData?.name ?? '', slug, email },
+      }).catch((err) => console.warn("[welcome-email] Failed to send:", err));
+
       setCreatedSlug(slug);
       setCreatedName(restaurantData?.name ?? '');
       setStep(6);

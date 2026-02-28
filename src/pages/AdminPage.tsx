@@ -10,6 +10,7 @@ import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
 import { DashboardMaPage } from "@/components/dashboard/DashboardMaPage";
 import { DashboardQRCodes } from "@/components/dashboard/DashboardQRCodes";
+import { DashboardTablettes } from "@/components/dashboard/DashboardTablettes";
 import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
 import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
 import { DashboardEnDirect } from "@/components/dashboard/DashboardEnDirect";
@@ -22,9 +23,9 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
 
-type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "parametres" | "stats" | "gerer";
+type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "tablettes" | "parametres" | "stats" | "gerer";
 
-const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "parametres", "stats", "gerer"];
+const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer"];
 
 function isValidView(v: string): v is DashboardView {
   return validViews.includes(v as DashboardView);
@@ -259,6 +260,7 @@ const AdminPage = () => {
               {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} />}
               {activeView === "page" && <DashboardMaPage restaurant={restaurant} />}
               {activeView === "qrcodes" && <DashboardQRCodes restaurant={restaurant} />}
+              {activeView === "tablettes" && <DashboardTablettes restaurant={restaurant} />}
               {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} />}
               {activeView === "stats" && <DashboardStats restaurant={restaurant} />}
               {activeView === "gerer" && <GererMenu onViewChange={handleViewChange} />}

@@ -92,6 +92,19 @@ export interface DbMenuItem {
   translations?: Record<string, { name: string; description?: string }>;
 }
 
+export interface DbTablet {
+  id: string;
+  restaurant_id: string;
+  serial_number: string;
+  name: string;
+  usage_type: 'cuisine' | 'caisse' | 'service_client' | 'autre';
+  status: 'active' | 'inactive' | 'maintenance';
+  activated_at: string;
+  deactivated_at: string | null;
+  notes: string;
+  created_at: string;
+}
+
 export interface DbOrder {
   id: string;
   restaurant_id: string;

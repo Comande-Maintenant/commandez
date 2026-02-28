@@ -42,9 +42,12 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
   };
 
   const generateQR = useCallback(async () => {
+    // Error correction level H (30% redundancy) to support future logo overlay
+    const ecLevel = "H" as const;
     try {
       // Main QR 512px
       const dataUrl = await QRCode.toDataURL(pageUrl, {
+        errorCorrectionLevel: ecLevel,
         width: 512,
         margin: 2,
         color: { dark: primaryColor, light: "#ffffff" },
@@ -53,6 +56,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
 
       // Main QR HD 1024px
       const hdDataUrl = await QRCode.toDataURL(pageUrl, {
+        errorCorrectionLevel: ecLevel,
         width: 1024,
         margin: 2,
         color: { dark: primaryColor, light: "#ffffff" },
@@ -60,6 +64,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       setQrHdDataUrl(hdDataUrl);
 
       const svg = await QRCode.toString(pageUrl, {
+        errorCorrectionLevel: ecLevel,
         type: "svg",
         width: 512,
         margin: 2,
@@ -69,12 +74,14 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
 
       // POS QR Code
       const posDataUrl = await QRCode.toDataURL(posUrl, {
+        errorCorrectionLevel: ecLevel,
         width: 512,
         margin: 2,
         color: { dark: "#1d4ed8", light: "#ffffff" },
       });
       setPosQrDataUrl(posDataUrl);
       const posSvgStr = await QRCode.toString(posUrl, {
+        errorCorrectionLevel: ecLevel,
         type: "svg",
         width: 512,
         margin: 2,
@@ -84,12 +91,14 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
 
       // Packaging QR 300px
       const packDataUrl = await QRCode.toDataURL(pageUrl, {
+        errorCorrectionLevel: ecLevel,
         width: 300,
         margin: 1,
         color: { dark: "#000000", light: "#ffffff" },
       });
       setPackQrDataUrl(packDataUrl);
       const packSvgStr = await QRCode.toString(pageUrl, {
+        errorCorrectionLevel: ecLevel,
         type: "svg",
         width: 300,
         margin: 1,
