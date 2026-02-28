@@ -10,7 +10,6 @@ import { CartSheet } from "@/components/CartSheet";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
-import { CustomOrderBuilder } from "@/components/CustomOrderBuilder";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
@@ -273,9 +272,7 @@ const RestaurantPage = () => {
   const payments = restaurant.payment_methods ?? [];
 
   const activeCategories = categories.filter((cat) =>
-    cat === "Personnalisation" && restaurant.customization_config?.enabled
-      ? true
-      : menuItems.some((m) => m.category === cat)
+    cat !== "Personnalisation" && menuItems.some((m) => m.category === cat)
   );
 
   const initial = restaurant.name?.charAt(0)?.toUpperCase() || "R";
@@ -509,23 +506,6 @@ const RestaurantPage = () => {
             {/* Menu Sections */}
             <div className="mt-6 space-y-8">
               {activeCategories.map((cat) => {
-                // Personnalisation category: render the custom order builder
-                if (cat === "Personnalisation" && restaurant.customization_config?.enabled) {
-                  return (
-                    <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} data-category={cat} className="scroll-mt-20">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{tCategory(cat, catTranslations)}</h3>
-                      <CustomOrderBuilder
-                        config={restaurant.customization_config}
-                        restaurantSlug={restaurant.slug}
-                        restaurantId={restaurant.id}
-                        primaryColor={primary}
-                        primaryLight={primaryLight}
-                        primaryDark={primaryDark}
-                      />
-                    </div>
-                  );
-                }
-
                 const catItems = menuItems.filter((m) => m.category === cat);
                 if (catItems.length === 0) return null;
                 return (
