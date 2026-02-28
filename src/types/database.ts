@@ -111,6 +111,7 @@ export interface DbOrder {
   order_number: number;
   customer_name: string;
   customer_phone: string;
+  customer_email: string;
   order_type: string;
   source: string;
   covers: number | null;
@@ -121,6 +122,40 @@ export interface DbOrder {
   notes: string;
   client_ip: string | null;
   pickup_time: string | null;
+  accepted_at: string | null;
+  ready_at: string | null;
+  completed_at: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface DbCustomer {
+  id: string;
+  restaurant_id: string;
+  customer_phone: string;
+  customer_name: string;
+  customer_email: string;
+  first_order_at: string | null;
+  last_order_at: string | null;
+  total_orders: number;
+  total_spent: number;
+  average_basket: number;
+  favorite_items: string[];
+  last_items: string[];
+  is_banned: boolean;
+  banned_at: string | null;
+  banned_reason: string;
+  ban_expires_at: string | null;
+  banned_ip: string;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbOwner {
+  id: string;
+  email: string;
+  phone: string;
+  role: 'owner' | 'super_admin';
+  created_at: string;
 }

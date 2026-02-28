@@ -12,6 +12,7 @@ import OrderPage from "./pages/OrderPage";
 import AdminPage from "./pages/AdminPage";
 import InscriptionPage from "./pages/InscriptionPage";
 import SuiviPage from "./pages/SuiviPage";
+import SuperAdminPage from "./pages/SuperAdminPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/order" element={<OrderPage />} />
             <Route path="/suivi/:orderId" element={<SuiviPage />} />
             <Route path="/admin/:slug" element={<AdminPage />} />
+            <Route path="/super-admin" element={<SuperAdminPage />} />
             <Route path="/:slug" element={<RestaurantPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

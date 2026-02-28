@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchRestaurantBySlug, fetchMenuItems, incrementDeactivationVisits, fetchActiveOrderCount } from "@/lib/api";
+import { fetchRestaurantBySlug, fetchMenuItems, incrementDeactivationVisits, fetchActiveOrderCount, isCustomerBanned } from "@/lib/api";
 import { checkRestaurantAvailability, canPlaceOrder } from "@/lib/schedule";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
 import { MenuItemCard } from "@/components/MenuItemCard";
@@ -121,6 +121,8 @@ const RestaurantPage = () => {
   const [loading, setLoading] = useState(true);
   const [activeOrderCount, setActiveOrderCount] = useState(0);
   const [lastOrderItems, setLastOrderItems] = useState<any[] | null>(null);
+  const [customerName, setCustomerName] = useState<string | null>(null);
+  const [customerBanned, setCustomerBanned] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [cartOpen, setCartOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -159,6 +161,33 @@ const RestaurantPage = () => {
       setLoading(false);
     });
   }, [slug]);
+
+  // Read customer identity from localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("cm_customer");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.name) setCustomerName(saved.name);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  // Check ban status
+  useEffect(() => {
+    if (!restaurant) return;
+    try {
+      const raw = localStorage.getItem("cm_customer");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.phone) {
+          isCustomerBanned(restaurant.id, saved.phone, saved.email).then((res) => {
+            if (res.banned) setCustomerBanned(true);
+          }).catch(() => {});
+        }
+      }
+    } catch { /* ignore */ }
+  }, [restaurant]);
 
   // Check for active order in localStorage
   useEffect(() => {
@@ -290,6 +319,29 @@ const RestaurantPage = () => {
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
           <p className="text-muted-foreground text-sm">Ce restaurant n'est plus disponible pour le moment.</p>
+          <Link to="/" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
+            Retour
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Banned customer
+  if (customerBanned) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center max-w-sm mx-auto px-4">
+          {restaurant.image && (
+            <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
+          )}
+          <h1 className="text-xl font-bold text-foreground mb-2">Commande impossible</h1>
+          <p className="text-muted-foreground text-sm">
+            Votre acces aux commandes a ete suspendu.
+            {restaurant.restaurant_phone && (
+              <> Contactez le restaurant au {restaurant.restaurant_phone} pour plus d'informations.</>
+            )}
+          </p>
           <Link to="/" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
             Retour
           </Link>
@@ -511,6 +563,25 @@ const RestaurantPage = () => {
             )}
           </div>
         </motion.div>
+
+        {/* Customer recognition banner */}
+        {customerName && !activeOrderId && (
+          <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-secondary/80 border border-border">
+            <p className="text-sm text-foreground">
+              Bonjour <span className="font-semibold">{customerName}</span> !
+            </p>
+            <button
+              onClick={() => {
+                localStorage.removeItem("cm_customer");
+                setCustomerName(null);
+                window.location.reload();
+              }}
+              className="text-xs text-muted-foreground underline hover:text-foreground"
+            >
+              Pas vous ? Changer
+            </button>
+          </div>
+        )}
 
         {/* Active order banner */}
         {activeOrderId && (

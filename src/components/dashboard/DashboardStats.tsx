@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts";
-import { TrendingUp, ShoppingBag, Receipt, Euro } from "lucide-react";
+import { TrendingUp, ShoppingBag, Receipt, Euro, Clock, Flame, Trophy } from "lucide-react";
 import { fetchOrders } from "@/lib/api";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,11 +58,67 @@ export const DashboardStats = ({ restaurant }: Props) => {
   const stats = useMemo(() => {
     const start = startOfPeriod(period);
     const filtered = orders.filter((o) => new Date(o.created_at) >= start);
-    const completed = filtered.filter((o) => o.status !== "done" || true); // all orders count
-    const revenue = completed.reduce((s, o) => s + Number(o.total), 0);
-    const count = completed.length;
+    const revenue = filtered.reduce((s, o) => s + Number(o.total), 0);
+    const count = filtered.length;
     const avg = count > 0 ? revenue / count : 0;
-    return { revenue, count, avg, filtered };
+
+    // Average preparation time (accepted_at -> completed_at)
+    let avgPrepTime = 0;
+    const withTimestamps = filtered.filter(
+      (o) => (o as any).accepted_at && (o as any).completed_at
+    );
+    if (withTimestamps.length > 0) {
+      const totalMins = withTimestamps.reduce((s, o) => {
+        const accepted = new Date((o as any).accepted_at).getTime();
+        const completed = new Date((o as any).completed_at).getTime();
+        return s + (completed - accepted) / 60000;
+      }, 0);
+      avgPrepTime = totalMins / withTimestamps.length;
+    }
+
+    // Peak hour
+    const hourCounts: Record<number, number> = {};
+    filtered.forEach((o) => {
+      const h = new Date(o.created_at).getHours();
+      hourCounts[h] = (hourCounts[h] || 0) + 1;
+    });
+    let peakHour = -1;
+    let peakCount = 0;
+    for (const [h, c] of Object.entries(hourCounts)) {
+      if (c > peakCount) {
+        peakCount = c;
+        peakHour = Number(h);
+      }
+    }
+
+    // Top 5 items
+    const itemCounts: Record<string, number> = {};
+    filtered.forEach((o) => {
+      const items = (o.items as any[]) || [];
+      items.forEach((i: any) => {
+        itemCounts[i.name] = (itemCounts[i.name] || 0) + (i.quantity || 1);
+      });
+    });
+    const topItems = Object.entries(itemCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+
+    // Busiest day
+    const dayCounts: Record<string, number> = {};
+    filtered.forEach((o) => {
+      const d = new Date(o.created_at).toLocaleDateString("fr-FR", { weekday: "long" });
+      dayCounts[d] = (dayCounts[d] || 0) + 1;
+    });
+    let busiestDay = "";
+    let busiestCount = 0;
+    for (const [d, c] of Object.entries(dayCounts)) {
+      if (c > busiestCount) {
+        busiestCount = c;
+        busiestDay = d;
+      }
+    }
+
+    return { revenue, count, avg, filtered, avgPrepTime, peakHour, topItems, busiestDay, busiestCount };
   }, [orders, period]);
 
   const chartData = useMemo(() => {
@@ -113,7 +169,13 @@ export const DashboardStats = ({ restaurant }: Props) => {
     { label: "Chiffre d'affaires", value: `${stats.revenue.toFixed(2)} €`, icon: Euro, accent: true },
     { label: "Commandes", value: stats.count, icon: ShoppingBag },
     { label: "Panier moyen", value: `${stats.avg.toFixed(2)} €`, icon: Receipt },
-    { label: "Total commandes", value: orders.length, icon: TrendingUp },
+    {
+      label: stats.avgPrepTime > 0 && stats.count >= 10 ? "Temps moyen" : "Total commandes",
+      value: stats.avgPrepTime > 0 && stats.count >= 10
+        ? `${Math.round(stats.avgPrepTime)} min`
+        : orders.length,
+      icon: stats.avgPrepTime > 0 && stats.count >= 10 ? Clock : TrendingUp,
+    },
   ];
 
   return (
@@ -177,6 +239,69 @@ export const DashboardStats = ({ restaurant }: Props) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Top items + insights */}
+      {stats.count > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {stats.topItems.length > 0 && (
+            <Card className="rounded-2xl border-border">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <Trophy className="h-4 w-4 text-amber-500" />
+                  Top 5 plats
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {stats.topItems.map(([name, count], i) => (
+                    <div key={name} className="flex items-center justify-between text-sm">
+                      <span className="text-foreground">
+                        <span className="text-muted-foreground mr-2">{i + 1}.</span>
+                        {name}
+                      </span>
+                      <span className="text-muted-foreground font-medium">{count}x</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          <Card className="rounded-2xl border-border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <Flame className="h-4 w-4 text-orange-500" />
+                Insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 text-sm">
+                {stats.peakHour >= 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Heure de pointe</span>
+                    <span className="font-medium text-foreground">{stats.peakHour}h - {stats.peakHour + 1}h</span>
+                  </div>
+                )}
+                {stats.busiestDay && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Jour le plus charge</span>
+                    <span className="font-medium text-foreground capitalize">{stats.busiestDay}</span>
+                  </div>
+                )}
+                {stats.avgPrepTime > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Temps preparation moyen</span>
+                    <span className="font-medium text-foreground">{Math.round(stats.avgPrepTime)} min</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Total historique</span>
+                  <span className="font-medium text-foreground">{orders.length} commandes</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Prevision de demande */}
       <div className="space-y-4">

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Flame, Receipt, Eye, UtensilsCrossed, Palette, QrCode, Tablet, Settings, BarChart3, ChevronDown } from "lucide-react";
-
-type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "tablettes" | "parametres" | "stats" | "gerer";
+import { Flame, Receipt, Eye, UtensilsCrossed, Palette, QrCode, Tablet, Settings, BarChart3, ChevronDown, Users } from "lucide-react";
+import type { DashboardView } from "@/types/dashboard";
 
 interface Props {
   activeView: DashboardView;
@@ -20,11 +19,12 @@ const adminItems: { id: DashboardView; label: string; icon: typeof Flame }[] = [
   { id: "page", label: "Ma Page", icon: Palette },
   { id: "qrcodes", label: "QR Codes", icon: QrCode },
   { id: "tablettes", label: "Mes tablettes", icon: Tablet },
+  { id: "clients", label: "Mes clients", icon: Users },
   { id: "parametres", label: "Parametres", icon: Settings },
   { id: "stats", label: "Statistiques", icon: BarChart3 },
 ];
 
-const isAdminView = (v: DashboardView) => ["carte", "page", "qrcodes", "tablettes", "parametres", "stats"].includes(v);
+const isAdminView = (v: DashboardView) => ["carte", "page", "qrcodes", "tablettes", "parametres", "stats", "clients"].includes(v);
 
 export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props) => {
   const [gererExpanded, setGererExpanded] = useState(() => isAdminView(activeView));

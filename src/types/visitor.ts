@@ -1,5 +1,6 @@
 export interface VisitorPresencePayload {
   visitor_id: string;
+  visitor_name?: string;
   cart_count: number;
   cart_total: number;
   cart_items: string[];

@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle } from "lucide-react";
-import { fetchOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders } from "@/lib/api";
+import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle, ShieldBan } from "lucide-react";
+import { fetchOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats } from "@/lib/api";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { POSAddItemModal } from "./pos/POSAddItemModal";
+import { BanDialog } from "./BanDialog";
 import { toast } from "sonner";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
@@ -41,6 +42,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
   const [advancing, setAdvancing] = useState<string | null>(null);
   const [addItemOrder, setAddItemOrder] = useState<DbOrder | null>(null);
   const [rupturesOpen, setRupturesOpen] = useState(false);
+  const [banTarget, setBanTarget] = useState<{ customer_name: string; customer_phone: string; restaurant_id: string; id?: string } | null>(null);
 
   const loadOrders = useCallback(async () => {
     const data = await fetchOrders(restaurant.id);
@@ -111,6 +113,28 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
     try {
       await updateOrderStatus(orderId, cfg.next);
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: cfg.next! } : o)));
+
+      // When completing an order, update customer stats (fire-and-forget)
+      if (cfg.next === "done") {
+        const order = orders.find((o) => o.id === orderId);
+        if (order) {
+          try {
+            const customer = await upsertCustomer({
+              restaurant_id: restaurant.id,
+              customer_phone: order.customer_phone,
+              customer_name: order.customer_name,
+              customer_email: (order as any).customer_email || undefined,
+            });
+            const orderItems = ((order.items as any[]) || []).map((i: any) => ({
+              name: i.name,
+              quantity: i.quantity || 1,
+            }));
+            await updateCustomerStats(customer.id, Number(order.total), orderItems);
+          } catch (e) {
+            console.error("Customer stats update failed:", e);
+          }
+        }
+      }
     } finally {
       setAdvancing(null);
     }
@@ -236,7 +260,23 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
                 <span className="text-xs text-muted-foreground">{timeSince(order.created_at)}</span>
               </div>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mb-3">
-                <span className="font-medium text-foreground">{order.customer_name}</span>
+                <span className="font-medium text-foreground flex items-center gap-1">
+                  {order.customer_name}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setBanTarget({
+                        customer_name: order.customer_name,
+                        customer_phone: order.customer_phone,
+                        restaurant_id: restaurant.id,
+                      });
+                    }}
+                    className="p-1 rounded hover:bg-destructive/10 transition-colors"
+                    title="Bannir ce client"
+                  >
+                    <ShieldBan className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                  </button>
+                </span>
                 <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{order.customer_phone}</span>
                 <span className="flex items-center gap-1">
                   {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> A emporter</>}
@@ -310,6 +350,20 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
           menuItems={menuItems}
           config={restaurant.customization_config}
           onUpdated={loadOrders}
+        />
+      )}
+
+      {/* Ban dialog from order */}
+      {banTarget && (
+        <BanDialog
+          customer={banTarget as any}
+          open={!!banTarget}
+          onClose={() => setBanTarget(null)}
+          onBanned={() => {
+            setBanTarget(null);
+            toast.success("Client banni");
+          }}
+          restaurantId={restaurant.id}
         />
       )}
 

@@ -29,8 +29,19 @@ export function useVisitorTracking(restaurantId: string | null) {
       config: { presence: { key: visitorId } },
     });
 
+    // Read customer name from localStorage
+    let visitorName: string | undefined;
+    try {
+      const raw = localStorage.getItem("cm_customer");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.name) visitorName = saved.name;
+      }
+    } catch { /* ignore */ }
+
     const buildPayload = (): VisitorPresencePayload => ({
       visitor_id: visitorId,
+      visitor_name: visitorName,
       cart_count: cartRef.current.totalItems,
       cart_total: cartRef.current.subtotal,
       cart_items: cartRef.current.items.slice(0, 5).map((i) => i.menuItem.name),

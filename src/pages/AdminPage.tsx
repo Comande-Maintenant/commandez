@@ -14,18 +14,21 @@ import { DashboardTablettes } from "@/components/dashboard/DashboardTablettes";
 import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
 import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
 import { DashboardEnDirect } from "@/components/dashboard/DashboardEnDirect";
+import { DashboardClients } from "@/components/dashboard/DashboardClients";
 import { GererMenu } from "@/components/dashboard/GererMenu";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
 import { AdminBottomNav } from "@/components/dashboard/AdminBottomNav";
 import { LiveSummaryBanner } from "@/components/dashboard/LiveSummaryBanner";
+import { AssistantChatbot } from "@/components/dashboard/AssistantChatbot";
+import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
+import { supabase } from "@/integrations/supabase/client";
+import type { DashboardView } from "@/types/dashboard";
 
-type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "tablettes" | "parametres" | "stats" | "gerer";
-
-const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer"];
+const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer", "clients"];
 
 function isValidView(v: string): v is DashboardView {
   return validViews.includes(v as DashboardView);
@@ -50,17 +53,51 @@ const AdminPage = () => {
     return "cuisine";
   });
   const [blurred, setBlurred] = useState(() => localStorage.getItem("dashboard-blur") === "true");
+  const [authChecked, setAuthChecked] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [pwaPrompt, setPwaPrompt] = useState<any>(null);
+  const [showPwaBanner, setShowPwaBanner] = useState(false);
   const sound = useNotificationSound();
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
   const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
+
+  // Auth check
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        setAuthError("not_logged_in");
+      }
+      setAuthChecked(true);
+    });
+  }, []);
 
   useEffect(() => {
     if (!slug) return;
     fetchRestaurantBySlug(slug).then((r) => {
       setRestaurant(r);
       setLoading(false);
+      // Check onboarding
+      if (r && !localStorage.getItem(`cm_onboarding_done_${r.slug}`)) {
+        setTimeout(() => setShowOnboarding(true), 1000);
+      }
     });
   }, [slug]);
+
+  // PWA install prompt
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setPwaPrompt(e);
+      const isTablet = navigator.maxTouchPoints > 0 && window.innerWidth >= 768;
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+      if (isTablet && !isStandalone && !localStorage.getItem("cm_pwa_dismissed")) {
+        setShowPwaBanner(true);
+      }
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   // Sync URL with active view
   useEffect(() => {
@@ -94,10 +131,22 @@ const AdminPage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || !authChecked) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (authError === "not_logged_in") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Connexion requise</h1>
+          <p className="text-muted-foreground mb-4">Connectez-vous pour acceder au tableau de bord.</p>
+          <Link to="/inscription" className="text-sm text-foreground underline">Se connecter</Link>
+        </div>
       </div>
     );
   }
@@ -263,6 +312,7 @@ const AdminPage = () => {
               {activeView === "tablettes" && <DashboardTablettes restaurant={restaurant} />}
               {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} />}
               {activeView === "stats" && <DashboardStats restaurant={restaurant} />}
+              {activeView === "clients" && <DashboardClients restaurant={restaurant} />}
               {activeView === "gerer" && <GererMenu onViewChange={handleViewChange} />}
             </motion.div>
           </AnimatePresence>
@@ -274,6 +324,57 @@ const AdminPage = () => {
         onViewChange={handleViewChange}
         newOrderCount={orderCounts.newCount}
       />
+
+      {/* PWA install banner */}
+      {showPwaBanner && (
+        <div className="fixed bottom-16 lg:bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
+          <div className="bg-card border border-border rounded-2xl p-4 shadow-lg flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-foreground">Installer l'application</p>
+              <p className="text-xs text-muted-foreground">Acces rapide depuis votre ecran d'accueil</p>
+            </div>
+            <div className="flex gap-2 flex-shrink-0">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="rounded-xl text-xs"
+                onClick={() => {
+                  setShowPwaBanner(false);
+                  localStorage.setItem("cm_pwa_dismissed", "true");
+                }}
+              >
+                Plus tard
+              </Button>
+              <Button
+                size="sm"
+                className="rounded-xl text-xs"
+                onClick={() => {
+                  pwaPrompt?.prompt();
+                  setShowPwaBanner(false);
+                }}
+              >
+                Installer
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assistant chatbot */}
+      <AssistantChatbot
+        activeView={activeView}
+        onNavigate={(v) => handleViewChange(v as DashboardView)}
+      />
+
+      {/* Onboarding tour */}
+      {showOnboarding && restaurant && (
+        <OnboardingTour
+          onComplete={() => {
+            setShowOnboarding(false);
+            localStorage.setItem(`cm_onboarding_done_${restaurant.slug}`, "true");
+          }}
+        />
+      )}
     </div>
   );
 };

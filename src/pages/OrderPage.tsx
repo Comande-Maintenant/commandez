@@ -4,7 +4,7 @@ import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle } from "lucide-re
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { createOrder, fetchClientIp, fetchRestaurantById } from "@/lib/api";
+import { createOrder, fetchClientIp, fetchRestaurantById, isCustomerBanned } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
@@ -16,13 +16,28 @@ const OrderPage = () => {
   const { t, isRTL } = useLanguage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [pickupTime, setPickupTime] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [restaurantPhone, setRestaurantPhone] = useState<string | null>(null);
   const [estimatedMinutes, setEstimatedMinutes] = useState(15);
+  const [banned, setBanned] = useState(false);
   const clientIpRef = useRef<string | null>(null);
 
-  // Fetch restaurant phone + client IP on mount
+  // Pre-fill from localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("cm_customer");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.name) setName(saved.name);
+        if (saved.phone) setPhone(saved.phone);
+        if (saved.email) setEmail(saved.email);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  // Fetch restaurant phone + client IP on mount + ban check
   useEffect(() => {
     if (!restaurantId) return;
     fetchRestaurantById(restaurantId).then((r) => {
@@ -37,6 +52,18 @@ const OrderPage = () => {
       }
     });
     fetchClientIp().then((ip) => { clientIpRef.current = ip; });
+    // Check ban
+    try {
+      const raw = localStorage.getItem("cm_customer");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.phone) {
+          isCustomerBanned(restaurantId, saved.phone, saved.email, undefined).then((res) => {
+            if (res.banned) setBanned(true);
+          }).catch(() => {});
+        }
+      }
+    } catch { /* ignore */ }
   }, [restaurantId]);
 
   const total = subtotal;
@@ -45,6 +72,9 @@ const OrderPage = () => {
     if (!restaurantId || submitting) return;
     setSubmitting(true);
     try {
+      // Save customer info to localStorage
+      localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email }));
+
       const orderItems = items.map((i) => ({
         name: i.menuItem.name,
         quantity: i.quantity,
@@ -56,6 +86,7 @@ const OrderPage = () => {
         restaurant_id: restaurantId,
         customer_name: name,
         customer_phone: phone,
+        customer_email: email || undefined,
         order_type: "collect",
         items: orderItems,
         subtotal,
@@ -80,6 +111,22 @@ const OrderPage = () => {
       setSubmitting(false);
     }
   };
+
+  if (banned) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4 p-4">
+        <AlertTriangle className="h-16 w-16 text-destructive/60" />
+        <h2 className="text-xl font-bold text-foreground">Commande impossible</h2>
+        <p className="text-muted-foreground text-center max-w-sm">
+          Votre acces aux commandes a ete suspendu.
+          {restaurantPhone && (
+            <> Contactez le restaurant au {restaurantPhone} pour plus d'informations.</>
+          )}
+        </p>
+        <Link to="/" className="text-sm text-foreground underline">Retour</Link>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -123,6 +170,7 @@ const OrderPage = () => {
           <div className="space-y-3">
             <Input placeholder={t("order.your_name")} value={name} onChange={(e) => setName(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
             <Input placeholder={t("order.phone")} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+            <Input placeholder="Email (optionnel)" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
           </div>
 
           {/* Pickup time picker */}

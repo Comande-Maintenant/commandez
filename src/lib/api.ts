@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { DbRestaurant, DbMenuItem, DbOrder, DbTablet } from "@/types/database";
+import type { DbRestaurant, DbMenuItem, DbOrder, DbTablet, DbCustomer, DbOwner } from "@/types/database";
 
 export async function fetchRestaurants(): Promise<DbRestaurant[]> {
   const { data, error } = await supabase
@@ -65,6 +65,7 @@ export async function createOrder(order: {
   restaurant_id: string;
   customer_name: string;
   customer_phone: string;
+  customer_email?: string;
   order_type: string;
   source?: string;
   covers?: number | null;
@@ -95,9 +96,14 @@ export async function fetchOrders(restaurantId: string): Promise<DbOrder[]> {
 }
 
 export async function updateOrderStatus(orderId: string, status: string) {
+  const updates: Record<string, any> = { status };
+  const now = new Date().toISOString();
+  if (status === "preparing") updates.accepted_at = now;
+  if (status === "ready") updates.ready_at = now;
+  if (status === "done") updates.completed_at = now;
   const { error } = await supabase
     .from("orders")
-    .update({ status })
+    .update(updates)
     .eq("id", orderId);
   if (error) throw error;
 }
@@ -346,4 +352,251 @@ export function subscribeToOrders(restaurantId: string, callback: (order: DbOrde
   return () => {
     supabase.removeChannel(channel);
   };
+}
+
+// --- Customers ---
+
+export async function fetchCustomers(restaurantId: string): Promise<DbCustomer[]> {
+  const { data, error } = await supabase
+    .from("restaurant_customers")
+    .select("*")
+    .eq("restaurant_id", restaurantId)
+    .order("last_order_at", { ascending: false, nullsFirst: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as DbCustomer[];
+}
+
+export async function fetchCustomerByPhone(restaurantId: string, phone: string): Promise<DbCustomer | null> {
+  const { data, error } = await supabase
+    .from("restaurant_customers")
+    .select("*")
+    .eq("restaurant_id", restaurantId)
+    .eq("customer_phone", phone)
+    .maybeSingle();
+  if (error) throw error;
+  return data as unknown as DbCustomer | null;
+}
+
+export async function upsertCustomer(customer: {
+  restaurant_id: string;
+  customer_phone: string;
+  customer_name: string;
+  customer_email?: string;
+}): Promise<DbCustomer> {
+  const { data, error } = await supabase
+    .from("restaurant_customers")
+    .upsert(customer, { onConflict: "restaurant_id,customer_phone" })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as unknown as DbCustomer;
+}
+
+export async function updateCustomerStats(
+  customerId: string,
+  orderTotal: number,
+  items: { name: string; quantity: number }[]
+) {
+  // Fetch current customer data
+  const { data: current, error: fetchErr } = await supabase
+    .from("restaurant_customers")
+    .select("total_orders, total_spent, favorite_items, last_items, first_order_at")
+    .eq("id", customerId)
+    .single();
+  if (fetchErr) throw fetchErr;
+
+  const c = current as any;
+  const newTotalOrders = (c.total_orders || 0) + 1;
+  const newTotalSpent = Number(c.total_spent || 0) + orderTotal;
+  const newAverage = newTotalSpent / newTotalOrders;
+
+  // Calculate favorite items (top 3 by frequency)
+  const itemCounts: Record<string, number> = {};
+  const prevFavorites: string[] = c.favorite_items || [];
+  for (const f of prevFavorites) itemCounts[f] = (itemCounts[f] || 0) + 5;
+  for (const item of items) itemCounts[item.name] = (itemCounts[item.name] || 0) + item.quantity;
+  const favorites = Object.entries(itemCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([name]) => name);
+
+  const lastItems = items.map((i) => i.name).slice(0, 5);
+
+  const updates: Record<string, any> = {
+    total_orders: newTotalOrders,
+    total_spent: newTotalSpent.toFixed(2),
+    average_basket: newAverage.toFixed(2),
+    favorite_items: favorites,
+    last_items: lastItems,
+    last_order_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+  if (!c.first_order_at) {
+    updates.first_order_at = new Date().toISOString();
+  }
+
+  const { error } = await supabase
+    .from("restaurant_customers")
+    .update(updates)
+    .eq("id", customerId);
+  if (error) throw error;
+}
+
+export async function banCustomer(
+  customerId: string,
+  reason: string,
+  expiresAt: string | null,
+  ip?: string
+) {
+  const { error } = await supabase
+    .from("restaurant_customers")
+    .update({
+      is_banned: true,
+      banned_at: new Date().toISOString(),
+      banned_reason: reason,
+      ban_expires_at: expiresAt,
+      banned_ip: ip || "",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", customerId);
+  if (error) throw error;
+}
+
+export async function unbanCustomer(customerId: string) {
+  const { error } = await supabase
+    .from("restaurant_customers")
+    .update({
+      is_banned: false,
+      banned_at: null,
+      banned_reason: "",
+      ban_expires_at: null,
+      banned_ip: "",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", customerId);
+  if (error) throw error;
+}
+
+export async function isCustomerBanned(
+  restaurantId: string,
+  phone: string,
+  email?: string,
+  ip?: string
+): Promise<{ banned: boolean; reason?: string; expires?: string | null }> {
+  // Check by phone
+  const { data, error } = await supabase
+    .from("restaurant_customers")
+    .select("is_banned, banned_reason, ban_expires_at, banned_ip")
+    .eq("restaurant_id", restaurantId)
+    .eq("customer_phone", phone)
+    .eq("is_banned", true)
+    .maybeSingle();
+  if (error || !data) {
+    // Also check by IP if provided
+    if (ip) {
+      const { data: ipData } = await supabase
+        .from("restaurant_customers")
+        .select("is_banned, banned_reason, ban_expires_at")
+        .eq("restaurant_id", restaurantId)
+        .eq("banned_ip", ip)
+        .eq("is_banned", true)
+        .maybeSingle();
+      if (ipData) {
+        const d = ipData as any;
+        if (d.ban_expires_at && new Date(d.ban_expires_at) < new Date()) {
+          return { banned: false };
+        }
+        return { banned: true, reason: d.banned_reason, expires: d.ban_expires_at };
+      }
+    }
+    return { banned: false };
+  }
+  const d = data as any;
+  // Auto-unban if expired
+  if (d.ban_expires_at && new Date(d.ban_expires_at) < new Date()) {
+    // Don't await, fire-and-forget unban
+    supabase
+      .from("restaurant_customers")
+      .update({ is_banned: false, banned_at: null, banned_reason: "", ban_expires_at: null, banned_ip: "" })
+      .eq("restaurant_id", restaurantId)
+      .eq("customer_phone", phone)
+      .then(() => {});
+    return { banned: false };
+  }
+  return { banned: true, reason: d.banned_reason, expires: d.ban_expires_at };
+}
+
+// --- Owner / Super Admin ---
+
+export async function fetchOwner(userId: string): Promise<DbOwner | null> {
+  const { data, error } = await supabase
+    .from("owners")
+    .select("*")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data as unknown as DbOwner | null;
+}
+
+export async function fetchPlatformStats() {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+
+  const [restaurants, ordersMonth, ordersToday] = await Promise.all([
+    supabase.from("restaurants").select("id", { count: "exact", head: true }),
+    supabase.from("orders").select("total").gte("created_at", monthStart),
+    supabase.from("orders").select("total").gte("created_at", todayStart),
+  ]);
+
+  const monthOrders = (ordersMonth.data ?? []) as any[];
+  const todayOrdersData = (ordersToday.data ?? []) as any[];
+
+  return {
+    totalRestaurants: restaurants.count ?? 0,
+    ordersThisMonth: monthOrders.length,
+    revenueThisMonth: monthOrders.reduce((s: number, o: any) => s + Number(o.total), 0),
+    ordersToday: todayOrdersData.length,
+    revenueToday: todayOrdersData.reduce((s: number, o: any) => s + Number(o.total), 0),
+  };
+}
+
+export async function fetchAllRestaurantsWithStats(): Promise<
+  (DbRestaurant & { order_count: number; revenue: number; last_order_at: string | null })[]
+> {
+  const { data: restaurants, error } = await supabase
+    .from("restaurants")
+    .select("*")
+    .order("name");
+  if (error) throw error;
+
+  const result: (DbRestaurant & { order_count: number; revenue: number; last_order_at: string | null })[] = [];
+  for (const r of (restaurants ?? []) as any[]) {
+    const { data: orders } = await supabase
+      .from("orders")
+      .select("total, created_at")
+      .eq("restaurant_id", r.id)
+      .order("created_at", { ascending: false })
+      .limit(1000);
+
+    const orderList = orders ?? [];
+    result.push({
+      ...r,
+      order_count: orderList.length,
+      revenue: orderList.reduce((s: number, o: any) => s + Number(o.total), 0),
+      last_order_at: orderList.length > 0 ? (orderList[0] as any).created_at : null,
+    });
+  }
+  return result as any;
+}
+
+export async function fetchOrdersByPeriod(restaurantId: string, since: Date): Promise<DbOrder[]> {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("restaurant_id", restaurantId)
+    .gte("created_at", since.toISOString())
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as DbOrder[];
 }
