@@ -282,13 +282,13 @@ const RestaurantPage = () => {
 
   return (
     <div className="relative min-h-screen pb-28" dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
-      {/* Full-page background gradient: primary -> bg, behind everything */}
+      {/* Full-page background gradient: immersive primary -> bg */}
       <div
         className="absolute inset-x-0 top-0 pointer-events-none"
         style={{
-          height: "100vh",
+          height: "max(100vh, 900px)",
           zIndex: 0,
-          background: `linear-gradient(to bottom, ${primary} 0%, ${primaryLight} 40%, ${bg} 80%, ${bg} 100%)`,
+          background: `linear-gradient(to bottom, ${primary} 0%, ${hexToRgba(primary, 0.7)} 20%, ${hexToRgba(primary, 0.35)} 35%, ${hexToRgba(primary, 0.15)} 50%, ${hexToRgba(primary, 0.05)} 65%, ${bg} 85%)`,
         }}
       />
 
@@ -320,8 +320,14 @@ const RestaurantPage = () => {
         {/* Restaurant Info Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <div
-            className="bg-white rounded-2xl p-5 border border-gray-100 transition-shadow duration-300"
-            style={{ boxShadow: scrolled ? "0 10px 40px rgba(0,0,0,0.12)" : "0 4px 12px rgba(0,0,0,0.06)" }}
+            className="rounded-2xl p-5 transition-shadow duration-300"
+            style={{
+              background: "rgba(255,255,255,0.65)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              border: "1px solid rgba(255,255,255,0.4)",
+              boxShadow: scrolled ? "0 10px 40px rgba(0,0,0,0.10)" : "0 4px 20px rgba(0,0,0,0.04)",
+            }}
           >
             {/* Logo + Name + Status */}
             <div className="flex items-start gap-4">
@@ -420,7 +426,12 @@ const RestaurantPage = () => {
             {/* Reassurance block */}
             <motion.div
               className="mt-4 p-3.5 rounded-xl flex items-start gap-3"
-              style={{ backgroundColor: primaryLight }}
+              style={{
+                background: `${hexToRgba(primary, 0.08)}`,
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.3)",
+              }}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -467,8 +478,13 @@ const RestaurantPage = () => {
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
               <div
-                className={`sticky top-0 z-30 mt-4 -mx-4 px-4 py-3 border-b border-gray-200/50 backdrop-blur-xl transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
-                style={{ backgroundColor: `${bg}ee` }}
+                className={`sticky top-0 z-30 mt-4 -mx-4 px-4 py-3 transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
+                style={{
+                  background: "rgba(255,255,255,0.55)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
+                  borderBottom: "1px solid rgba(255,255,255,0.3)",
+                }}
               >
                 <div ref={navScrollRef} className="flex gap-2 overflow-x-auto no-scrollbar">
                   {activeCategories.map((cat) => (
@@ -518,7 +534,7 @@ const RestaurantPage = () => {
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={cat}
-                        className="space-y-1"
+                        className="space-y-3"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -547,7 +563,14 @@ const RestaurantPage = () => {
 
         {/* How it works section */}
         <motion.div
-          className="mt-12 bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
+          className="mt-12 rounded-2xl p-6"
+          style={{
+            background: "rgba(255,255,255,0.55)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.3)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+          }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

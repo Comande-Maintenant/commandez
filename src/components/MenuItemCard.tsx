@@ -15,7 +15,7 @@ interface Props {
   isEven?: boolean;
 }
 
-export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, isEven }: Props) => {
+export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight }: Props) => {
   const [open, setOpen] = useState(false);
   const { t, tMenu } = useLanguage();
   const translated = tMenu(item);
@@ -30,8 +30,14 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
       >
         <motion.button
           onClick={() => setOpen(true)}
-          className="w-full text-left flex gap-3 p-3 rounded-xl transition-all group hover:shadow-md active:scale-[0.98]"
-          style={{ backgroundColor: isEven ? "transparent" : `${primaryLight || "#f5f5f5"}40` }}
+          className="w-full text-left flex gap-3 p-3 rounded-2xl transition-all group active:scale-[0.98]"
+          style={{
+            background: "rgba(255,255,255,0.55)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.3)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+          }}
           whileTap={{ scale: 0.98 }}
         >
           <div className="flex-1 min-w-0">
