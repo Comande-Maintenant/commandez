@@ -5,7 +5,6 @@ import { fetchMenuItems, createOrder, fetchOrders, updateOrderStatus, subscribeT
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import type { POSOrderType as POSOrderTypeValue, POSScreen, POSPersonOrder, POSItem } from "@/types/pos";
 import { POSOrderType } from "./POSOrderType";
-import { POSCovers } from "./POSCovers";
 import { POSItemBuilder } from "./POSItemBuilder";
 import { POSUpsell } from "./POSUpsell";
 import { POSRecap } from "./POSRecap";
@@ -76,16 +75,8 @@ export const DashboardPOS = ({ restaurant }: Props) => {
   const reset = useCallback(() => setState(initialState), []);
 
   const handleSelectOrderType = (orderType: POSOrderTypeValue) => {
-    setState((s) => ({ ...s, orderType, screen: "covers" }));
-  };
-
-  const handleSelectCovers = (covers: number) => {
-    const persons: POSPersonOrder[] = Array.from({ length: covers }, (_, i) => ({
-      personIndex: i,
-      label: `Personne ${i + 1}`,
-      items: [],
-    }));
-    setState((s) => ({ ...s, covers, persons, currentPerson: 0, screen: "builder" }));
+    const persons: POSPersonOrder[] = [{ personIndex: 0, label: "Personne 1", items: [] }];
+    setState((s) => ({ ...s, orderType, covers: 1, persons, currentPerson: 0, screen: "builder" }));
   };
 
   const handleUpdatePersons = (persons: POSPersonOrder[]) => {
@@ -217,13 +208,6 @@ export const DashboardPOS = ({ restaurant }: Props) => {
             onClose={() => {}}
           />
         )}
-        {state.screen === "covers" && (
-          <POSCovers
-            key="covers"
-            onSelect={handleSelectCovers}
-            onBack={() => setScreen("order_type")}
-          />
-        )}
         {state.screen === "builder" && (
           <POSItemBuilder
             key="builder"
@@ -234,7 +218,7 @@ export const DashboardPOS = ({ restaurant }: Props) => {
             onUpdatePersons={handleUpdatePersons}
             onSetCurrentPerson={handleSetCurrentPerson}
             onNext={() => setScreen("upsell")}
-            onBack={() => setScreen("covers")}
+            onBack={() => setScreen("order_type")}
           />
         )}
         {state.screen === "upsell" && (

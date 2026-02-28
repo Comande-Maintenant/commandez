@@ -1,5 +1,5 @@
 export type POSOrderType = "sur_place" | "a_emporter" | "telephone";
-export type POSScreen = "order_type" | "covers" | "builder" | "upsell" | "recap" | "success";
+export type POSScreen = "order_type" | "builder" | "upsell" | "recap" | "success";
 
 export interface POSPersonOrder {
   personIndex: number;
