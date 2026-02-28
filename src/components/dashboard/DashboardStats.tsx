@@ -134,7 +134,7 @@ export const DashboardStats = ({ restaurant }: Props) => {
                 <kpi.icon className="h-4 w-4 text-muted-foreground" />
                 <p className="text-xs text-muted-foreground">{kpi.label}</p>
               </div>
-              <p className={`text-2xl font-bold ${kpi.accent ? "text-[hsl(var(--primary))]" : "text-foreground"}`}>{kpi.value}</p>
+              <p className={`text-2xl font-bold blur-sensitive ${kpi.accent ? "text-[hsl(var(--primary))]" : "text-foreground"}`}>{kpi.value}</p>
             </CardContent>
           </Card>
         ))}
@@ -145,7 +145,7 @@ export const DashboardStats = ({ restaurant }: Props) => {
           <CardTitle className="text-base font-semibold">Chiffre d'affaires - {periodLabels[period]}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64">
+          <div className="h-64 blur-sensitive">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -164,7 +164,7 @@ export const DashboardStats = ({ restaurant }: Props) => {
           <CardTitle className="text-base font-semibold">Nombre de commandes - {periodLabels[period]}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-52">
+          <div className="h-52 blur-sensitive">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />

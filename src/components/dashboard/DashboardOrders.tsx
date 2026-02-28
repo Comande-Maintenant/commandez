@@ -142,11 +142,11 @@ export const DashboardOrders = ({ restaurant }: Props) => {
           { label: "Nouvelles", value: orders.filter((o) => o.status === "new").length, accent: true },
           { label: "En cours", value: orders.filter((o) => o.status === "preparing").length },
           { label: "Pretes", value: orders.filter((o) => o.status === "ready").length },
-          { label: "CA du jour", value: `${todayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2)} €` },
+          { label: "CA du jour", value: `${todayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2)} €`, sensitive: true },
         ].map((stat) => (
           <div key={stat.label} className="bg-card rounded-2xl border border-border p-3 sm:p-4">
             <p className="text-xs text-muted-foreground">{stat.label}</p>
-            <p className={`text-xl sm:text-2xl font-bold mt-1 ${stat.accent ? "text-[hsl(var(--warning))]" : "text-foreground"}`}>{stat.value}</p>
+            <p className={`text-xl sm:text-2xl font-bold mt-1 ${stat.accent ? "text-[hsl(var(--warning))]" : "text-foreground"} ${stat.sensitive ? "blur-sensitive" : ""}`}>{stat.value}</p>
           </div>
         ))}
       </div>
@@ -212,12 +212,12 @@ export const DashboardOrders = ({ restaurant }: Props) => {
                         <p className="text-xs text-muted-foreground truncate">{[...(item.sauces || []), ...(item.supplements || [])].join(", ")}</p>
                       )}
                     </div>
-                    <span className="text-foreground font-medium ml-2 flex-shrink-0">{(item.price * item.quantity).toFixed(2)} €</span>
+                    <span className="text-foreground font-medium ml-2 flex-shrink-0 blur-sensitive">{(item.price * item.quantity).toFixed(2)} €</span>
                   </div>
                 ))}
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
-                <span className="text-base font-bold text-foreground">{Number(order.total).toFixed(2)} €</span>
+                <span className="text-base font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} €</span>
                 {cfg.next && (
                   <Button
                     size="sm"

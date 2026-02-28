@@ -9,6 +9,8 @@ import {
   Loader2,
   ImageIcon,
   Receipt,
+  Copy,
+  Check,
 } from "lucide-react";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
@@ -45,8 +47,16 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
   const [logoPreview, setLogoPreview] = useState(restaurant.image || "");
   const [coverPreview, setCoverPreview] = useState(restaurant.cover_image || "");
 
+  const [copied, setCopied] = useState(false);
   const pageUrl = typeof window !== "undefined" ? `${window.location.origin}/${restaurant.slug}` : "";
   const posUrl = typeof window !== "undefined" ? `${window.location.origin}/admin/${restaurant.slug}?tab=caisse` : "";
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(pageUrl);
+    setCopied(true);
+    toast.success("Lien copie !");
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const generateQR = useCallback(async () => {
     try {
@@ -221,6 +231,20 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
 
   return (
     <div className="max-w-2xl space-y-8">
+      {/* Link */}
+      <section className="bg-card rounded-2xl border border-border p-5">
+        <div className="flex items-center justify-between">
+          <div className="min-w-0">
+            <h3 className="text-base font-semibold text-foreground mb-1">Lien de votre page</h3>
+            <p className="text-sm text-muted-foreground truncate">{pageUrl}</p>
+          </div>
+          <Button variant="outline" size="sm" className="rounded-xl gap-1.5 flex-shrink-0 ml-3" onClick={copyLink}>
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {copied ? "Copie !" : "Copier"}
+          </Button>
+        </div>
+      </section>
+
       {/* Colors */}
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">

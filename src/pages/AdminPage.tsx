@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Copy, Check } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, EyeOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchRestaurantBySlug } from "@/lib/api";
+import { fetchRestaurantBySlug, updateRestaurant } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
 import { DashboardOrders } from "@/components/dashboard/DashboardOrders";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
@@ -15,7 +15,7 @@ import { GererMenu } from "@/components/dashboard/GererMenu";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
 import { AdminBottomNav } from "@/components/dashboard/AdminBottomNav";
 import { LiveSummaryBanner } from "@/components/dashboard/LiveSummaryBanner";
-import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
 
@@ -45,7 +45,7 @@ const AdminPage = () => {
     if (tab === "settings") return "parametres";
     return "cuisine";
   });
-  const [copied, setCopied] = useState(false);
+  const [blurred, setBlurred] = useState(() => localStorage.getItem("dashboard-blur") === "true");
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
   const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
 
@@ -69,11 +69,24 @@ const AdminPage = () => {
     setActiveView(view);
   };
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/${slug}`);
-    setCopied(true);
-    toast.success("Lien copie !");
-    setTimeout(() => setCopied(false), 2000);
+  const toggleBlur = () => {
+    setBlurred((prev) => {
+      const next = !prev;
+      localStorage.setItem("dashboard-blur", String(next));
+      return next;
+    });
+  };
+
+  const toggleAccepting = async () => {
+    if (!restaurant) return;
+    const next = !restaurant.is_accepting_orders;
+    try {
+      await updateRestaurant(restaurant.id, { is_accepting_orders: next } as any);
+      setRestaurant({ ...restaurant, is_accepting_orders: next });
+      toast.success(next ? "Commandes activees" : "Commandes desactivees");
+    } catch {
+      toast.error("Erreur lors de la mise a jour");
+    }
   };
 
   if (loading) {
@@ -96,7 +109,8 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/50 lg:flex">
+    <div className="min-h-screen bg-secondary/50 lg:flex" data-blurred={blurred}>
+      <style>{`[data-blurred="true"] .blur-sensitive { filter: blur(8px); user-select: none; }`}</style>
       <AdminSidebar
         activeView={activeView}
         onViewChange={handleViewChange}
@@ -117,13 +131,26 @@ const AdminPage = () => {
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              <Button variant="outline" size="sm" className="rounded-xl gap-1.5 text-xs" onClick={copyLink}>
-                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                <span className="hidden sm:inline">{copied ? "Copie !" : "Copier le lien"}</span>
-              </Button>
+              {/* Blur toggle */}
+              <button
+                onClick={toggleBlur}
+                className="p-2 rounded-xl hover:bg-secondary transition-colors"
+                title={blurred ? "Afficher les montants" : "Masquer les montants"}
+              >
+                {blurred ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
+              </button>
+
+              {/* Disponible toggle */}
               <div className="flex items-center gap-2">
-                <span className={`h-2 w-2 rounded-full ${restaurant.is_open ? "bg-[hsl(var(--success))]" : "bg-muted-foreground"}`} />
-                <span className="text-xs font-medium text-muted-foreground hidden sm:inline">{restaurant.is_open ? "Ouvert" : "Ferme"}</span>
+                <span className={`h-2 w-2 rounded-full flex-shrink-0 ${restaurant.is_accepting_orders ? "bg-[hsl(var(--success))]" : "bg-destructive"}`} />
+                <span className={`text-xs font-medium hidden sm:inline ${restaurant.is_accepting_orders ? "text-[hsl(var(--success))]" : "text-destructive"}`}>
+                  {restaurant.is_accepting_orders ? "Disponible" : "Indisponible"}
+                </span>
+                <Switch
+                  checked={restaurant.is_accepting_orders}
+                  onCheckedChange={toggleAccepting}
+                  className="scale-90"
+                />
               </div>
             </div>
           </div>

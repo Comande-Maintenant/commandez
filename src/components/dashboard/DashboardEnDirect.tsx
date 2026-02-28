@@ -65,9 +65,9 @@ export const DashboardEnDirect = ({ restaurant, visitors, alerts }: Props) => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "CA du jour", value: `${todayStats.revenue.toFixed(2)} EUR`, icon: Euro, accent: true },
-              { label: "Commandes", value: todayStats.count, icon: ShoppingBag },
-              { label: "Ticket moyen", value: `${todayStats.avg.toFixed(2)} EUR`, icon: Receipt },
+              { label: "CA du jour", value: `${todayStats.revenue.toFixed(2)} EUR`, icon: Euro, accent: true, sensitive: true },
+              { label: "Commandes", value: todayStats.count, icon: ShoppingBag, sensitive: true },
+              { label: "Ticket moyen", value: `${todayStats.avg.toFixed(2)} EUR`, icon: Receipt, sensitive: true },
               { label: "Top plat", value: todayStats.topItem, icon: TrendingUp },
             ].map((kpi) => (
               <Card key={kpi.label} className="rounded-2xl border-border">
@@ -76,7 +76,7 @@ export const DashboardEnDirect = ({ restaurant, visitors, alerts }: Props) => {
                     <kpi.icon className="h-4 w-4 text-muted-foreground" />
                     <p className="text-xs text-muted-foreground">{kpi.label}</p>
                   </div>
-                  <p className={`text-lg sm:text-xl font-bold truncate ${kpi.accent ? "text-[hsl(var(--primary))]" : "text-foreground"}`}>
+                  <p className={`text-lg sm:text-xl font-bold truncate ${kpi.accent ? "text-[hsl(var(--primary))]" : "text-foreground"} ${kpi.sensitive ? "blur-sensitive" : ""}`}>
                     {kpi.value}
                   </p>
                 </CardContent>

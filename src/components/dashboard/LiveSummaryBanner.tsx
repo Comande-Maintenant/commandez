@@ -72,7 +72,7 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, c
             <p className="text-lg font-bold text-foreground">
               {cartsWithItems.length}
               {totalCartValue > 0 && (
-                <span className="text-xs font-normal text-muted-foreground ml-1">({totalCartValue.toFixed(0)} EUR)</span>
+                <span className="text-xs font-normal text-muted-foreground ml-1 blur-sensitive">({totalCartValue.toFixed(0)} EUR)</span>
               )}
             </p>
           </div>
