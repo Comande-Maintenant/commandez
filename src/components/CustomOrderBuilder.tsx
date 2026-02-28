@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Check, ChevronDown } from "lucide-react";
+import { ShoppingBag, Check, ChevronDown, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import type { CustomizationConfig, CustomizationStep, DbMenuItem } from "@/types/database";
@@ -32,6 +32,15 @@ export function CustomOrderBuilder({
 
   const steps = config.steps;
 
+  // Check if selected base allows multi-meat (tacos)
+  const isMultiMeat = useMemo(() => {
+    const baseStep = steps.find((s) => s.id === "base");
+    const baseId = selections["base"]?.[0];
+    if (!baseStep || !baseId) return false;
+    const baseOpt = baseStep.options.find((o) => o.id === baseId);
+    return baseOpt?.allow_multi_meat === true;
+  }, [steps, selections]);
+
   // Translate step title
   const tStepTitle = useCallback(
     (s: CustomizationStep) => {
@@ -50,13 +59,23 @@ export function CustomOrderBuilder({
     [language]
   );
 
-  // Check if step is completed
-  const isStepCompleted = useCallback(
+  // Check if step has its required condition met
+  const isStepFulfilled = useCallback(
     (idx: number) => {
       const s = steps[idx];
       const selected = selections[s.id] || [];
       if (s.required) return selected.length > 0;
-      // Optional steps are "completed" if we've moved past them
+      return true; // optional steps are always fulfillable
+    },
+    [steps, selections]
+  );
+
+  // Check if step is completed (fulfilled AND we've moved past it)
+  const isStepCompleted = useCallback(
+    (idx: number) => {
+      const s = steps[idx];
+      const selected = selections[s.id] || [];
+      if (s.required) return selected.length > 0 && idx < activeStep;
       return idx < activeStep;
     },
     [steps, selections, activeStep]
@@ -64,7 +83,7 @@ export function CustomOrderBuilder({
 
   // Check if all required steps are done
   const allRequiredDone = useMemo(() => {
-    return steps.every((s, idx) => {
+    return steps.every((s) => {
       if (!s.required) return true;
       return (selections[s.id] || []).length > 0;
     });
@@ -97,42 +116,7 @@ export function CustomOrderBuilder({
     }, 100);
   }, []);
 
-  // Toggle an option
-  const handleSelect = useCallback(
-    (stepIdx: number, stepDef: CustomizationStep, optionId: string) => {
-      setSelections((prev) => {
-        const current = prev[stepDef.id] || [];
-
-        if (stepDef.type === "single") {
-          return { ...prev, [stepDef.id]: [optionId] };
-        }
-
-        // Multiple
-        if (current.includes(optionId)) {
-          return { ...prev, [stepDef.id]: current.filter((id) => id !== optionId) };
-        }
-        if (stepDef.max_selections && current.length >= stepDef.max_selections) {
-          return prev;
-        }
-        return { ...prev, [stepDef.id]: [...current, optionId] };
-      });
-
-      // Single-select: auto-advance to next step
-      if (stepDef.type === "single") {
-        const nextIdx = stepIdx + 1;
-        if (nextIdx < steps.length) {
-          setActiveStep(nextIdx);
-          scrollToStep(nextIdx);
-        } else {
-          // Last step, scroll to cart
-          scrollToCart();
-        }
-      }
-    },
-    [steps, scrollToStep, scrollToCart]
-  );
-
-  // "Continuer" for multi-select steps
+  // Advance to next step
   const handleContinue = useCallback(
     (stepIdx: number) => {
       const nextIdx = stepIdx + 1;
@@ -146,7 +130,55 @@ export function CustomOrderBuilder({
     [steps, scrollToStep, scrollToCart]
   );
 
-  const isSelected = (stepId: string, optionId: string) =>
+  // Handle option selection
+  const handleSelect = useCallback(
+    (stepIdx: number, stepDef: CustomizationStep, optionId: string) => {
+      // Special case: viande with multi-meat (tacos)
+      if (stepDef.type === "single_or_multi" && isMultiMeat) {
+        setSelections((prev) => {
+          const current = prev[stepDef.id] || [];
+          // If clicking an already-selected option, remove it
+          if (current.includes(optionId)) {
+            return { ...prev, [stepDef.id]: current.filter((id) => id !== optionId) };
+          }
+          // Max 3 meats
+          if (current.length >= (stepDef.max_selections || 3)) return prev;
+          return { ...prev, [stepDef.id]: [...current, optionId] };
+        });
+        // No auto-advance for multi-meat, user uses "Continuer" button
+        return;
+      }
+
+      // single_or_multi without multi-meat: behave as single
+      if (stepDef.type === "single" || stepDef.type === "single_or_multi") {
+        setSelections((prev) => ({ ...prev, [stepDef.id]: [optionId] }));
+        // Auto-advance
+        const nextIdx = stepIdx + 1;
+        if (nextIdx < steps.length) {
+          setActiveStep(nextIdx);
+          scrollToStep(nextIdx);
+        } else {
+          scrollToCart();
+        }
+        return;
+      }
+
+      // Multiple / custom_garniture / multiple_with_quantity
+      setSelections((prev) => {
+        const current = prev[stepDef.id] || [];
+        if (current.includes(optionId)) {
+          return { ...prev, [stepDef.id]: current.filter((id) => id !== optionId) };
+        }
+        if (stepDef.max_selections && current.length >= stepDef.max_selections) {
+          return prev;
+        }
+        return { ...prev, [stepDef.id]: [...current, optionId] };
+      });
+    },
+    [steps, isMultiMeat, scrollToStep, scrollToCart]
+  );
+
+  const isOptionSelected = (stepId: string, optionId: string) =>
     (selections[stepId] || []).includes(optionId);
 
   // Build summary text for a completed step
@@ -169,14 +201,15 @@ export function CustomOrderBuilder({
   const buildName = useCallback(() => {
     const parts: string[] = [];
     const baseOpt = selections["base"]?.[0];
-    const viandeOpt = selections["viande"]?.[0];
+    const viandeOpts = selections["viande"] || [];
     if (baseOpt) {
       const opt = steps.find((s) => s.id === "base")?.options.find((o) => o.id === baseOpt);
       if (opt) parts.push(opt.name);
     }
-    if (viandeOpt) {
-      const opt = steps.find((s) => s.id === "viande")?.options.find((o) => o.id === viandeOpt);
-      if (opt) parts.push(opt.name);
+    if (viandeOpts.length > 0) {
+      const viandeStep = steps.find((s) => s.id === "viande");
+      const names = viandeOpts.map((id) => viandeStep?.options.find((o) => o.id === id)?.name).filter(Boolean);
+      parts.push(names.join("/"));
     }
     return parts.join(" ") || "Kebab personnalise";
   }, [selections, steps]);
@@ -218,8 +251,159 @@ export function CustomOrderBuilder({
     setTimeout(() => setJustAdded(false), 2000);
   }, [addItem, buildName, buildDescription, totalPrice, restaurantSlug, restaurantId]);
 
+  // Render options grid
+  const renderOptionsGrid = (s: CustomizationStep, stepIdx: number) => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      {s.options.map((opt) => {
+        const sel = isOptionSelected(s.id, opt.id);
+        return (
+          <button
+            key={opt.id}
+            onClick={() => handleSelect(stepIdx, s, opt.id)}
+            className="relative flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all duration-200 min-h-[64px] border-2"
+            style={{
+              backgroundColor: sel ? primaryColor : primaryLight,
+              borderColor: sel ? primaryColor : "transparent",
+              color: sel ? "#ffffff" : primaryDark,
+            }}
+          >
+            {sel && (
+              <div className="absolute top-1.5 right-1.5">
+                <Check className="h-3.5 w-3.5" />
+              </div>
+            )}
+            <span className="text-sm font-medium leading-tight">{tOptionName(opt)}</span>
+            {opt.price_modifier > 0 && (
+              <span className="text-xs mt-1 opacity-80">
+                +{opt.price_modifier.toFixed(2)} €
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  // Render the "Continuer" button for a step
+  const renderContinueButton = (stepIdx: number, stepDef: CustomizationStep) => {
+    const fulfilled = isStepFulfilled(stepIdx);
+    const selected = selections[stepDef.id] || [];
+    const isLast = stepIdx === steps.length - 1;
+
+    // Skip label for optional empty steps
+    const skipLabel = stepDef.skip_label || (stepDef.id === "sauces" ? "Pas de sauce" : stepDef.id === "supplements" ? "Pas de supplement" : "Passer");
+
+    if (stepDef.required && !fulfilled) {
+      return (
+        <div className="mt-3 w-full text-center text-sm font-medium py-2.5 rounded-xl text-gray-400 bg-gray-100">
+          Selectionnez d'abord
+        </div>
+      );
+    }
+
+    const label = !stepDef.required && selected.length === 0
+      ? skipLabel
+      : isLast ? "Terminer" : "Continuer";
+
+    return (
+      <button
+        onClick={() => handleContinue(stepIdx)}
+        className="mt-3 w-full text-center text-sm font-medium py-2.5 rounded-xl transition-colors"
+        style={{ backgroundColor: `${primaryColor}12`, color: primaryColor }}
+      >
+        {label} <ChevronRight className="inline h-3.5 w-3.5 ml-0.5" />
+      </button>
+    );
+  };
+
+  // Render viande step with multi-meat slots for tacos
+  const renderMultiMeatStep = (s: CustomizationStep, stepIdx: number) => {
+    const selected = selections[s.id] || [];
+    const maxMeats = s.max_selections || 3;
+
+    return (
+      <div className="px-3 pb-3 space-y-4">
+        {/* Render a slot for each meat (1, 2, 3) */}
+        {Array.from({ length: Math.min(selected.length + 1, maxMeats) }).map((_, slotIdx) => {
+          const slotMeatId = selected[slotIdx];
+          const slotMeatOpt = slotMeatId ? s.options.find((o) => o.id === slotMeatId) : null;
+          const isSlotFilled = !!slotMeatOpt;
+          const isActiveSlot = slotIdx === selected.length; // The next unfilled slot
+
+          return (
+            <div key={slotIdx}>
+              {/* Slot header */}
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-semibold text-gray-900">
+                  Viande {slotIdx + 1}
+                </span>
+                <span
+                  className="text-xs font-medium px-2 py-0.5 rounded-full"
+                  style={{
+                    backgroundColor: slotIdx === 0 ? `${primaryColor}15` : "#f3f4f6",
+                    color: slotIdx === 0 ? primaryColor : "#9ca3af",
+                  }}
+                >
+                  {slotIdx === 0 ? "obligatoire" : "optionnel"}
+                </span>
+                {isSlotFilled && (
+                  <span className="text-sm font-medium ml-auto" style={{ color: primaryColor }}>
+                    {tOptionName(slotMeatOpt!)}
+                    {slotMeatOpt!.price_modifier > 0 && ` (+${slotMeatOpt!.price_modifier.toFixed(2)} €)`}
+                  </span>
+                )}
+              </div>
+
+              {/* Show grid only for the active (unfilled) slot */}
+              {!isSlotFilled && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {s.options.map((opt) => {
+                    // Don't show already-selected meats
+                    const alreadyPicked = selected.includes(opt.id);
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => handleSelect(stepIdx, s, opt.id)}
+                        disabled={alreadyPicked}
+                        className={`relative flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all duration-200 min-h-[64px] border-2 ${alreadyPicked ? "opacity-30 cursor-not-allowed" : ""}`}
+                        style={{
+                          backgroundColor: primaryLight,
+                          borderColor: "transparent",
+                          color: primaryDark,
+                        }}
+                      >
+                        <span className="text-sm font-medium leading-tight">{tOptionName(opt)}</span>
+                        {opt.price_modifier > 0 && (
+                          <span className="text-xs mt-1 opacity-80">
+                            +{opt.price_modifier.toFixed(2)} €
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Continue button: visible once viande 1 is selected */}
+        {selected.length > 0 && renderContinueButton(stepIdx, s)}
+      </div>
+    );
+  };
+
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-100">
+    <div
+      className="rounded-2xl p-4 sm:p-5"
+      style={{
+        background: "rgba(255,255,255,0.55)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        border: "1px solid rgba(255,255,255,0.3)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+      }}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-base font-semibold text-gray-900">{t("custom.title")}</h4>
@@ -238,8 +422,10 @@ export function CustomOrderBuilder({
           const isCurrent = idx === activeStep;
           const summary = getStepSummary(s);
           const selected = selections[s.id] || [];
-          const isPast = idx < activeStep;
           const isFuture = idx > activeStep;
+
+          // Is this the viande step in multi-meat mode?
+          const isMultiMeatViande = s.type === "single_or_multi" && isMultiMeat;
 
           return (
             <div
@@ -301,55 +487,25 @@ export function CustomOrderBuilder({
                     </span>
                   </div>
 
-                  {/* Options grid - only for current step */}
+                  {/* Options - only for current step */}
                   {isCurrent && (
-                    <div className="px-3 pb-3">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {s.options.map((opt) => {
-                          const sel = isSelected(s.id, opt.id);
-                          return (
-                            <button
-                              key={opt.id}
-                              onClick={() => handleSelect(idx, s, opt.id)}
-                              className="relative flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all duration-200 min-h-[64px] border-2"
-                              style={{
-                                backgroundColor: sel ? primaryColor : primaryLight,
-                                borderColor: sel ? primaryColor : "transparent",
-                                color: sel ? "#ffffff" : primaryDark,
-                              }}
-                            >
-                              {sel && (
-                                <div className="absolute top-1.5 right-1.5">
-                                  <Check className="h-3.5 w-3.5" />
-                                </div>
-                              )}
-                              <span className="text-sm font-medium leading-tight">{tOptionName(opt)}</span>
-                              {opt.price_modifier > 0 && (
-                                <span className="text-xs mt-1 opacity-80">
-                                  +{opt.price_modifier.toFixed(2)} €
-                                </span>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Multi-select: continue link */}
-                      {s.type === "multiple" && (
-                        <button
-                          onClick={() => handleContinue(idx)}
-                          className="mt-3 w-full text-center text-sm font-medium py-2 rounded-xl transition-colors"
-                          style={{ color: primaryColor }}
-                        >
-                          {selected.length === 0
-                            ? (s.id === "sauces" ? "Pas de sauce" : s.id === "supplements" ? "Pas de supplement" : "Passer")
-                            : "Continuer"
-                          }
-                          {" "}
-                          <ChevronDown className="inline h-3.5 w-3.5" />
-                        </button>
+                    <>
+                      {isMultiMeatViande ? (
+                        renderMultiMeatStep(s, idx)
+                      ) : (
+                        <div className="px-3 pb-3">
+                          {renderOptionsGrid(s, idx)}
+                          {/* Continue button for non-single-select steps */}
+                          {s.type !== "single" && s.type !== "single_or_multi" && (
+                            renderContinueButton(idx, s)
+                          )}
+                          {/* For single_or_multi (non-tacos) treated as single: show continue if fulfilled */}
+                          {s.type === "single_or_multi" && !isMultiMeat && selected.length > 0 && (
+                            renderContinueButton(idx, s)
+                          )}
+                        </div>
                       )}
-                    </div>
+                    </>
                   )}
                 </div>
               )}
