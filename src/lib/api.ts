@@ -203,6 +203,21 @@ export async function renameCategory(restaurantId: string, oldName: string, newN
   }
 }
 
+export async function uploadMenuItemImage(restaurantId: string, menuItemId: string, blob: Blob): Promise<string> {
+  const path = `${restaurantId}/${menuItemId}.webp`;
+  const { error: uploadError } = await supabase.storage
+    .from("menu-item-images")
+    .upload(path, blob, { upsert: true, contentType: "image/webp" });
+  if (uploadError) throw uploadError;
+  const { data } = supabase.storage.from("menu-item-images").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+export async function deleteMenuItemImage(restaurantId: string, menuItemId: string): Promise<void> {
+  const path = `${restaurantId}/${menuItemId}.webp`;
+  await supabase.storage.from("menu-item-images").remove([path]);
+}
+
 export async function uploadRestaurantImage(restaurantId: string, file: File, type: "logo" | "cover"): Promise<string> {
   const ext = file.name.split(".").pop() || "jpg";
   const path = `${restaurantId}/${type}.${ext}`;
@@ -212,6 +227,45 @@ export async function uploadRestaurantImage(restaurantId: string, file: File, ty
   if (uploadError) throw uploadError;
   const { data } = supabase.storage.from("restaurant-images").getPublicUrl(path);
   return data.publicUrl;
+}
+
+export async function fetchOrderById(orderId: string): Promise<(DbOrder & { restaurant: Pick<DbRestaurant, 'name' | 'slug' | 'primary_color'> & { phone: string } }) | null> {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, restaurant:restaurants(name, slug, primary_color, restaurant_phone)")
+    .eq("id", orderId)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
+  // Remap restaurant_phone -> phone for convenience
+  const raw = data as any;
+  const rest = raw.restaurant;
+  return {
+    ...raw,
+    restaurant: { name: rest.name, slug: rest.slug, primary_color: rest.primary_color, phone: rest.restaurant_phone },
+  };
+}
+
+export function subscribeToOrderStatus(orderId: string, callback: (order: DbOrder) => void): () => void {
+  const channel = supabase
+    .channel(`order-track-${orderId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "orders",
+        filter: `id=eq.${orderId}`,
+      },
+      (payload) => {
+        callback(payload.new as unknown as DbOrder);
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
 }
 
 export function subscribeToOrders(restaurantId: string, callback: (order: DbOrder) => void) {

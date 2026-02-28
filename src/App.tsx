@@ -11,6 +11,7 @@ import RestaurantPage from "./pages/RestaurantPage";
 import OrderPage from "./pages/OrderPage";
 import AdminPage from "./pages/AdminPage";
 import InscriptionPage from "./pages/InscriptionPage";
+import SuiviPage from "./pages/SuiviPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/inscription" element={<InscriptionPage />} />
             <Route path="/order" element={<OrderPage />} />
+            <Route path="/suivi/:orderId" element={<SuiviPage />} />
             <Route path="/admin/:slug" element={<AdminPage />} />
             <Route path="/:slug" element={<RestaurantPage />} />
             <Route path="*" element={<NotFound />} />

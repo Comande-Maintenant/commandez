@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,7 +18,7 @@ import { ProtectedPhone } from "@/components/ProtectedPhone";
 const DEFAULT_PRIMARY = "#FF6B00";
 const DEFAULT_BG = "#FFF8F0";
 
-function hexToHSL(hex: string): string {
+function parseHexToHSL(hex: string): { h: number; s: number; l: number } {
   let r = 0, g = 0, b = 0;
   if (hex.length === 4) {
     r = parseInt(hex[1] + hex[1], 16);
@@ -40,7 +40,31 @@ function hexToHSL(hex: string): string {
     else if (max === g) h = ((b - r) / d + 2) / 6;
     else h = ((r - g) / d + 4) / 6;
   }
-  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+  return { h: h * 360, s: s * 100, l: l * 100 };
+}
+
+function hexToHSL(hex: string): string {
+  const { h, s, l } = parseHexToHSL(hex);
+  return `${Math.round(h)} ${Math.round(s)}% ${Math.round(l)}%`;
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100;
+  l /= 100;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function softenColor(hex: string): string {
+  const { h, s, l } = parseHexToHSL(hex);
+  const softS = s > 70 ? 60 : s;
+  const softL = l < 35 ? 40 : l > 55 ? 50 : l;
+  return hslToHex(h, softS, softL);
 }
 
 function lighten(hex: string, amount: number): string {
@@ -87,7 +111,9 @@ const PAYMENT_ICONS: Record<string, { icon: typeof CreditCard; label: string }> 
 
 const RestaurantPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
+  const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("");
@@ -96,6 +122,8 @@ const RestaurantPage = () => {
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const navScrollRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
+  const [scrolled, setScrolled] = useState(false);
+  const heroSentinelRef = useRef<HTMLDivElement>(null);
   const { totalItems, subtotal } = useCart();
   const { t, tCategory, isRTL } = useLanguage();
   const { updateSection } = useVisitorTracking(restaurant?.id ?? null);
@@ -112,6 +140,20 @@ const RestaurantPage = () => {
       }
       setLoading(false);
     });
+  }, [slug]);
+
+  // Check for active order in localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("active-order");
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.restaurantSlug === slug && Date.now() - data.createdAt < 2 * 60 * 60 * 1000) {
+        setActiveOrderId(data.orderId);
+      } else if (Date.now() - data.createdAt >= 2 * 60 * 60 * 1000) {
+        localStorage.removeItem("active-order");
+      }
+    } catch { /* ignore */ }
   }, [slug]);
 
   // IntersectionObserver: highlight active category on scroll
@@ -140,6 +182,18 @@ const RestaurantPage = () => {
     return () => observer.disconnect();
   }, [loading, restaurant, menuItems]);
 
+  // Scroll sentinel: detect when hero is out of view
+  useEffect(() => {
+    const sentinel = heroSentinelRef.current;
+    if (!sentinel) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    obs.observe(sentinel);
+    return () => obs.disconnect();
+  }, [loading, restaurant]);
+
   // Auto-scroll the tab bar to keep active tab visible
   useEffect(() => {
     if (!activeCategory) return;
@@ -160,7 +214,7 @@ const RestaurantPage = () => {
     setTimeout(() => { isScrollingRef.current = false; }, 800);
   }, []);
 
-  const primary = restaurant?.primary_color || DEFAULT_PRIMARY;
+  const primary = useMemo(() => softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color]);
   const bg = restaurant?.bg_color || DEFAULT_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
   const primaryDark = useMemo(() => darken(primary, 0.15), [primary]);
@@ -245,12 +299,17 @@ const RestaurantPage = () => {
           </Link>
           <LanguageSelector />
         </div>
+        {/* Scroll sentinel */}
+        <div ref={heroSentinelRef} className="absolute bottom-0 h-1 w-full" />
       </div>
 
       <div className="max-w-3xl mx-auto px-4 -mt-16 relative z-10">
         {/* Restaurant Info Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          <div className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100">
+          <div
+            className="bg-white rounded-2xl p-5 border border-gray-100 transition-shadow duration-300"
+            style={{ boxShadow: scrolled ? "0 10px 40px rgba(0,0,0,0.12)" : "0 4px 12px rgba(0,0,0,0.06)" }}
+          >
             {/* Logo + Name + Status */}
             <div className="flex items-start gap-4">
               {restaurant.image ? (
@@ -346,16 +405,20 @@ const RestaurantPage = () => {
             )}
 
             {/* Reassurance block */}
-            <div
+            <motion.div
               className="mt-4 p-3.5 rounded-xl flex items-start gap-3"
               style={{ backgroundColor: primaryLight }}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3 }}
             >
               <Shield className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: primary }} />
               <div>
                 <p className="text-sm font-semibold" style={{ color: primaryDark }}>{t("reassurance.title")}</p>
                 <p className="text-xs mt-0.5" style={{ color: primary }}>{t("reassurance.subtitle")}</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Closed / not accepting banner */}
             {!orderCheck.canOrder && (
@@ -367,6 +430,26 @@ const RestaurantPage = () => {
           </div>
         </motion.div>
 
+        {/* Active order banner */}
+        {activeOrderId && (
+          <motion.button
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            onClick={() => navigate(`/suivi/${activeOrderId}`)}
+            className="w-full mt-4 flex items-center justify-between px-4 py-3 rounded-xl text-white text-sm font-medium"
+            style={{ backgroundColor: primary }}
+          >
+            <span>Votre commande est en cours</span>
+            <span className="bg-white/20 px-3 py-1 rounded-full text-xs">Suivre</span>
+          </motion.button>
+        )}
+
+        {/* Double fade: info card -> menu transition */}
+        <div
+          className="h-16 -mx-4 pointer-events-none"
+          style={{ background: `linear-gradient(to bottom, ${hexToRgba(primary, 0.08)} 0%, transparent 100%)` }}
+        />
+
         {/* No menu items edge case */}
         {menuItems.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
@@ -376,7 +459,10 @@ const RestaurantPage = () => {
           <>
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
-              <div className="sticky top-0 z-30 mt-6 -mx-4 px-4 py-3 border-b border-gray-200/50 backdrop-blur-xl" style={{ backgroundColor: `${bg}ee` }}>
+              <div
+                className={`sticky top-0 z-30 mt-6 -mx-4 px-4 py-3 border-b border-gray-200/50 backdrop-blur-xl transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
+                style={{ backgroundColor: `${bg}ee` }}
+              >
                 <div ref={navScrollRef} className="flex gap-2 overflow-x-auto no-scrollbar">
                   {activeCategories.map((cat) => (
                     <button
@@ -422,19 +508,29 @@ const RestaurantPage = () => {
                 return (
                   <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} data-category={cat} className="scroll-mt-20">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">{tCategory(cat, catTranslations)}</h3>
-                    <div className="space-y-1">
-                      {catItems.map((item, idx) => (
-                        <MenuItemCard
-                          key={item.id}
-                          item={item}
-                          restaurantSlug={restaurant.slug}
-                          restaurantId={restaurant.id}
-                          primaryColor={primary}
-                          primaryLight={primaryLight}
-                          isEven={idx % 2 === 0}
-                        />
-                      ))}
-                    </div>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={cat}
+                        className="space-y-1"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {catItems.map((item, idx) => (
+                          <MenuItemCard
+                            key={item.id}
+                            item={item}
+                            index={idx}
+                            restaurantSlug={restaurant.slug}
+                            restaurantId={restaurant.id}
+                            primaryColor={primary}
+                            primaryLight={primaryLight}
+                            isEven={idx % 2 === 0}
+                          />
+                        ))}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 );
               })}
@@ -506,7 +602,7 @@ const RestaurantPage = () => {
             <div className="max-w-3xl mx-auto">
               <button
                 onClick={() => setCartOpen(true)}
-                className="w-full flex items-center justify-between px-5 py-4 rounded-2xl text-white shadow-xl transition-transform active:scale-[0.98]"
+                className="w-full flex items-center justify-between px-5 py-4 rounded-2xl text-white shadow-2xl transition-transform active:scale-[0.98]"
                 style={{ backgroundColor: primary }}
               >
                 <div className="flex items-center gap-3">

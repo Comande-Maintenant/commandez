@@ -13,7 +13,7 @@ type Mode = "collect" | "delivery";
 type Step = "mode" | "info" | "confirm";
 
 const OrderPage = () => {
-  const { items, subtotal, clearCart, restaurantId } = useCart();
+  const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
   const navigate = useNavigate();
   const { t, isRTL } = useLanguage();
   const [mode, setMode] = useState<Mode>("collect");
@@ -63,8 +63,13 @@ const OrderPage = () => {
         client_ip: clientIpRef.current,
       });
       setOrderNumber(order.order_number);
-      setConfirmed(true);
+      localStorage.setItem("active-order", JSON.stringify({
+        orderId: order.id,
+        restaurantSlug: restaurantSlug || "",
+        createdAt: Date.now(),
+      }));
       clearCart();
+      navigate("/suivi/" + order.id);
     } catch (e) {
       console.error("Order error:", e);
     } finally {

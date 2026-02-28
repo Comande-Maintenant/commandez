@@ -38,7 +38,10 @@ import {
   updateRestaurantCategories,
   renameCategory,
   updateRestaurant,
+  uploadMenuItemImage,
+  deleteMenuItemImage,
 } from "@/lib/api";
+import { resizeImageForMenu } from "@/lib/image";
 import type { DbRestaurant, DbMenuItem, Supplement } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -156,6 +159,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   const [renameValue, setRenameValue] = useState("");
   const [editItem, setEditItem] = useState<DbMenuItem | null>(null);
   const [showImport, setShowImport] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [newItem, setNewItem] = useState({
     name: "",
     description: "",
@@ -222,6 +226,36 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
     setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
     setEditItem(null);
     toast.success("Item modifie");
+  };
+
+  const handleImageUpload = async (file: File, itemId: string) => {
+    setUploadingImage(true);
+    try {
+      const blob = await resizeImageForMenu(file);
+      const url = await uploadMenuItemImage(restaurant.id, itemId, blob);
+      await updateMenuItem(itemId, { image: url });
+      setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: url } : i)));
+      if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: url } : prev);
+      toast.success("Photo ajoutee");
+    } catch (e) {
+      console.error("Image upload error:", e);
+      toast.error("Erreur lors de l'upload");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleImageDelete = async (itemId: string) => {
+    try {
+      await deleteMenuItemImage(restaurant.id, itemId);
+      await updateMenuItem(itemId, { image: null });
+      setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: "" } : i)));
+      if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: "" } : prev);
+      toast.success("Photo supprimee");
+    } catch (e) {
+      console.error("Image delete error:", e);
+      toast.error("Erreur lors de la suppression");
+    }
   };
 
   const handleAddCategory = async () => {
@@ -441,7 +475,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
             <Input placeholder="Nom du produit" value={newItem.name} onChange={(e) => setNewItem((n) => ({ ...n, name: e.target.value }))} />
             <Input placeholder="Description (optionnel)" value={newItem.description} onChange={(e) => setNewItem((n) => ({ ...n, description: e.target.value }))} />
             <Input type="number" step="0.50" placeholder="Prix (€)" value={newItem.price} onChange={(e) => setNewItem((n) => ({ ...n, price: e.target.value }))} />
-            <Input placeholder="URL image (optionnel)" value={newItem.image} onChange={(e) => setNewItem((n) => ({ ...n, image: e.target.value }))} />
+            <p className="text-xs text-muted-foreground">La photo pourra etre ajoutee apres creation.</p>
             <Button onClick={handleAddItem} className="w-full rounded-xl">Ajouter au menu</Button>
           </div>
         </DialogContent>
@@ -456,7 +490,54 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
               <Input value={editItem.name} onChange={(e) => setEditItem({ ...editItem, name: e.target.value })} placeholder="Nom" />
               <Input value={editItem.description} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder="Description" />
               <Input type="number" step="0.50" value={editItem.price} onChange={(e) => setEditItem({ ...editItem, price: parseFloat(e.target.value) || 0 })} placeholder="Prix" />
-              <Input value={editItem.image || ""} onChange={(e) => setEditItem({ ...editItem, image: e.target.value })} placeholder="URL image" />
+
+              {/* Photo upload */}
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground">Photo</p>
+                {editItem.image ? (
+                  <div className="flex items-center gap-3">
+                    <img src={editItem.image} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                    <div className="flex gap-2">
+                      <label className="cursor-pointer text-xs font-medium px-3 py-1.5 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors">
+                        Changer
+                        <input
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          className="hidden"
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            if (f) handleImageUpload(f, editItem.id);
+                          }}
+                        />
+                      </label>
+                      <button
+                        onClick={() => handleImageDelete(editItem.id)}
+                        className="text-xs font-medium px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="flex items-center gap-2 cursor-pointer text-sm font-medium px-4 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors w-fit">
+                    {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                    {uploadingImage ? "Upload..." : "Ajouter une photo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      disabled={uploadingImage}
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) handleImageUpload(f, editItem.id);
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">Populaire</span>
                 <Switch checked={editItem.popular} onCheckedChange={(v) => setEditItem({ ...editItem, popular: v })} />
