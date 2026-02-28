@@ -10,6 +10,7 @@ import { CartSheet } from "@/components/CartSheet";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
+import { CustomerAvatar } from "@/components/CustomerAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
@@ -150,6 +151,33 @@ const RestaurantPage = () => {
         const items = await fetchMenuItems(r.id);
         setMenuItems(items);
         document.title = `${r.name} - ${r.city || ""}`;
+        // Inject reorder from profile page
+        try {
+          const reorderRaw = localStorage.getItem("cm_reorder");
+          if (reorderRaw) {
+            const reorder = JSON.parse(reorderRaw);
+            if (reorder.restaurant_slug === slug) {
+              const reorderItems = Array.isArray(reorder.items) ? reorder.items : [];
+              for (const li of reorderItems) {
+                const menuItem = items.find((m) => m.name === li.name || m.id === li.menu_item_id);
+                if (menuItem) {
+                  const sauces = li.sauces || [];
+                  const supplements = Array.isArray(li.supplements)
+                    ? li.supplements.map((s: any) => typeof s === "string" ? { id: s, name: s, price: 0 } : { id: s.name, name: s.name, price: s.price || 0 })
+                    : [];
+                  const opts: any = {};
+                  if (li.viande_choice) opts.viandeChoice = li.viande_choice;
+                  if (li.garniture_choices) opts.garnitureChoices = li.garniture_choices;
+                  for (let q = 0; q < (li.quantity || 1); q++) {
+                    addItem(menuItem, sauces, supplements, r.slug, r.id, opts);
+                  }
+                }
+              }
+              localStorage.removeItem("cm_reorder");
+              toast.success("Commande precedente ajoutee au panier !");
+            }
+          }
+        } catch { /* ignore */ }
         // Fetch active order count for wait estimate
         fetchActiveOrderCount(r.id).then(setActiveOrderCount).catch(() => {});
         // Check for last order in localStorage
@@ -393,7 +421,10 @@ const RestaurantPage = () => {
           <Link to="/" className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors" aria-label="Retour">
             <ArrowLeft className="h-5 w-5 text-white" />
           </Link>
-          <LanguageSelector />
+          <div className="flex items-center gap-2">
+            <CustomerAvatar />
+            <LanguageSelector />
+          </div>
         </div>
         {/* Scroll sentinel */}
         <div ref={heroSentinelRef} className="absolute bottom-0 h-1 w-full" />

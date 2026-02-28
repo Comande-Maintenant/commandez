@@ -600,3 +600,106 @@ export async function fetchOrdersByPeriod(restaurantId: string, since: Date): Pr
   if (error) throw error;
   return (data ?? []) as unknown as DbOrder[];
 }
+
+// --- Customer Profiles ---
+
+export interface CustomerProfile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  default_order_type: string;
+  total_orders: number;
+  total_spent: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export async function fetchCustomerProfile(userId: string): Promise<CustomerProfile | null> {
+  const { data, error } = await supabase
+    .from("customer_profiles")
+    .select("*")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data as CustomerProfile | null;
+}
+
+export async function upsertCustomerProfile(profile: {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+}): Promise<CustomerProfile> {
+  const { data, error } = await supabase
+    .from("customer_profiles")
+    .upsert(profile, { onConflict: "id" })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as CustomerProfile;
+}
+
+export async function updateCustomerProfile(userId: string, updates: Partial<Pick<CustomerProfile, "name" | "phone" | "default_order_type">>): Promise<void> {
+  const { error } = await supabase
+    .from("customer_profiles")
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq("id", userId);
+  if (error) throw error;
+}
+
+export async function deleteCustomerProfile(userId: string): Promise<void> {
+  const { error } = await supabase
+    .from("customer_profiles")
+    .delete()
+    .eq("id", userId);
+  if (error) throw error;
+}
+
+export async function fetchCustomerOrders(userId: string): Promise<(DbOrder & { restaurant: { name: string; slug: string; primary_color: string } })[]> {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, restaurant:restaurants(name, slug, primary_color)")
+    .eq("customer_user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as (DbOrder & { restaurant: { name: string; slug: string; primary_color: string } })[];
+}
+
+export async function linkOrdersToUser(userId: string, email: string, phone?: string): Promise<void> {
+  // Link by email
+  if (email) {
+    await supabase
+      .from("orders")
+      .update({ customer_user_id: userId })
+      .eq("customer_email", email)
+      .is("customer_user_id", null);
+  }
+  // Link by phone
+  if (phone) {
+    await supabase
+      .from("orders")
+      .update({ customer_user_id: userId })
+      .eq("customer_phone", phone)
+      .is("customer_user_id", null);
+  }
+}
+
+export async function incrementCustomerStats(userId: string, orderTotal: number): Promise<void> {
+  const { data, error: fetchErr } = await supabase
+    .from("customer_profiles")
+    .select("total_orders, total_spent")
+    .eq("id", userId)
+    .single();
+  if (fetchErr || !data) return;
+  const c = data as any;
+  const { error } = await supabase
+    .from("customer_profiles")
+    .update({
+      total_orders: (c.total_orders || 0) + 1,
+      total_spent: (Number(c.total_spent) || 0) + orderTotal,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId);
+  if (error) throw error;
+}

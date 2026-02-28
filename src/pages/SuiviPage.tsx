@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft } from "lucide-react";
+import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
+import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import type { DbOrder } from "@/types/database";
 
 type OrderStatus = DbOrder["status"];
@@ -86,11 +90,17 @@ const ORDER_TYPE_LABELS: Record<string, string> = {
 const SuiviPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
+  const { isLoggedIn, signUp } = useCustomerAuth();
   const [order, setOrder] = useState<(DbOrder & { restaurant: { name: string; slug: string; primary_color: string; phone: string } }) | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const confettiRef = useRef<HTMLCanvasElement>(null);
   const confettiFiredRef = useRef(false);
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [profileDismissed, setProfileDismissed] = useState(() => {
+    try { return localStorage.getItem("cm_profile_dismissed") === "true"; } catch { return false; }
+  });
 
   useEffect(() => {
     if (!orderId) return;
@@ -313,6 +323,73 @@ const SuiviPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Profile creation block */}
+        {!isLoggedIn && order.customer_email && !profileDismissed && (isDone || isReady) && (
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
+            <div className="flex items-start gap-3 mb-3">
+              <UserPlus className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: primary }} />
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Creez votre profil en 10 secondes</p>
+                <p className="text-xs text-gray-500 mt-0.5">Retrouvez vos commandes et recommandez en un clic.</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <Input
+                type="email"
+                value={order.customer_email}
+                readOnly
+                className="h-11 bg-gray-50 text-sm"
+              />
+              <Input
+                type="password"
+                placeholder="Choisissez un mot de passe"
+                value={signupPassword}
+                onChange={(e) => setSignupPassword(e.target.value)}
+                className="h-11 text-sm"
+              />
+              <div className="flex gap-2">
+                <Button
+                  onClick={async () => {
+                    if (signupPassword.length < 6) {
+                      toast.error("Le mot de passe doit faire au moins 6 caracteres");
+                      return;
+                    }
+                    setSignupLoading(true);
+                    try {
+                      await signUp(
+                        order.customer_email,
+                        signupPassword,
+                        order.customer_name,
+                        order.customer_phone
+                      );
+                      toast.success("Profil cree avec succes !");
+                    } catch (e: any) {
+                      toast.error(e.message || "Erreur lors de l'inscription");
+                    } finally {
+                      setSignupLoading(false);
+                    }
+                  }}
+                  disabled={signupLoading || !signupPassword}
+                  className="flex-1 h-11 text-sm"
+                  style={{ backgroundColor: primary }}
+                >
+                  {signupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Creer mon profil"}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setProfileDismissed(true);
+                    localStorage.setItem("cm_profile_dismissed", "true");
+                  }}
+                  className="h-11 text-sm"
+                >
+                  Non merci
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Contact restaurant */}
         {order.restaurant.phone && !isDone && (

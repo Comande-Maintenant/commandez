@@ -4,7 +4,8 @@ import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle } from "lucide-re
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { createOrder, fetchClientIp, fetchRestaurantById, isCustomerBanned } from "@/lib/api";
+import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { createOrder, fetchClientIp, fetchRestaurantById, isCustomerBanned, incrementCustomerStats } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
@@ -14,6 +15,7 @@ const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
   const navigate = useNavigate();
   const { t, isRTL } = useLanguage();
+  const { user, isLoggedIn } = useCustomerAuth();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -77,12 +79,15 @@ const OrderPage = () => {
 
       const orderItems = items.map((i) => ({
         name: i.menuItem.name,
+        menu_item_id: i.menuItem.id,
         quantity: i.quantity,
         sauces: i.selectedSauces,
-        supplements: i.selectedSupplements.map((s) => s.name),
+        supplements: i.selectedSupplements.map((s) => ({ name: s.name, price: s.price })),
         price: i.totalPrice,
+        viande_choice: i.viandeChoice || null,
+        garniture_choices: i.garnitureChoices || null,
       }));
-      const order = await createOrder({
+      const orderPayload: Parameters<typeof createOrder>[0] = {
         restaurant_id: restaurantId,
         customer_name: name,
         customer_phone: phone,
@@ -93,15 +98,24 @@ const OrderPage = () => {
         total,
         client_ip: clientIpRef.current,
         pickup_time: pickupTime,
-      });
+      };
+      // Attach customer_user_id if logged in
+      if (isLoggedIn && user) {
+        (orderPayload as any).customer_user_id = user.id;
+      }
+      const order = await createOrder(orderPayload);
       localStorage.setItem("active-order", JSON.stringify({
         orderId: order.id,
         restaurantSlug: restaurantSlug || "",
         createdAt: Date.now(),
       }));
-      // Save last order for reorder feature
+      // Save last order for reorder feature (with full customizations)
       if (restaurantId) {
         localStorage.setItem(`last-order-${restaurantId}`, JSON.stringify(orderItems));
+      }
+      // Update customer profile stats if logged in
+      if (isLoggedIn && user) {
+        incrementCustomerStats(user.id, total).catch(() => {});
       }
       clearCart();
       navigate("/suivi/" + order.id);
