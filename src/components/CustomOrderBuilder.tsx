@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ShoppingBag, Check } from "lucide-react";
+import { ShoppingBag, Check, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import type { CustomizationConfig, CustomizationStep, DbMenuItem } from "@/types/database";
@@ -24,13 +24,13 @@ export function CustomOrderBuilder({
 }: Props) {
   const { t, language } = useLanguage();
   const { addItem } = useCart();
-  const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<Record<string, string[]>>({});
+  const [activeStep, setActiveStep] = useState(0);
   const [justAdded, setJustAdded] = useState(false);
+  const stepRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const cartRef = useRef<HTMLDivElement | null>(null);
 
   const steps = config.steps;
-  const step = steps[currentStep];
-  const isLastStep = currentStep === steps.length - 1;
 
   // Translate step title
   const tStepTitle = useCallback(
@@ -50,6 +50,26 @@ export function CustomOrderBuilder({
     [language]
   );
 
+  // Check if step is completed
+  const isStepCompleted = useCallback(
+    (idx: number) => {
+      const s = steps[idx];
+      const selected = selections[s.id] || [];
+      if (s.required) return selected.length > 0;
+      // Optional steps are "completed" if we've moved past them
+      return idx < activeStep;
+    },
+    [steps, selections, activeStep]
+  );
+
+  // Check if all required steps are done
+  const allRequiredDone = useMemo(() => {
+    return steps.every((s, idx) => {
+      if (!s.required) return true;
+      return (selections[s.id] || []).length > 0;
+    });
+  }, [steps, selections]);
+
   // Calculate total price
   const totalPrice = useMemo(() => {
     let total = config.base_price;
@@ -63,14 +83,30 @@ export function CustomOrderBuilder({
     return total;
   }, [config, steps, selections]);
 
+  // Scroll to a step
+  const scrollToStep = useCallback((idx: number) => {
+    setTimeout(() => {
+      stepRefs.current[idx]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }, []);
+
+  // Scroll to cart button
+  const scrollToCart = useCallback(() => {
+    setTimeout(() => {
+      cartRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }, []);
+
   // Toggle an option
-  const toggleOption = useCallback(
-    (stepDef: CustomizationStep, optionId: string) => {
+  const handleSelect = useCallback(
+    (stepIdx: number, stepDef: CustomizationStep, optionId: string) => {
       setSelections((prev) => {
         const current = prev[stepDef.id] || [];
+
         if (stepDef.type === "single") {
           return { ...prev, [stepDef.id]: [optionId] };
         }
+
         // Multiple
         if (current.includes(optionId)) {
           return { ...prev, [stepDef.id]: current.filter((id) => id !== optionId) };
@@ -80,17 +116,56 @@ export function CustomOrderBuilder({
         }
         return { ...prev, [stepDef.id]: [...current, optionId] };
       });
+
+      // Single-select: auto-advance to next step
+      if (stepDef.type === "single") {
+        const nextIdx = stepIdx + 1;
+        if (nextIdx < steps.length) {
+          setActiveStep(nextIdx);
+          scrollToStep(nextIdx);
+        } else {
+          // Last step, scroll to cart
+          scrollToCart();
+        }
+      }
     },
-    []
+    [steps, scrollToStep, scrollToCart]
+  );
+
+  // "Continuer" for multi-select steps
+  const handleContinue = useCallback(
+    (stepIdx: number) => {
+      const nextIdx = stepIdx + 1;
+      if (nextIdx < steps.length) {
+        setActiveStep(nextIdx);
+        scrollToStep(nextIdx);
+      } else {
+        scrollToCart();
+      }
+    },
+    [steps, scrollToStep, scrollToCart]
   );
 
   const isSelected = (stepId: string, optionId: string) =>
     (selections[stepId] || []).includes(optionId);
 
-  // Can advance? Check required steps
-  const canAdvance = step.required ? (selections[step.id] || []).length > 0 : true;
+  // Build summary text for a completed step
+  const getStepSummary = useCallback(
+    (s: CustomizationStep) => {
+      const selected = selections[s.id] || [];
+      if (selected.length === 0) return null;
+      return selected
+        .map((optId) => {
+          const opt = s.options.find((o) => o.id === optId);
+          return opt ? tOptionName(opt) : "";
+        })
+        .filter(Boolean)
+        .join(", ");
+    },
+    [selections, tOptionName]
+  );
 
-  // Build item name from selections (e.g. "Kebab Agneau")
+  // Build item name from selections
   const buildName = useCallback(() => {
     const parts: string[] = [];
     const baseOpt = selections["base"]?.[0];
@@ -137,9 +212,8 @@ export function CustomOrderBuilder({
       sort_order: 0,
     };
     addItem(syntheticItem, [], [], restaurantSlug, restaurantId);
-    // Reset
     setSelections({});
-    setCurrentStep(0);
+    setActiveStep(0);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 2000);
   }, [addItem, buildName, buildDescription, totalPrice, restaurantSlug, restaurantId]);
@@ -149,130 +223,176 @@ export function CustomOrderBuilder({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-base font-semibold text-gray-900">{t("custom.title")}</h4>
-        <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: primaryLight, color: primaryDark }}>
+        <span
+          className="text-xs font-medium px-2.5 py-1 rounded-full"
+          style={{ backgroundColor: primaryLight, color: primaryDark }}
+        >
           {t("custom.base_price", { price: config.base_price.toFixed(2) })}
         </span>
       </div>
 
-      {/* Progress dots */}
-      <div className="flex items-center gap-1.5 mb-4">
-        {steps.map((s, idx) => (
-          <div
-            key={s.id}
-            className="h-1.5 rounded-full flex-1 transition-all duration-300"
-            style={{
-              backgroundColor: idx <= currentStep ? primaryColor : `${primaryColor}20`,
-            }}
-          />
-        ))}
-      </div>
+      {/* All steps */}
+      <div className="space-y-3">
+        {steps.map((s, idx) => {
+          const completed = isStepCompleted(idx);
+          const isCurrent = idx === activeStep;
+          const summary = getStepSummary(s);
+          const selected = selections[s.id] || [];
+          const isPast = idx < activeStep;
+          const isFuture = idx > activeStep;
 
-      {/* Step indicator */}
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-xs text-gray-500">
-          {t("custom.step_of", { current: currentStep + 1, total: steps.length })}
-        </span>
-        <span
-          className="text-xs font-medium px-2 py-0.5 rounded-full"
-          style={{
-            backgroundColor: step.required ? `${primaryColor}15` : "#f3f4f6",
-            color: step.required ? primaryColor : "#6b7280",
-          }}
-        >
-          {step.required ? t("custom.required") : t("custom.optional")}
-          {step.max_selections ? ` (${t("custom.max_selections", { max: step.max_selections })})` : ""}
-        </span>
-      </div>
-
-      {/* Step title */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step.id}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.2 }}
-        >
-          <h5 className="text-sm font-semibold text-gray-800 mb-3">{tStepTitle(step)}</h5>
-
-          {/* Options grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {step.options.map((opt) => {
-              const selected = isSelected(step.id, opt.id);
-              return (
+          return (
+            <div
+              key={s.id}
+              ref={(el) => { stepRefs.current[idx] = el; }}
+              className="scroll-mt-4"
+            >
+              {/* Completed step: collapsed summary */}
+              {completed && !isCurrent ? (
                 <button
-                  key={opt.id}
-                  onClick={() => toggleOption(step, opt.id)}
-                  className="relative flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all duration-200 min-h-[64px] border-2"
-                  style={{
-                    backgroundColor: selected ? primaryColor : primaryLight,
-                    borderColor: selected ? primaryColor : "transparent",
-                    color: selected ? "#ffffff" : primaryDark,
-                  }}
+                  onClick={() => setActiveStep(idx)}
+                  className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl transition-colors hover:bg-gray-50"
                 >
-                  {selected && (
-                    <div className="absolute top-1.5 right-1.5">
-                      <Check className="h-3.5 w-3.5" />
+                  <div
+                    className="h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    <Check className="h-3 w-3 text-white" />
+                  </div>
+                  <span className="text-sm text-gray-500">{tStepTitle(s)}</span>
+                  <span className="text-sm font-medium text-gray-900 truncate flex-1 text-left ml-1">
+                    {summary}
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                </button>
+              ) : (
+                /* Active or future step: expanded */
+                <div
+                  className={`rounded-xl border transition-all ${
+                    isCurrent
+                      ? "border-gray-200 bg-white"
+                      : "border-gray-100 bg-gray-50/50 opacity-50"
+                  }`}
+                  style={isCurrent ? { borderColor: `${primaryColor}30` } : undefined}
+                >
+                  <div className="px-3 py-2.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
+                        style={{
+                          backgroundColor: isCurrent ? primaryColor : "#e5e7eb",
+                          color: isCurrent ? "#ffffff" : "#9ca3af",
+                        }}
+                      >
+                        {idx + 1}
+                      </div>
+                      <span className={`text-sm font-semibold ${isCurrent ? "text-gray-900" : "text-gray-400"}`}>
+                        {tStepTitle(s)}
+                      </span>
+                    </div>
+                    <span
+                      className="text-xs font-medium px-2 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: s.required && isCurrent ? `${primaryColor}15` : "#f3f4f6",
+                        color: s.required && isCurrent ? primaryColor : "#9ca3af",
+                      }}
+                    >
+                      {s.required ? t("custom.required") : t("custom.optional")}
+                    </span>
+                  </div>
+
+                  {/* Options grid - only for current step */}
+                  {isCurrent && (
+                    <div className="px-3 pb-3">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {s.options.map((opt) => {
+                          const sel = isSelected(s.id, opt.id);
+                          return (
+                            <button
+                              key={opt.id}
+                              onClick={() => handleSelect(idx, s, opt.id)}
+                              className="relative flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all duration-200 min-h-[64px] border-2"
+                              style={{
+                                backgroundColor: sel ? primaryColor : primaryLight,
+                                borderColor: sel ? primaryColor : "transparent",
+                                color: sel ? "#ffffff" : primaryDark,
+                              }}
+                            >
+                              {sel && (
+                                <div className="absolute top-1.5 right-1.5">
+                                  <Check className="h-3.5 w-3.5" />
+                                </div>
+                              )}
+                              <span className="text-sm font-medium leading-tight">{tOptionName(opt)}</span>
+                              {opt.price_modifier > 0 && (
+                                <span className="text-xs mt-1 opacity-80">
+                                  +{opt.price_modifier.toFixed(2)} €
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Multi-select: continue link */}
+                      {s.type === "multiple" && (
+                        <button
+                          onClick={() => handleContinue(idx)}
+                          className="mt-3 w-full text-center text-sm font-medium py-2 rounded-xl transition-colors"
+                          style={{ color: primaryColor }}
+                        >
+                          {selected.length === 0
+                            ? (s.id === "sauces" ? "Pas de sauce" : s.id === "supplements" ? "Pas de supplement" : "Passer")
+                            : "Continuer"
+                          }
+                          {" "}
+                          <ChevronDown className="inline h-3.5 w-3.5" />
+                        </button>
+                      )}
                     </div>
                   )}
-                  <span className="text-sm font-medium leading-tight">{tOptionName(opt)}</span>
-                  {opt.price_modifier > 0 && (
-                    <span className="text-xs mt-1 opacity-80">
-                      +{opt.price_modifier.toFixed(2)} €
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-      </AnimatePresence>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
-      {/* Navigation buttons */}
-      <div className="flex items-center justify-between mt-5 gap-3">
-        {currentStep > 0 ? (
-          <button
-            onClick={() => setCurrentStep((s) => s - 1)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
-            style={{ backgroundColor: primaryLight, color: primaryDark }}
+      {/* Cart section - visible when required steps are done */}
+      <div ref={cartRef} className="scroll-mt-4">
+        {allRequiredDone && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 pt-4 border-t border-gray-100"
           >
-            <ChevronLeft className="h-4 w-4" />
-            {t("custom.previous")}
-          </button>
-        ) : (
-          <div />
-        )}
-
-        {isLastStep ? (
-          <button
-            onClick={handleAddToCart}
-            disabled={!canAdvance}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-[0.97] disabled:opacity-50"
-            style={{ backgroundColor: primaryColor }}
-          >
-            <ShoppingBag className="h-4 w-4" />
-            {t("custom.add_to_cart", { price: totalPrice.toFixed(2) })}
-          </button>
-        ) : (
-          <button
-            onClick={() => setCurrentStep((s) => s + 1)}
-            disabled={!canAdvance}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-[0.97] disabled:opacity-50"
-            style={{ backgroundColor: primaryColor }}
-          >
-            {t("custom.next")}
-            <ChevronRight className="h-4 w-4" />
-          </button>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm text-gray-500">{t("custom.your_selection")}</span>
+              <span className="text-base font-bold" style={{ color: primaryColor }}>
+                {t("custom.total", { price: totalPrice.toFixed(2) })}
+              </span>
+            </div>
+            <button
+              onClick={handleAddToCart}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white transition-all active:scale-[0.97]"
+              style={{ backgroundColor: primaryColor }}
+            >
+              <ShoppingBag className="h-4 w-4" />
+              {t("custom.add_to_cart", { price: totalPrice.toFixed(2) })}
+            </button>
+          </motion.div>
         )}
       </div>
 
-      {/* Running total */}
-      <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-        <span className="text-xs text-gray-500">{t("custom.your_selection")}</span>
-        <span className="text-sm font-bold" style={{ color: primaryColor }}>
-          {t("custom.total", { price: totalPrice.toFixed(2) })}
-        </span>
-      </div>
+      {/* Running total - always visible at bottom */}
+      {!allRequiredDone && (
+        <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+          <span className="text-xs text-gray-500">{t("custom.your_selection")}</span>
+          <span className="text-sm font-bold" style={{ color: primaryColor }}>
+            {t("custom.total", { price: totalPrice.toFixed(2) })}
+          </span>
+        </div>
+      )}
 
       {/* Added confirmation */}
       <AnimatePresence>
