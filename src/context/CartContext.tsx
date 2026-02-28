@@ -7,6 +7,8 @@ export interface CartItem {
   quantity: number;
   selectedSauces: string[];
   selectedSupplements: Supplement[];
+  garnitureChoices?: { name: string; level: "oui" | "x2" }[];
+  viandeChoice?: string;
   totalPrice: number;
 }
 
@@ -14,7 +16,7 @@ interface CartContextType {
   items: CartItem[];
   restaurantSlug: string | null;
   restaurantId: string | null;
-  addItem: (item: DbMenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string, restaurantId: string) => void;
+  addItem: (item: DbMenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string, restaurantId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -45,17 +47,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     saveCart(state.items, state.restaurantSlug, state.restaurantId);
   }, [state]);
 
-  const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string) => {
+  const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number }) => {
     setState((prev) => {
       let items = prev.items;
       if (prev.restaurantSlug && prev.restaurantSlug !== slug) {
         items = [];
       }
       const suppTotal = supplements.reduce((sum, s) => sum + s.price, 0);
-      const totalPrice = menuItem.price + suppTotal;
+      const totalPrice = menuItem.price + suppTotal + (options?.extraCost || 0);
       const cartId = `${menuItem.id}-${Date.now()}`;
       return {
-        items: [...items, { id: cartId, menuItem, quantity: 1, selectedSauces: sauces, selectedSupplements: supplements, totalPrice }],
+        items: [...items, { id: cartId, menuItem, quantity: 1, selectedSauces: sauces, selectedSupplements: supplements, garnitureChoices: options?.garnitureChoices, viandeChoice: options?.viandeChoice, totalPrice }],
         restaurantSlug: slug,
         restaurantId: restId,
       };

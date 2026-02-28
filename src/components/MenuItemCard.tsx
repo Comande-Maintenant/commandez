@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
-import type { DbMenuItem } from "@/types/database";
+import type { DbMenuItem, CustomizationConfig } from "@/types/database";
 import { useLanguage } from "@/context/LanguageContext";
 import { ItemCustomizeModal } from "./ItemCustomizeModal";
+import { SavoryItemDrawer, isSavoryItem } from "./SavoryItemDrawer";
 
 interface Props {
   item: DbMenuItem;
@@ -13,12 +14,16 @@ interface Props {
   primaryColor?: string;
   primaryLight?: string;
   isEven?: boolean;
+  customizationConfig?: CustomizationConfig | null;
 }
 
-export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight }: Props) => {
+export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig }: Props) => {
   const [open, setOpen] = useState(false);
   const { t, tMenu } = useLanguage();
   const translated = tMenu(item);
+
+  const garnitureStep = customizationConfig?.steps?.find((s) => s.id === "garniture");
+  const showDrawer = isSavoryItem(item.category) && !!garnitureStep && !!customizationConfig;
 
   return (
     <>
@@ -89,14 +94,26 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         </motion.button>
       </motion.div>
 
-      <ItemCustomizeModal
-        item={item}
-        open={open}
-        onClose={() => setOpen(false)}
-        restaurantSlug={restaurantSlug}
-        restaurantId={restaurantId}
-        primaryColor={primaryColor}
-      />
+      {showDrawer ? (
+        <SavoryItemDrawer
+          item={item}
+          open={open}
+          onClose={() => setOpen(false)}
+          restaurantSlug={restaurantSlug}
+          restaurantId={restaurantId}
+          customizationConfig={customizationConfig}
+          primaryColor={primaryColor || "#FF6B00"}
+        />
+      ) : (
+        <ItemCustomizeModal
+          item={item}
+          open={open}
+          onClose={() => setOpen(false)}
+          restaurantSlug={restaurantSlug}
+          restaurantId={restaurantId}
+          primaryColor={primaryColor}
+        />
+      )}
     </>
   );
 };

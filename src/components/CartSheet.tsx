@@ -62,6 +62,16 @@ export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
                 <div key={item.id} className="flex gap-3 p-3 bg-secondary/50 rounded-xl">
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium text-foreground">{item.menuItem.name}</h4>
+                    {item.viandeChoice && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Viande : {item.viandeChoice}
+                      </p>
+                    )}
+                    {item.garnitureChoices && item.garnitureChoices.length > 0 && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Garniture : {item.garnitureChoices.map((g) => g.level === "x2" ? `${g.name} x2` : g.name).join(", ")}
+                      </p>
+                    )}
                     {item.selectedSauces.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {item.selectedSauces.join(", ")}

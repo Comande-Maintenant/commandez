@@ -698,6 +698,7 @@ const RestaurantPage = () => {
                             primaryColor={primary}
                             primaryLight={primaryLight}
                             isEven={idx % 2 === 0}
+                            customizationConfig={restaurant.customization_config}
                           />
                         ))}
                       </motion.div>
