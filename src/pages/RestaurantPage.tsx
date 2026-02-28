@@ -102,11 +102,14 @@ function getDefaultCoverImage(cuisine: string): string {
   return "/images/covers/default.jpg";
 }
 
-const PAYMENT_ICONS: Record<string, { icon: typeof CreditCard; label: string }> = {
-  "CB": { icon: CreditCard, label: "reassurance.payment_card" },
-  "Carte bancaire": { icon: CreditCard, label: "reassurance.payment_card" },
-  "Especes": { icon: Banknote, label: "reassurance.payment_cash" },
-  "Ticket restaurant": { icon: Ticket, label: "reassurance.payment_ticket" },
+const PAYMENT_ICONS: Record<string, { icon: typeof CreditCard; labelFR: string }> = {
+  "card": { icon: CreditCard, labelFR: "CB" },
+  "CB": { icon: CreditCard, labelFR: "CB" },
+  "Carte bancaire": { icon: CreditCard, labelFR: "Carte bancaire" },
+  "cash": { icon: Banknote, labelFR: "Especes" },
+  "Especes": { icon: Banknote, labelFR: "Especes" },
+  "ticket_restaurant": { icon: Ticket, labelFR: "Ticket restaurant" },
+  "Ticket restaurant": { icon: Ticket, labelFR: "Ticket restaurant" },
 };
 
 const RestaurantPage = () => {
@@ -278,9 +281,19 @@ const RestaurantPage = () => {
   const initial = restaurant.name?.charAt(0)?.toUpperCase() || "R";
 
   return (
-    <div className="min-h-screen pb-28" dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
+    <div className="relative min-h-screen pb-28" dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
+      {/* Full-page background gradient: primary -> bg, behind everything */}
+      <div
+        className="absolute inset-x-0 top-0 pointer-events-none"
+        style={{
+          height: "100vh",
+          zIndex: 0,
+          background: `linear-gradient(to bottom, ${primary} 0%, ${primaryLight} 40%, ${bg} 80%, ${bg} 100%)`,
+        }}
+      />
+
       {/* Cover / Hero */}
-      <div className="relative h-[220px] sm:h-64 overflow-hidden">
+      <div className="relative h-[200px] sm:h-64 overflow-hidden" style={{ zIndex: 1 }}>
         <img
           src={restaurant.cover_image || getDefaultCoverImage(restaurant.cuisine)}
           alt={restaurant.name}
@@ -290,7 +303,7 @@ const RestaurantPage = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 50%, ${hexToRgba(primary, 0.85)} 100%)`
+            background: `linear-gradient(to bottom, transparent 40%, ${primary} 100%)`
           }}
         />
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
@@ -303,18 +316,7 @@ const RestaurantPage = () => {
         <div ref={heroSentinelRef} className="absolute bottom-0 h-1 w-full" />
       </div>
 
-      {/* Mirror gradient: subtle primary glow below hero, fades to bg */}
-      <div
-        className="absolute left-0 right-0 pointer-events-none"
-        style={{
-          top: "220px",
-          height: "200px",
-          background: `linear-gradient(to bottom, ${hexToRgba(primary, 0.12)} 0%, ${hexToRgba(primary, 0.04)} 50%, transparent 100%)`,
-          zIndex: 0,
-        }}
-      />
-
-      <div className="max-w-3xl mx-auto px-4 -mt-16 relative z-10">
+      <div className="max-w-3xl mx-auto px-4 -mt-16 relative" style={{ zIndex: 2 }}>
         {/* Restaurant Info Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <div
@@ -408,7 +410,7 @@ const RestaurantPage = () => {
                       style={{ backgroundColor: primaryLight, color: primaryDark }}
                     >
                       <Icon className="h-3.5 w-3.5" />
-                      {config ? t(config.label) : method}
+                      {config?.labelFR || method}
                     </span>
                   );
                 })}
