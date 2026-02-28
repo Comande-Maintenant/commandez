@@ -395,7 +395,7 @@ export function CustomOrderBuilder({
 
   return (
     <div
-      className="rounded-2xl p-4 sm:p-5"
+      className="rounded-[28px] p-4 sm:p-5"
       style={{
         background: "rgba(255,255,255,0.55)",
         backdropFilter: "blur(12px)",
