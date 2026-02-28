@@ -303,6 +303,17 @@ const RestaurantPage = () => {
         <div ref={heroSentinelRef} className="absolute bottom-0 h-1 w-full" />
       </div>
 
+      {/* Mirror gradient background: primary fades to bg behind content */}
+      <div
+        className="absolute left-0 right-0 pointer-events-none"
+        style={{
+          top: "180px",
+          height: "400px",
+          background: `linear-gradient(to bottom, ${hexToRgba(primary, 0.15)} 0%, ${hexToRgba(primary, 0.05)} 40%, ${bg} 100%)`,
+          zIndex: 0,
+        }}
+      />
+
       <div className="max-w-3xl mx-auto px-4 -mt-16 relative z-10">
         {/* Restaurant Info Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
@@ -444,12 +455,6 @@ const RestaurantPage = () => {
           </motion.button>
         )}
 
-        {/* Double fade: info card -> menu transition */}
-        <div
-          className="h-16 -mx-4 pointer-events-none"
-          style={{ background: `linear-gradient(to bottom, ${hexToRgba(primary, 0.08)} 0%, transparent 100%)` }}
-        />
-
         {/* No menu items edge case */}
         {menuItems.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
@@ -460,7 +465,7 @@ const RestaurantPage = () => {
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
               <div
-                className={`sticky top-0 z-30 mt-6 -mx-4 px-4 py-3 border-b border-gray-200/50 backdrop-blur-xl transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
+                className={`sticky top-0 z-30 mt-4 -mx-4 px-4 py-3 border-b border-gray-200/50 backdrop-blur-xl transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
                 style={{ backgroundColor: `${bg}ee` }}
               >
                 <div ref={navScrollRef} className="flex gap-2 overflow-x-auto no-scrollbar">
