@@ -63,6 +63,21 @@ function darken(hex: string, amount: number): string {
   return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 }
 
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function getDefaultCoverImage(cuisine: string): string {
+  const c = cuisine.toLowerCase();
+  if (c.includes("kebab") || c.includes("turc") || c.includes("döner") || c.includes("doner")) return "/images/covers/kebab.jpg";
+  if (c.includes("pizza") || c.includes("italien") || c.includes("italian")) return "/images/covers/pizza.jpg";
+  if (c.includes("burger") || c.includes("américain") || c.includes("american")) return "/images/covers/burger.jpg";
+  return "/images/covers/default.jpg";
+}
+
 const PAYMENT_ICONS: Record<string, { icon: typeof CreditCard; label: string }> = {
   "CB": { icon: CreditCard, label: "reassurance.payment_card" },
   "Carte bancaire": { icon: CreditCard, label: "reassurance.payment_card" },
@@ -211,29 +226,19 @@ const RestaurantPage = () => {
   return (
     <div className="min-h-screen pb-28" dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
       {/* Cover / Hero */}
-      <div className="relative h-52 sm:h-64 overflow-hidden">
-        {restaurant.cover_image ? (
-          <img src={restaurant.cover_image} alt={restaurant.name} className="w-full h-full object-cover" loading="lazy" />
-        ) : (
-          <div className="w-full h-full relative">
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `
-                  radial-gradient(ellipse at 20% 50%, ${lighten(primary, 0.3)} 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 20%, ${lighten(primary, 0.5)} 0%, transparent 50%),
-                  radial-gradient(ellipse at 50% 80%, ${darken(primary, 0.2)} 0%, transparent 60%),
-                  linear-gradient(135deg, ${primary} 0%, ${darken(primary, 0.3)} 100%)
-                `
-              }}
-            />
-            <div className="absolute inset-0 opacity-[0.08]" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-              backgroundSize: "128px 128px"
-            }} />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
+      <div className="relative h-[220px] sm:h-64 overflow-hidden">
+        <img
+          src={restaurant.cover_image || getDefaultCoverImage(restaurant.cuisine)}
+          alt={restaurant.name}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 50%, ${hexToRgba(primary, 0.85)} 100%)`
+          }}
+        />
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
           <Link to="/" className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors">
             <ArrowLeft className="h-5 w-5 text-white" />
