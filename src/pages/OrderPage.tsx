@@ -68,6 +68,10 @@ const OrderPage = () => {
         restaurantSlug: restaurantSlug || "",
         createdAt: Date.now(),
       }));
+      // Save last order for reorder feature
+      if (restaurantId) {
+        localStorage.setItem(`last-order-${restaurantId}`, JSON.stringify(orderItems));
+      }
       clearCart();
       navigate("/suivi/" + order.id);
     } catch (e) {
@@ -91,7 +95,7 @@ const OrderPage = () => {
     <div className="min-h-screen bg-background" dir={isRTL ? "rtl" : "ltr"}>
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-1">
+          <button onClick={() => navigate(-1)} className="p-2" aria-label="Retour">
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
           <h1 className="text-lg font-semibold text-foreground">{t("order.place_order")}</h1>

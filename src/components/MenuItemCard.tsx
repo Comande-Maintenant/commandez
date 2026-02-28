@@ -64,10 +64,11 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
             <div className="relative w-20 h-20 sm:w-[100px] sm:h-[100px] rounded-xl overflow-hidden flex-shrink-0">
               <img src={item.image} alt={translated.name} className="w-full h-full object-cover" loading="lazy" />
               <motion.div
-                className="absolute bottom-1 right-1 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity text-white"
+                className="absolute bottom-1 right-1 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-white"
                 style={{ backgroundColor: primaryColor || "#FF6B00" }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label="Ajouter au panier"
               >
                 <Plus className="h-3.5 w-3.5" />
               </motion.div>
@@ -75,10 +76,11 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
           ) : (
             <div className="flex items-center">
               <motion.div
-                className="rounded-full p-2 transition-colors text-white"
+                className="rounded-full p-2.5 transition-colors text-white"
                 style={{ backgroundColor: primaryColor || "#FF6B00" }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label="Ajouter au panier"
               >
                 <Plus className="h-4 w-4" />
               </motion.div>

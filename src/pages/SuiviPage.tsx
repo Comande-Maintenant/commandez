@@ -182,7 +182,7 @@ const SuiviPage = () => {
 
       {/* Header */}
       <div className="px-4 pt-6 pb-4 flex items-center gap-3">
-        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors">
+        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors" aria-label="Retour au restaurant">
           <ArrowLeft className="h-5 w-5 text-gray-700" />
         </button>
         <div>

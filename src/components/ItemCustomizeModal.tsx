@@ -71,7 +71,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
           >
             <div className="sticky top-0 bg-white/90 backdrop-blur-xl z-10 p-4 flex items-center justify-between border-b border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900">{translated.name}</h3>
-              <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+              <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Fermer">
                 <X className="h-5 w-5 text-gray-400" />
               </button>
             </div>

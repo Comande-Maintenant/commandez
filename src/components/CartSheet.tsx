@@ -77,20 +77,22 @@ export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
                     </p>
                   </div>
                   <div className="flex flex-col items-end justify-between">
-                    <button onClick={() => removeItem(item.id)} className="p-1 text-muted-foreground hover:text-destructive transition-colors">
+                    <button onClick={() => removeItem(item.id)} className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors" aria-label="Supprimer">
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-1 rounded-full bg-background"
+                        className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-full bg-background"
+                        aria-label="Reduire quantite"
                       >
                         <Minus className="h-3 w-3" />
                       </button>
                       <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 rounded-full bg-background"
+                        className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-full bg-background"
+                        aria-label="Augmenter quantite"
                       >
                         <Plus className="h-3 w-3" />
                       </button>

@@ -267,6 +267,29 @@ export function subscribeToOrderStatus(orderId: string, callback: (order: DbOrde
   };
 }
 
+export async function incrementDeactivationVisits(restaurantId: string) {
+  const { data } = await supabase
+    .from("restaurants")
+    .select("deactivation_visit_count")
+    .eq("id", restaurantId)
+    .single();
+  const current = (data as any)?.deactivation_visit_count || 0;
+  await supabase
+    .from("restaurants")
+    .update({ deactivation_visit_count: current + 1 })
+    .eq("id", restaurantId);
+}
+
+export async function fetchActiveOrderCount(restaurantId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from("orders")
+    .select("*", { count: "exact", head: true })
+    .eq("restaurant_id", restaurantId)
+    .in("status", ["new", "preparing"]);
+  if (error) return 0;
+  return count ?? 0;
+}
+
 export function subscribeToOrders(restaurantId: string, callback: (order: DbOrder) => void) {
   const channel = supabase
     .channel(`orders-${restaurantId}`)

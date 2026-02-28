@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchRestaurantBySlug, fetchMenuItems } from "@/lib/api";
+import { fetchRestaurantBySlug, fetchMenuItems, incrementDeactivationVisits, fetchActiveOrderCount } from "@/lib/api";
 import { checkRestaurantAvailability, canPlaceOrder } from "@/lib/schedule";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
 import { MenuItemCard } from "@/components/MenuItemCard";
@@ -13,6 +13,7 @@ import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
+import { toast } from "sonner";
 
 const DEFAULT_PRIMARY = "#FF6B00";
 const UNIVERSAL_BG = "#FFF8F0";
@@ -118,6 +119,8 @@ const RestaurantPage = () => {
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeOrderCount, setActiveOrderCount] = useState(0);
+  const [lastOrderItems, setLastOrderItems] = useState<any[] | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [cartOpen, setCartOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -126,7 +129,7 @@ const RestaurantPage = () => {
   const isScrollingRef = useRef(false);
   const [scrolled, setScrolled] = useState(false);
   const heroSentinelRef = useRef<HTMLDivElement>(null);
-  const { totalItems, subtotal } = useCart();
+  const { totalItems, subtotal, addItem } = useCart();
   const { t, tCategory, isRTL } = useLanguage();
   const { updateSection } = useVisitorTracking(restaurant?.id ?? null);
 
@@ -136,9 +139,22 @@ const RestaurantPage = () => {
     fetchRestaurantBySlug(slug).then(async (r) => {
       setRestaurant(r);
       if (r) {
+        // If deactivated, increment visit count and skip menu fetch
+        if (r.deactivated_at) {
+          incrementDeactivationVisits(r.id).catch(() => {});
+          setLoading(false);
+          return;
+        }
         const items = await fetchMenuItems(r.id);
         setMenuItems(items);
         document.title = `${r.name} - ${r.city || ""}`;
+        // Fetch active order count for wait estimate
+        fetchActiveOrderCount(r.id).then(setActiveOrderCount).catch(() => {});
+        // Check for last order in localStorage
+        try {
+          const raw = localStorage.getItem(`last-order-${r.id}`);
+          if (raw) setLastOrderItems(JSON.parse(raw));
+        } catch { /* ignore */ }
       }
       setLoading(false);
     });
@@ -264,6 +280,24 @@ const RestaurantPage = () => {
     );
   }
 
+  // Deactivated restaurant
+  if (restaurant.deactivated_at) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center max-w-sm mx-auto px-4">
+          {restaurant.image && (
+            <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
+          )}
+          <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
+          <p className="text-muted-foreground text-sm">Ce restaurant n'est plus disponible pour le moment.</p>
+          <Link to="/" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
+            Retour
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const categories = restaurant.categories ?? [];
   const currentCategory = activeCategory || categories[0];
   const catTranslations = restaurant.category_translations;
@@ -304,7 +338,7 @@ const RestaurantPage = () => {
           }}
         />
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
-          <Link to="/" className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors">
+          <Link to="/" className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors" aria-label="Retour">
             <ArrowLeft className="h-5 w-5 text-white" />
           </Link>
           <LanguageSelector />
@@ -441,6 +475,33 @@ const RestaurantPage = () => {
               </div>
             </motion.div>
 
+            {/* Wait estimate + active orders */}
+            {activeOrderCount > 0 && (
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full"
+                  style={{ backgroundColor: primaryLight, color: primaryDark }}
+                >
+                  <Clock className="h-3.5 w-3.5" />
+                  {activeOrderCount <= 3 ? "~10-15 min" : activeOrderCount <= 7 ? "~20 min" : "~30 min, forte affluence"}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {activeOrderCount} commande{activeOrderCount > 1 ? "s" : ""} en preparation
+                </span>
+              </div>
+            )}
+            {activeOrderCount === 0 && orderCheck.canOrder && (
+              <div className="mt-3">
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full"
+                  style={{ backgroundColor: primaryLight, color: primaryDark }}
+                >
+                  <Clock className="h-3.5 w-3.5" />
+                  Aucune attente
+                </span>
+              </div>
+            )}
+
             {/* Closed / not accepting banner */}
             {!orderCheck.canOrder && (
               <div className="mt-3 p-3 bg-red-50 rounded-xl flex items-start gap-2">
@@ -463,6 +524,42 @@ const RestaurantPage = () => {
             <span>Votre commande est en cours</span>
             <span className="bg-white/20 px-3 py-1 rounded-full text-xs">Suivre</span>
           </motion.button>
+        )}
+
+        {/* Reorder banner */}
+        {lastOrderItems && lastOrderItems.length > 0 && !activeOrderId && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl border"
+            style={{ backgroundColor: primaryLight, borderColor: `${primary}30` }}
+          >
+            <div className="min-w-0">
+              <p className="text-sm font-medium" style={{ color: primaryDark }}>Recommander votre derniere commande ?</p>
+              <p className="text-xs text-gray-500 truncate">
+                {lastOrderItems.map((i: any) => `${i.quantity}x ${i.name}`).join(", ")}
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                // Add each last order item to cart
+                for (const li of lastOrderItems) {
+                  const menuItem = menuItems.find((m) => m.name === li.name);
+                  if (menuItem) {
+                    for (let q = 0; q < li.quantity; q++) {
+                      addItem(menuItem, li.sauces || [], (li.supplements || []).map((s: string) => ({ id: s, name: s, price: 0 })), restaurant.slug, restaurant.id);
+                    }
+                  }
+                }
+                setLastOrderItems(null);
+                toast.success("Commande ajoutee au panier !");
+              }}
+              className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white flex-shrink-0"
+              style={{ backgroundColor: primary }}
+            >
+              Ajouter
+            </button>
+          </motion.div>
         )}
 
         {/* No menu items edge case */}

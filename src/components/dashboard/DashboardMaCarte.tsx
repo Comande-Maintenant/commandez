@@ -20,6 +20,7 @@ import {
   Plus,
   Pencil,
   Trash2,
+  Copy,
   GripVertical,
   Loader2,
   ChevronDown,
@@ -60,11 +61,13 @@ function SortableItemRow({
   onToggle,
   onEdit,
   onDelete,
+  onDuplicate,
 }: {
   item: DbMenuItem;
   onToggle: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onDuplicate: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
   const style = { transform: CSS.Transform.toString(transform), transition };
@@ -93,6 +96,9 @@ function SortableItemRow({
       <span className="text-sm font-bold text-foreground shrink-0">{Number(item.price).toFixed(2)} €</span>
       <div className="flex items-center gap-1.5 shrink-0">
         <Switch checked={item.enabled} onCheckedChange={onToggle} className="scale-75" />
+        <button onClick={onDuplicate} className="p-1.5 rounded-lg hover:bg-secondary transition-colors" title="Dupliquer">
+          <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+        </button>
         <button onClick={onEdit} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
           <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
         </button>
@@ -188,6 +194,26 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   const toggleItem = async (id: string, enabled: boolean) => {
     await updateMenuItem(id, { enabled: !enabled });
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, enabled: !enabled } : i)));
+  };
+
+  const handleDuplicateItem = async (item: DbMenuItem) => {
+    try {
+      await insertMenuItem({
+        restaurant_id: restaurant.id,
+        name: item.name + " (copie)",
+        description: item.description,
+        price: item.price,
+        category: item.category,
+        image: item.image || undefined,
+        supplements: item.supplements,
+        sauces: item.sauces,
+      });
+      const data = await fetchAllMenuItems(restaurant.id);
+      setItems(data);
+      toast.success("Item duplique");
+    } catch {
+      toast.error("Erreur lors de la duplication");
+    }
   };
 
   const handleDeleteItem = async (id: string) => {
@@ -420,6 +446,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
                               onToggle={() => toggleItem(item.id, item.enabled)}
                               onEdit={() => setEditItem(item)}
                               onDelete={() => handleDeleteItem(item.id)}
+                              onDuplicate={() => handleDuplicateItem(item)}
                             />
                           ))}
                           {catItems.length === 0 && (

@@ -1,6 +1,6 @@
 import { Flame, Receipt, Eye, Settings } from "lucide-react";
 
-type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "parametres" | "stats" | "gerer";
+type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "parametres" | "stats" | "gerer";
 
 interface Props {
   activeView: DashboardView;
@@ -8,7 +8,7 @@ interface Props {
   newOrderCount: number;
 }
 
-const adminViews = new Set(["carte", "page", "parametres", "stats"]);
+const adminViews = new Set(["carte", "page", "qrcodes", "parametres", "stats"]);
 
 const items: { id: DashboardView; label: string; icon: typeof Flame }[] = [
   { id: "cuisine", label: "Cuisine", icon: Flame },

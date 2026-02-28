@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock } from "lucide-react";
-import { fetchOrders, fetchMenuItems, updateOrderStatus, subscribeToOrders } from "@/lib/api";
+import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle } from "lucide-react";
+import { fetchOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders } from "@/lib/api";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { POSAddItemModal } from "./pos/POSAddItemModal";
+import { toast } from "sonner";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
@@ -37,6 +40,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
   const [disconnected, setDisconnected] = useState(false);
   const [advancing, setAdvancing] = useState<string | null>(null);
   const [addItemOrder, setAddItemOrder] = useState<DbOrder | null>(null);
+  const [rupturesOpen, setRupturesOpen] = useState(false);
 
   const loadOrders = useCallback(async () => {
     const data = await fetchOrders(restaurant.id);
@@ -162,6 +166,36 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
         ))}
       </div>
 
+      {/* Last order + Ruptures */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-sm text-muted-foreground">
+          {(() => {
+            const activeOrders = orders.filter((o) => o.status !== "done");
+            if (activeOrders.length === 0) {
+              const lastDone = orders.find((o) => o.status === "done");
+              if (lastDone) {
+                const mins = Math.floor((Date.now() - new Date(lastDone.created_at).getTime()) / 60000);
+                if (mins > 30) return <span className="text-gray-400">Pas de commande depuis 30+ min</span>;
+                return <span>Derniere commande : il y a {mins < 1 ? "moins d'1" : mins} min</span>;
+              }
+              return null;
+            }
+            const newest = activeOrders[0];
+            const mins = Math.floor((Date.now() - new Date(newest.created_at).getTime()) / 60000);
+            return <span>Derniere commande : il y a {mins < 1 ? "moins d'1" : mins} min</span>;
+          })()}
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          className="rounded-xl gap-1.5"
+          onClick={() => setRupturesOpen(true)}
+        >
+          <AlertTriangle className="h-3.5 w-3.5" />
+          Ruptures
+        </Button>
+      </div>
+
       <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
         {filterTabs.map((tab) => (
           <button
@@ -278,6 +312,43 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
           onUpdated={loadOrders}
         />
       )}
+
+      {/* Ruptures drawer */}
+      <Sheet open={rupturesOpen} onOpenChange={setRupturesOpen}>
+        <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Gestion des ruptures</SheetTitle>
+          </SheetHeader>
+          <div className="mt-4 space-y-2">
+            {menuItems.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-8">Aucun plat</p>
+            )}
+            {menuItems.map((item) => (
+              <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/50">
+                <div className="flex items-center gap-3 min-w-0">
+                  {item.image && <img src={item.image} alt="" className="h-8 w-8 rounded-lg object-cover shrink-0" />}
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
+                    <p className="text-xs text-muted-foreground">{item.category}</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={item.enabled}
+                  onCheckedChange={async (val) => {
+                    try {
+                      await updateMenuItem(item.id, { enabled: val });
+                      setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
+                      toast.success(val ? `${item.name} disponible` : `${item.name} en rupture`);
+                    } catch {
+                      toast.error("Erreur");
+                    }
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

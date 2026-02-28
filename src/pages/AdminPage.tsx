@@ -9,6 +9,7 @@ import { DashboardOrders } from "@/components/dashboard/DashboardOrders";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
 import { DashboardMaPage } from "@/components/dashboard/DashboardMaPage";
+import { DashboardQRCodes } from "@/components/dashboard/DashboardQRCodes";
 import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
 import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
 import { DashboardEnDirect } from "@/components/dashboard/DashboardEnDirect";
@@ -16,13 +17,14 @@ import { GererMenu } from "@/components/dashboard/GererMenu";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
 import { AdminBottomNav } from "@/components/dashboard/AdminBottomNav";
 import { LiveSummaryBanner } from "@/components/dashboard/LiveSummaryBanner";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
 
-type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "parametres" | "stats" | "gerer";
+type DashboardView = "cuisine" | "caisse" | "en-direct" | "carte" | "page" | "qrcodes" | "parametres" | "stats" | "gerer";
 
-const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "parametres", "stats", "gerer"];
+const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "parametres", "stats", "gerer"];
 
 function isValidView(v: string): v is DashboardView {
   return validViews.includes(v as DashboardView);
@@ -144,6 +146,7 @@ const AdminPage = () => {
                   }}
                   className="p-2 rounded-xl hover:bg-secondary transition-colors"
                   title={sound.muted ? "Activer le son" : "Couper le son"}
+                  aria-label={sound.muted ? "Activer le son" : "Couper le son"}
                 >
                   {sound.muted || !sound.audioUnlocked ? (
                     <VolumeX className="h-4 w-4 text-muted-foreground" />
@@ -158,6 +161,7 @@ const AdminPage = () => {
                 onClick={toggleBlur}
                 className="p-2 rounded-xl hover:bg-secondary transition-colors"
                 title={blurred ? "Afficher les montants" : "Masquer les montants"}
+                aria-label={blurred ? "Afficher les montants" : "Masquer les montants"}
               >
                 {blurred ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
               </button>
@@ -191,6 +195,46 @@ const AdminPage = () => {
             </button>
           )}
 
+          {/* Reactivation banner */}
+          {restaurant.deactivated_at && (
+            <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="text-sm text-amber-900">
+                <p className="font-medium">
+                  Votre restaurant est desactive depuis le {new Date(restaurant.deactivated_at).toLocaleDateString("fr-FR")}.
+                  {(restaurant.deactivation_visit_count > 0) && (
+                    <> {restaurant.deactivation_visit_count} personne{restaurant.deactivation_visit_count > 1 ? "s ont" : " a"} essaye de commander.</>
+                  )}
+                </p>
+              </div>
+              <Button
+                size="sm"
+                className="rounded-xl whitespace-nowrap"
+                onClick={async () => {
+                  try {
+                    await updateRestaurant(restaurant.id, {
+                      deactivated_at: null,
+                      scheduled_deletion_at: null,
+                      is_accepting_orders: true,
+                      deactivation_visit_count: 0,
+                    } as any);
+                    setRestaurant({
+                      ...restaurant,
+                      deactivated_at: null,
+                      scheduled_deletion_at: null,
+                      is_accepting_orders: true,
+                      deactivation_visit_count: 0,
+                    });
+                    toast.success("Restaurant reactive !");
+                  } catch {
+                    toast.error("Erreur lors de la reactivation");
+                  }
+                }}
+              >
+                Reactiver
+              </Button>
+            </div>
+          )}
+
           {isOpsView(activeView) && activeView !== "caisse" && (
             <LiveSummaryBanner
               visitors={visitors}
@@ -214,6 +258,7 @@ const AdminPage = () => {
               {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} />}
               {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} />}
               {activeView === "page" && <DashboardMaPage restaurant={restaurant} />}
+              {activeView === "qrcodes" && <DashboardQRCodes restaurant={restaurant} />}
               {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} />}
               {activeView === "stats" && <DashboardStats restaurant={restaurant} />}
               {activeView === "gerer" && <GererMenu onViewChange={handleViewChange} />}

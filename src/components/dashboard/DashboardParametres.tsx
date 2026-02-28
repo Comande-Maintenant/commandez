@@ -155,16 +155,25 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
     window.location.href = "/";
   };
 
-  const handleDeleteRestaurant = async () => {
-    if (!confirm("Etes-vous sur de vouloir supprimer votre restaurant ? Cette action est irreversible.")) return;
-    if (!confirm("Derniere confirmation : toutes les donnees seront perdues.")) return;
+  const [deactivateConfirm, setDeactivateConfirm] = useState("");
+
+  const handleDeactivateRestaurant = async () => {
+    if (deactivateConfirm !== restaurant.name) {
+      toast.error("Le nom saisi ne correspond pas");
+      return;
+    }
     try {
-      const { error } = await supabase.from("restaurants").delete().eq("id", restaurant.id);
-      if (error) throw error;
-      toast.success("Restaurant supprime");
-      window.location.href = "/";
+      const now = new Date().toISOString();
+      const deletion = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+      await updateRestaurant(restaurant.id, {
+        deactivated_at: now,
+        scheduled_deletion_at: deletion,
+        is_accepting_orders: false,
+      } as any);
+      toast.success("Restaurant desactive. Vos donnees seront conservees 90 jours.");
+      window.location.reload();
     } catch (e) {
-      toast.error("Erreur lors de la suppression");
+      toast.error("Erreur lors de la desactivation");
     }
   };
 
@@ -410,13 +419,27 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
       <section className="bg-card rounded-2xl border border-destructive/30 p-5">
         <div className="flex items-center gap-2 mb-3">
           <AlertTriangle className="h-5 w-5 text-destructive" />
-          <h3 className="text-base font-semibold text-destructive">Zone de danger</h3>
+          <h3 className="text-base font-semibold text-destructive">Desactiver mon restaurant</h3>
         </div>
-        <p className="text-sm text-muted-foreground mb-3">
-          La suppression est definitive. Toutes les donnees (menu, commandes, images) seront perdues.
+        <p className="text-sm text-muted-foreground mb-2">
+          Votre restaurant ne sera plus visible par les clients. Vos donnees seront conservees 90 jours : vous pourrez reactiver a tout moment.
         </p>
-        <Button variant="destructive" className="w-full rounded-xl gap-2" onClick={handleDeleteRestaurant}>
-          <Trash2 className="h-4 w-4" />Supprimer mon restaurant
+        <p className="text-sm text-muted-foreground mb-3">
+          Pour confirmer, saisissez le nom exact de votre restaurant : <span className="font-semibold text-foreground">{restaurant.name}</span>
+        </p>
+        <Input
+          placeholder={restaurant.name}
+          value={deactivateConfirm}
+          onChange={(e) => setDeactivateConfirm(e.target.value)}
+          className="mb-3"
+        />
+        <Button
+          variant="destructive"
+          className="w-full rounded-xl gap-2"
+          onClick={handleDeactivateRestaurant}
+          disabled={deactivateConfirm !== restaurant.name}
+        >
+          <Trash2 className="h-4 w-4" />Desactiver
         </Button>
       </section>
     </div>

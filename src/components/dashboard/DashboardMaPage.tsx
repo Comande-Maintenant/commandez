@@ -1,19 +1,13 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import {
   Palette,
   Upload,
-  QrCode,
-  FileDown,
-  Printer,
   ExternalLink,
   Loader2,
   ImageIcon,
-  Receipt,
   Copy,
   Check,
 } from "lucide-react";
-import QRCode from "qrcode";
-import { jsPDF } from "jspdf";
 import { updateRestaurant, uploadRestaurantImage } from "@/lib/api";
 import { validateImageSize, resizeImage } from "@/lib/image";
 import type { DbRestaurant } from "@/types/database";
@@ -38,10 +32,6 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
   const [phone, setPhone] = useState(restaurant.restaurant_phone || "");
   const [website, setWebsite] = useState(restaurant.website || "");
   const [saving, setSaving] = useState(false);
-  const [qrDataUrl, setQrDataUrl] = useState("");
-  const [qrSvg, setQrSvg] = useState("");
-  const [posQrDataUrl, setPosQrDataUrl] = useState("");
-  const [posQrSvg, setPosQrSvg] = useState("");
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [logoPreview, setLogoPreview] = useState(restaurant.image || "");
@@ -49,7 +39,6 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
 
   const [copied, setCopied] = useState(false);
   const pageUrl = typeof window !== "undefined" ? `${window.location.origin}/${restaurant.slug}` : "";
-  const posUrl = typeof window !== "undefined" ? `${window.location.origin}/admin/${restaurant.slug}?tab=caisse` : "";
 
   const copyLink = () => {
     navigator.clipboard.writeText(pageUrl);
@@ -57,43 +46,6 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
     toast.success("Lien copie !");
     setTimeout(() => setCopied(false), 2000);
   };
-
-  const generateQR = useCallback(async () => {
-    try {
-      const dataUrl = await QRCode.toDataURL(pageUrl, {
-        width: 512,
-        margin: 2,
-        color: { dark: primaryColor, light: "#ffffff" },
-      });
-      setQrDataUrl(dataUrl);
-      const svg = await QRCode.toString(pageUrl, {
-        type: "svg",
-        width: 512,
-        margin: 2,
-        color: { dark: primaryColor, light: "#ffffff" },
-      });
-      setQrSvg(svg);
-
-      // POS QR Code
-      const posDataUrl = await QRCode.toDataURL(posUrl, {
-        width: 512,
-        margin: 2,
-        color: { dark: "#1d4ed8", light: "#ffffff" },
-      });
-      setPosQrDataUrl(posDataUrl);
-      const posSvgStr = await QRCode.toString(posUrl, {
-        type: "svg",
-        width: 512,
-        margin: 2,
-        color: { dark: "#1d4ed8", light: "#ffffff" },
-      });
-      setPosQrSvg(posSvgStr);
-    } catch (e) {
-      console.error("QR generation error:", e);
-    }
-  }, [pageUrl, posUrl, primaryColor]);
-
-  useEffect(() => { generateQR(); }, [generateQR]);
 
   const handleSaveColors = async () => {
     setSaving(true);
@@ -153,80 +105,6 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
     }
     const resized = await resizeImage(file);
     handleUpload(resized, type);
-  };
-
-  const downloadQrPng = () => {
-    if (!qrDataUrl) return;
-    const link = document.createElement("a");
-    link.download = `qr-${restaurant.slug}.png`;
-    link.href = qrDataUrl;
-    link.click();
-  };
-
-  const downloadQrSvg = () => {
-    if (!qrSvg) return;
-    const blob = new Blob([qrSvg], { type: "image/svg+xml" });
-    const link = document.createElement("a");
-    link.download = `qr-${restaurant.slug}.svg`;
-    link.href = URL.createObjectURL(blob);
-    link.click();
-  };
-
-  const generatePdf = async () => {
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-    const pageWidth = 210;
-
-    // Background
-    doc.setFillColor(255, 255, 255);
-    doc.rect(0, 0, 210, 297, "F");
-
-    // Logo (if available)
-    if (logoPreview) {
-      try {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        await new Promise<void>((resolve, reject) => {
-          img.onload = () => resolve();
-          img.onerror = reject;
-          img.src = logoPreview;
-        });
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext("2d")!.drawImage(img, 0, 0);
-        const logoData = canvas.toDataURL("image/png");
-        doc.addImage(logoData, "PNG", (pageWidth - 40) / 2, 20, 40, 40);
-      } catch {
-        // Skip logo if loading fails
-      }
-    }
-
-    // Restaurant name
-    doc.setFontSize(28);
-    doc.setFont("helvetica", "bold");
-    doc.text(name, pageWidth / 2, 80, { align: "center" });
-
-    // QR Code
-    if (qrDataUrl) {
-      doc.addImage(qrDataUrl, "PNG", (pageWidth - 80) / 2, 100, 80, 80);
-    }
-
-    // "Scannez pour commander"
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "normal");
-    doc.text("Scannez pour commander", pageWidth / 2, 200, { align: "center" });
-
-    // URL
-    doc.setFontSize(12);
-    doc.setTextColor(120, 120, 120);
-    doc.text(pageUrl, pageWidth / 2, 215, { align: "center" });
-
-    doc.save(`menu-${restaurant.slug}.pdf`);
-    toast.success("PDF telecharge");
-  };
-
-  const handlePrint = async () => {
-    await generatePdf();
   };
 
   return (
@@ -394,117 +272,6 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
           </div>
           <Button onClick={handleSaveInfo} disabled={saving} className="w-full rounded-xl">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}
-          </Button>
-        </div>
-      </section>
-
-      {/* QR Codes */}
-      <section className="bg-card rounded-2xl border border-border p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <QrCode className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">QR Code</h3>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          {qrDataUrl && (
-            <div className="bg-white p-4 rounded-xl border border-border">
-              <img src={qrDataUrl} alt="QR Code" className="w-48 h-48" />
-            </div>
-          )}
-          <div className="flex-1 space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Ce QR code pointe vers votre page :<br />
-              <span className="font-medium text-foreground">{pageUrl}</span>
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={downloadQrPng}>
-                <FileDown className="h-4 w-4" />PNG
-              </Button>
-              <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={downloadQrSvg}>
-                <FileDown className="h-4 w-4" />SVG
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* QR Code Caisse */}
-      <section className="bg-card rounded-2xl border border-border p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Receipt className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">QR Code Caisse</h3>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          {posQrDataUrl && (
-            <div className="bg-white p-4 rounded-xl border border-border">
-              <img src={posQrDataUrl} alt="QR Code Caisse" className="w-48 h-48" />
-            </div>
-          )}
-          <div className="flex-1 space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Ce QR code ouvre directement la caisse sur tablette :<br />
-              <span className="font-medium text-foreground">{posUrl}</span>
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-xl gap-1.5"
-                onClick={() => {
-                  if (!posQrDataUrl) return;
-                  const link = document.createElement("a");
-                  link.download = `qr-caisse-${restaurant.slug}.png`;
-                  link.href = posQrDataUrl;
-                  link.click();
-                }}
-              >
-                <FileDown className="h-4 w-4" />PNG
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-xl gap-1.5"
-                onClick={() => {
-                  if (!posQrSvg) return;
-                  const blob = new Blob([posQrSvg], { type: "image/svg+xml" });
-                  const link = document.createElement("a");
-                  link.download = `qr-caisse-${restaurant.slug}.svg`;
-                  link.href = URL.createObjectURL(blob);
-                  link.click();
-                }}
-              >
-                <FileDown className="h-4 w-4" />SVG
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* A4 Template */}
-      <section className="bg-card rounded-2xl border border-border p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Printer className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Template A4 imprimable</h3>
-        </div>
-
-        {/* Mini preview */}
-        <div className="bg-white border border-border rounded-xl p-6 text-center mb-4" style={{ aspectRatio: "210/297", maxHeight: 300 }}>
-          <div className="flex flex-col items-center justify-center h-full gap-3">
-            {logoPreview && <img src={logoPreview} alt="Logo" className="h-12 w-12 rounded-full object-cover" />}
-            <p className="text-lg font-bold" style={{ color: primaryColor }}>{name}</p>
-            {qrDataUrl && <img src={qrDataUrl} alt="QR" className="w-24 h-24" />}
-            <p className="text-sm text-gray-500">Scannez pour commander</p>
-            <p className="text-xs text-gray-400">{pageUrl}</p>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button variant="outline" className="flex-1 rounded-xl gap-1.5" onClick={generatePdf}>
-            <FileDown className="h-4 w-4" />Telecharger PDF
-          </Button>
-          <Button variant="outline" className="flex-1 rounded-xl gap-1.5" onClick={handlePrint}>
-            <Printer className="h-4 w-4" />Imprimer
           </Button>
         </div>
       </section>
