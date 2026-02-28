@@ -29,7 +29,6 @@ export interface Restaurant {
   address: string;
   city: string;
   estimatedTime: string;
-  deliveryFee: number;
   minimumOrder: number;
   isOpen: boolean;
   hours: string;
@@ -61,7 +60,6 @@ export const restaurants: Restaurant[] = [
     address: "42 Rue du Faubourg Saint-Denis",
     city: "Paris 10e",
     estimatedTime: "15-25 min",
-    deliveryFee: 2.99,
     minimumOrder: 10,
     isOpen: true,
     hours: "11h00 - 23h00",
@@ -92,7 +90,6 @@ export const restaurants: Restaurant[] = [
     address: "15 Rue de la République",
     city: "Lyon 2e",
     estimatedTime: "20-30 min",
-    deliveryFee: 3.49,
     minimumOrder: 12,
     isOpen: true,
     hours: "11h30 - 00h00",
@@ -121,7 +118,6 @@ export const restaurants: Restaurant[] = [
     address: "8 Cours Julien",
     city: "Marseille 6e",
     estimatedTime: "15-20 min",
-    deliveryFee: 1.99,
     minimumOrder: 8,
     isOpen: true,
     hours: "11h00 - 22h30",
@@ -148,7 +144,6 @@ export const restaurants: Restaurant[] = [
     address: "22 Place de la Victoire",
     city: "Bordeaux",
     estimatedTime: "25-35 min",
-    deliveryFee: 3.99,
     minimumOrder: 15,
     isOpen: false,
     hours: "12h00 - 22h00",
@@ -174,7 +169,6 @@ export const restaurants: Restaurant[] = [
     address: "5 Rue Masséna",
     city: "Nice",
     estimatedTime: "20-30 min",
-    deliveryFee: 2.49,
     minimumOrder: 12,
     isOpen: true,
     hours: "11h30 - 23h00",

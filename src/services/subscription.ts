@@ -49,7 +49,7 @@ export function getPricingPlans(): PricingPlan[] {
       badge: 'Premium',
       features: [
         'Tout du plan 12 mois',
-        'Livraison integree',
+        'Click & Collect avance',
         'Multi-etablissements',
         'API personnalisee',
       ],

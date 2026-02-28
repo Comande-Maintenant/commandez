@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   Power,
-  Truck,
   CreditCard,
   Clock,
   Bell,
@@ -10,6 +9,7 @@ import {
   Trash2,
   Loader2,
   AlertTriangle,
+  ShoppingBag,
 } from "lucide-react";
 import { updateRestaurant, fetchRestaurantHours, upsertRestaurantHours } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
@@ -33,7 +33,6 @@ const availabilityModes = [
 const orderModeOptions = [
   { id: "on_site", label: "Sur place" },
   { id: "pickup", label: "A emporter" },
-  { id: "delivery", label: "Livraison" },
 ];
 
 const paymentOptions = [
@@ -56,8 +55,7 @@ export const DashboardParametres = ({ restaurant }: Props) => {
   const [saving, setSaving] = useState(false);
   const [isAccepting, setIsAccepting] = useState(restaurant.is_accepting_orders);
   const [availabilityMode, setAvailabilityMode] = useState(restaurant.availability_mode || "manual");
-  const [orderMode, setOrderMode] = useState(restaurant.order_mode || "pickup_delivery");
-  const [deliveryFee, setDeliveryFee] = useState(String(restaurant.delivery_fee ?? 0));
+  const [orderMode, setOrderMode] = useState(restaurant.order_mode || "pickup");
   const [minimumOrder, setMinimumOrder] = useState(String(restaurant.minimum_order ?? 0));
   const [estimatedTime, setEstimatedTime] = useState(restaurant.estimated_time || "20-30 min");
   const [paymentMethods, setPaymentMethods] = useState<string[]>(restaurant.payment_methods ?? []);
@@ -120,7 +118,6 @@ export const DashboardParametres = ({ restaurant }: Props) => {
       await updateRestaurant(restaurant.id, {
         availability_mode: availabilityMode,
         order_mode: orderMode,
-        delivery_fee: parseFloat(deliveryFee) || 0,
         minimum_order: parseFloat(minimumOrder) || 0,
         estimated_time: estimatedTime,
         payment_methods: paymentMethods,
@@ -212,7 +209,7 @@ export const DashboardParametres = ({ restaurant }: Props) => {
       {/* Order modes */}
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
-          <Truck className="h-5 w-5 text-foreground" />
+          <ShoppingBag className="h-5 w-5 text-foreground" />
           <h3 className="text-base font-semibold text-foreground">Modes de commande</h3>
         </div>
 
@@ -230,39 +227,17 @@ export const DashboardParametres = ({ restaurant }: Props) => {
           ))}
         </div>
 
-        {selectedOrderModes.includes("delivery") && (
-          <div className="space-y-3 pt-3 border-t border-border">
-            <div>
-              <label className="text-sm text-muted-foreground">Frais de livraison (€)</label>
-              <Input
-                type="number"
-                step="0.50"
-                value={deliveryFee}
-                onChange={(e) => setDeliveryFee(e.target.value)}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <label className="text-sm text-muted-foreground">Commande minimum (€)</label>
-              <Input
-                type="number"
-                step="1"
-                value={minimumOrder}
-                onChange={(e) => setMinimumOrder(e.target.value)}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <label className="text-sm text-muted-foreground">Temps estime</label>
-              <Input
-                value={estimatedTime}
-                onChange={(e) => setEstimatedTime(e.target.value)}
-                placeholder="20-30 min"
-                className="mt-1"
-              />
-            </div>
+        <div className="space-y-3 pt-3 border-t border-border">
+          <div>
+            <label className="text-sm text-muted-foreground">Temps estime</label>
+            <Input
+              value={estimatedTime}
+              onChange={(e) => setEstimatedTime(e.target.value)}
+              placeholder="20-30 min"
+              className="mt-1"
+            />
           </div>
-        )}
+        </div>
       </section>
 
       {/* Payment methods */}

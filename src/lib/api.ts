@@ -65,16 +65,15 @@ export async function createOrder(order: {
   restaurant_id: string;
   customer_name: string;
   customer_phone: string;
-  customer_address?: string;
   order_type: string;
   source?: string;
   covers?: number | null;
   items: any;
   subtotal: number;
-  delivery_fee: number;
   total: number;
   notes?: string;
   client_ip?: string | null;
+  pickup_time?: string | null;
 }): Promise<DbOrder> {
   const { data, error } = await supabase
     .from("orders")

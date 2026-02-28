@@ -80,7 +80,6 @@ function launchConfetti(canvas: HTMLCanvasElement) {
 
 const ORDER_TYPE_LABELS: Record<string, string> = {
   collect: "A emporter",
-  delivery: "Livraison",
   dine_in: "Sur place",
 };
 
@@ -221,8 +220,19 @@ const SuiviPage = () => {
               </>
             ) : (
               <>
-                <p className="text-2xl font-bold text-gray-900">Environ {remainingMinutes} min</p>
-                <p className="text-sm text-gray-500 mt-1">{ORDER_TYPE_LABELS[order.order_type] || order.order_type}</p>
+                {order.pickup_time ? (
+                  <>
+                    <p className="text-2xl font-bold text-gray-900">
+                      Retrait a {new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">Commande programmee</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-2xl font-bold text-gray-900">Environ {remainingMinutes} min</p>
+                    <p className="text-sm text-gray-500 mt-1">{ORDER_TYPE_LABELS[order.order_type] || order.order_type}</p>
+                  </>
+                )}
               </>
             )}
           </motion.div>

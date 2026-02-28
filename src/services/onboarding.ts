@@ -49,7 +49,6 @@ export async function createRestaurantFromOnboarding(data: {
       is_open: true,
       is_accepting_orders: true,
       estimated_time: '15-25 min',
-      delivery_fee: 2.99,
       minimum_order: 10,
       rating: data.rating ?? null,
       review_count: 0,

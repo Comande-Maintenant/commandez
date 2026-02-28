@@ -162,7 +162,6 @@ export const DashboardPOS = ({ restaurant }: Props) => {
         covers: personCount,
         items: allItems,
         subtotal: total,
-        delivery_fee: 0,
         total,
         notes: state.notes || undefined,
       });

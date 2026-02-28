@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Phone, MapPin, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus } from "lucide-react";
+import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock } from "lucide-react";
 import { fetchOrders, fetchMenuItems, updateOrderStatus, subscribeToOrders } from "@/lib/api";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
@@ -202,13 +202,20 @@ export const DashboardOrders = ({ restaurant }: Props) => {
                 <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{order.customer_phone}</span>
                 <span className="flex items-center gap-1">
                   {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> A emporter</>}
-                  {order.order_type === "delivery" && <><MapPin className="h-3.5 w-3.5" /> Livraison</>}
                   {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> Sur place</>}
                   {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> Telephone</>}
                 </span>
                 {(order as any).covers && (
                   <span className="text-xs text-muted-foreground">({(order as any).covers} couvert{(order as any).covers > 1 ? "s" : ""})</span>
                 )}
+                {order.pickup_time ? (
+                  <span className="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">
+                    <Clock className="h-3 w-3" />
+                    Retrait a {new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                ) : (order.order_type === "collect" || order.order_type === "a_emporter") ? (
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-700">ASAP</span>
+                ) : null}
               </div>
               <div className="space-y-1 mb-3">
                 {orderItems.map((item: any, i: number) => (

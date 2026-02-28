@@ -50,7 +50,6 @@ export interface DbRestaurant {
   address: string;
   city: string;
   estimated_time: string;
-  delivery_fee: number;
   minimum_order: number;
   is_open: boolean;
   is_accepting_orders: boolean;
@@ -96,17 +95,16 @@ export interface DbOrder {
   order_number: number;
   customer_name: string;
   customer_phone: string;
-  customer_address: string;
   order_type: string;
   source: string;
   covers: number | null;
   status: 'new' | 'preparing' | 'ready' | 'done';
   items: any;
   subtotal: number;
-  delivery_fee: number;
   total: number;
   notes: string;
   client_ip: string | null;
+  pickup_time: string | null;
   created_at: string;
   updated_at: string;
 }
