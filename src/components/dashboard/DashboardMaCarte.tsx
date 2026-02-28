@@ -27,6 +27,7 @@ import {
   Check,
   X,
   ImageIcon,
+  Camera,
 } from "lucide-react";
 import {
   fetchAllMenuItems,
@@ -44,6 +45,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { MenuImportModal } from "@/components/dashboard/MenuImportModal";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -153,6 +155,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   const [renamingCategory, setRenamingCategory] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const [editItem, setEditItem] = useState<DbMenuItem | null>(null);
+  const [showImport, setShowImport] = useState(false);
   const [newItem, setNewItem] = useState({
     name: "",
     description: "",
@@ -324,6 +327,9 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
         <Button size="sm" className="rounded-xl gap-1" onClick={() => { setNewItem((n) => ({ ...n, category: categories[0] || "" })); setShowAddItem(true); }}>
           <Plus className="h-4 w-4" />Item
         </Button>
+        <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setShowImport(true)}>
+          <Camera className="h-4 w-4" />Importer
+        </Button>
       </div>
 
       {/* Categories DnD */}
@@ -460,6 +466,15 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Import modal */}
+      <MenuImportModal
+        open={showImport}
+        onOpenChange={setShowImport}
+        restaurant={restaurant}
+        existingItems={items}
+        onImportComplete={loadItems}
+      />
     </div>
   );
 };
