@@ -303,13 +303,13 @@ const RestaurantPage = () => {
         <div ref={heroSentinelRef} className="absolute bottom-0 h-1 w-full" />
       </div>
 
-      {/* Mirror gradient: starts at hero bottom with same primary intensity, fades down to bg */}
+      {/* Mirror gradient: subtle primary glow below hero, fades to bg */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
         style={{
           top: "220px",
-          height: "350px",
-          background: `linear-gradient(to bottom, ${hexToRgba(primary, 0.85)} 0%, ${hexToRgba(primary, 0.4)} 30%, ${hexToRgba(primary, 0.1)} 60%, ${bg} 100%)`,
+          height: "200px",
+          background: `linear-gradient(to bottom, ${hexToRgba(primary, 0.12)} 0%, ${hexToRgba(primary, 0.04)} 50%, transparent 100%)`,
           zIndex: 0,
         }}
       />
