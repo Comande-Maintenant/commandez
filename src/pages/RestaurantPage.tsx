@@ -12,6 +12,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
 import { CustomOrderBuilder } from "@/components/CustomOrderBuilder";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useVisitorTracking } from "@/hooks/useVisitorTracking";
+import { ProtectedPhone } from "@/components/ProtectedPhone";
 
 const DEFAULT_PRIMARY = "#FF6B00";
 const DEFAULT_BG = "#FFF8F0";
@@ -81,6 +83,7 @@ const RestaurantPage = () => {
   const isScrollingRef = useRef(false);
   const { totalItems, subtotal } = useCart();
   const { t, tCategory, isRTL } = useLanguage();
+  const { updateSection } = useVisitorTracking(restaurant?.id ?? null);
 
   useEffect(() => {
     if (!slug) return;
@@ -108,7 +111,10 @@ const RestaurantPage = () => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             const cat = entry.target.getAttribute("data-category");
-            if (cat) setActiveCategory(cat);
+            if (cat) {
+              setActiveCategory(cat);
+              updateSection("category:" + cat);
+            }
           }
         }
       },
@@ -300,13 +306,10 @@ const RestaurantPage = () => {
               {restaurant.restaurant_phone && (
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
-                  <a
-                    href={`tel:${restaurant.restaurant_phone}`}
-                    className="font-medium underline underline-offset-2"
+                  <ProtectedPhone
+                    phone={restaurant.restaurant_phone}
                     style={{ color: primary }}
-                  >
-                    {restaurant.restaurant_phone}
-                  </a>
+                  />
                 </div>
               )}
               {restaurant.hours && (

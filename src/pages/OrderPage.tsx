@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Clock, Check, ShoppingBag, Loader2 } from "lucide-react";
+import { ArrowLeft, Clock, Check, ShoppingBag, Loader2, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { createOrder } from "@/lib/api";
+import { createOrder, fetchClientIp, fetchRestaurantById } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ProtectedPhone } from "@/components/ProtectedPhone";
 
 type Mode = "collect" | "delivery";
 type Step = "mode" | "info" | "confirm";
@@ -23,6 +24,17 @@ const OrderPage = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [orderNumber, setOrderNumber] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [restaurantPhone, setRestaurantPhone] = useState<string | null>(null);
+  const clientIpRef = useRef<string | null>(null);
+
+  // Fetch restaurant phone + client IP on mount
+  useEffect(() => {
+    if (!restaurantId) return;
+    fetchRestaurantById(restaurantId).then((r) => {
+      if (r?.restaurant_phone) setRestaurantPhone(r.restaurant_phone);
+    });
+    fetchClientIp().then((ip) => { clientIpRef.current = ip; });
+  }, [restaurantId]);
 
   const deliveryFee = mode === "delivery" ? 2.99 : 0;
   const total = subtotal + deliveryFee;
@@ -48,6 +60,7 @@ const OrderPage = () => {
         subtotal,
         delivery_fee: deliveryFee,
         total,
+        client_ip: clientIpRef.current,
       });
       setOrderNumber(order.order_number);
       setConfirmed(true);
@@ -163,6 +176,24 @@ const OrderPage = () => {
               <div className="p-4 bg-secondary/50 rounded-2xl">
                 <div className="flex justify-between font-semibold text-foreground"><span>{t("order.total_to_pay")}</span><span>{total.toFixed(2)} €</span></div>
               </div>
+
+              {/* Reminder block */}
+              <div className="rounded-xl border-l-4 border-amber-400 bg-amber-50 p-4 space-y-2">
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="space-y-1.5 text-sm text-amber-900">
+                    <p className="font-medium">En validant, vous vous engagez a venir recuperer et regler votre commande.</p>
+                    <p>Les commandes non honorees peuvent entrainer un blocage de votre acces.</p>
+                    {restaurantPhone && (
+                      <p className="flex items-center gap-1.5 pt-1">
+                        Un imprevu ? Contactez le restaurant :
+                        <ProtectedPhone phone={restaurantPhone} className="text-amber-700 hover:text-amber-900" variant="button" iconClassName="h-3.5 w-3.5" />
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <Button
                 onClick={handleConfirm}
                 disabled={!name || !phone || (mode === "delivery" && !address) || submitting}

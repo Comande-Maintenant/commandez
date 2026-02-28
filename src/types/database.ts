@@ -97,6 +97,7 @@ export interface DbOrder {
   delivery_fee: number;
   total: number;
   notes: string;
+  client_ip: string | null;
   created_at: string;
   updated_at: string;
 }

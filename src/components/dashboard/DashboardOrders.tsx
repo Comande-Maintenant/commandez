@@ -5,6 +5,8 @@ import { fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardLiveVisitors } from "@/components/dashboard/DashboardLiveVisitors";
+import type { LiveVisitor, VisitorAlert } from "@/types/visitor";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
@@ -25,9 +27,11 @@ const filterTabs: { id: OrderStatus | "all"; label: string }[] = [
 
 interface Props {
   restaurant: DbRestaurant;
+  visitors?: LiveVisitor[];
+  alerts?: VisitorAlert[];
 }
 
-export const DashboardOrders = ({ restaurant }: Props) => {
+export const DashboardOrders = ({ restaurant, visitors = [], alerts = [] }: Props) => {
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
   const [loading, setLoading] = useState(true);
@@ -129,6 +133,11 @@ export const DashboardOrders = ({ restaurant }: Props) => {
 
   return (
     <div>
+      {/* Live visitors */}
+      {visitors.length > 0 && (
+        <DashboardLiveVisitors visitors={visitors} alerts={alerts} />
+      )}
+
       {/* Connection lost banner */}
       {disconnected && (
         <div className="mb-4 p-3 bg-destructive/10 rounded-xl flex items-center gap-2 text-sm text-destructive">

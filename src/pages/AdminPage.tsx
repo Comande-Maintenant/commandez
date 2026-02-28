@@ -12,6 +12,8 @@ import { DashboardParametres } from "@/components/dashboard/DashboardParametres"
 import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { LiveSummaryBanner } from "@/components/dashboard/LiveSummaryBanner";
+import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
 
 const tabs = [
   { id: "orders", label: "Commandes", icon: ClipboardList },
@@ -35,6 +37,8 @@ const AdminPage = () => {
   });
   const [showStats, setShowStats] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
+  const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
 
   useEffect(() => {
     if (!slug) return;
@@ -120,6 +124,12 @@ const AdminPage = () => {
 
       {/* Main content */}
       <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
+        <LiveSummaryBanner
+          visitors={visitors}
+          alerts={alerts}
+          orderCounts={orderCounts}
+          onNavigate={(tab) => { setActiveTab(tab as TabId); setShowStats(false); }}
+        />
         <AnimatePresence mode="wait">
           <motion.div key={activeTab + (showStats ? "-stats" : "")} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
             {activeTab === "orders" && !showStats && (
@@ -129,7 +139,7 @@ const AdminPage = () => {
                     <BarChart3 className="h-4 w-4" />Statistiques
                   </Button>
                 </div>
-                <DashboardOrders restaurant={restaurant} />
+                <DashboardOrders restaurant={restaurant} visitors={visitors} alerts={alerts} />
               </div>
             )}
             {activeTab === "orders" && showStats && (

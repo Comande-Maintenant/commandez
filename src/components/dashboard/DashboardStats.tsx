@@ -6,6 +6,9 @@ import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DemandCalendar } from "@/components/dashboard/DemandCalendar";
+import { DemandHourlyChart } from "@/components/dashboard/DemandHourlyChart";
+import { DemandTip } from "@/components/dashboard/DemandTip";
 
 type Period = "day" | "week" | "month";
 
@@ -174,6 +177,16 @@ export const DashboardStats = ({ restaurant }: Props) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Prevision de demande */}
+      <div className="space-y-4">
+        <h3 className="text-base font-semibold text-foreground">Prevision de demande</h3>
+        <DemandTip />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <DemandCalendar />
+          <DemandHourlyChart />
+        </div>
+      </div>
     </div>
   );
 };

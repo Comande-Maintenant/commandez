@@ -10,6 +10,16 @@ export async function fetchRestaurants(): Promise<DbRestaurant[]> {
   return (data ?? []) as unknown as DbRestaurant[];
 }
 
+export async function fetchRestaurantById(id: string): Promise<DbRestaurant | null> {
+  const { data, error } = await supabase
+    .from("restaurants")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return data as unknown as DbRestaurant | null;
+}
+
 export async function fetchRestaurantBySlug(slug: string): Promise<DbRestaurant | null> {
   const { data, error } = await supabase
     .from("restaurants")
@@ -41,6 +51,16 @@ export async function fetchAllMenuItems(restaurantId: string): Promise<DbMenuIte
   return (data ?? []) as unknown as DbMenuItem[];
 }
 
+export async function fetchClientIp(): Promise<string | null> {
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
+    return data.ip || null;
+  } catch {
+    return null;
+  }
+}
+
 export async function createOrder(order: {
   restaurant_id: string;
   customer_name: string;
@@ -54,6 +74,7 @@ export async function createOrder(order: {
   delivery_fee: number;
   total: number;
   notes?: string;
+  client_ip?: string | null;
 }): Promise<DbOrder> {
   const { data, error } = await supabase
     .from("orders")
