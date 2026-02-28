@@ -218,7 +218,7 @@ export function CustomOrderBuilder({
                   <span className="text-sm font-medium leading-tight">{tOptionName(opt)}</span>
                   {opt.price_modifier > 0 && (
                     <span className="text-xs mt-1 opacity-80">
-                      +{opt.price_modifier.toFixed(2)} \u20ac
+                      +{opt.price_modifier.toFixed(2)} €
                     </span>
                   )}
                 </button>
