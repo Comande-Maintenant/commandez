@@ -17,6 +17,7 @@ import SuiviPage from "./pages/SuiviPage";
 import SuperAdminPage from "./pages/SuperAdminPage";
 import CustomerProfilePage from "./pages/CustomerProfilePage";
 import AbonnementPage from "./pages/AbonnementPage";
+import ConnexionPage from "./pages/ConnexionPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/inscription" element={<InscriptionPage />} />
+            <Route path="/connexion" element={<ConnexionPage />} />
             <Route path="/order" element={<OrderPage />} />
             <Route path="/suivi/:orderId" element={<SuiviPage />} />
             <Route path="/admin/:slug" element={<AdminPage />} />
