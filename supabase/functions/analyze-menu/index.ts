@@ -63,10 +63,10 @@ serve(async (req) => {
     const allCategories: any[] = [];
 
     for (const url of imageUrls) {
-      const imageContent = {
-        type: "image" as const,
-        source: { type: "url" as const, url },
-      };
+      const isPdf = url.toLowerCase().endsWith('.pdf');
+      const contentBlock = isPdf
+        ? { type: "document" as const, source: { type: "url" as const, url } }
+        : { type: "image" as const, source: { type: "url" as const, url } };
 
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
@@ -81,7 +81,7 @@ serve(async (req) => {
           messages: [
             {
               role: "user",
-              content: [imageContent, { type: "text", text: ANALYSIS_PROMPT }],
+              content: [contentBlock, { type: "text", text: ANALYSIS_PROMPT }],
             },
           ],
         }),

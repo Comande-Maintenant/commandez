@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { MenuReviewEditor } from "@/components/onboarding/MenuReviewEditor";
 import { analyzeMenuImages } from "@/services/menu-analysis";
+import { convertFilesForAnalysis } from "@/utils/file-converter";
 import { insertMenuItem, updateRestaurantCategories, fetchAllMenuItems } from "@/lib/api";
 import type { AnalyzedCategory } from "@/types/onboarding";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
@@ -41,14 +42,15 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
 
   const handleFiles = async (newFiles: FileList | null) => {
     if (!newFiles || newFiles.length === 0) return;
-    const accepted = Array.from(newFiles).filter((f) =>
-      ["image/jpeg", "image/png", "image/webp", "application/pdf"].includes(f.type)
-    );
-    if (accepted.length === 0) {
-      toast.error("Format non supporte. Utilisez JPG, PNG ou PDF.");
+    const { converted, errors } = await convertFilesForAnalysis(Array.from(newFiles));
+    if (errors.length > 0) {
+      toast.error(`${errors.length} fichier(s) non convertis`);
+    }
+    if (converted.length === 0) {
+      toast.error("Aucun fichier exploitable.");
       return;
     }
-    const allFiles = [...files, ...accepted];
+    const allFiles = [...files, ...converted];
     setFiles(allFiles);
     await startAnalysis(allFiles);
   };
@@ -193,24 +195,24 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
             </div>
 
             <p className="text-xs text-muted-foreground text-center">
-              Formats : JPG, PNG, PDF. Plusieurs fichiers possibles.
+              Photos, PDF, captures d'ecran... tous formats acceptes.
             </p>
 
             <input
               ref={cameraInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
               capture="environment"
               className="hidden"
-              onChange={(e) => handleFiles(e.target.files)}
+              onChange={(e) => { handleFiles(e.target.files); e.target.value = ''; }}
             />
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,application/pdf"
+              accept="image/*,video/*,application/pdf,.heic,.heif,.svg"
               multiple
               className="hidden"
-              onChange={(e) => handleFiles(e.target.files)}
+              onChange={(e) => { handleFiles(e.target.files); e.target.value = ''; }}
             />
           </div>
         )}

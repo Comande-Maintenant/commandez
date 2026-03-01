@@ -1,8 +1,9 @@
 import { useState, useRef, useCallback } from 'react';
-import { Upload, Camera, Loader2, FileText } from 'lucide-react';
+import { Upload, Camera, Loader2, FileText, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { analyzeMenuImages } from '@/services/menu-analysis';
 import { extractColors } from '@/services/color-extraction';
+import { convertFilesForAnalysis } from '@/utils/file-converter';
 import type { AnalyzedMenu, ExtractedColors } from '@/types/onboarding';
 
 interface MenuUploadProps {
@@ -13,17 +14,31 @@ interface MenuUploadProps {
 export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
+  const [converting, setConverting] = useState(false);
   const [error, setError] = useState('');
+  const [conversionErrors, setConversionErrors] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
 
-  const handleFiles = useCallback((newFiles: FileList | null) => {
-    if (!newFiles) return;
-    const accepted = Array.from(newFiles).filter((f) =>
-      ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'].includes(f.type)
-    );
-    setFiles((prev) => [...prev, ...accepted]);
+  const handleFiles = useCallback(async (newFiles: FileList | null) => {
+    if (!newFiles || newFiles.length === 0) return;
     setError('');
+    setConversionErrors([]);
+    setConverting(true);
+
+    try {
+      const { converted, errors } = await convertFilesForAnalysis(Array.from(newFiles));
+      if (errors.length > 0) {
+        setConversionErrors(errors);
+      }
+      if (converted.length > 0) {
+        setFiles((prev) => [...prev, ...converted]);
+      }
+    } catch {
+      setError('Erreur lors de la conversion des fichiers.');
+    } finally {
+      setConverting(false);
+    }
   }, []);
 
   const handleDrop = useCallback(
@@ -42,19 +57,22 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
     try {
       const menu = await analyzeMenuImages(files);
 
-      // Try color extraction from first image
+      // Try color extraction from first image (non-blocking)
       let colors: ExtractedColors | undefined;
-      try {
-        const url = URL.createObjectURL(files[0]);
-        colors = await extractColors(url);
-        URL.revokeObjectURL(url);
-      } catch {
-        // Color extraction is optional
+      const firstImage = files.find((f) => f.type.startsWith('image/'));
+      if (firstImage) {
+        try {
+          const url = URL.createObjectURL(firstImage);
+          colors = await extractColors(url);
+          URL.revokeObjectURL(url);
+        } catch {
+          // Color extraction is optional
+        }
       }
 
       onAnalysisComplete(menu, colors);
     } catch (err) {
-      setError('Erreur lors de l\'analyse. Verifiez vos images et reessayez.');
+      setError('Erreur lors de l\'analyse. Verifiez vos fichiers et reessayez.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -74,14 +92,18 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
           Deposez vos photos de carte ici
         </p>
         <p className="text-xs text-muted-foreground mt-1">
-          JPG, PNG ou PDF - Plusieurs fichiers acceptes
+          Photos, PDF, captures d'ecran... tous formats acceptes
         </p>
         <input
           ref={inputRef}
           type="file"
-          accept="image/jpeg,image/png,image/webp,application/pdf"
+          accept="image/*,video/*,application/pdf,.heic,.heif,.svg"
           multiple
-          onChange={(e) => handleFiles(e.target.files)}
+          onChange={(e) => {
+            handleFiles(e.target.files);
+            // Reset input so same file can be re-selected
+            e.target.value = '';
+          }}
           className="hidden"
         />
       </div>
@@ -91,6 +113,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         variant="outline"
         className="w-full sm:hidden"
         onClick={() => cameraRef.current?.click()}
+        disabled={converting}
       >
         <Camera className="h-4 w-4 mr-2" />
         Prendre une photo
@@ -100,23 +123,59 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         type="file"
         accept="image/*"
         capture="environment"
-        onChange={(e) => handleFiles(e.target.files)}
+        onChange={(e) => {
+          handleFiles(e.target.files);
+          e.target.value = '';
+        }}
         className="hidden"
       />
 
+      {/* Converting indicator */}
+      {converting && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Conversion des fichiers en cours...
+        </div>
+      )}
+
+      {/* File list */}
       {files.length > 0 && (
         <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">
+            {files.length} fichier{files.length > 1 ? 's' : ''} pret{files.length > 1 ? 's' : ''}
+          </p>
           {files.map((f, i) => (
             <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-              <FileText className="h-4 w-4" />
+              <FileText className="h-4 w-4 shrink-0" />
               <span className="truncate">{f.name}</span>
+              <span className="text-xs shrink-0">({(f.size / 1024).toFixed(0)} Ko)</span>
               <button
                 onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))}
-                className="ml-auto text-destructive text-xs hover:underline"
+                className="ml-auto text-destructive text-xs hover:underline shrink-0"
               >
                 Retirer
               </button>
             </div>
+          ))}
+          {/* Add more files button */}
+          <button
+            onClick={() => inputRef.current?.click()}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
+          >
+            + Ajouter d'autres fichiers
+          </button>
+        </div>
+      )}
+
+      {/* Conversion errors */}
+      {conversionErrors.length > 0 && (
+        <div className="rounded-lg bg-destructive/10 p-3 space-y-1">
+          <div className="flex items-center gap-2 text-sm text-destructive font-medium">
+            <AlertCircle className="h-4 w-4" />
+            Certains fichiers n'ont pas pu etre convertis
+          </div>
+          {conversionErrors.map((err, i) => (
+            <p key={i} className="text-xs text-destructive/80 ml-6">{err}</p>
           ))}
         </div>
       )}
@@ -125,7 +184,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
 
       <Button
         onClick={handleAnalyze}
-        disabled={files.length === 0 || loading}
+        disabled={files.length === 0 || loading || converting}
         className="w-full"
       >
         {loading ? (
@@ -134,7 +193,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
             Analyse de votre carte en cours...
           </>
         ) : (
-          'Analyser ma carte'
+          `Analyser ${files.length > 1 ? `mes ${files.length} fichiers` : 'ma carte'}`
         )}
       </Button>
 
