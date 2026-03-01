@@ -31,9 +31,14 @@ export function NearbyPlaces({ onSelect }: NearbyPlacesProps) {
           } else {
             setResults(places);
           }
-        } catch (err) {
+        } catch (err: any) {
           console.error('[NearbyPlaces] Search error:', err);
-          setError('Erreur lors de la recherche. Reessayez ou utilisez la recherche par nom.');
+          const msg = err?.message || '';
+          setError(
+            msg
+              ? `Erreur : ${msg}`
+              : 'Erreur lors de la recherche. Reessayez ou utilisez la recherche par nom.'
+          );
         } finally {
           setLoading(false);
         }
