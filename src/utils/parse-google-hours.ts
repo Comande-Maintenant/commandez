@@ -95,18 +95,32 @@ function parseLine(line: string): ParsedHour | null {
 
   // Split by comma to get multiple time ranges
   // "11:00 AM – 2:30 PM, 5:30 – 10:30 PM"
+  // "11:00–14:30, 17:30–22:30"
   const ranges = rest.split(',').map((r) => r.trim()).filter(Boolean);
 
   let earliestOpen = '23:59';
   let latestClose = '00:00';
 
   for (const range of ranges) {
-    // Split by various dash characters: –, -, —, to
-    const parts = range.split(/\s*[–—-]\s*|\s+to\s+/i);
+    // Split by dash/en-dash/em-dash, but NOT the colon inside times
+    // Use a regex that matches dashes surrounded by optional spaces,
+    // but only when they separate two time values
+    const parts = range.split(/\s*[–—]\s*|\s+-\s+|\s+to\s+/i);
     if (parts.length < 2) continue;
 
-    const openTime = to24h(parts[0]);
-    const closeTime = to24h(parts[parts.length - 1]);
+    const rawOpen = parts[0].trim();
+    const rawClose = parts[parts.length - 1].trim();
+
+    // Google English format: "5:30 – 10:30 PM" → PM applies to BOTH
+    // If close has AM/PM but open doesn't, inherit it
+    const ampmMatch = rawClose.match(/\s*(am|pm)\s*$/i);
+    let fixedOpen = rawOpen;
+    if (ampmMatch && !/[ap]m/i.test(rawOpen)) {
+      fixedOpen = rawOpen + ' ' + ampmMatch[1];
+    }
+
+    const openTime = to24h(fixedOpen);
+    const closeTime = to24h(rawClose);
 
     if (compareTime(openTime, earliestOpen) < 0) {
       earliestOpen = openTime;
