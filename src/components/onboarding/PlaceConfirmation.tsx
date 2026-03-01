@@ -1,37 +1,43 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { Clock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import type { GooglePlaceResult } from '@/types/onboarding';
+import { parseGoogleHours, formatParsedHours, type ParsedHour } from '@/utils/parse-google-hours';
+
+export interface PlaceConfirmData {
+  name: string;
+  address: string;
+  city: string;
+  phone: string;
+  cuisine: string;
+  website: string;
+  hours: string;
+  rating: number | null;
+  google_place_id: string;
+  useAutoHours: boolean;
+  parsedHours: ParsedHour[] | null;
+}
 
 interface PlaceConfirmationProps {
   place: GooglePlaceResult;
-  onConfirm: (data: {
-    name: string;
-    address: string;
-    city: string;
-    phone: string;
-    cuisine: string;
-    website: string;
-    hours: string;
-    rating: number | null;
-    google_place_id: string;
-  }) => void;
+  onConfirm: (data: PlaceConfirmData) => void;
   onBack: () => void;
 }
 
-// Extract city from formatted_address ("3 Rue X, 89470 Monéteau, France")
-// or from vicinity ("3 Rue X, Monéteau")
+// Extract city from formatted_address ("3 Rue X, 89470 Moneteau, France")
+// or from vicinity ("3 Rue X, Moneteau")
 function extractCity(address: string, isVicinity: boolean): string {
   const parts = address.split(',').map((p) => p.trim());
   if (parts.length === 0) return '';
 
   if (isVicinity) {
-    // vicinity format: "3 Rue X, Monéteau" → city is the LAST part
+    // vicinity format: "3 Rue X, Moneteau" -> city is the LAST part
     return parts[parts.length - 1];
   }
 
-  // formatted_address: "3 Rue X, 89470 Monéteau, France" → city is second-to-last
+  // formatted_address: "3 Rue X, 89470 Moneteau, France" -> city is second-to-last
   if (parts.length >= 2) {
     const candidate = parts[parts.length - 2];
     return candidate.replace(/\d{5}\s*/, '').trim();
@@ -69,7 +75,6 @@ function detectCuisine(name: string, types?: string[]): string {
   for (const [keyword, cuisine] of Object.entries(CUISINE_MAP)) {
     if (lower.includes(keyword)) return cuisine;
   }
-  // Check Google types
   if (types) {
     if (types.includes('bakery')) return 'Boulangerie';
     if (types.includes('cafe')) return 'Café';
@@ -91,9 +96,20 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
   );
   const [cuisine, setCuisine] = useState(detectCuisine(place.name, place.types));
   const [website, setWebsite] = useState(place.website ?? '');
-  const [hours, setHours] = useState(
-    place.opening_hours?.weekday_text?.join(' | ') ?? ''
+  const [useAutoHours, setUseAutoHours] = useState(true);
+
+  // Parse Google hours if available
+  const weekdayText = place.opening_hours?.weekday_text;
+  const parsedHours = useMemo(
+    () => (weekdayText && weekdayText.length > 0 ? parseGoogleHours(weekdayText) : null),
+    [weekdayText]
   );
+  const formattedLines = useMemo(
+    () => (parsedHours ? formatParsedHours(parsedHours) : []),
+    [parsedHours]
+  );
+
+  const hoursString = weekdayText?.join(' | ') ?? '';
 
   const handleConfirm = () => {
     onConfirm({
@@ -103,9 +119,11 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
       phone,
       cuisine,
       website,
-      hours,
+      hours: hoursString,
       rating: place.rating ?? null,
       google_place_id: place.place_id,
+      useAutoHours: useAutoHours && !!parsedHours,
+      parsedHours: useAutoHours ? parsedHours : null,
     });
   };
 
@@ -153,14 +171,63 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
         />
       </div>
 
-      <div>
-        <Label>Horaires</Label>
-        <Input
-          value={hours}
-          onChange={(e) => setHours(e.target.value)}
-          placeholder="Lundi - Vendredi : 11h - 22h"
-        />
-      </div>
+      {/* Parsed hours display */}
+      {parsedHours && formattedLines.length > 0 && (
+        <div className="rounded-lg border border-border p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Label className="mb-0">Horaires Google</Label>
+          </div>
+          <div className="grid grid-cols-1 gap-1">
+            {formattedLines.map((line) => {
+              const isClosed = line.includes('Ferme');
+              return (
+                <div
+                  key={line}
+                  className={`text-sm px-2 py-1 rounded ${
+                    isClosed
+                      ? 'text-muted-foreground'
+                      : 'text-foreground'
+                  }`}
+                >
+                  {line}
+                </div>
+              );
+            })}
+          </div>
+          <label className="flex items-start gap-3 pt-2 border-t border-border cursor-pointer">
+            <input
+              type="checkbox"
+              checked={useAutoHours}
+              onChange={(e) => setUseAutoHours(e.target.checked)}
+              className="mt-0.5 rounded border-muted-foreground"
+            />
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                Utiliser ces horaires sur ma page
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Votre page sera automatiquement ouverte/fermee selon ces horaires
+              </p>
+            </div>
+          </label>
+        </div>
+      )}
+
+      {/* Fallback: manual hours input if Google hours not available */}
+      {!parsedHours && (
+        <div>
+          <Label>Horaires</Label>
+          <Input
+            value={hoursString}
+            readOnly
+            placeholder="Lundi - Vendredi : 11h - 22h"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Vous pourrez configurer vos horaires dans le dashboard apres inscription.
+          </p>
+        </div>
+      )}
 
       {place.rating && (
         <p className="text-sm text-muted-foreground">
