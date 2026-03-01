@@ -4,8 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 const COOKIE_DOMAIN = ".commandeici.com";
 const isCommandeiciDomain = typeof window !== "undefined" && window.location.hostname.endsWith("commandeici.com");
 
+function hasConsent(): boolean {
+  if (typeof document === "undefined") return false;
+  return document.cookie.indexOf("commandeici_consent=accepted") !== -1;
+}
+
 function setUserCookie() {
-  if (isCommandeiciDomain) {
+  if (isCommandeiciDomain && hasConsent()) {
     document.cookie = `commandeici_user=1; domain=${COOKIE_DOMAIN}; path=/; secure; samesite=lax; max-age=2592000`;
   }
 }
