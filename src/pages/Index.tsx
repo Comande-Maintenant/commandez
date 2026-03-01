@@ -14,7 +14,7 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "resto.order - Commande en ligne pour restaurants";
+    document.title = "commandeici - Commande en ligne pour restaurants";
     fetchRestaurants().then((data) => {
       setRestaurants(data);
       setLoading(false);
@@ -43,7 +43,7 @@ const Index = () => {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-xl font-bold tracking-tight text-foreground">
-            resto<span className="text-muted-foreground">.order</span>
+            commande<span className="text-muted-foreground">ici</span>
           </h1>
         </div>
       </header>

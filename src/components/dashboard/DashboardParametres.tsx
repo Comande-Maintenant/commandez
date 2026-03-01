@@ -15,6 +15,7 @@ import {
   Play,
 } from "lucide-react";
 import { updateRestaurant, fetchRestaurantHours, upsertRestaurantHours } from "@/lib/api";
+import { ReferralSection } from "./referral/ReferralSection";
 import type { DbRestaurant } from "@/types/database";
 import { ScheduleEditor, type ScheduleDay } from "./ScheduleEditor";
 import { Button } from "@/components/ui/button";
@@ -414,6 +415,9 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
           </Button>
         </div>
       </section>
+
+      {/* Referral / Parrainage */}
+      <ReferralSection restaurantId={restaurant.id} />
 
       {/* Danger zone */}
       <section className="bg-card rounded-2xl border border-destructive/30 p-5">

@@ -116,7 +116,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
       botMsg = {
         id: (Date.now() + 1).toString(),
         type: "bot",
-        text: "Je n'ai pas trouve de reponse a votre question. Contactez-nous a contact@commandemaintenant.com pour plus d'aide.",
+        text: "Je n'ai pas trouve de reponse a votre question. Contactez-nous a contact@commandeici.com pour plus d'aide.",
       };
     }
 

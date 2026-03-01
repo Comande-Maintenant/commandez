@@ -33,7 +33,7 @@ export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Prop
               <div className="relative">
                 <item.icon className="h-5 w-5" />
                 {item.id === "cuisine" && newOrderCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                  <span className="absolute -top-1.5 -right-2.5 bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                     {newOrderCount}
                   </span>
                 )}

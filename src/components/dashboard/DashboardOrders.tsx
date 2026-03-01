@@ -292,7 +292,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
                     Retrait a {new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                   </span>
                 ) : (order.order_type === "collect" || order.order_type === "a_emporter") ? (
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-700">ASAP</span>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">ASAP</span>
                 ) : null}
               </div>
               <div className="space-y-1 mb-3">

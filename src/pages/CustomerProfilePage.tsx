@@ -214,7 +214,7 @@ const CustomerProfilePage = () => {
             <div className="space-y-3">
               {orders.map((order) => {
                 const items = Array.isArray(order.items) ? order.items : [];
-                const restaurantColor = order.restaurant?.primary_color || "#FF6B00";
+                const restaurantColor = order.restaurant?.primary_color || "#10B981";
                 return (
                   <motion.div
                     key={order.id}

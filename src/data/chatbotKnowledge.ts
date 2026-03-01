@@ -116,13 +116,13 @@ export const chatbotKnowledge: ChatbotEntry[] = [
   {
     keywords: ["desactiver", "supprimer", "fermer", "compte", "restaurant", "pause"],
     question: "Comment desactiver mon restaurant ?",
-    answer: "Utilisez le toggle Disponible/Indisponible en haut du dashboard pour mettre en pause temporairement. Pour une desactivation longue, contactez-nous a contact@commandemaintenant.com.",
+    answer: "Utilisez le toggle Disponible/Indisponible en haut du dashboard pour mettre en pause temporairement. Pour une desactivation longue, contactez-nous a contact@commandeici.com.",
   },
   // Contact / aide
   {
     keywords: ["contact", "aide", "support", "probleme", "bug", "email"],
     question: "Comment contacter le support ?",
-    answer: "Envoyez un email a contact@commandemaintenant.com. Nous repondons generalement sous 24h. Decrivez votre probleme avec le nom de votre restaurant pour un traitement plus rapide.",
+    answer: "Envoyez un email a contact@commandeici.com. Nous repondons generalement sous 24h. Decrivez votre probleme avec le nom de votre restaurant pour un traitement plus rapide.",
   },
   // Guide
   {

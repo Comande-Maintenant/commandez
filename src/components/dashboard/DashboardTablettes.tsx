@@ -288,7 +288,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
           Besoin de tablettes pour votre restaurant ?
         </p>
         <a
-          href="mailto:contact@commandemaintenant.com?subject=Location tablettes"
+          href="mailto:contact@commandeici.com?subject=Location tablettes"
           className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline hover:opacity-80"
         >
           <Mail className="h-4 w-4" />

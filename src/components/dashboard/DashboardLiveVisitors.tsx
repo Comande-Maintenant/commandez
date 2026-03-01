@@ -59,7 +59,7 @@ function AlertPill({ alert }: { alert: VisitorAlert }) {
   }
   if (alert.type === "hesite") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
         <AlertTriangle className="h-3 w-3" />
         Hesite
       </span>

@@ -46,7 +46,7 @@ function launchConfetti(canvas: HTMLCanvasElement) {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const colors = ["#FF6B00", "#22C55E", "#3B82F6", "#EAB308", "#EC4899", "#8B5CF6"];
+  const colors = ["#10B981", "#22C55E", "#3B82F6", "#EAB308", "#EC4899", "#8B5CF6"];
   const particles: { x: number; y: number; vx: number; vy: number; color: string; size: number; life: number }[] = [];
 
   for (let i = 0; i < 120; i++) {
@@ -141,7 +141,7 @@ const SuiviPage = () => {
     return () => clearTimeout(timer);
   }, [order?.status]);
 
-  const primary = order?.restaurant?.primary_color || "#FF6B00";
+  const primary = order?.restaurant?.primary_color || "#10B981";
 
   // Calculate progress
   const getEstimatedMinutes = useCallback(() => {

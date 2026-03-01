@@ -64,7 +64,7 @@ export const DemandCalendar = () => {
         <div className="flex flex-wrap gap-3 mt-4 text-xs">
           <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-emerald-100" /> Calme</span>
           <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-amber-100" /> Moyen</span>
-          <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-orange-100" /> Fort</span>
+          <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-rose-100" /> Fort</span>
           <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-red-100" /> Tres fort</span>
         </div>
       </CardContent>

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,7 @@ import {
   createMenuItemsFromAnalysis,
   generateSlug,
 } from '@/services/onboarding';
+import { processReferral } from '@/services/referral';
 import type {
   GooglePlaceResult,
   AnalyzedCategory,
@@ -53,6 +54,8 @@ const slideVariants = {
 };
 
 const InscriptionPage = () => {
+  const [searchParams] = useSearchParams();
+  const refCode = useMemo(() => searchParams.get('ref') || '', [searchParams]);
   const [step, setStep] = useState(1);
 
   // Step 1: Account
@@ -197,6 +200,11 @@ const InscriptionPage = () => {
         await createMenuItemsFromAnalysis(restaurant.id, menuCategories);
       }
 
+      // Process referral code if present
+      if (refCode) {
+        await processReferral(restaurant.id, refCode).catch(() => {});
+      }
+
       // Send welcome email (fire-and-forget, non-blocking)
       supabase.functions.invoke("send-welcome-email", {
         body: { restaurantName: restaurantData?.name ?? '', slug, email },
@@ -219,7 +227,7 @@ const InscriptionPage = () => {
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-foreground hover:opacity-80">
             <ArrowLeft className="h-4 w-4" />
-            <span className="font-semibold text-lg">Commandez</span>
+            <span className="font-semibold text-lg">commandeici</span>
           </Link>
           {step < 6 && (
             <span className="text-xs text-muted-foreground">Etape {step}/5</span>
@@ -472,7 +480,7 @@ const InscriptionPage = () => {
       {/* Footer */}
       <footer className="border-t border-border py-4 mt-12">
         <p className="text-center text-xs text-muted-foreground">
-          Commande Maintenant
+          commandeici
         </p>
       </footer>
     </div>

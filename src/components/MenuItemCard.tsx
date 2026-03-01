@@ -51,7 +51,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
               {item.popular && (
                 <span
                   className="text-[10px] font-semibold uppercase tracking-wider text-white px-1.5 py-0.5 rounded-full"
-                  style={{ backgroundColor: primaryColor || "#FF6B00" }}
+                  style={{ backgroundColor: primaryColor || "#10B981" }}
                 >
                   {t("menu.popular")}
                 </span>
@@ -70,7 +70,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
               <img src={item.image} alt={translated.name} className="w-full h-full object-cover" loading="lazy" />
               <motion.div
                 className="absolute bottom-1 right-1 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-white"
-                style={{ backgroundColor: primaryColor || "#FF6B00" }}
+                style={{ backgroundColor: primaryColor || "#10B981" }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label="Ajouter au panier"
@@ -82,7 +82,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
             <div className="flex items-center">
               <motion.div
                 className="rounded-full p-2.5 transition-colors text-white"
-                style={{ backgroundColor: primaryColor || "#FF6B00" }}
+                style={{ backgroundColor: primaryColor || "#10B981" }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label="Ajouter au panier"
@@ -102,7 +102,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
           customizationConfig={customizationConfig}
-          primaryColor={primaryColor || "#FF6B00"}
+          primaryColor={primaryColor || "#10B981"}
         />
       ) : (
         <ItemCustomizeModal

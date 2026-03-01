@@ -16,7 +16,7 @@ import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
 import { toast } from "sonner";
 
-const DEFAULT_PRIMARY = "#FF6B00";
+const DEFAULT_PRIMARY = "#10B981";
 const UNIVERSAL_BG = "#FFF8F0";
 
 function parseHexToHSL(hex: string): { h: number; s: number; l: number } {

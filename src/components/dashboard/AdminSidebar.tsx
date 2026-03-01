@@ -51,7 +51,7 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
             <item.icon className="h-5 w-5 flex-shrink-0" />
             <span className="text-sm font-medium">{item.label}</span>
             {item.id === "cuisine" && newOrderCount > 0 && (
-              <span className="ml-auto bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="ml-auto bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 {newOrderCount}
               </span>
             )}

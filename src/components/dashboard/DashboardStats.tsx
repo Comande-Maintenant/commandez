@@ -269,7 +269,7 @@ export const DashboardStats = ({ restaurant }: Props) => {
           <Card className="rounded-2xl border-border">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Flame className="h-4 w-4 text-orange-500" />
+                <Flame className="h-4 w-4 text-amber-500" />
                 Insights
               </CardTitle>
             </CardHeader>

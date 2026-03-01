@@ -21,7 +21,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
   const [selectedSupplements, setSelectedSupplements] = useState<Supplement[]>([]);
   const [quantity, setQuantity] = useState(1);
 
-  const accent = primaryColor || "#FF6B00";
+  const accent = primaryColor || "#10B981";
   const translated = tMenu(item);
 
   const toggleSauce = (sauce: string) => {

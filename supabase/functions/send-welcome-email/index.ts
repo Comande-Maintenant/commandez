@@ -1,10 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 
-// Configurable: switch to Resend, SendGrid, etc. when the domain is live
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-const EMAIL_FROM = "Commande Maintenant <contact@commandemaintenant.com>";
-const BASE_URL = "https://commandez.lovable.app";
+const EMAIL_FROM = "commandeici <contact@commandeici.com>";
+const BASE_URL = "https://app.commandeici.com";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,11 +11,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-// Generate QR code PNG as base64 using the qrcode API
-// Uses error correction level H (30% redundancy) for future logo overlay
 async function generateQRCodeBase64(url: string, size = 400): Promise<string> {
-  // Use a public QR code API as a simple server-side approach
-  // When moving to production, replace with a proper QR library
   const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&ecc=H&margin=8`;
   const response = await fetch(qrApiUrl);
   if (!response.ok) throw new Error("Failed to generate QR code");
@@ -37,7 +32,7 @@ function renderWelcomeEmailHtml(params: {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bienvenue sur Commande Maintenant</title>
+<title>Bienvenue sur commandeici</title>
 </head>
 <body style="margin:0;padding:0;background-color:#f7f7f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f7f7f7;">
@@ -45,8 +40,8 @@ function renderWelcomeEmailHtml(params: {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
 
 <!-- Header -->
-<tr><td style="background-color:#FF6B00;padding:28px 32px;text-align:center;">
-  <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.3px;">Commande Maintenant</h1>
+<tr><td style="background-color:#10B981;padding:28px 32px;text-align:center;">
+  <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.3px;">commandeici</h1>
 </td></tr>
 
 <!-- Body -->
@@ -59,16 +54,16 @@ function renderWelcomeEmailHtml(params: {
   </p>
 
   <!-- Public URL -->
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FFF5EE;border-radius:12px;margin-bottom:20px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#ECFDF5;border-radius:12px;margin-bottom:20px;">
   <tr><td style="padding:20px 24px;">
-    <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#FF6B00;text-transform:uppercase;letter-spacing:0.5px;">Votre page de commande</p>
+    <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#10B981;text-transform:uppercase;letter-spacing:0.5px;">Votre page de commande</p>
     <p style="margin:0 0 12px;font-size:14px;color:#555;line-height:1.5;">
       C'est ce lien que vos clients utilisent pour commander.<br>
       Partagez-le partout : reseaux sociaux, WhatsApp, SMS, et surtout sur votre fiche Google.
     </p>
-    <a href="${publicUrl}" style="display:inline-block;word-break:break-all;font-size:14px;color:#FF6B00;font-weight:600;text-decoration:underline;">${publicUrl}</a>
+    <a href="${publicUrl}" style="display:inline-block;word-break:break-all;font-size:14px;color:#10B981;font-weight:600;text-decoration:underline;">${publicUrl}</a>
     <br><br>
-    <a href="${publicUrl}" style="display:inline-block;background-color:#FF6B00;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:10px 24px;border-radius:8px;">Voir ma page</a>
+    <a href="${publicUrl}" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:10px 24px;border-radius:8px;">Voir ma page</a>
   </td></tr>
   </table>
 
@@ -124,14 +119,14 @@ function renderWelcomeEmailHtml(params: {
     <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#333;text-transform:uppercase;letter-spacing:0.5px;">Besoin d'aide ?</p>
     <p style="margin:0;font-size:14px;color:#555;line-height:1.5;">
       Repondez directement a cet email ou contactez-nous :<br>
-      <a href="mailto:contact@commandemaintenant.com" style="color:#FF6B00;text-decoration:underline;">contact@commandemaintenant.com</a>
+      <a href="mailto:contact@commandeici.com" style="color:#10B981;text-decoration:underline;">contact@commandeici.com</a>
     </p>
   </td></tr>
   </table>
 
   <p style="margin:24px 0 0;font-size:14px;color:#555;line-height:1.5;">
     Bonne continuation et bonnes commandes !<br>
-    <strong>L'equipe Commande Maintenant</strong>
+    <strong>L'equipe commandeici</strong>
   </p>
 
 </td></tr>
@@ -139,7 +134,7 @@ function renderWelcomeEmailHtml(params: {
 <!-- Footer -->
 <tr><td style="padding:16px 28px;background-color:#fafafa;border-top:1px solid #eee;text-align:center;">
   <p style="margin:0;font-size:12px;color:#999;">
-    Commande Maintenant &bull; contact@commandemaintenant.com
+    commandeici &bull; contact@commandeici.com
   </p>
 </td></tr>
 
@@ -181,11 +176,10 @@ serve(async (req) => {
       qrCid,
     });
 
-    // Send via Resend API (configurable)
-    // If RESEND_API_KEY is not set, log and return success (dry run)
+    // Send via Resend API
     if (!RESEND_API_KEY) {
       console.log("[send-welcome-email] No RESEND_API_KEY set, dry run mode.");
-      console.log(`Would send to: ${email}, subject: Bienvenue sur Commande Maintenant !`);
+      console.log(`Would send to: ${email}, subject: Bienvenue sur commandeici !`);
       return new Response(
         JSON.stringify({ success: true, dryRun: true }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -201,7 +195,7 @@ serve(async (req) => {
       body: JSON.stringify({
         from: EMAIL_FROM,
         to: [email],
-        subject: "Bienvenue sur Commande Maintenant ! Votre page est en ligne",
+        subject: "Bienvenue sur commandeici ! Votre page est en ligne",
         html,
         attachments: [
           {

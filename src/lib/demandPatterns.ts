@@ -28,7 +28,7 @@ export const HOURLY_DISTRIBUTION: Record<number, number> = {
 export function getIntensityColor(value: number): string {
   if (value < 30) return "bg-emerald-100 text-emerald-800";
   if (value < 55) return "bg-amber-100 text-amber-800";
-  if (value < 75) return "bg-orange-100 text-orange-800";
+  if (value < 75) return "bg-rose-100 text-rose-800";
   return "bg-red-100 text-red-800";
 }
 

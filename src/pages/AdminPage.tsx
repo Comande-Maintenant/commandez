@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
 import { supabase } from "@/integrations/supabase/client";
 import type { DashboardView } from "@/types/dashboard";
+import { SubscriptionGate } from "@/components/auth/SubscriptionGate";
 
 const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer", "clients"];
 
@@ -163,6 +164,7 @@ const AdminPage = () => {
   }
 
   return (
+    <SubscriptionGate restaurantId={restaurant.id}>
     <div className="min-h-screen bg-secondary/50 lg:flex" data-blurred={blurred}>
       <style>{`[data-blurred="true"] .blur-sensitive { filter: blur(8px); user-select: none; }`}</style>
       <AdminSidebar
@@ -376,6 +378,7 @@ const AdminPage = () => {
         />
       )}
     </div>
+    </SubscriptionGate>
   );
 };
 

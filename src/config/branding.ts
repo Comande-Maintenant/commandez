@@ -6,15 +6,15 @@ export const BRANDING = {
   qrCodeLogoSize: 0.20,
 
   // Brand colors
-  primaryColor: "#FF6B00",
+  primaryColor: "#10B981",
 
   // Company info
-  companyName: "Commande Maintenant",
-  contactEmail: "contact@commandemaintenant.com",
+  companyName: "commandeici",
+  contactEmail: "contact@commandeici.com",
 
-  // Base URL: will be changed when the custom domain is configured
-  baseUrl: "https://commandez.lovable.app",
+  // Base URL
+  baseUrl: "https://app.commandeici.com",
 
   // Email sender
-  emailFrom: "Commande Maintenant <contact@commandemaintenant.com>",
+  emailFrom: "commandeici <contact@commandeici.com>",
 };

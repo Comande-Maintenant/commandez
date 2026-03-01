@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { useCrossDomainAuth } from "@/hooks/useCrossDomainAuth";
 import Index from "./pages/Index";
 import RestaurantPage from "./pages/RestaurantPage";
 import OrderPage from "./pages/OrderPage";
@@ -15,9 +16,15 @@ import InscriptionPage from "./pages/InscriptionPage";
 import SuiviPage from "./pages/SuiviPage";
 import SuperAdminPage from "./pages/SuperAdminPage";
 import CustomerProfilePage from "./pages/CustomerProfilePage";
+import AbonnementPage from "./pages/AbonnementPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+function AuthSync() {
+  useCrossDomainAuth();
+  return null;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -25,6 +32,7 @@ const App = () => (
       <LanguageProvider>
       <CartProvider>
       <CustomerAuthProvider>
+        <AuthSync />
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -35,6 +43,7 @@ const App = () => (
             <Route path="/order" element={<OrderPage />} />
             <Route path="/suivi/:orderId" element={<SuiviPage />} />
             <Route path="/admin/:slug" element={<AdminPage />} />
+            <Route path="/abonnement" element={<AbonnementPage />} />
             <Route path="/super-admin" element={<SuperAdminPage />} />
             <Route path="/profil" element={<CustomerProfilePage />} />
             <Route path="/:slug" element={<RestaurantPage />} />

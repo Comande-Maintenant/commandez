@@ -40,7 +40,7 @@ export const SavoryItemDrawer = ({
 }: Props) => {
   const { addItem } = useCart();
   const { t, tMenu } = useLanguage();
-  const accent = primaryColor || "#FF6B00";
+  const accent = primaryColor || "#10B981";
   const translated = tMenu(item);
 
   const viandeStep = customizationConfig.steps.find((s) => s.id === "viande");

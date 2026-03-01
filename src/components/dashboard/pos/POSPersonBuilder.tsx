@@ -131,7 +131,7 @@ export const POSPersonBuilder = ({
       case "oui":
         return "bg-foreground text-primary-foreground border-foreground";
       case "x2":
-        return "bg-orange-500 text-white border-orange-500";
+        return "bg-emerald-600 text-white border-emerald-600";
     }
   };
 
