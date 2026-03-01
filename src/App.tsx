@@ -18,6 +18,8 @@ import SuperAdminPage from "./pages/SuperAdminPage";
 import CustomerProfilePage from "./pages/CustomerProfilePage";
 import AbonnementPage from "./pages/AbonnementPage";
 import ConnexionPage from "./pages/ConnexionPage";
+import MotDePasseOubliePage from "./pages/MotDePasseOubliePage";
+import ReinitialiserMotDePassePage from "./pages/ReinitialiserMotDePassePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/inscription" element={<InscriptionPage />} />
             <Route path="/connexion" element={<ConnexionPage />} />
+            <Route path="/mot-de-passe-oublie" element={<MotDePasseOubliePage />} />
+            <Route path="/reinitialiser-mot-de-passe" element={<ReinitialiserMotDePassePage />} />
             <Route path="/order" element={<OrderPage />} />
             <Route path="/suivi/:orderId" element={<SuiviPage />} />
             <Route path="/admin/:slug" element={<AdminPage />} />

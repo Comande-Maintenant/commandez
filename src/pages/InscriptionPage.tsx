@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -57,6 +57,15 @@ const InscriptionPage = () => {
   const [searchParams] = useSearchParams();
   const refCode = useMemo(() => searchParams.get('ref') || '', [searchParams]);
   const [step, setStep] = useState(1);
+
+  // If user is already authenticated (e.g. redirected from /connexion), skip to step 2
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setStep(2);
+      }
+    });
+  }, []);
 
   // Step 1: Account
   const [email, setEmail] = useState('');
