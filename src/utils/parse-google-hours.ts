@@ -1,5 +1,5 @@
 /**
- * Parse Google Places weekday_text into structured restaurant_hours rows.
+ * Parse Google Places weekday_text into structured schedule format.
  *
  * Google returns weekday_text in either English or French, e.g.:
  *   "Monday: 11:00 AM – 2:30 PM, 5:30 – 10:30 PM"
@@ -7,18 +7,22 @@
  *   "Sunday: Closed"
  *   "dimanche: Fermé"
  *
- * The DB supports one open_time + close_time per day,
- * so for split hours we take the earliest open and latest close.
+ * Output format matches ScheduleDay[] used by ScheduleEditor and
+ * checkRestaurantAvailability, with multiple slots per day.
  */
 
-export interface ParsedHour {
-  day_of_week: number; // 0=Sunday, 1=Monday, ..., 6=Saturday
-  is_open: boolean;
-  open_time: string; // "HH:MM" 24h format
-  close_time: string; // "HH:MM" 24h format
+export interface ScheduleSlot {
+  open: string; // "HH:MM" 24h
+  close: string; // "HH:MM" 24h
 }
 
-// Map day names (English + French) to day_of_week (0=Sun)
+export interface ParsedScheduleDay {
+  day: number; // 0=Sunday, 1=Monday, ..., 6=Saturday
+  enabled: boolean;
+  slots: ScheduleSlot[];
+}
+
+// Map day names (English + French) to day number (0=Sun)
 const DAY_MAP: Record<string, number> = {
   sunday: 0, dimanche: 0,
   monday: 1, lundi: 1,
@@ -39,13 +43,12 @@ const DAY_LABELS_FR: Record<number, string> = {
   6: 'Samedi',
 };
 
-// Convert 12h time to 24h: "2:30 PM" → "14:30", "11:00 AM" → "11:00"
+// Convert 12h time to 24h: "2:30 PM" -> "14:30", "11:00 AM" -> "11:00"
 function to24h(timeStr: string): string {
   const cleaned = timeStr.trim();
 
   // Already 24h format (no AM/PM)
   if (!/[ap]m/i.test(cleaned)) {
-    // Normalize: "5:30" → "05:30"
     const parts = cleaned.split(':');
     if (parts.length === 2) {
       return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
@@ -65,18 +68,11 @@ function to24h(timeStr: string): string {
   return String(h).padStart(2, '0') + ':' + m;
 }
 
-// Compare two HH:MM times, return <0 if a<b, 0 if equal, >0 if a>b
-function compareTime(a: string, b: string): number {
-  const [ah, am] = a.split(':').map(Number);
-  const [bh, bm] = b.split(':').map(Number);
-  return ah * 60 + am - (bh * 60 + bm);
-}
-
 /**
- * Parse a single weekday_text line into a ParsedHour.
- * Returns null if the line cannot be parsed.
+ * Parse a single weekday_text line into a ParsedScheduleDay.
+ * Preserves multiple slots (e.g. lunch + dinner).
  */
-function parseLine(line: string): ParsedHour | null {
+function parseLine(line: string): ParsedScheduleDay | null {
   // Split on first colon: "Monday: 11:00 AM – 2:30 PM"
   const colonIdx = line.indexOf(':');
   if (colonIdx === -1) return null;
@@ -84,106 +80,83 @@ function parseLine(line: string): ParsedHour | null {
   const dayName = line.substring(0, colonIdx).trim().toLowerCase();
   const rest = line.substring(colonIdx + 1).trim();
 
-  const dayOfWeek = DAY_MAP[dayName];
-  if (dayOfWeek === undefined) return null;
+  const day = DAY_MAP[dayName];
+  if (day === undefined) return null;
 
   // Check for closed
   const closedPatterns = ['closed', 'fermé', 'ferme', 'fermée', 'fermee'];
   if (closedPatterns.some((p) => rest.toLowerCase().includes(p))) {
-    return { day_of_week: dayOfWeek, is_open: false, open_time: '00:00', close_time: '00:00' };
+    return { day, enabled: false, slots: [] };
   }
 
-  // Split by comma to get multiple time ranges
-  // "11:00 AM – 2:30 PM, 5:30 – 10:30 PM"
-  // "11:00–14:30, 17:30–22:30"
+  // Split by comma to get individual time ranges
+  // "11:00 AM – 2:30 PM, 5:30 – 10:30 PM" -> 2 slots
+  // "11:00–14:30, 17:30–22:30" -> 2 slots
   const ranges = rest.split(',').map((r) => r.trim()).filter(Boolean);
-
-  let earliestOpen = '23:59';
-  let latestClose = '00:00';
+  const slots: ScheduleSlot[] = [];
 
   for (const range of ranges) {
-    // Split by dash/en-dash/em-dash, but NOT the colon inside times
-    // Use a regex that matches dashes surrounded by optional spaces,
-    // but only when they separate two time values
-    const parts = range.split(/\s*[–—]\s*|\s+-\s+|\s+to\s+/i);
+    // Split by en-dash/em-dash (always), or hyphen only with spaces
+    const parts = range.split(/\s*[\u2013\u2014]\s*|\s+-\s+|\s+to\s+/i);
     if (parts.length < 2) continue;
 
     const rawOpen = parts[0].trim();
     const rawClose = parts[parts.length - 1].trim();
 
-    // Google English format: "5:30 – 10:30 PM" → PM applies to BOTH
-    // If close has AM/PM but open doesn't, inherit it
+    // Google English: "5:30 – 10:30 PM" -> PM applies to both
     const ampmMatch = rawClose.match(/\s*(am|pm)\s*$/i);
     let fixedOpen = rawOpen;
     if (ampmMatch && !/[ap]m/i.test(rawOpen)) {
       fixedOpen = rawOpen + ' ' + ampmMatch[1];
     }
 
-    const openTime = to24h(fixedOpen);
-    const closeTime = to24h(rawClose);
-
-    if (compareTime(openTime, earliestOpen) < 0) {
-      earliestOpen = openTime;
-    }
-    if (compareTime(closeTime, latestClose) > 0) {
-      latestClose = closeTime;
-    }
+    slots.push({
+      open: to24h(fixedOpen),
+      close: to24h(rawClose),
+    });
   }
 
-  // If we couldn't parse any valid range
-  if (earliestOpen === '23:59' && latestClose === '00:00') {
-    return null;
-  }
+  if (slots.length === 0) return null;
 
-  return {
-    day_of_week: dayOfWeek,
-    is_open: true,
-    open_time: earliestOpen,
-    close_time: latestClose,
-  };
+  return { day, enabled: true, slots };
 }
 
 /**
- * Parse Google Places weekday_text array into restaurant_hours format.
- * Returns 7 rows (one per day), with defaults for days not found.
+ * Parse Google Places weekday_text array into schedule format.
+ * Returns 7 days (Mon-Sun order), preserving multiple slots per day.
  */
-export function parseGoogleHours(weekdayText: string[]): ParsedHour[] {
-  const parsed = new Map<number, ParsedHour>();
+export function parseGoogleSchedule(weekdayText: string[]): ParsedScheduleDay[] {
+  const parsed = new Map<number, ParsedScheduleDay>();
 
   for (const line of weekdayText) {
     const result = parseLine(line);
     if (result) {
-      parsed.set(result.day_of_week, result);
+      parsed.set(result.day, result);
     }
   }
 
-  // Fill in all 7 days (default to closed if not found)
-  const hours: ParsedHour[] = [];
+  // Fill all 7 days (default closed if not found)
+  const schedule: ParsedScheduleDay[] = [];
   for (let d = 0; d <= 6; d++) {
-    hours.push(
-      parsed.get(d) ?? {
-        day_of_week: d,
-        is_open: false,
-        open_time: '00:00',
-        close_time: '00:00',
-      }
+    schedule.push(
+      parsed.get(d) ?? { day: d, enabled: false, slots: [] }
     );
   }
 
-  return hours;
+  return schedule;
 }
 
 /**
- * Format parsed hours for display in a simple list.
- * Returns lines like "Lundi : 11:00 - 22:30" or "Dimanche : Ferme"
+ * Format parsed schedule for display.
+ * Returns lines like "Lundi : 11:00-14:30, 17:30-22:30" or "Dimanche : Ferme"
  */
-export function formatParsedHours(hours: ParsedHour[]): string[] {
-  // Display in Mon-Sun order
-  const ordered = [1, 2, 3, 4, 5, 6, 0];
+export function formatScheduleLines(schedule: ParsedScheduleDay[]): string[] {
+  const ordered = [1, 2, 3, 4, 5, 6, 0]; // Mon-Sun
   return ordered.map((d) => {
-    const h = hours.find((x) => x.day_of_week === d);
+    const day = schedule.find((x) => x.day === d);
     const label = DAY_LABELS_FR[d] || `Jour ${d}`;
-    if (!h || !h.is_open) return `${label} : Ferme`;
-    return `${label} : ${h.open_time} - ${h.close_time}`;
+    if (!day || !day.enabled || day.slots.length === 0) return `${label} : Ferme`;
+    const slotsStr = day.slots.map((s) => `${s.open}-${s.close}`).join(', ');
+    return `${label} : ${slotsStr}`;
   });
 }

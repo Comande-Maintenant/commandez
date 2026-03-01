@@ -26,8 +26,8 @@ import {
 } from '@/services/onboarding';
 import { getPlaceDetails } from '@/services/google-places';
 import { processReferral } from '@/services/referral';
-import { upsertRestaurantHours, updateRestaurant } from '@/lib/api';
-import type { ParsedHour } from '@/utils/parse-google-hours';
+import { updateRestaurant } from '@/lib/api';
+import type { ParsedScheduleDay } from '@/utils/parse-google-hours';
 import type {
   GooglePlaceResult,
   AnalyzedCategory,
@@ -47,7 +47,7 @@ type RestaurantData = {
   rating: number | null;
   google_place_id: string;
   useAutoHours: boolean;
-  parsedHours: ParsedHour[] | null;
+  parsedSchedule: ParsedScheduleDay[] | null;
 };
 
 const STEP_LABELS = ['Compte', 'Restaurant', 'Carte', 'Design', 'Formule', 'Termine'];
@@ -160,11 +160,7 @@ const InscriptionPage = () => {
   };
 
   const handlePlaceConfirm = (data: RestaurantData) => {
-    setRestaurantData({
-      ...data,
-      useAutoHours: data.useAutoHours,
-      parsedHours: data.parsedHours,
-    });
+    setRestaurantData(data);
     setStep(3);
   };
 
@@ -180,7 +176,7 @@ const InscriptionPage = () => {
       rating: null,
       google_place_id: '',
       useAutoHours: false,
-      parsedHours: null,
+      parsedSchedule: null,
     });
     setStep(3);
   };
@@ -235,10 +231,12 @@ const InscriptionPage = () => {
         await createMenuItemsFromAnalysis(restaurant.id, menuCategories);
       }
 
-      // Insert parsed Google hours into restaurant_hours + set auto mode
-      if (restaurantData?.useAutoHours && restaurantData.parsedHours) {
-        await upsertRestaurantHours(restaurant.id, restaurantData.parsedHours);
-        await updateRestaurant(restaurant.id, { availability_mode: 'auto' } as any);
+      // Store parsed schedule JSON + set auto mode
+      if (restaurantData?.useAutoHours && restaurantData.parsedSchedule) {
+        await updateRestaurant(restaurant.id, {
+          schedule: restaurantData.parsedSchedule,
+          availability_mode: 'auto',
+        } as any);
       }
 
       // Process referral code if present

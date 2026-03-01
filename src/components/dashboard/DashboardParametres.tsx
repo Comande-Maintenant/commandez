@@ -14,7 +14,7 @@ import {
   VolumeX,
   Play,
 } from "lucide-react";
-import { updateRestaurant, fetchRestaurantHours, upsertRestaurantHours } from "@/lib/api";
+import { updateRestaurant } from "@/lib/api";
 import { ReferralSection } from "./referral/ReferralSection";
 import type { DbRestaurant } from "@/types/database";
 import { ScheduleEditor, type ScheduleDay } from "./ScheduleEditor";
@@ -75,29 +75,22 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
   const [schedule, setSchedule] = useState<ScheduleDay[]>([]);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
 
-  // Load schedule from restaurant_hours
+  // Load schedule from restaurant.schedule JSON (supports multi-slots)
   useEffect(() => {
-    fetchRestaurantHours(restaurant.id).then((data) => {
-      if (data.length > 0) {
-        setSchedule(
-          data.map((d: any) => ({
-            day: d.day_of_week,
-            enabled: d.is_open,
-            slots: [{ open: d.open_time || "11:00", close: d.close_time || "23:00" }],
-          }))
-        );
-      } else {
-        setSchedule(
-          orderedDays.map((d) => ({
-            day: d,
-            enabled: d !== 0,
-            slots: [{ open: "11:00", close: "23:00" }],
-          }))
-        );
-      }
-      setLoadingSchedule(false);
-    });
-  }, [restaurant.id]);
+    const saved: ScheduleDay[] | null = restaurant.schedule;
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+      setSchedule(saved);
+    } else {
+      setSchedule(
+        orderedDays.map((d) => ({
+          day: d,
+          enabled: d !== 0,
+          slots: [{ open: "11:00", close: "23:00" }],
+        }))
+      );
+    }
+    setLoadingSchedule(false);
+  }, [restaurant.id, restaurant.schedule]);
 
   const togglePayment = (id: string) => {
     setPaymentMethods((prev) =>
@@ -135,14 +128,8 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
         restaurant_phone: phoneNumber,
       } as any);
 
-      // Save schedule
-      const hours = schedule.map((s) => ({
-        day_of_week: s.day,
-        is_open: s.enabled,
-        open_time: s.slots[0]?.open || "11:00",
-        close_time: s.slots[s.slots.length - 1]?.close || "23:00",
-      }));
-      await upsertRestaurantHours(restaurant.id, hours);
+      // Save schedule as JSON (supports multi-slots per day)
+      await updateRestaurant(restaurant.id, { schedule } as any);
 
       toast.success("Parametres enregistres");
     } catch (e) {

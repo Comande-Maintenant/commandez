@@ -4,7 +4,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import type { GooglePlaceResult } from '@/types/onboarding';
-import { parseGoogleHours, formatParsedHours, type ParsedHour } from '@/utils/parse-google-hours';
+import {
+  parseGoogleSchedule,
+  formatScheduleLines,
+  type ParsedScheduleDay,
+} from '@/utils/parse-google-hours';
 
 export interface PlaceConfirmData {
   name: string;
@@ -17,7 +21,7 @@ export interface PlaceConfirmData {
   rating: number | null;
   google_place_id: string;
   useAutoHours: boolean;
-  parsedHours: ParsedHour[] | null;
+  parsedSchedule: ParsedScheduleDay[] | null;
 }
 
 interface PlaceConfirmationProps {
@@ -33,11 +37,9 @@ function extractCity(address: string, isVicinity: boolean): string {
   if (parts.length === 0) return '';
 
   if (isVicinity) {
-    // vicinity format: "3 Rue X, Moneteau" -> city is the LAST part
     return parts[parts.length - 1];
   }
 
-  // formatted_address: "3 Rue X, 89470 Moneteau, France" -> city is second-to-last
   if (parts.length >= 2) {
     const candidate = parts[parts.length - 2];
     return candidate.replace(/\d{5}\s*/, '').trim();
@@ -45,7 +47,6 @@ function extractCity(address: string, isVicinity: boolean): string {
   return '';
 }
 
-// Cuisine keywords to detect from Google place name or types
 const CUISINE_MAP: Record<string, string> = {
   kebab: 'Kebab',
   pizza: 'Pizzeria',
@@ -98,15 +99,15 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
   const [website, setWebsite] = useState(place.website ?? '');
   const [useAutoHours, setUseAutoHours] = useState(true);
 
-  // Parse Google hours if available
+  // Parse Google hours with multi-slot support
   const weekdayText = place.opening_hours?.weekday_text;
-  const parsedHours = useMemo(
-    () => (weekdayText && weekdayText.length > 0 ? parseGoogleHours(weekdayText) : null),
+  const parsedSchedule = useMemo(
+    () => (weekdayText && weekdayText.length > 0 ? parseGoogleSchedule(weekdayText) : null),
     [weekdayText]
   );
   const formattedLines = useMemo(
-    () => (parsedHours ? formatParsedHours(parsedHours) : []),
-    [parsedHours]
+    () => (parsedSchedule ? formatScheduleLines(parsedSchedule) : []),
+    [parsedSchedule]
   );
 
   const hoursString = weekdayText?.join(' | ') ?? '';
@@ -122,8 +123,8 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
       hours: hoursString,
       rating: place.rating ?? null,
       google_place_id: place.place_id,
-      useAutoHours: useAutoHours && !!parsedHours,
-      parsedHours: useAutoHours ? parsedHours : null,
+      useAutoHours: useAutoHours && !!parsedSchedule,
+      parsedSchedule: useAutoHours ? parsedSchedule : null,
     });
   };
 
@@ -171,8 +172,8 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
         />
       </div>
 
-      {/* Parsed hours display */}
-      {parsedHours && formattedLines.length > 0 && (
+      {/* Parsed hours display with slots */}
+      {parsedSchedule && formattedLines.length > 0 && (
         <div className="rounded-lg border border-border p-4 space-y-3">
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
@@ -185,9 +186,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
                 <div
                   key={line}
                   className={`text-sm px-2 py-1 rounded ${
-                    isClosed
-                      ? 'text-muted-foreground'
-                      : 'text-foreground'
+                    isClosed ? 'text-muted-foreground' : 'text-foreground'
                   }`}
                 >
                   {line}
@@ -214,8 +213,8 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
         </div>
       )}
 
-      {/* Fallback: manual hours input if Google hours not available */}
-      {!parsedHours && (
+      {/* Fallback if no Google hours */}
+      {!parsedSchedule && (
         <div>
           <Label>Horaires</Label>
           <Input
