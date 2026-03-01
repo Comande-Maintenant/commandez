@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import type { DbMenuItem, CustomizationConfig } from "@/types/database";
-import type { CustomizationData } from "@/types/customization";
+import type { UniversalCustomizationData } from "@/types/customization";
 import { useLanguage } from "@/context/LanguageContext";
 import { ItemCustomizeModal } from "./ItemCustomizeModal";
 import { SavoryItemDrawer, isSavoryItem } from "./SavoryItemDrawer";
@@ -17,7 +17,7 @@ interface Props {
   primaryLight?: string;
   isEven?: boolean;
   customizationConfig?: CustomizationConfig | null;
-  customizationData?: CustomizationData | null;
+  customizationData?: UniversalCustomizationData | null;
   menuItems?: DbMenuItem[];
 }
 

@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "Fritessaus",
   "custom.free_sauces": "{count} gratis",
   "custom.extra_sauce": "+{price} € per saus",
-  "custom.add_to_cart": "Toevoegen aan winkelwagen"
+  "custom.add_to_cart": "Toevoegen aan winkelwagen",
+  "custom.choose_size": "Kies je maat",
+  "custom.choose_formula": "Kies je formule",
+  "custom.choose_protein": "Kies je proteine",
+  "custom.choose_filling": "Kies je vulling",
+  "custom.choose_bread": "Kies je brood",
+  "custom.choose_toppings": "Kies je toppings",
+  "custom.choose_type": "Kies het type",
+  "custom.choose_sauce": "Kies je saus",
+  "custom.choose_pieces": "Kies je stukken",
+  "custom.extras": "Extra's",
+  "custom.spice_level": "Pittigheid",
+  "custom.title_generic": "Stel je bestelling samen"
 }

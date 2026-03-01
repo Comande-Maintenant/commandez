@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "Sauce frites",
   "custom.free_sauces": "{count} gratuites",
   "custom.extra_sauce": "+{price} € par sauce",
-  "custom.add_to_cart": "Ajouter au panier"
+  "custom.add_to_cart": "Ajouter au panier",
+  "custom.choose_size": "Choisissez la taille",
+  "custom.choose_formula": "Choisissez la formule",
+  "custom.choose_protein": "Choisissez la proteine",
+  "custom.choose_filling": "Choisissez la garniture",
+  "custom.choose_bread": "Choisissez le pain",
+  "custom.choose_toppings": "Choisissez les toppings",
+  "custom.choose_type": "Choisissez le type",
+  "custom.choose_sauce": "Choisissez la sauce",
+  "custom.choose_pieces": "Choisissez les pieces",
+  "custom.extras": "Extras",
+  "custom.spice_level": "Niveau d'epices",
+  "custom.title_generic": "Composez votre commande"
 }

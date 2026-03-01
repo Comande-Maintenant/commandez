@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "صلصة البطاطس",
   "custom.free_sauces": "{count} مجانية",
   "custom.extra_sauce": "+{price} € لكل صلصة",
-  "custom.add_to_cart": "أضف إلى السلة"
+  "custom.add_to_cart": "أضف إلى السلة",
+  "custom.choose_size": "اختر الحجم",
+  "custom.choose_formula": "اختر التشكيلة",
+  "custom.choose_protein": "اختر البروتين",
+  "custom.choose_filling": "اختر الحشوة",
+  "custom.choose_bread": "اختر الخبز",
+  "custom.choose_toppings": "اختر الاضافات",
+  "custom.choose_type": "اختر النوع",
+  "custom.choose_sauce": "اختر الصلصة",
+  "custom.choose_pieces": "اختر القطع",
+  "custom.extras": "اضافات",
+  "custom.spice_level": "مستوى الحرارة",
+  "custom.title_generic": "اطلب وجبتك"
 }

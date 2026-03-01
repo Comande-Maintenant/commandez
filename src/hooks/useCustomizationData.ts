@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { fetchCustomizationData } from "@/lib/customizationApi";
-import type { CustomizationData } from "@/types/customization";
+import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
+import type { UniversalCustomizationData } from "@/types/customization";
 
 export function useCustomizationData(restaurantId: string | null) {
-  const [data, setData] = useState<CustomizationData | null>(null);
+  const [data, setData] = useState<UniversalCustomizationData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -11,10 +11,10 @@ export function useCustomizationData(restaurantId: string | null) {
     let cancelled = false;
     setIsLoading(true);
 
-    fetchCustomizationData(restaurantId).then((result) => {
+    fetchUniversalCustomizationData(restaurantId).then((result) => {
       if (cancelled) return;
-      // Only set data if there are actually bases configured
-      if (result.bases.length > 0) {
+      // Activate if there are step templates OR bases configured
+      if (result.stepTemplates.length > 0 || result.bases.length > 0) {
         setData(result);
       }
       setIsLoading(false);

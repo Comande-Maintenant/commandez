@@ -88,3 +88,57 @@ export interface CustomizationData {
   accompagnements: DbAccompagnement[];
   config: DbOrderConfig | null;
 }
+
+// ============================================================
+// Universal Order Engine types
+// ============================================================
+
+export type CuisineType =
+  | 'kebab'
+  | 'pizza'
+  | 'burger'
+  | 'sushi'
+  | 'indian'
+  | 'chinese'
+  | 'bakery'
+  | 'poke'
+  | 'creperie'
+  | 'coffee_shop'
+  | 'tacos_fr'
+  | 'generic';
+
+export type StepType =
+  | 'single_select'
+  | 'multi_select'
+  | 'toggle_group'
+  | 'chip_select'
+  | 'upsell'
+  | 'recap';
+
+export interface DbCuisineStepTemplate {
+  id: string;
+  cuisine_type: CuisineType;
+  step_key: string;
+  label_i18n: string;
+  data_source: string;
+  step_type: StepType;
+  sort_order: number;
+  required: boolean;
+  config: Record<string, unknown>;
+}
+
+export interface StepSelection {
+  stepKey: string;
+  stepLabel: string;
+  selections: Array<{
+    id: string;
+    name: string;
+    price: number;
+    meta?: Record<string, unknown>;
+  }>;
+}
+
+export interface UniversalCustomizationData extends CustomizationData {
+  cuisine_type: CuisineType;
+  stepTemplates: DbCuisineStepTemplate[];
+}

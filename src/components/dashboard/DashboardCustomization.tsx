@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   DndContext,
   closestCenter,
@@ -18,9 +18,10 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Plus, Pencil, Trash2, GripVertical, Loader2 } from "lucide-react";
 import type { DbRestaurant } from "@/types/database";
-import type { DbBase, DbViande, DbGarniture, DbSauce, DbAccompagnement, DbOrderConfig } from "@/types/customization";
+import type { DbBase, DbViande, DbGarniture, DbSauce, DbAccompagnement, DbOrderConfig, DbCuisineStepTemplate } from "@/types/customization";
 import {
   fetchAllBases, fetchAllViandes, fetchAllGarnitures, fetchAllSauces, fetchAllAccompagnements, fetchOrderConfig,
+  fetchCuisineStepTemplates, fetchRestaurantCuisineType,
   insertBase, updateBase, deleteBase, batchUpdateBaseSortOrder,
   insertViande, updateViande, deleteViande, batchUpdateViandeSortOrder,
   insertGarniture, updateGarniture, deleteGarniture, batchUpdateGarnitureSortOrder,
@@ -39,6 +40,24 @@ interface Props {
 }
 
 type TabId = "bases" | "viandes" | "garnitures" | "sauces" | "accompagnements" | "config";
+
+// Map data_source to TabId
+const DATA_SOURCE_TO_TAB: Record<string, TabId> = {
+  restaurant_bases: "bases",
+  restaurant_viandes: "viandes",
+  restaurant_garnitures: "garnitures",
+  restaurant_sauces: "sauces",
+  restaurant_accompagnements: "accompagnements",
+};
+
+// Map data_source to display label
+const DATA_SOURCE_LABELS: Record<string, Record<string, string>> = {
+  restaurant_bases: { default: "Bases" },
+  restaurant_viandes: { default: "Viandes" },
+  restaurant_garnitures: { default: "Garnitures" },
+  restaurant_sauces: { default: "Sauces" },
+  restaurant_accompagnements: { default: "Accomp." },
+};
 
 // Generic sortable row
 function SortableRow({
@@ -98,6 +117,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
   const [sauces, setSauces] = useState<DbSauce[]>([]);
   const [accompagnements, setAccompagnements] = useState<DbAccompagnement[]>([]);
   const [config, setConfig] = useState<DbOrderConfig | null>(null);
+  const [stepTemplates, setStepTemplates] = useState<DbCuisineStepTemplate[]>([]);
 
   // Dialog state
   const [showDialog, setShowDialog] = useState(false);
@@ -131,13 +151,15 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
 
   const loadAll = useCallback(async () => {
     setLoading(true);
-    const [b, v, g, s, a, c] = await Promise.all([
+    const cuisineType = await fetchRestaurantCuisineType(restaurant.id);
+    const [b, v, g, s, a, c, templates] = await Promise.all([
       fetchAllBases(restaurant.id),
       fetchAllViandes(restaurant.id),
       fetchAllGarnitures(restaurant.id),
       fetchAllSauces(restaurant.id),
       fetchAllAccompagnements(restaurant.id),
       fetchOrderConfig(restaurant.id),
+      fetchCuisineStepTemplates(cuisineType),
     ]);
     setBases(b);
     setViandes(v);
@@ -145,6 +167,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
     setSauces(s);
     setAccompagnements(a);
     setConfig(c);
+    setStepTemplates(templates);
     if (c) {
       setCfgFreeSandwich(String(c.free_sauces_sandwich));
       setCfgFreeFrites(String(c.free_sauces_frites));
@@ -349,14 +372,43 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
     }
   };
 
-  const tabs: { id: TabId; label: string; count: number }[] = [
-    { id: "bases", label: "Bases", count: bases.length },
-    { id: "viandes", label: "Viandes", count: viandes.length },
-    { id: "garnitures", label: "Garnitures", count: garnitures.length },
-    { id: "sauces", label: "Sauces", count: sauces.length },
-    { id: "accompagnements", label: "Accomp.", count: accompagnements.length },
-    { id: "config", label: "Config", count: 0 },
-  ];
+  // Build tabs dynamically from cuisine step templates
+  const tabs: { id: TabId; label: string; count: number }[] = useMemo(() => {
+    const countMap: Record<TabId, number> = {
+      bases: bases.length,
+      viandes: viandes.length,
+      garnitures: garnitures.length,
+      sauces: sauces.length,
+      accompagnements: accompagnements.length,
+      config: 0,
+    };
+
+    if (stepTemplates.length === 0) {
+      // Fallback: show all tabs (backward compat for restaurants without templates)
+      return [
+        { id: "bases" as TabId, label: "Bases", count: bases.length },
+        { id: "viandes" as TabId, label: "Viandes", count: viandes.length },
+        { id: "garnitures" as TabId, label: "Garnitures", count: garnitures.length },
+        { id: "sauces" as TabId, label: "Sauces", count: sauces.length },
+        { id: "accompagnements" as TabId, label: "Accomp.", count: accompagnements.length },
+        { id: "config" as TabId, label: "Config", count: 0 },
+      ];
+    }
+
+    // Deduplicate data_sources from templates, keep order
+    const seen = new Set<string>();
+    const dynamicTabs: { id: TabId; label: string; count: number }[] = [];
+    for (const tmpl of stepTemplates) {
+      const tabId = DATA_SOURCE_TO_TAB[tmpl.data_source];
+      if (!tabId || seen.has(tabId)) continue;
+      seen.add(tabId);
+      const label = DATA_SOURCE_LABELS[tmpl.data_source]?.default ?? tabId;
+      dynamicTabs.push({ id: tabId, label, count: countMap[tabId] ?? 0 });
+    }
+    // Always add config tab
+    dynamicTabs.push({ id: "config", label: "Config", count: 0 });
+    return dynamicTabs;
+  }, [stepTemplates, bases.length, viandes.length, garnitures.length, sauces.length, accompagnements.length]);
 
   const currentItems = activeTab === "bases" ? bases
     : activeTab === "viandes" ? viandes

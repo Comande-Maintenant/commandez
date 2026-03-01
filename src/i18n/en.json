@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "Fries sauce",
   "custom.free_sauces": "{count} free",
   "custom.extra_sauce": "+{price} € per sauce",
-  "custom.add_to_cart": "Add to cart"
+  "custom.add_to_cart": "Add to cart",
+  "custom.choose_size": "Choose your size",
+  "custom.choose_formula": "Choose your formula",
+  "custom.choose_protein": "Choose your protein",
+  "custom.choose_filling": "Choose your filling",
+  "custom.choose_bread": "Choose your bread",
+  "custom.choose_toppings": "Choose your toppings",
+  "custom.choose_type": "Choose the type",
+  "custom.choose_sauce": "Choose your sauce",
+  "custom.choose_pieces": "Choose your pieces",
+  "custom.extras": "Extras",
+  "custom.spice_level": "Spice level",
+  "custom.title_generic": "Build your order"
 }

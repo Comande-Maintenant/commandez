@@ -42,6 +42,7 @@ type RestaurantData = {
   city: string;
   phone: string;
   cuisine: string;
+  cuisine_type?: string;
   website: string;
   hours: string;
   rating: number | null;
@@ -159,18 +160,19 @@ const InscriptionPage = () => {
     }
   };
 
-  const handlePlaceConfirm = (data: RestaurantData) => {
+  const handlePlaceConfirm = (data: RestaurantData & { cuisine_type?: string }) => {
     setRestaurantData(data);
     setStep(3);
   };
 
-  const handleManualSubmit = (data: { name: string; address: string; city: string; phone?: string; cuisine: string }) => {
+  const handleManualSubmit = (data: { name: string; address: string; city: string; phone?: string; cuisine: string; cuisine_type?: string }) => {
     setRestaurantData({
       name: data.name,
       address: data.address,
       city: data.city,
       phone: data.phone ?? '',
       cuisine: data.cuisine,
+      cuisine_type: data.cuisine_type || 'generic',
       website: '',
       hours: '',
       rating: null,
@@ -213,6 +215,7 @@ const InscriptionPage = () => {
         address: restaurantData?.address,
         city: restaurantData?.city,
         cuisine: restaurantData?.cuisine,
+        cuisine_type: restaurantData?.cuisine_type || 'generic',
         description: description || undefined,
         image: logoUrl || undefined,
         restaurant_phone: restaurantData?.phone,

@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug, fetchMenuItems, incrementDeactivationVisits, fetchActiveOrderCount, isCustomerBanned } from "@/lib/api";
 import { checkRestaurantAvailability, canPlaceOrder } from "@/lib/schedule";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
-import type { CustomizationData } from "@/types/customization";
+import type { UniversalCustomizationData } from "@/types/customization";
 import { MenuItemCard } from "@/components/MenuItemCard";
-import { fetchCustomizationData } from "@/lib/customizationApi";
+import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
 import { CartSheet } from "@/components/CartSheet";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -127,7 +127,7 @@ const RestaurantPage = () => {
   const [customerName, setCustomerName] = useState<string | null>(null);
   const [customerBanned, setCustomerBanned] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("");
-  const [customizationData, setCustomizationData] = useState<CustomizationData | null>(null);
+  const [customizationData, setCustomizationData] = useState<UniversalCustomizationData | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -186,8 +186,8 @@ const RestaurantPage = () => {
           ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement"].includes(m.product_type || "")
         );
         if (hasCustomizable) {
-          fetchCustomizationData(r.id).then((cd) => {
-            if (cd.bases.length > 0) setCustomizationData(cd);
+          fetchUniversalCustomizationData(r.id).then((cd) => {
+            if (cd.stepTemplates.length > 0 || cd.bases.length > 0) setCustomizationData(cd);
           }).catch(() => {});
         }
         // Fetch active order count for wait estimate

@@ -71,6 +71,7 @@ export interface DbRestaurant {
     max_minutes: number;
   };
   customization_config: CustomizationConfig | null;
+  cuisine_type?: string;
   deactivated_at: string | null;
   scheduled_deletion_at: string | null;
   deactivation_visit_count: number;

@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "薯条酱料",
   "custom.free_sauces": "{count} 份免费",
   "custom.extra_sauce": "+{price} €/份",
-  "custom.add_to_cart": "加入购物车"
+  "custom.add_to_cart": "加入购物车",
+  "custom.choose_size": "选择大小",
+  "custom.choose_formula": "选择套餐",
+  "custom.choose_protein": "选择蛋白质",
+  "custom.choose_filling": "选择馅料",
+  "custom.choose_bread": "选择面包",
+  "custom.choose_toppings": "选择配料",
+  "custom.choose_type": "选择类型",
+  "custom.choose_sauce": "选择酱料",
+  "custom.choose_pieces": "选择份量",
+  "custom.extras": "附加",
+  "custom.spice_level": "辣度",
+  "custom.title_generic": "定制您的订单"
 }

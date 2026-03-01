@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "Pommes-Sosse",
   "custom.free_sauces": "{count} gratis",
   "custom.extra_sauce": "+{price} € pro Sosse",
-  "custom.add_to_cart": "In den Warenkorb"
+  "custom.add_to_cart": "In den Warenkorb",
+  "custom.choose_size": "Grosse wahlen",
+  "custom.choose_formula": "Formel wahlen",
+  "custom.choose_protein": "Protein wahlen",
+  "custom.choose_filling": "Fullung wahlen",
+  "custom.choose_bread": "Brot wahlen",
+  "custom.choose_toppings": "Toppings wahlen",
+  "custom.choose_type": "Typ wahlen",
+  "custom.choose_sauce": "Sosse wahlen",
+  "custom.choose_pieces": "Stucke wahlen",
+  "custom.extras": "Extras",
+  "custom.spice_level": "Scharfegrad",
+  "custom.title_generic": "Bestellen Sie Ihr Gericht"
 }

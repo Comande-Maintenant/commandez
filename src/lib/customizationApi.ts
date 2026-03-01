@@ -7,6 +7,9 @@ import type {
   DbAccompagnement,
   DbOrderConfig,
   CustomizationData,
+  DbCuisineStepTemplate,
+  CuisineType,
+  UniversalCustomizationData,
 } from "@/types/customization";
 
 // ============================================================
@@ -171,6 +174,41 @@ export async function upsertOrderConfig(restaurantId: string, data: Partial<DbOr
     .from("restaurant_order_config")
     .upsert({ ...data, restaurant_id: restaurantId, updated_at: new Date().toISOString() }, { onConflict: "restaurant_id" });
   if (error) throw error;
+}
+
+// ============================================================
+// Universal Order Engine: fetch cuisine templates
+// ============================================================
+
+export async function fetchCuisineStepTemplates(cuisineType: string): Promise<DbCuisineStepTemplate[]> {
+  const { data } = await supabase
+    .from("cuisine_step_templates")
+    .select("*")
+    .eq("cuisine_type", cuisineType)
+    .order("sort_order");
+  return (data ?? []) as unknown as DbCuisineStepTemplate[];
+}
+
+export async function fetchRestaurantCuisineType(restaurantId: string): Promise<CuisineType> {
+  const { data } = await supabase
+    .from("restaurants")
+    .select("cuisine_type")
+    .eq("id", restaurantId)
+    .maybeSingle();
+  return ((data as any)?.cuisine_type as CuisineType) ?? "generic";
+}
+
+export async function fetchUniversalCustomizationData(restaurantId: string): Promise<UniversalCustomizationData> {
+  const [baseData, cuisineType] = await Promise.all([
+    fetchCustomizationData(restaurantId),
+    fetchRestaurantCuisineType(restaurantId),
+  ]);
+  const stepTemplates = await fetchCuisineStepTemplates(cuisineType);
+  return {
+    ...baseData,
+    cuisine_type: cuisineType,
+    stepTemplates,
+  };
 }
 
 // ============================================================

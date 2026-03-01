@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "감자튀김 소스",
   "custom.free_sauces": "{count}개 무료",
   "custom.extra_sauce": "+{price} €/개",
-  "custom.add_to_cart": "장바구니에 추가"
+  "custom.add_to_cart": "장바구니에 추가",
+  "custom.choose_size": "사이즈 선택",
+  "custom.choose_formula": "세트 선택",
+  "custom.choose_protein": "단백질 선택",
+  "custom.choose_filling": "속재료 선택",
+  "custom.choose_bread": "빵 선택",
+  "custom.choose_toppings": "토핑 선택",
+  "custom.choose_type": "유형 선택",
+  "custom.choose_sauce": "소스 선택",
+  "custom.choose_pieces": "조각 선택",
+  "custom.extras": "추가",
+  "custom.spice_level": "매운맛 단계",
+  "custom.title_generic": "주문 구성"
 }

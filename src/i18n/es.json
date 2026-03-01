@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "Salsa patatas",
   "custom.free_sauces": "{count} gratis",
   "custom.extra_sauce": "+{price} € por salsa",
-  "custom.add_to_cart": "Agregar al carrito"
+  "custom.add_to_cart": "Agregar al carrito",
+  "custom.choose_size": "Elige el tamano",
+  "custom.choose_formula": "Elige la formula",
+  "custom.choose_protein": "Elige la proteina",
+  "custom.choose_filling": "Elige el relleno",
+  "custom.choose_bread": "Elige el pan",
+  "custom.choose_toppings": "Elige los toppings",
+  "custom.choose_type": "Elige el tipo",
+  "custom.choose_sauce": "Elige la salsa",
+  "custom.choose_pieces": "Elige las piezas",
+  "custom.extras": "Extras",
+  "custom.spice_level": "Nivel de picante",
+  "custom.title_generic": "Compone tu pedido"
 }

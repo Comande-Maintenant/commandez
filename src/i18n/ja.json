@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "ポテトソース",
   "custom.free_sauces": "{count} 個無料",
   "custom.extra_sauce": "+{price} €/個",
-  "custom.add_to_cart": "カートに追加"
+  "custom.add_to_cart": "カートに追加",
+  "custom.choose_size": "サイズを選択",
+  "custom.choose_formula": "セットを選択",
+  "custom.choose_protein": "タンパク質を選択",
+  "custom.choose_filling": "具材を選択",
+  "custom.choose_bread": "パンを選択",
+  "custom.choose_toppings": "トッピングを選択",
+  "custom.choose_type": "種類を選択",
+  "custom.choose_sauce": "ソースを選択",
+  "custom.choose_pieces": "ピースを選択",
+  "custom.extras": "追加",
+  "custom.spice_level": "辛さレベル",
+  "custom.title_generic": "オーダーを作成"
 }

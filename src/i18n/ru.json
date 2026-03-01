@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "Соус к картошке",
   "custom.free_sauces": "{count} бесплатно",
   "custom.extra_sauce": "+{price} € за соус",
-  "custom.add_to_cart": "Добавить в корзину"
+  "custom.add_to_cart": "Добавить в корзину",
+  "custom.choose_size": "Выберите размер",
+  "custom.choose_formula": "Выберите формулу",
+  "custom.choose_protein": "Выберите белок",
+  "custom.choose_filling": "Выберите начинку",
+  "custom.choose_bread": "Выберите хлеб",
+  "custom.choose_toppings": "Выберите топпинги",
+  "custom.choose_type": "Выберите тип",
+  "custom.choose_sauce": "Выберите соус",
+  "custom.choose_pieces": "Выберите кусочки",
+  "custom.extras": "Дополнительно",
+  "custom.spice_level": "Уровень остроты",
+  "custom.title_generic": "Соберите заказ"
 }

@@ -3,12 +3,15 @@ import { Clock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { GooglePlaceResult } from '@/types/onboarding';
 import {
   parseGoogleSchedule,
   formatScheduleLines,
   type ParsedScheduleDay,
 } from '@/utils/parse-google-hours';
+import { CUISINE_TYPE_OPTIONS, detectCuisineType } from '@/lib/cuisineTypes';
+import type { CuisineType } from '@/types/customization';
 
 export interface PlaceConfirmData {
   name: string;
@@ -16,6 +19,7 @@ export interface PlaceConfirmData {
   city: string;
   phone: string;
   cuisine: string;
+  cuisine_type: string;
   website: string;
   hours: string;
   rating: number | null;
@@ -96,6 +100,9 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
     place.formatted_phone_number || place.international_phone_number || ''
   );
   const [cuisine, setCuisine] = useState(detectCuisine(place.name, place.types));
+  const [cuisineType, setCuisineType] = useState<CuisineType>(() =>
+    detectCuisineType(place.name, detectCuisine(place.name, place.types))
+  );
   const [website, setWebsite] = useState(place.website ?? '');
   const [useAutoHours, setUseAutoHours] = useState(true);
 
@@ -119,6 +126,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
       city,
       phone,
       cuisine,
+      cuisine_type: cuisineType,
       website,
       hours: hoursString,
       rating: place.rating ?? null,
@@ -155,12 +163,28 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
       </div>
 
       <div>
-        <Label>Type de cuisine</Label>
+        <Label>Type de cuisine (affiche)</Label>
         <Input
           value={cuisine}
           onChange={(e) => setCuisine(e.target.value)}
           placeholder="Pizzeria, Kebab, Sushi..."
         />
+      </div>
+
+      <div>
+        <Label>Type de restaurant</Label>
+        <Select value={cuisineType} onValueChange={(v) => setCuisineType(v as CuisineType)}>
+          <SelectTrigger className="w-full mt-1">
+            <SelectValue placeholder="Selectionnez..." />
+          </SelectTrigger>
+          <SelectContent>
+            {CUISINE_TYPE_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>

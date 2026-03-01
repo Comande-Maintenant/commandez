@@ -99,6 +99,16 @@ export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
                         + {item.dessertChoice.name}
                       </p>
                     )}
+                    {/* Generic custom choices (non-kebab cuisines) */}
+                    {item.customChoices && item.customChoices.length > 0 && !item.baseChoice && !item.viandeChoice && (
+                      <>
+                        {item.customChoices.filter((c) => c.selections.length > 0).map((choice) => (
+                          <p key={choice.stepKey} className="text-xs text-muted-foreground mt-0.5">
+                            {choice.stepLabel} : {choice.selections.map((s) => s.name).join(", ")}
+                          </p>
+                        ))}
+                      </>
+                    )}
                     {item.selectedSupplements.length > 0 && (
                       <p className="text-xs text-muted-foreground">
                         + {item.selectedSupplements.map((s) => s.name).join(", ")}

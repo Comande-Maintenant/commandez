@@ -18,6 +18,7 @@ export async function createRestaurantFromOnboarding(data: {
   address?: string;
   city?: string;
   cuisine?: string;
+  cuisine_type?: string;
   description?: string;
   image?: string;
   cover_image?: string;
@@ -41,6 +42,7 @@ export async function createRestaurantFromOnboarding(data: {
       address: data.address ?? null,
       city: data.city ?? null,
       cuisine: data.cuisine ?? null,
+      cuisine_type: data.cuisine_type ?? 'generic',
       description: data.description ?? null,
       image: data.image ?? null,
       cover_image: data.cover_image ?? null,

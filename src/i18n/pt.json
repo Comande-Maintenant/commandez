@@ -92,5 +92,17 @@
   "custom.same_sauce_frites": "Molho batatas",
   "custom.free_sauces": "{count} gratis",
   "custom.extra_sauce": "+{price} € por molho",
-  "custom.add_to_cart": "Adicionar ao carrinho"
+  "custom.add_to_cart": "Adicionar ao carrinho",
+  "custom.choose_size": "Escolha o tamanho",
+  "custom.choose_formula": "Escolha a formula",
+  "custom.choose_protein": "Escolha a proteina",
+  "custom.choose_filling": "Escolha o recheio",
+  "custom.choose_bread": "Escolha o pao",
+  "custom.choose_toppings": "Escolha os toppings",
+  "custom.choose_type": "Escolha o tipo",
+  "custom.choose_sauce": "Escolha o molho",
+  "custom.choose_pieces": "Escolha as pecas",
+  "custom.extras": "Extras",
+  "custom.spice_level": "Nivel de picante",
+  "custom.title_generic": "Monte seu pedido"
 }

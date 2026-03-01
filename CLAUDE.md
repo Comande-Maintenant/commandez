@@ -9,15 +9,17 @@
 - React 18.3 + TypeScript + Vite
 - Tailwind CSS + shadcn-ui (composants dans `src/components/ui/`)
 - Supabase : DB + Auth + Storage + Realtime + Edge Functions
-- Framer Motion (animations), React Query (data fetching), Stripe (paiements)
+- Framer Motion (animations), React Query (data fetching)
 - React Router (routing)
+- Shopify Subscriptions (paiements recurrents via checkout Shopify)
 
 ## Backend Supabase
 - **Project** : rbqgsxhkccbhqdmdtxwr
 - **URL** : https://rbqgsxhkccbhqdmdtxwr.supabase.co
 - **Management API token** : voir .env ou CLAUDE.md local (pas dans le repo)
-- **Edge functions deployees** : send-email, send-welcome-email, trial-reminders
+- **Edge functions deployees** : send-email, send-welcome-email, trial-reminders, shopify-webhooks, validate-promo
 - **Cron** : pg_cron + pg_net, trial-reminders daily a 3h UTC
+- **Secret** : SHOPIFY_WEBHOOK_SECRET (= client_secret de l'app Shopify)
 
 ## Theme Shopify (commandeici.com)
 - **Store** : idwzsh-11.myshopify.com
@@ -56,7 +58,9 @@
 - `src/pages/RestaurantPage.tsx` : menu publique (`/:slug`)
 - `src/pages/AdminPage.tsx` : dashboard admin (`/admin/:slug`)
 - `src/pages/InscriptionPage.tsx` : onboarding + capture `?ref=CODE`
-- `src/pages/AbonnementPage.tsx` : page post-trial expiration
+- `src/pages/ChoisirPlanPage.tsx` : selection plan + redirect checkout Shopify (`/choisir-plan`)
+- `src/pages/AbonnementConfirmePage.tsx` : polling post-checkout (`/abonnement-confirme`)
+- `src/pages/AbonnementPage.tsx` : page reactivation post-expiration (`/abonnement`)
 
 ### Data / Auth
 - `src/lib/api.ts` : fonctions Supabase CRUD
@@ -66,7 +70,8 @@
 - `src/hooks/useCrossDomainAuth.ts` : gestion cookie `commandeici_user`
 
 ### Fonctionnalites
-- `src/components/auth/SubscriptionGate.tsx` : gate abonnement
+- `src/components/auth/SubscriptionGate.tsx` : gate abonnement (dual table: subscriptions + legacy restaurants)
+- `src/services/shopify-checkout.ts` : URL checkout Shopify avec selling plans
 - `src/services/referral.ts` : logique parrainage
 - `src/components/dashboard/referral/ReferralSection.tsx` : UI parrainage
 - `src/components/CustomOrderBuilder.tsx` : configurateur multi-etapes
@@ -90,13 +95,23 @@
 - Inscription avec `?ref=CODE` : filleul 8 semaines, parrain +4 semaines
 - Trigger DB : auto-genere code + set trial 4 semaines a l'INSERT
 
-## Abonnement
-- Plan : 19 euros/mois, essai 4 semaines (8 avec parrainage)
-- SubscriptionGate wrappe le dashboard (check status + trial_end_date + bonus_weeks)
-- Cron trial-reminders : emails J-7/J-3/J-1 + expire trials + desactive commandes
+## Abonnement (paywall Shopify)
+- **Plans** : mensuel 29.99 EUR/mois, annuel 239.88 EUR/an
+- **Trial** : 14 jours, CB requise via Shopify checkout
+- **Checkout** : cart permalink Shopify avec selling_plan + note_attributes (restaurant_id, plan, promo_code)
+- **Lifecycle** : pending_payment -> trial -> active -> past_due/cancelled/expired
+- **Produit Shopify** : "commandeici Pro" (Product: 10461219324243, Variant: 53146218692947)
+- **Selling Plans** : Mensuel (690731942227), Annuel (690731974995)
+- **Webhooks Shopify** : subscription_contracts/create, orders/paid, subscription_billing_attempts/failure, subscription_contracts/update
+- **Codes promo** : LANCEMENT (30j gratuits), BIENVENUE (+14j trial), MOITIE (50% 1er cycle)
+- **SubscriptionGate** : check table subscriptions, fallback restaurants (legacy), banniere trial, ecran past_due
+- **Cron trial-reminders** : daily 3AM UTC, dual table (subscriptions + legacy restaurants), emails J-7/J-3/J-1
 
 ## Tables Supabase principales
-- **restaurants** : slug, name, categories, primary_color, customization_config, referral_code, referred_by, bonus_weeks, trial_end_date, subscription_status, owner_id, stripe_*
+- **restaurants** : slug, name, categories, primary_color, customization_config, referral_code, referred_by, bonus_weeks, trial_end_date, subscription_status, owner_id
+- **subscriptions** : restaurant_id (UNIQUE), status, plan, billing_day, trial_start/end, shopify_contract_id (UNIQUE), shopify_customer_id, shopify_order_id, bonus_days, promo_code_used
+- **promo_codes** : code (UNIQUE), type, value, max_uses, current_uses, valid_from/until, active
+- **promo_code_uses** : promo_code_id, restaurant_id, UNIQUE(promo_code_id, restaurant_id)
 - **menu_items** : restaurant_id, name, price, category, supplements, sauces, translations, variants
 - **orders** : restaurant_id, order_number, customer_*, status, items, total, source, covers
 - **restaurant_hours** : day_of_week, is_open, open_time, close_time

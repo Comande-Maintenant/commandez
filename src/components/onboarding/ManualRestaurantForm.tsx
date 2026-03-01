@@ -1,9 +1,11 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CUISINE_TYPE_OPTIONS } from '@/lib/cuisineTypes';
 
 const schema = z.object({
   name: z.string().min(2, 'Nom requis'),
@@ -11,6 +13,7 @@ const schema = z.object({
   city: z.string().min(2, 'Ville requise'),
   phone: z.string().optional(),
   cuisine: z.string().min(2, 'Type de cuisine requis'),
+  cuisine_type: z.string().min(1, 'Type de cuisine requis'),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -24,10 +27,11 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: initialData,
+    defaultValues: { ...initialData, cuisine_type: initialData?.cuisine_type || 'generic' },
   });
 
   return (
@@ -56,9 +60,32 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
       </div>
 
       <div>
-        <Label htmlFor="cuisine">Type de cuisine</Label>
+        <Label htmlFor="cuisine">Type de cuisine (affiche)</Label>
         <Input id="cuisine" {...register('cuisine')} placeholder="Pizzeria, Kebab, Sushi..." />
         {errors.cuisine && <p className="text-sm text-destructive mt-1">{errors.cuisine.message}</p>}
+      </div>
+
+      <div>
+        <Label>Type de restaurant</Label>
+        <Controller
+          control={control}
+          name="cuisine_type"
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className="w-full mt-1">
+                <SelectValue placeholder="Selectionnez..." />
+              </SelectTrigger>
+              <SelectContent>
+                {CUISINE_TYPE_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        {errors.cuisine_type && <p className="text-sm text-destructive mt-1">{errors.cuisine_type.message}</p>}
       </div>
 
       <Button type="submit" className="w-full">Continuer</Button>

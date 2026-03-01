@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import type { DbMenuItem, Supplement } from "@/types/database";
+import type { StepSelection } from "@/types/customization";
 
 export interface CartItem {
   id: string;
@@ -13,6 +14,7 @@ export interface CartItem {
   accompagnementChoice?: { name: string; size?: string; sauces?: string[] };
   drinkChoice?: { name: string; price: number };
   dessertChoice?: { name: string; price: number };
+  customChoices?: StepSelection[];
   totalPrice: number;
 }
 
@@ -20,7 +22,7 @@ interface CartContextType {
   items: CartItem[];
   restaurantSlug: string | null;
   restaurantId: string | null;
-  addItem: (item: DbMenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string, restaurantId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number } }) => void;
+  addItem: (item: DbMenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string, restaurantId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number }; customChoices?: StepSelection[] }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -51,7 +53,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     saveCart(state.items, state.restaurantSlug, state.restaurantId);
   }, [state]);
 
-  const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number } }) => {
+  const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number }; customChoices?: StepSelection[] }) => {
     setState((prev) => {
       let items = prev.items;
       if (prev.restaurantSlug && prev.restaurantSlug !== slug) {
@@ -73,6 +75,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           accompagnementChoice: options?.accompagnementChoice,
           drinkChoice: options?.drinkChoice,
           dessertChoice: options?.dessertChoice,
+          customChoices: options?.customChoices,
           totalPrice,
         }],
         restaurantSlug: slug,
