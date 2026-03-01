@@ -463,7 +463,7 @@ const RestaurantPage = () => {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
                   <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{restaurant.name}</h1>
-                  {availability.isOpen ? (
+                  {restaurant.is_accepting_orders ? (
                     <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-emerald-500">
                       {t("status.open")}
                     </span>

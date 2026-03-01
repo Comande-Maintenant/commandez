@@ -83,24 +83,15 @@ export function checkRestaurantAvailability(restaurant: DbRestaurant): {
 
 /**
  * Check if an order can be placed right now.
- * Returns { canOrder, reason }.
+ * The "Disponible" toggle (is_accepting_orders) is the master switch.
+ * If the restaurateur sets it to true, orders are accepted regardless of schedule.
  */
 export function canPlaceOrder(restaurant: DbRestaurant): {
   canOrder: boolean;
   reason: string | null;
 } {
-  // Check accepting orders toggle first
   if (!restaurant.is_accepting_orders) {
     return { canOrder: false, reason: "Ce restaurant n'accepte pas de commandes pour le moment." };
-  }
-
-  const { isOpen, nextOpenLabel } = checkRestaurantAvailability(restaurant);
-
-  if (!isOpen) {
-    const reason = nextOpenLabel
-      ? `Ce restaurant est ferme. Prochaine ouverture : ${nextOpenLabel}`
-      : "Ce restaurant est ferme.";
-    return { canOrder: false, reason };
   }
 
   return { canOrder: true, reason: null };
