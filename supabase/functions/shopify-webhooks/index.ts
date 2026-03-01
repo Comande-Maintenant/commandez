@@ -158,7 +158,6 @@ async function handleContractCreate(
 
   const contractId = String((payload as any).admin_graphql_api_id || (payload as any).id || "");
   const plan = getNoteAttr(payload, "plan") || "monthly";
-  const billingDay = parseInt(getNoteAttr(payload, "billing_day") || "15", 10);
   const promoCode = getNoteAttr(payload, "promo_code") || null;
 
   const now = new Date();
@@ -168,19 +167,19 @@ async function handleContractCreate(
   // Determine status based on trial
   const status = "trial";
 
+  // Upsert by restaurant_id (row may already exist from ChoisirPlanPage with pending_payment)
   const { error } = await supabase.from("subscriptions").upsert(
     {
       restaurant_id: restaurantId,
       status,
       plan,
-      billing_day: billingDay,
       trial_start: now.toISOString(),
       trial_end: trialEnd.toISOString(),
       shopify_contract_id: contractId || null,
       shopify_customer_id: String((payload as any).customer_id || (payload as any).customer?.id || ""),
       promo_code_used: promoCode,
     },
-    { onConflict: "shopify_contract_id" }
+    { onConflict: "restaurant_id" }
   );
 
   if (error) {

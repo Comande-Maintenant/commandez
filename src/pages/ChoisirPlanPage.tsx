@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import {
   buildCheckoutUrl,
   PLAN_PRICES,
-  BILLING_DAYS,
-  type BillingDay,
 } from "@/services/shopify-checkout";
 
 const features = [
@@ -35,7 +33,6 @@ interface PromoResult {
 const ChoisirPlanPage = () => {
   const navigate = useNavigate();
   const [plan, setPlan] = useState<"monthly" | "annual">("monthly");
-  const [billingDay, setBillingDay] = useState<BillingDay>(15);
   const [promoCode, setPromoCode] = useState("");
   const [promoResult, setPromoResult] = useState<PromoResult | null>(null);
   const [promoLoading, setPromoLoading] = useState(false);
@@ -109,7 +106,6 @@ const ChoisirPlanPage = () => {
           restaurant_id: restaurantId,
           status: "pending_payment",
           plan,
-          billing_day: billingDay,
           promo_code_used: promoResult?.valid ? promoCode.trim().toUpperCase() : null,
         },
         { onConflict: "restaurant_id" }
@@ -117,7 +113,6 @@ const ChoisirPlanPage = () => {
 
       const url = buildCheckoutUrl({
         plan,
-        billingDay,
         restaurantId,
         restaurantSlug,
         email,
@@ -236,36 +231,6 @@ const ChoisirPlanPage = () => {
           </ul>
         </div>
 
-        {/* Billing day selector */}
-        <div className="bg-card rounded-xl border border-border p-5 mb-6">
-          <h3 className="text-sm font-semibold text-foreground mb-1">
-            Creneau de prelevement
-          </h3>
-          <p className="text-xs text-muted-foreground mb-3">
-            Choisissez le jour du mois pour vos prelevements recurrents.
-          </p>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-            {BILLING_DAYS.map((day) => (
-              <button
-                key={day}
-                onClick={() => setBillingDay(day)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all border ${
-                  billingDay === day
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:border-primary/30"
-                }`}
-              >
-                Le {day === 1 ? "1er" : day}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground mt-3">
-            Votre premier prelevement aura lieu le {firstPaymentStr}. Les
-            suivants seront recales sur le {billingDay === 1 ? "1er" : billingDay}{" "}
-            de chaque {plan === "annual" ? "annee" : "mois"}.
-          </p>
-        </div>
-
         {/* Promo code */}
         <div className="bg-card rounded-xl border border-border p-5 mb-6">
           <div className="flex items-center gap-2 mb-3">
@@ -326,8 +291,7 @@ const ChoisirPlanPage = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">
-                Puis le {billingDay === 1 ? "1er" : billingDay} de chaque{" "}
-                {plan === "annual" ? "annee" : "mois"}
+                Puis chaque {plan === "annual" ? "annee" : "mois"}
               </span>
               <span className="text-muted-foreground">
                 {price.toFixed(2)} EUR
