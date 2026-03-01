@@ -13,39 +13,45 @@ interface ScheduleDay {
 
 /**
  * Check if restaurant is currently open based on availability mode and schedule.
- * Returns { isOpen, nextOpenLabel } where nextOpenLabel is a human-readable string
- * like "Lundi a 11:00" if the restaurant is currently closed.
+ * Returns { isOpen, nextOpenLabel, currentCloseTime, todaySlots } where:
+ * - nextOpenLabel is "Lundi a 11:00" if currently closed
+ * - currentCloseTime is "14:30" if currently open (close time of current slot)
+ * - todaySlots are today's schedule slots for display
  */
 export function checkRestaurantAvailability(restaurant: DbRestaurant): {
   isOpen: boolean;
   nextOpenLabel: string | null;
+  currentCloseTime: string | null;
+  todaySlots: ScheduleSlot[];
 } {
   const mode = restaurant.availability_mode || "manual";
 
   if (mode === "always") {
-    return { isOpen: true, nextOpenLabel: null };
+    return { isOpen: true, nextOpenLabel: null, currentCloseTime: null, todaySlots: [] };
   }
 
   if (mode === "manual") {
-    return { isOpen: restaurant.is_open, nextOpenLabel: null };
+    return { isOpen: restaurant.is_open, nextOpenLabel: null, currentCloseTime: null, todaySlots: [] };
   }
 
   // mode === "auto" - check schedule
   const schedule: ScheduleDay[] = restaurant.schedule ?? [];
   if (schedule.length === 0) {
-    return { isOpen: restaurant.is_open, nextOpenLabel: null };
+    return { isOpen: restaurant.is_open, nextOpenLabel: null, currentCloseTime: null, todaySlots: [] };
   }
 
   const now = new Date();
   const currentDay = now.getDay(); // 0=sunday
   const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 
-  // Check if currently open
   const todaySchedule = schedule.find((s) => s.day === currentDay);
+  const todaySlots = todaySchedule?.enabled ? todaySchedule.slots : [];
+
+  // Check if currently open
   if (todaySchedule?.enabled) {
     for (const slot of todaySchedule.slots) {
       if (currentTime >= slot.open && currentTime < slot.close) {
-        return { isOpen: true, nextOpenLabel: null };
+        return { isOpen: true, nextOpenLabel: null, currentCloseTime: slot.close, todaySlots };
       }
     }
   }
@@ -57,7 +63,7 @@ export function checkRestaurantAvailability(restaurant: DbRestaurant): {
   if (todaySchedule?.enabled) {
     for (const slot of todaySchedule.slots) {
       if (currentTime < slot.open) {
-        return { isOpen: false, nextOpenLabel: `Aujourd'hui a ${slot.open}` };
+        return { isOpen: false, nextOpenLabel: `Aujourd'hui a ${slot.open}`, currentCloseTime: null, todaySlots };
       }
     }
   }
@@ -68,11 +74,11 @@ export function checkRestaurantAvailability(restaurant: DbRestaurant): {
     const daySchedule = schedule.find((s) => s.day === checkDay);
     if (daySchedule?.enabled && daySchedule.slots.length > 0) {
       const firstSlot = daySchedule.slots[0];
-      return { isOpen: false, nextOpenLabel: `${dayNames[checkDay]} a ${firstSlot.open}` };
+      return { isOpen: false, nextOpenLabel: `${dayNames[checkDay]} a ${firstSlot.open}`, currentCloseTime: null, todaySlots };
     }
   }
 
-  return { isOpen: false, nextOpenLabel: null };
+  return { isOpen: false, nextOpenLabel: null, currentCloseTime: null, todaySlots: [] };
 }
 
 /**

@@ -41,6 +41,7 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
         {opsItems.map((item) => (
           <button
             key={item.id}
+            data-tour={item.id}
             onClick={() => handleViewChange(item.id)}
             className={`flex items-center gap-3 px-3 min-h-[48px] rounded-xl transition-colors ${
               activeView === item.id
@@ -63,6 +64,7 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
 
         {/* Gerer section */}
         <button
+          data-tour="gerer"
           onClick={() => setGererExpanded(!gererExpanded)}
           className="flex items-center gap-3 px-3 min-h-[48px] rounded-xl text-muted-foreground hover:bg-secondary transition-colors"
         >

@@ -1,4 +1,4 @@
-export type SubscriptionPlan = 'none' | 'monthly' | '6months' | '12months' | '18months';
+export type SubscriptionPlan = 'none' | 'monthly';
 
 export interface Owner {
   id: string;

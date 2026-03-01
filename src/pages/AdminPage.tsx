@@ -63,11 +63,15 @@ const AdminPage = () => {
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
   const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
 
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
+
   // Auth check
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) {
         setAuthError("not_logged_in");
+      } else {
+        setAuthUserId(data.user.id);
       }
       setAuthChecked(true);
     });
@@ -163,6 +167,19 @@ const AdminPage = () => {
     );
   }
 
+  // Owner check - only the restaurant owner can access admin
+  if (authUserId && restaurant.owner_id && authUserId !== restaurant.owner_id) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Acces refuse</h1>
+          <p className="text-muted-foreground mb-4">Vous n'etes pas le proprietaire de ce restaurant.</p>
+          <Link to="/" className="text-sm text-foreground underline">Retour</Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <SubscriptionGate restaurantId={restaurant.id}>
     <div className="min-h-screen bg-secondary/50 lg:flex" data-blurred={blurred}>
@@ -190,6 +207,7 @@ const AdminPage = () => {
               {/* Sound toggle (cuisine view) */}
               {isOpsView(activeView) && (
                 <button
+                  data-tour="son"
                   onClick={() => {
                     if (!sound.audioUnlocked) {
                       sound.unlockAudio();
@@ -219,7 +237,7 @@ const AdminPage = () => {
               </button>
 
               {/* Disponible toggle */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" data-tour="disponible">
                 <span className={`h-2 w-2 rounded-full flex-shrink-0 ${restaurant.is_accepting_orders ? "bg-[hsl(var(--success))]" : "bg-destructive"}`} />
                 <span className={`text-xs font-medium hidden sm:inline ${restaurant.is_accepting_orders ? "text-[hsl(var(--success))]" : "text-destructive"}`}>
                   {restaurant.is_accepting_orders ? "Disponible" : "Indisponible"}

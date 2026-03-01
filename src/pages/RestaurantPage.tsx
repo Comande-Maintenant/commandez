@@ -509,12 +509,28 @@ const RestaurantPage = () => {
                   />
                 </div>
               )}
-              {restaurant.hours && (
+              {/* Schedule-based hours display */}
+              {availability.currentCloseTime ? (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
+                  <span>
+                    {availability.todaySlots.length > 1
+                      ? availability.todaySlots.map((s) => `${s.open}-${s.close}`).join(", ")
+                      : `Ferme a ${availability.currentCloseTime}`
+                    }
+                  </span>
+                </div>
+              ) : availability.nextOpenLabel ? (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
+                  <span>Ouvre {availability.nextOpenLabel}</span>
+                </div>
+              ) : restaurant.hours ? (
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
                   <span>{restaurant.hours}</span>
                 </div>
-              )}
+              ) : null}
             </div>
 
             {/* Payment methods */}

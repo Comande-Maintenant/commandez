@@ -25,6 +25,7 @@ export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Prop
           return (
             <button
               key={item.id}
+              data-tour={item.id}
               onClick={() => onViewChange(item.id)}
               className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-medium transition-colors min-h-[56px] justify-center relative ${
                 isActive ? "text-foreground" : "text-muted-foreground"
