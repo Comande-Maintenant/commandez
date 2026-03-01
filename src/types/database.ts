@@ -74,6 +74,11 @@ export interface DbRestaurant {
   deactivated_at: string | null;
   scheduled_deletion_at: string | null;
   deactivation_visit_count: number;
+  referral_code: string | null;
+  referred_by: string | null;
+  bonus_weeks: number;
+  trial_end_date: string | null;
+  subscription_status: string | null;
 }
 
 export interface DbMenuItem {

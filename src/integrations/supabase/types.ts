@@ -247,6 +247,14 @@ export type Database = {
           subscription_start_date: string | null
           updated_at: string
           website: string | null
+          referral_code: string | null
+          referred_by: string | null
+          bonus_weeks: number | null
+          trial_end_date: string | null
+          subscription_status: string | null
+          deactivated_at: string | null
+          scheduled_deletion_at: string | null
+          deactivation_visit_count: number | null
         }
         Insert: {
           address?: string | null
@@ -288,6 +296,14 @@ export type Database = {
           subscription_start_date?: string | null
           updated_at?: string
           website?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          bonus_weeks?: number | null
+          trial_end_date?: string | null
+          subscription_status?: string | null
+          deactivated_at?: string | null
+          scheduled_deletion_at?: string | null
+          deactivation_visit_count?: number | null
         }
         Update: {
           address?: string | null
@@ -329,8 +345,64 @@ export type Database = {
           subscription_start_date?: string | null
           updated_at?: string
           website?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          bonus_weeks?: number | null
+          trial_end_date?: string | null
+          subscription_status?: string | null
+          deactivated_at?: string | null
+          scheduled_deletion_at?: string | null
+          deactivation_visit_count?: number | null
         }
         Relationships: []
+      }
+      referrals: {
+        Row: {
+          id: string
+          referrer_id: string
+          referee_id: string | null
+          referee_email: string | null
+          status: string | null
+          bonus_weeks_granted: number | null
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          referrer_id: string
+          referee_id?: string | null
+          referee_email?: string | null
+          status?: string | null
+          bonus_weeks_granted?: number | null
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          referrer_id?: string
+          referee_id?: string | null
+          referee_email?: string | null
+          status?: string | null
+          bonus_weeks_granted?: number | null
+          created_at?: string
+          completed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referee_id_fkey"
+            columns: ["referee_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
