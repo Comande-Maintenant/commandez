@@ -32,10 +32,11 @@ function extractCity(address: string): string {
 }
 
 export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmationProps) {
+  const fullAddress = place.formatted_address || place.vicinity || '';
   const [name, setName] = useState(place.name);
-  const [address, setAddress] = useState(place.formatted_address ?? '');
-  const [city, setCity] = useState(extractCity(place.formatted_address ?? ''));
-  const [phone, setPhone] = useState(place.formatted_phone_number ?? '');
+  const [address, setAddress] = useState(fullAddress);
+  const [city, setCity] = useState(extractCity(fullAddress));
+  const [phone, setPhone] = useState(place.formatted_phone_number || place.international_phone_number || '');
   const [cuisine, setCuisine] = useState('');
   const [website, setWebsite] = useState(place.website ?? '');
   const [hours, setHours] = useState(

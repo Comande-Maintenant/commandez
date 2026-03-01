@@ -53,7 +53,7 @@ export function GooglePlaceSearch({ onSelect }: GooglePlaceSearchProps) {
               <div className="font-medium text-foreground">{place.name}</div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                 <MapPin className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{place.formatted_address}</span>
+                <span className="truncate">{place.formatted_address || place.vicinity || ''}</span>
               </div>
               {place.rating && (
                 <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">

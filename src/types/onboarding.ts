@@ -10,11 +10,13 @@ export interface Owner {
 export interface GooglePlaceResult {
   place_id: string;
   name: string;
-  formatted_address: string;
+  formatted_address?: string;
+  vicinity?: string;
   formatted_phone_number?: string;
+  international_phone_number?: string;
   rating?: number;
   types?: string[];
-  opening_hours?: { weekday_text?: string[] };
+  opening_hours?: { weekday_text?: string[]; open_now?: boolean };
   photos?: { photo_reference: string }[];
   website?: string;
   geometry?: { location: { lat: number; lng: number } };
