@@ -20,24 +20,76 @@ interface PlaceConfirmationProps {
   onBack: () => void;
 }
 
-function extractCity(address: string): string {
+// Extract city from formatted_address ("3 Rue X, 89470 Monéteau, France")
+// or from vicinity ("3 Rue X, Monéteau")
+function extractCity(address: string, isVicinity: boolean): string {
   const parts = address.split(',').map((p) => p.trim());
-  // Usually city is second-to-last in French addresses
+  if (parts.length === 0) return '';
+
+  if (isVicinity) {
+    // vicinity format: "3 Rue X, Monéteau" → city is the LAST part
+    return parts[parts.length - 1];
+  }
+
+  // formatted_address: "3 Rue X, 89470 Monéteau, France" → city is second-to-last
   if (parts.length >= 2) {
     const candidate = parts[parts.length - 2];
-    // Remove postal code
     return candidate.replace(/\d{5}\s*/, '').trim();
   }
   return '';
 }
 
+// Cuisine keywords to detect from Google place name or types
+const CUISINE_MAP: Record<string, string> = {
+  kebab: 'Kebab',
+  pizza: 'Pizzeria',
+  pizzeria: 'Pizzeria',
+  sushi: 'Sushi',
+  japonais: 'Japonais',
+  chinois: 'Chinois',
+  indien: 'Indien',
+  thai: 'Thaïlandais',
+  burger: 'Burger',
+  brasserie: 'Brasserie',
+  creperie: 'Crêperie',
+  boulangerie: 'Boulangerie',
+  patisserie: 'Pâtisserie',
+  traiteur: 'Traiteur',
+  tacos: 'Tacos',
+  istanbul: 'Kebab',
+  antalya: 'Kebab',
+  wok: 'Asiatique',
+  poke: 'Poké',
+  bagel: 'Bagel',
+  sandwicherie: 'Sandwicherie',
+};
+
+function detectCuisine(name: string, types?: string[]): string {
+  const lower = name.toLowerCase();
+  for (const [keyword, cuisine] of Object.entries(CUISINE_MAP)) {
+    if (lower.includes(keyword)) return cuisine;
+  }
+  // Check Google types
+  if (types) {
+    if (types.includes('bakery')) return 'Boulangerie';
+    if (types.includes('cafe')) return 'Café';
+    if (types.includes('bar')) return 'Bar';
+  }
+  return '';
+}
+
 export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmationProps) {
+  const hasFormattedAddress = !!place.formatted_address;
   const fullAddress = place.formatted_address || place.vicinity || '';
+  const isVicinity = !hasFormattedAddress && !!place.vicinity;
+
   const [name, setName] = useState(place.name);
   const [address, setAddress] = useState(fullAddress);
-  const [city, setCity] = useState(extractCity(fullAddress));
-  const [phone, setPhone] = useState(place.formatted_phone_number || place.international_phone_number || '');
-  const [cuisine, setCuisine] = useState('');
+  const [city, setCity] = useState(extractCity(fullAddress, isVicinity));
+  const [phone, setPhone] = useState(
+    place.formatted_phone_number || place.international_phone_number || ''
+  );
+  const [cuisine, setCuisine] = useState(detectCuisine(place.name, place.types));
   const [website, setWebsite] = useState(place.website ?? '');
   const [hours, setHours] = useState(
     place.opening_hours?.weekday_text?.join(' | ') ?? ''
@@ -94,12 +146,20 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
 
       <div>
         <Label>Site web</Label>
-        <Input value={website} onChange={(e) => setWebsite(e.target.value)} />
+        <Input
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+          placeholder="https://..."
+        />
       </div>
 
       <div>
         <Label>Horaires</Label>
-        <Input value={hours} onChange={(e) => setHours(e.target.value)} />
+        <Input
+          value={hours}
+          onChange={(e) => setHours(e.target.value)}
+          placeholder="Lundi - Vendredi : 11h - 22h"
+        />
       </div>
 
       {place.rating && (

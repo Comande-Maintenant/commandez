@@ -24,6 +24,7 @@ import {
   createMenuItemsFromAnalysis,
   generateSlug,
 } from '@/services/onboarding';
+import { getPlaceDetails } from '@/services/google-places';
 import { processReferral } from '@/services/referral';
 import type {
   GooglePlaceResult,
@@ -134,9 +135,24 @@ const InscriptionPage = () => {
     }
   };
 
-  // ---- Step 2: Place selected ----
+  // ---- Step 2: Place selected → enrich with details ----
   const handlePlaceSelect = async (place: GooglePlaceResult) => {
-    setSelectedPlace(place);
+    try {
+      const details = await getPlaceDetails(place.place_id);
+      // Merge: keep nearby fields, overlay with details where available
+      setSelectedPlace({
+        ...place,
+        formatted_address: details?.formatted_address || place.formatted_address || place.vicinity,
+        formatted_phone_number: details?.formatted_phone_number || place.formatted_phone_number || place.international_phone_number,
+        website: details?.website || place.website,
+        opening_hours: details?.opening_hours || place.opening_hours,
+        rating: details?.rating ?? place.rating,
+        types: details?.types || place.types,
+      });
+    } catch {
+      // If details fail, use what we have from nearby search
+      setSelectedPlace(place);
+    }
   };
 
   const handlePlaceConfirm = (data: RestaurantData) => {
