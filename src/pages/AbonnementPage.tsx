@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Check, Shield, Clock, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BRANDING } from "@/config/branding";
 
 const features = [
   "Page de commande personnalisee",
@@ -46,9 +45,12 @@ const AbonnementPage = () => {
 
           <h3 className="text-xl font-bold text-foreground mb-1">commandeici Pro</h3>
           <div className="flex items-baseline justify-center gap-1 mb-1">
-            <span className="text-4xl font-bold text-foreground">19&euro;</span>
+            <span className="text-4xl font-bold text-foreground">29,99&euro;</span>
             <span className="text-muted-foreground">/mois</span>
           </div>
+          <p className="text-sm text-muted-foreground mb-1">
+            ou 239,88 EUR/an (economisez 33%)
+          </p>
           <p className="text-sm text-muted-foreground mb-6">Sans engagement</p>
 
           <ul className="text-left space-y-2.5 mb-8">
@@ -61,13 +63,13 @@ const AbonnementPage = () => {
           </ul>
 
           <Button className="w-full h-12 rounded-xl text-base" asChild>
-            <a href={`mailto:${BRANDING.contactEmail}?subject=Activation abonnement commandeici`}>
-              Activer mon abonnement
-            </a>
+            <Link to="/choisir-plan">
+              Reactiver mon abonnement
+            </Link>
           </Button>
 
           <p className="text-xs text-muted-foreground mt-3">
-            Contactez-nous pour activer votre abonnement. Paiement par virement ou carte.
+            14 jours d'essai gratuit, carte bancaire requise. Paiement securise via Shopify.
           </p>
         </div>
 
@@ -84,7 +86,7 @@ const AbonnementPage = () => {
             <Zap className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-foreground">Rentabilise des la 2e commande directe</p>
-              <p className="text-xs text-muted-foreground">19 euros/mois vs 30% de commission par commande sur les plateformes.</p>
+              <p className="text-xs text-muted-foreground">29,99 EUR/mois vs 30% de commission par commande sur les plateformes.</p>
             </div>
           </div>
         </div>

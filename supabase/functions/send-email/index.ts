@@ -63,6 +63,63 @@ const templates: Record<string, (data: Record<string, string>) => { subject: str
       <a href="https://app.commandeici.com/inscription" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Commencer</a>
     `),
   }),
+
+  // Subscription activated
+  subscription_activated: (data) => ({
+    subject: "Votre abonnement commandeici est actif !",
+    html: wrapHtml(`
+      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
+      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
+        Votre abonnement commandeici <strong>${data.plan === "annual" ? "annuel" : "mensuel"}</strong> est maintenant actif.<br>
+        Votre essai gratuit de 14 jours a commence. Le premier prelevement aura lieu le <strong>${data.trialEnd}</strong>.
+      </p>
+      <a href="https://app.commandeici.com/admin" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Acceder a mon dashboard</a>
+      <p style="margin:16px 0 0;font-size:13px;color:#999;">Sans engagement, resiliable a tout moment.</p>
+    `),
+  }),
+
+  // Payment failed
+  payment_failed: (data) => ({
+    subject: "Probleme de paiement sur commandeici",
+    html: wrapHtml(`
+      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
+      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
+        Votre dernier paiement pour commandeici a echoue.<br>
+        Veuillez mettre a jour vos informations de paiement pour continuer a recevoir des commandes.
+      </p>
+      <a href="https://idwzsh-11.myshopify.com/account" style="display:inline-block;background-color:#EF4444;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Mettre a jour mon paiement</a>
+      <p style="margin:16px 0 0;font-size:13px;color:#999;">Si vous avez besoin d'aide, contactez-nous.</p>
+    `),
+  }),
+
+  // Subscription cancelled
+  subscription_cancelled: (data) => ({
+    subject: "Votre abonnement commandeici a ete annule",
+    html: wrapHtml(`
+      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
+      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
+        Votre abonnement commandeici a ete annule. Votre page de commande n'est plus accessible par vos clients.<br>
+        Vous pouvez reactiver votre abonnement a tout moment.
+      </p>
+      <a href="https://app.commandeici.com/choisir-plan" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Reactiver mon abonnement</a>
+    `),
+  }),
+
+  // Promo code applied
+  promo_applied: (data) => ({
+    subject: "Code promo applique sur commandeici !",
+    html: wrapHtml(`
+      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
+      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
+        Le code promo <strong>${data.promoCode}</strong> a bien ete applique a votre compte.<br>
+        ${data.promoType === "free_days" ? `Vous beneficiez de ${data.promoValue} jours offerts.` : ""}
+        ${data.promoType === "free_trial_extension" ? `Votre essai gratuit a ete prolonge de ${data.promoValue} jours.` : ""}
+        ${data.promoType === "discount_percent" ? `${data.promoValue}% de reduction sur votre premier cycle.` : ""}
+        ${data.promoType === "discount_fixed" ? `${data.promoValue} EUR de reduction sur votre premier cycle.` : ""}
+      </p>
+      <a href="https://app.commandeici.com/admin" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Acceder a mon dashboard</a>
+    `),
+  }),
 };
 
 function wrapHtml(content: string): string {

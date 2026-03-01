@@ -164,3 +164,44 @@ export interface DbOwner {
   role: 'owner' | 'super_admin';
   created_at: string;
 }
+
+export type SubscriptionStatus =
+  | 'pending_payment'
+  | 'trial'
+  | 'active'
+  | 'past_due'
+  | 'cancelled'
+  | 'expired'
+  | 'promo';
+
+export interface DbSubscription {
+  id: string;
+  restaurant_id: string;
+  status: SubscriptionStatus;
+  plan: 'monthly' | 'annual';
+  billing_day: number;
+  trial_start: string | null;
+  trial_end: string | null;
+  current_period_start: string | null;
+  current_period_end: string | null;
+  shopify_contract_id: string | null;
+  shopify_customer_id: string | null;
+  shopify_order_id: string | null;
+  bonus_days: number;
+  promo_code_used: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbPromoCode {
+  id: string;
+  code: string;
+  type: 'free_days' | 'discount_percent' | 'discount_fixed' | 'free_trial_extension';
+  value: number;
+  max_uses: number | null;
+  current_uses: number;
+  valid_from: string;
+  valid_until: string | null;
+  active: boolean;
+  created_at: string;
+}

@@ -355,6 +355,28 @@ const RestaurantPage = () => {
     );
   }
 
+  // Subscription expired/cancelled/past_due - public page unavailable
+  if (
+    restaurant.subscription_status === "expired" ||
+    restaurant.subscription_status === "cancelled" ||
+    restaurant.subscription_status === "past_due"
+  ) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center max-w-sm mx-auto px-4">
+          {restaurant.image && (
+            <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
+          )}
+          <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
+          <p className="text-muted-foreground text-sm">Ce restaurant est temporairement indisponible.</p>
+          <Link to="/" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
+            Retour
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   // Banned customer
   if (customerBanned) {
     return (

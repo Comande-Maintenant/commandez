@@ -17,6 +17,8 @@ import SuiviPage from "./pages/SuiviPage";
 import SuperAdminPage from "./pages/SuperAdminPage";
 import CustomerProfilePage from "./pages/CustomerProfilePage";
 import AbonnementPage from "./pages/AbonnementPage";
+import ChoisirPlanPage from "./pages/ChoisirPlanPage";
+import AbonnementConfirmePage from "./pages/AbonnementConfirmePage";
 import ConnexionPage from "./pages/ConnexionPage";
 import MotDePasseOubliePage from "./pages/MotDePasseOubliePage";
 import ReinitialiserMotDePassePage from "./pages/ReinitialiserMotDePassePage";
@@ -50,6 +52,8 @@ const App = () => (
             <Route path="/suivi/:orderId" element={<SuiviPage />} />
             <Route path="/admin/:slug" element={<AdminPage />} />
             <Route path="/abonnement" element={<AbonnementPage />} />
+            <Route path="/choisir-plan" element={<ChoisirPlanPage />} />
+            <Route path="/abonnement-confirme" element={<AbonnementConfirmePage />} />
             <Route path="/super-admin" element={<SuperAdminPage />} />
             <Route path="/profil" element={<CustomerProfilePage />} />
             <Route path="/:slug" element={<RestaurantPage />} />

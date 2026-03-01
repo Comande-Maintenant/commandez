@@ -13,10 +13,15 @@ import {
   Volume2,
   VolumeX,
   Play,
+  Crown,
+  Tag,
+  ExternalLink,
 } from "lucide-react";
 import { updateRestaurant } from "@/lib/api";
 import { ReferralSection } from "./referral/ReferralSection";
-import type { DbRestaurant } from "@/types/database";
+import type { DbRestaurant, DbSubscription } from "@/types/database";
+import { Link } from "react-router-dom";
+import { PLAN_PRICES } from "@/services/shopify-checkout";
 import { ScheduleEditor, type ScheduleDay } from "./ScheduleEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -141,6 +146,45 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = "/";
+  };
+
+  const [subscription, setSubscription] = useState<DbSubscription | null>(null);
+
+  // Load subscription info
+  useEffect(() => {
+    supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("restaurant_id", restaurant.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single()
+      .then(({ data }) => {
+        if (data) setSubscription(data as unknown as DbSubscription);
+      });
+  }, [restaurant.id]);
+
+  const [promoInput, setPromoInput] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
+
+  const handleApplyPromo = async () => {
+    if (!promoInput.trim()) return;
+    setPromoLoading(true);
+    try {
+      const { data } = await supabase.functions.invoke("validate-promo", {
+        body: { code: promoInput.trim(), restaurant_id: restaurant.id },
+      });
+      if (data?.valid) {
+        toast.success(data.description || "Code promo applique !");
+        setPromoInput("");
+      } else {
+        toast.error(data?.error || "Code invalide");
+      }
+    } catch {
+      toast.error("Erreur lors de la validation");
+    } finally {
+      setPromoLoading(false);
+    }
   };
 
   const [deactivateConfirm, setDeactivateConfirm] = useState("");
@@ -401,6 +445,107 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
             <LogOut className="h-4 w-4" />Se deconnecter
           </Button>
         </div>
+      </section>
+
+      {/* Subscription / Abonnement */}
+      <section className="bg-card rounded-2xl border border-border p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Crown className="h-5 w-5 text-foreground" />
+          <h3 className="text-base font-semibold text-foreground">Mon abonnement</h3>
+        </div>
+
+        {subscription ? (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Formule</span>
+              <span className="text-sm font-medium text-foreground">
+                {subscription.plan === "annual" ? "Annuel" : "Mensuel"}{" "}
+                ({PLAN_PRICES[subscription.plan].toFixed(2)} EUR/{subscription.plan === "annual" ? "an" : "mois"})
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Statut</span>
+              <span className={`text-sm font-medium ${
+                subscription.status === "active" || subscription.status === "promo"
+                  ? "text-green-600"
+                  : subscription.status === "trial"
+                  ? "text-blue-600"
+                  : subscription.status === "past_due"
+                  ? "text-red-600"
+                  : "text-amber-600"
+              }`}>
+                {subscription.status === "active" ? "Actif" :
+                 subscription.status === "trial" ? "Essai gratuit" :
+                 subscription.status === "past_due" ? "Paiement en attente" :
+                 subscription.status === "cancelled" ? "Annule" :
+                 subscription.status === "expired" ? "Expire" :
+                 subscription.status === "promo" ? "Promo" :
+                 "En attente"}
+              </span>
+            </div>
+            {subscription.trial_end && subscription.status === "trial" && (
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Fin de l'essai</span>
+                <span className="text-sm font-medium text-foreground">
+                  {new Date(subscription.trial_end).toLocaleDateString("fr-FR")}
+                </span>
+              </div>
+            )}
+            {subscription.billing_day && (
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Prelevement</span>
+                <span className="text-sm text-foreground">
+                  Le {subscription.billing_day === 1 ? "1er" : subscription.billing_day} de chaque {subscription.plan === "annual" ? "annee" : "mois"}
+                </span>
+              </div>
+            )}
+
+            <div className="flex gap-2 pt-2">
+              <Button variant="outline" size="sm" className="flex-1 gap-1.5" asChild>
+                <a href="https://idwzsh-11.myshopify.com/account" target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Gerer
+                </a>
+              </Button>
+              <Button variant="outline" size="sm" className="flex-1" asChild>
+                <Link to="/choisir-plan">Changer de formule</Link>
+              </Button>
+            </div>
+
+            {/* Promo code input */}
+            <div className="pt-2 border-t border-border">
+              <div className="flex items-center gap-2 mb-2">
+                <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Code promotionnel</span>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={promoInput}
+                  onChange={(e) => setPromoInput(e.target.value)}
+                  placeholder="LANCEMENT"
+                  className="flex-1 h-9 text-sm"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleApplyPromo}
+                  disabled={promoLoading || !promoInput.trim()}
+                >
+                  {promoLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Appliquer"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-4">
+            <p className="text-sm text-muted-foreground mb-3">
+              Aucun abonnement actif.
+            </p>
+            <Button size="sm" asChild>
+              <Link to="/choisir-plan">Choisir une formule</Link>
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* Referral / Parrainage */}

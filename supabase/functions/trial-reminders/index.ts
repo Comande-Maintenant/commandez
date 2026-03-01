@@ -13,9 +13,14 @@ const corsHeaders = {
  * Trial reminders cron function.
  * Called daily via pg_cron + pg_net.
  *
- * 1. Sends reminder emails at J-7, J-3, J-1 before trial end
- * 2. Sends expiration email when trial ends
- * 3. Marks expired trials as 'expired' and disables ordering
+ * Checks both:
+ * 1. New subscriptions table (trial status)
+ * 2. Legacy restaurants table (backward compat for existing restaurants)
+ *
+ * Actions:
+ * - Sends reminder emails at J-7, J-3, J-1 before trial end
+ * - Sends expiration email when trial ends
+ * - Marks expired trials and disables ordering
  */
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -26,72 +31,127 @@ serve(async (req) => {
   const results: string[] = [];
 
   try {
-    // Get all restaurants on trial with their owner email
-    const { data: restaurants, error } = await supabase
+    // ---- 1. New subscriptions table ----
+    const { data: subs } = await supabase
+      .from("subscriptions")
+      .select("id, restaurant_id, trial_end, bonus_days, status")
+      .eq("status", "trial")
+      .not("trial_end", "is", null);
+
+    if (subs && subs.length > 0) {
+      const now = new Date();
+
+      for (const sub of subs) {
+        const trialEnd = new Date(sub.trial_end);
+        if (sub.bonus_days > 0) {
+          trialEnd.setDate(trialEnd.getDate() + sub.bonus_days);
+        }
+
+        const diffMs = trialEnd.getTime() - now.getTime();
+        const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+        // Get owner email
+        const { data: restaurant } = await supabase
+          .from("restaurants")
+          .select("name, owner_id, owners!inner(email)")
+          .eq("id", sub.restaurant_id)
+          .single();
+
+        if (!restaurant) continue;
+        const ownerEmail = (restaurant as any).owners?.email;
+        if (!ownerEmail) continue;
+
+        if (daysLeft <= 0) {
+          // Expire the subscription
+          await supabase
+            .from("subscriptions")
+            .update({ status: "expired" })
+            .eq("id", sub.id);
+
+          await supabase
+            .from("restaurants")
+            .update({ subscription_status: "expired", is_accepting_orders: false })
+            .eq("id", sub.restaurant_id);
+
+          await sendEmail(supabase, "trial_expired", ownerEmail, {
+            restaurantName: restaurant.name,
+          });
+
+          results.push(`[sub] ${restaurant.name}: expired, email sent`);
+          continue;
+        }
+
+        if (daysLeft === 7 || daysLeft === 3 || daysLeft === 1) {
+          await sendEmail(supabase, "trial_expiring", ownerEmail, {
+            restaurantName: restaurant.name,
+            daysLeft: String(daysLeft),
+          });
+          results.push(`[sub] ${restaurant.name}: J-${daysLeft} reminder sent`);
+        }
+      }
+    }
+
+    // ---- 2. Legacy restaurants table (backward compat) ----
+    // Only process restaurants that do NOT have a row in subscriptions
+    const { data: restaurants } = await supabase
       .from("restaurants")
       .select("id, name, trial_end_date, bonus_weeks, subscription_status, owner_id, owners!inner(email)")
       .eq("subscription_status", "trial")
       .not("trial_end_date", "is", null);
 
-    if (error) {
-      console.error("[trial-reminders] Query error:", error);
-      return new Response(
-        JSON.stringify({ error: error.message }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+    if (restaurants && restaurants.length > 0) {
+      // Get restaurant IDs that already have subscriptions rows
+      const restaurantIds = restaurants.map((r) => r.id);
+      const { data: existingSubs } = await supabase
+        .from("subscriptions")
+        .select("restaurant_id")
+        .in("restaurant_id", restaurantIds);
 
-    if (!restaurants || restaurants.length === 0) {
-      return new Response(
-        JSON.stringify({ message: "No trial restaurants found", results }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+      const subRestaurantIds = new Set((existingSubs ?? []).map((s: any) => s.restaurant_id));
 
-    const now = new Date();
+      const now = new Date();
 
-    for (const r of restaurants) {
-      const trialEnd = new Date(r.trial_end_date);
-      // Add bonus weeks
-      if (r.bonus_weeks > 0) {
-        trialEnd.setDate(trialEnd.getDate() + r.bonus_weeks * 7);
-      }
+      for (const r of restaurants) {
+        // Skip if already managed by subscriptions table
+        if (subRestaurantIds.has(r.id)) continue;
 
-      const diffMs = trialEnd.getTime() - now.getTime();
-      const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-      const ownerEmail = (r as any).owners?.email;
+        const trialEnd = new Date(r.trial_end_date);
+        if (r.bonus_weeks > 0) {
+          trialEnd.setDate(trialEnd.getDate() + r.bonus_weeks * 7);
+        }
 
-      if (!ownerEmail) continue;
+        const diffMs = trialEnd.getTime() - now.getTime();
+        const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        const ownerEmail = (r as any).owners?.email;
 
-      // Trial already expired
-      if (daysLeft <= 0) {
-        // Expire the trial
-        await supabase
-          .from("restaurants")
-          .update({ subscription_status: "expired", is_accepting_orders: false })
-          .eq("id", r.id);
+        if (!ownerEmail) continue;
 
-        // Send expiration email
-        await sendEmail(supabase, "trial_expired", ownerEmail, {
-          restaurantName: r.name,
-        });
+        if (daysLeft <= 0) {
+          await supabase
+            .from("restaurants")
+            .update({ subscription_status: "expired", is_accepting_orders: false })
+            .eq("id", r.id);
 
-        results.push(`${r.name}: expired, email sent to ${ownerEmail}`);
-        continue;
-      }
+          await sendEmail(supabase, "trial_expired", ownerEmail, {
+            restaurantName: r.name,
+          });
 
-      // Send reminders at J-7, J-3, J-1
-      if (daysLeft === 7 || daysLeft === 3 || daysLeft === 1) {
-        await sendEmail(supabase, "trial_expiring", ownerEmail, {
-          restaurantName: r.name,
-          daysLeft: String(daysLeft),
-        });
-        results.push(`${r.name}: J-${daysLeft} reminder sent to ${ownerEmail}`);
+          results.push(`[legacy] ${r.name}: expired, email sent`);
+          continue;
+        }
+
+        if (daysLeft === 7 || daysLeft === 3 || daysLeft === 1) {
+          await sendEmail(supabase, "trial_expiring", ownerEmail, {
+            restaurantName: r.name,
+            daysLeft: String(daysLeft),
+          });
+          results.push(`[legacy] ${r.name}: J-${daysLeft} reminder sent`);
+        }
       }
     }
 
     return new Response(
-      JSON.stringify({ success: true, processed: restaurants.length, results }),
+      JSON.stringify({ success: true, results }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {

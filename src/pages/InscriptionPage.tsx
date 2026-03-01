@@ -196,7 +196,7 @@ const InscriptionPage = () => {
     setStep(4);
   };
 
-  // ---- Step 5: Create everything ----
+  // ---- Step 5: Create restaurant then redirect to plan selection ----
   const handlePlanSelect = async (plan: SubscriptionPlan) => {
     setSelectedPlan(plan);
     setCreating(true);
@@ -243,6 +243,14 @@ const InscriptionPage = () => {
       if (refCode) {
         await processReferral(restaurant.id, refCode).catch(() => {});
       }
+
+      // Insert pending subscription
+      await supabase.from('subscriptions').insert({
+        restaurant_id: restaurant.id,
+        status: 'pending_payment',
+        plan: plan === 'none' ? 'monthly' : plan,
+        billing_day: 15,
+      });
 
       // Send welcome email (fire-and-forget, non-blocking)
       supabase.functions.invoke("send-welcome-email", {
