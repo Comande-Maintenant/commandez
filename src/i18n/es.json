@@ -77,5 +77,20 @@
   "custom.add_to_cart": "Anadir al carrito - {price} €",
   "custom.your_selection": "Su seleccion",
   "custom.base_price": "Base: {price} €",
-  "custom.total": "Total: {price} €"
+  "custom.total": "Total: {price} €",
+  "custom.choose_base": "Elija su base",
+  "custom.choose_meat": "Elija su carne",
+  "custom.toppings": "Guarniciones",
+  "custom.sauces": "Salsas",
+  "custom.side": "Acompanamiento",
+  "custom.drink_upsell": "Una bebida?",
+  "custom.dessert_upsell": "Un postre?",
+  "custom.recap": "Resumen",
+  "custom.complet": "Completo",
+  "custom.skip": "Omitir",
+  "custom.no_thanks": "No gracias",
+  "custom.same_sauce_frites": "Salsa patatas",
+  "custom.free_sauces": "{count} gratis",
+  "custom.extra_sauce": "+{price} € por salsa",
+  "custom.add_to_cart": "Agregar al carrito"
 }

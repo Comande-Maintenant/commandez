@@ -77,5 +77,20 @@
   "custom.add_to_cart": "В корзину - {price} €",
   "custom.your_selection": "Ваш выбор",
   "custom.base_price": "Базовая цена: {price} €",
-  "custom.total": "Итого: {price} €"
+  "custom.total": "Итого: {price} €",
+  "custom.choose_base": "Выберите основу",
+  "custom.choose_meat": "Выберите мясо",
+  "custom.toppings": "Гарнир",
+  "custom.sauces": "Соусы",
+  "custom.side": "Гарнир",
+  "custom.drink_upsell": "Напиток?",
+  "custom.dessert_upsell": "Десерт?",
+  "custom.recap": "Итог",
+  "custom.complet": "Полный",
+  "custom.skip": "Пропустить",
+  "custom.no_thanks": "Нет спасибо",
+  "custom.same_sauce_frites": "Соус к картошке",
+  "custom.free_sauces": "{count} бесплатно",
+  "custom.extra_sauce": "+{price} € за соус",
+  "custom.add_to_cart": "Добавить в корзину"
 }

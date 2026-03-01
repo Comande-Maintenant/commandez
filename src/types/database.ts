@@ -95,6 +95,7 @@ export interface DbMenuItem {
   sauces: string[];
   sort_order: number;
   translations?: Record<string, { name: string; description?: string }>;
+  product_type?: string;
 }
 
 export interface DbTablet {

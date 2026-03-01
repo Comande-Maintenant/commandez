@@ -77,5 +77,20 @@
   "custom.add_to_cart": "Toevoegen aan winkelwagen - {price} €",
   "custom.your_selection": "Uw selectie",
   "custom.base_price": "Basis: {price} €",
-  "custom.total": "Totaal: {price} €"
+  "custom.total": "Totaal: {price} €",
+  "custom.choose_base": "Kies uw basis",
+  "custom.choose_meat": "Kies uw vlees",
+  "custom.toppings": "Garnituur",
+  "custom.sauces": "Sauzen",
+  "custom.side": "Bijgerecht",
+  "custom.drink_upsell": "Een drankje?",
+  "custom.dessert_upsell": "Een dessert?",
+  "custom.recap": "Overzicht",
+  "custom.complet": "Compleet",
+  "custom.skip": "Overslaan",
+  "custom.no_thanks": "Nee bedankt",
+  "custom.same_sauce_frites": "Fritessaus",
+  "custom.free_sauces": "{count} gratis",
+  "custom.extra_sauce": "+{price} € per saus",
+  "custom.add_to_cart": "Toevoegen aan winkelwagen"
 }

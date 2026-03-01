@@ -77,5 +77,20 @@
   "custom.add_to_cart": "カートに追加 - {price} €",
   "custom.your_selection": "選択内容",
   "custom.base_price": "基本価格: {price} €",
-  "custom.total": "合計: {price} €"
+  "custom.total": "合計: {price} €",
+  "custom.choose_base": "ベースを選択",
+  "custom.choose_meat": "お肉を選択",
+  "custom.toppings": "トッピング",
+  "custom.sauces": "ソース",
+  "custom.side": "サイドメニュー",
+  "custom.drink_upsell": "ドリンクはいかが?",
+  "custom.dessert_upsell": "デザートはいかが?",
+  "custom.recap": "注文内容",
+  "custom.complet": "全部",
+  "custom.skip": "スキップ",
+  "custom.no_thanks": "結構です",
+  "custom.same_sauce_frites": "ポテトソース",
+  "custom.free_sauces": "{count} 個無料",
+  "custom.extra_sauce": "+{price} €/個",
+  "custom.add_to_cart": "カートに追加"
 }

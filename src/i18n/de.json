@@ -77,5 +77,20 @@
   "custom.add_to_cart": "In den Warenkorb - {price} €",
   "custom.your_selection": "Ihre Auswahl",
   "custom.base_price": "Basis: {price} €",
-  "custom.total": "Gesamt: {price} €"
+  "custom.total": "Gesamt: {price} €",
+  "custom.choose_base": "Wahlen Sie Ihre Basis",
+  "custom.choose_meat": "Wahlen Sie Ihr Fleisch",
+  "custom.toppings": "Beilagen",
+  "custom.sauces": "Sossen",
+  "custom.side": "Beilage",
+  "custom.drink_upsell": "Ein Getrank?",
+  "custom.dessert_upsell": "Ein Dessert?",
+  "custom.recap": "Zusammenfassung",
+  "custom.complet": "Komplett",
+  "custom.skip": "Uberspringen",
+  "custom.no_thanks": "Nein danke",
+  "custom.same_sauce_frites": "Pommes-Sosse",
+  "custom.free_sauces": "{count} gratis",
+  "custom.extra_sauce": "+{price} € pro Sosse",
+  "custom.add_to_cart": "In den Warenkorb"
 }

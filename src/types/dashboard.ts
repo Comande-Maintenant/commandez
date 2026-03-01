@@ -9,4 +9,5 @@ export type DashboardView =
   | "parametres"
   | "stats"
   | "gerer"
-  | "clients";
+  | "clients"
+  | "customization";

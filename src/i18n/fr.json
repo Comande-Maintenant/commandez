@@ -77,5 +77,20 @@
   "custom.add_to_cart": "Ajouter au panier - {price} €",
   "custom.your_selection": "Votre selection",
   "custom.base_price": "Base : {price} €",
-  "custom.total": "Total : {price} €"
+  "custom.total": "Total : {price} €",
+  "custom.choose_base": "Choisissez votre base",
+  "custom.choose_meat": "Choisissez votre viande",
+  "custom.toppings": "Garnitures",
+  "custom.sauces": "Sauces",
+  "custom.side": "Accompagnement",
+  "custom.drink_upsell": "Une boisson ?",
+  "custom.dessert_upsell": "Un dessert ?",
+  "custom.recap": "Recapitulatif",
+  "custom.complet": "Complet",
+  "custom.skip": "Passer",
+  "custom.no_thanks": "Non merci",
+  "custom.same_sauce_frites": "Sauce frites",
+  "custom.free_sauces": "{count} gratuites",
+  "custom.extra_sauce": "+{price} € par sauce",
+  "custom.add_to_cart": "Ajouter au panier"
 }

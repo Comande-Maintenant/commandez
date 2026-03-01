@@ -248,6 +248,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
       price: editItem.price,
       image: editItem.image,
       popular: editItem.popular,
+      product_type: editItem.product_type || "simple",
     });
     setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
     setEditItem(null);
@@ -565,6 +566,24 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
                 )}
               </div>
 
+              {/* Product type */}
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">Type de produit</p>
+                <select
+                  value={editItem.product_type || "simple"}
+                  onChange={(e) => setEditItem({ ...editItem, product_type: e.target.value })}
+                  className="w-full h-10 rounded-xl border border-input bg-background px-3 text-sm"
+                >
+                  <option value="simple">Simple</option>
+                  <option value="sandwich_personnalisable">Sandwich personnalisable</option>
+                  <option value="sandwich_simple">Sandwich simple</option>
+                  <option value="menu">Menu</option>
+                  <option value="accompagnement">Accompagnement</option>
+                  <option value="boisson">Boisson</option>
+                  <option value="dessert">Dessert</option>
+                  <option value="supplement">Supplement</option>
+                </select>
+              </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">Populaire</span>
                 <Switch checked={editItem.popular} onCheckedChange={(v) => setEditItem({ ...editItem, popular: v })} />

@@ -16,6 +16,7 @@ import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
 import { DashboardEnDirect } from "@/components/dashboard/DashboardEnDirect";
 import { DashboardClients } from "@/components/dashboard/DashboardClients";
 import { GererMenu } from "@/components/dashboard/GererMenu";
+import { DashboardCustomization } from "@/components/dashboard/DashboardCustomization";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
 import { AdminBottomNav } from "@/components/dashboard/AdminBottomNav";
 import { LiveSummaryBanner } from "@/components/dashboard/LiveSummaryBanner";
@@ -29,7 +30,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { DashboardView } from "@/types/dashboard";
 import { SubscriptionGate } from "@/components/auth/SubscriptionGate";
 
-const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer", "clients"];
+const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer", "clients", "customization"];
 
 function isValidView(v: string): v is DashboardView {
   return validViews.includes(v as DashboardView);
@@ -333,6 +334,7 @@ const AdminPage = () => {
               {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} />}
               {activeView === "stats" && <DashboardStats restaurant={restaurant} />}
               {activeView === "clients" && <DashboardClients restaurant={restaurant} />}
+              {activeView === "customization" && <DashboardCustomization restaurant={restaurant} />}
               {activeView === "gerer" && <GererMenu onViewChange={handleViewChange} />}
             </motion.div>
           </AnimatePresence>

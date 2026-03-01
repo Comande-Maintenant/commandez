@@ -77,5 +77,20 @@
   "custom.add_to_cart": "加入购物车 - {price} €",
   "custom.your_selection": "您的选择",
   "custom.base_price": "基础价: {price} €",
-  "custom.total": "总计: {price} €"
+  "custom.total": "总计: {price} €",
+  "custom.choose_base": "选择您的底料",
+  "custom.choose_meat": "选择肉类",
+  "custom.toppings": "配菜",
+  "custom.sauces": "酱料",
+  "custom.side": "配餐",
+  "custom.drink_upsell": "来杯饮料?",
+  "custom.dessert_upsell": "来份甜点?",
+  "custom.recap": "订单摘要",
+  "custom.complet": "全部",
+  "custom.skip": "跳过",
+  "custom.no_thanks": "不用了",
+  "custom.same_sauce_frites": "薯条酱料",
+  "custom.free_sauces": "{count} 份免费",
+  "custom.extra_sauce": "+{price} €/份",
+  "custom.add_to_cart": "加入购物车"
 }

@@ -77,5 +77,20 @@
   "custom.add_to_cart": "أضف إلى السلة - {price} €",
   "custom.your_selection": "اختيارك",
   "custom.base_price": "الأساس: {price} €",
-  "custom.total": "المجموع: {price} €"
+  "custom.total": "المجموع: {price} €",
+  "custom.choose_base": "اختر الأساس",
+  "custom.choose_meat": "اختر اللحم",
+  "custom.toppings": "الإضافات",
+  "custom.sauces": "الصلصات",
+  "custom.side": "طبق جانبي",
+  "custom.drink_upsell": "مشروب؟",
+  "custom.dessert_upsell": "حلوى؟",
+  "custom.recap": "ملخص",
+  "custom.complet": "كامل",
+  "custom.skip": "تخطي",
+  "custom.no_thanks": "لا شكرا",
+  "custom.same_sauce_frites": "صلصة البطاطس",
+  "custom.free_sauces": "{count} مجانية",
+  "custom.extra_sauce": "+{price} € لكل صلصة",
+  "custom.add_to_cart": "أضف إلى السلة"
 }

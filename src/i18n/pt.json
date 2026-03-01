@@ -77,5 +77,20 @@
   "custom.add_to_cart": "Adicionar ao carrinho - {price} €",
   "custom.your_selection": "Sua selecao",
   "custom.base_price": "Base: {price} €",
-  "custom.total": "Total: {price} €"
+  "custom.total": "Total: {price} €",
+  "custom.choose_base": "Escolha sua base",
+  "custom.choose_meat": "Escolha sua carne",
+  "custom.toppings": "Guarnicoes",
+  "custom.sauces": "Molhos",
+  "custom.side": "Acompanhamento",
+  "custom.drink_upsell": "Uma bebida?",
+  "custom.dessert_upsell": "Uma sobremesa?",
+  "custom.recap": "Resumo",
+  "custom.complet": "Completo",
+  "custom.skip": "Pular",
+  "custom.no_thanks": "Nao obrigado",
+  "custom.same_sauce_frites": "Molho batatas",
+  "custom.free_sauces": "{count} gratis",
+  "custom.extra_sauce": "+{price} € por molho",
+  "custom.add_to_cart": "Adicionar ao carrinho"
 }

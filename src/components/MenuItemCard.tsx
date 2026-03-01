@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import type { DbMenuItem, CustomizationConfig } from "@/types/database";
+import type { CustomizationData } from "@/types/customization";
 import { useLanguage } from "@/context/LanguageContext";
 import { ItemCustomizeModal } from "./ItemCustomizeModal";
 import { SavoryItemDrawer, isSavoryItem } from "./SavoryItemDrawer";
+import { ProductCustomizer } from "./ProductCustomizer";
 
 interface Props {
   item: DbMenuItem;
@@ -15,15 +17,25 @@ interface Props {
   primaryLight?: string;
   isEven?: boolean;
   customizationConfig?: CustomizationConfig | null;
+  customizationData?: CustomizationData | null;
+  menuItems?: DbMenuItem[];
 }
 
-export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig }: Props) => {
+const CUSTOMIZABLE_TYPES = ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement"];
+
+export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems }: Props) => {
   const [open, setOpen] = useState(false);
   const { t, tMenu } = useLanguage();
   const translated = tMenu(item);
 
+  // Routing logic:
+  // 1. New system: product_type is customizable + customizationData exists -> ProductCustomizer
+  // 2. Legacy: isSavoryItem + garniture step + customizationConfig -> SavoryItemDrawer
+  // 3. Fallback: ItemCustomizeModal
+  const productType = item.product_type || "simple";
+  const useNewCustomizer = CUSTOMIZABLE_TYPES.includes(productType) && !!customizationData;
   const garnitureStep = customizationConfig?.steps?.find((s) => s.id === "garniture");
-  const showDrawer = isSavoryItem(item.category) && !!garnitureStep && !!customizationConfig;
+  const useLegacyDrawer = !useNewCustomizer && isSavoryItem(item.category) && !!garnitureStep && !!customizationConfig;
 
   return (
     <>
@@ -94,7 +106,18 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         </motion.button>
       </motion.div>
 
-      {showDrawer ? (
+      {useNewCustomizer ? (
+        <ProductCustomizer
+          item={item}
+          open={open}
+          onClose={() => setOpen(false)}
+          restaurantSlug={restaurantSlug}
+          restaurantId={restaurantId}
+          customizationData={customizationData}
+          menuItems={menuItems || []}
+          primaryColor={primaryColor || "#10B981"}
+        />
+      ) : useLegacyDrawer ? (
         <SavoryItemDrawer
           item={item}
           open={open}

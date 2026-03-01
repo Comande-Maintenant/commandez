@@ -72,9 +72,31 @@ export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
                         Garniture : {item.garnitureChoices.map((g) => g.level === "x2" ? `${g.name} x2` : g.name).join(", ")}
                       </p>
                     )}
+                    {item.baseChoice && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Base : {item.baseChoice}
+                      </p>
+                    )}
                     {item.selectedSauces.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {item.selectedSauces.join(", ")}
+                        Sauces : {item.selectedSauces.join(", ")}
+                      </p>
+                    )}
+                    {item.accompagnementChoice && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        + {item.accompagnementChoice.name}
+                        {item.accompagnementChoice.size ? ` (${item.accompagnementChoice.size})` : ""}
+                        {item.accompagnementChoice.sauces?.length ? ` - ${item.accompagnementChoice.sauces.join(", ")}` : ""}
+                      </p>
+                    )}
+                    {item.drinkChoice && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        + {item.drinkChoice.name}
+                      </p>
+                    )}
+                    {item.dessertChoice && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        + {item.dessertChoice.name}
                       </p>
                     )}
                     {item.selectedSupplements.length > 0 && (
