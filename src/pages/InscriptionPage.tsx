@@ -383,6 +383,10 @@ const InscriptionPage = () => {
                 {searchMode === 'manual' && (
                   <ManualRestaurantForm onSubmit={handleManualSubmit} />
                 )}
+
+                <Button variant="outline" onClick={() => setStep(1)} className="w-full">
+                  Retour
+                </Button>
               </div>
             </motion.div>
           )}
@@ -413,6 +417,9 @@ const InscriptionPage = () => {
                   onAnalysisComplete={handleAnalysisComplete}
                   onSkip={() => setStep(4)}
                 />
+                <Button variant="outline" onClick={() => { setSelectedPlace(null); setRestaurantData(null); setStep(2); }} className="w-full mt-4">
+                  Retour
+                </Button>
               </div>
             </motion.div>
           )}
@@ -502,6 +509,11 @@ const InscriptionPage = () => {
                       Creation de votre page en cours...
                     </p>
                   </div>
+                )}
+                {!creating && (
+                  <Button variant="outline" onClick={() => setStep(4)} className="w-full mt-4">
+                    Retour
+                  </Button>
                 )}
               </div>
             </motion.div>
