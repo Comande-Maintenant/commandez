@@ -122,6 +122,30 @@
 - **Antalya Kebab** : slug `moneteau-antalya-kebab`, id `c236aa92-cab3-4aa1-a337-7767770cb764`, referral `58379E`
 - 10 categories, 35 items, CustomOrderBuilder 5 etapes
 
+## Migrations Supabase (CLI)
+
+### Setup (deja fait)
+Le remote a une table `supabase_migrations.schema_migrations` qui track les migrations appliquees.
+Le projet est linke : `SUPABASE_ACCESS_TOKEN=sbp_230be05e89adf1016d7b2fb7120155f5c082ed14 npx supabase link --project-ref rbqgsxhkccbhqdmdtxwr`
+
+### Deployer une nouvelle migration
+1. Creer le fichier : `supabase/migrations/NNN_description.sql`
+2. Dry-run : `SUPABASE_ACCESS_TOKEN=sbp_230be05e89adf1016d7b2fb7120155f5c082ed14 npx supabase db push --dry-run`
+3. Push : `SUPABASE_ACCESS_TOKEN=sbp_230be05e89adf1016d7b2fb7120155f5c082ed14 npx supabase db push`
+
+### Executer du SQL ad-hoc sur le remote (sans migration)
+```bash
+curl -s -X POST "https://api.supabase.com/v1/projects/rbqgsxhkccbhqdmdtxwr/database/query" \
+  -H "Authorization: Bearer sbp_230be05e89adf1016d7b2fb7120155f5c082ed14" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SELECT 1"}'
+```
+
+### Notes
+- Les fichiers de migration doivent utiliser `IF NOT EXISTS` / `IF EXISTS` pour etre idempotents
+- La table de suivi est `supabase_migrations.schema_migrations` (version + name)
+- 20 migrations enregistrees (002 a 019 + 2 migrations auto-generees)
+
 ## Regles
 - Ne JAMAIS modifier la DA sans demander
 - PULL BEFORE PUSH sur theme Shopify (live gagne toujours)
