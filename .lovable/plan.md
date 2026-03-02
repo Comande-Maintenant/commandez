@@ -10,7 +10,7 @@ Crée une application SaaS de commande en ligne pour restaurants (kebab, tacos, 
 
 &nbsp;
 
-L’objectif n’est PAS de créer une marketplace avec des centaines de restaurants affichés ensemble, mais un système où **chaque restaurant possède sa propre page dédiée, optimisée pour la conversion et le SEO**.
+L'objectif n'est PAS de créer une marketplace avec des centaines de restaurants affichés ensemble, mais un système où **chaque restaurant possède sa propre page dédiée, optimisée pour la conversion et le SEO**.
 
 &nbsp;
 
@@ -79,11 +79,11 @@ Transformer un visiteur en client en moins de 10 secondes.
   - Nom du restaurant
   - Note + avis
   - Adresse + horaires
-  - Bouton CTA principal : **“Commander maintenant”**
+  - Bouton CTA principal : **"Commander maintenant"**
   &nbsp;
 - Menu :
   &nbsp;
-  - Catégories (Sandwichs, Assiettes, Boissons…)
+  - Catégories (Sandwichs, Assiettes, Boissons...)
   - Produits avec :
     &nbsp;
     - Nom
@@ -166,7 +166,7 @@ Fonctionnalités :
 
 &nbsp;
 
-## **🔗 STRATÉGIE D’ACQUISITION (TRÈS IMPORTANT)**
+## **🔗 STRATÉGIE D'ACQUISITION (TRÈS IMPORTANT)**
 
 &nbsp;
 
@@ -178,14 +178,14 @@ Fonctionnalités :
   &nbsp;
   - Met ce lien sur sa fiche Google Business Profile
   - Le partage sur Instagram / TikTok
-  - L’utilise comme site officiel
+  - L'utilise comme site officiel
   &nbsp;
 
 &nbsp;
 
 &nbsp;
 
-👉 L’application agit comme un **site web clé en main + outil de commande**
+👉 L'application agit comme un **site web clé en main + outil de commande**
 
 &nbsp;
 
@@ -202,7 +202,7 @@ Fonctionnalités :
 &nbsp;
 
 - Ne PAS afficher une liste massive de restaurants
-- Pas de “catalogue global”
+- Pas de "catalogue global"
 - Chaque page doit être indépendante
 
 &nbsp;
@@ -236,7 +236,7 @@ Fonctionnalités :
   &nbsp;
   - Minimaliste
   - Ultra lisible
-  - Beaucoup d’espace blanc
+  - Beaucoup d'espace blanc
   - Typo Inter / SF Pro
   &nbsp;
 - UX :

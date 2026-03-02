@@ -152,4 +152,23 @@ curl -s -X POST "https://api.supabase.com/v1/projects/rbqgsxhkccbhqdmdtxwr/datab
 - git pull avant modifications app
 - Francais pour les interfaces, anglais pour le code
 - Lovable : commit+push GitHub, sync manuellement dans Lovable
-- Ne JAMAIS utiliser le tiret cadratin dans les textes
+- Ne JAMAIS utiliser le tiret cadratin (em dash, en dash) dans les textes
+
+## REGLE COPYWRITING - ZERO STYLE "IA"
+
+Tout texte visible par un utilisateur (titres, boutons, descriptions, emails,
+notifications, pages, blog, SEO, etc.) doit etre ecrit comme un humain parle.
+
+INTERDITS : "innovant", "solution", "optimisez", "boostez", "transformez",
+"plateforme", "digital", "revolutionnaire", "excellence", "potentiel",
+"tout-en-un", "au coeur de", "des aujourd'hui", "n'attendez plus",
+"passez a la vitesse superieure", "incontournable", "game-changer",
+"disruptif", "levier de croissance", "synergie", "ecosysteme", "holistique",
+"seamless", "sans couture", "state-of-the-art", "cutting-edge", "best-in-class",
+"scalable", "robust" (dans du texte public), et tout buzzword corporate/IA.
+
+TEST : si un restaurateur de kebab trouverait la phrase bizarre dite a l'oral,
+c'est que c'est mal ecrit. Reecrire.
+
+Style : concret, court, specifique, terre-a-terre, honnete.
+"Moins de telephone. Plus de cuisine." > "Optimisez la gestion de vos commandes."

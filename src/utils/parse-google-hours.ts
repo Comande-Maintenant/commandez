@@ -2,8 +2,8 @@
  * Parse Google Places weekday_text into structured schedule format.
  *
  * Google returns weekday_text in either English or French, e.g.:
- *   "Monday: 11:00 AM – 2:30 PM, 5:30 – 10:30 PM"
- *   "lundi: 11:00 – 14:30, 17:30 – 22:30"
+ *   "Monday: 11:00 AM - 2:30 PM, 5:30 - 10:30 PM"
+ *   "lundi: 11:00 - 14:30, 17:30 - 22:30"
  *   "Sunday: Closed"
  *   "dimanche: Fermé"
  *
@@ -73,7 +73,7 @@ function to24h(timeStr: string): string {
  * Preserves multiple slots (e.g. lunch + dinner).
  */
 function parseLine(line: string): ParsedScheduleDay | null {
-  // Split on first colon: "Monday: 11:00 AM – 2:30 PM"
+  // Split on first colon: "Monday: 11:00 AM - 2:30 PM"
   const colonIdx = line.indexOf(':');
   if (colonIdx === -1) return null;
 
@@ -90,8 +90,8 @@ function parseLine(line: string): ParsedScheduleDay | null {
   }
 
   // Split by comma to get individual time ranges
-  // "11:00 AM – 2:30 PM, 5:30 – 10:30 PM" -> 2 slots
-  // "11:00–14:30, 17:30–22:30" -> 2 slots
+  // "11:00 AM - 2:30 PM, 5:30 - 10:30 PM" -> 2 slots
+  // "11:00-14:30, 17:30-22:30" -> 2 slots
   const ranges = rest.split(',').map((r) => r.trim()).filter(Boolean);
   const slots: ScheduleSlot[] = [];
 
@@ -103,7 +103,7 @@ function parseLine(line: string): ParsedScheduleDay | null {
     const rawOpen = parts[0].trim();
     const rawClose = parts[parts.length - 1].trim();
 
-    // Google English: "5:30 – 10:30 PM" -> PM applies to both
+    // Google English: "5:30 - 10:30 PM" -> PM applies to both
     const ampmMatch = rawClose.match(/\s*(am|pm)\s*$/i);
     let fixedOpen = rawOpen;
     if (ampmMatch && !/[ap]m/i.test(rawOpen)) {
