@@ -31,9 +31,9 @@ const AbonnementPage = () => {
         {/* Trial expired message */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-8 text-center">
           <Clock className="h-8 w-8 text-amber-500 mx-auto mb-2" />
-          <h2 className="text-lg font-semibold text-foreground mb-1">Votre essai est termine</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-1">Votre essai est terminé</h2>
           <p className="text-sm text-muted-foreground">
-            Pour continuer a recevoir des commandes, activez votre abonnement.
+            Pour continuer à recevoir des commandes, activez votre abonnement.
           </p>
         </div>
 

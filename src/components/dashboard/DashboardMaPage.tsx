@@ -54,7 +54,7 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
         primary_color: primaryColor,
         bg_color: bgColor,
       } as any);
-      toast.success("Couleurs enregistrees");
+      toast.success("Couleurs enregistrées");
     } catch (e) {
       toast.error("Erreur lors de la sauvegarde");
     }
@@ -72,7 +72,7 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
         restaurant_phone: phone,
         website,
       } as any);
-      toast.success("Informations enregistrees");
+      toast.success("Informations enregistrées");
     } catch (e) {
       toast.error("Erreur lors de la sauvegarde");
     }
@@ -89,7 +89,7 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
         await updateRestaurant(restaurant.id, { cover_image: url } as any);
         setCoverPreview(url);
       }
-      toast.success(`${type === "logo" ? "Logo" : "Couverture"} mise a jour`);
+      toast.success(`${type === "logo" ? "Logo" : "Couverture"} mise à jour`);
     } catch (e) {
       toast.error("Erreur lors de l'upload");
     }
@@ -262,7 +262,7 @@ export const DashboardMaPage = ({ restaurant }: Props) => {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-sm text-muted-foreground">Telephone</label>
+              <label className="text-sm text-muted-foreground">Téléphone</label>
               <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1" />
             </div>
             <div>

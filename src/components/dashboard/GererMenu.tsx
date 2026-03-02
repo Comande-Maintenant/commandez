@@ -6,13 +6,13 @@ interface Props {
 }
 
 const items = [
-  { id: "carte" as DashboardView, label: "Ma Carte", desc: "Modifier les plats, prix, categories", icon: UtensilsCrossed },
+  { id: "carte" as DashboardView, label: "Ma Carte", desc: "Modifier les plats, prix, catégories", icon: UtensilsCrossed },
   { id: "customization" as DashboardView, label: "Personnalisation", desc: "Bases, viandes, sauces, garnitures", icon: ChefHat },
   { id: "page" as DashboardView, label: "Ma Page", desc: "Logo, couleurs, informations", icon: Palette },
-  { id: "qrcodes" as DashboardView, label: "QR Codes", desc: "Generer et telecharger vos QR codes", icon: QrCode },
-  { id: "tablettes" as DashboardView, label: "Mes tablettes", desc: "Gerer vos tablettes", icon: Tablet },
+  { id: "qrcodes" as DashboardView, label: "QR Codes", desc: "Générer et télécharger vos QR codes", icon: QrCode },
+  { id: "tablettes" as DashboardView, label: "Mes tablettes", desc: "Gérer vos tablettes", icon: Tablet },
   { id: "clients" as DashboardView, label: "Mes clients", desc: "Base clients, statistiques, bans", icon: Users },
-  { id: "parametres" as DashboardView, label: "Parametres", desc: "Horaires, modes, paiement", icon: Settings },
+  { id: "parametres" as DashboardView, label: "Paramètres", desc: "Horaires, modes, paiement", icon: Settings },
   { id: "stats" as DashboardView, label: "Statistiques", desc: "Historique, tendances, exports", icon: BarChart3 },
 ];
 

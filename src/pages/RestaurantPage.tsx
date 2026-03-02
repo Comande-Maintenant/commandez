@@ -177,7 +177,7 @@ const RestaurantPage = () => {
                 }
               }
               localStorage.removeItem("cm_reorder");
-              toast.success("Commande precedente ajoutee au panier !");
+              toast.success("Commande précédente ajoutée au panier !");
             }
           }
         } catch { /* ignore */ }
@@ -417,7 +417,7 @@ const RestaurantPage = () => {
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">Commande impossible</h1>
           <p className="text-muted-foreground text-sm">
-            Votre acces aux commandes a ete suspendu.
+            Votre accès aux commandes a été suspendu.
             {restaurant.restaurant_phone && (
               <> Contactez le restaurant au {restaurant.restaurant_phone} pour plus d'informations.</>
             )}
@@ -572,7 +572,7 @@ const RestaurantPage = () => {
                   <span>
                     {availability.todaySlots.length > 1
                       ? availability.todaySlots.map((s) => `${s.open}-${s.close}`).join(", ")
-                      : `Ferme a ${availability.currentCloseTime}`
+                      : `Ferme à ${availability.currentCloseTime}`
                     }
                   </span>
                 </div>
@@ -641,7 +641,7 @@ const RestaurantPage = () => {
                   {activeOrderCount <= 3 ? "~10-15 min" : activeOrderCount <= 7 ? "~20 min" : "~30 min, forte affluence"}
                 </span>
                 <span className="text-xs text-gray-500">
-                  {activeOrderCount} commande{activeOrderCount > 1 ? "s" : ""} en preparation
+                  {activeOrderCount} commande{activeOrderCount > 1 ? "s" : ""} en préparation
                 </span>
               </div>
             )}
@@ -709,7 +709,7 @@ const RestaurantPage = () => {
             style={{ backgroundColor: primaryLight, borderColor: `${primary}30` }}
           >
             <div className="min-w-0">
-              <p className="text-sm font-medium" style={{ color: primaryDark }}>Recommander votre derniere commande ?</p>
+              <p className="text-sm font-medium" style={{ color: primaryDark }}>Recommander votre dernière commande ?</p>
               <p className="text-xs text-gray-500 truncate">
                 {lastOrderItems.map((i: any) => `${i.quantity}x ${i.name}`).join(", ")}
               </p>
@@ -726,7 +726,7 @@ const RestaurantPage = () => {
                   }
                 }
                 setLastOrderItems(null);
-                toast.success("Commande ajoutee au panier !");
+                toast.success("Commande ajoutée au panier !");
               }}
               className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white flex-shrink-0"
               style={{ backgroundColor: primary }}

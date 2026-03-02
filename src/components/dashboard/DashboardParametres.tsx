@@ -47,8 +47,8 @@ interface Props {
 }
 
 const availabilityModes = [
-  { id: "manual", label: "Manuel", desc: "Activez/desactivez manuellement" },
-  { id: "auto", label: "Automatique", desc: "Selon vos horaires configures" },
+  { id: "manual", label: "Manuel", desc: "Activez/désactivez manuellement" },
+  { id: "auto", label: "Automatique", desc: "Selon vos horaires configurés" },
   { id: "always", label: "Toujours ouvert", desc: "Accepte les commandes 24/7" },
 ];
 
@@ -136,7 +136,7 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
       // Save schedule as JSON (supports multi-slots per day)
       await updateRestaurant(restaurant.id, { schedule } as any);
 
-      toast.success("Parametres enregistres");
+      toast.success("Paramètres enregistrés");
     } catch (e) {
       toast.error("Erreur lors de la sauvegarde");
     }
@@ -202,10 +202,10 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
         scheduled_deletion_at: deletion,
         is_accepting_orders: false,
       } as any);
-      toast.success("Restaurant desactive. Vos donnees seront conservees 90 jours.");
+      toast.success("Restaurant désactivé. Vos données seront conservées 90 jours.");
       window.location.reload();
     } catch (e) {
-      toast.error("Erreur lors de la desactivation");
+      toast.error("Erreur lors de la désactivation");
     }
   };
 
@@ -315,7 +315,7 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Clock className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Temps de preparation</h3>
+          <h3 className="text-base font-semibold text-foreground">Temps de préparation</h3>
         </div>
 
         <div className="space-y-4">
@@ -437,7 +437,7 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
 
         <div className="space-y-3">
           <div>
-            <label className="text-sm text-muted-foreground">Telephone</label>
+            <label className="text-sm text-muted-foreground">Téléphone</label>
             <Input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="mt-1" />
           </div>
 
@@ -558,7 +558,7 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
           <h3 className="text-base font-semibold text-destructive">Desactiver mon restaurant</h3>
         </div>
         <p className="text-sm text-muted-foreground mb-2">
-          Votre restaurant ne sera plus visible par les clients. Vos donnees seront conservees 90 jours : vous pourrez reactiver a tout moment.
+          Votre restaurant ne sera plus visible par les clients. Vos données seront conservées 90 jours : vous pourrez réactiver à tout moment.
         </p>
         <p className="text-sm text-muted-foreground mb-3">
           Pour confirmer, saisissez le nom exact de votre restaurant : <span className="font-semibold text-foreground">{restaurant.name}</span>

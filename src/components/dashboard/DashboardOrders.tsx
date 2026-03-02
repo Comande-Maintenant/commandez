@@ -15,17 +15,17 @@ type OrderStatus = "new" | "preparing" | "ready" | "done";
 
 const statusConfig: Record<OrderStatus, { label: string; color: string; next?: OrderStatus; nextLabel?: string }> = {
   new: { label: "Nouvelle", color: "bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))]", next: "preparing", nextLabel: "Accepter" },
-  preparing: { label: "En preparation", color: "bg-foreground text-primary-foreground", next: "ready", nextLabel: "Prete" },
-  ready: { label: "Prete", color: "bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]", next: "done", nextLabel: "Terminee" },
-  done: { label: "Terminee", color: "bg-muted text-muted-foreground" },
+  preparing: { label: "En préparation", color: "bg-foreground text-primary-foreground", next: "ready", nextLabel: "Prête" },
+  ready: { label: "Prête", color: "bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]", next: "done", nextLabel: "Terminée" },
+  done: { label: "Terminée", color: "bg-muted text-muted-foreground" },
 };
 
 const filterTabs: { id: OrderStatus | "all"; label: string }[] = [
   { id: "all", label: "Toutes" },
   { id: "new", label: "Nouvelles" },
   { id: "preparing", label: "En cours" },
-  { id: "ready", label: "Pretes" },
-  { id: "done", label: "Terminees" },
+  { id: "ready", label: "Prêtes" },
+  { id: "done", label: "Terminées" },
 ];
 
 interface Props {
@@ -180,7 +180,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
         {[
           { label: "Nouvelles", value: orders.filter((o) => o.status === "new").length, accent: true },
           { label: "En cours", value: orders.filter((o) => o.status === "preparing").length },
-          { label: "Pretes", value: orders.filter((o) => o.status === "ready").length },
+          { label: "Prêtes", value: orders.filter((o) => o.status === "ready").length },
           { label: "CA du jour", value: `${todayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2)} €`, sensitive: true },
         ].map((stat) => (
           <div key={stat.label} className="bg-card rounded-2xl border border-border p-3 sm:p-4">
@@ -279,9 +279,9 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
                 </span>
                 <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{order.customer_phone}</span>
                 <span className="flex items-center gap-1">
-                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> A emporter</>}
+                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> À emporter</>}
                   {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> Sur place</>}
-                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> Telephone</>}
+                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> Téléphone</>}
                 </span>
                 {(order as any).covers && (
                   <span className="text-xs text-muted-foreground">({(order as any).covers} couvert{(order as any).covers > 1 ? "s" : ""})</span>

@@ -55,7 +55,7 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
       </div>
 
       <div>
-        <Label htmlFor="phone">Telephone (optionnel)</Label>
+        <Label htmlFor="phone">Téléphone (optionnel)</Label>
         <Input id="phone" {...register('phone')} placeholder="01 23 45 67 89" />
       </div>
 
@@ -73,7 +73,7 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className="w-full mt-1">
-                <SelectValue placeholder="Selectionnez..." />
+                <SelectValue placeholder="Sélectionnez..." />
               </SelectTrigger>
               <SelectContent>
                 {CUISINE_TYPE_OPTIONS.map((opt) => (

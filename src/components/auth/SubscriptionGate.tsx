@@ -184,11 +184,11 @@ function PastDueScreen() {
         <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
           <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-foreground mb-2">
-            Probleme de paiement
+            Problème de paiement
           </h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Votre dernier paiement a echoue. Mettez a jour vos informations de
-            paiement pour continuer a utiliser commandeici.
+            Votre dernier paiement a échoué. Mettez à jour vos informations de
+            paiement pour continuer à utiliser commandeici.
           </p>
           <Button asChild className="w-full">
             <a
@@ -196,11 +196,11 @@ function PastDueScreen() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Gerer mon paiement
+              Gérer mon paiement
             </a>
           </Button>
           <p className="text-xs text-muted-foreground mt-3">
-            Vous serez redirige vers votre espace client Shopify.
+            Vous serez redirigé vers votre espace client.
           </p>
         </div>
       </div>

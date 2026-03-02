@@ -132,7 +132,7 @@ export const POSDesserts = ({ desserts, menuItems, onUpdateDesserts, onSetDesser
             className="flex-1 rounded-xl min-h-[48px] text-sm"
             onClick={() => { onUpdateDesserts([]); onSetDessertPending(true); onNext(); }}
           >
-            Peut-etre apres
+            Peut-être après
           </Button>
         </div>
         {desserts.length > 0 && (

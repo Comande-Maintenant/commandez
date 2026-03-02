@@ -366,7 +366,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
         enable_boisson_upsell: cfgBoissonUpsell,
         enable_dessert_upsell: cfgDessertUpsell,
       });
-      toast.success("Configuration enregistree");
+      toast.success("Configuration enregistrée");
     } catch {
       toast.error("Erreur");
     }
@@ -461,7 +461,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
             <Input type="number" step="0.10" value={cfgExtraSauce} onChange={(e) => setCfgExtraSauce(e.target.value)} className="mt-1" />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-foreground">Suggerer sauce sandwich pour frites</span>
+            <span className="text-sm text-foreground">Suggérer sauce sandwich pour frites</span>
             <Switch checked={cfgSuggestSauce} onCheckedChange={setCfgSuggestSauce} />
           </div>
           <div className="flex items-center justify-between">

@@ -211,7 +211,7 @@ export function CustomOrderBuilder({
       const names = viandeOpts.map((id) => viandeStep?.options.find((o) => o.id === id)?.name).filter(Boolean);
       parts.push(names.join("/"));
     }
-    return parts.join(" ") || "Kebab personnalise";
+    return parts.join(" ") || "Kebab personnalisé";
   }, [selections, steps]);
 
   // Build description from garniture, sauce, supplement
@@ -296,7 +296,7 @@ export function CustomOrderBuilder({
     if (stepDef.required && !fulfilled) {
       return (
         <div className="mt-3 w-full text-center text-sm font-medium py-2.5 rounded-xl text-gray-400 bg-gray-100">
-          Selectionnez d'abord
+          Sélectionnez d'abord
         </div>
       );
     }

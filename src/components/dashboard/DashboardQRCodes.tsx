@@ -331,7 +331,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
         </div>
 
         <Button variant="outline" className="w-full rounded-xl gap-1.5" onClick={generateA4Pdf}>
-          <FileDown className="h-4 w-4" />Telecharger PDF A4
+          <FileDown className="h-4 w-4" />Télécharger PDF A4
         </Button>
       </section>
 
@@ -351,7 +351,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
           <div className="flex-1 space-y-3">
             <p className="text-sm text-muted-foreground">
               Format compact pour emballages et sacs.<br />
-              <span className="text-xs">Commandez en ligne, recuperez sur place</span>
+              <span className="text-xs">Commandez en ligne, récupérez sur place</span>
             </p>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={() => downloadPng(packQrDataUrl, `qr-emballage-${restaurant.slug}.png`)}>

@@ -76,7 +76,7 @@ const CustomerProfilePage = () => {
     try {
       await updateProfile({ name: editName, phone: editPhone || null });
       setEditing(false);
-      toast.success("Profil mis a jour");
+      toast.success("Profil mis à jour");
     } catch {
       toast.error("Erreur lors de la sauvegarde");
     } finally {

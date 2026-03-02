@@ -20,9 +20,9 @@ interface StepDef {
 
 const STEPS: StepDef[] = [
   { key: "received", label: "Commande recue", icon: Inbox, matchStatuses: ["new", "preparing", "ready", "done"] },
-  { key: "preparing", label: "En preparation", icon: ChefHat, matchStatuses: ["preparing", "ready", "done"] },
+  { key: "preparing", label: "En préparation", icon: ChefHat, matchStatuses: ["preparing", "ready", "done"] },
   { key: "almost", label: "Bientot prete", icon: Timer, matchStatuses: ["ready", "done"] },
-  { key: "ready", label: "Prete !", icon: CheckCircle, matchStatuses: ["ready", "done"] },
+  { key: "ready", label: "Prête !", icon: CheckCircle, matchStatuses: ["ready", "done"] },
 ];
 
 function getStepIndex(status: OrderStatus, elapsedRatio: number): number {
@@ -213,8 +213,8 @@ const SuiviPage = () => {
           >
             {isDone ? (
               <>
-                <p className="text-2xl font-bold text-gray-900">Merci et bon appetit !</p>
-                <p className="text-sm text-gray-500 mt-1">Votre commande est terminee</p>
+                <p className="text-2xl font-bold text-gray-900">Merci et bon appétit !</p>
+                <p className="text-sm text-gray-500 mt-1">Votre commande est terminée</p>
               </>
             ) : isReady ? (
               <>
@@ -224,9 +224,9 @@ const SuiviPage = () => {
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 0.6, repeat: 2 }}
                 >
-                  Votre commande est prete !
+                  Votre commande est prête !
                 </motion.p>
-                <p className="text-sm text-gray-500 mt-1">Vous pouvez venir la recuperer</p>
+                <p className="text-sm text-gray-500 mt-1">Vous pouvez venir la récupérer</p>
               </>
             ) : (
               <>
@@ -330,7 +330,7 @@ const SuiviPage = () => {
             <div className="flex items-start gap-3 mb-3">
               <UserPlus className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: primary }} />
               <div>
-                <p className="text-sm font-semibold text-gray-900">Creez votre profil en 10 secondes</p>
+                <p className="text-sm font-semibold text-gray-900">Créez votre profil en 10 secondes</p>
                 <p className="text-xs text-gray-500 mt-0.5">Retrouvez vos commandes et recommandez en un clic.</p>
               </div>
             </div>
@@ -352,7 +352,7 @@ const SuiviPage = () => {
                 <Button
                   onClick={async () => {
                     if (signupPassword.length < 6) {
-                      toast.error("Le mot de passe doit faire au moins 6 caracteres");
+                      toast.error("Le mot de passe doit faire au moins 6 caractères");
                       return;
                     }
                     setSignupLoading(true);
@@ -363,7 +363,7 @@ const SuiviPage = () => {
                         order.customer_name,
                         order.customer_phone
                       );
-                      toast.success("Profil cree avec succes !");
+                      toast.success("Profil créé avec succès !");
                     } catch (e: any) {
                       toast.error(e.message || "Erreur lors de l'inscription");
                     } finally {

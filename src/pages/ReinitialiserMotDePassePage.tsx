@@ -110,9 +110,9 @@ const ReinitialiserMotDePassePage = () => {
             <div className="w-14 h-14 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
               <AlertCircle className="h-7 w-7 text-destructive" />
             </div>
-            <h2 className="text-xl font-bold text-foreground">Lien expire ou invalide</h2>
+            <h2 className="text-xl font-bold text-foreground">Lien expiré ou invalide</h2>
             <p className="text-sm text-muted-foreground">
-              Ce lien de reinitialisation a expire ou a deja ete utilise.
+              Ce lien de réinitialisation a expiré ou a déjà été utilisé.
             </p>
             <Link to="/mot-de-passe-oublie">
               <Button className="w-full h-12 rounded-xl mt-2">Demander un nouveau lien</Button>

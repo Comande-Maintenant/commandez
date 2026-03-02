@@ -60,7 +60,7 @@ const Index = () => {
           <div>
             <h1 className="text-2xl font-bold text-foreground">Espace restaurateur</h1>
             <p className="text-sm text-muted-foreground mt-2">
-              Gerez vos commandes, votre carte et vos clients.
+              Gérez vos commandes, votre carte et vos clients.
             </p>
           </div>
 

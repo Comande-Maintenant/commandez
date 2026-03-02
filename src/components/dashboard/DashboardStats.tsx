@@ -289,7 +289,7 @@ export const DashboardStats = ({ restaurant }: Props) => {
                 )}
                 {stats.avgPrepTime > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Temps preparation moyen</span>
+                    <span className="text-muted-foreground">Temps préparation moyen</span>
                     <span className="font-medium text-foreground">{Math.round(stats.avgPrepTime)} min</span>
                   </div>
                 )}

@@ -51,7 +51,7 @@ type RestaurantData = {
   parsedSchedule: ParsedScheduleDay[] | null;
 };
 
-const STEP_LABELS = ['Compte', 'Restaurant', 'Carte', 'Design', 'Formule', 'Termine'];
+const STEP_LABELS = ['Compte', 'Restaurant', 'Carte', 'Design', 'Formule', 'Terminé'];
 
 const slideVariants = {
   enter: { opacity: 0, x: 30 },
@@ -114,7 +114,7 @@ const InscriptionPage = () => {
       return;
     }
     if (password.length < 6) {
-      setAccountError('Le mot de passe doit contenir au moins 6 caracteres.');
+      setAccountError('Le mot de passe doit contenir au moins 6 caractères.');
       return;
     }
     setAccountLoading(true);
@@ -132,7 +132,7 @@ const InscriptionPage = () => {
     } catch (err: any) {
       const msg = err.message || '';
       if (msg.includes('already registered') || msg.includes('already been registered')) {
-        setAccountError('Cet email est deja utilise. Connectez-vous ou utilisez un autre email.');
+        setAccountError('Cet email est déjà utilisé. Connectez-vous ou utilisez un autre email.');
       } else {
         setAccountError(msg || 'Erreur lors de l\'inscription.');
       }
@@ -266,7 +266,7 @@ const InscriptionPage = () => {
       setCreatedRestaurantId(restaurant.id);
       setStep(6);
     } catch (err: any) {
-      toast.error(err.message || 'Erreur lors de la creation. Veuillez reessayer.');
+      toast.error(err.message || 'Erreur lors de la création. Veuillez réessayer.');
     } finally {
       setCreating(false);
     }
@@ -282,7 +282,7 @@ const InscriptionPage = () => {
             <span className="font-semibold text-lg">commandeici</span>
           </a>
           {step < 6 && (
-            <span className="text-xs text-muted-foreground">Etape {step}/5</span>
+            <span className="text-xs text-muted-foreground">Étape {step}/5</span>
           )}
         </div>
       </header>
@@ -297,7 +297,7 @@ const InscriptionPage = () => {
           {step === 1 && (
             <motion.div key="step1" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6 space-y-4">
-                <h2 className="text-xl font-bold text-foreground">Creez votre compte</h2>
+                <h2 className="text-xl font-bold text-foreground">Créez votre compte</h2>
                 <p className="text-sm text-muted-foreground">
                   En quelques minutes, votre restaurant sera en ligne.
                 </p>
@@ -320,12 +320,12 @@ const InscriptionPage = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="6 caracteres minimum"
+                    placeholder="6 caractères minimum"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="phone">Telephone</Label>
+                  <Label htmlFor="phone">Téléphone</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -344,11 +344,11 @@ const InscriptionPage = () => {
                   disabled={accountLoading}
                   className="w-full"
                 >
-                  {accountLoading ? 'Creation en cours...' : 'Creer mon compte'}
+                  {accountLoading ? 'Création en cours...' : 'Créer mon compte'}
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground">
-                  Deja un compte ?{' '}
+                  Déjà un compte ?{' '}
                   <Link to="/connexion" className="text-foreground underline">
                     Se connecter
                   </Link>
@@ -441,9 +441,9 @@ const InscriptionPage = () => {
           {step === 3 && menuCategories.length > 0 && (
             <motion.div key="step3b" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6">
-                <h2 className="text-xl font-bold text-foreground mb-2">Verifiez votre carte</h2>
+                <h2 className="text-xl font-bold text-foreground mb-2">Vérifiez votre carte</h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Nous avons detecte les elements suivants. Modifiez si necessaire.
+                  Nous avons détecté les éléments suivants. Modifiez si nécessaire.
                 </p>
                 <MenuReviewEditor
                   menu={menuCategories}
@@ -510,7 +510,7 @@ const InscriptionPage = () => {
               <div className="bg-card rounded-xl border border-border p-6">
                 <h2 className="text-xl font-bold text-foreground mb-2">Choisissez votre formule</h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Selectionnez la formule qui vous convient. Sans engagement, resiliable a tout moment.
+                  Sélectionnez la formule qui vous convient. Sans engagement, résiliable à tout moment.
                 </p>
                 <PricingCards
                   onSelect={handlePlanSelect}
@@ -519,7 +519,7 @@ const InscriptionPage = () => {
                 {creating && (
                   <div className="text-center mt-4">
                     <p className="text-sm text-muted-foreground animate-pulse">
-                      Creation de votre page en cours...
+                      Création de votre page en cours...
                     </p>
                   </div>
                 )}

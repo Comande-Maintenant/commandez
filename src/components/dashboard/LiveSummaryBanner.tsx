@@ -87,7 +87,7 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, c
             <ChefHat className="h-4 w-4 text-blue-600" />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">En preparation</p>
+            <p className="text-xs text-muted-foreground">En préparation</p>
             <p className="text-lg font-bold text-foreground">
               {orderCounts.preparingCount}
               {orderCounts.newCount > 0 && (

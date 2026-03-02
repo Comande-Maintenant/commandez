@@ -9,7 +9,7 @@ interface Props {
 const options: { type: POSOrderTypeValue; label: string; icon: typeof UtensilsCrossed }[] = [
   { type: "sur_place", label: "Sur place", icon: UtensilsCrossed },
   { type: "a_emporter", label: "A emporter", icon: ShoppingBag },
-  { type: "telephone", label: "Telephone", icon: Phone },
+  { type: "telephone", label: "Téléphone", icon: Phone },
 ];
 
 export const POSOrderType = ({ onSelect }: Props) => {

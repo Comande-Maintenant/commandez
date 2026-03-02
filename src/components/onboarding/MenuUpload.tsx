@@ -9,10 +9,10 @@ import type { AnalyzedMenu, ExtractedColors } from '@/types/onboarding';
 
 const LOADING_MESSAGES = [
   "Nous analysons votre carte pour vous faire gagner du temps...",
-  "Notre IA structure vos plats, categories et prix...",
-  "Vous n'aurez plus qu'a verifier et ajuster si necessaire.",
-  "Preparation de votre menu numerique en cours...",
-  "Encore un instant, nous mettons en forme vos categories...",
+  "Notre IA structure vos plats, catégories et prix...",
+  "Vous n'aurez plus qu'à vérifier et ajuster si nécessaire.",
+  "Préparation de votre menu numérique en cours...",
+  "Encore un instant, nous mettons en forme vos catégories...",
   "Bientot pret ! Votre carte digitale prend forme...",
 ];
 
@@ -95,7 +95,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
 
       onAnalysisComplete(menu, colors);
     } catch (err) {
-      setError('Erreur lors de l\'analyse. Verifiez vos fichiers et reessayez.');
+      setError('Erreur lors de l\'analyse. Vérifiez vos fichiers et réessayez.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -154,7 +154,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
               {/* Fixed tip */}
               <div className="flex items-start gap-2 text-xs text-muted-foreground">
                 <Lightbulb className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                <span>Pensez a verifier les prix et les descriptions une fois l'analyse terminee.</span>
+                <span>Pensez à vérifier les prix et les descriptions une fois l'analyse terminée.</span>
               </div>
             </div>
           </motion.div>
@@ -180,10 +180,10 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
       >
         <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
         <p className="text-sm font-medium text-foreground">
-          Deposez vos photos de carte ici
+          Déposez vos photos de carte ici
         </p>
         <p className="text-xs text-muted-foreground mt-1">
-          Photos, PDF, captures d'ecran... tous formats acceptes
+          Photos, PDF, captures d'écran... tous formats acceptés
         </p>
         <input
           ref={inputRef}

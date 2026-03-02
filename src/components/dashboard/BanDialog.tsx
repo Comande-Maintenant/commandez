@@ -61,7 +61,7 @@ export const BanDialog = ({ customer, open, onClose, onBanned, restaurantId }: P
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Raison (optionnel)</label>
             <Textarea
-              placeholder="Commande non recuperee, comportement inapproprie..."
+              placeholder="Commande non récupérée, comportement inapproprié..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="rounded-xl resize-none"

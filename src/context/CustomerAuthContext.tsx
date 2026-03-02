@@ -87,7 +87,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
       },
     });
     if (error) throw error;
-    if (!data.user) throw new Error("Inscription echouee");
+    if (!data.user) throw new Error("Inscription échouée");
 
     // Create profile row
     await upsertCustomerProfile({
@@ -112,7 +112,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
   const signIn = useCallback(async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    if (!data.user) throw new Error("Connexion echouee");
+    if (!data.user) throw new Error("Connexion échouée");
 
     // Check not an owner
     const role = data.user.user_metadata?.role;

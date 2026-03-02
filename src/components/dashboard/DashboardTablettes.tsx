@@ -102,11 +102,11 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
 
   const handleSave = async () => {
     if (!serialNumber.trim()) {
-      toast.error("Le numero de serie est requis");
+      toast.error("Le numéro de série est requis");
       return;
     }
     if (serialNumber.trim().length > 20) {
-      toast.error("Le numero de serie ne doit pas depasser 20 caracteres");
+      toast.error("Le numéro de série ne doit pas dépasser 20 caractères");
       return;
     }
 
@@ -119,7 +119,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
           usage_type: usageType as DbTablet["usage_type"],
           notes: notes.trim(),
         });
-        toast.success("Tablette mise a jour");
+        toast.success("Tablette mise à jour");
       } else {
         await insertTablet({
           restaurant_id: restaurant.id,
@@ -136,7 +136,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
     } catch (err: any) {
       const msg = err?.message || "";
       if (msg.includes("unique") || msg.includes("duplicate")) {
-        toast.error("Ce numero de serie est deja enregistre");
+        toast.error("Ce numéro de série est déjà enregistré");
       } else {
         toast.error("Erreur lors de l'enregistrement");
       }
@@ -152,10 +152,10 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
         status: newStatus,
         deactivated_at: newStatus === "inactive" ? new Date().toISOString() : null,
       });
-      toast.success(newStatus === "active" ? "Tablette reactivee" : "Tablette desactivee");
+      toast.success(newStatus === "active" ? "Tablette réactivée" : "Tablette désactivée");
       await loadTablets();
     } catch {
-      toast.error("Erreur lors de la mise a jour");
+      toast.error("Erreur lors de la mise à jour");
     }
   };
 
@@ -168,7 +168,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
         <div>
           <h2 className="text-xl font-bold text-foreground">Mes tablettes</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Gerez les tablettes associees a votre restaurant.
+            Gérez les tablettes associées à votre restaurant.
           </p>
         </div>
         <Button onClick={openAdd} className="rounded-xl gap-2">
@@ -182,9 +182,9 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
       ) : tablets.length === 0 ? (
         <div className="text-center py-12 bg-card border border-border rounded-2xl">
           <Tablet className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-muted-foreground text-sm">Aucune tablette enregistree</p>
+          <p className="text-muted-foreground text-sm">Aucune tablette enregistrée</p>
           <p className="text-xs text-muted-foreground mt-1">
-            Ajoutez vos tablettes pour les gerer depuis cet espace.
+            Ajoutez vos tablettes pour les gérer depuis cet espace.
           </p>
         </div>
       ) : (
@@ -306,7 +306,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div>
-              <Label htmlFor="serial">Numero de serie (max 20 car.)</Label>
+              <Label htmlFor="serial">Numéro de série (max 20 car.)</Label>
               <Input
                 id="serial"
                 value={serialNumber}

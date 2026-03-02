@@ -59,9 +59,9 @@ export function getCurrentDemandTip(): string {
   // Morning prep window
   if (hour >= 8 && hour < 11) {
     if (pattern.midi >= 70) {
-      return "Le midi s'annonce charge. Pensez a preparer les ingredients en avance.";
+      return "Le midi s'annonce chargé. Pensez à préparer les ingrédients en avance.";
     }
-    return "Midi devrait etre tranquille, bon moment pour mettre a jour la carte.";
+    return "Midi devrait être tranquille, bon moment pour mettre à jour la carte.";
   }
 
   // Lunch rush

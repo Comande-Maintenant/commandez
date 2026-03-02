@@ -65,7 +65,7 @@ export function MenuReviewEditor({ menu, onConfirm, onBack }: MenuReviewEditorPr
   const addCategory = () => {
     setCategories((prev) => [
       ...prev,
-      { name: 'Nouvelle categorie', items: [] },
+      { name: 'Nouvelle catégorie', items: [] },
     ]);
     setExpandedCat(categories.length);
   };
@@ -76,11 +76,11 @@ export function MenuReviewEditor({ menu, onConfirm, onBack }: MenuReviewEditorPr
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {categories.length} categories, {totalItems} articles detectes
+          {categories.length} catégories, {totalItems} articles détectés
         </p>
         <Button variant="outline" size="sm" onClick={addCategory}>
           <Plus className="h-3.5 w-3.5 mr-1" />
-          Categorie
+          Catégorie
         </Button>
       </div>
 

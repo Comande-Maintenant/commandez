@@ -184,7 +184,7 @@ export const DashboardPOS = ({ restaurant }: Props) => {
       setReadyOrders((prev) => prev.filter((o) => o.id !== orderId));
       toast.success("Commande terminee");
     } catch {
-      toast.error("Erreur lors de la mise a jour");
+      toast.error("Erreur lors de la mise à jour");
     }
   };
 

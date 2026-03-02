@@ -50,7 +50,7 @@ export function ReferralSection({ restaurantId }: Props) {
 
   const handleWhatsApp = () => {
     const msg = encodeURIComponent(
-      `Salut ! Je te recommande commandeici pour gerer tes commandes en ligne. Inscris-toi avec mon lien et on gagne chacun 4 semaines gratuites : ${referralLink}`
+      `Salut ! Je te recommande commandeici pour gérer tes commandes en ligne. Inscris-toi avec mon lien et on gagne chacun 4 semaines gratuites : ${referralLink}`
     );
     window.open(`https://wa.me/?text=${msg}`, "_blank");
   };
@@ -58,7 +58,7 @@ export function ReferralSection({ restaurantId }: Props) {
   const handleEmail = () => {
     const subject = encodeURIComponent("Je te recommande commandeici");
     const body = encodeURIComponent(
-      `Salut,\n\nJe te recommande commandeici pour gerer tes commandes en ligne. C'est sans commission, simple a mettre en place, et ca marche vraiment bien.\n\nInscris-toi avec mon lien et on gagne chacun 4 semaines gratuites :\n${referralLink}\n\nA bientot !`
+      `Salut,\n\nJe te recommande commandeici pour gérer tes commandes en ligne. C'est sans commission, simple à mettre en place, et ça marche vraiment bien.\n\nInscris-toi avec mon lien et on gagne chacun 4 semaines gratuites :\n${referralLink}\n\nÀ bientôt !`
     );
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };

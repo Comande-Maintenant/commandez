@@ -132,7 +132,7 @@ export const DashboardClients = ({ restaurant }: Props) => {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Rechercher par nom, telephone, email..."
+            placeholder="Rechercher par nom, téléphone, email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10 rounded-xl"
@@ -186,8 +186,8 @@ export const DashboardClients = ({ restaurant }: Props) => {
             <ShoppingBag className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p className="text-sm">
               {customers.length === 0
-                ? "Pas encore de client. Ils apparaitront ici apres leur premiere commande terminee."
-                : "Aucun client ne correspond a votre recherche."}
+                ? "Pas encore de client. Ils apparaîtront ici après leur première commande terminée."
+                : "Aucun client ne correspond à votre recherche."}
             </p>
           </div>
         )}

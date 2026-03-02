@@ -77,7 +77,7 @@ export const ScheduleEditor = ({ schedule, onChange }: Props) => {
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm font-medium text-foreground">Horaires par jour</p>
         <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={copyToAll}>
-          <Copy className="h-3.5 w-3.5" />Copier lundi a tous
+          <Copy className="h-3.5 w-3.5" />Copier lundi à tous
         </Button>
       </div>
       <div className="bg-card rounded-2xl border border-border overflow-hidden divide-y divide-border">
@@ -123,7 +123,7 @@ export const ScheduleEditor = ({ schedule, onChange }: Props) => {
                   onClick={() => addSlot(day.day)}
                   className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Plus className="h-3 w-3" />Ajouter un creneau
+                  <Plus className="h-3 w-3" />Ajouter un créneau
                 </button>
               </div>
             )}

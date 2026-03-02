@@ -11,12 +11,12 @@ import {
 } from "@/services/shopify-checkout";
 
 const features = [
-  "Page de commande personnalisee",
-  "Menu modifiable en temps reel",
+  "Page de commande personnalisée",
+  "Menu modifiable en temps réel",
   "0% de commission sur les commandes",
   "Dashboard et statistiques",
   "Base clients avec historique",
-  "Notifications en temps reel",
+  "Notifications en temps réel",
   "QR Code aux couleurs de votre resto",
   "Traduction auto en 12 langues",
   "Support reactif",
@@ -80,7 +80,7 @@ const ChoisirPlanPage = () => {
       if (error) throw error;
       setPromoResult(data as PromoResult);
       if (data?.valid) {
-        toast.success("Code promo applique !");
+        toast.success("Code promo appliqué !");
       } else {
         toast.error(data?.error || "Code invalide");
       }
@@ -93,7 +93,7 @@ const ChoisirPlanPage = () => {
 
   const handleCheckout = async () => {
     if (!restaurantId || !restaurantSlug || !email) {
-      toast.error("Impossible de continuer. Verifiez votre connexion.");
+      toast.error("Impossible de continuer. Vérifiez votre connexion.");
       return;
     }
 
@@ -156,7 +156,7 @@ const ChoisirPlanPage = () => {
           Choisissez votre formule
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Sans engagement, resiliable a tout moment.
+          Sans engagement, résiliable à tout moment.
         </p>
 
         {/* Trial reassurance banner */}
@@ -165,7 +165,7 @@ const ChoisirPlanPage = () => {
           <div>
             <p className="text-sm font-semibold text-green-800">14 jours d'essai gratuit</p>
             <p className="text-xs text-green-700 mt-0.5">
-              Testez sans engagement, vous ne serez debite qu'apres la periode d'essai.
+              Testez sans engagement, vous ne serez débité qu'après la période d'essai.
             </p>
           </div>
         </div>
@@ -217,7 +217,7 @@ const ChoisirPlanPage = () => {
               (soit 239,88 EUR/an)
             </p>
             <p className="text-xs text-primary font-medium mt-1">
-              Economisez 120 EUR/an
+              Économisez 120 EUR/an
             </p>
             {plan === "annual" && (
               <div className="absolute top-3 right-3 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
@@ -288,7 +288,7 @@ const ChoisirPlanPage = () => {
         {/* Recap */}
         <div className="bg-muted/50 rounded-xl p-5 mb-6">
           <h3 className="text-sm font-semibold text-foreground mb-3">
-            Recapitulatif
+            Récapitulatif
           </h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -297,7 +297,7 @@ const ChoisirPlanPage = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">
-                Premier prelevement le {firstPaymentStr}
+                Premier prélèvement le {firstPaymentStr}
               </span>
               <span className="font-semibold text-foreground">
                 {price.toFixed(2)} EUR
@@ -305,7 +305,7 @@ const ChoisirPlanPage = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">
-                Puis chaque {plan === "annual" ? "annee" : "mois"}
+                Puis chaque {plan === "annual" ? "année" : "mois"}
               </span>
               <span className="text-muted-foreground">
                 {price.toFixed(2)} EUR
@@ -337,7 +337,7 @@ const ChoisirPlanPage = () => {
 
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4">
           <Lock className="h-3.5 w-3.5" />
-          <span>Paiement securise via Shopify. Aucun debit avant 14 jours.</span>
+          <span>Paiement sécurisé. Aucun débit avant 14 jours.</span>
         </div>
       </main>
     </div>

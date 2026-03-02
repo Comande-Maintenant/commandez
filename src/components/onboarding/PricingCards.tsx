@@ -19,7 +19,7 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
         <div>
           <p className="text-sm font-semibold text-green-800">14 jours d'essai gratuit</p>
           <p className="text-xs text-green-700 mt-0.5">
-            Testez sans engagement, vous ne serez debite qu'apres la periode d'essai.
+            Testez sans engagement, vous ne serez débité qu'après la période d'essai.
           </p>
         </div>
       </div>
@@ -69,7 +69,7 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
 
               <p className="text-xs mt-2">
                 {isAnnual ? (
-                  <span className="text-primary font-medium">Economisez 120 EUR/an</span>
+                  <span className="text-primary font-medium">Économisez 120 EUR/an</span>
                 ) : (
                   <span className="text-muted-foreground">Sans engagement</span>
                 )}
@@ -83,7 +83,7 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
                   onSelect(plan.id as SubscriptionPlan);
                 }}
               >
-                {isSelected ? 'Selectionne' : 'Choisir cette formule'}
+                {isSelected ? 'Sélectionné' : 'Choisir cette formule'}
               </Button>
             </div>
           );
@@ -110,7 +110,7 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
       {/* Security footer */}
       <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground max-w-2xl mx-auto">
         <Lock className="h-3.5 w-3.5" />
-        <span>Paiement securise via Shopify. Aucun debit avant 14 jours.</span>
+        <span>Paiement sécurisé. Aucun débit avant 14 jours.</span>
       </div>
     </div>
   );

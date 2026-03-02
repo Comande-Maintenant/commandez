@@ -293,7 +293,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
     setExpanded((prev) => ({ ...prev, [newCategoryName.trim()]: true }));
     setNewCategoryName("");
     setShowAddCategory(false);
-    toast.success("Categorie ajoutee");
+    toast.success("Catégorie ajoutée");
   };
 
   const handleRenameCategory = async () => {
@@ -313,13 +313,13 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
     });
     setRenamingCategory(null);
     setRenameValue("");
-    toast.success("Categorie renommee");
+    toast.success("Catégorie renommée");
   };
 
   const handleDeleteCategory = async (cat: string) => {
     const catItems = items.filter((i) => i.category === cat);
-    if (catItems.length > 0 && !confirm(`Supprimer la categorie "${cat}" et ses ${catItems.length} items ?`)) return;
-    if (catItems.length === 0 && !confirm(`Supprimer la categorie "${cat}" ?`)) return;
+    if (catItems.length > 0 && !confirm(`Supprimer la catégorie "${cat}" et ses ${catItems.length} items ?`)) return;
+    if (catItems.length === 0 && !confirm(`Supprimer la catégorie "${cat}" ?`)) return;
     // Delete all items in this category
     for (const item of catItems) {
       await deleteMenuItem(item.id);
@@ -328,7 +328,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
     setCategories(updated);
     await updateRestaurantCategories(restaurant.id, updated);
     setItems((prev) => prev.filter((i) => i.category !== cat));
-    toast.success("Categorie supprimee");
+    toast.success("Catégorie supprimée");
   };
 
   // DnD for categories
@@ -451,7 +451,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
                             />
                           ))}
                           {catItems.length === 0 && (
-                            <p className="text-xs text-muted-foreground py-3 text-center">Aucun item dans cette categorie</p>
+                            <p className="text-xs text-muted-foreground py-3 text-center">Aucun item dans cette catégorie</p>
                           )}
                         </div>
                       </SortableContext>
@@ -466,17 +466,17 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
 
       {categories.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
-          <p className="text-sm">Aucune categorie. Ajoutez-en une pour commencer.</p>
+          <p className="text-sm">Aucune catégorie. Ajoutez-en une pour commencer.</p>
         </div>
       )}
 
       {/* Add category dialog */}
       <Dialog open={showAddCategory} onOpenChange={setShowAddCategory}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Ajouter une categorie</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Ajouter une catégorie</DialogTitle></DialogHeader>
           <div className="space-y-3 mt-2">
             <Input
-              placeholder="Nom de la categorie"
+              placeholder="Nom de la catégorie"
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAddCategory()}
@@ -503,7 +503,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
             <Input placeholder="Nom du produit" value={newItem.name} onChange={(e) => setNewItem((n) => ({ ...n, name: e.target.value }))} />
             <Input placeholder="Description (optionnel)" value={newItem.description} onChange={(e) => setNewItem((n) => ({ ...n, description: e.target.value }))} />
             <Input type="number" step="0.50" placeholder="Prix (€)" value={newItem.price} onChange={(e) => setNewItem((n) => ({ ...n, price: e.target.value }))} />
-            <p className="text-xs text-muted-foreground">La photo pourra etre ajoutee apres creation.</p>
+            <p className="text-xs text-muted-foreground">La photo pourra être ajoutée après création.</p>
             <Button onClick={handleAddItem} className="w-full rounded-xl">Ajouter au menu</Button>
           </div>
         </DialogContent>

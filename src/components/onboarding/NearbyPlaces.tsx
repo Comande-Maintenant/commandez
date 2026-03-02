@@ -15,7 +15,7 @@ export function NearbyPlaces({ onSelect }: NearbyPlacesProps) {
 
   const handleGeolocate = () => {
     if (!navigator.geolocation) {
-      setError('La geolocalisation n\'est pas supportee par votre navigateur.');
+      setError('La géolocalisation n\'est pas supportée par votre navigateur.');
       return;
     }
     setLoading(true);
@@ -27,7 +27,7 @@ export function NearbyPlaces({ onSelect }: NearbyPlacesProps) {
         try {
           const places = await searchNearby(pos.coords.latitude, pos.coords.longitude);
           if (places.length === 0) {
-            setError('Aucun restaurant trouve a proximite. Essayez la recherche par nom.');
+            setError('Aucun restaurant trouvé à proximité. Essayez la recherche par nom.');
           } else {
             setResults(places);
           }
@@ -37,7 +37,7 @@ export function NearbyPlaces({ onSelect }: NearbyPlacesProps) {
           setError(
             msg
               ? `Erreur : ${msg}`
-              : 'Erreur lors de la recherche. Reessayez ou utilisez la recherche par nom.'
+              : 'Erreur lors de la recherche. Réessayez ou utilisez la recherche par nom.'
           );
         } finally {
           setLoading(false);
@@ -48,17 +48,17 @@ export function NearbyPlaces({ onSelect }: NearbyPlacesProps) {
         switch (geoError.code) {
           case geoError.PERMISSION_DENIED:
             setError(
-              'Acces a la position refuse. Autorisez la geolocalisation dans les parametres de votre navigateur, puis reessayez.'
+              'Accès à la position refusé. Autorisez la géolocalisation dans les paramètres de votre navigateur, puis réessayez.'
             );
             break;
           case geoError.POSITION_UNAVAILABLE:
-            setError('Position indisponible. Verifiez que la localisation est activee sur votre appareil.');
+            setError('Position indisponible. Vérifiez que la localisation est activée sur votre appareil.');
             break;
           case geoError.TIMEOUT:
-            setError('La localisation a pris trop de temps. Reessayez ou utilisez la recherche par nom.');
+            setError('La localisation a pris trop de temps. Réessayez ou utilisez la recherche par nom.');
             break;
           default:
-            setError('Erreur de geolocalisation. Essayez la recherche par nom.');
+            setError('Erreur de géolocalisation. Essayez la recherche par nom.');
         }
       },
       {
@@ -90,7 +90,7 @@ export function NearbyPlaces({ onSelect }: NearbyPlacesProps) {
       {results.length > 0 && (
         <div className="space-y-2 max-h-80 overflow-y-auto">
           <p className="text-xs text-muted-foreground">
-            {results.length} restaurant{results.length > 1 ? 's' : ''} a proximite
+            {results.length} restaurant{results.length > 1 ? 's' : ''} à proximité
           </p>
           {results.map((place) => (
             <button

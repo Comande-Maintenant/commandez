@@ -91,7 +91,7 @@ const MotDePasseOubliePage = () => {
                       instants.
                     </p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Pensez a verifier vos spams.
+                      Pensez à vérifier vos spams.
                     </p>
                   </div>
 
@@ -114,7 +114,7 @@ const MotDePasseOubliePage = () => {
                     to="/connexion"
                     className="block text-center text-sm text-primary hover:underline"
                   >
-                    &larr; Retour a la connexion
+                    &larr; Retour à la connexion
                   </Link>
                 </>
               ) : (
@@ -163,7 +163,7 @@ const MotDePasseOubliePage = () => {
                     to="/connexion"
                     className="block text-center text-sm text-primary hover:underline"
                   >
-                    &larr; Retour a la connexion
+                    &larr; Retour à la connexion
                   </Link>
                 </>
               )}

@@ -131,9 +131,9 @@ const AdminPage = () => {
     try {
       await updateRestaurant(restaurant.id, { is_accepting_orders: next } as any);
       setRestaurant({ ...restaurant, is_accepting_orders: next });
-      toast.success(next ? "Commandes activees" : "Commandes desactivees");
+      toast.success(next ? "Commandes activées" : "Commandes désactivées");
     } catch {
-      toast.error("Erreur lors de la mise a jour");
+      toast.error("Erreur lors de la mise à jour");
     }
   };
 
@@ -295,13 +295,13 @@ const AdminPage = () => {
                       is_accepting_orders: true,
                       deactivation_visit_count: 0,
                     });
-                    toast.success("Restaurant reactive !");
+                    toast.success("Restaurant réactivé !");
                   } catch {
-                    toast.error("Erreur lors de la reactivation");
+                    toast.error("Erreur lors de la réactivation");
                   }
                 }}
               >
-                Reactiver
+                Réactiver
               </Button>
             </div>
           )}

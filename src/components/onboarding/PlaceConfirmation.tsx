@@ -139,7 +139,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Verifiez et completez les informations de votre restaurant.
+        Vérifiez et complétez les informations de votre restaurant.
       </p>
 
       <div>
@@ -175,7 +175,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
         <Label>Type de restaurant</Label>
         <Select value={cuisineType} onValueChange={(v) => setCuisineType(v as CuisineType)}>
           <SelectTrigger className="w-full mt-1">
-            <SelectValue placeholder="Selectionnez..." />
+            <SelectValue placeholder="Sélectionnez..." />
           </SelectTrigger>
           <SelectContent>
             {CUISINE_TYPE_OPTIONS.map((opt) => (
@@ -247,7 +247,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
             placeholder="Lundi - Vendredi : 11h - 22h"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Vous pourrez configurer vos horaires dans le dashboard apres inscription.
+            Vous pourrez configurer vos horaires dans le dashboard après inscription.
           </p>
         </div>
       )}

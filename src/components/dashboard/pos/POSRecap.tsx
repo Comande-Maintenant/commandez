@@ -27,7 +27,7 @@ interface Props {
 const orderTypeConfig: Record<POSOrderType, { label: string; icon: typeof UtensilsCrossed }> = {
   sur_place: { label: "Sur place", icon: UtensilsCrossed },
   a_emporter: { label: "A emporter", icon: ShoppingBag },
-  telephone: { label: "Telephone", icon: Phone },
+  telephone: { label: "Téléphone", icon: Phone },
 };
 
 export const POSRecap = ({

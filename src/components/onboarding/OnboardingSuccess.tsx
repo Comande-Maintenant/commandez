@@ -88,7 +88,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
       if (error) throw error;
       setPromoResult(data as PromoResult);
       if (data?.valid) {
-        toast.success('Code promo applique !');
+        toast.success('Code promo appliqué !');
       } else {
         toast.error(data?.error || 'Code invalide');
       }
@@ -130,7 +130,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
             {restaurantName} est en ligne !
           </h2>
           <p className="text-muted-foreground mt-2">
-            Votre essai gratuit de 14 jours a commence. Partagez votre page avec vos clients.
+            Votre essai gratuit de 14 jours a commencé. Partagez votre page avec vos clients.
           </p>
         </div>
 
@@ -150,7 +150,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
 
         <Link to={`/admin/${slug}`}>
           <Button className="mt-2">
-            Acceder a mon tableau de bord
+            Accéder à mon tableau de bord
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </Link>
@@ -168,16 +168,16 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
 
         <div>
           <h2 className="text-xl font-bold text-foreground">
-            Finalisez votre inscription sur Shopify
+            Finalisez votre inscription
           </h2>
           <p className="text-muted-foreground mt-2">
-            Completez le paiement dans l'onglet qui vient de s'ouvrir.<br />
-            Cette page se mettra a jour automatiquement.
+            Complétez le paiement dans l'onglet qui vient de s'ouvrir.<br />
+            Cette page se mettra à jour automatiquement.
           </p>
         </div>
 
         <div className="bg-muted/50 rounded-xl p-4 max-w-md mx-auto text-sm text-muted-foreground space-y-2">
-          <p>L'onglet Shopify ne s'est pas ouvert ?</p>
+          <p>L'onglet ne s'est pas ouvert ?</p>
           <Button variant="outline" size="sm" onClick={handleActivate}>
             <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
             Rouvrir la page de paiement
@@ -185,7 +185,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Aucun debit aujourd'hui. Votre essai gratuit de 14 jours commence des la validation.
+          Aucun débit aujourd'hui. Votre essai gratuit de 14 jours commence dès la validation.
         </p>
       </div>
     );
@@ -202,7 +202,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
       {/* Title */}
       <div>
         <h2 className="text-2xl font-bold text-foreground">
-          {restaurantName} est presque pret !
+          {restaurantName} est presque prêt !
         </h2>
         <p className="text-muted-foreground mt-2">
           Activez votre essai gratuit de 14 jours pour mettre votre page en ligne.
@@ -231,7 +231,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
         </div>
         <div className="flex items-center gap-2">
           <RefreshCw className="h-4 w-4 text-green-600" />
-          <span>Annulez a tout moment</span>
+          <span>Annulez à tout moment</span>
         </div>
       </div>
 
@@ -284,7 +284,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
 
       {/* Small print */}
       <p className="text-xs text-muted-foreground max-w-md mx-auto">
-        Le paiement s'ouvre dans un nouvel onglet via Shopify. Vous ne serez debite que dans 14 jours.
+        Le paiement s'ouvre dans un nouvel onglet. Vous ne serez débité que dans 14 jours.
       </p>
     </div>
   );

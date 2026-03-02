@@ -134,7 +134,7 @@ export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, o
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
         <Clock className="h-4 w-4" style={{ color: accent }} />
-        Quand souhaitez-vous recuperer votre commande ?
+        Quand souhaitez-vous récupérer votre commande ?
       </h3>
 
       {/* ASAP / Scheduled toggle */}
@@ -176,9 +176,9 @@ export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, o
             className="overflow-hidden"
           >
             {loading ? (
-              <div className="py-6 text-center text-sm text-gray-400">Chargement des creneaux...</div>
+              <div className="py-6 text-center text-sm text-gray-400">Chargement des créneaux...</div>
             ) : slotGroups.length === 0 ? (
-              <div className="py-6 text-center text-sm text-gray-400">Aucun creneau disponible pour le moment</div>
+              <div className="py-6 text-center text-sm text-gray-400">Aucun créneau disponible pour le moment</div>
             ) : (
               <div className="space-y-4 pt-1">
                 {slotGroups.map((group) => (

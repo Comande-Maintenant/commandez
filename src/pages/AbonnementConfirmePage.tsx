@@ -114,7 +114,7 @@ const AbonnementConfirmePage = () => {
               variant="outline"
               className="w-full"
             >
-              Verifier a nouveau
+              Vérifier à nouveau
             </Button>
           </>
         )}

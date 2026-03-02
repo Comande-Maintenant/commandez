@@ -132,7 +132,7 @@ const OrderPage = () => {
         <AlertTriangle className="h-16 w-16 text-destructive/60" />
         <h2 className="text-xl font-bold text-foreground">Commande impossible</h2>
         <p className="text-muted-foreground text-center max-w-sm">
-          Votre acces aux commandes a ete suspendu.
+          Votre accès aux commandes a été suspendu.
           {restaurantPhone && (
             <> Contactez le restaurant au {restaurantPhone} pour plus d'informations.</>
           )}
@@ -212,11 +212,11 @@ const OrderPage = () => {
             <div className="flex items-start gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
               <div className="space-y-1.5 text-sm text-amber-900">
-                <p className="font-medium">En validant, vous vous engagez a venir recuperer et regler votre commande.</p>
-                <p>Les commandes non honorees peuvent entrainer un blocage de votre acces.</p>
+                <p className="font-medium">En validant, vous vous engagez à venir récupérer et régler votre commande.</p>
+                <p>Les commandes non honorées peuvent entraîner un blocage de votre accès.</p>
                 {restaurantPhone && (
                   <p className="flex items-center gap-1.5 pt-1">
-                    Un imprevu ? Contactez le restaurant :
+                    Un imprévu ? Contactez le restaurant :
                     <ProtectedPhone phone={restaurantPhone} className="text-amber-700 hover:text-amber-900" variant="button" iconClassName="h-3.5 w-3.5" />
                   </p>
                 )}

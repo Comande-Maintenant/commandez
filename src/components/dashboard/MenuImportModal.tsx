@@ -138,7 +138,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
       const parts: string[] = [];
       if (added > 0) parts.push(`${added} article${added > 1 ? "s" : ""} ajoute${added > 1 ? "s" : ""}`);
       if (skipped > 0) parts.push(`${skipped} doublon${skipped > 1 ? "s" : ""} ignore${skipped > 1 ? "s" : ""}`);
-      if (newCategoryNames.length > 0) parts.push(`${newCategoryNames.length} nouvelle${newCategoryNames.length > 1 ? "s" : ""} categorie${newCategoryNames.length > 1 ? "s" : ""}`);
+      if (newCategoryNames.length > 0) parts.push(`${newCategoryNames.length} nouvelle${newCategoryNames.length > 1 ? "s" : ""} catégorie${newCategoryNames.length > 1 ? "s" : ""}`);
 
       toast.success(parts.length > 0 ? parts.join(", ") : "Import termine");
       onImportComplete();
@@ -169,7 +169,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
             <div className="flex items-start gap-2 p-3 rounded-xl bg-blue-50 border border-blue-200 text-sm">
               <Info className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
               <p className="text-blue-800">
-                Vous pouvez photographier votre liste de sauces, vos boissons, un nouveau menu, ou toute information manquante. L'analyse est automatique et les elements seront ajoutes a votre carte existante.
+                Vous pouvez photographier votre liste de sauces, vos boissons, un nouveau menu, ou toute information manquante. L'analyse est automatique et les éléments seront ajoutés à votre carte existante.
               </p>
             </div>
 
@@ -238,7 +238,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
         {step === "saving" && (
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-foreground" />
-            <p className="text-sm text-muted-foreground">Ajout des elements a votre carte...</p>
+            <p className="text-sm text-muted-foreground">Ajout des éléments à votre carte...</p>
           </div>
         )}
       </DialogContent>

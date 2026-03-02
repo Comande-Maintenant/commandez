@@ -38,7 +38,7 @@ function ColorSwatch({
       {recommended && (
         <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-full">
           <Sparkles className="h-3 w-3" />
-          Recommande
+          Recommandé
         </span>
       )}
     </button>
@@ -100,7 +100,7 @@ export function QuickColorPicker({
           {showTooltip && (
             <div className="absolute left-0 top-full mt-1 z-10 bg-card border border-border rounded-lg p-3 shadow-lg max-w-xs">
               <p className="text-xs text-muted-foreground">
-                Cette combinaison est extraite de votre carte et offrira une meilleure coherence visuelle.
+                Cette combinaison est extraite de votre carte et offrira une meilleure cohérence visuelle.
               </p>
             </div>
           )}
@@ -127,7 +127,7 @@ export function QuickColorPicker({
               onChange={(e) => onPrimaryChange(e.target.value)}
               className="w-6 h-6 rounded-full border-0 cursor-pointer"
             />
-            <span className="text-sm text-muted-foreground">Personnalise</span>
+            <span className="text-sm text-muted-foreground">Personnalisé</span>
           </label>
         </div>
       </div>
@@ -152,7 +152,7 @@ export function QuickColorPicker({
               onChange={(e) => onBgChange(e.target.value)}
               className="w-6 h-6 rounded-full border-0 cursor-pointer"
             />
-            <span className="text-sm text-muted-foreground">Personnalise</span>
+            <span className="text-sm text-muted-foreground">Personnalisé</span>
           </label>
         </div>
       </div>

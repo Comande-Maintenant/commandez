@@ -110,7 +110,7 @@ async function extractVideoFrame(file: File): Promise<File> {
           (blob) => {
             cleanup();
             if (!blob) {
-              reject(new Error('Extraction de frame echouee'));
+              reject(new Error('Extraction de frame échouée'));
               return;
             }
             const ext = file.name.replace(/\.[^.]+$/, '.jpg');
@@ -150,7 +150,7 @@ async function convertSvg(file: File): Promise<File> {
         canvas.toBlob(
           (blob) => {
             if (!blob) {
-              reject(new Error('Conversion SVG echouee'));
+              reject(new Error('Conversion SVG échouée'));
               return;
             }
             resolve(
@@ -251,7 +251,7 @@ export async function convertFilesForAnalysis(
     if (result.status === 'fulfilled') {
       converted.push(result.value);
     } else {
-      errors.push(`${files[i].name}: ${result.reason?.message || 'Conversion echouee'}`);
+      errors.push(`${files[i].name}: ${result.reason?.message || 'Conversion échouée'}`);
     }
   }
 

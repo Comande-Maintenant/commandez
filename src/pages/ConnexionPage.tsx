@@ -91,11 +91,11 @@ const ConnexionPage = () => {
       if (msg.includes('Invalid login credentials')) {
         setError('Email ou mot de passe incorrect.');
       } else if (msg.includes('Email not confirmed')) {
-        setError("Votre email n'est pas confirme. Verifiez votre boite mail.");
+        setError("Votre email n'est pas confirmé. Vérifiez votre boîte mail.");
       } else if (msg.includes('too many requests') || msg.includes('rate limit')) {
-        setError('Trop de tentatives. Reessayez dans quelques minutes.');
+        setError('Trop de tentatives. Réessayez dans quelques minutes.');
       } else {
-        setError('Une erreur est survenue. Reessayez.');
+        setError('Une erreur est survenue. Réessayez.');
       }
       setShakeError(true);
       setTimeout(() => setShakeError(false), 500);
@@ -169,7 +169,7 @@ const ConnexionPage = () => {
           {/* Bottom: testimonial */}
           <div className="relative z-10 border-t border-white/20 pt-6">
             <p className="text-sm italic text-white/80 leading-relaxed">
-              "En 2 semaines j'ai recupere ce que je perdais en commissions sur un mois."
+              "En 2 semaines j'ai récupéré ce que je perdais en commissions sur un mois."
             </p>
             <p className="text-sm font-medium mt-3 text-white/60">
               Mehdi, Le Sultan Kebab
@@ -209,7 +209,7 @@ const ConnexionPage = () => {
                     <div>
                       <h2 className="text-2xl font-bold text-foreground">Bon retour</h2>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Connectez-vous a votre espace.
+                        Connectez-vous à votre espace.
                       </p>
                     </div>
                   )}
@@ -304,7 +304,7 @@ const ConnexionPage = () => {
                       {loading ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
                       ) : isFirstLogin ? (
-                        'Acceder a mon espace \u2192'
+                        'Accéder à mon espace \u2192'
                       ) : (
                         'Se connecter \u2192'
                       )}

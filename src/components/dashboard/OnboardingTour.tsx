@@ -14,37 +14,37 @@ interface Step {
 const steps: Step[] = [
   {
     title: "Cuisine",
-    description: "Ici, vous recevez et gerez toutes les commandes. Acceptez, preparez, et marquez comme prete en un clic.",
+    description: "Ici, vous recevez et gérez toutes les commandes. Acceptez, préparez, et marquez comme prête en un clic.",
     selector: '[data-tour="cuisine"]',
     position: "bottom",
   },
   {
     title: "Caisse",
-    description: "Prenez des commandes manuellement pour les clients sur place ou par telephone.",
+    description: "Prenez des commandes manuellement pour les clients sur place ou par téléphone.",
     selector: '[data-tour="caisse"]',
     position: "bottom",
   },
   {
     title: "En direct",
-    description: "Voyez qui visite votre page en temps reel, leur panier et les alertes d'activite.",
+    description: "Voyez qui visite votre page en temps réel, leur panier et les alertes d'activité.",
     selector: '[data-tour="en-direct"]',
     position: "bottom",
   },
   {
-    title: "Gerer",
-    description: "Accedez a votre carte, page, QR codes, clients, parametres et statistiques.",
+    title: "Gérer",
+    description: "Accédez à votre carte, page, QR codes, clients, paramètres et statistiques.",
     selector: '[data-tour="gerer"]',
     position: "top",
   },
   {
-    title: "Disponibilite",
-    description: "Ce toggle active ou desactive les commandes instantanement. Pratique pour les pauses ou fermetures.",
+    title: "Disponibilité",
+    description: "Ce toggle active ou désactive les commandes instantanément. Pratique pour les pauses ou fermetures.",
     selector: '[data-tour="disponible"]',
     position: "bottom",
   },
   {
     title: "Son",
-    description: "Activez le son pour etre alerte a chaque nouvelle commande. Indispensable en service !",
+    description: "Activez le son pour être alerté à chaque nouvelle commande. Indispensable en service !",
     selector: '[data-tour="son"]',
     position: "bottom",
   },
@@ -172,7 +172,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
               className="rounded-xl gap-1"
             >
               <ChevronLeft className="h-4 w-4" />
-              Precedent
+              Précédent
             </Button>
             <Button
               size="sm"

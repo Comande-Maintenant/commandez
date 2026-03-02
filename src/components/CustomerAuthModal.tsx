@@ -27,7 +27,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
     setLoading(true);
     try {
       await signIn(email, password);
-      toast.success("Connexion reussie !");
+      toast.success("Connexion réussie !");
       onClose();
     } catch (e: any) {
       toast.error(e.message || "Erreur de connexion");
@@ -39,7 +39,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
   const handleSignup = async () => {
     if (!email || !password) return;
     if (password.length < 6) {
-      toast.error("Le mot de passe doit faire au moins 6 caracteres");
+      toast.error("Le mot de passe doit faire au moins 6 caractères");
       return;
     }
     setLoading(true);
@@ -58,7 +58,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
       if (!name) name = email.split("@")[0];
 
       await signUp(email, password, name, phone);
-      toast.success("Profil cree avec succes !");
+      toast.success("Profil créé avec succès !");
       onClose();
     } catch (e: any) {
       toast.error(e.message || "Erreur lors de l'inscription");
@@ -155,7 +155,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
               </Button>
               <button onClick={() => switchView("login")} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mx-auto">
                 <ArrowLeft className="h-3 w-3" />
-                Deja un compte ? Se connecter
+                Déjà un compte ? Se connecter
               </button>
             </>
           )}
@@ -167,7 +167,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
               </Button>
               <button onClick={() => switchView("login")} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mx-auto">
                 <ArrowLeft className="h-3 w-3" />
-                Retour a la connexion
+                Retour à la connexion
               </button>
             </>
           )}
