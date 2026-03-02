@@ -20,10 +20,10 @@ const AbonnementPage = () => {
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-foreground hover:opacity-80">
+          <a href="https://commandeici.com" className="flex items-center gap-2 text-foreground hover:opacity-80">
             <ArrowLeft className="h-4 w-4" />
             <span className="font-semibold text-lg">commandeici</span>
-          </Link>
+          </a>
         </div>
       </header>
 

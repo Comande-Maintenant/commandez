@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -341,9 +341,9 @@ const RestaurantPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Restaurant introuvable</h1>
-          <Link to="/" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">
+          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">
             {t("nav.back_home")}
-          </Link>
+          </a>
         </div>
       </div>
     );
@@ -359,9 +359,9 @@ const RestaurantPage = () => {
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
           <p className="text-muted-foreground text-sm">Ce restaurant n'est plus disponible pour le moment.</p>
-          <Link to="/" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
+          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
             Retour
-          </Link>
+          </a>
         </div>
       </div>
     );
@@ -381,9 +381,9 @@ const RestaurantPage = () => {
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
           <p className="text-muted-foreground text-sm">Ce restaurant est temporairement indisponible.</p>
-          <Link to="/" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
+          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
             Retour
-          </Link>
+          </a>
         </div>
       </div>
     );
@@ -404,9 +404,9 @@ const RestaurantPage = () => {
               <> Contactez le restaurant au {restaurant.restaurant_phone} pour plus d'informations.</>
             )}
           </p>
-          <Link to="/" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
+          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
             Retour
-          </Link>
+          </a>
         </div>
       </div>
     );
@@ -452,9 +452,13 @@ const RestaurantPage = () => {
           }}
         />
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
-          <Link to="/" className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors" aria-label="Retour">
+          <button
+            onClick={() => window.history.length > 1 ? navigate(-1) : window.location.href = "https://commandeici.com"}
+            className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
+            aria-label="Retour"
+          >
             <ArrowLeft className="h-5 w-5 text-white" />
-          </Link>
+          </button>
           <div className="flex items-center gap-2">
             <CustomerAvatar />
             <LanguageSelector />
@@ -844,9 +848,9 @@ const RestaurantPage = () => {
 
         {/* Footer */}
         <div className="mt-8 mb-4 text-center">
-          <Link to="/" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+          <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
             {t("footer.powered_by")}
-          </Link>
+          </a>
         </div>
       </div>
 

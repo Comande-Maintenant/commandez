@@ -151,7 +151,7 @@ const AdminPage = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">Connexion requise</h1>
           <p className="text-muted-foreground mb-4">Connectez-vous pour acceder au tableau de bord.</p>
-          <Link to="/inscription" className="text-sm text-foreground underline">Se connecter</Link>
+          <Link to="/connexion" className="text-sm text-foreground underline">Se connecter</Link>
         </div>
       </div>
     );
@@ -162,7 +162,7 @@ const AdminPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Restaurant introuvable</h1>
-          <Link to="/" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">Retour</Link>
+          <Link to="/connexion" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">Retour</Link>
         </div>
       </div>
     );
@@ -175,7 +175,7 @@ const AdminPage = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">Acces refuse</h1>
           <p className="text-muted-foreground mb-4">Vous n'etes pas le proprietaire de ce restaurant.</p>
-          <Link to="/" className="text-sm text-foreground underline">Retour</Link>
+          <Link to="/connexion" className="text-sm text-foreground underline">Retour</Link>
         </div>
       </div>
     );

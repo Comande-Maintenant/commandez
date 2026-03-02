@@ -137,7 +137,7 @@ const OrderPage = () => {
             <> Contactez le restaurant au {restaurantPhone} pour plus d'informations.</>
           )}
         </p>
-        <Link to="/" className="text-sm text-foreground underline">Retour</Link>
+        <a href="https://commandeici.com" className="text-sm text-foreground underline">Retour</a>
       </div>
     );
   }
@@ -147,7 +147,11 @@ const OrderPage = () => {
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4 p-4">
         <ShoppingBag className="h-16 w-16 text-muted-foreground/20" />
         <p className="text-muted-foreground">{t("cart.empty")}</p>
-        <Link to="/" className="text-sm text-foreground underline">{t("order.back_home")}</Link>
+        {restaurantSlug ? (
+          <Link to={`/${restaurantSlug}`} className="text-sm text-foreground underline">{t("order.back_home")}</Link>
+        ) : (
+          <a href="https://commandeici.com" className="text-sm text-foreground underline">{t("order.back_home")}</a>
+        )}
       </div>
     );
   }
