@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle, ShieldBan } from "lucide-react";
 import { fetchOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats } from "@/lib/api";
+import { formatDisplayNumber } from "@/lib/orderNumber";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -251,7 +252,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
             <motion.div key={order.id} layout initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="bg-card rounded-2xl border border-border p-4 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <span className="text-lg font-bold text-foreground">#{order.order_number}</span>
+                  <span className="text-lg font-bold text-foreground">{formatDisplayNumber(order)}</span>
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.color}`}>{cfg.label}</span>
                   {(order as any).source === "pos" && (
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Caisse</span>

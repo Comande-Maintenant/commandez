@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { updateOrderItems } from "@/lib/api";
 import { calculateCustomizationPrice, formatPOSOrderSummary } from "@/lib/posHelpers";
+import { formatDisplayNumber } from "@/lib/orderNumber";
 import type { DbMenuItem, DbOrder, CustomizationConfig } from "@/types/database";
 import type { POSCustomization, POSDrinkItem, POSDessertItem } from "@/types/pos";
 import { usePOSCustomization } from "./usePOSCustomization";
@@ -137,7 +138,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Ajouter a #{order.order_number}</DialogTitle>
+          <DialogTitle>Ajouter a {formatDisplayNumber(order)}</DialogTitle>
         </DialogHeader>
 
         {/* Mode tabs */}

@@ -4,11 +4,11 @@ import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  orderNumber: number;
+  displayNumber: string;
   onReset: () => void;
 }
 
-export const POSSuccess = ({ orderNumber, onReset }: Props) => {
+export const POSSuccess = ({ displayNumber, onReset }: Props) => {
   useEffect(() => {
     const timer = setTimeout(onReset, 5000);
     return () => clearTimeout(timer);
@@ -35,7 +35,7 @@ export const POSSuccess = ({ orderNumber, onReset }: Props) => {
         transition={{ delay: 0.3 }}
         className="text-4xl font-bold text-foreground mb-2"
       >
-        #{orderNumber}
+        {displayNumber}
       </motion.p>
 
       <motion.p

@@ -109,12 +109,14 @@ export type Database = {
           customer_address: string | null
           customer_name: string
           customer_phone: string
+          daily_number: number | null
           delivery_fee: number | null
           id: string
           items: Json
           notes: string | null
           order_number: number
           order_type: string
+          payment_method: string | null
           restaurant_id: string
           source: string | null
           covers: number | null
@@ -128,12 +130,14 @@ export type Database = {
           customer_address?: string | null
           customer_name: string
           customer_phone: string
+          daily_number?: number | null
           delivery_fee?: number | null
           id?: string
           items?: Json
           notes?: string | null
           order_number?: number
           order_type: string
+          payment_method?: string | null
           restaurant_id: string
           source?: string | null
           covers?: number | null
@@ -147,12 +151,14 @@ export type Database = {
           customer_address?: string | null
           customer_name?: string
           customer_phone?: string
+          daily_number?: number | null
           delivery_fee?: number | null
           id?: string
           items?: Json
           notes?: string | null
           order_number?: number
           order_type?: string
+          payment_method?: string | null
           restaurant_id?: string
           source?: string | null
           covers?: number | null

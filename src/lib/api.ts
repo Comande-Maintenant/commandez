@@ -75,6 +75,7 @@ export async function createOrder(order: {
   notes?: string;
   client_ip?: string | null;
   pickup_time?: string | null;
+  payment_method?: string;
 }): Promise<DbOrder> {
   const { data, error } = await supabase
     .from("orders")

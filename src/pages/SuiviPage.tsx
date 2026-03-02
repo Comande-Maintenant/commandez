@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
+import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -197,7 +198,7 @@ const SuiviPage = () => {
         </button>
         <div>
           <h1 className="text-lg font-bold text-gray-900">{order.restaurant.name}</h1>
-          <p className="text-sm text-gray-500">Commande #{order.order_number}</p>
+          <p className="text-sm text-gray-500">Commande {formatDisplayNumber(order)}</p>
         </div>
       </div>
 

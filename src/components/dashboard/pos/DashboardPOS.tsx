@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import { ChevronDown, Check } from "lucide-react";
 import { fetchMenuItems, createOrder, fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
 import { buildOrderItems, calculateGrandTotal } from "@/lib/posHelpers";
+import { formatDisplayNumber } from "@/lib/orderNumber";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import type {
   POSOrderType as POSOrderTypeValue,
@@ -44,6 +45,8 @@ const initialState = {
   customerName: "",
   tableNumber: "",
   orderNumber: 0,
+  paymentMethod: "cash",
+  displayNumber: "",
   submitting: false,
 };
 
@@ -164,12 +167,15 @@ export const DashboardPOS = ({ restaurant }: Props) => {
         subtotal: total,
         total,
         notes: state.notes || undefined,
+        payment_method: state.paymentMethod,
       });
 
+      const dn = formatDisplayNumber(order);
       setState((s) => ({
         ...s,
         screen: "success",
         orderNumber: order.order_number,
+        displayNumber: dn,
         submitting: false,
       }));
     } catch (e) {
@@ -212,7 +218,7 @@ export const DashboardPOS = ({ restaurant }: Props) => {
               {readyOrders.map((order) => (
                 <div key={order.id} className="flex items-center justify-between bg-secondary/50 rounded-xl px-3 py-2">
                   <div className="min-w-0">
-                    <span className="text-sm font-bold text-foreground">#{order.order_number}</span>
+                    <span className="text-sm font-bold text-foreground">{formatDisplayNumber(order)}</span>
                     <span className="text-sm text-muted-foreground ml-2">{order.customer_name}</span>
                     <span className="text-sm font-medium text-foreground ml-2">{Number(order.total).toFixed(2)} EUR</span>
                   </div>
@@ -294,9 +300,12 @@ export const DashboardPOS = ({ restaurant }: Props) => {
             customerName={state.customerName}
             tableNumber={state.tableNumber}
             notes={state.notes}
+            paymentMethod={state.paymentMethod}
+            availablePaymentMethods={restaurant.payment_methods || ["cash", "card", "ticket_restaurant"]}
             onSetCustomerName={(name) => setState((s) => ({ ...s, customerName: name }))}
             onSetTableNumber={(num) => setState((s) => ({ ...s, tableNumber: num }))}
             onSetNotes={(notes) => setState((s) => ({ ...s, notes }))}
+            onSetPaymentMethod={(method) => setState((s) => ({ ...s, paymentMethod: method }))}
             onEditPerson={handleEditPerson}
             onSubmit={handleSubmit}
             onBack={() => setScreen("desserts")}
@@ -306,7 +315,7 @@ export const DashboardPOS = ({ restaurant }: Props) => {
         {state.screen === "success" && (
           <POSSuccess
             key="success"
-            orderNumber={state.orderNumber}
+            displayNumber={state.displayNumber}
             onReset={reset}
           />
         )}

@@ -69,5 +69,6 @@ export interface POSState {
   customerName: string;
   tableNumber: string;
   orderNumber: number;
+  paymentMethod: string;
   submitting: boolean;
 }

@@ -1,10 +1,16 @@
-import { ArrowLeft, UtensilsCrossed, ShoppingBag, Phone, Pencil } from "lucide-react";
+import { ArrowLeft, UtensilsCrossed, ShoppingBag, Phone, Pencil, CreditCard, Banknote, Ticket } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { POSOrderType } from "@/types/pos";
 import type { POSPersonOrder, POSDrinkItem, POSDessertItem } from "@/types/pos";
 import { formatPOSOrderSummary, calculateGrandTotal } from "@/lib/posHelpers";
+
+const paymentOptions = [
+  { id: "cash", label: "Especes", icon: Banknote },
+  { id: "card", label: "Carte", icon: CreditCard },
+  { id: "ticket_restaurant", label: "Ticket resto", icon: Ticket },
+] as const;
 
 interface Props {
   orderType: POSOrderType;
@@ -15,9 +21,12 @@ interface Props {
   customerName: string;
   tableNumber: string;
   notes: string;
+  paymentMethod: string;
+  availablePaymentMethods: string[];
   onSetCustomerName: (name: string) => void;
   onSetTableNumber: (num: string) => void;
   onSetNotes: (notes: string) => void;
+  onSetPaymentMethod: (method: string) => void;
   onEditPerson: (index: number) => void;
   onSubmit: () => void;
   onBack: () => void;
@@ -39,9 +48,12 @@ export const POSRecap = ({
   customerName,
   tableNumber,
   notes,
+  paymentMethod,
+  availablePaymentMethods,
   onSetCustomerName,
   onSetTableNumber,
   onSetNotes,
+  onSetPaymentMethod,
   onEditPerson,
   onSubmit,
   onBack,
@@ -186,6 +198,33 @@ export const POSRecap = ({
             rows={2}
             className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-foreground/20"
           />
+        </div>
+
+        {/* Payment method */}
+        <div className="bg-card border border-border rounded-2xl p-4">
+          <label className="text-sm text-muted-foreground mb-2 block">Mode de paiement</label>
+          <div className="flex gap-2">
+            {paymentOptions
+              .filter((opt) => availablePaymentMethods.includes(opt.id))
+              .map((opt) => {
+                const Icon = opt.icon;
+                const isActive = paymentMethod === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    onClick={() => onSetPaymentMethod(opt.id)}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all border-2 ${
+                      isActive
+                        ? "border-foreground bg-foreground text-primary-foreground"
+                        : "border-border bg-background text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {opt.label}
+                  </button>
+                );
+              })}
+          </div>
         </div>
       </div>
 

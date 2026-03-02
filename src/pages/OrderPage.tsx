@@ -98,6 +98,7 @@ const OrderPage = () => {
         total,
         client_ip: clientIpRef.current,
         pickup_time: pickupTime,
+        payment_method: 'card',
       };
       // Attach customer_user_id if logged in
       if (isLoggedIn && user) {

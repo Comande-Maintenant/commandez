@@ -116,6 +116,8 @@ export interface DbOrder {
   id: string;
   restaurant_id: string;
   order_number: number;
+  daily_number: number | null;
+  payment_method: string | null;
   customer_name: string;
   customer_phone: string;
   customer_email: string;
