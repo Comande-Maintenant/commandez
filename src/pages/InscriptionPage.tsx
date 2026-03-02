@@ -101,6 +101,7 @@ const InscriptionPage = () => {
   // Step 6: Success
   const [createdSlug, setCreatedSlug] = useState('');
   const [createdName, setCreatedName] = useState('');
+  const [createdRestaurantId, setCreatedRestaurantId] = useState('');
 
   // Final creation loading
   const [creating, setCreating] = useState(false);
@@ -262,6 +263,7 @@ const InscriptionPage = () => {
 
       setCreatedSlug(slug);
       setCreatedName(restaurantData?.name ?? '');
+      setCreatedRestaurantId(restaurant.id);
       setStep(6);
     } catch (err: any) {
       toast.error(err.message || 'Erreur lors de la creation. Veuillez reessayer.');
@@ -533,7 +535,13 @@ const InscriptionPage = () => {
           {/* STEP 6: Success */}
           {step === 6 && (
             <motion.div key="step6" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
-              <OnboardingSuccess restaurantName={createdName} slug={createdSlug} />
+              <OnboardingSuccess
+                restaurantName={createdName}
+                slug={createdSlug}
+                email={email}
+                restaurantId={createdRestaurantId}
+                plan={selectedPlan}
+              />
             </motion.div>
           )}
         </AnimatePresence>

@@ -20,8 +20,9 @@ export function getPricingPlans(): PricingPlan[] {
     {
       id: 'annual',
       name: 'Annuel',
-      price: 239.88,
-      badge: 'Economisez 33%',
+      price: 19.99,
+      totalPrice: 239.88,
+      badge: 'Populaire',
       features: [
         'Page en ligne personnalisee',
         'QR code pour vos tables',

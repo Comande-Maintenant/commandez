@@ -367,6 +367,24 @@ const RestaurantPage = () => {
     );
   }
 
+  // Subscription pending_payment - page not yet activated
+  if (restaurant.subscription_status === "pending_payment") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center max-w-sm mx-auto px-4">
+          {restaurant.image && (
+            <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
+          )}
+          <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
+          <p className="text-muted-foreground text-sm">Cette page est en cours d'activation.</p>
+          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
+            Retour
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   // Subscription expired/cancelled/past_due - public page unavailable
   if (
     restaurant.subscription_status === "expired" ||

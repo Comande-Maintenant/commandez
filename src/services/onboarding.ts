@@ -61,6 +61,7 @@ export async function createRestaurantFromOnboarding(data: {
       primary_color: data.primary_color ?? '#000000',
       bg_color: data.bg_color ?? '#ffffff',
       subscription_plan: data.subscription_plan ?? 'none',
+      subscription_status: 'pending_payment',
       payment_methods: data.payment_methods ?? [],
       owner_id: data.owner_id ?? null,
     } as any)

@@ -1,10 +1,20 @@
-import { useState, useRef, useCallback } from 'react';
-import { Upload, Camera, Loader2, FileText, AlertCircle } from 'lucide-react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { Upload, Camera, Loader2, FileText, AlertCircle, AlertTriangle, Lightbulb } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { analyzeMenuImages } from '@/services/menu-analysis';
 import { extractColors } from '@/services/color-extraction';
 import { convertFilesForAnalysis } from '@/utils/file-converter';
 import type { AnalyzedMenu, ExtractedColors } from '@/types/onboarding';
+
+const LOADING_MESSAGES = [
+  "Nous analysons votre carte pour vous faire gagner du temps...",
+  "Notre IA structure vos plats, categories et prix...",
+  "Vous n'aurez plus qu'a verifier et ajuster si necessaire.",
+  "Preparation de votre menu numerique en cours...",
+  "Encore un instant, nous mettons en forme vos categories...",
+  "Bientot pret ! Votre carte digitale prend forme...",
+];
 
 interface MenuUploadProps {
   onAnalysisComplete: (menu: AnalyzedMenu, colors?: ExtractedColors) => void;
@@ -17,8 +27,21 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
   const [converting, setConverting] = useState(false);
   const [error, setError] = useState('');
   const [conversionErrors, setConversionErrors] = useState<string[]>([]);
+  const [messageIndex, setMessageIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
+
+  // Rotate loading messages every 4s
+  useEffect(() => {
+    if (!loading) {
+      setMessageIndex(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const handleFiles = useCallback(async (newFiles: FileList | null) => {
     if (!newFiles || newFiles.length === 0) return;
@@ -80,7 +103,75 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative">
+      {/* Loading overlay */}
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl"
+            style={{ backgroundColor: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(4px)' }}
+          >
+            <div className="flex flex-col items-center gap-5 px-6 max-w-sm text-center">
+              {/* Spinner */}
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+
+              {/* Fake progress bar */}
+              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary rounded-full"
+                  style={{
+                    animation: 'fakeProgress 15s ease-out forwards',
+                  }}
+                />
+              </div>
+
+              {/* Rotating message */}
+              <div className="h-12 flex items-center">
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={messageIndex}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-sm text-foreground font-medium"
+                  >
+                    {LOADING_MESSAGES[messageIndex]}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+
+              {/* Fixed warning */}
+              <div className="flex items-start gap-2 text-xs text-amber-700 bg-amber-50 rounded-lg p-3 w-full">
+                <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <span>Ne quittez pas cette page, l'analyse est en cours.</span>
+              </div>
+
+              {/* Fixed tip */}
+              <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                <Lightbulb className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <span>Pensez a verifier les prix et les descriptions une fois l'analyse terminee.</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* CSS for fake progress animation */}
+      <style>{`
+        @keyframes fakeProgress {
+          0% { width: 0%; }
+          30% { width: 35%; }
+          60% { width: 60%; }
+          80% { width: 78%; }
+          100% { width: 90%; }
+        }
+      `}</style>
+
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
@@ -190,7 +281,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            Analyse de votre carte en cours...
+            Analyse en cours...
           </>
         ) : (
           `Analyser ${files.length > 1 ? `mes ${files.length} fichiers` : 'ma carte'}`

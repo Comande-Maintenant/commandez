@@ -54,6 +54,7 @@ export interface PricingPlan {
   id: SubscriptionPlan;
   name: string;
   price: number;
+  totalPrice?: number;
   discount?: string;
   badge?: string;
   features: string[];

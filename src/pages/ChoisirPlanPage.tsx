@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, Tag, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, Tag, Loader2, Gift, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -155,9 +155,20 @@ const ChoisirPlanPage = () => {
         <h1 className="text-2xl font-bold text-foreground mb-2">
           Choisissez votre formule
         </h1>
-        <p className="text-sm text-muted-foreground mb-8">
-          14 jours d'essai gratuit, carte bancaire requise. Sans engagement.
+        <p className="text-sm text-muted-foreground mb-6">
+          Sans engagement, resiliable a tout moment.
         </p>
+
+        {/* Trial reassurance banner */}
+        <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-4 mb-8">
+          <Gift className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-green-800">14 jours d'essai gratuit</p>
+            <p className="text-xs text-green-700 mt-0.5">
+              Testez sans engagement, vous ne serez debite qu'apres la periode d'essai.
+            </p>
+          </div>
+        </div>
 
         {/* Plan cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -175,8 +186,8 @@ const ChoisirPlanPage = () => {
               <span className="text-3xl font-bold text-foreground">29,99</span>
               <span className="text-sm text-muted-foreground">EUR/mois</span>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Sans engagement, resiliable a tout moment
+            <p className="text-xs text-muted-foreground mt-2">
+              Sans engagement
             </p>
             {plan === "monthly" && (
               <div className="absolute top-3 right-3 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
@@ -190,20 +201,23 @@ const ChoisirPlanPage = () => {
             onClick={() => setPlan("annual")}
             className={`relative rounded-xl border-2 p-6 text-left transition-all ${
               plan === "annual"
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/30"
+                ? "border-primary bg-primary/5 scale-[1.02]"
+                : "border-primary/40 bg-primary/5 hover:border-primary scale-[1.02]"
             }`}
           >
             <div className="absolute -top-3 left-4 bg-primary text-primary-foreground text-xs font-semibold px-3 py-0.5 rounded-full">
-              Economisez 33%
+              Populaire
             </div>
             <h3 className="font-semibold text-foreground text-lg">Annuel</h3>
             <div className="flex items-baseline gap-1 mt-2">
-              <span className="text-3xl font-bold text-foreground">239,88</span>
-              <span className="text-sm text-muted-foreground">EUR/an</span>
+              <span className="text-3xl font-bold text-foreground">19,99</span>
+              <span className="text-sm text-muted-foreground">EUR/mois</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Soit 19,99 EUR/mois au lieu de 29,99
+              (soit 239,88 EUR/an)
+            </p>
+            <p className="text-xs text-primary font-medium mt-1">
+              Economisez 120 EUR/an
             </p>
             {plan === "annual" && (
               <div className="absolute top-3 right-3 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
@@ -318,10 +332,13 @@ const ChoisirPlanPage = () => {
         </Button>
 
         <p className="text-xs text-center text-muted-foreground mt-3">
-          Vous serez redirige vers la page de paiement securisee Shopify.
-          <br />
-          14 jours d'essai gratuit, carte bancaire requise.
+          Aucun paiement aujourd'hui. Votre essai gratuit de 14 jours commence maintenant.
         </p>
+
+        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4">
+          <Lock className="h-3.5 w-3.5" />
+          <span>Paiement securise via Shopify. Aucun debit avant 14 jours.</span>
+        </div>
       </main>
     </div>
   );
