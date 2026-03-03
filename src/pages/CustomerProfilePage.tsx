@@ -17,6 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { fetchCustomerOrders, type CustomerProfile } from "@/lib/api";
 import { CustomerAuthModal } from "@/components/CustomerAuthModal";
 import type { DbOrder } from "@/types/database";
@@ -24,19 +25,20 @@ import { toast } from "sonner";
 
 type OrderWithRestaurant = DbOrder & { restaurant: { name: string; slug: string; primary_color: string } };
 
-function formatRelativeDate(dateStr: string): string {
+function formatRelativeDate(dateStr: string, t: (key: string, params?: Record<string, string | number>) => string): string {
   const d = new Date(dateStr);
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
   const diffDays = Math.floor(diffMs / 86400000);
-  if (diffDays === 0) return "Aujourd'hui";
-  if (diffDays === 1) return "Hier";
-  if (diffDays < 7) return `Il y a ${diffDays} jours`;
+  if (diffDays === 0) return t("client.today");
+  if (diffDays === 1) return t("client.yesterday");
+  if (diffDays < 7) return t("client.days_ago", { days: diffDays });
   return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
 }
 
 const CustomerProfilePage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { user, profile, isLoggedIn, isLoading, signOut, updateProfile, deleteAccount, resetPassword } = useCustomerAuth();
   const [orders, setOrders] = useState<OrderWithRestaurant[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
@@ -76,9 +78,9 @@ const CustomerProfilePage = () => {
     try {
       await updateProfile({ name: editName, phone: editPhone || null });
       setEditing(false);
-      toast.success("Profil mis à jour");
+      toast.success(t("client.profile_updated"));
     } catch {
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error(t("client.save_error"));
     } finally {
       setSavingProfile(false);
     }
@@ -96,10 +98,10 @@ const CustomerProfilePage = () => {
   const handleDeleteAccount = async () => {
     try {
       await deleteAccount();
-      toast.success("Profil supprime");
+      toast.success(t("client.profile_deleted"));
       navigate("/");
     } catch {
-      toast.error("Erreur lors de la suppression");
+      toast.error(t("client.delete_error"));
     }
   };
 
@@ -107,9 +109,9 @@ const CustomerProfilePage = () => {
     if (!profile?.email) return;
     try {
       await resetPassword(profile.email);
-      toast.success("Lien de reinitialisation envoye par email");
+      toast.success(t("client.reset_sent"));
     } catch {
-      toast.error("Erreur");
+      toast.error(t("client.generic_error"));
     }
   };
 
@@ -130,10 +132,10 @@ const CustomerProfilePage = () => {
       {/* Header */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2" aria-label="Retour">
+          <button onClick={() => navigate(-1)} className="p-2" aria-label={t("client.back")}>
             <ArrowLeft className="h-5 w-5 text-gray-700" />
           </button>
-          <h1 className="text-lg font-semibold text-gray-900">Mon profil</h1>
+          <h1 className="text-lg font-semibold text-gray-900">{t("client.title")}</h1>
         </div>
       </div>
 
@@ -149,8 +151,8 @@ const CustomerProfilePage = () => {
             <div className="flex-1 min-w-0">
               {editing ? (
                 <div className="space-y-2">
-                  <Input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Nom" className="h-10" />
-                  <Input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} placeholder="Telephone" type="tel" className="h-10" />
+                  <Input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder={t("client.name")} className="h-10" />
+                  <Input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} placeholder={t("client.phone")} type="tel" className="h-10" />
                 </div>
               ) : (
                 <>
@@ -172,16 +174,16 @@ const CustomerProfilePage = () => {
           {editing ? (
             <div className="flex gap-2">
               <Button onClick={handleSaveProfile} disabled={savingProfile} className="flex-1 h-10 text-sm">
-                {savingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}
+                {savingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : t("client.save")}
               </Button>
               <Button variant="outline" onClick={() => { setEditing(false); setEditName(profile.name); setEditPhone(profile.phone || ""); }} className="h-10 text-sm">
-                Annuler
+                {t("client.cancel")}
               </Button>
             </div>
           ) : (
             <Button variant="outline" onClick={() => setEditing(true)} className="w-full h-10 text-sm">
               <Edit2 className="h-3.5 w-3.5 mr-2" />
-              Modifier mes infos
+              {t("client.edit_info")}
             </Button>
           )}
 
@@ -189,18 +191,18 @@ const CustomerProfilePage = () => {
           <div className="flex gap-4 mt-4 pt-4 border-t border-gray-100">
             <div className="text-center flex-1">
               <p className="text-lg font-bold text-gray-900">{profile.total_orders}</p>
-              <p className="text-xs text-gray-500">Commandes</p>
+              <p className="text-xs text-gray-500">{t("client.orders_stat")}</p>
             </div>
             <div className="text-center flex-1">
               <p className="text-lg font-bold text-gray-900">{Number(profile.total_spent).toFixed(0)} &euro;</p>
-              <p className="text-xs text-gray-500">Depense</p>
+              <p className="text-xs text-gray-500">{t("client.spent")}</p>
             </div>
           </div>
         </motion.div>
 
         {/* Order history */}
         <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Historique des commandes</h2>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{t("client.order_history")}</h2>
           {loadingOrders ? (
             <div className="flex justify-center py-8">
               <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
@@ -208,7 +210,7 @@ const CustomerProfilePage = () => {
           ) : orders.length === 0 ? (
             <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
               <ShoppingBag className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-sm text-gray-500">Aucune commande pour le moment</p>
+              <p className="text-sm text-gray-500">{t("client.no_orders")}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -224,8 +226,8 @@ const CustomerProfilePage = () => {
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <p className="text-sm font-semibold text-gray-900">{order.restaurant?.name || "Restaurant"}</p>
-                        <p className="text-xs text-gray-500">{formatRelativeDate(order.created_at)} - #{order.order_number}</p>
+                        <p className="text-sm font-semibold text-gray-900">{order.restaurant?.name || t("client.restaurant_fallback")}</p>
+                        <p className="text-xs text-gray-500">{formatRelativeDate(order.created_at, t)} - #{order.order_number}</p>
                       </div>
                       <span className="text-sm font-bold text-gray-900">{Number(order.total).toFixed(2)} &euro;</span>
                     </div>
@@ -240,7 +242,7 @@ const CustomerProfilePage = () => {
                         className="flex-1 h-9 text-xs"
                       >
                         <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
-                        Recommander
+                        {t("client.reorder")}
                       </Button>
                       <Button
                         variant="ghost"
@@ -248,7 +250,7 @@ const CustomerProfilePage = () => {
                         onClick={() => navigate(`/suivi/${order.id}`)}
                         className="h-9 text-xs text-gray-500"
                       >
-                        Details
+                        {t("client.details")}
                         <ChevronRight className="h-3.5 w-3.5 ml-1" />
                       </Button>
                     </div>
@@ -263,30 +265,30 @@ const CustomerProfilePage = () => {
         <div className="space-y-2 pt-4">
           <Button variant="outline" onClick={handleResetPassword} className="w-full h-11 text-sm justify-start">
             <KeyRound className="h-4 w-4 mr-2" />
-            Changer mon mot de passe
+            {t("client.change_password")}
           </Button>
           <Button variant="outline" onClick={() => signOut()} className="w-full h-11 text-sm justify-start">
             <LogOut className="h-4 w-4 mr-2" />
-            Se deconnecter
+            {t("client.logout")}
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="ghost" className="w-full h-11 text-sm justify-start text-red-600 hover:text-red-700 hover:bg-red-50">
                 <Trash2 className="h-4 w-4 mr-2" />
-                Supprimer mon profil
+                {t("client.delete_profile")}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Supprimer votre profil ?</AlertDialogTitle>
+                <AlertDialogTitle>{t("client.delete_confirm_title")}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Cette action est irreversible. Votre historique de commandes sera dissocie de votre compte.
+                  {t("client.delete_confirm_desc")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogCancel>{t("client.cancel")}</AlertDialogCancel>
                 <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700">
-                  Supprimer
+                  {t("cart.remove")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

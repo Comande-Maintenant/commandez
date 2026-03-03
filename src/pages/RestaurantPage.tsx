@@ -105,15 +105,20 @@ function getDefaultCoverImage(cuisine: string): string {
   return "/images/covers/default.jpg";
 }
 
-const PAYMENT_ICONS: Record<string, { icon: typeof CreditCard; labelFR: string }> = {
-  "card": { icon: CreditCard, labelFR: "CB" },
-  "CB": { icon: CreditCard, labelFR: "CB" },
-  "Carte bancaire": { icon: CreditCard, labelFR: "Carte bancaire" },
-  "cash": { icon: Banknote, labelFR: "Especes" },
-  "Especes": { icon: Banknote, labelFR: "Especes" },
-  "ticket_restaurant": { icon: Ticket, labelFR: "Ticket restaurant" },
-  "Ticket restaurant": { icon: Ticket, labelFR: "Ticket restaurant" },
+const PAYMENT_ICONS: Record<string, { icon: typeof CreditCard; labelKey: string }> = {
+  "card": { icon: CreditCard, labelKey: "payment.card" },
+  "CB": { icon: CreditCard, labelKey: "payment.card" },
+  "Carte bancaire": { icon: CreditCard, labelKey: "payment.card" },
+  "cash": { icon: Banknote, labelKey: "payment.cash" },
+  "Especes": { icon: Banknote, labelKey: "payment.cash" },
+  "ticket_restaurant": { icon: Ticket, labelKey: "payment.ticket_restaurant" },
+  "Ticket restaurant": { icon: Ticket, labelKey: "payment.ticket_restaurant" },
 };
+
+const DAY_KEYS = [
+  "schedule.sunday", "schedule.monday", "schedule.tuesday", "schedule.wednesday",
+  "schedule.thursday", "schedule.friday", "schedule.saturday",
+];
 
 const RestaurantPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -143,6 +148,17 @@ const RestaurantPage = () => {
     if (!slug) return;
     setLoading(true);
     fetchRestaurantBySlug(slug).then(async (r) => {
+      if (r) {
+        // Real-time trial check: if trial_end_date is past, treat as expired
+        if (r.subscription_status === "trial" && r.trial_end_date) {
+          const trialEnd = new Date(r.trial_end_date);
+          // Add bonus_weeks
+          if (r.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + r.bonus_weeks * 7);
+          if (trialEnd < new Date()) {
+            r = { ...r, subscription_status: "expired" };
+          }
+        }
+      }
       setRestaurant(r);
       if (r) {
         // If deactivated, increment visit count and skip menu fetch
@@ -177,7 +193,7 @@ const RestaurantPage = () => {
                 }
               }
               localStorage.removeItem("cm_reorder");
-              toast.success("Commande précédente ajoutée au panier !");
+              toast.success(t("restaurant.reorder_added"));
             }
           }
         } catch { /* ignore */ }
@@ -340,7 +356,7 @@ const RestaurantPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground">Restaurant introuvable</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("restaurant.not_found")}</h1>
           <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">
             {t("nav.back_home")}
           </a>
@@ -358,9 +374,9 @@ const RestaurantPage = () => {
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
-          <p className="text-muted-foreground text-sm">Ce restaurant n'est plus disponible pour le moment.</p>
+          <p className="text-muted-foreground text-sm">{t("restaurant.deactivated")}</p>
           <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            Retour
+            {t("nav.back")}
           </a>
         </div>
       </div>
@@ -376,9 +392,9 @@ const RestaurantPage = () => {
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
-          <p className="text-muted-foreground text-sm">Cette page est en cours d'activation.</p>
+          <p className="text-muted-foreground text-sm">{t("restaurant.activating")}</p>
           <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            Retour
+            {t("nav.back")}
           </a>
         </div>
       </div>
@@ -398,9 +414,9 @@ const RestaurantPage = () => {
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
-          <p className="text-muted-foreground text-sm">Ce restaurant est temporairement indisponible.</p>
+          <p className="text-muted-foreground text-sm">{t("restaurant.unavailable")}</p>
           <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            Retour
+            {t("nav.back")}
           </a>
         </div>
       </div>
@@ -415,15 +431,15 @@ const RestaurantPage = () => {
           {restaurant.image && (
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
           )}
-          <h1 className="text-xl font-bold text-foreground mb-2">Commande impossible</h1>
+          <h1 className="text-xl font-bold text-foreground mb-2">{t("order.banned_title")}</h1>
           <p className="text-muted-foreground text-sm">
-            Votre accès aux commandes a été suspendu.
+            {t("order.banned_desc")}
             {restaurant.restaurant_phone && (
-              <> Contactez le restaurant au {restaurant.restaurant_phone} pour plus d'informations.</>
+              <> {t("order.banned_contact", { phone: restaurant.restaurant_phone })}</>
             )}
           </p>
           <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            Retour
+            {t("nav.back")}
           </a>
         </div>
       </div>
@@ -473,7 +489,7 @@ const RestaurantPage = () => {
           <button
             onClick={() => window.history.length > 1 ? navigate(-1) : window.location.href = "https://commandeici.com"}
             className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
-            aria-label="Retour"
+            aria-label={t("nav.back")}
           >
             <ArrowLeft className="h-5 w-5 text-white" />
           </button>
@@ -572,14 +588,19 @@ const RestaurantPage = () => {
                   <span>
                     {availability.todaySlots.length > 1
                       ? availability.todaySlots.map((s) => `${s.open}-${s.close}`).join(", ")
-                      : `Ferme à ${availability.currentCloseTime}`
+                      : t("restaurant.closes_at", { time: availability.currentCloseTime })
                     }
                   </span>
                 </div>
-              ) : availability.nextOpenLabel ? (
+              ) : availability.nextOpenInfo ? (
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
-                  <span>Ouvre {availability.nextOpenLabel}</span>
+                  <span>
+                    {availability.nextOpenInfo.isToday
+                      ? t("restaurant.opens_today_at", { time: availability.nextOpenInfo.time })
+                      : t("restaurant.opens_day_at", { day: t(DAY_KEYS[availability.nextOpenInfo.dayIndex!]), time: availability.nextOpenInfo.time })
+                    }
+                  </span>
                 </div>
               ) : restaurant.hours ? (
                 <div className="flex items-center gap-2">
@@ -602,7 +623,7 @@ const RestaurantPage = () => {
                       style={{ backgroundColor: primaryLight, color: primaryDark }}
                     >
                       <Icon className="h-3.5 w-3.5" />
-                      {config?.labelFR || method}
+                      {config ? t(config.labelKey) : method}
                     </span>
                   );
                 })}
@@ -638,10 +659,10 @@ const RestaurantPage = () => {
                   style={{ backgroundColor: primaryLight, color: primaryDark }}
                 >
                   <Clock className="h-3.5 w-3.5" />
-                  {activeOrderCount <= 3 ? "~10-15 min" : activeOrderCount <= 7 ? "~20 min" : "~30 min, forte affluence"}
+                  {activeOrderCount <= 3 ? t("restaurant.wait_short") : activeOrderCount <= 7 ? t("restaurant.wait_medium") : t("restaurant.wait_long")}
                 </span>
                 <span className="text-xs text-gray-500">
-                  {activeOrderCount} commande{activeOrderCount > 1 ? "s" : ""} en préparation
+                  {t("restaurant.orders_preparing", { count: activeOrderCount })}
                 </span>
               </div>
             )}
@@ -652,7 +673,7 @@ const RestaurantPage = () => {
                   style={{ backgroundColor: primaryLight, color: primaryDark }}
                 >
                   <Clock className="h-3.5 w-3.5" />
-                  Aucune attente
+                  {t("restaurant.no_wait")}
                 </span>
               </div>
             )}
@@ -661,7 +682,7 @@ const RestaurantPage = () => {
             {!orderCheck.canOrder && (
               <div className="mt-3 p-3 bg-red-50 rounded-xl flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-red-600">{orderCheck.reason}</p>
+                <p className="text-sm text-red-600">{orderCheck.reason ? t(orderCheck.reason) : ""}</p>
               </div>
             )}
           </div>
@@ -671,7 +692,7 @@ const RestaurantPage = () => {
         {customerName && !activeOrderId && (
           <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-secondary/80 border border-border">
             <p className="text-sm text-foreground">
-              Bonjour <span className="font-semibold">{customerName}</span> !
+              {t("restaurant.greeting", { name: customerName })}
             </p>
             <button
               onClick={() => {
@@ -681,7 +702,7 @@ const RestaurantPage = () => {
               }}
               className="text-xs text-muted-foreground underline hover:text-foreground"
             >
-              Pas vous ? Changer
+              {t("restaurant.not_you")}
             </button>
           </div>
         )}
@@ -695,8 +716,8 @@ const RestaurantPage = () => {
             className="w-full mt-4 flex items-center justify-between px-4 py-3 rounded-xl text-white text-sm font-medium"
             style={{ backgroundColor: primary }}
           >
-            <span>Votre commande est en cours</span>
-            <span className="bg-white/20 px-3 py-1 rounded-full text-xs">Suivre</span>
+            <span>{t("restaurant.order_in_progress")}</span>
+            <span className="bg-white/20 px-3 py-1 rounded-full text-xs">{t("restaurant.follow_order")}</span>
           </motion.button>
         )}
 
@@ -709,7 +730,7 @@ const RestaurantPage = () => {
             style={{ backgroundColor: primaryLight, borderColor: `${primary}30` }}
           >
             <div className="min-w-0">
-              <p className="text-sm font-medium" style={{ color: primaryDark }}>Recommander votre dernière commande ?</p>
+              <p className="text-sm font-medium" style={{ color: primaryDark }}>{t("restaurant.reorder_prompt")}</p>
               <p className="text-xs text-gray-500 truncate">
                 {lastOrderItems.map((i: any) => `${i.quantity}x ${i.name}`).join(", ")}
               </p>
@@ -726,12 +747,12 @@ const RestaurantPage = () => {
                   }
                 }
                 setLastOrderItems(null);
-                toast.success("Commande ajoutée au panier !");
+                toast.success(t("restaurant.reorder_success"));
               }}
               className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white flex-shrink-0"
               style={{ backgroundColor: primary }}
             >
-              Ajouter
+              {t("restaurant.add_button")}
             </button>
           </motion.div>
         )}

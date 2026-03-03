@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -20,10 +21,10 @@ interface StepDef {
 }
 
 const STEPS: StepDef[] = [
-  { key: "received", label: "Commande recue", icon: Inbox, matchStatuses: ["new", "preparing", "ready", "done"] },
-  { key: "preparing", label: "En préparation", icon: ChefHat, matchStatuses: ["preparing", "ready", "done"] },
-  { key: "almost", label: "Bientot prete", icon: Timer, matchStatuses: ["ready", "done"] },
-  { key: "ready", label: "Prête !", icon: CheckCircle, matchStatuses: ["ready", "done"] },
+  { key: "received", label: "suivi.received", icon: Inbox, matchStatuses: ["new", "preparing", "ready", "done"] },
+  { key: "preparing", label: "suivi.preparing", icon: ChefHat, matchStatuses: ["preparing", "ready", "done"] },
+  { key: "almost", label: "suivi.almost_ready", icon: Timer, matchStatuses: ["ready", "done"] },
+  { key: "ready", label: "suivi.ready", icon: CheckCircle, matchStatuses: ["ready", "done"] },
 ];
 
 function getStepIndex(status: OrderStatus, elapsedRatio: number): number {
@@ -83,14 +84,15 @@ function launchConfetti(canvas: HTMLCanvasElement) {
   animate();
 }
 
-const ORDER_TYPE_LABELS: Record<string, string> = {
-  collect: "A emporter",
-  dine_in: "Sur place",
+const ORDER_TYPE_KEYS: Record<string, string> = {
+  collect: "suivi.takeaway",
+  dine_in: "suivi.dine_in",
 };
 
 const SuiviPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { isLoggedIn, signUp } = useCustomerAuth();
   const [order, setOrder] = useState<(DbOrder & { restaurant: { name: string; slug: string; primary_color: string; phone: string } }) | null>(null);
   const [loading, setLoading] = useState(true);
@@ -168,7 +170,7 @@ const SuiviPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-pulse text-gray-400">Chargement...</div>
+        <div className="animate-pulse text-gray-400">{t("suivi.loading")}</div>
       </div>
     );
   }
@@ -176,8 +178,8 @@ const SuiviPage = () => {
   if (error || !order) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-4 p-4">
-        <p className="text-gray-500">Commande introuvable</p>
-        <button onClick={() => navigate("/")} className="text-sm underline text-gray-700">Retour</button>
+        <p className="text-gray-500">{t("suivi.not_found")}</p>
+        <button onClick={() => navigate("/")} className="text-sm underline text-gray-700">{t("suivi.back")}</button>
       </div>
     );
   }
@@ -193,12 +195,12 @@ const SuiviPage = () => {
 
       {/* Header */}
       <div className="px-4 pt-6 pb-4 flex items-center gap-3">
-        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors" aria-label="Retour au restaurant">
+        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors" aria-label={t("suivi.back_to_restaurant")}>
           <ArrowLeft className="h-5 w-5 text-gray-700" />
         </button>
         <div>
           <h1 className="text-lg font-bold text-gray-900">{order.restaurant.name}</h1>
-          <p className="text-sm text-gray-500">Commande {formatDisplayNumber(order)}</p>
+          <p className="text-sm text-gray-500">{t("suivi.order_number", { number: formatDisplayNumber(order) })}</p>
         </div>
       </div>
 
@@ -214,8 +216,8 @@ const SuiviPage = () => {
           >
             {isDone ? (
               <>
-                <p className="text-2xl font-bold text-gray-900">Merci et bon appétit !</p>
-                <p className="text-sm text-gray-500 mt-1">Votre commande est terminée</p>
+                <p className="text-2xl font-bold text-gray-900">{t("suivi.done_title")}</p>
+                <p className="text-sm text-gray-500 mt-1">{t("suivi.done_subtitle")}</p>
               </>
             ) : isReady ? (
               <>
@@ -225,23 +227,23 @@ const SuiviPage = () => {
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 0.6, repeat: 2 }}
                 >
-                  Votre commande est prête !
+                  {t("suivi.ready_title")}
                 </motion.p>
-                <p className="text-sm text-gray-500 mt-1">Vous pouvez venir la récupérer</p>
+                <p className="text-sm text-gray-500 mt-1">{t("suivi.ready_subtitle")}</p>
               </>
             ) : (
               <>
                 {order.pickup_time ? (
                   <>
                     <p className="text-2xl font-bold text-gray-900">
-                      Retrait a {new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                      {t("suivi.pickup_at", { time: new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) })}
                     </p>
-                    <p className="text-sm text-gray-500 mt-1">Commande programmee</p>
+                    <p className="text-sm text-gray-500 mt-1">{t("suivi.scheduled")}</p>
                   </>
                 ) : (
                   <>
-                    <p className="text-2xl font-bold text-gray-900">Environ {remainingMinutes} min</p>
-                    <p className="text-sm text-gray-500 mt-1">{ORDER_TYPE_LABELS[order.order_type] || order.order_type}</p>
+                    <p className="text-2xl font-bold text-gray-900">{t("suivi.time_remaining", { minutes: remainingMinutes })}</p>
+                    <p className="text-sm text-gray-500 mt-1">{ORDER_TYPE_KEYS[order.order_type] ? t(ORDER_TYPE_KEYS[order.order_type]) : order.order_type}</p>
                   </>
                 )}
               </>
@@ -297,7 +299,7 @@ const SuiviPage = () => {
                   {/* Label */}
                   <div className="pt-2">
                     <p className={`text-sm font-medium ${isComplete ? "text-gray-900" : "text-gray-400"}`}>
-                      {step.label}
+                      {t(step.label)}
                     </p>
                   </div>
                 </div>
@@ -308,7 +310,7 @@ const SuiviPage = () => {
 
         {/* Order summary */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Recapitulatif</h3>
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">{t("suivi.summary")}</h3>
           <div className="space-y-1.5">
             {items.map((item: any, i: number) => (
               <div key={i} className="flex justify-between text-sm">
@@ -319,7 +321,7 @@ const SuiviPage = () => {
           </div>
           <div className="border-t border-gray-100 mt-3 pt-3">
             <div className="flex justify-between text-sm font-bold text-gray-900">
-              <span>Total</span>
+              <span>{t("suivi.total")}</span>
               <span>{Number(order.total).toFixed(2)} €</span>
             </div>
           </div>
@@ -331,8 +333,8 @@ const SuiviPage = () => {
             <div className="flex items-start gap-3 mb-3">
               <UserPlus className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: primary }} />
               <div>
-                <p className="text-sm font-semibold text-gray-900">Créez votre profil en 10 secondes</p>
-                <p className="text-xs text-gray-500 mt-0.5">Retrouvez vos commandes et recommandez en un clic.</p>
+                <p className="text-sm font-semibold text-gray-900">{t("suivi.create_profile")}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{t("suivi.create_profile_desc")}</p>
               </div>
             </div>
             <div className="space-y-3">
@@ -344,7 +346,7 @@ const SuiviPage = () => {
               />
               <Input
                 type="password"
-                placeholder="Choisissez un mot de passe"
+                placeholder={t("suivi.password_placeholder")}
                 value={signupPassword}
                 onChange={(e) => setSignupPassword(e.target.value)}
                 className="h-11 text-sm"
@@ -353,7 +355,7 @@ const SuiviPage = () => {
                 <Button
                   onClick={async () => {
                     if (signupPassword.length < 6) {
-                      toast.error("Le mot de passe doit faire au moins 6 caractères");
+                      toast.error(t("suivi.password_too_short"));
                       return;
                     }
                     setSignupLoading(true);
@@ -364,9 +366,9 @@ const SuiviPage = () => {
                         order.customer_name,
                         order.customer_phone
                       );
-                      toast.success("Profil créé avec succès !");
+                      toast.success(t("suivi.profile_created"));
                     } catch (e: any) {
-                      toast.error(e.message || "Erreur lors de l'inscription");
+                      toast.error(e.message || t("suivi.signup_error"));
                     } finally {
                       setSignupLoading(false);
                     }
@@ -375,7 +377,7 @@ const SuiviPage = () => {
                   className="flex-1 h-11 text-sm"
                   style={{ backgroundColor: primary }}
                 >
-                  {signupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Creer mon profil"}
+                  {signupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("suivi.create_button")}
                 </Button>
                 <Button
                   variant="outline"
@@ -385,7 +387,7 @@ const SuiviPage = () => {
                   }}
                   className="h-11 text-sm"
                 >
-                  Non merci
+                  {t("suivi.no_thanks")}
                 </Button>
               </div>
             </div>
@@ -400,7 +402,7 @@ const SuiviPage = () => {
             style={{ backgroundColor: hexToRgba(primary, 0.1), color: primary }}
           >
             <Phone className="h-4 w-4" />
-            Appeler le restaurant
+            {t("suivi.call_restaurant")}
           </a>
         )}
 
@@ -416,7 +418,7 @@ const SuiviPage = () => {
             className="w-full py-3.5 rounded-xl text-white font-medium text-sm"
             style={{ backgroundColor: primary }}
           >
-            Retour au restaurant
+            {t("suivi.back_to_restaurant")}
           </motion.button>
         )}
       </div>

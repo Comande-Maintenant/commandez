@@ -1101,5 +1101,50 @@
   "pos.empty_order": "Commande vide",
   "pos.complete_no": "Complet sans {item}",
   "pos.drinks_label": "Boissons",
-  "pos.desserts_label": "Desserts"
+  "pos.desserts_label": "Desserts",
+
+  "restaurant.not_found": "Restaurant introuvable",
+  "restaurant.deactivated": "Ce restaurant n'est plus disponible pour le moment.",
+  "restaurant.activating": "Cette page est en cours d'activation.",
+  "restaurant.unavailable": "Ce restaurant est temporairement indisponible.",
+  "restaurant.reorder_added": "Commande precedente ajoutee au panier !",
+  "restaurant.closes_at": "Ferme a {time}",
+  "restaurant.opens_today_at": "Aujourd'hui a {time}",
+  "restaurant.opens_day_at": "{day} a {time}",
+  "restaurant.wait_short": "~10-15 min",
+  "restaurant.wait_medium": "~20 min",
+  "restaurant.wait_long": "~30 min, forte affluence",
+  "restaurant.orders_preparing": "{count} commande(s) en preparation",
+  "restaurant.no_wait": "Aucune attente",
+  "restaurant.greeting": "Bonjour {name} !",
+  "restaurant.not_you": "Pas vous ? Changer",
+  "restaurant.order_in_progress": "Votre commande est en cours",
+  "restaurant.follow_order": "Suivre",
+  "restaurant.reorder_prompt": "Recommander votre derniere commande ?",
+  "restaurant.add_button": "Ajouter",
+  "restaurant.reorder_success": "Commande ajoutee au panier !",
+
+  "payment.card": "CB",
+  "payment.cash": "Especes",
+  "payment.ticket_restaurant": "Ticket restaurant",
+
+  "schedule.sunday": "Dimanche",
+  "schedule.monday": "Lundi",
+  "schedule.tuesday": "Mardi",
+  "schedule.wednesday": "Mercredi",
+  "schedule.thursday": "Jeudi",
+  "schedule.friday": "Vendredi",
+  "schedule.saturday": "Samedi",
+  "schedule.not_accepting": "Ce restaurant n'accepte pas de commandes pour le moment.",
+
+  "order.restaurant_unavailable": "Ce restaurant n'accepte pas de commandes pour le moment.",
+  "order.error_generic": "Une erreur est survenue. Veuillez reessayer.",
+
+  "client.today": "Aujourd'hui",
+  "client.yesterday": "Hier",
+  "client.days_ago": "Il y a {days} jours",
+  "client.restaurant_fallback": "Restaurant",
+  "client.generic_error": "Erreur",
+
+  "nav.back": "Retour"
 }

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
 import { PickupTimePicker } from "@/components/PickupTimePicker";
+import { toast } from "sonner";
 
 const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
@@ -74,6 +75,27 @@ const OrderPage = () => {
     if (!restaurantId || submitting) return;
     setSubmitting(true);
     try {
+      // Check subscription status before placing order
+      const resto = await fetchRestaurantById(restaurantId);
+      if (resto) {
+        const status = resto.subscription_status;
+        if (status === "expired" || status === "cancelled" || status === "past_due" || status === "pending_payment") {
+          toast.error(t("order.restaurant_unavailable"));
+          setSubmitting(false);
+          return;
+        }
+        // Real-time trial check
+        if (status === "trial" && resto.trial_end_date) {
+          const trialEnd = new Date(resto.trial_end_date);
+          if (resto.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + resto.bonus_weeks * 7);
+          if (trialEnd < new Date()) {
+            toast.error(t("order.restaurant_unavailable"));
+            setSubmitting(false);
+            return;
+          }
+        }
+      }
+
       // Save customer info to localStorage
       localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email }));
 
@@ -122,6 +144,7 @@ const OrderPage = () => {
       navigate("/suivi/" + order.id);
     } catch (e) {
       console.error("Order error:", e);
+      toast.error(t("order.error_generic"));
     } finally {
       setSubmitting(false);
     }
@@ -131,14 +154,14 @@ const OrderPage = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4 p-4">
         <AlertTriangle className="h-16 w-16 text-destructive/60" />
-        <h2 className="text-xl font-bold text-foreground">Commande impossible</h2>
+        <h2 className="text-xl font-bold text-foreground">{t("order.banned_title")}</h2>
         <p className="text-muted-foreground text-center max-w-sm">
-          Votre accès aux commandes a été suspendu.
+          {t("order.banned_desc")}
           {restaurantPhone && (
-            <> Contactez le restaurant au {restaurantPhone} pour plus d'informations.</>
+            <> {t("order.banned_contact", { phone: restaurantPhone })}</>
           )}
         </p>
-        <a href="https://commandeici.com" className="text-sm text-foreground underline">Retour</a>
+        <a href="https://commandeici.com" className="text-sm text-foreground underline">{t("nav.back")}</a>
       </div>
     );
   }
@@ -161,7 +184,7 @@ const OrderPage = () => {
     <div className="min-h-screen bg-background" dir={isRTL ? "rtl" : "ltr"}>
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2" aria-label="Retour">
+          <button onClick={() => navigate(-1)} className="p-2" aria-label={t("nav.back")}>
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
           <h1 className="text-lg font-semibold text-foreground">{t("order.place_order")}</h1>
@@ -189,7 +212,7 @@ const OrderPage = () => {
           <div className="space-y-3">
             <Input placeholder={t("order.your_name")} value={name} onChange={(e) => setName(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
             <Input placeholder={t("order.phone")} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
-            <Input placeholder="Email (optionnel)" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+            <Input placeholder={t("order.email_optional")} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
           </div>
 
           {/* Pickup time picker */}
@@ -213,11 +236,11 @@ const OrderPage = () => {
             <div className="flex items-start gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
               <div className="space-y-1.5 text-sm text-amber-900">
-                <p className="font-medium">En validant, vous vous engagez à venir récupérer et régler votre commande.</p>
-                <p>Les commandes non honorées peuvent entraîner un blocage de votre accès.</p>
+                <p className="font-medium">{t("order.commitment_warning")}</p>
+                <p>{t("order.no_show_warning")}</p>
                 {restaurantPhone && (
                   <p className="flex items-center gap-1.5 pt-1">
-                    Un imprévu ? Contactez le restaurant :
+                    {t("order.issue_contact")}
                     <ProtectedPhone phone={restaurantPhone} className="text-amber-700 hover:text-amber-900" variant="button" iconClassName="h-3.5 w-3.5" />
                   </p>
                 )}
