@@ -28,7 +28,7 @@ export const GererMenu = ({ onViewChange }: Props) => {
           <button
             key={item.id}
             onClick={() => onViewChange(item.id)}
-            className="bg-card rounded-2xl border border-border p-6 hover:shadow-md cursor-pointer transition-all text-left active:scale-[0.98]"
+            className="bg-card rounded-2xl border border-border p-6 hover:shadow-md cursor-pointer transition-all text-start active:scale-[0.98]"
           >
             <item.icon className="h-8 w-8 text-foreground mb-3" />
             <p className="text-sm font-semibold text-foreground">{t(item.labelKey)}</p>

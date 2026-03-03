@@ -37,7 +37,7 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
   };
 
   return (
-    <aside className="hidden lg:flex flex-col fixed left-0 top-0 w-60 h-screen border-r border-border bg-background z-40">
+    <aside className="hidden lg:flex flex-col fixed start-0 inset-y-0 w-60 border-e border-border bg-background z-40">
       <div className="p-4 flex-1 flex flex-col gap-1">
         {/* Operational views */}
         {opsItemsDef.map((item) => (
@@ -54,7 +54,7 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
             <item.icon className="h-5 w-5 flex-shrink-0" />
             <span className="text-sm font-medium">{t(item.tKey)}</span>
             {item.id === "cuisine" && newOrderCount > 0 && (
-              <span className="ml-auto bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="ms-auto bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 {newOrderCount}
               </span>
             )}
@@ -72,11 +72,11 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
         >
           <Settings className="h-5 w-5 flex-shrink-0" />
           <span className="text-sm font-semibold">{t('dashboard.nav.manage')}</span>
-          <ChevronDown className={`h-4 w-4 ml-auto transition-transform ${gererExpanded ? "rotate-180" : ""}`} />
+          <ChevronDown className={`h-4 w-4 ms-auto transition-transform ${gererExpanded ? "rotate-180" : ""}`} />
         </button>
 
         {gererExpanded && (
-          <div className="flex flex-col gap-1 pl-2">
+          <div className="flex flex-col gap-1 ps-2">
             {adminItemsDef.map((item) => (
               <button
                 key={item.id}

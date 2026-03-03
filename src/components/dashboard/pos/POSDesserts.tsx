@@ -85,7 +85,7 @@ export const POSDesserts = ({ desserts, menuItems, onUpdateDesserts, onSetDesser
                   <p className="font-semibold text-foreground text-sm leading-tight">{item.name}</p>
                   <p className="text-foreground/70 font-bold mt-1">{item.price.toFixed(2)} €</p>
                   {inCart && (
-                    <span className="absolute top-2 right-2 bg-foreground text-primary-foreground text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
+                    <span className="absolute top-2 end-2 bg-foreground text-primary-foreground text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
                       {inCart.quantity}
                     </span>
                   )}

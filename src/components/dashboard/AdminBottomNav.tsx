@@ -18,7 +18,7 @@ const items: { id: DashboardView; label: string; icon: typeof Flame }[] = [
 
 export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Props) => {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border">
+    <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-background border-t border-border">
       <div className="flex">
         {items.map((item) => {
           const isActive = item.id === activeView || (item.id === "gerer" && adminViews.has(activeView));
@@ -34,7 +34,7 @@ export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Prop
               <div className="relative">
                 <item.icon className="h-5 w-5" />
                 {item.id === "cuisine" && newOrderCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                  <span className="absolute -top-1.5 -end-2.5 bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                     {newOrderCount}
                   </span>
                 )}

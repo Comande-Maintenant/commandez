@@ -143,10 +143,10 @@ function SortableCategoryHeader({
         <GripVertical className="h-4 w-4 text-muted-foreground" />
       </button>
       <button onClick={onToggleExpand} className="p-1 shrink-0">
-        {expanded ? <ChevronDown className="h-4 w-4 text-foreground" /> : <ChevronRight className="h-4 w-4 text-foreground" />}
+        {expanded ? <ChevronDown className="h-4 w-4 text-foreground" /> : <ChevronRight className="h-4 w-4 text-foreground rtl:scale-x-[-1]" />}
       </button>
       <span className="flex-1 text-sm font-semibold text-foreground">{name}</span>
-      <span className="text-xs text-muted-foreground mr-2">{itemCount} {t('dashboard.menu.items_count')}</span>
+      <span className="text-xs text-muted-foreground me-2">{itemCount} {t('dashboard.menu.items_count')}</span>
       <button onClick={onRename} className="p-1.5 rounded-lg hover:bg-background/50 transition-colors">
         <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
       </button>
@@ -507,7 +507,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                       onDragEnd={(e) => handleItemDragEnd(e, cat)}
                     >
                       <SortableContext items={catItems.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-                        <div className="ml-4 space-y-1.5">
+                        <div className="ms-4 space-y-1.5">
                           {catItems.map((item) => (
                             <SortableItemRow
                               key={item.id}

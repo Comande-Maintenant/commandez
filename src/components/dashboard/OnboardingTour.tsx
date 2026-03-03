@@ -154,7 +154,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
         >
           <button
             onClick={onComplete}
-            className="absolute top-3 right-3 p-1 rounded-lg hover:bg-secondary"
+            className="absolute top-3 end-3 p-1 rounded-lg hover:bg-secondary"
           >
             <X className="h-4 w-4 text-muted-foreground" />
           </button>
@@ -173,7 +173,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
               disabled={currentStep === 0}
               className="rounded-xl gap-1"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4 rtl:scale-x-[-1]" />
               {t('common.previous')}
             </Button>
             <Button
@@ -188,7 +188,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
               className="rounded-xl gap-1"
             >
               {isLast ? t('common.finish') : t('common.next')}
-              {!isLast && <ChevronRight className="h-4 w-4" />}
+              {!isLast && <ChevronRight className="h-4 w-4 rtl:scale-x-[-1]" />}
             </Button>
           </div>
         </motion.div>

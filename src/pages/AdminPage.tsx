@@ -42,7 +42,7 @@ const isOpsView = (v: DashboardView) => ["cuisine", "caisse", "en-direct"].inclu
 const AdminPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
   const isDemo = slug === "demo";
   const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
   const [loading, setLoading] = useState(true);
@@ -203,7 +203,7 @@ const AdminPage = () => {
 
       {/* Demo banner */}
       {isDemo && (
-        <div className="fixed top-0 left-0 right-0 z-[60] bg-emerald-500 text-white">
+        <div className="fixed top-0 inset-x-0 z-[60] bg-emerald-500 text-white">
           <div className="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
             <p className="text-sm font-medium truncate">
               {t("demo.banner_text")}
@@ -211,7 +211,7 @@ const AdminPage = () => {
             <Button
               size="sm"
               variant="secondary"
-              className="rounded-xl text-xs font-semibold flex-shrink-0 ml-3 bg-white text-emerald-700 hover:bg-emerald-50"
+              className="rounded-xl text-xs font-semibold flex-shrink-0 ms-3 bg-white text-emerald-700 hover:bg-emerald-50"
               onClick={() => navigate("/inscription")}
             >
               {t("demo.banner_cta")}
@@ -226,13 +226,13 @@ const AdminPage = () => {
         newOrderCount={orderCounts.newCount}
       />
 
-      <div className="flex-1 lg:ml-60 pb-20 lg:pb-0">
+      <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
         {/* Header */}
         <header className="bg-background border-b border-border sticky top-0 z-50" style={isDemo ? { top: "3rem" } : undefined}>
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
-              <Link to={isDemo ? "/" : `/${slug}`} className="p-2 -ml-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
-                <ArrowLeft className="h-5 w-5 text-foreground" />
+              <Link to={isDemo ? "/" : `/${slug}`} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+                <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </Link>
               <div className="min-w-0">
                 <h1 className="text-base font-semibold text-foreground truncate">{restaurant.name}</h1>
@@ -384,7 +384,7 @@ const AdminPage = () => {
 
       {/* PWA install banner - not in demo */}
       {!isDemo && showPwaBanner && (
-        <div className="fixed bottom-16 lg:bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
+        <div className="fixed bottom-16 lg:bottom-4 inset-x-4 z-50 max-w-md mx-auto">
           <div className="bg-card border border-border rounded-2xl p-4 shadow-lg flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-semibold text-foreground">Installer l'application</p>

@@ -253,7 +253,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           >
             {t(tab.labelKey)}
             {tab.id === "new" && newCount > 0 && (
-              <span className="ml-1.5 bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))] text-xs font-bold px-1.5 py-0.5 rounded-full">{newCount}</span>
+              <span className="ms-1.5 bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))] text-xs font-bold px-1.5 py-0.5 rounded-full">{newCount}</span>
             )}
           </button>
         ))}
@@ -331,7 +331,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                         <p className="text-xs text-muted-foreground truncate">{[...(item.sauces || []), ...(item.supplements || [])].join(", ")}</p>
                       )}
                     </div>
-                    <span className="text-foreground font-medium ml-2 flex-shrink-0 blur-sensitive">{(item.price * item.quantity).toFixed(2)} €</span>
+                    <span className="text-foreground font-medium ms-2 flex-shrink-0 blur-sensitive">{(item.price * item.quantity).toFixed(2)} €</span>
                   </div>
                 ))}
               </div>
@@ -355,7 +355,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                       disabled={advancing === order.id}
                       className="rounded-xl gap-1 min-h-[44px]"
                     >
-                      {advancing === order.id ? "..." : t(cfg.nextLabelKey!)}<ChevronRight className="h-4 w-4" />
+                      {advancing === order.id ? "..." : t(cfg.nextLabelKey!)}<ChevronRight className="h-4 w-4 rtl:scale-x-[-1]" />
                     </Button>
                   )}
                 </div>

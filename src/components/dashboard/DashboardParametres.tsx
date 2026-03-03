@@ -247,7 +247,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             <button
               key={mode.id}
               onClick={() => setAvailabilityMode(mode.id)}
-              className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all border ${
+              className={`w-full flex items-center gap-3 p-3 rounded-xl text-start transition-all border ${
                 availabilityMode === mode.id ? "border-foreground bg-secondary" : "border-border hover:bg-secondary/50"
               }`}
             >

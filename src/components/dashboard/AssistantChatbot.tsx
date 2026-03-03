@@ -151,7 +151,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             onClick={() => setOpen(true)}
-            className="fixed bottom-20 lg:bottom-6 right-4 z-50 w-12 h-12 rounded-full bg-foreground text-primary-foreground shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+            className="fixed bottom-20 lg:bottom-6 end-4 z-50 w-12 h-12 rounded-full bg-foreground text-primary-foreground shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
             aria-label={t('dashboard.assistant.open')}
           >
             <MessageCircle className="h-5 w-5" />
@@ -166,7 +166,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-20 lg:bottom-6 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm bg-card border border-border rounded-2xl shadow-2xl flex flex-col"
+            className="fixed bottom-20 lg:bottom-6 end-4 z-50 w-[calc(100vw-2rem)] max-w-sm bg-card border border-border rounded-2xl shadow-2xl flex flex-col"
             style={{ maxHeight: "min(70vh, 500px)" }}
           >
             {/* Header */}
@@ -247,7 +247,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
                             className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-foreground/10 hover:bg-foreground/20 transition-colors"
                           >
                             {a.label}
-                            <ArrowRight className="h-3 w-3" />
+                            <ArrowRight className="h-3 w-3 rtl:scale-x-[-1]" />
                           </button>
                         ))}
                       </div>

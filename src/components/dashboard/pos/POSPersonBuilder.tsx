@@ -273,10 +273,10 @@ export const POSPersonBuilder = ({
                 >
                   {g.name}
                   {g.level === "x2" && (
-                    <span className="absolute top-1 right-1.5 text-[10px] font-bold bg-white/20 rounded px-1">x2</span>
+                    <span className="absolute top-1 end-1.5 text-[10px] font-bold bg-white/20 rounded px-1">x2</span>
                   )}
                   {g.level === "oui" && (
-                    <span className="absolute top-1 right-1.5">
+                    <span className="absolute top-1 end-1.5">
                       <Check className="h-3 w-3" />
                     </span>
                   )}
@@ -299,7 +299,7 @@ export const POSPersonBuilder = ({
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
               {sauceStep.title}
               {sauceStep.max_selections && (
-                <span className="ml-2 text-xs font-normal">(max {sauceStep.max_selections})</span>
+                <span className="ms-2 text-xs font-normal">(max {sauceStep.max_selections})</span>
               )}
             </h3>
 
@@ -472,7 +472,7 @@ export const POSPersonBuilder = ({
                   <div>
                     <span className="text-sm font-medium text-foreground">{sup.name}</span>
                     {sup.unitPrice > 0 && (
-                      <span className="text-xs text-muted-foreground ml-2">+{sup.unitPrice.toFixed(2)} €</span>
+                      <span className="text-xs text-muted-foreground ms-2">+{sup.unitPrice.toFixed(2)} €</span>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
@@ -515,7 +515,7 @@ export const POSPersonBuilder = ({
         <div className="border-t border-border bg-background px-4 py-3 space-y-3">
           {/* Mini recap */}
           <div className="flex items-center justify-between">
-            <div className="text-sm text-foreground truncate flex-1 mr-3">
+            <div className="text-sm text-foreground truncate flex-1 me-3">
               {recapParts.join(", ")}
             </div>
             <span className="text-lg font-bold text-foreground tabular-nums">{price.toFixed(2)} €</span>
