@@ -126,7 +126,6 @@
   "custom.meat_slot": "肉类 {number}",
   "custom.no_sauce": "不要酱料",
   "custom.no_supplement": "不要加料",
-
   "common.save": "保存",
   "common.cancel": "取消",
   "common.delete": "删除",
@@ -154,14 +153,12 @@
   "common.price": "价格",
   "common.total": "总计",
   "common.min_unit": "分钟",
-
   "common.toast.save_error": "保存出错",
   "common.toast.upload_error": "上传出错",
   "common.toast.delete_error": "删除出错",
   "common.toast.update_error": "更新出错",
   "common.toast.link_copied": "链接已复制！",
   "common.toast.copy_error": "无法复制",
-
   "time.just_now": "刚刚",
   "time.ago_min": "{n} 分钟前",
   "time.ago_hours": "{n} 小时前",
@@ -171,10 +168,8 @@
   "time.today": "今天",
   "time.yesterday": "昨天",
   "time.days_ago": "{n} 天前",
-
   "notfound.title": "页面未找到",
   "notfound.back_home": "返回首页",
-
   "auth.welcome": "欢迎！",
   "auth.welcome_desc": "3分钟后，告别佣金。",
   "auth.welcome_back": "欢迎回来",
@@ -212,7 +207,6 @@
   "auth.step_menu": "添加您的菜单",
   "auth.step_share": "分享您的链接",
   "auth.step_orders": "收到第一笔直接订单",
-
   "auth.signup.step_account": "账户",
   "auth.signup.step_restaurant": "餐厅",
   "auth.signup.step_menu": "菜单",
@@ -254,7 +248,6 @@
   "auth.signup.email_taken": "该邮箱已被使用。请登录或使用其他邮箱。",
   "auth.signup.signup_error": "注册出错。",
   "auth.signup.creation_error": "创建出错。请重试。",
-
   "auth.reset.email_required": "请输入邮箱地址。",
   "auth.reset.email_sent_title": "邮件已发送！",
   "auth.reset.email_sent_desc": "如果该邮箱对应的账户存在，您将很快收到链接。",
@@ -285,7 +278,6 @@
   "auth.reset.confirm_password": "确认密码",
   "auth.reset.confirm_placeholder": "确认您的密码",
   "auth.reset.reset_button": "重置",
-
   "auth.customer.login_success": "登录成功！",
   "auth.customer.login_error": "登录出错",
   "auth.customer.password_too_short": "密码至少6个字符",
@@ -307,7 +299,6 @@
   "auth.customer.signup_failed": "注册失败",
   "auth.customer.login_failed": "登录失败",
   "auth.customer.owner_account_error": "这是餐厅老板账户，请使用管理页面。",
-
   "subscription.choose_plan": "选择套餐",
   "subscription.no_commitment": "无约束，随时取消。",
   "subscription.trial_banner": "14天免费试用",
@@ -358,7 +349,6 @@
   "subscription.selected": "已选择",
   "subscription.choose_this_plan": "选择此套餐",
   "subscription.pricing_fine_print": "14天免费试用，需绑定银行卡。您的客户无需在线付款，到店付款即可。",
-
   "subscription.features.custom_page": "定制点餐页面",
   "subscription.features.realtime_menu": "实时编辑菜单",
   "subscription.features.zero_commission": "订单0%佣金",
@@ -375,7 +365,6 @@
   "subscription.features.ocr_menu": "菜单OCR扫描",
   "subscription.features.priority_support": "优先客服支持",
   "subscription.features.advanced_stats": "高级统计",
-
   "subscription.gate.trial": "免费试用",
   "subscription.gate.days_remaining": "剩余 {days} 天。",
   "subscription.gate.activate": "激活",
@@ -383,7 +372,6 @@
   "subscription.gate.payment_desc": "上次付款失败。请更新付款信息以继续使用commandeici。",
   "subscription.gate.manage_payment": "管理付款",
   "subscription.gate.redirect_note": "您将被重定向到客户专区。",
-
   "onboarding.success.online": "{name} 已上线！",
   "onboarding.success.trial_started": "您的14天免费试用已开始。分享页面给您的客户吧。",
   "onboarding.success.go_dashboard": "进入管理面板",
@@ -401,7 +389,6 @@
   "onboarding.success.promo_question": "有优惠码？",
   "onboarding.success.activate_button": "激活免费试用",
   "onboarding.success.fine_print": "付款将在新标签页打开。14天内不会收费。",
-
   "onboarding.upload.loading_1": "正在分析您的菜单，为您节省时间...",
   "onboarding.upload.loading_2": "AI正在整理菜品、分类和价格...",
   "onboarding.upload.loading_3": "您只需检查并调整即可。",
@@ -425,7 +412,6 @@
   "onboarding.upload.analyze_files": "分析 {count} 个文件",
   "onboarding.upload.analyze_menu": "分析我的菜单",
   "onboarding.upload.manual_create": "手动创建菜单",
-
   "onboarding.review.new_category": "新分类",
   "onboarding.review.summary": "检测到 {categories} 个分类，{items} 个菜品",
   "onboarding.review.category": "分类",
@@ -435,7 +421,6 @@
   "onboarding.review.add_item": "添加菜品",
   "onboarding.review.back": "返回",
   "onboarding.review.validate": "确认我的菜单",
-
   "onboarding.place.confirm_desc": "检查并完善您的餐厅信息。",
   "onboarding.place.name": "名称",
   "onboarding.place.address": "地址",
@@ -478,7 +463,6 @@
   "onboarding.place.manual_city_placeholder": "上海",
   "onboarding.place.manual_phone": "电话（可选）",
   "onboarding.place.manual_phone_placeholder": "138 1234 5678",
-
   "onboarding.colors.recommended": "推荐",
   "onboarding.colors.preview_name": "您的餐厅",
   "onboarding.colors.live_preview": "实时预览",
@@ -488,7 +472,6 @@
   "onboarding.colors.primary": "主色调",
   "onboarding.colors.custom": "自定义",
   "onboarding.colors.background": "背景色",
-
   "suivi.received": "订单已接收",
   "suivi.preparing": "准备中",
   "suivi.almost_ready": "即将完成",
@@ -518,7 +501,6 @@
   "suivi.create_button": "创建我的账户",
   "suivi.no_thanks": "不了，谢谢",
   "suivi.call_restaurant": "联系餐厅",
-
   "client.profile_updated": "账户已更新",
   "client.save_error": "保存出错",
   "client.profile_deleted": "账户已删除",
@@ -542,7 +524,6 @@
   "client.delete_profile": "删除我的账户",
   "client.delete_confirm_title": "确定删除账户？",
   "client.delete_confirm_desc": "此操作不可撤销。您的数据将被永久删除。",
-
   "pickup.title": "您想什么时候取餐？",
   "pickup.asap": "尽快",
   "pickup.asap_time": "大约 {minutes} 分钟",
@@ -553,7 +534,6 @@
   "pickup.lunch": " - 午餐",
   "pickup.dinner": " - 晚餐",
   "pickup.tomorrow": "明天",
-
   "dashboard.nav.kitchen": "厨房",
   "dashboard.nav.pos": "收银台",
   "dashboard.nav.live": "实时",
@@ -565,7 +545,6 @@
   "dashboard.nav.settings": "设置",
   "dashboard.nav.stats": "统计",
   "dashboard.nav.manage": "管理",
-
   "dashboard.admin.orders_enabled": "已开启接单",
   "dashboard.admin.orders_disabled": "已关闭接单",
   "dashboard.admin.login_required": "需要登录",
@@ -588,7 +567,6 @@
   "dashboard.admin.reactivate": "重新激活",
   "dashboard.admin.install_app": "安装应用",
   "dashboard.admin.quick_access": "从主屏幕快速访问",
-
   "dashboard.orders.status_new": "新订单",
   "dashboard.orders.status_preparing": "准备中",
   "dashboard.orders.status_ready": "已完成",
@@ -619,7 +597,6 @@
   "dashboard.orders.no_items": "无菜品",
   "dashboard.orders.item_available": "{name} 有货",
   "dashboard.orders.item_out_of_stock": "{name} 缺货",
-
   "dashboard.stats.today": "今天",
   "dashboard.stats.this_week": "本周",
   "dashboard.stats.this_month": "本月",
@@ -638,7 +615,6 @@
   "dashboard.stats.total_historical": "历史总计",
   "dashboard.stats.orders_suffix": "单",
   "dashboard.stats.demand_forecast": "需求预测",
-
   "dashboard.live.unknown": "未知",
   "dashboard.live.daily_stats": "今日统计",
   "dashboard.live.revenue_today": "今日营收",
@@ -665,7 +641,6 @@
   "dashboard.live.compact_online": "在线：",
   "dashboard.live.compact_carts": "购物车：",
   "dashboard.live.compact_preparing": "备餐：",
-
   "dashboard.menu.copy_suffix": "（副本）",
   "dashboard.menu.item_duplicated": "菜品已复制",
   "dashboard.menu.duplicate_error": "复制出错",
@@ -709,7 +684,6 @@
   "dashboard.menu.type_drink": "饮料",
   "dashboard.menu.type_dessert": "甜点",
   "dashboard.menu.type_supplement": "加料",
-
   "dashboard.page.colors_saved": "颜色已保存",
   "dashboard.page.info_saved": "信息已保存",
   "dashboard.page.image_updated": "{type}已更新",
@@ -735,7 +709,6 @@
   "dashboard.page.page_preview": "页面预览",
   "dashboard.page.view_page": "查看我的页面",
   "dashboard.page.preview_title": "页面预览",
-
   "dashboard.clients.load_error": "客户加载出错",
   "dashboard.clients.title": "我的客户",
   "dashboard.clients.total": "客户总数",
@@ -762,7 +735,6 @@
   "dashboard.clients.unban": "解封",
   "dashboard.clients.ban": "封禁",
   "dashboard.clients.unbanned": "已解封",
-
   "dashboard.settings.manual": "手动",
   "dashboard.settings.manual_desc": "手动开启/关闭",
   "dashboard.settings.automatic": "自动",
@@ -830,7 +802,6 @@
   "dashboard.settings.disable_confirm": "确认请输入餐厅的准确名称：",
   "dashboard.settings.disable_button": "停用",
   "dashboard.settings.demo_unavailable": "演示模式下不可用",
-
   "dashboard.qr.scan_to_order": "扫码下单",
   "dashboard.qr.a4_downloaded": "A4页面已下载",
   "dashboard.qr.poster_downloaded": "海报已下载",
@@ -851,7 +822,6 @@
   "dashboard.qr.pos_desc": "此二维码可直接在平板上打开收银台：",
   "dashboard.qr.tip_title": "提示",
   "dashboard.qr.tip_text": "打印A4页面并裁剪二维码放在餐桌上。SVG格式适合大幅面打印，不会失真。",
-
   "dashboard.tablets.usage_kitchen": "厨房",
   "dashboard.tablets.usage_pos": "收银台",
   "dashboard.tablets.usage_service": "客户服务",
@@ -887,7 +857,6 @@
   "dashboard.tablets.usage_label": "用途",
   "dashboard.tablets.notes_label": "备注（可选）",
   "dashboard.tablets.notes_placeholder": "其他信息...",
-
   "dashboard.customization.title": "订单定制",
   "dashboard.customization.modified": "已修改",
   "dashboard.customization.added": "已添加",
@@ -923,7 +892,6 @@
   "dashboard.customization.default_label": "默认",
   "dashboard.customization.optional_label": "可选",
   "dashboard.customization.empty_state": "暂无菜品。点击\"添加\"开始。",
-
   "dashboard.manage.title": "管理我的餐厅",
   "dashboard.manage.menu_label": "我的菜单",
   "dashboard.manage.menu_desc": "编辑菜品、价格、分类",
@@ -941,7 +909,6 @@
   "dashboard.manage.settings_desc": "营业时间、模式、支付",
   "dashboard.manage.stats_label": "统计",
   "dashboard.manage.stats_desc": "历史、趋势、导出",
-
   "dashboard.schedule.sunday": "周日",
   "dashboard.schedule.monday": "周一",
   "dashboard.schedule.tuesday": "周二",
@@ -954,7 +921,6 @@
   "dashboard.schedule.closed": "关门",
   "dashboard.schedule.to": "至",
   "dashboard.schedule.add_slot": "添加时间段",
-
   "dashboard.ban.success": "{name} 已被封禁",
   "dashboard.ban.error": "封禁出错",
   "dashboard.ban.title": "封禁客户",
@@ -966,7 +932,6 @@
   "dashboard.ban.30_days": "30天",
   "dashboard.ban.permanent": "永久",
   "dashboard.ban.confirm": "确认封禁",
-
   "dashboard.import.conversion_error": "{count} 个文件转换失败",
   "dashboard.import.no_usable_files": "没有可用的文件。",
   "dashboard.import.analysis_error": "分析出错",
@@ -984,7 +949,6 @@
   "dashboard.import.analyzing": "分析中...",
   "dashboard.import.ai_reading": "AI正在读取文档并提取菜品。",
   "dashboard.import.adding_items": "正在添加菜品到菜单...",
-
   "dashboard.demand.tip_title": "今日提示",
   "dashboard.demand.calendar_title": "一周日历",
   "dashboard.demand.lunch": "午餐",
@@ -996,7 +960,6 @@
   "dashboard.demand.hourly_title": "今日每小时预测",
   "dashboard.demand.intensity": "强度",
   "dashboard.demand.now": "现在",
-
   "dashboard.referral.title": "推荐计划",
   "dashboard.referral.description": "推荐同行，双方各获4周免费使用。",
   "dashboard.referral.referrals": "推荐",
@@ -1011,7 +974,6 @@
   "dashboard.referral.whatsapp_message": "你好！推荐你使用commandeici管理订单。用我的推荐码，我们都能获得4周免费使用：{url}",
   "dashboard.referral.email_subject": "推荐commandeici",
   "dashboard.referral.email_body": "你好，\n\n推荐你使用commandeici管理直接订单，零佣金。用我的链接，我们都能获得4周免费使用：\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "库存管理",
   "dashboard.assistant.shortcut_ban": "封禁客户",
   "dashboard.assistant.shortcut_supplements": "添加加料",
@@ -1026,7 +988,6 @@
   "dashboard.assistant.contact_support": "联系客服",
   "dashboard.assistant.fallback": "未找到答案。请联系 contact@commandeici.com 获取帮助。",
   "dashboard.assistant.input_placeholder": "输入您的问题...",
-
   "dashboard.onboarding.step_kitchen": "厨房",
   "dashboard.onboarding.step_kitchen_desc": "在这里接收和管理所有订单。一键接单、备餐、标记完成。",
   "dashboard.onboarding.step_pos": "收银台",
@@ -1039,7 +1000,6 @@
   "dashboard.onboarding.step_availability_desc": "此开关可即时开启或关闭接单。休息或歇业时很方便。",
   "dashboard.onboarding.step_sound": "声音",
   "dashboard.onboarding.step_sound_desc": "开启声音，每收到新订单会有提醒。营业时必不可少！",
-
   "pos.order_type": "订单类型",
   "pos.dine_in": "堂食",
   "pos.takeaway": "外带",
@@ -1148,7 +1108,6 @@
   "demo.cta_try": "还没决定？试试演示",
   "demo.cta_link": "在演示模式中探索工具",
   "demo.no_orders": "演示餐厅",
-
   "home.page_title": "commandeici - 餐厅管理",
   "home.create_page": "创建我的页面",
   "home.title": "餐厅管理",
@@ -1159,5 +1118,6 @@
   "dashboard.orders.action_ready": "已备好",
   "dashboard.orders.action_done": "已完成",
   "dashboard.orders.covers_count": "{count} 位",
-  "dashboard.orders.add_item": "添加"
+  "dashboard.orders.add_item": "添加",
+  "restaurant.show_phone": "显示电话号码"
 }

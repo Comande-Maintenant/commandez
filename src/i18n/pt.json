@@ -1108,7 +1108,6 @@
   "demo.cta_try": "Ainda nao convencido? Experimente a demo",
   "demo.cta_link": "Descobrir a ferramenta em modo demo",
   "demo.no_orders": "Restaurante de demonstracao",
-
   "home.page_title": "commandeici - Painel restaurante",
   "home.create_page": "Criar minha pagina",
   "home.title": "Painel restaurante",
@@ -1119,5 +1118,6 @@
   "dashboard.orders.action_ready": "Pronto",
   "dashboard.orders.action_done": "Concluido",
   "dashboard.orders.covers_count": "{count} talher(es)",
-  "dashboard.orders.add_item": "Adicionar"
+  "dashboard.orders.add_item": "Adicionar",
+  "restaurant.show_phone": "Mostrar numero"
 }

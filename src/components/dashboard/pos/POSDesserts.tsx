@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import type { DbMenuItem } from "@/types/database";
 import type { POSDessertItem } from "@/types/pos";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   desserts: POSDessertItem[];
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export const POSDesserts = ({ desserts, menuItems, onUpdateDesserts, onSetDessertPending, onNext, onBack }: Props) => {
+  const { t } = useLanguage();
   const dessertItems = useMemo(
     () => menuItems.filter((item) => item.category.toLowerCase().includes("dessert")),
     [menuItems]
@@ -61,13 +63,13 @@ export const POSDesserts = ({ desserts, menuItems, onUpdateDesserts, onSetDesser
         <button onClick={onBack} className="p-2 rounded-full hover:bg-secondary transition-colors">
           <ArrowLeft className="h-5 w-5 text-foreground" />
         </button>
-        <h2 className="text-xl font-bold text-foreground">Desserts</h2>
+        <h2 className="text-xl font-bold text-foreground">{t('pos.desserts')}</h2>
       </div>
 
       {/* Items grid */}
       <div className="flex-1 overflow-y-auto px-4 py-3">
         {dessertItems.length === 0 ? (
-          <p className="text-center text-muted-foreground py-12">Aucun dessert dans le menu</p>
+          <p className="text-center text-muted-foreground py-12">{t('pos.no_desserts')}</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {dessertItems.map((item) => {
@@ -113,7 +115,7 @@ export const POSDesserts = ({ desserts, menuItems, onUpdateDesserts, onSetDesser
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground">Total desserts : {dessertsTotal.toFixed(2)} €</p>
+          <p className="text-sm text-muted-foreground">{t('pos.desserts_total')} {dessertsTotal.toFixed(2)} €</p>
         </div>
       )}
 
@@ -125,14 +127,14 @@ export const POSDesserts = ({ desserts, menuItems, onUpdateDesserts, onSetDesser
             className="flex-1 rounded-xl min-h-[48px] text-sm"
             onClick={() => { onUpdateDesserts([]); onSetDessertPending(false); onNext(); }}
           >
-            Pas de dessert
+            {t('pos.no_dessert')}
           </Button>
           <Button
             variant="outline"
             className="flex-1 rounded-xl min-h-[48px] text-sm"
             onClick={() => { onUpdateDesserts([]); onSetDessertPending(true); onNext(); }}
           >
-            Peut-être après
+            {t('pos.maybe_later')}
           </Button>
         </div>
         {desserts.length > 0 && (
@@ -140,7 +142,7 @@ export const POSDesserts = ({ desserts, menuItems, onUpdateDesserts, onSetDesser
             className="w-full rounded-xl min-h-[48px] text-base font-semibold"
             onClick={() => { onSetDessertPending(false); onNext(); }}
           >
-            Suivant
+            {t('pos.next')}
           </Button>
         )}
       </div>

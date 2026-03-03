@@ -126,7 +126,6 @@
   "custom.meat_slot": "Et {number}",
   "custom.no_sauce": "Sos yok",
   "custom.no_supplement": "Ek yok",
-
   "common.save": "Kaydet",
   "common.cancel": "Iptal",
   "common.delete": "Sil",
@@ -154,14 +153,12 @@
   "common.price": "Fiyat",
   "common.total": "Toplam",
   "common.min_unit": "dk",
-
   "common.toast.save_error": "Kaydetme hatasi",
   "common.toast.upload_error": "Yukleme hatasi",
   "common.toast.delete_error": "Silme hatasi",
   "common.toast.update_error": "Guncelleme hatasi",
   "common.toast.link_copied": "Baglanti kopyalandi!",
   "common.toast.copy_error": "Kopyalanamadi",
-
   "time.just_now": "Simdi",
   "time.ago_min": "{n} dk once",
   "time.ago_hours": "{n}s once",
@@ -171,10 +168,8 @@
   "time.today": "Bugun",
   "time.yesterday": "Dun",
   "time.days_ago": "{n} gun once",
-
   "notfound.title": "Sayfa bulunamadi",
   "notfound.back_home": "Ana sayfaya don",
-
   "auth.welcome": "Hos geldiniz!",
   "auth.welcome_desc": "Komisyonlardan kurtulmaya 3 dakika kaldi.",
   "auth.welcome_back": "Tekrar hos geldiniz",
@@ -212,7 +207,6 @@
   "auth.step_menu": "Menunuzu ekleyin",
   "auth.step_share": "Linkinizi paylasin",
   "auth.step_orders": "Ilk dogrudan siparislerinizi alin",
-
   "auth.signup.step_account": "Hesap",
   "auth.signup.step_restaurant": "Restoran",
   "auth.signup.step_menu": "Menu",
@@ -254,7 +248,6 @@
   "auth.signup.email_taken": "Bu e-posta zaten kullaniliyor. Giris yapin veya baska bir e-posta kullanin.",
   "auth.signup.signup_error": "Kayit sirasinda hata olustu.",
   "auth.signup.creation_error": "Olusturma hatasi. Lutfen tekrar deneyin.",
-
   "auth.reset.email_required": "E-posta adresinizi girin.",
   "auth.reset.email_sent_title": "E-posta gonderildi!",
   "auth.reset.email_sent_desc": "Bu adreste bir hesap varsa, birka dakika icinde bir link alacaksiniz.",
@@ -285,7 +278,6 @@
   "auth.reset.confirm_password": "Sifreyi onayla",
   "auth.reset.confirm_placeholder": "Sifrenizi onaylayin",
   "auth.reset.reset_button": "Sifirla",
-
   "auth.customer.login_success": "Giris basarili!",
   "auth.customer.login_error": "Giris hatasi",
   "auth.customer.password_too_short": "Sifre en az 6 karakter olmalidir",
@@ -307,7 +299,6 @@
   "auth.customer.signup_failed": "Kayit basarisiz",
   "auth.customer.login_failed": "Giris basarisiz",
   "auth.customer.owner_account_error": "Bu bir restoran sahibi hesabi. Admin sayfasini kullanin.",
-
   "subscription.choose_plan": "Planunuzi secin",
   "subscription.no_commitment": "Taahhut yok, istediginiz zaman iptal edin.",
   "subscription.trial_banner": "14 gun ucretsiz deneme",
@@ -358,7 +349,6 @@
   "subscription.selected": "Secili",
   "subscription.choose_this_plan": "Bu plani sec",
   "subscription.pricing_fine_print": "14 gun ucretsiz deneme, kredi karti gerekli. Musterileriniz online odeme yapmaz. Odeme her zamanki gibi yerinde yapilir.",
-
   "subscription.features.custom_page": "Kisisellestirilebilir siparis sayfasi",
   "subscription.features.realtime_menu": "Anlik duzenlenebilir menu",
   "subscription.features.zero_commission": "Siparislere %0 komisyon",
@@ -375,7 +365,6 @@
   "subscription.features.ocr_menu": "Menunuzun OCR analizi",
   "subscription.features.priority_support": "Oncelikli destek",
   "subscription.features.advanced_stats": "Gelismis istatistikler",
-
   "subscription.gate.trial": "Ucretsiz deneme",
   "subscription.gate.days_remaining": "{days} gun kaldi.",
   "subscription.gate.activate": "Aktif et",
@@ -383,7 +372,6 @@
   "subscription.gate.payment_desc": "Son odemeniz basarisiz oldu. commandeici kullanmaya devam etmek icin odeme bilgilerinizi guncelleyin.",
   "subscription.gate.manage_payment": "Odememi yonet",
   "subscription.gate.redirect_note": "Musteri alaniniza yonlendirileceksiniz.",
-
   "onboarding.success.online": "{name} yayinda!",
   "onboarding.success.trial_started": "14 gunluk ucretsiz denemeniz basladi. Sayfanizi musterilerinizle paylasin.",
   "onboarding.success.go_dashboard": "Kontrol panelime git",
@@ -401,7 +389,6 @@
   "onboarding.success.promo_question": "Promo kodunuz var mi?",
   "onboarding.success.activate_button": "Ucretsiz denememi aktif et",
   "onboarding.success.fine_print": "Odeme yeni bir sekmede acilir. 14 gun boyunca odeme alinmaz.",
-
   "onboarding.upload.loading_1": "Size zaman kazandirmak icin menunuzu analiz ediyoruz...",
   "onboarding.upload.loading_2": "Yapay zekamiz yemeklerinizi, kategorilerinizi ve fiyatlarinizi yapilandiriyor...",
   "onboarding.upload.loading_3": "Sadece kontrol edip gerekirse duzeltmeniz yeterli.",
@@ -425,7 +412,6 @@
   "onboarding.upload.analyze_files": "{count} dosyami analiz et",
   "onboarding.upload.analyze_menu": "Menumu analiz et",
   "onboarding.upload.manual_create": "Menumu elle olustur",
-
   "onboarding.review.new_category": "Yeni kategori",
   "onboarding.review.summary": "{categories} kategori, {items} urun tespit edildi",
   "onboarding.review.category": "Kategori",
@@ -435,7 +421,6 @@
   "onboarding.review.add_item": "Urun ekle",
   "onboarding.review.back": "Geri",
   "onboarding.review.validate": "Menumu onayla",
-
   "onboarding.place.confirm_desc": "Restoran bilgilerinizi kontrol edin ve tamamlayin.",
   "onboarding.place.name": "Ad",
   "onboarding.place.address": "Adres",
@@ -478,7 +463,6 @@
   "onboarding.place.manual_city_placeholder": "Istanbul",
   "onboarding.place.manual_phone": "Telefon (istege bagli)",
   "onboarding.place.manual_phone_placeholder": "0532 123 45 67",
-
   "onboarding.colors.recommended": "Onerilen",
   "onboarding.colors.preview_name": "Restoraniniz",
   "onboarding.colors.live_preview": "Canli onizleme",
@@ -488,7 +472,6 @@
   "onboarding.colors.primary": "Ana renk",
   "onboarding.colors.custom": "Ozel",
   "onboarding.colors.background": "Arka plan rengi",
-
   "suivi.received": "Siparis alindi",
   "suivi.preparing": "Hazirlaniyor",
   "suivi.almost_ready": "Neredeyse hazir",
@@ -518,7 +501,6 @@
   "suivi.create_button": "Profilimi olustur",
   "suivi.no_thanks": "Hayir tesekkurler",
   "suivi.call_restaurant": "Restorani ara",
-
   "client.profile_updated": "Profil guncellendi",
   "client.save_error": "Kaydetme hatasi",
   "client.profile_deleted": "Profil silindi",
@@ -542,7 +524,6 @@
   "client.delete_profile": "Profilimi sil",
   "client.delete_confirm_title": "Profilinizi silmek istiyor musunuz?",
   "client.delete_confirm_desc": "Bu islem geri alinamaz. Verileriniz kalici olarak silinecektir.",
-
   "pickup.title": "Siparisini ne zaman almak istersiniz?",
   "pickup.asap": "En kisa surede",
   "pickup.asap_time": "Yaklasik {minutes} dk",
@@ -553,7 +534,6 @@
   "pickup.lunch": " - ogle",
   "pickup.dinner": " - aksam",
   "pickup.tomorrow": "Yarin",
-
   "dashboard.nav.kitchen": "Mutfak",
   "dashboard.nav.pos": "Kasa",
   "dashboard.nav.live": "Canli",
@@ -565,7 +545,6 @@
   "dashboard.nav.settings": "Ayarlar",
   "dashboard.nav.stats": "Istatistikler",
   "dashboard.nav.manage": "Yonet",
-
   "dashboard.admin.orders_enabled": "Siparisler acik",
   "dashboard.admin.orders_disabled": "Siparisler kapali",
   "dashboard.admin.login_required": "Giris gerekli",
@@ -588,7 +567,6 @@
   "dashboard.admin.reactivate": "Yeniden aktif et",
   "dashboard.admin.install_app": "Uygulamayi yukle",
   "dashboard.admin.quick_access": "Ana ekraninizdan hizli erisim",
-
   "dashboard.orders.status_new": "Yeni",
   "dashboard.orders.status_preparing": "Hazirlaniyor",
   "dashboard.orders.status_ready": "Hazir",
@@ -619,7 +597,6 @@
   "dashboard.orders.no_items": "Urun yok",
   "dashboard.orders.item_available": "{name} mevcut",
   "dashboard.orders.item_out_of_stock": "{name} tukendi",
-
   "dashboard.stats.today": "Bugun",
   "dashboard.stats.this_week": "Bu hafta",
   "dashboard.stats.this_month": "Bu ay",
@@ -638,7 +615,6 @@
   "dashboard.stats.total_historical": "Tum zamanlar toplami",
   "dashboard.stats.orders_suffix": "siparis",
   "dashboard.stats.demand_forecast": "Talep tahmini",
-
   "dashboard.live.unknown": "Bilinmiyor",
   "dashboard.live.daily_stats": "Gunun istatistikleri",
   "dashboard.live.revenue_today": "Gunluk ciro",
@@ -665,7 +641,6 @@
   "dashboard.live.compact_online": "Online:",
   "dashboard.live.compact_carts": "Sepetler:",
   "dashboard.live.compact_preparing": "Hazirlanyor:",
-
   "dashboard.menu.copy_suffix": " (kopya)",
   "dashboard.menu.item_duplicated": "Urun kopyalandi",
   "dashboard.menu.duplicate_error": "Kopyalama hatasi",
@@ -709,7 +684,6 @@
   "dashboard.menu.type_drink": "Icecek",
   "dashboard.menu.type_dessert": "Tatli",
   "dashboard.menu.type_supplement": "Ek",
-
   "dashboard.page.colors_saved": "Renkler kaydedildi",
   "dashboard.page.info_saved": "Bilgiler kaydedildi",
   "dashboard.page.image_updated": "{type} guncellendi",
@@ -735,7 +709,6 @@
   "dashboard.page.page_preview": "Sayfa onizleme",
   "dashboard.page.view_page": "Sayfami gor",
   "dashboard.page.preview_title": "Sayfa onizleme",
-
   "dashboard.clients.load_error": "Musteri yukleme hatasi",
   "dashboard.clients.title": "Musterilerim",
   "dashboard.clients.total": "Toplam musteri",
@@ -762,7 +735,6 @@
   "dashboard.clients.unban": "Yasagi kaldir",
   "dashboard.clients.ban": "Yasakla",
   "dashboard.clients.unbanned": "yasagi kaldirildi",
-
   "dashboard.settings.manual": "Manuel",
   "dashboard.settings.manual_desc": "Elle acin/kapatin",
   "dashboard.settings.automatic": "Otomatik",
@@ -830,7 +802,6 @@
   "dashboard.settings.disable_confirm": "Onaylamak icin restoraninizin tam adini yazin:",
   "dashboard.settings.disable_button": "Deaktif et",
   "dashboard.settings.demo_unavailable": "Demo modunda kulanilamaz",
-
   "dashboard.qr.scan_to_order": "Siparis icin tara",
   "dashboard.qr.a4_downloaded": "A4 sayfa indirildi",
   "dashboard.qr.poster_downloaded": "Vitrin afisi indirildi",
@@ -851,7 +822,6 @@
   "dashboard.qr.pos_desc": "Bu QR kod tablette dogrudan kasayi acar :",
   "dashboard.qr.tip_title": "Ipucu",
   "dashboard.qr.tip_text": "A4 sayfayi bastirin ve QR kodlari masalariniz icin kesin. SVG formati kalite kaybetmeden buyuk baski icin idealdir.",
-
   "dashboard.tablets.usage_kitchen": "Mutfak",
   "dashboard.tablets.usage_pos": "Kasa",
   "dashboard.tablets.usage_service": "Musteri hizmeti",
@@ -887,7 +857,6 @@
   "dashboard.tablets.usage_label": "Kullanim",
   "dashboard.tablets.notes_label": "Notlar (istege bagli)",
   "dashboard.tablets.notes_placeholder": "Ek bilgiler...",
-
   "dashboard.customization.title": "Siparis kisisellestirme",
   "dashboard.customization.modified": "Duzenlendi",
   "dashboard.customization.added": "Eklendi",
@@ -923,7 +892,6 @@
   "dashboard.customization.default_label": "Varsayilan",
   "dashboard.customization.optional_label": "Istege bagli",
   "dashboard.customization.empty_state": "Oge yok. Baslamak icin \"Ekle\"ye tiklayin.",
-
   "dashboard.manage.title": "Restornimi yonet",
   "dashboard.manage.menu_label": "Menum",
   "dashboard.manage.menu_desc": "Yemekler, fiyatlar, kategoriler",
@@ -941,7 +909,6 @@
   "dashboard.manage.settings_desc": "Saatler, modlar, odeme",
   "dashboard.manage.stats_label": "Istatistikler",
   "dashboard.manage.stats_desc": "Gecmis, trendler, disa aktarma",
-
   "dashboard.schedule.sunday": "Pazar",
   "dashboard.schedule.monday": "Pazartesi",
   "dashboard.schedule.tuesday": "Sali",
@@ -954,7 +921,6 @@
   "dashboard.schedule.closed": "Kapali",
   "dashboard.schedule.to": "-",
   "dashboard.schedule.add_slot": "Saat ekle",
-
   "dashboard.ban.success": "{name} yasaklandi",
   "dashboard.ban.error": "Yasaklama hatasi",
   "dashboard.ban.title": "Bir musteriyi yasakla",
@@ -966,7 +932,6 @@
   "dashboard.ban.30_days": "30 gun",
   "dashboard.ban.permanent": "Kalici",
   "dashboard.ban.confirm": "Yasagi onayla",
-
   "dashboard.import.conversion_error": "{count} dosya donusturulemedi",
   "dashboard.import.no_usable_files": "Kullanilabilir dosya yok.",
   "dashboard.import.analysis_error": "Analiz hatasi",
@@ -984,7 +949,6 @@
   "dashboard.import.analyzing": "Analiz ediliyor...",
   "dashboard.import.ai_reading": "Yapay zeka belgenizi okuyor ve ogeleri cikariyor.",
   "dashboard.import.adding_items": "Ogeler menunuze ekleniyor...",
-
   "dashboard.demand.tip_title": "Gunun ipucu",
   "dashboard.demand.calendar_title": "Haftalik takvim",
   "dashboard.demand.lunch": "Ogle",
@@ -996,7 +960,6 @@
   "dashboard.demand.hourly_title": "Gunluk saatlik tahmin",
   "dashboard.demand.intensity": "Yogunluk",
   "dashboard.demand.now": "Simdi",
-
   "dashboard.referral.title": "Tavsiye",
   "dashboard.referral.description": "Bir meslektasinizi tavsiye edin, ikiniz de 4 hafta ucretsiz kazanin.",
   "dashboard.referral.referrals": "Tavsiyeler",
@@ -1011,7 +974,6 @@
   "dashboard.referral.whatsapp_message": "Merhaba! Siparislerini yonetmek icin sana commandeici'yi oneriyorum. Kodumu kullan, ikimiz de 4 hafta ucretsiz kazanalim : {url}",
   "dashboard.referral.email_subject": "Sana commandeici'yi oneriyorum",
   "dashboard.referral.email_body": "Merhaba,\n\nKomisyonsuz dogrudan siparislerini yonetmek icin sana commandeici'yi oneriyorum. Linkimi kullan, ikimiz de 4 hafta ucretsiz kazanalim :\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "Stok yonetimi",
   "dashboard.assistant.shortcut_ban": "Musteri yasakla",
   "dashboard.assistant.shortcut_supplements": "Ek ekle",
@@ -1026,7 +988,6 @@
   "dashboard.assistant.contact_support": "Destekle iletisime gec",
   "dashboard.assistant.fallback": "Sorunuza bir cevap bulamadim. Daha fazla yardim icin contact@commandeici.com adresinden bize ulasin.",
   "dashboard.assistant.input_placeholder": "Sorunuzu yazin...",
-
   "dashboard.onboarding.step_kitchen": "Mutfak",
   "dashboard.onboarding.step_kitchen_desc": "Burada tum siparisleri alir ve yonetirsiniz. Kabul edin, hazirlayin ve tek tikla hazir olarak isaretleyin.",
   "dashboard.onboarding.step_pos": "Kasa",
@@ -1039,7 +1000,6 @@
   "dashboard.onboarding.step_availability_desc": "Bu dume siparisleri aninda acar veya kapatir. Molalar ve kapanislar icin pratik.",
   "dashboard.onboarding.step_sound": "Ses",
   "dashboard.onboarding.step_sound_desc": "Her yeni sipariste uyarilmak icin sesi acin. Servis sirasinda vazgecilmez!",
-
   "pos.order_type": "Siparis turu",
   "pos.dine_in": "Yerinde",
   "pos.takeaway": "Paket",
@@ -1103,7 +1063,6 @@
   "pos.complete_no": "{item} olmadan tamamla",
   "pos.drinks_label": "Icecekler",
   "pos.desserts_label": "Tatlilar",
-
   "restaurant.not_found": "Restoran bulunamadi",
   "restaurant.deactivated": "Bu restoran su an icin hizmet vermiyor.",
   "restaurant.activating": "Bu sayfa aktif ediliyor.",
@@ -1124,11 +1083,9 @@
   "restaurant.reorder_prompt": "Son siparisini tekrar vereyim mi?",
   "restaurant.add_button": "Ekle",
   "restaurant.reorder_success": "Siparis sepete eklendi!",
-
   "payment.card": "Kredi karti",
   "payment.cash": "Nakit",
   "payment.ticket_restaurant": "Yemek ceki",
-
   "schedule.sunday": "Pazar",
   "schedule.monday": "Pazartesi",
   "schedule.tuesday": "Sali",
@@ -1137,25 +1094,20 @@
   "schedule.friday": "Cuma",
   "schedule.saturday": "Cumartesi",
   "schedule.not_accepting": "Bu restoran su an siparis kabul etmiyor.",
-
   "order.restaurant_unavailable": "Bu restoran su an siparis kabul etmiyor.",
   "order.error_generic": "Bir hata olustu. Lutfen tekrar deneyin.",
-
   "client.today": "Bugun",
   "client.yesterday": "Dun",
   "client.days_ago": "{days} gun once",
   "client.restaurant_fallback": "Restoran",
   "client.generic_error": "Hata",
-
   "nav.back": "Geri",
-
   "demo.banner_text": "Demo modu : istediginiz gibi test edin, her sey interaktif!",
   "demo.banner_cta": "Sayfami olustur : 14 gun ucretsiz",
   "demo.cta_discover": "Demo modunda kesfet",
   "demo.cta_try": "Henuz ikna olmadiniz mi? Demo modunu deneyin",
   "demo.cta_link": "Araci demo modunda kesfet",
   "demo.no_orders": "Demo restoran",
-
   "home.page_title": "commandeici - Restoran alani",
   "home.create_page": "Sayfami olustur",
   "home.title": "Restoran alani",
@@ -1163,9 +1115,9 @@
   "home.login": "Giris yap",
   "home.create_free": "Ucretsiz sayfami olustur",
   "home.back_to_site": "Siteye don",
-
   "dashboard.orders.action_ready": "Hazir",
   "dashboard.orders.action_done": "Tamamlandi",
   "dashboard.orders.covers_count": "{count} kisilik",
-  "dashboard.orders.add_item": "Ekle"
+  "dashboard.orders.add_item": "Ekle",
+  "restaurant.show_phone": "Telefon numarasini goster"
 }

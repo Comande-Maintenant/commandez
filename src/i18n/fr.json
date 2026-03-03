@@ -1124,6 +1124,7 @@
   "restaurant.reorder_prompt": "Recommander votre derniere commande ?",
   "restaurant.add_button": "Ajouter",
   "restaurant.reorder_success": "Commande ajoutee au panier !",
+  "restaurant.show_phone": "Afficher le numero",
 
   "payment.card": "CB",
   "payment.cash": "Especes",

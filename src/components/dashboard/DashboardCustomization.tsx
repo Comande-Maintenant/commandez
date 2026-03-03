@@ -34,6 +34,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -107,6 +108,7 @@ function SortableRow({
 }
 
 export const DashboardCustomization = ({ restaurant }: Props) => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabId>("bases");
   const [loading, setLoading] = useState(true);
 
@@ -271,21 +273,21 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
       }
       setShowDialog(false);
       resetForm();
-      toast.success(editId ? "Modifie" : "Ajoute");
+      toast.success(editId ? t('dashboard.customization.modified') : t('dashboard.customization.added'));
     } catch {
       toast.error("Erreur");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Supprimer ?")) return;
+    if (!confirm(t('dashboard.customization.delete_confirm'))) return;
     try {
       if (activeTab === "bases") { await deleteBase(id); setBases(await fetchAllBases(restaurant.id)); }
       else if (activeTab === "viandes") { await deleteViande(id); setViandes(await fetchAllViandes(restaurant.id)); }
       else if (activeTab === "garnitures") { await deleteGarniture(id); setGarnitures(await fetchAllGarnitures(restaurant.id)); }
       else if (activeTab === "sauces") { await deleteSauce(id); setSauces(await fetchAllSauces(restaurant.id)); }
       else if (activeTab === "accompagnements") { await deleteAccompagnement(id); setAccompagnements(await fetchAllAccompagnements(restaurant.id)); }
-      toast.success("Supprime");
+      toast.success(t('dashboard.customization.deleted'));
     } catch {
       toast.error("Erreur");
     }
@@ -386,12 +388,12 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
     if (stepTemplates.length === 0) {
       // Fallback: show all tabs (backward compat for restaurants without templates)
       return [
-        { id: "bases" as TabId, label: "Bases", count: bases.length },
-        { id: "viandes" as TabId, label: "Viandes", count: viandes.length },
-        { id: "garnitures" as TabId, label: "Garnitures", count: garnitures.length },
-        { id: "sauces" as TabId, label: "Sauces", count: sauces.length },
-        { id: "accompagnements" as TabId, label: "Accomp.", count: accompagnements.length },
-        { id: "config" as TabId, label: "Config", count: 0 },
+        { id: "bases" as TabId, label: t('dashboard.customization.tab_bases'), count: bases.length },
+        { id: "viandes" as TabId, label: t('dashboard.customization.tab_meats'), count: viandes.length },
+        { id: "garnitures" as TabId, label: t('dashboard.customization.tab_toppings'), count: garnitures.length },
+        { id: "sauces" as TabId, label: t('dashboard.customization.tab_sauces'), count: sauces.length },
+        { id: "accompagnements" as TabId, label: t('dashboard.customization.tab_sides'), count: accompagnements.length },
+        { id: "config" as TabId, label: t('dashboard.customization.tab_config'), count: 0 },
       ];
     }
 
@@ -406,7 +408,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
       dynamicTabs.push({ id: tabId, label, count: countMap[tabId] ?? 0 });
     }
     // Always add config tab
-    dynamicTabs.push({ id: "config", label: "Config", count: 0 });
+    dynamicTabs.push({ id: "config", label: t('dashboard.customization.tab_config'), count: 0 });
     return dynamicTabs;
   }, [stepTemplates, bases.length, viandes.length, garnitures.length, sauces.length, accompagnements.length]);
 
@@ -427,7 +429,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-foreground mb-4">Personnalisation commande</h2>
+      <h2 className="text-xl font-bold text-foreground mb-4">{t('dashboard.customization.title')}</h2>
 
       {/* Tab bar */}
       <div className="flex gap-1 overflow-x-auto no-scrollbar mb-4">
@@ -493,10 +495,10 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
                     extra = `${Number(b.price).toFixed(2)} € - ${b.max_viandes} viande(s) max`;
                   } else if (activeTab === "viandes") {
                     const v = item as DbViande;
-                    extra = Number(v.supplement) > 0 ? `+${Number(v.supplement).toFixed(2)} €` : "Inclus";
+                    extra = Number(v.supplement) > 0 ? `+${Number(v.supplement).toFixed(2)} €` : t('dashboard.customization.included');
                   } else if (activeTab === "garnitures") {
                     const g = item as DbGarniture;
-                    extra = g.is_default ? "Par defaut" : "Optionnel";
+                    extra = g.is_default ? t('dashboard.customization.default_label') : t('dashboard.customization.optional_label');
                   } else if (activeTab === "sauces") {
                     const s = item as DbSauce;
                     const parts = [];
@@ -524,7 +526,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
                   );
                 })}
                 {currentItems.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-8">Aucun element. Cliquez "Ajouter" pour commencer.</p>
+                  <p className="text-sm text-muted-foreground text-center py-8">{t('dashboard.customization.empty_state')}</p>
                 )}
               </div>
             </SortableContext>
@@ -536,14 +538,14 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
       <Dialog open={showDialog} onOpenChange={(open) => { if (!open) { setShowDialog(false); resetForm(); } }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editId ? "Modifier" : "Ajouter"}</DialogTitle>
+            <DialogTitle>{editId ? t('common.edit') : t('common.add')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 mt-2">
-            <Input placeholder="Nom" value={formName} onChange={(e) => setFormName(e.target.value)} />
+            <Input placeholder={t('dashboard.customization.name')} value={formName} onChange={(e) => setFormName(e.target.value)} />
 
             {activeTab === "bases" && (
               <>
-                <Input type="number" step="0.50" placeholder="Prix (€)" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} />
+                <Input type="number" step="0.50" placeholder={t('dashboard.customization.price')} value={formPrice} onChange={(e) => setFormPrice(e.target.value)} />
                 <Input type="number" placeholder="Max viandes" value={formMaxViandes} onChange={(e) => setFormMaxViandes(e.target.value)} />
               </>
             )}
@@ -585,7 +587,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
                     <Input type="number" step="0.50" placeholder="Grand (€)" value={formPriceLarge} onChange={(e) => setFormPriceLarge(e.target.value)} />
                   </div>
                 ) : (
-                  <Input type="number" step="0.50" placeholder="Prix (€)" value={formPriceDefault} onChange={(e) => setFormPriceDefault(e.target.value)} />
+                  <Input type="number" step="0.50" placeholder={t('dashboard.customization.price')} value={formPriceDefault} onChange={(e) => setFormPriceDefault(e.target.value)} />
                 )}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-foreground">Option sauce</span>
@@ -595,7 +597,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
             )}
 
             <Button onClick={handleSave} className="w-full rounded-xl">
-              {editId ? "Enregistrer" : "Ajouter"}
+              {editId ? t('common.save') : t('common.add')}
             </Button>
           </div>
         </DialogContent>

@@ -9,6 +9,7 @@ import { insertMenuItem, updateRestaurantCategories, fetchAllMenuItems } from "@
 import type { AnalyzedCategory } from "@/types/onboarding";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   open: boolean;
@@ -21,6 +22,7 @@ interface Props {
 type Step = "upload" | "analyzing" | "review" | "saving";
 
 export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems, onImportComplete }: Props) => {
+  const { t } = useLanguage();
   const [step, setStep] = useState<Step>("upload");
   const [files, setFiles] = useState<File[]>([]);
   const [analyzedCategories, setAnalyzedCategories] = useState<AnalyzedCategory[]>([]);
@@ -44,10 +46,10 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
     if (!newFiles || newFiles.length === 0) return;
     const { converted, errors } = await convertFilesForAnalysis(Array.from(newFiles));
     if (errors.length > 0) {
-      toast.error(`${errors.length} fichier(s) non convertis`);
+      toast.error(t('dashboard.import.conversion_error', { count: errors.length }));
     }
     if (converted.length === 0) {
-      toast.error("Aucun fichier exploitable.");
+      toast.error(t('dashboard.import.no_usable_files'));
       return;
     }
     const allFiles = [...files, ...converted];
@@ -64,7 +66,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
       setStep("review");
     } catch (e: any) {
       console.error("Analysis error:", e);
-      setError(e.message || "Erreur lors de l'analyse");
+      setError(e.message || t('dashboard.import.analysis_error'));
       setStep("upload");
     }
   };
@@ -136,16 +138,16 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
       }
 
       const parts: string[] = [];
-      if (added > 0) parts.push(`${added} article${added > 1 ? "s" : ""} ajoute${added > 1 ? "s" : ""}`);
-      if (skipped > 0) parts.push(`${skipped} doublon${skipped > 1 ? "s" : ""} ignore${skipped > 1 ? "s" : ""}`);
-      if (newCategoryNames.length > 0) parts.push(`${newCategoryNames.length} nouvelle${newCategoryNames.length > 1 ? "s" : ""} catégorie${newCategoryNames.length > 1 ? "s" : ""}`);
+      if (added > 0) parts.push(`${added} ${t('dashboard.import.items_added')}`);
+      if (skipped > 0) parts.push(`${skipped} ${t('dashboard.import.duplicates_skipped')}`);
+      if (newCategoryNames.length > 0) parts.push(`${newCategoryNames.length} ${t('dashboard.import.new_categories')}`);
 
-      toast.success(parts.length > 0 ? parts.join(", ") : "Import termine");
+      toast.success(parts.length > 0 ? parts.join(", ") : t('dashboard.import.import_done'));
       onImportComplete();
       handleClose(false);
     } catch (e: any) {
       console.error("Import error:", e);
-      toast.error("Erreur lors de l'import");
+      toast.error(t('dashboard.import.import_error'));
       setStep("review");
     }
   };
@@ -156,20 +158,20 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Camera className="h-5 w-5" />
-            Importer des elements
+            {t('dashboard.import.title')}
           </DialogTitle>
         </DialogHeader>
 
         {step === "upload" && (
           <div className="space-y-4 mt-2">
             <p className="text-sm text-muted-foreground">
-              Prenez en photo ou importez un fichier pour completer votre carte automatiquement.
+              {t('dashboard.import.description')}
             </p>
 
             <div className="flex items-start gap-2 p-3 rounded-xl bg-blue-50 border border-blue-200 text-sm">
               <Info className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
               <p className="text-blue-800">
-                Vous pouvez photographier votre liste de sauces, vos boissons, un nouveau menu, ou toute information manquante. L'analyse est automatique et les éléments seront ajoutés à votre carte existante.
+                {t('dashboard.import.info_text')}
               </p>
             </div>
 
@@ -183,19 +185,19 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
                 className="flex flex-col items-center gap-2 p-6 bg-card border border-border rounded-2xl hover:shadow-md hover:border-foreground/20 transition-all active:scale-[0.98] cursor-pointer"
               >
                 <Camera className="h-8 w-8 text-foreground" />
-                <span className="text-sm font-medium text-foreground">Prendre une photo</span>
+                <span className="text-sm font-medium text-foreground">{t('dashboard.import.take_photo')}</span>
               </button>
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="flex flex-col items-center gap-2 p-6 bg-card border border-border rounded-2xl hover:shadow-md hover:border-foreground/20 transition-all active:scale-[0.98] cursor-pointer"
               >
                 <FileUp className="h-8 w-8 text-foreground" />
-                <span className="text-sm font-medium text-foreground">Choisir un fichier</span>
+                <span className="text-sm font-medium text-foreground">{t('dashboard.import.choose_file')}</span>
               </button>
             </div>
 
             <p className="text-xs text-muted-foreground text-center">
-              Photos, PDF, captures d'ecran... tous formats acceptes.
+              {t('dashboard.import.accepted_formats')}
             </p>
 
             <input
@@ -220,8 +222,8 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
         {step === "analyzing" && (
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-foreground" />
-            <p className="text-sm text-muted-foreground">Analyse en cours...</p>
-            <p className="text-xs text-muted-foreground">L'IA lit votre document et extrait les elements.</p>
+            <p className="text-sm text-muted-foreground">{t('dashboard.import.analyzing')}</p>
+            <p className="text-xs text-muted-foreground">{t('dashboard.import.ai_reading')}</p>
           </div>
         )}
 
@@ -238,7 +240,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
         {step === "saving" && (
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-foreground" />
-            <p className="text-sm text-muted-foreground">Ajout des éléments à votre carte...</p>
+            <p className="text-sm text-muted-foreground">{t('dashboard.import.adding_items')}</p>
           </div>
         )}
       </DialogContent>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import type { DbMenuItem } from "@/types/database";
 import type { POSDrinkItem } from "@/types/pos";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   drinks: POSDrinkItem[];
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack }: Props) => {
+  const { t } = useLanguage();
   const drinkItems = useMemo(
     () => menuItems.filter((item) => item.category.toLowerCase().includes("boisson")),
     [menuItems]
@@ -60,13 +62,13 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
         <button onClick={onBack} className="p-2 rounded-full hover:bg-secondary transition-colors">
           <ArrowLeft className="h-5 w-5 text-foreground" />
         </button>
-        <h2 className="text-xl font-bold text-foreground">Boissons</h2>
+        <h2 className="text-xl font-bold text-foreground">{t('pos.drinks')}</h2>
       </div>
 
       {/* Items grid */}
       <div className="flex-1 overflow-y-auto px-4 py-3">
         {drinkItems.length === 0 ? (
-          <p className="text-center text-muted-foreground py-12">Aucune boisson dans le menu</p>
+          <p className="text-center text-muted-foreground py-12">{t('pos.no_drinks')}</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {drinkItems.map((item) => {
@@ -112,7 +114,7 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground">Total boissons : {drinksTotal.toFixed(2)} €</p>
+          <p className="text-sm text-muted-foreground">{t('pos.drinks_total')} {drinksTotal.toFixed(2)} €</p>
         </div>
       )}
 
@@ -123,13 +125,13 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
           className="flex-1 rounded-xl min-h-[56px] text-base"
           onClick={() => { onUpdateDrinks([]); onNext(); }}
         >
-          Pas de boisson
+          {t('pos.no_drink')}
         </Button>
         <Button
           className="flex-1 rounded-xl min-h-[56px] text-base font-semibold"
           onClick={onNext}
         >
-          Suivant
+          {t('pos.next')}
         </Button>
       </div>
     </motion.div>

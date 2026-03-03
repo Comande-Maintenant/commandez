@@ -126,7 +126,6 @@
   "custom.meat_slot": "Мясо {number}",
   "custom.no_sauce": "Без соуса",
   "custom.no_supplement": "Без дополнений",
-
   "common.save": "Сохранить",
   "common.cancel": "Отмена",
   "common.delete": "Удалить",
@@ -154,14 +153,12 @@
   "common.price": "Цена",
   "common.total": "Итого",
   "common.min_unit": "мин",
-
   "common.toast.save_error": "Ошибка сохранения",
   "common.toast.upload_error": "Ошибка загрузки",
   "common.toast.delete_error": "Ошибка удаления",
   "common.toast.update_error": "Ошибка обновления",
   "common.toast.link_copied": "Ссылка скопирована!",
   "common.toast.copy_error": "Не удалось скопировать",
-
   "time.just_now": "Только что",
   "time.ago_min": "{n} мин назад",
   "time.ago_hours": "{n}ч назад",
@@ -171,10 +168,8 @@
   "time.today": "Сегодня",
   "time.yesterday": "Вчера",
   "time.days_ago": "{n} дн. назад",
-
   "notfound.title": "Страница не найдена",
   "notfound.back_home": "На главную",
-
   "auth.welcome": "Добро пожаловать!",
   "auth.welcome_desc": "Через 3 минуты вы откажетесь от комиссий.",
   "auth.welcome_back": "С возвращением",
@@ -212,7 +207,6 @@
   "auth.step_menu": "Добавьте меню",
   "auth.step_share": "Поделитесь ссылкой",
   "auth.step_orders": "Получайте первые прямые заказы",
-
   "auth.signup.step_account": "Аккаунт",
   "auth.signup.step_restaurant": "Ресторан",
   "auth.signup.step_menu": "Меню",
@@ -254,7 +248,6 @@
   "auth.signup.email_taken": "Этот email уже используется. Войдите или используйте другой email.",
   "auth.signup.signup_error": "Ошибка при регистрации.",
   "auth.signup.creation_error": "Ошибка при создании. Попробуйте снова.",
-
   "auth.reset.email_required": "Введите email.",
   "auth.reset.email_sent_title": "Письмо отправлено!",
   "auth.reset.email_sent_desc": "Если аккаунт с этим адресом существует, вы скоро получите ссылку.",
@@ -285,7 +278,6 @@
   "auth.reset.confirm_password": "Подтвердите пароль",
   "auth.reset.confirm_placeholder": "Подтвердите пароль",
   "auth.reset.reset_button": "Сбросить",
-
   "auth.customer.login_success": "Вход выполнен!",
   "auth.customer.login_error": "Ошибка входа",
   "auth.customer.password_too_short": "Пароль должен содержать минимум 6 символов",
@@ -307,7 +299,6 @@
   "auth.customer.signup_failed": "Регистрация не удалась",
   "auth.customer.login_failed": "Вход не удался",
   "auth.customer.owner_account_error": "Это аккаунт владельца ресторана. Используйте страницу администратора.",
-
   "subscription.choose_plan": "Выберите тариф",
   "subscription.no_commitment": "Без обязательств, отмена в любое время.",
   "subscription.trial_banner": "14 дней бесплатно",
@@ -358,7 +349,6 @@
   "subscription.selected": "Выбрано",
   "subscription.choose_this_plan": "Выбрать этот тариф",
   "subscription.pricing_fine_print": "14 дней бесплатно, банковская карта обязательна. Ваши клиенты не платят онлайн. Оплата на месте, как обычно.",
-
   "subscription.features.custom_page": "Страница заказов с вашим дизайном",
   "subscription.features.realtime_menu": "Меню, редактируемое в реальном времени",
   "subscription.features.zero_commission": "0% комиссии на заказы",
@@ -375,7 +365,6 @@
   "subscription.features.ocr_menu": "Сканирование меню (OCR)",
   "subscription.features.priority_support": "Приоритетная поддержка",
   "subscription.features.advanced_stats": "Расширенная статистика",
-
   "subscription.gate.trial": "Пробный период",
   "subscription.gate.days_remaining": "Осталось {days} дн.",
   "subscription.gate.activate": "Активировать",
@@ -383,7 +372,6 @@
   "subscription.gate.payment_desc": "Последний платеж не прошел. Обновите платежные данные, чтобы продолжить пользоваться commandeici.",
   "subscription.gate.manage_payment": "Управление оплатой",
   "subscription.gate.redirect_note": "Вы будете перенаправлены в личный кабинет.",
-
   "onboarding.success.online": "{name} онлайн!",
   "onboarding.success.trial_started": "Ваш 14-дневный пробный период начался. Поделитесь страницей с клиентами.",
   "onboarding.success.go_dashboard": "Перейти в панель управления",
@@ -401,7 +389,6 @@
   "onboarding.success.promo_question": "Есть промокод?",
   "onboarding.success.activate_button": "Активировать пробный период",
   "onboarding.success.fine_print": "Оплата откроется в новой вкладке. Списаний не будет 14 дней.",
-
   "onboarding.upload.loading_1": "Анализируем ваше меню, чтобы сэкономить время...",
   "onboarding.upload.loading_2": "ИИ сортирует блюда, категории и цены...",
   "onboarding.upload.loading_3": "Останется только проверить и подправить при необходимости.",
@@ -425,7 +412,6 @@
   "onboarding.upload.analyze_files": "Анализировать {count} файл(ов)",
   "onboarding.upload.analyze_menu": "Анализировать меню",
   "onboarding.upload.manual_create": "Создать меню вручную",
-
   "onboarding.review.new_category": "Новая категория",
   "onboarding.review.summary": "{categories} категорий, {items} позиций обнаружено",
   "onboarding.review.category": "Категория",
@@ -435,7 +421,6 @@
   "onboarding.review.add_item": "Добавить позицию",
   "onboarding.review.back": "Назад",
   "onboarding.review.validate": "Подтвердить меню",
-
   "onboarding.place.confirm_desc": "Проверьте и дополните информацию о ресторане.",
   "onboarding.place.name": "Название",
   "onboarding.place.address": "Адрес",
@@ -478,7 +463,6 @@
   "onboarding.place.manual_city_placeholder": "Москва",
   "onboarding.place.manual_phone": "Телефон (необязательно)",
   "onboarding.place.manual_phone_placeholder": "+7 999 123 45 67",
-
   "onboarding.colors.recommended": "Рекомендуемый",
   "onboarding.colors.preview_name": "Ваш ресторан",
   "onboarding.colors.live_preview": "Предпросмотр",
@@ -488,7 +472,6 @@
   "onboarding.colors.primary": "Основной цвет",
   "onboarding.colors.custom": "Свой цвет",
   "onboarding.colors.background": "Цвет фона",
-
   "suivi.received": "Заказ принят",
   "suivi.preparing": "Готовится",
   "suivi.almost_ready": "Почти готово",
@@ -518,7 +501,6 @@
   "suivi.create_button": "Создать профиль",
   "suivi.no_thanks": "Нет, спасибо",
   "suivi.call_restaurant": "Позвонить в ресторан",
-
   "client.profile_updated": "Профиль обновлен",
   "client.save_error": "Ошибка сохранения",
   "client.profile_deleted": "Профиль удален",
@@ -542,7 +524,6 @@
   "client.delete_profile": "Удалить профиль",
   "client.delete_confirm_title": "Удалить профиль?",
   "client.delete_confirm_desc": "Это действие необратимо. Ваши данные будут удалены навсегда.",
-
   "pickup.title": "Когда вы хотите забрать заказ?",
   "pickup.asap": "Как можно скорее",
   "pickup.asap_time": "Около {minutes} мин",
@@ -553,7 +534,6 @@
   "pickup.lunch": " - обед",
   "pickup.dinner": " - ужин",
   "pickup.tomorrow": "Завтра",
-
   "dashboard.nav.kitchen": "Кухня",
   "dashboard.nav.pos": "Касса",
   "dashboard.nav.live": "Онлайн",
@@ -565,7 +545,6 @@
   "dashboard.nav.settings": "Настройки",
   "dashboard.nav.stats": "Статистика",
   "dashboard.nav.manage": "Управление",
-
   "dashboard.admin.orders_enabled": "Заказы включены",
   "dashboard.admin.orders_disabled": "Заказы отключены",
   "dashboard.admin.login_required": "Вход обязателен",
@@ -588,7 +567,6 @@
   "dashboard.admin.reactivate": "Активировать",
   "dashboard.admin.install_app": "Установить приложение",
   "dashboard.admin.quick_access": "Быстрый доступ с главного экрана",
-
   "dashboard.orders.status_new": "Новый",
   "dashboard.orders.status_preparing": "Готовится",
   "dashboard.orders.status_ready": "Готов",
@@ -619,7 +597,6 @@
   "dashboard.orders.no_items": "Нет позиций",
   "dashboard.orders.item_available": "{name} в наличии",
   "dashboard.orders.item_out_of_stock": "{name} нет в наличии",
-
   "dashboard.stats.today": "Сегодня",
   "dashboard.stats.this_week": "Эта неделя",
   "dashboard.stats.this_month": "Этот месяц",
@@ -638,7 +615,6 @@
   "dashboard.stats.total_historical": "Итого за все время",
   "dashboard.stats.orders_suffix": "заказов",
   "dashboard.stats.demand_forecast": "Прогноз спроса",
-
   "dashboard.live.unknown": "Неизвестный",
   "dashboard.live.daily_stats": "Статистика за сегодня",
   "dashboard.live.revenue_today": "Выручка сегодня",
@@ -665,7 +641,6 @@
   "dashboard.live.compact_online": "Онлайн:",
   "dashboard.live.compact_carts": "Корзины:",
   "dashboard.live.compact_preparing": "Готов.:",
-
   "dashboard.menu.copy_suffix": " (копия)",
   "dashboard.menu.item_duplicated": "Позиция продублирована",
   "dashboard.menu.duplicate_error": "Ошибка дублирования",
@@ -709,7 +684,6 @@
   "dashboard.menu.type_drink": "Напиток",
   "dashboard.menu.type_dessert": "Десерт",
   "dashboard.menu.type_supplement": "Дополнение",
-
   "dashboard.page.colors_saved": "Цвета сохранены",
   "dashboard.page.info_saved": "Информация сохранена",
   "dashboard.page.image_updated": "{type} обновлено",
@@ -735,7 +709,6 @@
   "dashboard.page.page_preview": "Предпросмотр страницы",
   "dashboard.page.view_page": "Посмотреть страницу",
   "dashboard.page.preview_title": "Предпросмотр страницы",
-
   "dashboard.clients.load_error": "Ошибка загрузки клиентов",
   "dashboard.clients.title": "Мои клиенты",
   "dashboard.clients.total": "Всего клиентов",
@@ -762,7 +735,6 @@
   "dashboard.clients.unban": "Разблокировать",
   "dashboard.clients.ban": "Заблокировать",
   "dashboard.clients.unbanned": "разблокирован",
-
   "dashboard.settings.manual": "Вручную",
   "dashboard.settings.manual_desc": "Включайте/отключайте вручную",
   "dashboard.settings.automatic": "Автоматически",
@@ -830,7 +802,6 @@
   "dashboard.settings.disable_confirm": "Для подтверждения введите точное название ресторана:",
   "dashboard.settings.disable_button": "Отключить",
   "dashboard.settings.demo_unavailable": "Недоступно в демо-режиме",
-
   "dashboard.qr.scan_to_order": "Отсканируйте для заказа",
   "dashboard.qr.a4_downloaded": "Лист A4 скачан",
   "dashboard.qr.poster_downloaded": "Постер скачан",
@@ -851,7 +822,6 @@
   "dashboard.qr.pos_desc": "Этот QR-код открывает кассу прямо на планшете:",
   "dashboard.qr.tip_title": "Совет",
   "dashboard.qr.tip_text": "Распечатайте лист A4 и вырежьте QR-коды для столов. Формат SVG идеален для крупноформатной печати без потери качества.",
-
   "dashboard.tablets.usage_kitchen": "Кухня",
   "dashboard.tablets.usage_pos": "Касса",
   "dashboard.tablets.usage_service": "Обслуживание",
@@ -887,7 +857,6 @@
   "dashboard.tablets.usage_label": "Назначение",
   "dashboard.tablets.notes_label": "Заметки (необязательно)",
   "dashboard.tablets.notes_placeholder": "Дополнительная информация...",
-
   "dashboard.customization.title": "Настройка заказов",
   "dashboard.customization.modified": "Изменено",
   "dashboard.customization.added": "Добавлено",
@@ -923,7 +892,6 @@
   "dashboard.customization.default_label": "По умолч.",
   "dashboard.customization.optional_label": "Необязательно",
   "dashboard.customization.empty_state": "Нет позиций. Нажмите \"Добавить\" для начала.",
-
   "dashboard.manage.title": "Управление рестораном",
   "dashboard.manage.menu_label": "Мое меню",
   "dashboard.manage.menu_desc": "Блюда, цены, категории",
@@ -941,7 +909,6 @@
   "dashboard.manage.settings_desc": "Расписание, режимы, оплата",
   "dashboard.manage.stats_label": "Статистика",
   "dashboard.manage.stats_desc": "История, тренды, экспорт",
-
   "dashboard.schedule.sunday": "Воскресенье",
   "dashboard.schedule.monday": "Понедельник",
   "dashboard.schedule.tuesday": "Вторник",
@@ -954,7 +921,6 @@
   "dashboard.schedule.closed": "Закрыто",
   "dashboard.schedule.to": "до",
   "dashboard.schedule.add_slot": "Добавить временной слот",
-
   "dashboard.ban.success": "{name} заблокирован(а)",
   "dashboard.ban.error": "Ошибка блокировки",
   "dashboard.ban.title": "Заблокировать клиента",
@@ -966,7 +932,6 @@
   "dashboard.ban.30_days": "30 дней",
   "dashboard.ban.permanent": "Навсегда",
   "dashboard.ban.confirm": "Подтвердить блокировку",
-
   "dashboard.import.conversion_error": "{count} файл(ов) не сконвертировано",
   "dashboard.import.no_usable_files": "Нет пригодных файлов.",
   "dashboard.import.analysis_error": "Ошибка анализа",
@@ -984,7 +949,6 @@
   "dashboard.import.analyzing": "Анализ...",
   "dashboard.import.ai_reading": "ИИ читает документ и извлекает позиции.",
   "dashboard.import.adding_items": "Добавление позиций в меню...",
-
   "dashboard.demand.tip_title": "Совет дня",
   "dashboard.demand.calendar_title": "Календарь недели",
   "dashboard.demand.lunch": "Обед",
@@ -996,7 +960,6 @@
   "dashboard.demand.hourly_title": "Почасовой прогноз на сегодня",
   "dashboard.demand.intensity": "Интенсивность",
   "dashboard.demand.now": "Сейчас",
-
   "dashboard.referral.title": "Реферальная программа",
   "dashboard.referral.description": "Пригласите коллегу, оба получите 4 бесплатные недели.",
   "dashboard.referral.referrals": "Приглашения",
@@ -1011,7 +974,6 @@
   "dashboard.referral.whatsapp_message": "Привет! Рекомендую commandeici для управления заказами. Используй мой код, и мы оба получим 4 бесплатные недели: {url}",
   "dashboard.referral.email_subject": "Рекомендую commandeici",
   "dashboard.referral.email_body": "Привет,\n\nРекомендую commandeici для управления прямыми заказами без комиссии. Используй мою ссылку, и мы оба получим 4 бесплатные недели:\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "Управление запасами",
   "dashboard.assistant.shortcut_ban": "Заблокировать клиента",
   "dashboard.assistant.shortcut_supplements": "Добавить дополнения",
@@ -1026,7 +988,6 @@
   "dashboard.assistant.contact_support": "Связаться с поддержкой",
   "dashboard.assistant.fallback": "Не удалось найти ответ. Свяжитесь с нами по адресу contact@commandeici.com.",
   "dashboard.assistant.input_placeholder": "Введите вопрос...",
-
   "dashboard.onboarding.step_kitchen": "Кухня",
   "dashboard.onboarding.step_kitchen_desc": "Здесь вы принимаете и управляете заказами. Принять, приготовить, отметить готовым - в один клик.",
   "dashboard.onboarding.step_pos": "Касса",
@@ -1039,7 +1000,6 @@
   "dashboard.onboarding.step_availability_desc": "Этот переключатель включает или отключает заказы мгновенно. Удобно для перерывов или закрытия.",
   "dashboard.onboarding.step_sound": "Звук",
   "dashboard.onboarding.step_sound_desc": "Включите звук, чтобы получать оповещения о каждом новом заказе. Необходимо во время работы!",
-
   "pos.order_type": "Тип заказа",
   "pos.dine_in": "В зале",
   "pos.takeaway": "Навынос",
@@ -1148,7 +1108,6 @@
   "demo.cta_try": "Еще не уверены? Попробуйте демо",
   "demo.cta_link": "Откройте инструмент в демо-режиме",
   "demo.no_orders": "Демо-ресторан",
-
   "home.page_title": "commandeici - Панель ресторана",
   "home.create_page": "Создать мою страницу",
   "home.title": "Панель ресторана",
@@ -1159,5 +1118,6 @@
   "dashboard.orders.action_ready": "Готов",
   "dashboard.orders.action_done": "Завершен",
   "dashboard.orders.covers_count": "{count} прибор(ов)",
-  "dashboard.orders.add_item": "Добавить"
+  "dashboard.orders.add_item": "Добавить",
+  "restaurant.show_phone": "Показать номер"
 }

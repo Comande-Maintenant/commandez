@@ -1108,7 +1108,6 @@
   "demo.cta_try": "Noch nicht ueberzeugt? Testen Sie die Demo",
   "demo.cta_link": "Das Tool im Demo-Modus entdecken",
   "demo.no_orders": "Demo-Restaurant",
-
   "home.page_title": "commandeici - Restaurant-Dashboard",
   "home.create_page": "Meine Seite erstellen",
   "home.title": "Restaurant-Dashboard",
@@ -1119,5 +1118,6 @@
   "dashboard.orders.action_ready": "Bereit",
   "dashboard.orders.action_done": "Abgeschlossen",
   "dashboard.orders.covers_count": "{count} Gedeck(e)",
-  "dashboard.orders.add_item": "Hinzufugen"
+  "dashboard.orders.add_item": "Hinzufugen",
+  "restaurant.show_phone": "Telefonnummer anzeigen"
 }

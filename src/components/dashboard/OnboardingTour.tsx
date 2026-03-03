@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createPortal } from "react-dom";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Step {
   title: string;
@@ -11,50 +12,51 @@ interface Step {
   position: "top" | "bottom" | "left" | "right";
 }
 
-const steps: Step[] = [
-  {
-    title: "Cuisine",
-    description: "Ici, vous recevez et gérez toutes les commandes. Acceptez, préparez, et marquez comme prête en un clic.",
-    selector: '[data-tour="cuisine"]',
-    position: "bottom",
-  },
-  {
-    title: "Caisse",
-    description: "Prenez des commandes manuellement pour les clients sur place ou par téléphone.",
-    selector: '[data-tour="caisse"]',
-    position: "bottom",
-  },
-  {
-    title: "En direct",
-    description: "Voyez qui visite votre page en temps réel, leur panier et les alertes d'activité.",
-    selector: '[data-tour="en-direct"]',
-    position: "bottom",
-  },
-  {
-    title: "Gérer",
-    description: "Accédez à votre carte, page, QR codes, clients, paramètres et statistiques.",
-    selector: '[data-tour="gerer"]',
-    position: "top",
-  },
-  {
-    title: "Disponibilité",
-    description: "Ce toggle active ou désactive les commandes instantanément. Pratique pour les pauses ou fermetures.",
-    selector: '[data-tour="disponible"]',
-    position: "bottom",
-  },
-  {
-    title: "Son",
-    description: "Activez le son pour être alerté à chaque nouvelle commande. Indispensable en service !",
-    selector: '[data-tour="son"]',
-    position: "bottom",
-  },
-];
-
 interface Props {
   onComplete: () => void;
 }
 
 export const OnboardingTour = ({ onComplete }: Props) => {
+  const { t } = useLanguage();
+
+  const steps = useMemo<Step[]>(() => [
+    {
+      title: t('dashboard.onboarding.step_kitchen'),
+      description: t('dashboard.onboarding.step_kitchen_desc'),
+      selector: '[data-tour="cuisine"]',
+      position: "bottom",
+    },
+    {
+      title: t('dashboard.onboarding.step_pos'),
+      description: t('dashboard.onboarding.step_pos_desc'),
+      selector: '[data-tour="caisse"]',
+      position: "bottom",
+    },
+    {
+      title: t('dashboard.onboarding.step_live'),
+      description: t('dashboard.onboarding.step_live_desc'),
+      selector: '[data-tour="en-direct"]',
+      position: "bottom",
+    },
+    {
+      title: t('dashboard.onboarding.step_manage'),
+      description: t('dashboard.onboarding.step_manage_desc'),
+      selector: '[data-tour="gerer"]',
+      position: "top",
+    },
+    {
+      title: t('dashboard.onboarding.step_availability'),
+      description: t('dashboard.onboarding.step_availability_desc'),
+      selector: '[data-tour="disponible"]',
+      position: "bottom",
+    },
+    {
+      title: t('dashboard.onboarding.step_sound'),
+      description: t('dashboard.onboarding.step_sound_desc'),
+      selector: '[data-tour="son"]',
+      position: "bottom",
+    },
+  ], [t]);
   const [currentStep, setCurrentStep] = useState(0);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -172,7 +174,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
               className="rounded-xl gap-1"
             >
               <ChevronLeft className="h-4 w-4" />
-              Précédent
+              {t('common.previous')}
             </Button>
             <Button
               size="sm"
@@ -185,7 +187,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
               }}
               className="rounded-xl gap-1"
             >
-              {isLast ? "Terminer" : "Suivant"}
+              {isLast ? t('common.finish') : t('common.next')}
               {!isLast && <ChevronRight className="h-4 w-4" />}
             </Button>
           </div>

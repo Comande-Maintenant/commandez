@@ -126,7 +126,6 @@
   "custom.meat_slot": "Meat {number}",
   "custom.no_sauce": "No sauce",
   "custom.no_supplement": "No extra",
-
   "common.save": "Save",
   "common.cancel": "Cancel",
   "common.delete": "Delete",
@@ -154,14 +153,12 @@
   "common.price": "Price",
   "common.total": "Total",
   "common.min_unit": "min",
-
   "common.toast.save_error": "Error while saving",
   "common.toast.upload_error": "Error while uploading",
   "common.toast.delete_error": "Error while deleting",
   "common.toast.update_error": "Error while updating",
   "common.toast.link_copied": "Link copied!",
   "common.toast.copy_error": "Unable to copy",
-
   "time.just_now": "Just now",
   "time.ago_min": "{n} min ago",
   "time.ago_hours": "{n}h ago",
@@ -171,10 +168,8 @@
   "time.today": "Today",
   "time.yesterday": "Yesterday",
   "time.days_ago": "{n} days ago",
-
   "notfound.title": "Page not found",
   "notfound.back_home": "Back to home",
-
   "auth.welcome": "Welcome!",
   "auth.welcome_desc": "You're 3 minutes away from ditching commissions.",
   "auth.welcome_back": "Welcome back",
@@ -212,7 +207,6 @@
   "auth.step_menu": "Add your menu",
   "auth.step_share": "Share your link",
   "auth.step_orders": "Receive your first direct orders",
-
   "auth.signup.step_account": "Account",
   "auth.signup.step_restaurant": "Restaurant",
   "auth.signup.step_menu": "Menu",
@@ -254,7 +248,6 @@
   "auth.signup.email_taken": "This email is already in use. Log in or use another email.",
   "auth.signup.signup_error": "Error during sign-up.",
   "auth.signup.creation_error": "Error during creation. Please try again.",
-
   "auth.reset.email_required": "Enter your email address.",
   "auth.reset.email_sent_title": "Email sent!",
   "auth.reset.email_sent_desc": "If an account exists with this address, you'll receive a link shortly.",
@@ -285,7 +278,6 @@
   "auth.reset.confirm_password": "Confirm password",
   "auth.reset.confirm_placeholder": "Confirm your password",
   "auth.reset.reset_button": "Reset",
-
   "auth.customer.login_success": "Login successful!",
   "auth.customer.login_error": "Login error",
   "auth.customer.password_too_short": "Password must be at least 6 characters",
@@ -307,7 +299,6 @@
   "auth.customer.signup_failed": "Sign-up failed",
   "auth.customer.login_failed": "Login failed",
   "auth.customer.owner_account_error": "This is a restaurant owner account. Use the admin page.",
-
   "subscription.choose_plan": "Choose your plan",
   "subscription.no_commitment": "No commitment, cancel anytime.",
   "subscription.trial_banner": "14-day free trial",
@@ -358,7 +349,6 @@
   "subscription.selected": "Selected",
   "subscription.choose_this_plan": "Choose this plan",
   "subscription.pricing_fine_print": "14-day free trial, credit card required. Your customers don't pay online. Payment is made on-site, as usual.",
-
   "subscription.features.custom_page": "Custom ordering page",
   "subscription.features.realtime_menu": "Menu editable in real time",
   "subscription.features.zero_commission": "0% commission on orders",
@@ -375,7 +365,6 @@
   "subscription.features.ocr_menu": "OCR menu scanning",
   "subscription.features.priority_support": "Priority support",
   "subscription.features.advanced_stats": "Advanced statistics",
-
   "subscription.gate.trial": "Free trial",
   "subscription.gate.days_remaining": "{days} day(s) remaining.",
   "subscription.gate.activate": "Activate",
@@ -383,7 +372,6 @@
   "subscription.gate.payment_desc": "Your last payment failed. Update your payment information to continue using commandeici.",
   "subscription.gate.manage_payment": "Manage my payment",
   "subscription.gate.redirect_note": "You will be redirected to your customer area.",
-
   "onboarding.success.online": "{name} is online!",
   "onboarding.success.trial_started": "Your 14-day free trial has started. Share your page with your customers.",
   "onboarding.success.go_dashboard": "Go to my dashboard",
@@ -401,7 +389,6 @@
   "onboarding.success.promo_question": "Have a promo code?",
   "onboarding.success.activate_button": "Activate my free trial",
   "onboarding.success.fine_print": "Payment opens in a new tab. You won't be charged for 14 days.",
-
   "onboarding.upload.loading_1": "We're analyzing your menu to save you time...",
   "onboarding.upload.loading_2": "Our AI is organizing your dishes, categories and prices...",
   "onboarding.upload.loading_3": "You'll just need to review and adjust if needed.",
@@ -425,7 +412,6 @@
   "onboarding.upload.analyze_files": "Analyze my {count} files",
   "onboarding.upload.analyze_menu": "Analyze my menu",
   "onboarding.upload.manual_create": "Create my menu manually",
-
   "onboarding.review.new_category": "New category",
   "onboarding.review.summary": "{categories} categories, {items} items detected",
   "onboarding.review.category": "Category",
@@ -435,7 +421,6 @@
   "onboarding.review.add_item": "Add an item",
   "onboarding.review.back": "Back",
   "onboarding.review.validate": "Confirm my menu",
-
   "onboarding.place.confirm_desc": "Check and complete your restaurant's information.",
   "onboarding.place.name": "Name",
   "onboarding.place.address": "Address",
@@ -478,7 +463,6 @@
   "onboarding.place.manual_city_placeholder": "London",
   "onboarding.place.manual_phone": "Phone (optional)",
   "onboarding.place.manual_phone_placeholder": "01 23 45 67 89",
-
   "onboarding.colors.recommended": "Recommended",
   "onboarding.colors.preview_name": "Your Restaurant",
   "onboarding.colors.live_preview": "Live preview",
@@ -488,7 +472,6 @@
   "onboarding.colors.primary": "Primary color",
   "onboarding.colors.custom": "Custom",
   "onboarding.colors.background": "Background color",
-
   "suivi.received": "Order received",
   "suivi.preparing": "Being prepared",
   "suivi.almost_ready": "Almost ready",
@@ -518,7 +501,6 @@
   "suivi.create_button": "Create my profile",
   "suivi.no_thanks": "No thanks",
   "suivi.call_restaurant": "Call the restaurant",
-
   "client.profile_updated": "Profile updated",
   "client.save_error": "Error while saving",
   "client.profile_deleted": "Profile deleted",
@@ -542,7 +524,6 @@
   "client.delete_profile": "Delete my profile",
   "client.delete_confirm_title": "Delete your profile?",
   "client.delete_confirm_desc": "This action is irreversible. Your data will be permanently deleted.",
-
   "pickup.title": "When would you like to pick up your order?",
   "pickup.asap": "As soon as possible",
   "pickup.asap_time": "About {minutes} min",
@@ -553,7 +534,6 @@
   "pickup.lunch": " - lunch",
   "pickup.dinner": " - dinner",
   "pickup.tomorrow": "Tomorrow",
-
   "dashboard.nav.kitchen": "Kitchen",
   "dashboard.nav.pos": "POS",
   "dashboard.nav.live": "Live",
@@ -565,7 +545,6 @@
   "dashboard.nav.settings": "Settings",
   "dashboard.nav.stats": "Statistics",
   "dashboard.nav.manage": "Manage",
-
   "dashboard.admin.orders_enabled": "Orders enabled",
   "dashboard.admin.orders_disabled": "Orders disabled",
   "dashboard.admin.login_required": "Login required",
@@ -588,7 +567,6 @@
   "dashboard.admin.reactivate": "Reactivate",
   "dashboard.admin.install_app": "Install the app",
   "dashboard.admin.quick_access": "Quick access from your home screen",
-
   "dashboard.orders.status_new": "New",
   "dashboard.orders.status_preparing": "Preparing",
   "dashboard.orders.status_ready": "Ready",
@@ -619,7 +597,6 @@
   "dashboard.orders.no_items": "No items",
   "dashboard.orders.item_available": "{name} available",
   "dashboard.orders.item_out_of_stock": "{name} out of stock",
-
   "dashboard.stats.today": "Today",
   "dashboard.stats.this_week": "This week",
   "dashboard.stats.this_month": "This month",
@@ -638,7 +615,6 @@
   "dashboard.stats.total_historical": "All-time total",
   "dashboard.stats.orders_suffix": "orders",
   "dashboard.stats.demand_forecast": "Demand forecast",
-
   "dashboard.live.unknown": "Unknown",
   "dashboard.live.daily_stats": "Today's stats",
   "dashboard.live.revenue_today": "Today's revenue",
@@ -665,7 +641,6 @@
   "dashboard.live.compact_online": "Online:",
   "dashboard.live.compact_carts": "Carts:",
   "dashboard.live.compact_preparing": "Prep:",
-
   "dashboard.menu.copy_suffix": " (copy)",
   "dashboard.menu.item_duplicated": "Item duplicated",
   "dashboard.menu.duplicate_error": "Error while duplicating",
@@ -709,7 +684,6 @@
   "dashboard.menu.type_drink": "Drink",
   "dashboard.menu.type_dessert": "Dessert",
   "dashboard.menu.type_supplement": "Extra",
-
   "dashboard.page.colors_saved": "Colors saved",
   "dashboard.page.info_saved": "Information saved",
   "dashboard.page.image_updated": "{type} updated",
@@ -735,7 +709,6 @@
   "dashboard.page.page_preview": "Page preview",
   "dashboard.page.view_page": "View my page",
   "dashboard.page.preview_title": "Page preview",
-
   "dashboard.clients.load_error": "Error loading customers",
   "dashboard.clients.title": "My customers",
   "dashboard.clients.total": "Total customers",
@@ -762,7 +735,6 @@
   "dashboard.clients.unban": "Unban",
   "dashboard.clients.ban": "Ban",
   "dashboard.clients.unbanned": "unbanned",
-
   "dashboard.settings.manual": "Manual",
   "dashboard.settings.manual_desc": "Enable/disable manually",
   "dashboard.settings.automatic": "Automatic",
@@ -830,7 +802,6 @@
   "dashboard.settings.disable_confirm": "To confirm, type the exact name of your restaurant:",
   "dashboard.settings.disable_button": "Disable",
   "dashboard.settings.demo_unavailable": "Not available in demo mode",
-
   "dashboard.qr.scan_to_order": "Scan to order",
   "dashboard.qr.a4_downloaded": "A4 sheet downloaded",
   "dashboard.qr.poster_downloaded": "Window poster downloaded",
@@ -851,7 +822,6 @@
   "dashboard.qr.pos_desc": "This QR code opens the POS directly on a tablet:",
   "dashboard.qr.tip_title": "Tip",
   "dashboard.qr.tip_text": "Print the A4 sheet and cut out the QR codes for your tables. The SVG format is ideal for large-format printing without loss of quality.",
-
   "dashboard.tablets.usage_kitchen": "Kitchen",
   "dashboard.tablets.usage_pos": "POS",
   "dashboard.tablets.usage_service": "Customer service",
@@ -887,7 +857,6 @@
   "dashboard.tablets.usage_label": "Usage",
   "dashboard.tablets.notes_label": "Notes (optional)",
   "dashboard.tablets.notes_placeholder": "Additional information...",
-
   "dashboard.customization.title": "Order customization",
   "dashboard.customization.modified": "Modified",
   "dashboard.customization.added": "Added",
@@ -923,7 +892,6 @@
   "dashboard.customization.default_label": "Default",
   "dashboard.customization.optional_label": "Optional",
   "dashboard.customization.empty_state": "No items. Click \"Add\" to get started.",
-
   "dashboard.manage.title": "Manage my restaurant",
   "dashboard.manage.menu_label": "My Menu",
   "dashboard.manage.menu_desc": "Edit dishes, prices, categories",
@@ -941,7 +909,6 @@
   "dashboard.manage.settings_desc": "Hours, modes, payment",
   "dashboard.manage.stats_label": "Statistics",
   "dashboard.manage.stats_desc": "History, trends, exports",
-
   "dashboard.schedule.sunday": "Sunday",
   "dashboard.schedule.monday": "Monday",
   "dashboard.schedule.tuesday": "Tuesday",
@@ -954,7 +921,6 @@
   "dashboard.schedule.closed": "Closed",
   "dashboard.schedule.to": "to",
   "dashboard.schedule.add_slot": "Add a time slot",
-
   "dashboard.ban.success": "{name} has been banned",
   "dashboard.ban.error": "Error during ban",
   "dashboard.ban.title": "Ban a customer",
@@ -966,7 +932,6 @@
   "dashboard.ban.30_days": "30 days",
   "dashboard.ban.permanent": "Permanent",
   "dashboard.ban.confirm": "Confirm ban",
-
   "dashboard.import.conversion_error": "{count} file(s) not converted",
   "dashboard.import.no_usable_files": "No usable files.",
   "dashboard.import.analysis_error": "Error during analysis",
@@ -984,7 +949,6 @@
   "dashboard.import.analyzing": "Analyzing...",
   "dashboard.import.ai_reading": "AI is reading your document and extracting items.",
   "dashboard.import.adding_items": "Adding items to your menu...",
-
   "dashboard.demand.tip_title": "Tip of the moment",
   "dashboard.demand.calendar_title": "Week calendar",
   "dashboard.demand.lunch": "Lunch",
@@ -996,7 +960,6 @@
   "dashboard.demand.hourly_title": "Today's hourly forecast",
   "dashboard.demand.intensity": "Intensity",
   "dashboard.demand.now": "Now",
-
   "dashboard.referral.title": "Referral",
   "dashboard.referral.description": "Refer a colleague, both of you get 4 free weeks.",
   "dashboard.referral.referrals": "Referrals",
@@ -1011,7 +974,6 @@
   "dashboard.referral.whatsapp_message": "Hi! I recommend commandeici for managing your orders. Use my code and we both get 4 free weeks: {url}",
   "dashboard.referral.email_subject": "I recommend commandeici",
   "dashboard.referral.email_body": "Hi,\n\nI recommend commandeici for managing your direct orders without commission. Use my link and we both get 4 free weeks:\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "Manage stock",
   "dashboard.assistant.shortcut_ban": "Ban a customer",
   "dashboard.assistant.shortcut_supplements": "Add extras",
@@ -1026,7 +988,6 @@
   "dashboard.assistant.contact_support": "Contact support",
   "dashboard.assistant.fallback": "I couldn't find an answer to your question. Contact us at contact@commandeici.com for more help.",
   "dashboard.assistant.input_placeholder": "Type your question...",
-
   "dashboard.onboarding.step_kitchen": "Kitchen",
   "dashboard.onboarding.step_kitchen_desc": "Here, you receive and manage all orders. Accept, prepare, and mark as ready in one click.",
   "dashboard.onboarding.step_pos": "POS",
@@ -1039,7 +1000,6 @@
   "dashboard.onboarding.step_availability_desc": "This toggle enables or disables orders instantly. Handy for breaks or closures.",
   "dashboard.onboarding.step_sound": "Sound",
   "dashboard.onboarding.step_sound_desc": "Enable sound to be alerted for each new order. Essential during service!",
-
   "pos.order_type": "Order type",
   "pos.dine_in": "Dine in",
   "pos.takeaway": "Takeaway",
@@ -1148,7 +1108,6 @@
   "demo.cta_try": "Not convinced yet? Try the demo",
   "demo.cta_link": "Discover the tool in demo mode",
   "demo.no_orders": "Demo restaurant",
-
   "home.page_title": "commandeici - Restaurant Dashboard",
   "home.create_page": "Create my page",
   "home.title": "Restaurant Dashboard",
@@ -1159,5 +1118,6 @@
   "dashboard.orders.action_ready": "Ready",
   "dashboard.orders.action_done": "Done",
   "dashboard.orders.covers_count": "{count} cover(s)",
-  "dashboard.orders.add_item": "Add"
+  "dashboard.orders.add_item": "Add",
+  "restaurant.show_phone": "Show phone number"
 }

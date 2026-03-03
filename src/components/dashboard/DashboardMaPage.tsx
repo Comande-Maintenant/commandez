@@ -14,6 +14,7 @@ import type { DbRestaurant } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -24,6 +25,7 @@ const primarySwatches = ["#000000", "#1a1a2e", "#16213e", "#e63946", "#2d6a4f", 
 const bgSwatches = ["#ffffff", "#fafafa", "#f5f5f5", "#fef3c7", "#ecfdf5", "#eff6ff"];
 
 export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [primaryColor, setPrimaryColor] = useState(restaurant.primary_color || "#000000");
   const [bgColor, setBgColor] = useState(restaurant.bg_color || "#ffffff");
   const [name, setName] = useState(restaurant.name || "");
@@ -44,14 +46,14 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
   const copyLink = () => {
     navigator.clipboard.writeText(pageUrl);
     setCopied(true);
-    toast.success("Lien copie !");
+    toast.success(t('common.toast.link_copied'));
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleSaveColors = async () => {
     setSaving(true);
     if (isDemo) {
-      toast.success("Couleurs enregistrées");
+      toast.success(t('dashboard.page.colors_saved'));
       setSaving(false);
       return;
     }
@@ -60,9 +62,9 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
         primary_color: primaryColor,
         bg_color: bgColor,
       } as any);
-      toast.success("Couleurs enregistrées");
+      toast.success(t('dashboard.page.colors_saved'));
     } catch (e) {
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error(t('common.toast.save_error'));
     }
     setSaving(false);
   };
@@ -70,7 +72,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
   const handleSaveInfo = async () => {
     setSaving(true);
     if (isDemo) {
-      toast.success("Informations enregistrées");
+      toast.success(t('dashboard.page.info_saved'));
       setSaving(false);
       return;
     }
@@ -83,9 +85,9 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
         restaurant_phone: phone,
         website,
       } as any);
-      toast.success("Informations enregistrées");
+      toast.success(t('dashboard.page.info_saved'));
     } catch (e) {
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error(t('common.toast.save_error'));
     }
     setSaving(false);
   };
@@ -96,7 +98,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
       const url = URL.createObjectURL(file);
       if (type === "logo") setLogoPreview(url);
       else setCoverPreview(url);
-      toast.success(`${type === "logo" ? "Logo" : "Couverture"} mise à jour`);
+      toast.success(t('dashboard.page.image_updated', { type: type === "logo" ? t('dashboard.page.logo') : t('dashboard.page.cover') }));
       return;
     }
     try {
@@ -108,9 +110,9 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
         await updateRestaurant(restaurant.id, { cover_image: url } as any);
         setCoverPreview(url);
       }
-      toast.success(`${type === "logo" ? "Logo" : "Couverture"} mise à jour`);
+      toast.success(t('dashboard.page.image_updated', { type: type === "logo" ? t('dashboard.page.logo') : t('dashboard.page.cover') }));
     } catch (e) {
-      toast.error("Erreur lors de l'upload");
+      toast.error(t('common.toast.upload_error'));
     }
   };
 
@@ -132,12 +134,12 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center justify-between">
           <div className="min-w-0">
-            <h3 className="text-base font-semibold text-foreground mb-1">Lien de votre page</h3>
+            <h3 className="text-base font-semibold text-foreground mb-1">{t('dashboard.page.page_link')}</h3>
             <p className="text-sm text-muted-foreground truncate">{pageUrl}</p>
           </div>
           <Button variant="outline" size="sm" className="rounded-xl gap-1.5 flex-shrink-0 ml-3" onClick={copyLink}>
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            {copied ? "Copie !" : "Copier"}
+            {copied ? t('common.copied') : t('common.copy')}
           </Button>
         </div>
       </section>
@@ -146,7 +148,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Palette className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Couleurs</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.page.colors')}</h3>
         </div>
 
         {/* Preview */}
@@ -154,18 +156,18 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-full" style={{ backgroundColor: primaryColor }} />
             <div>
-              <p className="font-bold" style={{ color: primaryColor }}>{name || "Votre Restaurant"}</p>
-              <p className="text-sm opacity-60" style={{ color: primaryColor }}>Apercu en temps reel</p>
+              <p className="font-bold" style={{ color: primaryColor }}>{name || t('dashboard.page.preview_name')}</p>
+              <p className="text-sm opacity-60" style={{ color: primaryColor }}>{t('dashboard.page.live_preview')}</p>
             </div>
           </div>
           <div className="inline-block px-4 py-2 rounded-full text-sm font-medium text-white" style={{ backgroundColor: primaryColor }}>
-            Commander
+            {t('dashboard.page.order_button')}
           </div>
         </div>
 
         <div className="space-y-4">
           <div>
-            <p className="text-sm font-medium text-foreground mb-2">Couleur principale</p>
+            <p className="text-sm font-medium text-foreground mb-2">{t('dashboard.page.primary_color')}</p>
             <div className="flex flex-wrap gap-2">
               {primarySwatches.map((c) => (
                 <button
@@ -183,7 +185,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
           </div>
 
           <div>
-            <p className="text-sm font-medium text-foreground mb-2">Couleur de fond</p>
+            <p className="text-sm font-medium text-foreground mb-2">{t('dashboard.page.background_color')}</p>
             <div className="flex flex-wrap gap-2">
               {bgSwatches.map((c) => (
                 <button
@@ -202,7 +204,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
         </div>
 
         <Button onClick={handleSaveColors} disabled={saving} className="w-full rounded-xl mt-4">
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer les couleurs"}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t('dashboard.page.save_colors')}
         </Button>
       </section>
 
@@ -210,12 +212,12 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <ImageIcon className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Logo & Couverture</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.page.logo_cover')}</h3>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm font-medium text-foreground mb-2">Logo</p>
+            <p className="text-sm font-medium text-foreground mb-2">{t('dashboard.page.logo')}</p>
             <button
               onClick={() => logoInputRef.current?.click()}
               className="w-full aspect-square rounded-xl border-2 border-dashed border-border hover:border-foreground/30 flex items-center justify-center overflow-hidden transition-colors"
@@ -225,7 +227,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
               ) : (
                 <div className="text-center text-muted-foreground">
                   <Upload className="h-6 w-6 mx-auto mb-1" />
-                  <span className="text-xs">Cliquer pour uploader</span>
+                  <span className="text-xs">{t('dashboard.page.click_to_upload')}</span>
                 </div>
               )}
             </button>
@@ -233,7 +235,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
           </div>
 
           <div>
-            <p className="text-sm font-medium text-foreground mb-2">Couverture</p>
+            <p className="text-sm font-medium text-foreground mb-2">{t('dashboard.page.cover')}</p>
             <button
               onClick={() => coverInputRef.current?.click()}
               className="w-full aspect-square rounded-xl border-2 border-dashed border-border hover:border-foreground/30 flex items-center justify-center overflow-hidden transition-colors"
@@ -243,7 +245,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
               ) : (
                 <div className="text-center text-muted-foreground">
                   <Upload className="h-6 w-6 mx-auto mb-1" />
-                  <span className="text-xs">Cliquer pour uploader</span>
+                  <span className="text-xs">{t('dashboard.page.click_to_upload')}</span>
                 </div>
               )}
             </button>
@@ -254,14 +256,14 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
 
       {/* Info */}
       <section className="bg-card rounded-2xl border border-border p-5">
-        <h3 className="text-base font-semibold text-foreground mb-4">Informations</h3>
+        <h3 className="text-base font-semibold text-foreground mb-4">{t('dashboard.page.information')}</h3>
         <div className="space-y-3">
           <div>
-            <label className="text-sm text-muted-foreground">Nom du restaurant</label>
+            <label className="text-sm text-muted-foreground">{t('dashboard.page.restaurant_name')}</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
           </div>
           <div>
-            <label className="text-sm text-muted-foreground">Description</label>
+            <label className="text-sm text-muted-foreground">{t('dashboard.page.description')}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -271,26 +273,26 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-sm text-muted-foreground">Adresse</label>
+              <label className="text-sm text-muted-foreground">{t('dashboard.page.address')}</label>
               <Input value={address} onChange={(e) => setAddress(e.target.value)} className="mt-1" />
             </div>
             <div>
-              <label className="text-sm text-muted-foreground">Ville</label>
+              <label className="text-sm text-muted-foreground">{t('dashboard.page.city')}</label>
               <Input value={city} onChange={(e) => setCity(e.target.value)} className="mt-1" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-sm text-muted-foreground">Téléphone</label>
+              <label className="text-sm text-muted-foreground">{t('dashboard.page.phone')}</label>
               <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1" />
             </div>
             <div>
-              <label className="text-sm text-muted-foreground">Site web</label>
+              <label className="text-sm text-muted-foreground">{t('dashboard.page.website')}</label>
               <Input value={website} onChange={(e) => setWebsite(e.target.value)} className="mt-1" />
             </div>
           </div>
           <Button onClick={handleSaveInfo} disabled={saving} className="w-full rounded-xl">
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t('common.save')}
           </Button>
         </div>
       </section>
@@ -298,10 +300,10 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
       {/* Preview page */}
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-foreground">Apercu de votre page</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.page.page_preview')}</h3>
           <Button variant="outline" size="sm" className="rounded-xl gap-1.5" asChild>
             <a href={`/${restaurant.slug}`} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4" />Voir ma page
+              <ExternalLink className="h-4 w-4" />{t('dashboard.page.view_page')}
             </a>
           </Button>
         </div>
@@ -309,7 +311,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
           <iframe
             src={`/${restaurant.slug}`}
             className="w-full h-full"
-            title="Apercu de la page"
+            title={t('dashboard.page.preview_title')}
             style={{ pointerEvents: "none" }}
           />
         </div>

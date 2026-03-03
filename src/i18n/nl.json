@@ -1108,7 +1108,6 @@
   "demo.cta_try": "Nog niet overtuigd? Probeer de demo",
   "demo.cta_link": "Ontdek de tool in demomodus",
   "demo.no_orders": "Demonstratierestaurant",
-
   "home.page_title": "commandeici - Restaurant dashboard",
   "home.create_page": "Maak mijn pagina",
   "home.title": "Restaurant dashboard",
@@ -1119,5 +1118,6 @@
   "dashboard.orders.action_ready": "Klaar",
   "dashboard.orders.action_done": "Afgerond",
   "dashboard.orders.covers_count": "{count} couvert(s)",
-  "dashboard.orders.add_item": "Toevoegen"
+  "dashboard.orders.add_item": "Toevoegen",
+  "restaurant.show_phone": "Telefoonnummer tonen"
 }

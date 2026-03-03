@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { Phone } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   phone: string;
@@ -17,6 +18,7 @@ interface Props {
  * Bots see "Afficher le numero", real users click to reveal.
  */
 export const ProtectedPhone = ({ phone, className = "", style, iconClassName, variant = "inline" }: Props) => {
+  const { t } = useLanguage();
   const [revealed, setRevealed] = useState(false);
 
   const formatPhone = useCallback((raw: string) => {
@@ -46,7 +48,7 @@ export const ProtectedPhone = ({ phone, className = "", style, iconClassName, va
         style={style}
       >
         <Phone className={iconClassName || "h-4 w-4"} />
-        {revealed ? formatPhone(phone) : "Afficher le numero"}
+        {revealed ? formatPhone(phone) : t('restaurant.show_phone')}
       </button>
     );
   }
@@ -58,7 +60,7 @@ export const ProtectedPhone = ({ phone, className = "", style, iconClassName, va
       className={`inline-flex items-center gap-1.5 underline underline-offset-2 font-medium ${className}`}
       style={style}
     >
-      {revealed ? formatPhone(phone) : "Afficher le numero"}
+      {revealed ? formatPhone(phone) : t('restaurant.show_phone')}
     </button>
   );
 };

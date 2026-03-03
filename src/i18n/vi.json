@@ -126,7 +126,6 @@
   "custom.meat_slot": "Thit {number}",
   "custom.no_sauce": "Khong sot",
   "custom.no_supplement": "Khong them",
-
   "common.save": "Luu",
   "common.cancel": "Huy",
   "common.delete": "Xoa",
@@ -154,14 +153,12 @@
   "common.price": "Gia",
   "common.total": "Tong",
   "common.min_unit": "phut",
-
   "common.toast.save_error": "Loi khi luu",
   "common.toast.upload_error": "Loi khi tai len",
   "common.toast.delete_error": "Loi khi xoa",
   "common.toast.update_error": "Loi khi cap nhat",
   "common.toast.link_copied": "Da sao chep link!",
   "common.toast.copy_error": "Khong the sao chep",
-
   "time.just_now": "Vua xong",
   "time.ago_min": "{n} phut truoc",
   "time.ago_hours": "{n} gio truoc",
@@ -171,10 +168,8 @@
   "time.today": "Hom nay",
   "time.yesterday": "Hom qua",
   "time.days_ago": "{n} ngay truoc",
-
   "notfound.title": "Khong tim thay trang",
   "notfound.back_home": "Ve trang chu",
-
   "auth.welcome": "Chao mung!",
   "auth.welcome_desc": "Chi 3 phut nua la ban thoat khoi hoa hong.",
   "auth.welcome_back": "Chao mung tro lai",
@@ -212,7 +207,6 @@
   "auth.step_menu": "Them thuc don",
   "auth.step_share": "Chia se link",
   "auth.step_orders": "Nhan don hang truc tiep dau tien",
-
   "auth.signup.step_account": "Tai khoan",
   "auth.signup.step_restaurant": "Nha hang",
   "auth.signup.step_menu": "Thuc don",
@@ -254,7 +248,6 @@
   "auth.signup.email_taken": "Email nay da duoc su dung. Dang nhap hoac dung email khac.",
   "auth.signup.signup_error": "Loi khi dang ky.",
   "auth.signup.creation_error": "Loi khi tao. Vui long thu lai.",
-
   "auth.reset.email_required": "Nhap dia chi email cua ban.",
   "auth.reset.email_sent_title": "Da gui email!",
   "auth.reset.email_sent_desc": "Neu co tai khoan voi dia chi nay, ban se nhan duoc link trong it phut.",
@@ -285,7 +278,6 @@
   "auth.reset.confirm_password": "Xac nhan mat khau",
   "auth.reset.confirm_placeholder": "Xac nhan mat khau cua ban",
   "auth.reset.reset_button": "Dat lai",
-
   "auth.customer.login_success": "Dang nhap thanh cong!",
   "auth.customer.login_error": "Loi dang nhap",
   "auth.customer.password_too_short": "Mat khau phai co it nhat 6 ky tu",
@@ -307,7 +299,6 @@
   "auth.customer.signup_failed": "Dang ky that bai",
   "auth.customer.login_failed": "Dang nhap that bai",
   "auth.customer.owner_account_error": "Day la tai khoan nha hang. Hay dung trang quan tri.",
-
   "subscription.choose_plan": "Chon goi cua ban",
   "subscription.no_commitment": "Khong rang buoc, huy bat cu luc nao.",
   "subscription.trial_banner": "Dung thu mien phi 14 ngay",
@@ -358,7 +349,6 @@
   "subscription.selected": "Da chon",
   "subscription.choose_this_plan": "Chon goi nay",
   "subscription.pricing_fine_print": "Dung thu mien phi 14 ngay, can the tin dung. Khach hang cua ban khong thanh toan truc tuyen. Thanh toan tai cho nhu binh thuong.",
-
   "subscription.features.custom_page": "Trang dat hang tuy chinh",
   "subscription.features.realtime_menu": "Thuc don chinh sua truc tiep",
   "subscription.features.zero_commission": "0% hoa hong don hang",
@@ -375,7 +365,6 @@
   "subscription.features.ocr_menu": "Phan tich OCR thuc don",
   "subscription.features.priority_support": "Ho tro uu tien",
   "subscription.features.advanced_stats": "Thong ke nang cao",
-
   "subscription.gate.trial": "Dung thu mien phi",
   "subscription.gate.days_remaining": "Con {days} ngay.",
   "subscription.gate.activate": "Kich hoat",
@@ -383,7 +372,6 @@
   "subscription.gate.payment_desc": "Thanh toan gan nhat cua ban that bai. Cap nhat thong tin thanh toan de tiep tuc su dung commandeici.",
   "subscription.gate.manage_payment": "Quan ly thanh toan",
   "subscription.gate.redirect_note": "Ban se duoc chuyen den khu vuc khach hang.",
-
   "onboarding.success.online": "{name} da len mang!",
   "onboarding.success.trial_started": "14 ngay dung thu mien phi bat dau. Chia se trang cua ban voi khach hang.",
   "onboarding.success.go_dashboard": "Di den bang dieu khien",
@@ -401,7 +389,6 @@
   "onboarding.success.promo_question": "Ban co ma khuyen mai?",
   "onboarding.success.activate_button": "Kich hoat dung thu mien phi",
   "onboarding.success.fine_print": "Thanh toan mo trong tab moi. Khong tinh phi trong 14 ngay.",
-
   "onboarding.upload.loading_1": "Chung toi dang phan tich thuc don de tiet kiem thoi gian cho ban...",
   "onboarding.upload.loading_2": "AI dang sap xep mon an, danh muc va gia cua ban...",
   "onboarding.upload.loading_3": "Ban chi can kiem tra va dieu chinh neu can.",
@@ -425,7 +412,6 @@
   "onboarding.upload.analyze_files": "Phan tich {count} file",
   "onboarding.upload.analyze_menu": "Phan tich thuc don",
   "onboarding.upload.manual_create": "Tao thuc don thu cong",
-
   "onboarding.review.new_category": "Danh muc moi",
   "onboarding.review.summary": "{categories} danh muc, {items} mon duoc phat hien",
   "onboarding.review.category": "Danh muc",
@@ -435,7 +421,6 @@
   "onboarding.review.add_item": "Them mon",
   "onboarding.review.back": "Quay lai",
   "onboarding.review.validate": "Xac nhan thuc don",
-
   "onboarding.place.confirm_desc": "Kiem tra va hoan tat thong tin nha hang.",
   "onboarding.place.name": "Ten",
   "onboarding.place.address": "Dia chi",
@@ -478,7 +463,6 @@
   "onboarding.place.manual_city_placeholder": "Ho Chi Minh",
   "onboarding.place.manual_phone": "Dien thoai (khong bat buoc)",
   "onboarding.place.manual_phone_placeholder": "0912 345 678",
-
   "onboarding.colors.recommended": "Goi y",
   "onboarding.colors.preview_name": "Nha Hang Cua Ban",
   "onboarding.colors.live_preview": "Xem truoc truc tiep",
@@ -488,7 +472,6 @@
   "onboarding.colors.primary": "Mau chinh",
   "onboarding.colors.custom": "Tuy chinh",
   "onboarding.colors.background": "Mau nen",
-
   "suivi.received": "Da nhan don",
   "suivi.preparing": "Dang chuan bi",
   "suivi.almost_ready": "Sap xong",
@@ -518,7 +501,6 @@
   "suivi.create_button": "Tao ho so",
   "suivi.no_thanks": "Khong, cam on",
   "suivi.call_restaurant": "Goi nha hang",
-
   "client.profile_updated": "Ho so da cap nhat",
   "client.save_error": "Loi khi luu",
   "client.profile_deleted": "Ho so da xoa",
@@ -542,7 +524,6 @@
   "client.delete_profile": "Xoa ho so",
   "client.delete_confirm_title": "Xoa ho so cua ban?",
   "client.delete_confirm_desc": "Hanh dong nay khong the hoan tac. Du lieu cua ban se bi xoa vinh vien.",
-
   "pickup.title": "Ban muon nhan don hang luc nao?",
   "pickup.asap": "Som nhat co the",
   "pickup.asap_time": "Khoang {minutes} phut",
@@ -553,7 +534,6 @@
   "pickup.lunch": " - trua",
   "pickup.dinner": " - toi",
   "pickup.tomorrow": "Ngay mai",
-
   "dashboard.nav.kitchen": "Bep",
   "dashboard.nav.pos": "Thu ngan",
   "dashboard.nav.live": "Truc tiep",
@@ -565,7 +545,6 @@
   "dashboard.nav.settings": "Cai dat",
   "dashboard.nav.stats": "Thong ke",
   "dashboard.nav.manage": "Quan ly",
-
   "dashboard.admin.orders_enabled": "Don hang dang bat",
   "dashboard.admin.orders_disabled": "Don hang dang tat",
   "dashboard.admin.login_required": "Can dang nhap",
@@ -588,7 +567,6 @@
   "dashboard.admin.reactivate": "Bat lai",
   "dashboard.admin.install_app": "Cai dat ung dung",
   "dashboard.admin.quick_access": "Truy cap nhanh tu man hinh chinh",
-
   "dashboard.orders.status_new": "Moi",
   "dashboard.orders.status_preparing": "Dang chuan bi",
   "dashboard.orders.status_ready": "San sang",
@@ -619,7 +597,6 @@
   "dashboard.orders.no_items": "Khong co mon",
   "dashboard.orders.item_available": "{name} con hang",
   "dashboard.orders.item_out_of_stock": "{name} het hang",
-
   "dashboard.stats.today": "Hom nay",
   "dashboard.stats.this_week": "Tuan nay",
   "dashboard.stats.this_month": "Thang nay",
@@ -638,7 +615,6 @@
   "dashboard.stats.total_historical": "Tong tich luy",
   "dashboard.stats.orders_suffix": "don hang",
   "dashboard.stats.demand_forecast": "Du bao nhu cau",
-
   "dashboard.live.unknown": "Khong ro",
   "dashboard.live.daily_stats": "Thong ke hom nay",
   "dashboard.live.revenue_today": "Doanh thu hom nay",
@@ -665,7 +641,6 @@
   "dashboard.live.compact_online": "Online:",
   "dashboard.live.compact_carts": "Gio hang:",
   "dashboard.live.compact_preparing": "Dang lam:",
-
   "dashboard.menu.copy_suffix": " (ban sao)",
   "dashboard.menu.item_duplicated": "Mon da sao chep",
   "dashboard.menu.duplicate_error": "Loi khi sao chep",
@@ -709,7 +684,6 @@
   "dashboard.menu.type_drink": "Do uong",
   "dashboard.menu.type_dessert": "Trang mieng",
   "dashboard.menu.type_supplement": "Phu them",
-
   "dashboard.page.colors_saved": "Da luu mau sac",
   "dashboard.page.info_saved": "Da luu thong tin",
   "dashboard.page.image_updated": "Da cap nhat {type}",
@@ -735,7 +709,6 @@
   "dashboard.page.page_preview": "Xem truoc trang",
   "dashboard.page.view_page": "Xem trang",
   "dashboard.page.preview_title": "Xem truoc trang",
-
   "dashboard.clients.load_error": "Loi tai khach hang",
   "dashboard.clients.title": "Khach hang cua toi",
   "dashboard.clients.total": "Tong khach hang",
@@ -762,7 +735,6 @@
   "dashboard.clients.unban": "Bo chan",
   "dashboard.clients.ban": "Chan",
   "dashboard.clients.unbanned": "da bo chan",
-
   "dashboard.settings.manual": "Thu cong",
   "dashboard.settings.manual_desc": "Bat/tat thu cong",
   "dashboard.settings.automatic": "Tu dong",
@@ -830,7 +802,6 @@
   "dashboard.settings.disable_confirm": "De xac nhan, nhap dung ten nha hang:",
   "dashboard.settings.disable_button": "Tat",
   "dashboard.settings.demo_unavailable": "Khong kha dung trong che do demo",
-
   "dashboard.qr.scan_to_order": "Quet de dat hang",
   "dashboard.qr.a4_downloaded": "Da tai trang A4",
   "dashboard.qr.poster_downloaded": "Da tai poster",
@@ -851,7 +822,6 @@
   "dashboard.qr.pos_desc": "Ma QR nay mo truc tiep thu ngan tren may tinh bang :",
   "dashboard.qr.tip_title": "Meo",
   "dashboard.qr.tip_text": "In trang A4 va cat ma QR cho cac ban. Dinh dang SVG ly tuong de in lon ma khong bi mo.",
-
   "dashboard.tablets.usage_kitchen": "Bep",
   "dashboard.tablets.usage_pos": "Thu ngan",
   "dashboard.tablets.usage_service": "Phuc vu khach",
@@ -887,7 +857,6 @@
   "dashboard.tablets.usage_label": "Muc dich",
   "dashboard.tablets.notes_label": "Ghi chu (khong bat buoc)",
   "dashboard.tablets.notes_placeholder": "Thong tin bo sung...",
-
   "dashboard.customization.title": "Tuy chinh don hang",
   "dashboard.customization.modified": "Da sua",
   "dashboard.customization.added": "Da them",
@@ -923,7 +892,6 @@
   "dashboard.customization.default_label": "Mac dinh",
   "dashboard.customization.optional_label": "Tuy chon",
   "dashboard.customization.empty_state": "Khong co muc nao. Nhan \"Them\" de bat dau.",
-
   "dashboard.manage.title": "Quan ly nha hang",
   "dashboard.manage.menu_label": "Thuc don",
   "dashboard.manage.menu_desc": "Mon an, gia, danh muc",
@@ -941,7 +909,6 @@
   "dashboard.manage.settings_desc": "Gio, che do, thanh toan",
   "dashboard.manage.stats_label": "Thong ke",
   "dashboard.manage.stats_desc": "Lich su, xu huong, xuat file",
-
   "dashboard.schedule.sunday": "Chu nhat",
   "dashboard.schedule.monday": "Thu 2",
   "dashboard.schedule.tuesday": "Thu 3",
@@ -954,7 +921,6 @@
   "dashboard.schedule.closed": "Dong cua",
   "dashboard.schedule.to": "-",
   "dashboard.schedule.add_slot": "Them khung gio",
-
   "dashboard.ban.success": "Da chan {name}",
   "dashboard.ban.error": "Loi khi chan",
   "dashboard.ban.title": "Chan khach hang",
@@ -966,7 +932,6 @@
   "dashboard.ban.30_days": "30 ngay",
   "dashboard.ban.permanent": "Vinh vien",
   "dashboard.ban.confirm": "Xac nhan chan",
-
   "dashboard.import.conversion_error": "{count} file khong chuyen doi duoc",
   "dashboard.import.no_usable_files": "Khong co file su dung duoc.",
   "dashboard.import.analysis_error": "Loi phan tich",
@@ -984,7 +949,6 @@
   "dashboard.import.analyzing": "Dang phan tich...",
   "dashboard.import.ai_reading": "AI dang doc tai lieu va trich xuat cac muc.",
   "dashboard.import.adding_items": "Dang them muc vao thuc don...",
-
   "dashboard.demand.tip_title": "Meo hom nay",
   "dashboard.demand.calendar_title": "Lich tuan",
   "dashboard.demand.lunch": "Trua",
@@ -996,7 +960,6 @@
   "dashboard.demand.hourly_title": "Du bao theo gio hom nay",
   "dashboard.demand.intensity": "Cuong do",
   "dashboard.demand.now": "Bay gio",
-
   "dashboard.referral.title": "Gioi thieu",
   "dashboard.referral.description": "Gioi thieu dong nghiep, ca hai duoc 4 tuan mien phi.",
   "dashboard.referral.referrals": "Luot gioi thieu",
@@ -1011,7 +974,6 @@
   "dashboard.referral.whatsapp_message": "Chao ban! Minh goi y commandeici de quan ly don hang. Dung ma cua minh, ca hai duoc 4 tuan mien phi : {url}",
   "dashboard.referral.email_subject": "Minh goi y commandeici cho ban",
   "dashboard.referral.email_body": "Chao ban,\n\nMinh goi y commandeici de quan ly don hang truc tiep khong hoa hong. Dung link cua minh, ca hai duoc 4 tuan mien phi :\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "Quan ly ton kho",
   "dashboard.assistant.shortcut_ban": "Chan khach",
   "dashboard.assistant.shortcut_supplements": "Them phu thu",
@@ -1026,7 +988,6 @@
   "dashboard.assistant.contact_support": "Lien he ho tro",
   "dashboard.assistant.fallback": "Toi khong tim thay cau tra loi. Lien he contact@commandeici.com de duoc ho tro them.",
   "dashboard.assistant.input_placeholder": "Nhap cau hoi...",
-
   "dashboard.onboarding.step_kitchen": "Bep",
   "dashboard.onboarding.step_kitchen_desc": "Day la noi ban nhan va xu ly don hang. Chap nhan, chuan bi va danh dau san sang chi voi mot click.",
   "dashboard.onboarding.step_pos": "Thu ngan",
@@ -1039,7 +1000,6 @@
   "dashboard.onboarding.step_availability_desc": "Nut nay bat/tat don hang ngay lap tuc. Tien loi cho gio nghi hoac dong cua.",
   "dashboard.onboarding.step_sound": "Am thanh",
   "dashboard.onboarding.step_sound_desc": "Bat am thanh de duoc bao khi co don moi. Rat can thiet khi phuc vu!",
-
   "pos.order_type": "Loai don",
   "pos.dine_in": "Tai cho",
   "pos.takeaway": "Mang di",
@@ -1103,7 +1063,6 @@
   "pos.complete_no": "Hoan tat khong {item}",
   "pos.drinks_label": "Do uong",
   "pos.desserts_label": "Trang mieng",
-
   "restaurant.not_found": "Khong tim thay nha hang",
   "restaurant.deactivated": "Nha hang nay hien khong phuc vu.",
   "restaurant.activating": "Trang nay dang duoc kich hoat.",
@@ -1124,11 +1083,9 @@
   "restaurant.reorder_prompt": "Dat lai don truoc?",
   "restaurant.add_button": "Them",
   "restaurant.reorder_success": "Don hang da them vao gio!",
-
   "payment.card": "The",
   "payment.cash": "Tien mat",
   "payment.ticket_restaurant": "Phieu an",
-
   "schedule.sunday": "Chu nhat",
   "schedule.monday": "Thu 2",
   "schedule.tuesday": "Thu 3",
@@ -1137,25 +1094,20 @@
   "schedule.friday": "Thu 6",
   "schedule.saturday": "Thu 7",
   "schedule.not_accepting": "Nha hang nay hien khong nhan don.",
-
   "order.restaurant_unavailable": "Nha hang nay hien khong nhan don.",
   "order.error_generic": "Da co loi xay ra. Vui long thu lai.",
-
   "client.today": "Hom nay",
   "client.yesterday": "Hom qua",
   "client.days_ago": "{days} ngay truoc",
   "client.restaurant_fallback": "Nha hang",
   "client.generic_error": "Loi",
-
   "nav.back": "Quay lai",
-
   "demo.banner_text": "Che do demo : tu do thu nghiem, moi thu deu tuong tac!",
   "demo.banner_cta": "Tao trang : 14 ngay mien phi",
   "demo.cta_discover": "Kham pha che do demo",
   "demo.cta_try": "Chua thay thuyet phuc? Thu che do demo",
   "demo.cta_link": "Kham pha cong cu qua demo",
   "demo.no_orders": "Nha hang demo",
-
   "home.page_title": "commandeici - Khu vuc nha hang",
   "home.create_page": "Tao trang",
   "home.title": "Khu vuc nha hang",
@@ -1163,9 +1115,9 @@
   "home.login": "Dang nhap",
   "home.create_free": "Tao trang mien phi",
   "home.back_to_site": "Quay lai trang web",
-
   "dashboard.orders.action_ready": "San sang",
   "dashboard.orders.action_done": "Hoan tat",
   "dashboard.orders.covers_count": "{count} nguoi",
-  "dashboard.orders.add_item": "Them"
+  "dashboard.orders.add_item": "Them",
+  "restaurant.show_phone": "Hien thi so dien thoai"
 }

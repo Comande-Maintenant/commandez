@@ -1108,7 +1108,6 @@
   "demo.cta_try": "아직 확신이 없으신가요? 데모를 사용해 보세요",
   "demo.cta_link": "데모 모드에서 도구 발견하기",
   "demo.no_orders": "데모 레스토랑",
-
   "home.page_title": "commandeici - 레스토랑 관리",
   "home.create_page": "내 페이지 만들기",
   "home.title": "레스토랑 관리",
@@ -1119,5 +1118,6 @@
   "dashboard.orders.action_ready": "준비됨",
   "dashboard.orders.action_done": "완료",
   "dashboard.orders.covers_count": "{count}인분",
-  "dashboard.orders.add_item": "추가"
+  "dashboard.orders.add_item": "추가",
+  "restaurant.show_phone": "전화번호 표시"
 }

@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { MessageCircle, X, Send, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { chatbotKnowledge, type ChatbotEntry } from "@/data/chatbotKnowledge";
 import type { DashboardView } from "@/types/dashboard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   activeView: DashboardView;
@@ -50,24 +51,25 @@ function findMatches(query: string): ChatbotEntry[] {
     .map((s) => s.entry);
 }
 
-const contextualShortcuts: Partial<Record<DashboardView, { label: string; query: string }[]>> = {
-  cuisine: [
-    { label: "Gerer les ruptures", query: "rupture" },
-    { label: "Bannir un client", query: "bannir client" },
-  ],
-  carte: [
-    { label: "Ajouter des supplements", query: "supplement" },
-    { label: "Traduire les categories", query: "langue traduction" },
-  ],
-  stats: [
-    { label: "Comprendre les stats", query: "statistique performance" },
-  ],
-  "en-direct": [
-    { label: "Voir les alertes", query: "visiteur direct" },
-  ],
-};
-
 export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
+  const { t } = useLanguage();
+
+  const contextualShortcuts = useMemo<Partial<Record<DashboardView, { label: string; query: string }[]>>>(() => ({
+    cuisine: [
+      { label: t('dashboard.assistant.shortcut_stock'), query: "rupture" },
+      { label: t('dashboard.assistant.shortcut_ban'), query: "bannir client" },
+    ],
+    carte: [
+      { label: t('dashboard.assistant.shortcut_supplements'), query: "supplement" },
+      { label: t('dashboard.assistant.shortcut_translate'), query: "langue traduction" },
+    ],
+    stats: [
+      { label: t('dashboard.assistant.shortcut_stats'), query: "statistique performance" },
+    ],
+    "en-direct": [
+      { label: t('dashboard.assistant.shortcut_alerts'), query: "visiteur direct" },
+    ],
+  }), [t]);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -116,7 +118,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
       botMsg = {
         id: (Date.now() + 1).toString(),
         type: "bot",
-        text: "Je n'ai pas trouvé de réponse à votre question. Contactez-nous à contact@commandeici.com pour plus d'aide.",
+        text: t('dashboard.assistant.fallback'),
       };
     }
 
@@ -150,7 +152,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
             exit={{ scale: 0 }}
             onClick={() => setOpen(true)}
             className="fixed bottom-20 lg:bottom-6 right-4 z-50 w-12 h-12 rounded-full bg-foreground text-primary-foreground shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
-            aria-label="Ouvrir l'assistant"
+            aria-label={t('dashboard.assistant.open')}
           >
             <MessageCircle className="h-5 w-5" />
           </motion.button>
@@ -170,8 +172,8 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <div>
-                <p className="text-sm font-semibold text-foreground">Assistant Commandez</p>
-                <p className="text-xs text-muted-foreground">Posez votre question</p>
+                <p className="text-sm font-semibold text-foreground">{t('dashboard.assistant.title')}</p>
+                <p className="text-xs text-muted-foreground">{t('dashboard.assistant.subtitle')}</p>
               </div>
               <button onClick={() => setOpen(false)} className="p-1.5 rounded-lg hover:bg-secondary">
                 <X className="h-4 w-4 text-muted-foreground" />
@@ -182,7 +184,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-[200px]">
               {messages.length === 0 && (
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">Comment puis-je vous aider ?</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.assistant.welcome')}</p>
                   {/* Contextual shortcuts */}
                   {shortcuts.map((s) => (
                     <button
@@ -198,13 +200,13 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
                     onClick={() => handleSend("comment commencer guide")}
                     className="w-full text-left px-3 py-2 rounded-xl bg-secondary/50 text-sm text-foreground hover:bg-secondary transition-colors"
                   >
-                    Revoir le guide de demarrage
+                    {t('dashboard.assistant.restart_guide')}
                   </button>
                   <button
                     onClick={() => handleSend("contact aide")}
                     className="w-full text-left px-3 py-2 rounded-xl bg-secondary/50 text-sm text-foreground hover:bg-secondary transition-colors"
                   >
-                    Contacter le support
+                    {t('dashboard.assistant.contact_support')}
                   </button>
                 </div>
               )}
@@ -267,7 +269,7 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
               >
                 <Input
                   ref={inputRef}
-                  placeholder="Tapez votre question..."
+                  placeholder={t('dashboard.assistant.input_placeholder')}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   className="rounded-xl text-sm"

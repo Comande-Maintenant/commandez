@@ -126,7 +126,6 @@
   "custom.meat_slot": "お肉 {number}",
   "custom.no_sauce": "ソースなし",
   "custom.no_supplement": "トッピングなし",
-
   "common.save": "保存",
   "common.cancel": "キャンセル",
   "common.delete": "削除",
@@ -154,14 +153,12 @@
   "common.price": "価格",
   "common.total": "合計",
   "common.min_unit": "分",
-
   "common.toast.save_error": "保存中にエラーが発生しました",
   "common.toast.upload_error": "アップロード中にエラーが発生しました",
   "common.toast.delete_error": "削除中にエラーが発生しました",
   "common.toast.update_error": "更新中にエラーが発生しました",
   "common.toast.link_copied": "リンクをコピーしました！",
   "common.toast.copy_error": "コピーできませんでした",
-
   "time.just_now": "たった今",
   "time.ago_min": "{n}分前",
   "time.ago_hours": "{n}時間前",
@@ -171,10 +168,8 @@
   "time.today": "今日",
   "time.yesterday": "昨日",
   "time.days_ago": "{n}日前",
-
   "notfound.title": "ページが見つかりません",
   "notfound.back_home": "ホームに戻る",
-
   "auth.welcome": "ようこそ！",
   "auth.welcome_desc": "手数料から解放されるまであと3分です。",
   "auth.welcome_back": "おかえりなさい",
@@ -212,7 +207,6 @@
   "auth.step_menu": "メニューを追加",
   "auth.step_share": "リンクを共有",
   "auth.step_orders": "最初の直接注文を受ける",
-
   "auth.signup.step_account": "アカウント",
   "auth.signup.step_restaurant": "レストラン",
   "auth.signup.step_menu": "メニュー",
@@ -254,7 +248,6 @@
   "auth.signup.email_taken": "このメールアドレスは既に使用されています。ログインするか、別のメールアドレスをお使いください。",
   "auth.signup.signup_error": "登録中にエラーが発生しました。",
   "auth.signup.creation_error": "作成中にエラーが発生しました。もう一度お試しください。",
-
   "auth.reset.email_required": "メールアドレスを入力してください。",
   "auth.reset.email_sent_title": "メールを送信しました！",
   "auth.reset.email_sent_desc": "このアドレスにアカウントが存在する場合、まもなくリンクが届きます。",
@@ -285,7 +278,6 @@
   "auth.reset.confirm_password": "パスワードを確認",
   "auth.reset.confirm_placeholder": "パスワードを再入力",
   "auth.reset.reset_button": "再設定する",
-
   "auth.customer.login_success": "ログインしました！",
   "auth.customer.login_error": "ログインエラー",
   "auth.customer.password_too_short": "パスワードは6文字以上で入力してください",
@@ -307,7 +299,6 @@
   "auth.customer.signup_failed": "登録に失敗しました",
   "auth.customer.login_failed": "ログインに失敗しました",
   "auth.customer.owner_account_error": "これはレストランオーナーアカウントです。管理ページをご利用ください。",
-
   "subscription.choose_plan": "プランを選択",
   "subscription.no_commitment": "縛りなし、いつでも解約可能。",
   "subscription.trial_banner": "14日間無料お試し",
@@ -358,7 +349,6 @@
   "subscription.selected": "選択中",
   "subscription.choose_this_plan": "このプランを選択",
   "subscription.pricing_fine_print": "14日間無料、クレジットカードが必要です。お客様はオンライン決済不要。いつも通り店頭でお支払いいただけます。",
-
   "subscription.features.custom_page": "オリジナル注文ページ",
   "subscription.features.realtime_menu": "リアルタイムメニュー編集",
   "subscription.features.zero_commission": "注文手数料 0%",
@@ -375,7 +365,6 @@
   "subscription.features.ocr_menu": "メニューOCR読み取り",
   "subscription.features.priority_support": "優先サポート",
   "subscription.features.advanced_stats": "詳細統計",
-
   "subscription.gate.trial": "無料お試し",
   "subscription.gate.days_remaining": "残り {days} 日。",
   "subscription.gate.activate": "有効にする",
@@ -383,7 +372,6 @@
   "subscription.gate.payment_desc": "最後のお支払いに失敗しました。commandeiciを引き続きご利用いただくため、支払い情報を更新してください。",
   "subscription.gate.manage_payment": "お支払いを管理",
   "subscription.gate.redirect_note": "お客様ページに移動します。",
-
   "onboarding.success.online": "{name} が公開されました！",
   "onboarding.success.trial_started": "14日間の無料お試しが始まりました。お客様にページを共有しましょう。",
   "onboarding.success.go_dashboard": "ダッシュボードへ",
@@ -401,7 +389,6 @@
   "onboarding.success.promo_question": "プロモコードをお持ちですか？",
   "onboarding.success.activate_button": "無料お試しを開始",
   "onboarding.success.fine_print": "お支払いは新しいタブで開きます。課金は14日後からです。",
-
   "onboarding.upload.loading_1": "メニューを分析しています...",
   "onboarding.upload.loading_2": "AIが料理、カテゴリ、価格を整理しています...",
   "onboarding.upload.loading_3": "確認して、必要があれば調整してください。",
@@ -425,7 +412,6 @@
   "onboarding.upload.analyze_files": "{count}ファイルを分析",
   "onboarding.upload.analyze_menu": "メニューを分析",
   "onboarding.upload.manual_create": "手動でメニューを作成",
-
   "onboarding.review.new_category": "新しいカテゴリ",
   "onboarding.review.summary": "{categories}カテゴリ、{items}品を検出",
   "onboarding.review.category": "カテゴリ",
@@ -435,7 +421,6 @@
   "onboarding.review.add_item": "アイテムを追加",
   "onboarding.review.back": "戻る",
   "onboarding.review.validate": "メニューを確定",
-
   "onboarding.place.confirm_desc": "お店の情報を確認・入力してください。",
   "onboarding.place.name": "店名",
   "onboarding.place.address": "住所",
@@ -478,7 +463,6 @@
   "onboarding.place.manual_city_placeholder": "東京",
   "onboarding.place.manual_phone": "電話番号（任意）",
   "onboarding.place.manual_phone_placeholder": "03-1234-5678",
-
   "onboarding.colors.recommended": "おすすめ",
   "onboarding.colors.preview_name": "あなたのお店",
   "onboarding.colors.live_preview": "リアルタイムプレビュー",
@@ -488,7 +472,6 @@
   "onboarding.colors.primary": "メインカラー",
   "onboarding.colors.custom": "カスタム",
   "onboarding.colors.background": "背景色",
-
   "suivi.received": "注文受付済み",
   "suivi.preparing": "調理中",
   "suivi.almost_ready": "もうすぐ完成",
@@ -518,7 +501,6 @@
   "suivi.create_button": "プロフィールを作成",
   "suivi.no_thanks": "いいえ、結構です",
   "suivi.call_restaurant": "お店に電話する",
-
   "client.profile_updated": "プロフィールが更新されました",
   "client.save_error": "保存中にエラーが発生しました",
   "client.profile_deleted": "プロフィールが削除されました",
@@ -542,7 +524,6 @@
   "client.delete_profile": "プロフィールを削除",
   "client.delete_confirm_title": "プロフィールを削除しますか？",
   "client.delete_confirm_desc": "この操作は取り消せません。データは完全に削除されます。",
-
   "pickup.title": "いつ受け取りに来られますか？",
   "pickup.asap": "できるだけ早く",
   "pickup.asap_time": "約{minutes}分",
@@ -553,7 +534,6 @@
   "pickup.lunch": " - ランチ",
   "pickup.dinner": " - ディナー",
   "pickup.tomorrow": "明日",
-
   "dashboard.nav.kitchen": "キッチン",
   "dashboard.nav.pos": "レジ",
   "dashboard.nav.live": "ライブ",
@@ -565,7 +545,6 @@
   "dashboard.nav.settings": "設定",
   "dashboard.nav.stats": "統計",
   "dashboard.nav.manage": "管理",
-
   "dashboard.admin.orders_enabled": "注文受付中",
   "dashboard.admin.orders_disabled": "注文停止中",
   "dashboard.admin.login_required": "ログインが必要です",
@@ -588,7 +567,6 @@
   "dashboard.admin.reactivate": "再開する",
   "dashboard.admin.install_app": "アプリをインストール",
   "dashboard.admin.quick_access": "ホーム画面からすぐにアクセス",
-
   "dashboard.orders.status_new": "新規",
   "dashboard.orders.status_preparing": "調理中",
   "dashboard.orders.status_ready": "完成",
@@ -619,7 +597,6 @@
   "dashboard.orders.no_items": "アイテムなし",
   "dashboard.orders.item_available": "{name} 在庫あり",
   "dashboard.orders.item_out_of_stock": "{name} 品切れ",
-
   "dashboard.stats.today": "今日",
   "dashboard.stats.this_week": "今週",
   "dashboard.stats.this_month": "今月",
@@ -638,7 +615,6 @@
   "dashboard.stats.total_historical": "累計",
   "dashboard.stats.orders_suffix": "件",
   "dashboard.stats.demand_forecast": "需要予測",
-
   "dashboard.live.unknown": "不明",
   "dashboard.live.daily_stats": "本日の統計",
   "dashboard.live.revenue_today": "今日の売上",
@@ -665,7 +641,6 @@
   "dashboard.live.compact_online": "オンライン：",
   "dashboard.live.compact_carts": "カート：",
   "dashboard.live.compact_preparing": "調理中：",
-
   "dashboard.menu.copy_suffix": "（コピー）",
   "dashboard.menu.item_duplicated": "アイテムを複製しました",
   "dashboard.menu.duplicate_error": "複製中にエラーが発生しました",
@@ -709,7 +684,6 @@
   "dashboard.menu.type_drink": "ドリンク",
   "dashboard.menu.type_dessert": "デザート",
   "dashboard.menu.type_supplement": "トッピング",
-
   "dashboard.page.colors_saved": "カラーを保存しました",
   "dashboard.page.info_saved": "情報を保存しました",
   "dashboard.page.image_updated": "{type}を更新しました",
@@ -735,7 +709,6 @@
   "dashboard.page.page_preview": "ページプレビュー",
   "dashboard.page.view_page": "ページを見る",
   "dashboard.page.preview_title": "ページプレビュー",
-
   "dashboard.clients.load_error": "顧客の読み込みエラー",
   "dashboard.clients.title": "顧客",
   "dashboard.clients.total": "総顧客数",
@@ -762,7 +735,6 @@
   "dashboard.clients.unban": "ブロック解除",
   "dashboard.clients.ban": "ブロック",
   "dashboard.clients.unbanned": "ブロック解除されました",
-
   "dashboard.settings.manual": "手動",
   "dashboard.settings.manual_desc": "手動でオン/オフ切り替え",
   "dashboard.settings.automatic": "自動",
@@ -830,7 +802,6 @@
   "dashboard.settings.disable_confirm": "確認のため、お店の正確な名前を入力してください：",
   "dashboard.settings.disable_button": "無効化する",
   "dashboard.settings.demo_unavailable": "デモモードでは利用できません",
-
   "dashboard.qr.scan_to_order": "スキャンして注文",
   "dashboard.qr.a4_downloaded": "A4シートをダウンロードしました",
   "dashboard.qr.poster_downloaded": "ポスターをダウンロードしました",
@@ -851,7 +822,6 @@
   "dashboard.qr.pos_desc": "このQR Codeでタブレットのレジ画面を直接開けます：",
   "dashboard.qr.tip_title": "ヒント",
   "dashboard.qr.tip_text": "A4シートを印刷してQR Codeを切り取り、テーブルに置きましょう。SVG形式なら大判印刷でも画質が落ちません。",
-
   "dashboard.tablets.usage_kitchen": "キッチン",
   "dashboard.tablets.usage_pos": "レジ",
   "dashboard.tablets.usage_service": "接客",
@@ -887,7 +857,6 @@
   "dashboard.tablets.usage_label": "用途",
   "dashboard.tablets.notes_label": "備考（任意）",
   "dashboard.tablets.notes_placeholder": "追加情報...",
-
   "dashboard.customization.title": "注文カスタマイズ",
   "dashboard.customization.modified": "変更済み",
   "dashboard.customization.added": "追加済み",
@@ -923,7 +892,6 @@
   "dashboard.customization.default_label": "デフォルト",
   "dashboard.customization.optional_label": "任意",
   "dashboard.customization.empty_state": "アイテムがありません。「追加」をクリックして始めましょう。",
-
   "dashboard.manage.title": "お店を管理",
   "dashboard.manage.menu_label": "メニュー",
   "dashboard.manage.menu_desc": "料理、価格、カテゴリを編集",
@@ -941,7 +909,6 @@
   "dashboard.manage.settings_desc": "営業時間、注文方式、決済",
   "dashboard.manage.stats_label": "統計",
   "dashboard.manage.stats_desc": "履歴、トレンド、エクスポート",
-
   "dashboard.schedule.sunday": "日曜日",
   "dashboard.schedule.monday": "月曜日",
   "dashboard.schedule.tuesday": "火曜日",
@@ -954,7 +921,6 @@
   "dashboard.schedule.closed": "定休日",
   "dashboard.schedule.to": "-",
   "dashboard.schedule.add_slot": "時間枠を追加",
-
   "dashboard.ban.success": "{name} をブロックしました",
   "dashboard.ban.error": "ブロック中にエラーが発生しました",
   "dashboard.ban.title": "客をブロック",
@@ -966,7 +932,6 @@
   "dashboard.ban.30_days": "30日間",
   "dashboard.ban.permanent": "永久",
   "dashboard.ban.confirm": "ブロックを確定",
-
   "dashboard.import.conversion_error": "{count}ファイルを変換できませんでした",
   "dashboard.import.no_usable_files": "使用可能なファイルがありません。",
   "dashboard.import.analysis_error": "分析中にエラーが発生しました",
@@ -984,7 +949,6 @@
   "dashboard.import.analyzing": "分析中...",
   "dashboard.import.ai_reading": "AIがドキュメントを読み取り、アイテムを抽出中です。",
   "dashboard.import.adding_items": "メニューにアイテムを追加中...",
-
   "dashboard.demand.tip_title": "今日のアドバイス",
   "dashboard.demand.calendar_title": "今週のカレンダー",
   "dashboard.demand.lunch": "ランチ",
@@ -996,7 +960,6 @@
   "dashboard.demand.hourly_title": "本日の時間帯別予測",
   "dashboard.demand.intensity": "混雑度",
   "dashboard.demand.now": "現在",
-
   "dashboard.referral.title": "紹介プログラム",
   "dashboard.referral.description": "仲間を紹介して、お互いに4週間無料をゲットしましょう。",
   "dashboard.referral.referrals": "紹介",
@@ -1011,7 +974,6 @@
   "dashboard.referral.whatsapp_message": "こんにちは！注文管理にcommanddeiciをお勧めします。私のコードを使えば、お互いに4週間無料です：{url}",
   "dashboard.referral.email_subject": "commandeiciをおすすめします",
   "dashboard.referral.email_body": "こんにちは、\n\n手数料なしで直接注文を管理できるcommandeiciをおすすめします。このリンクからお互いに4週間無料になります：\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "在庫管理",
   "dashboard.assistant.shortcut_ban": "客をブロック",
   "dashboard.assistant.shortcut_supplements": "トッピングを追加",
@@ -1026,7 +988,6 @@
   "dashboard.assistant.contact_support": "サポートに連絡",
   "dashboard.assistant.fallback": "ご質問の回答が見つかりませんでした。contact@commandeici.com までお問い合わせください。",
   "dashboard.assistant.input_placeholder": "質問を入力...",
-
   "dashboard.onboarding.step_kitchen": "キッチン",
   "dashboard.onboarding.step_kitchen_desc": "ここで全注文を受け付け、管理します。受付、調理、完成をワンクリックで。",
   "dashboard.onboarding.step_pos": "レジ",
@@ -1039,7 +1000,6 @@
   "dashboard.onboarding.step_availability_desc": "このスイッチで注文の受付/停止を即座に切り替えられます。休憩や閉店時に便利です。",
   "dashboard.onboarding.step_sound": "通知音",
   "dashboard.onboarding.step_sound_desc": "通知音をオンにして、新しい注文が入るたびにお知らせを受けましょう。営業中は必須です！",
-
   "pos.order_type": "注文タイプ",
   "pos.dine_in": "店内",
   "pos.takeaway": "テイクアウト",
@@ -1148,7 +1108,6 @@
   "demo.cta_try": "まだ迷っていますか？デモをお試しください",
   "demo.cta_link": "デモモードでツールを発見",
   "demo.no_orders": "デモレストラン",
-
   "home.page_title": "commandeici - レストラン管理",
   "home.create_page": "ページを作成",
   "home.title": "レストラン管理",
@@ -1159,5 +1118,6 @@
   "dashboard.orders.action_ready": "準備完了",
   "dashboard.orders.action_done": "完了",
   "dashboard.orders.covers_count": "{count}名",
-  "dashboard.orders.add_item": "追加"
+  "dashboard.orders.add_item": "追加",
+  "restaurant.show_phone": "電話番号を表示"
 }

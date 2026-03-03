@@ -126,7 +126,6 @@
   "custom.meat_slot": "لحم {number}",
   "custom.no_sauce": "بدون صلصة",
   "custom.no_supplement": "بدون إضافة",
-
   "common.save": "حفظ",
   "common.cancel": "إلغاء",
   "common.delete": "حذف",
@@ -154,14 +153,12 @@
   "common.price": "السعر",
   "common.total": "المجموع",
   "common.min_unit": "دقيقة",
-
   "common.toast.save_error": "خطأ أثناء الحفظ",
   "common.toast.upload_error": "خطأ أثناء الرفع",
   "common.toast.delete_error": "خطأ أثناء الحذف",
   "common.toast.update_error": "خطأ أثناء التحديث",
   "common.toast.link_copied": "تم نسخ الرابط!",
   "common.toast.copy_error": "تعذر النسخ",
-
   "time.just_now": "الآن",
   "time.ago_min": "منذ {n} دقيقة",
   "time.ago_hours": "منذ {n} ساعة",
@@ -171,10 +168,8 @@
   "time.today": "اليوم",
   "time.yesterday": "أمس",
   "time.days_ago": "منذ {n} يوم",
-
   "notfound.title": "الصفحة غير موجودة",
   "notfound.back_home": "العودة إلى الرئيسية",
-
   "auth.welcome": "مرحبا!",
   "auth.welcome_desc": "أنت على بعد 3 دقائق من التخلص من العمولات.",
   "auth.welcome_back": "مرحبا بعودتك",
@@ -212,7 +207,6 @@
   "auth.step_menu": "أضف قائمتك",
   "auth.step_share": "شارك رابطك",
   "auth.step_orders": "استقبل طلباتك المباشرة الأولى",
-
   "auth.signup.step_account": "الحساب",
   "auth.signup.step_restaurant": "المطعم",
   "auth.signup.step_menu": "القائمة",
@@ -254,7 +248,6 @@
   "auth.signup.email_taken": "هذا البريد مستخدم بالفعل. سجل الدخول أو استخدم بريدا آخر.",
   "auth.signup.signup_error": "خطأ أثناء التسجيل.",
   "auth.signup.creation_error": "خطأ أثناء الإنشاء. يرجى المحاولة مرة أخرى.",
-
   "auth.reset.email_required": "أدخل بريدك الإلكتروني.",
   "auth.reset.email_sent_title": "تم إرسال البريد!",
   "auth.reset.email_sent_desc": "إذا كان هناك حساب بهذا العنوان، ستتلقى رابطا خلال لحظات.",
@@ -285,7 +278,6 @@
   "auth.reset.confirm_password": "تأكيد كلمة المرور",
   "auth.reset.confirm_placeholder": "أكد كلمة المرور",
   "auth.reset.reset_button": "إعادة تعيين",
-
   "auth.customer.login_success": "تم تسجيل الدخول!",
   "auth.customer.login_error": "خطأ في تسجيل الدخول",
   "auth.customer.password_too_short": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
@@ -307,7 +299,6 @@
   "auth.customer.signup_failed": "فشل التسجيل",
   "auth.customer.login_failed": "فشل تسجيل الدخول",
   "auth.customer.owner_account_error": "هذا حساب مطعم. استخدم صفحة الإدارة.",
-
   "subscription.choose_plan": "اختر باقتك",
   "subscription.no_commitment": "بدون التزام، يمكنك الإلغاء في أي وقت.",
   "subscription.trial_banner": "14 يوم تجربة مجانية",
@@ -358,7 +349,6 @@
   "subscription.selected": "محدد",
   "subscription.choose_this_plan": "اختر هذه الباقة",
   "subscription.pricing_fine_print": "14 يوم تجربة مجانية، بطاقة مصرفية مطلوبة. عملاؤك لا يدفعون عبر الإنترنت. الدفع يتم في المكان كالمعتاد.",
-
   "subscription.features.custom_page": "صفحة طلب مخصصة",
   "subscription.features.realtime_menu": "قائمة قابلة للتعديل فورا",
   "subscription.features.zero_commission": "0% عمولة على الطلبات",
@@ -375,7 +365,6 @@
   "subscription.features.ocr_menu": "تحليل OCR لقائمتك",
   "subscription.features.priority_support": "دعم ذو أولوية",
   "subscription.features.advanced_stats": "إحصائيات متقدمة",
-
   "subscription.gate.trial": "تجربة مجانية",
   "subscription.gate.days_remaining": "{days} يوم متبقي.",
   "subscription.gate.activate": "تفعيل",
@@ -383,7 +372,6 @@
   "subscription.gate.payment_desc": "فشل آخر عملية دفع. حدث معلومات الدفع للاستمرار في استخدام commandeici.",
   "subscription.gate.manage_payment": "إدارة الدفع",
   "subscription.gate.redirect_note": "ستتم إعادة توجيهك إلى حسابك.",
-
   "onboarding.success.online": "{name} أصبح متاحا!",
   "onboarding.success.trial_started": "بدأت تجربتك المجانية لمدة 14 يوم. شارك صفحتك مع عملائك.",
   "onboarding.success.go_dashboard": "الذهاب إلى لوحة التحكم",
@@ -401,7 +389,6 @@
   "onboarding.success.promo_question": "لديك رمز ترويجي؟",
   "onboarding.success.activate_button": "تفعيل تجربتي المجانية",
   "onboarding.success.fine_print": "يفتح الدفع في نافذة جديدة. لن يتم الخصم إلا بعد 14 يوم.",
-
   "onboarding.upload.loading_1": "نحلل قائمتك لتوفير وقتك...",
   "onboarding.upload.loading_2": "نرتب أطباقك وفئاتك وأسعارك...",
   "onboarding.upload.loading_3": "ما عليك سوى المراجعة والتعديل إذا لزم الأمر.",
@@ -425,7 +412,6 @@
   "onboarding.upload.analyze_files": "تحليل ملفاتي ({count})",
   "onboarding.upload.analyze_menu": "تحليل قائمتي",
   "onboarding.upload.manual_create": "إنشاء قائمتي يدويا",
-
   "onboarding.review.new_category": "فئة جديدة",
   "onboarding.review.summary": "{categories} فئة، {items} عنصر مكتشف",
   "onboarding.review.category": "فئة",
@@ -435,7 +421,6 @@
   "onboarding.review.add_item": "إضافة عنصر",
   "onboarding.review.back": "رجوع",
   "onboarding.review.validate": "اعتماد قائمتي",
-
   "onboarding.place.confirm_desc": "تحقق من معلومات مطعمك وأكملها.",
   "onboarding.place.name": "الاسم",
   "onboarding.place.address": "العنوان",
@@ -478,7 +463,6 @@
   "onboarding.place.manual_city_placeholder": "الرباط",
   "onboarding.place.manual_phone": "الهاتف (اختياري)",
   "onboarding.place.manual_phone_placeholder": "01 23 45 67 89",
-
   "onboarding.colors.recommended": "موصى به",
   "onboarding.colors.preview_name": "مطعمك",
   "onboarding.colors.live_preview": "معاينة مباشرة",
@@ -488,7 +472,6 @@
   "onboarding.colors.primary": "اللون الرئيسي",
   "onboarding.colors.custom": "مخصص",
   "onboarding.colors.background": "لون الخلفية",
-
   "suivi.received": "تم استلام الطلب",
   "suivi.preparing": "قيد التحضير",
   "suivi.almost_ready": "جاهز قريبا",
@@ -518,7 +501,6 @@
   "suivi.create_button": "إنشاء ملفي الشخصي",
   "suivi.no_thanks": "لا شكرا",
   "suivi.call_restaurant": "الاتصال بالمطعم",
-
   "client.profile_updated": "تم تحديث الملف الشخصي",
   "client.save_error": "خطأ أثناء الحفظ",
   "client.profile_deleted": "تم حذف الملف الشخصي",
@@ -542,7 +524,6 @@
   "client.delete_profile": "حذف ملفي الشخصي",
   "client.delete_confirm_title": "حذف ملفك الشخصي؟",
   "client.delete_confirm_desc": "هذا الإجراء لا يمكن التراجع عنه. سيتم حذف بياناتك نهائيا.",
-
   "pickup.title": "متى تريد استلام طلبك؟",
   "pickup.asap": "في أقرب وقت",
   "pickup.asap_time": "حوالي {minutes} دقيقة",
@@ -553,7 +534,6 @@
   "pickup.lunch": " - غداء",
   "pickup.dinner": " - عشاء",
   "pickup.tomorrow": "غدا",
-
   "dashboard.nav.kitchen": "المطبخ",
   "dashboard.nav.pos": "الكاشير",
   "dashboard.nav.live": "مباشر",
@@ -565,7 +545,6 @@
   "dashboard.nav.settings": "الإعدادات",
   "dashboard.nav.stats": "الإحصائيات",
   "dashboard.nav.manage": "إدارة",
-
   "dashboard.admin.orders_enabled": "الطلبات مفعلة",
   "dashboard.admin.orders_disabled": "الطلبات معطلة",
   "dashboard.admin.login_required": "تسجيل الدخول مطلوب",
@@ -588,7 +567,6 @@
   "dashboard.admin.reactivate": "إعادة التفعيل",
   "dashboard.admin.install_app": "تثبيت التطبيق",
   "dashboard.admin.quick_access": "وصول سريع من شاشتك الرئيسية",
-
   "dashboard.orders.status_new": "جديد",
   "dashboard.orders.status_preparing": "قيد التحضير",
   "dashboard.orders.status_ready": "جاهز",
@@ -619,7 +597,6 @@
   "dashboard.orders.no_items": "لا توجد أطباق",
   "dashboard.orders.item_available": "{name} متاح",
   "dashboard.orders.item_out_of_stock": "{name} نفد",
-
   "dashboard.stats.today": "اليوم",
   "dashboard.stats.this_week": "هذا الأسبوع",
   "dashboard.stats.this_month": "هذا الشهر",
@@ -638,7 +615,6 @@
   "dashboard.stats.total_historical": "الإجمالي التاريخي",
   "dashboard.stats.orders_suffix": "طلب",
   "dashboard.stats.demand_forecast": "توقع الطلب",
-
   "dashboard.live.unknown": "مجهول",
   "dashboard.live.daily_stats": "إحصائيات اليوم",
   "dashboard.live.revenue_today": "إيرادات اليوم",
@@ -665,7 +641,6 @@
   "dashboard.live.compact_online": "متصل:",
   "dashboard.live.compact_carts": "السلات:",
   "dashboard.live.compact_preparing": "قيد التحضير:",
-
   "dashboard.menu.copy_suffix": " (نسخة)",
   "dashboard.menu.item_duplicated": "تم نسخ العنصر",
   "dashboard.menu.duplicate_error": "خطأ أثناء النسخ",
@@ -709,7 +684,6 @@
   "dashboard.menu.type_drink": "مشروب",
   "dashboard.menu.type_dessert": "حلوى",
   "dashboard.menu.type_supplement": "إضافة",
-
   "dashboard.page.colors_saved": "تم حفظ الألوان",
   "dashboard.page.info_saved": "تم حفظ المعلومات",
   "dashboard.page.image_updated": "تم تحديث {type}",
@@ -735,7 +709,6 @@
   "dashboard.page.page_preview": "معاينة صفحتك",
   "dashboard.page.view_page": "عرض صفحتي",
   "dashboard.page.preview_title": "معاينة الصفحة",
-
   "dashboard.clients.load_error": "خطأ في تحميل العملاء",
   "dashboard.clients.title": "عملائي",
   "dashboard.clients.total": "إجمالي العملاء",
@@ -762,7 +735,6 @@
   "dashboard.clients.unban": "إلغاء الحظر",
   "dashboard.clients.ban": "حظر",
   "dashboard.clients.unbanned": "تم إلغاء الحظر",
-
   "dashboard.settings.manual": "يدوي",
   "dashboard.settings.manual_desc": "فعل/عطل يدويا",
   "dashboard.settings.automatic": "تلقائي",
@@ -830,7 +802,6 @@
   "dashboard.settings.disable_confirm": "للتأكيد، اكتب الاسم الدقيق لمطعمك:",
   "dashboard.settings.disable_button": "تعطيل",
   "dashboard.settings.demo_unavailable": "غير متوفر في الوضع التجريبي",
-
   "dashboard.qr.scan_to_order": "امسح للطلب",
   "dashboard.qr.a4_downloaded": "تم تنزيل صفحة A4",
   "dashboard.qr.poster_downloaded": "تم تنزيل ملصق الواجهة",
@@ -851,7 +822,6 @@
   "dashboard.qr.pos_desc": "يفتح QR Code هذا الكاشير مباشرة على الجهاز اللوحي:",
   "dashboard.qr.tip_title": "نصيحة",
   "dashboard.qr.tip_text": "اطبع صفحة A4 وقص QR Codes للطاولات. صيغة SVG مثالية للطباعة بحجم كبير بدون فقدان الجودة.",
-
   "dashboard.tablets.usage_kitchen": "المطبخ",
   "dashboard.tablets.usage_pos": "الكاشير",
   "dashboard.tablets.usage_service": "خدمة العملاء",
@@ -887,7 +857,6 @@
   "dashboard.tablets.usage_label": "الاستخدام",
   "dashboard.tablets.notes_label": "ملاحظات (اختياري)",
   "dashboard.tablets.notes_placeholder": "معلومات إضافية...",
-
   "dashboard.customization.title": "تخصيص الطلب",
   "dashboard.customization.modified": "تم التعديل",
   "dashboard.customization.added": "تم الإضافة",
@@ -923,7 +892,6 @@
   "dashboard.customization.default_label": "افتراضي",
   "dashboard.customization.optional_label": "اختياري",
   "dashboard.customization.empty_state": "لا توجد عناصر. اضغط \"إضافة\" للبدء.",
-
   "dashboard.manage.title": "إدارة مطعمي",
   "dashboard.manage.menu_label": "قائمتي",
   "dashboard.manage.menu_desc": "تعديل الأطباق والأسعار والفئات",
@@ -941,7 +909,6 @@
   "dashboard.manage.settings_desc": "المواعيد والأوضاع والدفع",
   "dashboard.manage.stats_label": "الإحصائيات",
   "dashboard.manage.stats_desc": "السجل والاتجاهات والتصدير",
-
   "dashboard.schedule.sunday": "الأحد",
   "dashboard.schedule.monday": "الاثنين",
   "dashboard.schedule.tuesday": "الثلاثاء",
@@ -954,7 +921,6 @@
   "dashboard.schedule.closed": "مغلق",
   "dashboard.schedule.to": "إلى",
   "dashboard.schedule.add_slot": "إضافة فترة",
-
   "dashboard.ban.success": "تم حظر {name}",
   "dashboard.ban.error": "خطأ أثناء الحظر",
   "dashboard.ban.title": "حظر عميل",
@@ -966,7 +932,6 @@
   "dashboard.ban.30_days": "30 يوم",
   "dashboard.ban.permanent": "دائم",
   "dashboard.ban.confirm": "تأكيد الحظر",
-
   "dashboard.import.conversion_error": "{count} ملف لم يتم تحويله",
   "dashboard.import.no_usable_files": "لا توجد ملفات قابلة للاستخدام.",
   "dashboard.import.analysis_error": "خطأ أثناء التحليل",
@@ -984,7 +949,6 @@
   "dashboard.import.analyzing": "جاري التحليل...",
   "dashboard.import.ai_reading": "يقرأ الذكاء الاصطناعي مستندك ويستخرج العناصر.",
   "dashboard.import.adding_items": "جاري إضافة العناصر إلى قائمتك...",
-
   "dashboard.demand.tip_title": "نصيحة اللحظة",
   "dashboard.demand.calendar_title": "تقويم الأسبوع",
   "dashboard.demand.lunch": "غداء",
@@ -996,7 +960,6 @@
   "dashboard.demand.hourly_title": "توقع الساعات لهذا اليوم",
   "dashboard.demand.intensity": "الكثافة",
   "dashboard.demand.now": "الآن",
-
   "dashboard.referral.title": "الإحالة",
   "dashboard.referral.description": "أحل زميلا واحصل على 4 أسابيع مجانية لكل منكما.",
   "dashboard.referral.referrals": "الإحالات",
@@ -1011,7 +974,6 @@
   "dashboard.referral.whatsapp_message": "مرحبا! أنصحك بـ commandeici لإدارة طلباتك. استخدم رمزي وكلانا يحصل على 4 أسابيع مجانية: {url}",
   "dashboard.referral.email_subject": "أنصحك بـ commandeici",
   "dashboard.referral.email_body": "مرحبا،\n\nأنصحك بـ commandeici لإدارة طلباتك المباشرة بدون عمولة. استخدم رابطي وكلانا يحصل على 4 أسابيع مجانية:\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "إدارة النفاد",
   "dashboard.assistant.shortcut_ban": "حظر عميل",
   "dashboard.assistant.shortcut_supplements": "إضافة ملحقات",
@@ -1026,7 +988,6 @@
   "dashboard.assistant.contact_support": "التواصل مع الدعم",
   "dashboard.assistant.fallback": "لم أجد إجابة لسؤالك. تواصل معنا على contact@commandeici.com لمزيد من المساعدة.",
   "dashboard.assistant.input_placeholder": "اكتب سؤالك...",
-
   "dashboard.onboarding.step_kitchen": "المطبخ",
   "dashboard.onboarding.step_kitchen_desc": "هنا تستقبل وتدير جميع الطلبات. اقبل وحضر وعلم كجاهز بنقرة واحدة.",
   "dashboard.onboarding.step_pos": "الكاشير",
@@ -1039,7 +1000,6 @@
   "dashboard.onboarding.step_availability_desc": "هذا الزر يفعل أو يعطل الطلبات فورا. مفيد للاستراحات أو الإغلاق.",
   "dashboard.onboarding.step_sound": "الصوت",
   "dashboard.onboarding.step_sound_desc": "فعل الصوت ليتم تنبيهك عند كل طلب جديد. ضروري أثناء الخدمة!",
-
   "pos.order_type": "نوع الطلب",
   "pos.dine_in": "في المكان",
   "pos.takeaway": "سفري",
@@ -1148,7 +1108,6 @@
   "demo.cta_try": "غير مقتنع بعد؟ جرب العرض التوضيحي",
   "demo.cta_link": "اكتشف الاداة في الوضع التجريبي",
   "demo.no_orders": "مطعم تجريبي",
-
   "home.page_title": "commandeici - لوحة المطعم",
   "home.create_page": "انشاء صفحتي",
   "home.title": "لوحة المطعم",
@@ -1159,5 +1118,6 @@
   "dashboard.orders.action_ready": "جاهز",
   "dashboard.orders.action_done": "مكتمل",
   "dashboard.orders.covers_count": "{count} غطاء",
-  "dashboard.orders.add_item": "اضافة"
+  "dashboard.orders.add_item": "اضافة",
+  "restaurant.show_phone": "عرض الرقم"
 }

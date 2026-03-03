@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   displayNumber: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export const POSSuccess = ({ displayNumber, onReset }: Props) => {
+  const { t } = useLanguage();
   useEffect(() => {
     const timer = setTimeout(onReset, 5000);
     return () => clearTimeout(timer);
@@ -44,7 +46,7 @@ export const POSSuccess = ({ displayNumber, onReset }: Props) => {
         transition={{ delay: 0.4 }}
         className="text-lg text-muted-foreground mb-8"
       >
-        Commande envoyee en cuisine
+        {t('pos.order_sent')}
       </motion.p>
 
       <Button
@@ -52,7 +54,7 @@ export const POSSuccess = ({ displayNumber, onReset }: Props) => {
         className="rounded-xl min-h-[56px] px-8 text-base"
         onClick={onReset}
       >
-        Nouvelle commande
+        {t('pos.new_order')}
       </Button>
     </motion.div>
   );

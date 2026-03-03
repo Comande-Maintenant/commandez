@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Sparkles, Info } from 'lucide-react';
 import type { ExtractedColors } from '@/types/onboarding';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface QuickColorPickerProps {
   extractedColors?: ExtractedColors;
@@ -15,12 +16,14 @@ function ColorSwatch({
   selected,
   label,
   recommended,
+  recommendedLabel,
   onClick,
 }: {
   color: string;
   selected: boolean;
   label?: string;
   recommended?: boolean;
+  recommendedLabel?: string;
   onClick: () => void;
 }) {
   return (
@@ -35,10 +38,10 @@ function ColorSwatch({
         style={{ backgroundColor: color }}
       />
       <span className="text-sm text-foreground">{label ?? color}</span>
-      {recommended && (
+      {recommended && recommendedLabel && (
         <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-full">
           <Sparkles className="h-3 w-3" />
-          Recommandé
+          {recommendedLabel}
         </span>
       )}
     </button>
@@ -52,6 +55,7 @@ export function QuickColorPicker({
   onPrimaryChange,
   onBgChange,
 }: QuickColorPickerProps) {
+  const { t } = useLanguage();
   const [showTooltip, setShowTooltip] = useState(false);
 
   const primaryOptions = extractedColors
@@ -75,15 +79,15 @@ export function QuickColorPicker({
             style={{ backgroundColor: primaryColor }}
           />
           <div>
-            <p className="font-bold" style={{ color: primaryColor }}>Votre Restaurant</p>
-            <p className="text-sm opacity-60" style={{ color: primaryColor }}>Apercu en temps reel</p>
+            <p className="font-bold" style={{ color: primaryColor }}>{t('onboarding.colors.preview_name')}</p>
+            <p className="text-sm opacity-60" style={{ color: primaryColor }}>{t('onboarding.colors.live_preview')}</p>
           </div>
         </div>
         <div
           className="inline-block px-4 py-2 rounded-full text-sm font-medium text-white"
           style={{ backgroundColor: primaryColor }}
         >
-          Commander
+          {t('onboarding.colors.order_button')}
         </div>
       </div>
 
@@ -95,12 +99,12 @@ export function QuickColorPicker({
             className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <Info className="h-3.5 w-3.5" />
-            Couleurs extraites de votre carte
+            {t('onboarding.colors.extracted_tooltip')}
           </button>
           {showTooltip && (
             <div className="absolute left-0 top-full mt-1 z-10 bg-card border border-border rounded-lg p-3 shadow-lg max-w-xs">
               <p className="text-xs text-muted-foreground">
-                Cette combinaison est extraite de votre carte et offrira une meilleure cohérence visuelle.
+                {t('onboarding.colors.extracted_desc')}
               </p>
             </div>
           )}
@@ -109,7 +113,7 @@ export function QuickColorPicker({
 
       {/* Primary color */}
       <div>
-        <p className="text-sm font-medium text-foreground mb-2">Couleur principale</p>
+        <p className="text-sm font-medium text-foreground mb-2">{t('onboarding.colors.primary')}</p>
         <div className="flex flex-wrap gap-2">
           {primaryOptions.map((c, i) => (
             <ColorSwatch
@@ -117,6 +121,7 @@ export function QuickColorPicker({
               color={c}
               selected={primaryColor === c}
               recommended={i === 0 && !!extractedColors}
+              recommendedLabel={t('onboarding.colors.recommended')}
               onClick={() => onPrimaryChange(c)}
             />
           ))}
@@ -127,14 +132,14 @@ export function QuickColorPicker({
               onChange={(e) => onPrimaryChange(e.target.value)}
               className="w-6 h-6 rounded-full border-0 cursor-pointer"
             />
-            <span className="text-sm text-muted-foreground">Personnalisé</span>
+            <span className="text-sm text-muted-foreground">{t('onboarding.colors.custom')}</span>
           </label>
         </div>
       </div>
 
       {/* Background color */}
       <div>
-        <p className="text-sm font-medium text-foreground mb-2">Couleur de fond</p>
+        <p className="text-sm font-medium text-foreground mb-2">{t('onboarding.colors.background')}</p>
         <div className="flex flex-wrap gap-2">
           {bgOptions.map((c, i) => (
             <ColorSwatch
@@ -142,6 +147,7 @@ export function QuickColorPicker({
               color={c}
               selected={bgColor === c}
               recommended={i === 0 && !!extractedColors}
+              recommendedLabel={t('onboarding.colors.recommended')}
               onClick={() => onBgChange(c)}
             />
           ))}
@@ -152,7 +158,7 @@ export function QuickColorPicker({
               onChange={(e) => onBgChange(e.target.value)}
               className="w-6 h-6 rounded-full border-0 cursor-pointer"
             />
-            <span className="text-sm text-muted-foreground">Personnalisé</span>
+            <span className="text-sm text-muted-foreground">{t('onboarding.colors.custom')}</span>
           </label>
         </div>
       </div>
