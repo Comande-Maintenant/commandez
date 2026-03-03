@@ -3,6 +3,7 @@ import { Navigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurantId: string;
@@ -149,6 +150,7 @@ export function SubscriptionGate({ restaurantId, children }: Props) {
 
 // ---- Trial Banner ----
 function TrialBanner({ daysLeft }: { daysLeft: number }) {
+  const { t } = useLanguage();
   const isUrgent = daysLeft <= 3;
 
   return (
@@ -161,8 +163,7 @@ function TrialBanner({ daysLeft }: { daysLeft: number }) {
     >
       <Clock className="h-4 w-4 flex-shrink-0" />
       <span>
-        <strong>Essai gratuit</strong> : {daysLeft} jour{daysLeft > 1 ? "s" : ""} restant
-        {daysLeft > 1 ? "s" : ""}.
+        <strong>{t('subscription.gate.trial')}</strong> : {t('subscription.gate.days_remaining', { days: daysLeft })}
       </span>
       <Link
         to="/choisir-plan"
@@ -170,7 +171,7 @@ function TrialBanner({ daysLeft }: { daysLeft: number }) {
           isUrgent ? "text-amber-700" : "text-emerald-700"
         }`}
       >
-        Activer
+        {t('subscription.gate.activate')}
       </Link>
     </div>
   );
@@ -178,17 +179,18 @@ function TrialBanner({ daysLeft }: { daysLeft: number }) {
 
 // ---- Past Due Screen ----
 function PastDueScreen() {
+  const { t } = useLanguage();
+
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
       <div className="max-w-sm mx-auto text-center px-4">
         <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
           <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-foreground mb-2">
-            Problème de paiement
+            {t('subscription.gate.payment_problem')}
           </h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Votre dernier paiement a échoué. Mettez à jour vos informations de
-            paiement pour continuer à utiliser commandeici.
+            {t('subscription.gate.payment_desc')}
           </p>
           <Button asChild className="w-full">
             <a
@@ -196,11 +198,11 @@ function PastDueScreen() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Gérer mon paiement
+              {t('subscription.gate.manage_payment')}
             </a>
           </Button>
           <p className="text-xs text-muted-foreground mt-3">
-            Vous serez redirigé vers votre espace client.
+            {t('subscription.gate.redirect_note')}
           </p>
         </div>
       </div>

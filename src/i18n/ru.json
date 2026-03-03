@@ -829,6 +829,7 @@
   "dashboard.settings.disable_info": "Ваш ресторан не будет виден клиентам. Данные сохранятся 90 дней: вы сможете реактивировать в любой момент.",
   "dashboard.settings.disable_confirm": "Для подтверждения введите точное название ресторана:",
   "dashboard.settings.disable_button": "Отключить",
+  "dashboard.settings.demo_unavailable": "Недоступно в демо-режиме",
 
   "dashboard.qr.scan_to_order": "Отсканируйте для заказа",
   "dashboard.qr.a4_downloaded": "Лист A4 скачан",
@@ -1146,5 +1147,17 @@
   "demo.cta_discover": "Открыть демо-режим",
   "demo.cta_try": "Еще не уверены? Попробуйте демо",
   "demo.cta_link": "Откройте инструмент в демо-режиме",
-  "demo.no_orders": "Демо-ресторан"
+  "demo.no_orders": "Демо-ресторан",
+
+  "home.page_title": "commandeici - Панель ресторана",
+  "home.create_page": "Создать мою страницу",
+  "home.title": "Панель ресторана",
+  "home.description": "Управляйте заказами, меню и клиентами.",
+  "home.login": "Войти",
+  "home.create_free": "Создать мою страницу бесплатно",
+  "home.back_to_site": "Вернуться на сайт",
+  "dashboard.orders.action_ready": "Готов",
+  "dashboard.orders.action_done": "Завершен",
+  "dashboard.orders.covers_count": "{count} прибор(ов)",
+  "dashboard.orders.add_item": "Добавить"
 }

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle, ShieldBan } from "lucide-react";
 import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -14,19 +15,19 @@ import { toast } from "sonner";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
-const statusConfig: Record<OrderStatus, { label: string; color: string; next?: OrderStatus; nextLabel?: string }> = {
-  new: { label: "Nouvelle", color: "bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))]", next: "preparing", nextLabel: "Accepter" },
-  preparing: { label: "En préparation", color: "bg-foreground text-primary-foreground", next: "ready", nextLabel: "Prête" },
-  ready: { label: "Prête", color: "bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]", next: "done", nextLabel: "Terminée" },
-  done: { label: "Terminée", color: "bg-muted text-muted-foreground" },
+const statusConfigDef: Record<OrderStatus, { labelKey: string; color: string; next?: OrderStatus; nextLabelKey?: string }> = {
+  new: { labelKey: "dashboard.orders.status_new", color: "bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))]", next: "preparing", nextLabelKey: "dashboard.orders.action_accept" },
+  preparing: { labelKey: "dashboard.orders.status_preparing", color: "bg-foreground text-primary-foreground", next: "ready", nextLabelKey: "dashboard.orders.action_ready" },
+  ready: { labelKey: "dashboard.orders.status_ready", color: "bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]", next: "done", nextLabelKey: "dashboard.orders.action_done" },
+  done: { labelKey: "dashboard.orders.status_done", color: "bg-muted text-muted-foreground" },
 };
 
-const filterTabs: { id: OrderStatus | "all"; label: string }[] = [
-  { id: "all", label: "Toutes" },
-  { id: "new", label: "Nouvelles" },
-  { id: "preparing", label: "En cours" },
-  { id: "ready", label: "Prêtes" },
-  { id: "done", label: "Terminées" },
+const filterTabsDef: { id: OrderStatus | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "dashboard.orders.filter_all" },
+  { id: "new", labelKey: "dashboard.orders.filter_new" },
+  { id: "preparing", labelKey: "dashboard.orders.filter_in_progress" },
+  { id: "ready", labelKey: "dashboard.orders.filter_ready" },
+  { id: "done", labelKey: "dashboard.orders.filter_done" },
 ];
 
 interface Props {
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
@@ -113,7 +115,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const newCount = orders.filter((o) => o.status === "new").length;
 
   const advanceStatus = async (orderId: string, currentStatus: OrderStatus) => {
-    const cfg = statusConfig[currentStatus];
+    const cfg = statusConfigDef[currentStatus];
     if (!cfg.next) return;
     setAdvancing(orderId);
 
@@ -164,9 +166,9 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
 
   const timeSince = (dateStr: string) => {
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return "A l'instant";
-    if (mins < 60) return `Il y a ${mins} min`;
-    return `Il y a ${Math.floor(mins / 60)}h`;
+    if (mins < 1) return t('time.just_now');
+    if (mins < 60) return t('time.ago_min', { n: mins });
+    return t('time.ago_hours', { n: Math.floor(mins / 60) });
   };
 
   const todayOrders = orders.filter((o) => {
@@ -194,16 +196,16 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       {disconnected && (
         <div className="mb-4 p-3 bg-destructive/10 rounded-xl flex items-center gap-2 text-sm text-destructive">
           <WifiOff className="h-4 w-4 flex-shrink-0" />
-          Connexion perdue. Reconnexion en cours...
+          {t('dashboard.orders.connection_lost')}
         </div>
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "Nouvelles", value: orders.filter((o) => o.status === "new").length, accent: true },
-          { label: "En cours", value: orders.filter((o) => o.status === "preparing").length },
-          { label: "Prêtes", value: orders.filter((o) => o.status === "ready").length },
-          { label: "CA du jour", value: `${todayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2)} €`, sensitive: true },
+          { label: t('dashboard.orders.filter_new'), value: orders.filter((o) => o.status === "new").length, accent: true },
+          { label: t('dashboard.orders.filter_in_progress'), value: orders.filter((o) => o.status === "preparing").length },
+          { label: t('dashboard.orders.filter_ready'), value: orders.filter((o) => o.status === "ready").length },
+          { label: t('dashboard.orders.revenue_today'), value: `${todayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2)} €`, sensitive: true },
         ].map((stat) => (
           <div key={stat.label} className="bg-card rounded-2xl border border-border p-3 sm:p-4">
             <p className="text-xs text-muted-foreground">{stat.label}</p>
@@ -221,14 +223,14 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
               const lastDone = orders.find((o) => o.status === "done");
               if (lastDone) {
                 const mins = Math.floor((Date.now() - new Date(lastDone.created_at).getTime()) / 60000);
-                if (mins > 30) return <span className="text-gray-400">Pas de commande depuis 30+ min</span>;
-                return <span>Derniere commande : il y a {mins < 1 ? "moins d'1" : mins} min</span>;
+                if (mins > 30) return <span className="text-gray-400">{t('dashboard.orders.no_order_30min')}</span>;
+                return <span>{t('dashboard.orders.last_order_ago', { n: mins < 1 ? t('dashboard.orders.less_than_1') : mins })}</span>;
               }
               return null;
             }
             const newest = activeOrders[0];
             const mins = Math.floor((Date.now() - new Date(newest.created_at).getTime()) / 60000);
-            return <span>Derniere commande : il y a {mins < 1 ? "moins d'1" : mins} min</span>;
+            return <span>{t('dashboard.orders.last_order_ago', { n: mins < 1 ? t('dashboard.orders.less_than_1') : mins })}</span>;
           })()}
         </div>
         <Button
@@ -238,18 +240,18 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           onClick={() => setRupturesOpen(true)}
         >
           <AlertTriangle className="h-3.5 w-3.5" />
-          Ruptures
+          {t('dashboard.orders.out_of_stock')}
         </Button>
       </div>
 
       <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
-        {filterTabs.map((tab) => (
+        {filterTabsDef.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setFilter(tab.id)}
             className={`px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all min-h-[44px] ${filter === tab.id ? "bg-foreground text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:text-foreground"}`}
           >
-            {tab.label}
+            {t(tab.labelKey)}
             {tab.id === "new" && newCount > 0 && (
               <span className="ml-1.5 bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))] text-xs font-bold px-1.5 py-0.5 rounded-full">{newCount}</span>
             )}
@@ -262,21 +264,21 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           <div className="text-center py-16 text-muted-foreground">
             <Package className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p className="text-sm">
-              {filter === "all" ? "Pas encore de commande aujourd'hui. Ca va venir !" : "Aucune commande"}
+              {filter === "all" ? t('dashboard.orders.no_orders_today') : t('dashboard.orders.no_orders_filtered')}
             </p>
           </div>
         )}
         {filtered.map((order) => {
-          const cfg = statusConfig[order.status as OrderStatus];
+          const cfg = statusConfigDef[order.status as OrderStatus];
           const orderItems = (order.items as any[]) || [];
           return (
             <motion.div key={order.id} layout initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="bg-card rounded-2xl border border-border p-4 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="text-lg font-bold text-foreground">{formatDisplayNumber(order)}</span>
-                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.color}`}>{cfg.label}</span>
+                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.color}`}>{t(cfg.labelKey)}</span>
                   {(order as any).source === "pos" && (
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Caisse</span>
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">{t('dashboard.orders.source_pos')}</span>
                   )}
                 </div>
                 <span className="text-xs text-muted-foreground">{timeSince(order.created_at)}</span>
@@ -294,24 +296,24 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                       });
                     }}
                     className="p-1 rounded hover:bg-destructive/10 transition-colors"
-                    title="Bannir ce client"
+                    title={t('dashboard.orders.ban_client')}
                   >
                     <ShieldBan className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
                   </button>
                 </span>
                 <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{order.customer_phone}</span>
                 <span className="flex items-center gap-1">
-                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> À emporter</>}
-                  {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> Sur place</>}
-                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> Téléphone</>}
+                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> {t('dashboard.orders.takeaway')}</>}
+                  {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> {t('dashboard.orders.dine_in')}</>}
+                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> {t('dashboard.orders.phone')}</>}
                 </span>
                 {(order as any).covers && (
-                  <span className="text-xs text-muted-foreground">({(order as any).covers} couvert{(order as any).covers > 1 ? "s" : ""})</span>
+                  <span className="text-xs text-muted-foreground">({(order as any).covers} {t('dashboard.orders.covers')})</span>
                 )}
                 {order.pickup_time ? (
                   <span className="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">
                     <Clock className="h-3 w-3" />
-                    Retrait a {new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                    {t('dashboard.orders.pickup_at', { time: new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) })}
                   </span>
                 ) : (order.order_type === "collect" || order.order_type === "a_emporter") ? (
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">ASAP</span>
@@ -343,7 +345,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                       onClick={() => setAddItemOrder(order)}
                       className="rounded-xl gap-1 min-h-[36px] text-xs text-muted-foreground"
                     >
-                      <Plus className="h-3.5 w-3.5" /> Ajouter
+                      <Plus className="h-3.5 w-3.5" /> {t('dashboard.orders.add_item')}
                     </Button>
                   )}
                   {cfg.next && (
@@ -353,7 +355,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                       disabled={advancing === order.id}
                       className="rounded-xl gap-1 min-h-[44px]"
                     >
-                      {advancing === order.id ? "..." : cfg.nextLabel}<ChevronRight className="h-4 w-4" />
+                      {advancing === order.id ? "..." : t(cfg.nextLabelKey!)}<ChevronRight className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
@@ -383,7 +385,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           onClose={() => setBanTarget(null)}
           onBanned={() => {
             setBanTarget(null);
-            toast.success("Client banni");
+            toast.success(t('dashboard.orders.client_banned'));
           }}
           restaurantId={restaurant.id}
         />
@@ -393,11 +395,11 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       <Sheet open={rupturesOpen} onOpenChange={setRupturesOpen}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Gestion des ruptures</SheetTitle>
+            <SheetTitle>{t('dashboard.orders.stock_management')}</SheetTitle>
           </SheetHeader>
           <div className="mt-4 space-y-2">
             {menuItems.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-8">Aucun plat</p>
+              <p className="text-sm text-muted-foreground text-center py-8">{t('dashboard.orders.no_items')}</p>
             )}
             {menuItems.map((item) => (
               <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/50">
@@ -413,15 +415,15 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                   onCheckedChange={async (val) => {
                     if (isDemo) {
                       setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
-                      toast.success(val ? `${item.name} disponible` : `${item.name} en rupture`);
+                      toast.success(val ? t('dashboard.orders.item_available', { name: item.name }) : t('dashboard.orders.item_out_of_stock', { name: item.name }));
                       return;
                     }
                     try {
                       await updateMenuItem(item.id, { enabled: val });
                       setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
-                      toast.success(val ? `${item.name} disponible` : `${item.name} en rupture`);
+                      toast.success(val ? t('dashboard.orders.item_available', { name: item.name }) : t('dashboard.orders.item_out_of_stock', { name: item.name }));
                     } catch {
-                      toast.error("Erreur");
+                      toast.error(t('common.error'));
                     }
                   }}
                 />

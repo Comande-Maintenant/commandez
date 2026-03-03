@@ -829,6 +829,7 @@
   "dashboard.settings.disable_info": "お客様からお店が見えなくなります。データは90日間保存され、いつでも再開できます。",
   "dashboard.settings.disable_confirm": "確認のため、お店の正確な名前を入力してください：",
   "dashboard.settings.disable_button": "無効化する",
+  "dashboard.settings.demo_unavailable": "デモモードでは利用できません",
 
   "dashboard.qr.scan_to_order": "スキャンして注文",
   "dashboard.qr.a4_downloaded": "A4シートをダウンロードしました",
@@ -1146,5 +1147,17 @@
   "demo.cta_discover": "デモモードを発見",
   "demo.cta_try": "まだ迷っていますか？デモをお試しください",
   "demo.cta_link": "デモモードでツールを発見",
-  "demo.no_orders": "デモレストラン"
+  "demo.no_orders": "デモレストラン",
+
+  "home.page_title": "commandeici - レストラン管理",
+  "home.create_page": "ページを作成",
+  "home.title": "レストラン管理",
+  "home.description": "注文、メニュー、顧客を管理しましょう。",
+  "home.login": "ログイン",
+  "home.create_free": "無料でページを作成",
+  "home.back_to_site": "サイトに戻る",
+  "dashboard.orders.action_ready": "準備完了",
+  "dashboard.orders.action_done": "完了",
+  "dashboard.orders.covers_count": "{count}名",
+  "dashboard.orders.add_item": "追加"
 }

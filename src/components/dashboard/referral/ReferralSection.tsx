@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getReferralStats, getReferrals, type Referral, type ReferralStats } from "@/services/referral";
 import { BRANDING } from "@/config/branding";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurantId: string;
 }
 
 export function ReferralSection({ restaurantId }: Props) {
+  const { t } = useLanguage();
   const [stats, setStats] = useState<ReferralStats | null>(null);
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [copied, setCopied] = useState(false);
@@ -41,24 +43,24 @@ export function ReferralSection({ restaurantId }: Props) {
     try {
       await navigator.clipboard.writeText(referralLink);
       setCopied(true);
-      toast.success("Lien copie !");
+      toast.success(t('common.toast.link_copied'));
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error("Impossible de copier");
+      toast.error(t('common.toast.copy_error'));
     }
   };
 
   const handleWhatsApp = () => {
     const msg = encodeURIComponent(
-      `Salut ! Je te recommande commandeici pour gérer tes commandes en ligne. Inscris-toi avec mon lien et on gagne chacun 4 semaines gratuites : ${referralLink}`
+      t('dashboard.referral.whatsapp_message', { url: referralLink })
     );
     window.open(`https://wa.me/?text=${msg}`, "_blank");
   };
 
   const handleEmail = () => {
-    const subject = encodeURIComponent("Je te recommande commandeici");
+    const subject = encodeURIComponent(t('dashboard.referral.email_subject'));
     const body = encodeURIComponent(
-      `Salut,\n\nJe te recommande commandeici pour gérer tes commandes en ligne. C'est sans commission, simple à mettre en place, et ça marche vraiment bien.\n\nInscris-toi avec mon lien et on gagne chacun 4 semaines gratuites :\n${referralLink}\n\nÀ bientôt !`
+      t('dashboard.referral.email_body', { url: referralLink })
     );
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };
@@ -82,9 +84,9 @@ export function ReferralSection({ restaurantId }: Props) {
           <Gift className="h-5 w-5 text-emerald-600" />
         </div>
         <div>
-          <h3 className="font-semibold text-foreground">Parrainage</h3>
+          <h3 className="font-semibold text-foreground">{t('dashboard.referral.title')}</h3>
           <p className="text-sm text-muted-foreground">
-            Parrainez un collegue, gagnez 4 semaines gratuites chacun.
+            {t('dashboard.referral.description')}
           </p>
         </div>
       </div>
@@ -115,27 +117,27 @@ export function ReferralSection({ restaurantId }: Props) {
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div className="text-center p-3 bg-muted rounded-xl">
           <div className="text-lg font-bold text-foreground">{stats.totalReferrals}</div>
-          <div className="text-xs text-muted-foreground">Parrainages</div>
+          <div className="text-xs text-muted-foreground">{t('dashboard.referral.referrals')}</div>
         </div>
         <div className="text-center p-3 bg-muted rounded-xl">
           <div className="text-lg font-bold text-emerald-600">{stats.completedReferrals}</div>
-          <div className="text-xs text-muted-foreground">Confirmes</div>
+          <div className="text-xs text-muted-foreground">{t('dashboard.referral.confirmed')}</div>
         </div>
         <div className="text-center p-3 bg-muted rounded-xl">
-          <div className="text-lg font-bold text-emerald-600">+{stats.totalBonusWeeks} sem.</div>
-          <div className="text-xs text-muted-foreground">Gagnees</div>
+          <div className="text-lg font-bold text-emerald-600">+{stats.totalBonusWeeks} {t('dashboard.referral.weeks_unit')}</div>
+          <div className="text-xs text-muted-foreground">{t('dashboard.referral.earned')}</div>
         </div>
       </div>
 
       {/* Referral history */}
       {referrals.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-foreground mb-2">Historique</h4>
+          <h4 className="text-sm font-medium text-foreground mb-2">{t('dashboard.referral.history')}</h4>
           <div className="space-y-2">
             {referrals.slice(0, 5).map((r) => (
               <div key={r.id} className="flex items-center justify-between text-sm py-2 border-b border-border last:border-0">
                 <span className="text-muted-foreground">
-                  {r.referee_email || "Restaurant parraine"}
+                  {r.referee_email || t('dashboard.referral.default_name')}
                 </span>
                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                   r.status === "completed"
@@ -144,7 +146,7 @@ export function ReferralSection({ restaurantId }: Props) {
                     ? "bg-yellow-50 text-yellow-700"
                     : "bg-gray-100 text-gray-500"
                 }`}>
-                  {r.status === "completed" ? "Confirme" : r.status === "pending" ? "En attente" : "Expire"}
+                  {r.status === "completed" ? t('dashboard.referral.status_confirmed') : r.status === "pending" ? t('dashboard.referral.status_pending') : t('dashboard.referral.status_expired')}
                 </span>
               </div>
             ))}

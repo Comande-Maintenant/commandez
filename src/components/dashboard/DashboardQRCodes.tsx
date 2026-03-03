@@ -15,12 +15,14 @@ import { jsPDF } from "jspdf";
 import type { DbRestaurant } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurant: DbRestaurant;
 }
 
 export const DashboardQRCodes = ({ restaurant }: Props) => {
+  const { t } = useLanguage();
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [qrSvg, setQrSvg] = useState("");
   const [qrHdDataUrl, setQrHdDataUrl] = useState("");
@@ -37,7 +39,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
   const copyLink = () => {
     navigator.clipboard.writeText(pageUrl);
     setCopied(true);
-    toast.success("Lien copie !");
+    toast.success(t('common.toast.link_copied'));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -193,12 +195,12 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
         doc.setFontSize(8);
         doc.setFont("helvetica", "normal");
         doc.setTextColor(100, 100, 100);
-        doc.text("Scannez pour commander", x + qrSize / 2, y + qrSize + 8, { align: "center" });
+        doc.text(t('dashboard.qr.scan_to_order'), x + qrSize / 2, y + qrSize + 8, { align: "center" });
       }
     }
 
     doc.save(`qr-fiche-a4-${restaurant.slug}.pdf`);
-    toast.success("Fiche A4 telechargee");
+    toast.success(t('dashboard.qr.a4_downloaded'));
   };
 
   // PDF A3 - Vitrine/Affiche grand format
@@ -243,7 +245,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(0, 0, 0);
-    doc.text("Scannez pour commander", pw / 2, qrY + qrSize + 20, { align: "center" });
+    doc.text(t('dashboard.qr.scan_to_order'), pw / 2, qrY + qrSize + 20, { align: "center" });
 
     // URL
     doc.setFontSize(14);
@@ -251,7 +253,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
     doc.text(pageUrl, pw / 2, qrY + qrSize + 35, { align: "center" });
 
     doc.save(`qr-vitrine-a3-${restaurant.slug}.pdf`);
-    toast.success("Affiche vitrine telechargee");
+    toast.success(t('dashboard.qr.poster_downloaded'));
   };
 
   // PNG HD for vitrine
@@ -265,12 +267,12 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center justify-between">
           <div className="min-w-0">
-            <h3 className="text-base font-semibold text-foreground mb-1">Lien de votre page</h3>
+            <h3 className="text-base font-semibold text-foreground mb-1">{t('dashboard.qr.page_link')}</h3>
             <p className="text-sm text-muted-foreground truncate">{pageUrl}</p>
           </div>
           <Button variant="outline" size="sm" className="rounded-xl gap-1.5 flex-shrink-0 ml-3" onClick={copyLink}>
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            {copied ? "Copie !" : "Copier"}
+            {copied ? t('common.copied') : t('common.copy')}
           </Button>
         </div>
       </section>
@@ -279,7 +281,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <QrCode className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">QR Code principal</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.qr.main_qr')}</h3>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -290,7 +292,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
           )}
           <div className="flex-1 space-y-3">
             <p className="text-sm text-muted-foreground">
-              Ce QR code pointe vers votre page :<br />
+              {t('dashboard.qr.qr_points_to')}<br />
               <span className="font-medium text-foreground">{pageUrl}</span>
             </p>
             <div className="flex flex-wrap gap-2">
@@ -301,7 +303,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
                 <FileDown className="h-4 w-4" />SVG
               </Button>
               <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={copyLink}>
-                <Copy className="h-4 w-4" />Copier le lien
+                <Copy className="h-4 w-4" />{t('dashboard.qr.copy_link')}
               </Button>
             </div>
           </div>
@@ -312,13 +314,13 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Printer className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Fiche imprimable A4</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.qr.a4_sheet')}</h3>
         </div>
 
         {/* Mini preview */}
         <div className="bg-white border border-border rounded-xl p-6 text-center mb-4" style={{ aspectRatio: "210/297", maxHeight: 280 }}>
           <div className="flex flex-col items-center justify-center h-full gap-2">
-            <p className="text-sm font-bold text-gray-700">6 QR codes avec votre nom et logo</p>
+            <p className="text-sm font-bold text-gray-700">{t('dashboard.qr.a4_preview')}</p>
             <div className="grid grid-cols-2 gap-3">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
@@ -326,12 +328,12 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-1">Ideal pour les tables</p>
+            <p className="text-xs text-gray-400 mt-1">{t('dashboard.qr.ideal_for_tables')}</p>
           </div>
         </div>
 
         <Button variant="outline" className="w-full rounded-xl gap-1.5" onClick={generateA4Pdf}>
-          <FileDown className="h-4 w-4" />Télécharger PDF A4
+          <FileDown className="h-4 w-4" />{t('dashboard.qr.download_a4')}
         </Button>
       </section>
 
@@ -339,7 +341,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Package className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">QR Emballage</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.qr.packaging_qr')}</h3>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -350,8 +352,8 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
           )}
           <div className="flex-1 space-y-3">
             <p className="text-sm text-muted-foreground">
-              Format compact pour emballages et sacs.<br />
-              <span className="text-xs">Commandez en ligne, récupérez sur place</span>
+              {t('dashboard.qr.packaging_desc')}<br />
+              <span className="text-xs">{t('dashboard.qr.packaging_tagline')}</span>
             </p>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" className="rounded-xl gap-1.5" onClick={() => downloadPng(packQrDataUrl, `qr-emballage-${restaurant.slug}.png`)}>
@@ -369,11 +371,11 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <ImageIcon className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">QR Vitrine / Affiche</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.qr.poster_qr')}</h3>
         </div>
 
         <p className="text-sm text-muted-foreground mb-4">
-          Grand format avec logo, nom et description. Parfait pour votre vitrine ou un panneau.
+          {t('dashboard.qr.poster_desc')}
         </p>
 
         <div className="flex flex-wrap gap-2">
@@ -390,7 +392,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Receipt className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">QR Code Caisse</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.qr.pos_qr')}</h3>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -401,7 +403,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
           )}
           <div className="flex-1 space-y-3">
             <p className="text-sm text-muted-foreground">
-              Ce QR code ouvre directement la caisse sur tablette :<br />
+              {t('dashboard.qr.pos_desc')}<br />
               <span className="font-medium text-foreground">{posUrl}</span>
             </p>
             <div className="flex flex-wrap gap-2">
@@ -431,10 +433,9 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
         <div className="flex items-start gap-3">
           <Lightbulb className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-amber-900">Astuce</p>
+            <p className="text-sm font-medium text-amber-900">{t('dashboard.qr.tip_title')}</p>
             <p className="text-sm text-amber-800 mt-1">
-              Imprimez la fiche A4 et decoupez les QR codes pour vos tables.
-              Le format SVG est ideal pour une impression grand format sans perte de qualite.
+              {t('dashboard.qr.tip_text')}
             </p>
           </div>
         </div>

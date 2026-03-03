@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLanguage } from '@/context/LanguageContext';
 import type { GooglePlaceResult } from '@/types/onboarding';
 import {
   parseGoogleSchedule,
@@ -89,6 +90,7 @@ function detectCuisine(name: string, types?: string[]): string {
 }
 
 export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmationProps) {
+  const { t } = useLanguage();
   const hasFormattedAddress = !!place.formatted_address;
   const fullAddress = place.formatted_address || place.vicinity || '';
   const isVicinity = !hasFormattedAddress && !!place.vicinity;
@@ -139,43 +141,43 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Vérifiez et complétez les informations de votre restaurant.
+        {t('onboarding.place.confirm_desc')}
       </p>
 
       <div>
-        <Label>Nom</Label>
+        <Label>{t('onboarding.place.name')}</Label>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </div>
 
       <div>
-        <Label>Adresse</Label>
+        <Label>{t('onboarding.place.address')}</Label>
         <Input value={address} onChange={(e) => setAddress(e.target.value)} />
       </div>
 
       <div>
-        <Label>Ville</Label>
+        <Label>{t('onboarding.place.city')}</Label>
         <Input value={city} onChange={(e) => setCity(e.target.value)} />
       </div>
 
       <div>
-        <Label>Telephone</Label>
+        <Label>{t('onboarding.place.phone')}</Label>
         <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
       </div>
 
       <div>
-        <Label>Type de cuisine (affiche)</Label>
+        <Label>{t('onboarding.place.cuisine_type')}</Label>
         <Input
           value={cuisine}
           onChange={(e) => setCuisine(e.target.value)}
-          placeholder="Pizzeria, Kebab, Sushi..."
+          placeholder={t('onboarding.place.cuisine_placeholder')}
         />
       </div>
 
       <div>
-        <Label>Type de restaurant</Label>
+        <Label>{t('onboarding.place.restaurant_type')}</Label>
         <Select value={cuisineType} onValueChange={(v) => setCuisineType(v as CuisineType)}>
           <SelectTrigger className="w-full mt-1">
-            <SelectValue placeholder="Sélectionnez..." />
+            <SelectValue placeholder={t('onboarding.place.select_placeholder')} />
           </SelectTrigger>
           <SelectContent>
             {CUISINE_TYPE_OPTIONS.map((opt) => (
@@ -188,7 +190,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
       </div>
 
       <div>
-        <Label>Site web</Label>
+        <Label>{t('onboarding.place.website')}</Label>
         <Input
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
@@ -201,7 +203,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
         <div className="rounded-lg border border-border p-4 space-y-3">
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
-            <Label className="mb-0">Horaires Google</Label>
+            <Label className="mb-0">{t('onboarding.place.google_hours')}</Label>
           </div>
           <div className="grid grid-cols-1 gap-1">
             {formattedLines.map((line) => {
@@ -227,10 +229,10 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
             />
             <div>
               <p className="text-sm font-medium text-foreground">
-                Utiliser ces horaires sur ma page
+                {t('onboarding.place.use_hours')}
               </p>
               <p className="text-xs text-muted-foreground">
-                Votre page sera automatiquement ouverte/fermee selon ces horaires
+                {t('onboarding.place.hours_auto_desc')}
               </p>
             </div>
           </label>
@@ -240,30 +242,30 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
       {/* Fallback if no Google hours */}
       {!parsedSchedule && (
         <div>
-          <Label>Horaires</Label>
+          <Label>{t('onboarding.place.hours_label')}</Label>
           <Input
             value={hoursString}
             readOnly
-            placeholder="Lundi - Vendredi : 11h - 22h"
+            placeholder={t('onboarding.place.hours_placeholder')}
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Vous pourrez configurer vos horaires dans le dashboard après inscription.
+            {t('onboarding.place.hours_help')}
           </p>
         </div>
       )}
 
       {place.rating && (
         <p className="text-sm text-muted-foreground">
-          Note Google : {place.rating}/5
+          {t('onboarding.place.google_rating')} {place.rating}/5
         </p>
       )}
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack} className="flex-1">
-          Retour
+          {t('onboarding.place.back')}
         </Button>
         <Button onClick={handleConfirm} className="flex-1">
-          Confirmer ces informations
+          {t('onboarding.place.confirm')}
         </Button>
       </div>
     </div>

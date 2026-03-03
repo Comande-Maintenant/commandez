@@ -864,6 +864,7 @@
   "dashboard.settings.disable_info": "Ihr Restaurant wird für Kunden nicht mehr sichtbar sein. Ihre Daten werden 90 Tage aufbewahrt: Sie können jederzeit reaktivieren.",
   "dashboard.settings.disable_confirm": "Geben Sie zur Bestätigung den genauen Namen Ihres Restaurants ein:",
   "dashboard.settings.disable_button": "Deaktivieren",
+  "dashboard.settings.demo_unavailable": "Im Demo-Modus nicht verfugbar",
   "dashboard.qr.scan_to_order": "Scannen zum Bestellen",
   "dashboard.qr.a4_downloaded": "A4-Blatt heruntergeladen",
   "dashboard.qr.poster_downloaded": "Fensterposter heruntergeladen",
@@ -1106,5 +1107,17 @@
   "demo.cta_discover": "Demo-Modus entdecken",
   "demo.cta_try": "Noch nicht ueberzeugt? Testen Sie die Demo",
   "demo.cta_link": "Das Tool im Demo-Modus entdecken",
-  "demo.no_orders": "Demo-Restaurant"
+  "demo.no_orders": "Demo-Restaurant",
+
+  "home.page_title": "commandeici - Restaurant-Dashboard",
+  "home.create_page": "Meine Seite erstellen",
+  "home.title": "Restaurant-Dashboard",
+  "home.description": "Verwalten Sie Ihre Bestellungen, Speisekarte und Kunden.",
+  "home.login": "Anmelden",
+  "home.create_free": "Meine Seite kostenlos erstellen",
+  "home.back_to_site": "Zuruck zur Website",
+  "dashboard.orders.action_ready": "Bereit",
+  "dashboard.orders.action_done": "Abgeschlossen",
+  "dashboard.orders.covers_count": "{count} Gedeck(e)",
+  "dashboard.orders.add_item": "Hinzufugen"
 }

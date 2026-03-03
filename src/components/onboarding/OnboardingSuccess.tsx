@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { buildCheckoutUrl } from '@/services/shopify-checkout';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SubscriptionPlan } from '@/types/onboarding';
 
 interface OnboardingSuccessProps {
@@ -27,6 +28,7 @@ interface PromoResult {
 type Phase = 'ready' | 'waiting' | 'confirmed';
 
 export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, plan }: OnboardingSuccessProps) {
+  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [promoOpen, setPromoOpen] = useState(false);
   const [promoCode, setPromoCode] = useState('');
@@ -88,12 +90,12 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
       if (error) throw error;
       setPromoResult(data as PromoResult);
       if (data?.valid) {
-        toast.success('Code promo appliqué !');
+        toast.success(t('subscription.promo_applied'));
       } else {
-        toast.error(data?.error || 'Code invalide');
+        toast.error(data?.error || t('subscription.invalid_code'));
       }
     } catch {
-      toast.error('Erreur lors de la validation');
+      toast.error(t('subscription.validation_error'));
     } finally {
       setPromoLoading(false);
     }
@@ -113,7 +115,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
       window.open(url, '_blank');
       setPhase('waiting');
     } catch {
-      toast.error('Erreur lors de la redirection.');
+      toast.error(t('subscription.redirect_error'));
     }
   };
 
@@ -127,10 +129,10 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
 
         <div>
           <h2 className="text-2xl font-bold text-foreground">
-            {restaurantName} est en ligne !
+            {t('onboarding.success.online', { name: restaurantName })}
           </h2>
           <p className="text-muted-foreground mt-2">
-            Votre essai gratuit de 14 jours a commencé. Partagez votre page avec vos clients.
+            {t('onboarding.success.trial_started')}
           </p>
         </div>
 
@@ -150,7 +152,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
 
         <Link to={`/admin/${slug}`}>
           <Button className="mt-2">
-            Accéder à mon tableau de bord
+            {t('onboarding.success.go_dashboard')}
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </Link>
@@ -168,24 +170,24 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
 
         <div>
           <h2 className="text-xl font-bold text-foreground">
-            Finalisez votre inscription
+            {t('onboarding.success.finalize')}
           </h2>
           <p className="text-muted-foreground mt-2">
-            Complétez le paiement dans l'onglet qui vient de s'ouvrir.<br />
-            Cette page se mettra à jour automatiquement.
+            {t('onboarding.success.finalize_desc')}<br />
+            {t('onboarding.success.auto_update')}
           </p>
         </div>
 
         <div className="bg-muted/50 rounded-xl p-4 max-w-md mx-auto text-sm text-muted-foreground space-y-2">
-          <p>L'onglet ne s'est pas ouvert ?</p>
+          <p>{t('onboarding.success.tab_not_opened')}</p>
           <Button variant="outline" size="sm" onClick={handleActivate}>
             <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-            Rouvrir la page de paiement
+            {t('onboarding.success.reopen_payment')}
           </Button>
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Aucun débit aujourd'hui. Votre essai gratuit de 14 jours commence dès la validation.
+          {t('onboarding.success.no_charge_today')}
         </p>
       </div>
     );
@@ -202,10 +204,10 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
       {/* Title */}
       <div>
         <h2 className="text-2xl font-bold text-foreground">
-          {restaurantName} est presque prêt !
+          {t('onboarding.success.almost_ready', { name: restaurantName })}
         </h2>
         <p className="text-muted-foreground mt-2">
-          Activez votre essai gratuit de 14 jours pour mettre votre page en ligne.
+          {t('onboarding.success.activate_trial')}
         </p>
       </div>
 
@@ -223,15 +225,15 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
       <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
           <CalendarOff className="h-4 w-4 text-green-600" />
-          <span>14 jours d'essai gratuit</span>
+          <span>{t('onboarding.success.trial_14_days')}</span>
         </div>
         <div className="flex items-center gap-2">
           <Lock className="h-4 w-4 text-green-600" />
-          <span>Aucun paiement aujourd'hui</span>
+          <span>{t('onboarding.success.no_payment_today')}</span>
         </div>
         <div className="flex items-center gap-2">
           <RefreshCw className="h-4 w-4 text-green-600" />
-          <span>Annulez à tout moment</span>
+          <span>{t('onboarding.success.cancel_anytime')}</span>
         </div>
       </div>
 
@@ -241,7 +243,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
           onClick={() => setPromoOpen(!promoOpen)}
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mx-auto"
         >
-          Vous avez un code promo ?
+          {t('onboarding.success.promo_question')}
           {promoOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
         </button>
 
@@ -261,7 +263,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
               onClick={handleValidatePromo}
               disabled={promoLoading || !promoCode.trim()}
             >
-              {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Appliquer'}
+              {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('common.apply')}
             </Button>
           </div>
         )}
@@ -278,13 +280,13 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
         onClick={handleActivate}
         className="w-full max-w-md mx-auto h-12 rounded-xl text-base"
       >
-        Activer mon essai gratuit
+        {t('onboarding.success.activate_button')}
         <ExternalLink className="h-4 w-4 ml-2" />
       </Button>
 
       {/* Small print */}
       <p className="text-xs text-muted-foreground max-w-md mx-auto">
-        Le paiement s'ouvre dans un nouvel onglet. Vous ne serez débité que dans 14 jours.
+        {t('onboarding.success.fine_print')}
       </p>
     </div>
   );

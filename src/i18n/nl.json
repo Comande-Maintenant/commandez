@@ -864,6 +864,7 @@
   "dashboard.settings.disable_info": "Uw restaurant zal niet meer zichtbaar zijn voor klanten. Uw gegevens worden 90 dagen bewaard: u kunt op elk moment heractiveren.",
   "dashboard.settings.disable_confirm": "Typ ter bevestiging de exacte naam van uw restaurant:",
   "dashboard.settings.disable_button": "Uitschakelen",
+  "dashboard.settings.demo_unavailable": "Niet beschikbaar in demomodus",
   "dashboard.qr.scan_to_order": "Scan om te bestellen",
   "dashboard.qr.a4_downloaded": "A4-blad gedownload",
   "dashboard.qr.poster_downloaded": "Raamposter gedownload",
@@ -1106,5 +1107,17 @@
   "demo.cta_discover": "Ontdek de demomodus",
   "demo.cta_try": "Nog niet overtuigd? Probeer de demo",
   "demo.cta_link": "Ontdek de tool in demomodus",
-  "demo.no_orders": "Demonstratierestaurant"
+  "demo.no_orders": "Demonstratierestaurant",
+
+  "home.page_title": "commandeici - Restaurant dashboard",
+  "home.create_page": "Maak mijn pagina",
+  "home.title": "Restaurant dashboard",
+  "home.description": "Beheer uw bestellingen, menu en klanten.",
+  "home.login": "Inloggen",
+  "home.create_free": "Maak mijn pagina gratis aan",
+  "home.back_to_site": "Terug naar de website",
+  "dashboard.orders.action_ready": "Klaar",
+  "dashboard.orders.action_done": "Afgerond",
+  "dashboard.orders.covers_count": "{count} couvert(s)",
+  "dashboard.orders.add_item": "Toevoegen"
 }

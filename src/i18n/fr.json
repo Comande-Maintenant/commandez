@@ -829,6 +829,7 @@
   "dashboard.settings.disable_info": "Votre restaurant ne sera plus visible par les clients. Vos donnees seront conservees 90 jours : vous pourrez reactiver a tout moment.",
   "dashboard.settings.disable_confirm": "Pour confirmer, saisissez le nom exact de votre restaurant :",
   "dashboard.settings.disable_button": "Desactiver",
+  "dashboard.settings.demo_unavailable": "Non disponible en mode demo",
 
   "dashboard.qr.scan_to_order": "Scannez pour commander",
   "dashboard.qr.a4_downloaded": "Fiche A4 telechargee",
@@ -1153,5 +1154,18 @@
   "demo.cta_discover": "Decouvrir en mode demo",
   "demo.cta_try": "Pas encore convaincu ? Essayez le mode demo",
   "demo.cta_link": "Decouvrir l'outil en mode demo",
-  "demo.no_orders": "Restaurant de demonstration"
+  "demo.no_orders": "Restaurant de demonstration",
+
+  "home.page_title": "commandeici - Espace restaurateur",
+  "home.create_page": "Creer ma page",
+  "home.title": "Espace restaurateur",
+  "home.description": "Gerez vos commandes, votre carte et vos clients.",
+  "home.login": "Se connecter",
+  "home.create_free": "Creer ma page gratuitement",
+  "home.back_to_site": "Retour au site",
+
+  "dashboard.orders.action_ready": "Prete",
+  "dashboard.orders.action_done": "Terminee",
+  "dashboard.orders.covers_count": "{count} couvert(s)",
+  "dashboard.orders.add_item": "Ajouter"
 }

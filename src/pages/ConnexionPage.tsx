@@ -5,24 +5,26 @@ import { Mail, Lock, Eye, EyeOff, Loader2, Check, ArrowLeft } from 'lucide-react
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-
-const STATS = [
-  { icon: '\uD83D\uDCB0', value: '+12 400\u20AC', label: 'economises par nos restaurateurs ce mois' },
-  { icon: '\uD83D\uDCE6', value: '1 847', label: 'commandes directes cette semaine' },
-  { icon: '\uD83C\uDFEA', value: '+50', label: 'restaurateurs nous font confiance' },
-];
-
-const FIRST_LOGIN_STEPS = [
-  'Creer votre page en 2 min',
-  'Ajouter votre menu',
-  'Partager votre lien',
-  'Recevoir vos premieres commandes directes',
-];
+import { useLanguage } from '@/context/LanguageContext';
 
 const ConnexionPage = () => {
+  const { t, changeLanguage } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+
+  const STATS = [
+    { icon: '\uD83D\uDCB0', value: '+12 400\u20AC', label: t('auth.stats_saved') },
+    { icon: '\uD83D\uDCE6', value: '1 847', label: t('auth.stats_orders') },
+    { icon: '\uD83C\uDFEA', value: '+50', label: t('auth.stats_trust') },
+  ];
+
+  const FIRST_LOGIN_STEPS = [
+    t('auth.step_create'),
+    t('auth.step_menu'),
+    t('auth.step_share'),
+    t('auth.step_orders'),
+  ];
 
   const isFirstLogin =
     (location.state as any)?.firstLogin || searchParams.get('bienvenue') === '1';
@@ -39,18 +41,18 @@ const ConnexionPage = () => {
 
   useEffect(() => {
     if (resetSuccess) {
-      toast.success('Mot de passe modifie. Connectez-vous avec votre nouveau mot de passe.');
+      toast.success(t('auth.password_changed'));
     }
   }, [resetSuccess]);
 
   const handleSignIn = async () => {
     setError('');
     if (!email.trim()) {
-      setError('Entrez votre adresse email.');
+      setError(t('auth.email_required'));
       return;
     }
     if (!password) {
-      setError('Entrez votre mot de passe.');
+      setError(t('auth.password_required'));
       return;
     }
 
@@ -68,34 +70,37 @@ const ConnexionPage = () => {
         return;
       }
 
-      // Find user's restaurant
+      // Find user's restaurant and load preferred language
       const userId = data.user?.id;
       if (userId) {
         const { data: restaurants } = await supabase
           .from('restaurants')
-          .select('slug')
+          .select('slug, preferred_language')
           .eq('owner_id', userId)
           .limit(1);
 
         if (restaurants && restaurants.length > 0) {
+          if (restaurants[0].preferred_language) {
+            changeLanguage(restaurants[0].preferred_language as any);
+          }
           navigate(`/admin/${restaurants[0].slug}`);
           return;
         }
       }
 
       // No restaurant - go to inscription (step 2)
-      toast.info('Completez la creation de votre page.');
+      toast.info(t('auth.complete_creation'));
       navigate('/inscription');
     } catch (err: any) {
       const msg = err.message || '';
       if (msg.includes('Invalid login credentials')) {
-        setError('Email ou mot de passe incorrect.');
+        setError(t('auth.wrong_credentials'));
       } else if (msg.includes('Email not confirmed')) {
-        setError("Votre email n'est pas confirmé. Vérifiez votre boîte mail.");
+        setError(t('auth.email_not_confirmed'));
       } else if (msg.includes('too many requests') || msg.includes('rate limit')) {
-        setError('Trop de tentatives. Réessayez dans quelques minutes.');
+        setError(t('auth.too_many_attempts'));
       } else {
-        setError('Une erreur est survenue. Réessayez.');
+        setError(t('auth.generic_error'));
       }
       setShakeError(true);
       setTimeout(() => setShakeError(false), 500);
@@ -142,18 +147,18 @@ const ConnexionPage = () => {
             </a>
 
             <h1 className="text-3xl font-bold leading-tight">
-              Vos commandes.
+              {t('auth.tagline_orders')}
               <br />
-              Vos clients.
+              {t('auth.tagline_clients')}
               <br />
-              Vos marges.
+              {t('auth.tagline_margins')}
             </h1>
           </div>
 
           {/* Middle: stats */}
           <div className="relative z-10 space-y-6">
             <p className="text-sm font-medium text-white/60 uppercase tracking-wider">
-              En ce moment
+              {t('auth.current_stats')}
             </p>
             {STATS.map((stat) => (
               <div key={stat.value} className="flex items-start gap-3">
@@ -169,10 +174,10 @@ const ConnexionPage = () => {
           {/* Bottom: testimonial */}
           <div className="relative z-10 border-t border-white/20 pt-6">
             <p className="text-sm italic text-white/80 leading-relaxed">
-              "En 2 semaines j'ai récupéré ce que je perdais en commissions sur un mois."
+              "{t('auth.testimonial')}"
             </p>
             <p className="text-sm font-medium mt-3 text-white/60">
-              Mehdi, Le Sultan Kebab
+              {t('auth.testimonial_author')}
             </p>
           </div>
         </div>
@@ -183,7 +188,7 @@ const ConnexionPage = () => {
             {/* Mobile mini-message */}
             {!isFirstLogin && (
               <p className="lg:hidden text-sm text-primary font-medium mb-4 text-center">
-                0% de commission sur vos commandes directes.
+                {t('auth.zero_commission')}
               </p>
             )}
 
@@ -200,16 +205,16 @@ const ConnexionPage = () => {
                   {/* Title */}
                   {isFirstLogin ? (
                     <div>
-                      <h2 className="text-2xl font-bold text-foreground">Bienvenue !</h2>
+                      <h2 className="text-2xl font-bold text-foreground">{t('auth.welcome')}</h2>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Vous etes a 3 minutes de ne plus subir les commissions.
+                        {t('auth.welcome_desc')}
                       </p>
                     </div>
                   ) : (
                     <div>
-                      <h2 className="text-2xl font-bold text-foreground">Bon retour</h2>
+                      <h2 className="text-2xl font-bold text-foreground">{t('auth.welcome_back')}</h2>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Connectez-vous à votre espace.
+                        {t('auth.welcome_back_desc')}
                       </p>
                     </div>
                   )}
@@ -219,7 +224,7 @@ const ConnexionPage = () => {
                     {/* Email */}
                     <div className="space-y-1.5">
                       <label htmlFor="login-email" className="text-sm font-medium text-foreground">
-                        Adresse email
+                        {t('auth.email')}
                       </label>
                       <div className="relative">
                         <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -229,7 +234,7 @@ const ConnexionPage = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           onKeyDown={handleKeyDown}
-                          placeholder="vous@restaurant.fr"
+                          placeholder={t('auth.email_placeholder')}
                           disabled={loading}
                           className="flex w-full rounded-xl border-2 border-input bg-background px-3 py-3 pl-10 text-base transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
                         />
@@ -239,7 +244,7 @@ const ConnexionPage = () => {
                     {/* Password */}
                     <div className="space-y-1.5">
                       <label htmlFor="login-password" className="text-sm font-medium text-foreground">
-                        Mot de passe
+                        {t('auth.password')}
                       </label>
                       <div className="relative">
                         <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -249,7 +254,7 @@ const ConnexionPage = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           onKeyDown={handleKeyDown}
-                          placeholder="Votre mot de passe"
+                          placeholder={t('auth.password_placeholder')}
                           disabled={loading}
                           className="flex w-full rounded-xl border-2 border-input bg-background px-3 py-3 pl-10 pr-10 text-base transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
                         />
@@ -277,13 +282,13 @@ const ConnexionPage = () => {
                           onChange={(e) => setStayConnected(e.target.checked)}
                           className="h-4 w-4 rounded border-input text-primary accent-emerald-600"
                         />
-                        <span className="text-sm text-muted-foreground">Rester connecte</span>
+                        <span className="text-sm text-muted-foreground">{t('auth.stay_connected')}</span>
                       </label>
                       <Link
                         to="/mot-de-passe-oublie"
                         className="text-sm text-primary hover:underline"
                       >
-                        Mot de passe oublie ?
+                        {t('auth.forgot_password')}
                       </Link>
                     </div>
 
@@ -304,9 +309,9 @@ const ConnexionPage = () => {
                       {loading ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
                       ) : isFirstLogin ? (
-                        'Accéder à mon espace \u2192'
+                        <>{t('auth.access_space')} {'\u2192'}</>
                       ) : (
-                        'Se connecter \u2192'
+                        <>{t('auth.login')} {'\u2192'}</>
                       )}
                     </Button>
                   </div>
@@ -314,7 +319,7 @@ const ConnexionPage = () => {
                   {/* First login checklist */}
                   {isFirstLogin && (
                     <div className="bg-primary/5 border border-primary/10 rounded-xl p-4 space-y-2.5">
-                      <p className="text-sm font-medium text-foreground">Ce qui vous attend :</p>
+                      <p className="text-sm font-medium text-foreground">{t('auth.what_awaits')}</p>
                       {FIRST_LOGIN_STEPS.map((item) => (
                         <div key={item} className="flex items-center gap-2">
                           <Check className="h-4 w-4 text-primary flex-shrink-0" />
@@ -330,18 +335,18 @@ const ConnexionPage = () => {
                       <div className="w-full border-t border-border" />
                     </div>
                     <div className="relative flex justify-center text-xs">
-                      <span className="bg-background px-3 text-muted-foreground">ou</span>
+                      <span className="bg-background px-3 text-muted-foreground">{t('common.or')}</span>
                     </div>
                   </div>
 
                   {/* Create account */}
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Pas encore de compte ?</p>
+                    <p className="text-sm text-muted-foreground">{t('auth.no_account')}</p>
                     <Link
                       to="/inscription"
                       className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline mt-1"
                     >
-                      Creer mon compte gratuitement &rarr;
+                      {t('auth.create_free')} &rarr;
                     </Link>
                   </div>
 
@@ -351,7 +356,7 @@ const ConnexionPage = () => {
                       to="/admin/demo"
                       className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
                     >
-                      Decouvrir l'outil en mode demo
+                      {t('demo.cta_link')}
                     </Link>
                   </div>
                 </div>

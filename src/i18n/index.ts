@@ -1,6 +1,6 @@
 import fr from "./fr.json";
 
-export const SUPPORTED_LANGUAGES = ["fr", "en", "es", "de", "it", "pt", "nl", "ar", "zh", "ja", "ko", "ru"] as const;
+export const SUPPORTED_LANGUAGES = ["fr", "en", "es", "de", "it", "pt", "nl", "ar", "zh", "ja", "ko", "ru", "tr", "vi"] as const;
 export type Language = (typeof SUPPORTED_LANGUAGES)[number];
 
 export const LANGUAGES = [
@@ -16,6 +16,8 @@ export const LANGUAGES = [
   { code: "ja" as const, name: "\u65e5\u672c\u8a9e", flag: "\ud83c\uddef\ud83c\uddf5" },
   { code: "ko" as const, name: "\ud55c\uad6d\uc5b4", flag: "\ud83c\uddf0\ud83c\uddf7" },
   { code: "ru" as const, name: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", flag: "\ud83c\uddf7\ud83c\uddfa" },
+  { code: "tr" as const, name: "T\u00fcrk\u00e7e", flag: "\ud83c\uddf9\ud83c\uddf7" },
+  { code: "vi" as const, name: "Ti\u1ebfng Vi\u1ec7t", flag: "\ud83c\uddfb\ud83c\uddf3" },
 ] as const;
 
 // Dynamic import loaders for non-fr languages
@@ -31,6 +33,8 @@ const languageLoaders: Record<string, () => Promise<{ default: Record<string, st
   ja: () => import("./ja.json"),
   ko: () => import("./ko.json"),
   ru: () => import("./ru.json"),
+  tr: () => import("./tr.json"),
+  vi: () => import("./vi.json"),
 };
 
 // In-memory cache for loaded translations

@@ -1,38 +1,31 @@
 import type { SubscriptionPlan, PricingPlan } from '@/types/onboarding';
 
-export function getPricingPlans(): PricingPlan[] {
+export function getPricingPlans(t: (key: string, params?: Record<string, string | number>) => string): PricingPlan[] {
+  const features = [
+    t('subscription.features.custom_page'),
+    t('subscription.features.custom_qr'),
+    t('subscription.features.pos_realtime'),
+    t('subscription.features.full_dashboard'),
+    t('subscription.features.auto_translation'),
+    t('subscription.features.advanced_stats'),
+    t('subscription.features.ocr_menu'),
+    t('subscription.features.priority_support'),
+  ];
+
   return [
     {
       id: 'monthly',
-      name: 'Mensuel',
+      name: t('subscription.monthly'),
       price: 29.99,
-      features: [
-        'Page en ligne personnalisée',
-        'QR code pour vos tables',
-        'Prise de commande en temps réel',
-        'Tableau de bord complet',
-        'Traduction auto en 12 langues',
-        'Statistiques avancées',
-        'Analyse OCR de votre carte',
-        'Support prioritaire',
-      ],
+      features,
     },
     {
       id: 'annual',
-      name: 'Annuel',
+      name: t('subscription.annual'),
       price: 19.99,
       totalPrice: 239.88,
-      badge: 'Populaire',
-      features: [
-        'Page en ligne personnalisée',
-        'QR code pour vos tables',
-        'Prise de commande en temps réel',
-        'Tableau de bord complet',
-        'Traduction auto en 12 langues',
-        'Statistiques avancées',
-        'Analyse OCR de votre carte',
-        'Support prioritaire',
-      ],
+      badge: t('subscription.popular'),
+      features,
     },
   ];
 }

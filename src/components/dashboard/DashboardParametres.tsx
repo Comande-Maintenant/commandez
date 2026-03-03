@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   Power,
   CreditCard,
@@ -47,28 +48,29 @@ interface Props {
   isDemo?: boolean;
 }
 
-const availabilityModes = [
-  { id: "manual", label: "Manuel", desc: "Activez/désactivez manuellement" },
-  { id: "auto", label: "Automatique", desc: "Selon vos horaires configurés" },
-  { id: "always", label: "Toujours ouvert", desc: "Accepte les commandes 24/7" },
-];
-
-const orderModeOptions = [
-  { id: "on_site", label: "Sur place" },
-  { id: "pickup", label: "A emporter" },
-];
-
-const paymentOptions = [
-  { id: "cash", label: "Especes" },
-  { id: "card", label: "Carte bancaire" },
-  { id: "ticket_restaurant", label: "Ticket restaurant" },
-  { id: "apple_google_pay", label: "Apple Pay / Google Pay" },
-];
-
-
 const orderedDays = [1, 2, 3, 4, 5, 6, 0];
 
 export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
+  const { t } = useLanguage();
+
+  const availabilityModes = useMemo(() => [
+    { id: "manual", label: t('dashboard.settings.manual'), desc: t('dashboard.settings.manual_desc') },
+    { id: "auto", label: t('dashboard.settings.automatic'), desc: t('dashboard.settings.automatic_desc') },
+    { id: "always", label: t('dashboard.settings.always_open'), desc: t('dashboard.settings.always_open_desc') },
+  ], [t]);
+
+  const orderModeOptions = useMemo(() => [
+    { id: "on_site", label: t('dashboard.settings.dine_in') },
+    { id: "pickup", label: t('dashboard.settings.takeaway') },
+  ], [t]);
+
+  const paymentOptions = useMemo(() => [
+    { id: "cash", label: t('dashboard.settings.cash') },
+    { id: "card", label: t('dashboard.settings.card') },
+    { id: "ticket_restaurant", label: t('dashboard.settings.meal_voucher') },
+    { id: "apple_google_pay", label: t('dashboard.settings.apple_google_pay') },
+  ], [t]);
+
   const [saving, setSaving] = useState(false);
   const [isAccepting, setIsAccepting] = useState(restaurant.is_accepting_orders);
   const [availabilityMode, setAvailabilityMode] = useState(restaurant.availability_mode || "manual");
@@ -124,7 +126,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   const handleSave = async () => {
     setSaving(true);
     if (isDemo) {
-      toast.success("Paramètres enregistrés");
+      toast.success(t('dashboard.settings.saved'));
       setSaving(false);
       return;
     }
@@ -143,9 +145,9 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       // Save schedule as JSON (supports multi-slots per day)
       await updateRestaurant(restaurant.id, { schedule } as any);
 
-      toast.success("Paramètres enregistrés");
+      toast.success(t('dashboard.settings.saved'));
     } catch (e) {
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error(t('common.toast.save_error'));
     }
     setSaving(false);
   };
@@ -178,7 +180,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   const handleApplyPromo = async () => {
     if (!promoInput.trim()) return;
     if (isDemo) {
-      toast.success("Code promo applique !");
+      toast.success(t('dashboard.settings.promo_applied'));
       setPromoInput("");
       return;
     }
@@ -188,13 +190,13 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
         body: { code: promoInput.trim(), restaurant_id: restaurant.id },
       });
       if (data?.valid) {
-        toast.success(data.description || "Code promo applique !");
+        toast.success(data.description || t('dashboard.settings.promo_applied'));
         setPromoInput("");
       } else {
-        toast.error(data?.error || "Code invalide");
+        toast.error(data?.error || t('dashboard.settings.invalid_code'));
       }
     } catch {
-      toast.error("Erreur lors de la validation");
+      toast.error(t('subscription.validation_error'));
     } finally {
       setPromoLoading(false);
     }
@@ -203,9 +205,9 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   const [deactivateConfirm, setDeactivateConfirm] = useState("");
 
   const handleDeactivateRestaurant = async () => {
-    if (isDemo) { toast.info("Non disponible en mode demo"); return; }
+    if (isDemo) { toast.info(t('dashboard.settings.demo_unavailable')); return; }
     if (deactivateConfirm !== restaurant.name) {
-      toast.error("Le nom saisi ne correspond pas");
+      toast.error(t('dashboard.settings.name_mismatch'));
       return;
     }
     try {
@@ -216,10 +218,10 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
         scheduled_deletion_at: deletion,
         is_accepting_orders: false,
       } as any);
-      toast.success("Restaurant désactivé. Vos données seront conservées 90 jours.");
+      toast.success(t('dashboard.settings.restaurant_disabled'));
       window.location.reload();
     } catch (e) {
-      toast.error("Erreur lors de la désactivation");
+      toast.error(t('dashboard.settings.disable_error'));
     }
   };
 
@@ -229,13 +231,13 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Power className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Disponibilite</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.availability')}</h3>
         </div>
 
         <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
           <div>
-            <p className="text-sm font-medium text-foreground">Accepter les commandes</p>
-            <p className="text-xs text-muted-foreground">{isAccepting ? "Les clients peuvent commander" : "Commandes suspendues"}</p>
+            <p className="text-sm font-medium text-foreground">{t('dashboard.settings.accept_orders')}</p>
+            <p className="text-xs text-muted-foreground">{isAccepting ? t('dashboard.settings.clients_can_order') : t('dashboard.settings.orders_suspended')}</p>
           </div>
           <Switch checked={isAccepting} onCheckedChange={handleToggleAccepting} />
         </div>
@@ -273,7 +275,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <ShoppingBag className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Modes de commande</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.order_modes')}</h3>
         </div>
 
         <div className="space-y-2 mb-4">
@@ -292,7 +294,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
 
         <div className="space-y-3 pt-3 border-t border-border">
           <div>
-            <label className="text-sm text-muted-foreground">Temps estime</label>
+            <label className="text-sm text-muted-foreground">{t('dashboard.settings.estimated_time')}</label>
             <Input
               value={estimatedTime}
               onChange={(e) => setEstimatedTime(e.target.value)}
@@ -307,7 +309,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <CreditCard className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Moyens de paiement</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.payment_methods')}</h3>
         </div>
 
         <div className="space-y-2">
@@ -329,13 +331,13 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Clock className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Temps de préparation</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.prep_time')}</h3>
         </div>
 
         <div className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-sm text-muted-foreground">Temps par defaut</label>
+              <label className="text-sm text-muted-foreground">{t('dashboard.settings.default_time')}</label>
               <span className="text-sm font-medium text-foreground">{prepTime.default_minutes} min</span>
             </div>
             <input
@@ -350,7 +352,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
           </div>
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-sm text-muted-foreground">Temps par item supplementaire</label>
+              <label className="text-sm text-muted-foreground">{t('dashboard.settings.extra_item_time')}</label>
               <span className="text-sm font-medium text-foreground">{prepTime.per_item_minutes} min</span>
             </div>
             <input
@@ -364,7 +366,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             />
           </div>
           <div>
-            <label className="text-sm text-muted-foreground">Temps max (min)</label>
+            <label className="text-sm text-muted-foreground">{t('dashboard.settings.max_time')}</label>
             <Input
               type="number"
               value={prepTime.max_minutes}
@@ -379,7 +381,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Bell className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Notifications</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.notifications')}</h3>
         </div>
 
         {sound ? (
@@ -387,8 +389,8 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             {/* Mute toggle */}
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-foreground">Son des notifications</p>
-                <p className="text-xs text-muted-foreground">{sound.muted ? "Desactive" : "Joue un son a chaque nouvelle commande"}</p>
+                <p className="text-sm font-medium text-foreground">{t('dashboard.settings.notification_sound')}</p>
+                <p className="text-xs text-muted-foreground">{sound.muted ? t('dashboard.settings.sound_disabled') : t('dashboard.settings.sound_enabled')}</p>
               </div>
               <Switch checked={!sound.muted} onCheckedChange={(val) => sound.setMuted(!val)} />
             </div>
@@ -423,40 +425,40 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
               className="rounded-xl gap-2"
             >
               <Play className="h-3.5 w-3.5" />
-              Tester le son
+              {t('dashboard.settings.test_sound')}
             </Button>
 
             {!sound.audioUnlocked && (
               <p className="text-xs text-amber-600">
-                Le son sera active au premier appui sur "Tester le son" ou via le bouton en haut de page.
+                {t('dashboard.settings.sound_info')}
               </p>
             )}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">Chargement...</p>
+          <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
         )}
       </section>
 
       {/* Save button */}
       <Button onClick={handleSave} disabled={saving} className="w-full rounded-xl h-12">
-        {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer tous les parametres"}
+        {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t('dashboard.settings.save_all')}
       </Button>
 
       {/* Account */}
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <User className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Mon compte</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.my_account')}</h3>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-sm text-muted-foreground">Téléphone</label>
+            <label className="text-sm text-muted-foreground">{t('dashboard.settings.phone')}</label>
             <Input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="mt-1" />
           </div>
 
           <Button variant="outline" className="w-full rounded-xl gap-2" onClick={handleLogout}>
-            <LogOut className="h-4 w-4" />Se deconnecter
+            <LogOut className="h-4 w-4" />{t('dashboard.settings.logout')}
           </Button>
         </div>
       </section>
@@ -465,20 +467,20 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Crown className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">Mon abonnement</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.my_subscription')}</h3>
         </div>
 
         {subscription ? (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Formule</span>
+              <span className="text-sm text-muted-foreground">{t('dashboard.settings.plan')}</span>
               <span className="text-sm font-medium text-foreground">
-                {subscription.plan === "annual" ? "Annuel" : "Mensuel"}{" "}
+                {subscription.plan === "annual" ? t('dashboard.settings.annual') : t('dashboard.settings.monthly')}{" "}
                 ({PLAN_PRICES[subscription.plan].toFixed(2)} EUR/{subscription.plan === "annual" ? "an" : "mois"})
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Statut</span>
+              <span className="text-sm text-muted-foreground">{t('dashboard.settings.status')}</span>
               <span className={`text-sm font-medium ${
                 subscription.status === "active" || subscription.status === "promo"
                   ? "text-green-600"
@@ -488,18 +490,18 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
                   ? "text-red-600"
                   : "text-amber-600"
               }`}>
-                {subscription.status === "active" ? "Actif" :
-                 subscription.status === "trial" ? "Essai gratuit" :
-                 subscription.status === "past_due" ? "Paiement en attente" :
-                 subscription.status === "cancelled" ? "Annule" :
-                 subscription.status === "expired" ? "Expire" :
-                 subscription.status === "promo" ? "Promo" :
-                 "En attente"}
+                {subscription.status === "active" ? t('dashboard.settings.status_active') :
+                 subscription.status === "trial" ? t('dashboard.settings.status_trial') :
+                 subscription.status === "past_due" ? t('dashboard.settings.status_pending') :
+                 subscription.status === "cancelled" ? t('dashboard.settings.status_cancelled') :
+                 subscription.status === "expired" ? t('dashboard.settings.status_expired') :
+                 subscription.status === "promo" ? t('dashboard.settings.status_promo') :
+                 t('dashboard.settings.status_waiting')}
               </span>
             </div>
             {subscription.trial_end && subscription.status === "trial" && (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Fin de l'essai</span>
+                <span className="text-sm text-muted-foreground">{t('dashboard.settings.trial_end')}</span>
                 <span className="text-sm font-medium text-foreground">
                   {new Date(subscription.trial_end).toLocaleDateString("fr-FR")}
                 </span>
@@ -507,9 +509,11 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             )}
             {subscription.billing_day && (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Prelevement</span>
+                <span className="text-sm text-muted-foreground">{t('dashboard.settings.billing')}</span>
                 <span className="text-sm text-foreground">
-                  Le {subscription.billing_day === 1 ? "1er" : subscription.billing_day} de chaque {subscription.plan === "annual" ? "annee" : "mois"}
+                  {subscription.plan === "annual"
+                    ? t('dashboard.settings.billing_desc_annual', { day: subscription.billing_day === 1 ? t('dashboard.settings.first_ordinal') : String(subscription.billing_day) })
+                    : t('dashboard.settings.billing_desc_monthly', { day: subscription.billing_day === 1 ? t('dashboard.settings.first_ordinal') : String(subscription.billing_day) })}
                 </span>
               </div>
             )}
@@ -518,11 +522,11 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
               <Button variant="outline" size="sm" className="flex-1 gap-1.5" asChild>
                 <a href="https://idwzsh-11.myshopify.com/account" target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="h-3.5 w-3.5" />
-                  Gerer
+                  {t('dashboard.settings.manage')}
                 </a>
               </Button>
               <Button variant="outline" size="sm" className="flex-1" asChild>
-                <Link to="/choisir-plan">Changer de formule</Link>
+                <Link to="/choisir-plan">{t('dashboard.settings.change_plan')}</Link>
               </Button>
             </div>
 
@@ -530,7 +534,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             <div className="pt-2 border-t border-border">
               <div className="flex items-center gap-2 mb-2">
                 <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Code promotionnel</span>
+                <span className="text-xs text-muted-foreground">{t('dashboard.settings.promo_code')}</span>
               </div>
               <div className="flex gap-2">
                 <Input
@@ -545,7 +549,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
                   onClick={handleApplyPromo}
                   disabled={promoLoading || !promoInput.trim()}
                 >
-                  {promoLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Appliquer"}
+                  {promoLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : t('common.apply')}
                 </Button>
               </div>
             </div>
@@ -553,10 +557,10 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
         ) : (
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground mb-3">
-              Aucun abonnement actif.
+              {t('dashboard.settings.no_subscription')}
             </p>
             <Button size="sm" asChild>
-              <Link to="/choisir-plan">Choisir une formule</Link>
+              <Link to="/choisir-plan">{t('dashboard.settings.choose_plan')}</Link>
             </Button>
           </div>
         )}
@@ -569,13 +573,13 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-destructive/30 p-5">
         <div className="flex items-center gap-2 mb-3">
           <AlertTriangle className="h-5 w-5 text-destructive" />
-          <h3 className="text-base font-semibold text-destructive">Desactiver mon restaurant</h3>
+          <h3 className="text-base font-semibold text-destructive">{t('dashboard.settings.disable_restaurant')}</h3>
         </div>
         <p className="text-sm text-muted-foreground mb-2">
-          Votre restaurant ne sera plus visible par les clients. Vos données seront conservées 90 jours : vous pourrez réactiver à tout moment.
+          {t('dashboard.settings.disable_info')}
         </p>
         <p className="text-sm text-muted-foreground mb-3">
-          Pour confirmer, saisissez le nom exact de votre restaurant : <span className="font-semibold text-foreground">{restaurant.name}</span>
+          {t('dashboard.settings.disable_confirm')} <span className="font-semibold text-foreground">{restaurant.name}</span>
         </p>
         <Input
           placeholder={restaurant.name}
@@ -589,7 +593,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
           onClick={handleDeactivateRestaurant}
           disabled={deactivateConfirm !== restaurant.name}
         >
-          <Trash2 className="h-4 w-4" />Desactiver
+          <Trash2 className="h-4 w-4" />{t('dashboard.settings.disable_button')}
         </Button>
       </section>
     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts";
 import { TrendingUp, ShoppingBag, Receipt, Euro, Clock, Flame, Trophy } from "lucide-react";
 import { fetchOrders, fetchDemoOrders } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,10 +18,10 @@ interface Props {
   isDemo?: boolean;
 }
 
-const periodLabels: Record<Period, string> = {
-  day: "Aujourd'hui",
-  week: "Cette semaine",
-  month: "Ce mois",
+const periodLabelKeys: Record<Period, string> = {
+  day: "dashboard.stats.today",
+  week: "dashboard.stats.this_week",
+  month: "dashboard.stats.this_month",
 };
 
 function startOfPeriod(period: Period): Date {
@@ -45,6 +46,7 @@ function formatHour(h: number) {
 }
 
 export const DashboardStats = ({ restaurant, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("month");
@@ -168,11 +170,11 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
   }
 
   const kpis = [
-    { label: "Chiffre d'affaires", value: `${stats.revenue.toFixed(2)} €`, icon: Euro, accent: true },
-    { label: "Commandes", value: stats.count, icon: ShoppingBag },
-    { label: "Panier moyen", value: `${stats.avg.toFixed(2)} €`, icon: Receipt },
+    { label: t('dashboard.stats.revenue'), value: `${stats.revenue.toFixed(2)} €`, icon: Euro, accent: true },
+    { label: t('dashboard.stats.orders'), value: stats.count, icon: ShoppingBag },
+    { label: t('dashboard.stats.avg_basket'), value: `${stats.avg.toFixed(2)} €`, icon: Receipt },
     {
-      label: stats.avgPrepTime > 0 && stats.count >= 10 ? "Temps moyen" : "Total commandes",
+      label: stats.avgPrepTime > 0 && stats.count >= 10 ? t('dashboard.stats.avg_time') : t('dashboard.stats.total_orders'),
       value: stats.avgPrepTime > 0 && stats.count >= 10
         ? `${Math.round(stats.avgPrepTime)} min`
         : orders.length,
@@ -185,7 +187,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
       <Tabs value={period} onValueChange={(v) => setPeriod(v as Period)}>
         <TabsList className="rounded-xl">
           {(["day", "week", "month"] as Period[]).map((p) => (
-            <TabsTrigger key={p} value={p} className="rounded-lg text-sm">{periodLabels[p]}</TabsTrigger>
+            <TabsTrigger key={p} value={p} className="rounded-lg text-sm">{t(periodLabelKeys[p])}</TabsTrigger>
           ))}
         </TabsList>
       </Tabs>
@@ -206,7 +208,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
 
       <Card className="rounded-2xl border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">Chiffre d'affaires - {periodLabels[period]}</CardTitle>
+          <CardTitle className="text-base font-semibold">{t('dashboard.stats.revenue_period', { period: t(periodLabelKeys[period]) })}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-64 blur-sensitive">
@@ -225,7 +227,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
 
       <Card className="rounded-2xl border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">Nombre de commandes - {periodLabels[period]}</CardTitle>
+          <CardTitle className="text-base font-semibold">{t('dashboard.stats.orders_period', { period: t(periodLabelKeys[period]) })}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-52 blur-sensitive">
@@ -250,7 +252,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
               <CardHeader className="pb-2">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
                   <Trophy className="h-4 w-4 text-amber-500" />
-                  Top 5 plats
+                  {t('dashboard.stats.top_5')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -272,32 +274,32 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <Flame className="h-4 w-4 text-amber-500" />
-                Insights
+                {t('dashboard.stats.insights')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-sm">
                 {stats.peakHour >= 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Heure de pointe</span>
+                    <span className="text-muted-foreground">{t('dashboard.stats.peak_hour')}</span>
                     <span className="font-medium text-foreground">{stats.peakHour}h - {stats.peakHour + 1}h</span>
                   </div>
                 )}
                 {stats.busiestDay && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Jour le plus charge</span>
+                    <span className="text-muted-foreground">{t('dashboard.stats.busiest_day')}</span>
                     <span className="font-medium text-foreground capitalize">{stats.busiestDay}</span>
                   </div>
                 )}
                 {stats.avgPrepTime > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Temps préparation moyen</span>
+                    <span className="text-muted-foreground">{t('dashboard.stats.avg_prep_time')}</span>
                     <span className="font-medium text-foreground">{Math.round(stats.avgPrepTime)} min</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Total historique</span>
-                  <span className="font-medium text-foreground">{orders.length} commandes</span>
+                  <span className="text-muted-foreground">{t('dashboard.stats.total_historical')}</span>
+                  <span className="font-medium text-foreground">{orders.length} {t('dashboard.stats.orders_suffix')}</span>
                 </div>
               </div>
             </CardContent>
@@ -307,7 +309,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
 
       {/* Prevision de demande */}
       <div className="space-y-4">
-        <h3 className="text-base font-semibold text-foreground">Prevision de demande</h3>
+        <h3 className="text-base font-semibold text-foreground">{t('dashboard.stats.demand_forecast')}</h3>
         <DemandTip />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <DemandCalendar />

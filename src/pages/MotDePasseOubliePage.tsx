@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/context/LanguageContext';
 
 const MotDePasseOubliePage = () => {
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ const MotDePasseOubliePage = () => {
   const handleReset = async () => {
     setError('');
     if (!email.trim()) {
-      setError('Entrez votre adresse email.');
+      setError(t('auth.reset.email_required'));
       return;
     }
     setLoading(true);
@@ -85,13 +87,12 @@ const MotDePasseOubliePage = () => {
                     <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Mail className="h-7 w-7 text-primary" />
                     </div>
-                    <h2 className="text-xl font-bold text-foreground">Email envoye !</h2>
+                    <h2 className="text-xl font-bold text-foreground">{t('auth.reset.email_sent_title')}</h2>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Si un compte existe avec cette adresse, vous recevrez un lien dans quelques
-                      instants.
+                      {t('auth.reset.email_sent_desc')}
                     </p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Pensez à vérifier vos spams.
+                      {t('auth.reset.check_spam')}
                     </p>
                   </div>
 
@@ -104,9 +105,9 @@ const MotDePasseOubliePage = () => {
                     {loading ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : countdown > 0 ? (
-                      `Renvoyer l'email (${countdown}s)`
+                      t('auth.reset.resend_countdown', { countdown })
                     ) : (
-                      "Renvoyer l'email"
+                      t('auth.reset.resend')
                     )}
                   </Button>
 
@@ -114,21 +115,21 @@ const MotDePasseOubliePage = () => {
                     to="/connexion"
                     className="block text-center text-sm text-primary hover:underline"
                   >
-                    &larr; Retour à la connexion
+                    &larr; {t('auth.reset.back_to_login')}
                   </Link>
                 </>
               ) : (
                 <>
                   <div>
-                    <h2 className="text-xl font-bold text-foreground">Mot de passe oublie ?</h2>
+                    <h2 className="text-xl font-bold text-foreground">{t('auth.reset.title')}</h2>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Entrez votre email, on vous envoie un lien de reinitialisation.
+                      {t('auth.reset.description')}
                     </p>
                   </div>
 
                   <div className="space-y-1.5">
                     <label htmlFor="reset-email" className="text-sm font-medium text-foreground">
-                      Adresse email
+                      {t('auth.reset.email_label')}
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -138,7 +139,7 @@ const MotDePasseOubliePage = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="vous@restaurant.fr"
+                        placeholder={t('auth.email_placeholder')}
                         disabled={loading}
                         className="flex w-full rounded-xl border-2 border-input bg-background px-3 py-3 pl-10 text-base transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
                       />
@@ -155,7 +156,7 @@ const MotDePasseOubliePage = () => {
                     {loading ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                      'Envoyer le lien \u2192'
+                      <>{t('auth.reset.send_link')} {'\u2192'}</>
                     )}
                   </Button>
 
@@ -163,7 +164,7 @@ const MotDePasseOubliePage = () => {
                     to="/connexion"
                     className="block text-center text-sm text-primary hover:underline"
                   >
-                    &larr; Retour à la connexion
+                    &larr; {t('auth.reset.back_to_login')}
                   </Link>
                 </>
               )}

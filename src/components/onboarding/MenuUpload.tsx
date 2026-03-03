@@ -5,16 +5,8 @@ import { Button } from '@/components/ui/button';
 import { analyzeMenuImages } from '@/services/menu-analysis';
 import { extractColors } from '@/services/color-extraction';
 import { convertFilesForAnalysis } from '@/utils/file-converter';
+import { useLanguage } from '@/context/LanguageContext';
 import type { AnalyzedMenu, ExtractedColors } from '@/types/onboarding';
-
-const LOADING_MESSAGES = [
-  "Nous analysons votre carte pour vous faire gagner du temps...",
-  "Notre IA structure vos plats, catégories et prix...",
-  "Vous n'aurez plus qu'à vérifier et ajuster si nécessaire.",
-  "Préparation de votre menu numérique en cours...",
-  "Encore un instant, nous mettons en forme vos catégories...",
-  "Bientot pret ! Votre carte digitale prend forme...",
-];
 
 interface MenuUploadProps {
   onAnalysisComplete: (menu: AnalyzedMenu, colors?: ExtractedColors) => void;
@@ -22,6 +14,17 @@ interface MenuUploadProps {
 }
 
 export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
+  const { t } = useLanguage();
+
+  const LOADING_MESSAGES = [
+    t('onboarding.upload.loading_1'),
+    t('onboarding.upload.loading_2'),
+    t('onboarding.upload.loading_3'),
+    t('onboarding.upload.loading_4'),
+    t('onboarding.upload.loading_5'),
+    t('onboarding.upload.loading_6'),
+  ];
+
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [converting, setConverting] = useState(false);
@@ -58,7 +61,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         setFiles((prev) => [...prev, ...converted]);
       }
     } catch {
-      setError('Erreur lors de la conversion des fichiers.');
+      setError(t('onboarding.upload.conversion_error'));
     } finally {
       setConverting(false);
     }
@@ -95,7 +98,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
 
       onAnalysisComplete(menu, colors);
     } catch (err) {
-      setError('Erreur lors de l\'analyse. Vérifiez vos fichiers et réessayez.');
+      setError(t('onboarding.upload.analysis_error'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -148,13 +151,13 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
               {/* Fixed warning */}
               <div className="flex items-start gap-2 text-xs text-amber-700 bg-amber-50 rounded-lg p-3 w-full">
                 <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                <span>Ne quittez pas cette page, l'analyse est en cours.</span>
+                <span>{t('onboarding.upload.dont_leave')}</span>
               </div>
 
               {/* Fixed tip */}
               <div className="flex items-start gap-2 text-xs text-muted-foreground">
                 <Lightbulb className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                <span>Pensez à vérifier les prix et les descriptions une fois l'analyse terminée.</span>
+                <span>{t('onboarding.upload.check_prices')}</span>
               </div>
             </div>
           </motion.div>
@@ -180,10 +183,10 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
       >
         <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
         <p className="text-sm font-medium text-foreground">
-          Déposez vos photos de carte ici
+          {t('onboarding.upload.drop_title')}
         </p>
         <p className="text-xs text-muted-foreground mt-1">
-          Photos, PDF, captures d'écran... tous formats acceptés
+          {t('onboarding.upload.drop_desc')}
         </p>
         <input
           ref={inputRef}
@@ -207,7 +210,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         disabled={converting}
       >
         <Camera className="h-4 w-4 mr-2" />
-        Prendre une photo
+        {t('onboarding.upload.take_photo')}
       </Button>
       <input
         ref={cameraRef}
@@ -225,7 +228,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
       {converting && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Conversion des fichiers en cours...
+          {t('onboarding.upload.converting')}
         </div>
       )}
 
@@ -233,7 +236,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
       {files.length > 0 && (
         <div className="space-y-2">
           <p className="text-xs text-muted-foreground">
-            {files.length} fichier{files.length > 1 ? 's' : ''} pret{files.length > 1 ? 's' : ''}
+            {t('onboarding.upload.files_ready', { count: files.length })}
           </p>
           {files.map((f, i) => (
             <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -244,7 +247,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
                 onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))}
                 className="ml-auto text-destructive text-xs hover:underline shrink-0"
               >
-                Retirer
+                {t('onboarding.upload.remove')}
               </button>
             </div>
           ))}
@@ -253,7 +256,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
             onClick={() => inputRef.current?.click()}
             className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
           >
-            + Ajouter d'autres fichiers
+            {t('onboarding.upload.add_more')}
           </button>
         </div>
       )}
@@ -263,7 +266,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         <div className="rounded-lg bg-destructive/10 p-3 space-y-1">
           <div className="flex items-center gap-2 text-sm text-destructive font-medium">
             <AlertCircle className="h-4 w-4" />
-            Certains fichiers n'ont pas pu etre convertis
+            {t('onboarding.upload.conversion_failed')}
           </div>
           {conversionErrors.map((err, i) => (
             <p key={i} className="text-xs text-destructive/80 ml-6">{err}</p>
@@ -281,10 +284,12 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            Analyse en cours...
+            {t('onboarding.upload.analyzing')}
           </>
         ) : (
-          `Analyser ${files.length > 1 ? `mes ${files.length} fichiers` : 'ma carte'}`
+          files.length > 1
+            ? t('onboarding.upload.analyze_files', { count: files.length })
+            : t('onboarding.upload.analyze_menu')
         )}
       </Button>
 
@@ -292,7 +297,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
         onClick={onSkip}
         className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
-        Creer ma carte manuellement
+        {t('onboarding.upload.manual_create')}
       </button>
     </div>
   );

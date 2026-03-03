@@ -33,6 +33,7 @@ export async function createRestaurantFromOnboarding(data: {
   subscription_plan?: SubscriptionPlan;
   payment_methods?: string[];
   owner_id?: string;
+  preferred_language?: string;
 }) {
   const { data: restaurant, error } = await supabase
     .from('restaurants')
@@ -64,6 +65,7 @@ export async function createRestaurantFromOnboarding(data: {
       subscription_status: 'pending_payment',
       payment_methods: data.payment_methods ?? [],
       owner_id: data.owner_id ?? null,
+      preferred_language: data.preferred_language ?? 'fr',
     } as any)
     .select()
     .single();

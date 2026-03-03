@@ -829,6 +829,7 @@
   "dashboard.settings.disable_info": "لن يكون مطعمك مرئيا للعملاء. سيتم الاحتفاظ ببياناتك لمدة 90 يوم: يمكنك إعادة التفعيل في أي وقت.",
   "dashboard.settings.disable_confirm": "للتأكيد، اكتب الاسم الدقيق لمطعمك:",
   "dashboard.settings.disable_button": "تعطيل",
+  "dashboard.settings.demo_unavailable": "غير متوفر في الوضع التجريبي",
 
   "dashboard.qr.scan_to_order": "امسح للطلب",
   "dashboard.qr.a4_downloaded": "تم تنزيل صفحة A4",
@@ -1146,5 +1147,17 @@
   "demo.cta_discover": "اكتشف الوضع التجريبي",
   "demo.cta_try": "غير مقتنع بعد؟ جرب العرض التوضيحي",
   "demo.cta_link": "اكتشف الاداة في الوضع التجريبي",
-  "demo.no_orders": "مطعم تجريبي"
+  "demo.no_orders": "مطعم تجريبي",
+
+  "home.page_title": "commandeici - لوحة المطعم",
+  "home.create_page": "انشاء صفحتي",
+  "home.title": "لوحة المطعم",
+  "home.description": "ادر طلباتك وقائمتك وعملائك.",
+  "home.login": "تسجيل الدخول",
+  "home.create_free": "انشاء صفحتي مجانا",
+  "home.back_to_site": "العودة للموقع",
+  "dashboard.orders.action_ready": "جاهز",
+  "dashboard.orders.action_done": "مكتمل",
+  "dashboard.orders.covers_count": "{count} غطاء",
+  "dashboard.orders.add_item": "اضافة"
 }

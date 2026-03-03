@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useLanguage } from '@/context/LanguageContext';
 import { StepIndicator } from '@/components/onboarding/StepIndicator';
 import { GooglePlaceSearch } from '@/components/onboarding/GooglePlaceSearch';
 import { NearbyPlaces } from '@/components/onboarding/NearbyPlaces';
@@ -51,8 +52,6 @@ type RestaurantData = {
   parsedSchedule: ParsedScheduleDay[] | null;
 };
 
-const STEP_LABELS = ['Compte', 'Restaurant', 'Carte', 'Design', 'Formule', 'Terminé'];
-
 const slideVariants = {
   enter: { opacity: 0, x: 30 },
   center: { opacity: 1, x: 0 },
@@ -60,6 +59,17 @@ const slideVariants = {
 };
 
 const InscriptionPage = () => {
+  const { t, language } = useLanguage();
+
+  const STEP_LABELS = [
+    t('auth.signup.step_account'),
+    t('auth.signup.step_restaurant'),
+    t('auth.signup.step_menu'),
+    t('auth.signup.step_design'),
+    t('auth.signup.step_plan'),
+    t('auth.signup.step_done'),
+  ];
+
   const [searchParams] = useSearchParams();
   const refCode = useMemo(() => searchParams.get('ref') || '', [searchParams]);
   const [step, setStep] = useState(1);
@@ -110,11 +120,11 @@ const InscriptionPage = () => {
   const handleSignUp = async () => {
     setAccountError('');
     if (!email || !password) {
-      setAccountError('Email et mot de passe requis.');
+      setAccountError(t('auth.signup.email_password_required'));
       return;
     }
     if (password.length < 6) {
-      setAccountError('Le mot de passe doit contenir au moins 6 caractères.');
+      setAccountError(t('auth.signup.password_min_length'));
       return;
     }
     setAccountLoading(true);
@@ -132,9 +142,9 @@ const InscriptionPage = () => {
     } catch (err: any) {
       const msg = err.message || '';
       if (msg.includes('already registered') || msg.includes('already been registered')) {
-        setAccountError('Cet email est déjà utilisé. Connectez-vous ou utilisez un autre email.');
+        setAccountError(t('auth.signup.email_taken'));
       } else {
-        setAccountError(msg || 'Erreur lors de l\'inscription.');
+        setAccountError(msg || t('auth.signup.signup_error'));
       }
     } finally {
       setAccountLoading(false);
@@ -228,6 +238,7 @@ const InscriptionPage = () => {
         bg_color: bgColor,
         subscription_plan: plan,
         owner_id: user?.id,
+        preferred_language: language,
       });
 
       // Create menu items if any
@@ -266,7 +277,7 @@ const InscriptionPage = () => {
       setCreatedRestaurantId(restaurant.id);
       setStep(6);
     } catch (err: any) {
-      toast.error(err.message || 'Erreur lors de la création. Veuillez réessayer.');
+      toast.error(err.message || t('auth.signup.creation_error'));
     } finally {
       setCreating(false);
     }
@@ -282,7 +293,7 @@ const InscriptionPage = () => {
             <span className="font-semibold text-lg">commandeici</span>
           </a>
           {step < 6 && (
-            <span className="text-xs text-muted-foreground">Étape {step}/5</span>
+            <span className="text-xs text-muted-foreground">{t('auth.signup.step_counter', { step })}</span>
           )}
         </div>
       </header>
@@ -299,7 +310,7 @@ const InscriptionPage = () => {
               to="/admin/demo"
               className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
             >
-              Pas encore convaincu ? Essayez le mode demo
+              {t('demo.cta_try')}
             </Link>
           </div>
         )}
@@ -309,41 +320,41 @@ const InscriptionPage = () => {
           {step === 1 && (
             <motion.div key="step1" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6 space-y-4">
-                <h2 className="text-xl font-bold text-foreground">Créez votre compte</h2>
+                <h2 className="text-xl font-bold text-foreground">{t('auth.signup.create_account')}</h2>
                 <p className="text-sm text-muted-foreground">
-                  En quelques minutes, votre restaurant sera en ligne.
+                  {t('auth.signup.create_desc')}
                 </p>
 
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('auth.signup.email')}</Label>
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="vous@restaurant.fr"
+                    placeholder={t('auth.email_placeholder')}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="password">Mot de passe</Label>
+                  <Label htmlFor="password">{t('auth.signup.password')}</Label>
                   <Input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="6 caractères minimum"
+                    placeholder={t('auth.signup.password_placeholder')}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="phone">Téléphone</Label>
+                  <Label htmlFor="phone">{t('auth.signup.phone')}</Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="06 12 34 56 78"
+                    placeholder={t('auth.signup.phone_placeholder')}
                   />
                 </div>
 
@@ -356,13 +367,13 @@ const InscriptionPage = () => {
                   disabled={accountLoading}
                   className="w-full"
                 >
-                  {accountLoading ? 'Création en cours...' : 'Créer mon compte'}
+                  {accountLoading ? t('auth.signup.creating') : t('auth.signup.create_button')}
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground">
-                  Déjà un compte ?{' '}
+                  {t('auth.signup.already_account')}{' '}
                   <Link to="/connexion" className="text-foreground underline">
-                    Se connecter
+                    {t('auth.signup.login')}
                   </Link>
                 </p>
               </div>
@@ -373,7 +384,7 @@ const InscriptionPage = () => {
           {step === 2 && !selectedPlace && (
             <motion.div key="step2" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6 space-y-4">
-                <h2 className="text-xl font-bold text-foreground">Trouvez votre restaurant</h2>
+                <h2 className="text-xl font-bold text-foreground">{t('auth.signup.find_restaurant')}</h2>
 
                 <div className="flex gap-2">
                   <Button
@@ -381,21 +392,21 @@ const InscriptionPage = () => {
                     size="sm"
                     onClick={() => setSearchMode('search')}
                   >
-                    Recherche
+                    {t('auth.signup.search')}
                   </Button>
                   <Button
                     variant={searchMode === 'nearby' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setSearchMode('nearby')}
                   >
-                    Autour de moi
+                    {t('auth.signup.nearby')}
                   </Button>
                   <Button
                     variant={searchMode === 'manual' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setSearchMode('manual')}
                   >
-                    Manuel
+                    {t('auth.signup.manual')}
                   </Button>
                 </div>
 
@@ -410,7 +421,7 @@ const InscriptionPage = () => {
                 )}
 
                 <Button variant="outline" onClick={() => setStep(1)} className="w-full">
-                  Retour
+                  {t('auth.signup.back')}
                 </Button>
               </div>
             </motion.div>
@@ -420,7 +431,7 @@ const InscriptionPage = () => {
           {step === 2 && selectedPlace && (
             <motion.div key="step2b" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6">
-                <h2 className="text-xl font-bold text-foreground mb-4">Confirmez les informations</h2>
+                <h2 className="text-xl font-bold text-foreground mb-4">{t('auth.signup.confirm_info')}</h2>
                 <PlaceConfirmation
                   place={selectedPlace}
                   onConfirm={handlePlaceConfirm}
@@ -434,16 +445,16 @@ const InscriptionPage = () => {
           {step === 3 && menuCategories.length === 0 && (
             <motion.div key="step3" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6">
-                <h2 className="text-xl font-bold text-foreground mb-2">Importez votre carte</h2>
+                <h2 className="text-xl font-bold text-foreground mb-2">{t('auth.signup.import_menu')}</h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Prenez en photo votre carte ou deposez une image. Nous extrairons automatiquement tous vos plats, prix et supplements.
+                  {t('auth.signup.import_desc')}
                 </p>
                 <MenuUpload
                   onAnalysisComplete={handleAnalysisComplete}
                   onSkip={() => setStep(4)}
                 />
                 <Button variant="outline" onClick={() => { setSelectedPlace(null); setRestaurantData(null); setStep(2); }} className="w-full mt-4">
-                  Retour
+                  {t('auth.signup.back')}
                 </Button>
               </div>
             </motion.div>
@@ -453,9 +464,9 @@ const InscriptionPage = () => {
           {step === 3 && menuCategories.length > 0 && (
             <motion.div key="step3b" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6">
-                <h2 className="text-xl font-bold text-foreground mb-2">Vérifiez votre carte</h2>
+                <h2 className="text-xl font-bold text-foreground mb-2">{t('auth.signup.review_menu')}</h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Nous avons détecté les éléments suivants. Modifiez si nécessaire.
+                  {t('auth.signup.review_desc')}
                 </p>
                 <MenuReviewEditor
                   menu={menuCategories}
@@ -471,9 +482,9 @@ const InscriptionPage = () => {
             <motion.div key="step4" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6 space-y-5">
                 <div>
-                  <h2 className="text-xl font-bold text-foreground">Personnalisez</h2>
+                  <h2 className="text-xl font-bold text-foreground">{t('auth.signup.customize')}</h2>
                   <p className="text-sm text-muted-foreground">
-                    Choisissez les couleurs et ajoutez une description.
+                    {t('auth.signup.customize_desc')}
                   </p>
                 </div>
 
@@ -486,17 +497,17 @@ const InscriptionPage = () => {
                 />
 
                 <div>
-                  <Label>Description du restaurant (optionnel)</Label>
+                  <Label>{t('auth.signup.restaurant_desc')}</Label>
                   <Textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Quelques mots sur votre restaurant..."
+                    placeholder={t('auth.signup.restaurant_desc_placeholder')}
                     rows={3}
                   />
                 </div>
 
                 <div>
-                  <Label>URL du logo (optionnel)</Label>
+                  <Label>{t('auth.signup.logo_url')}</Label>
                   <Input
                     value={logoUrl}
                     onChange={(e) => setLogoUrl(e.target.value)}
@@ -506,10 +517,10 @@ const InscriptionPage = () => {
 
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={() => setStep(3)} className="flex-1">
-                    Retour
+                    {t('auth.signup.back')}
                   </Button>
                   <Button onClick={() => setStep(5)} className="flex-1">
-                    Continuer
+                    {t('order.continue')}
                   </Button>
                 </div>
               </div>
@@ -520,9 +531,9 @@ const InscriptionPage = () => {
           {step === 5 && (
             <motion.div key="step5" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }} className="max-w-4xl -mx-[calc((100vw-32rem)/2+1rem)] sm:mx-0">
               <div className="bg-card rounded-xl border border-border p-6">
-                <h2 className="text-xl font-bold text-foreground mb-2">Choisissez votre formule</h2>
+                <h2 className="text-xl font-bold text-foreground mb-2">{t('auth.signup.choose_plan')}</h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Sélectionnez la formule qui vous convient. Sans engagement, résiliable à tout moment.
+                  {t('auth.signup.choose_plan_desc')}
                 </p>
                 <PricingCards
                   onSelect={handlePlanSelect}
@@ -531,13 +542,13 @@ const InscriptionPage = () => {
                 {creating && (
                   <div className="text-center mt-4">
                     <p className="text-sm text-muted-foreground animate-pulse">
-                      Création de votre page en cours...
+                      {t('auth.signup.creating_page')}
                     </p>
                   </div>
                 )}
                 {!creating && (
                   <Button variant="outline" onClick={() => setStep(4)} className="w-full mt-4">
-                    Retour
+                    {t('auth.signup.back')}
                   </Button>
                 )}
               </div>

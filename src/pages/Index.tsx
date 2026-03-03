@@ -4,14 +4,16 @@ import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/context/LanguageContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [checking, setChecking] = useState(true);
 
   // Auto-redirect if restaurateur is already logged in
   useEffect(() => {
-    document.title = "commandeici - Espace restaurateur";
+    document.title = t('home.page_title');
 
     supabase.auth.getUser().then(async ({ data }) => {
       if (data.user) {
@@ -28,7 +30,7 @@ const Index = () => {
       }
       setChecking(false);
     });
-  }, [navigate]);
+  }, [navigate, t]);
 
   if (checking) {
     return (
@@ -51,7 +53,7 @@ const Index = () => {
             className="rounded-xl text-xs font-semibold"
             onClick={() => navigate("/inscription")}
           >
-            Creer ma page
+            {t('home.create_page')}
           </Button>
         </div>
       </header>
@@ -65,9 +67,9 @@ const Index = () => {
           transition={{ duration: 0.4 }}
         >
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Espace restaurateur</h1>
+            <h1 className="text-2xl font-bold text-foreground">{t('home.title')}</h1>
             <p className="text-sm text-muted-foreground mt-2">
-              Gérez vos commandes, votre carte et vos clients.
+              {t('home.description')}
             </p>
           </div>
 
@@ -76,21 +78,21 @@ const Index = () => {
               onClick={() => navigate("/connexion")}
               className="w-full h-12 rounded-xl text-base font-semibold"
             >
-              Se connecter
+              {t('home.login')}
             </Button>
             <Button
               variant="outline"
               onClick={() => navigate("/inscription")}
               className="w-full h-12 rounded-xl text-base"
             >
-              Creer ma page gratuitement
+              {t('home.create_free')}
             </Button>
             <Button
               variant="ghost"
               onClick={() => navigate("/admin/demo")}
               className="w-full h-10 rounded-xl text-sm text-muted-foreground hover:text-foreground"
             >
-              Decouvrir en mode demo &rarr;
+              {t('demo.cta_discover')} &rarr;
             </Button>
           </div>
 
@@ -105,7 +107,7 @@ const Index = () => {
               href="https://commandeici.com"
               className="block text-sm text-muted-foreground hover:text-foreground transition-colors underline"
             >
-              Retour au site
+              {t('home.back_to_site')}
             </a>
           </div>
         </motion.div>

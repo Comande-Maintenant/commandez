@@ -829,6 +829,7 @@
   "dashboard.settings.disable_info": "Il tuo ristorante non sara piu visibile ai clienti. I tuoi dati saranno conservati per 90 giorni: potrai riattivare in qualsiasi momento.",
   "dashboard.settings.disable_confirm": "Per confermare, inserisci il nome esatto del tuo ristorante:",
   "dashboard.settings.disable_button": "Disattiva",
+  "dashboard.settings.demo_unavailable": "Non disponibile in modalita demo",
 
   "dashboard.qr.scan_to_order": "Scansiona per ordinare",
   "dashboard.qr.a4_downloaded": "Foglio A4 scaricato",
@@ -1146,5 +1147,17 @@
   "demo.cta_discover": "Scopri la modalita demo",
   "demo.cta_try": "Non sei convinto? Prova la demo",
   "demo.cta_link": "Scopri lo strumento in modalita demo",
-  "demo.no_orders": "Ristorante dimostrativo"
+  "demo.no_orders": "Ristorante dimostrativo",
+
+  "home.page_title": "commandeici - Pannello ristorante",
+  "home.create_page": "Crea la mia pagina",
+  "home.title": "Pannello ristorante",
+  "home.description": "Gestisci ordini, menu e clienti.",
+  "home.login": "Accedi",
+  "home.create_free": "Crea la mia pagina gratis",
+  "home.back_to_site": "Torna al sito",
+  "dashboard.orders.action_ready": "Pronto",
+  "dashboard.orders.action_done": "Completato",
+  "dashboard.orders.covers_count": "{count} coperto/i",
+  "dashboard.orders.add_item": "Aggiungi"
 }

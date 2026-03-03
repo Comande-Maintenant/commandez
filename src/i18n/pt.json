@@ -864,6 +864,7 @@
   "dashboard.settings.disable_info": "Seu restaurante não será mais visível para os clientes. Seus dados serão mantidos por 90 dias: você pode reativar quando quiser.",
   "dashboard.settings.disable_confirm": "Para confirmar, digite o nome exato do seu restaurante:",
   "dashboard.settings.disable_button": "Desativar",
+  "dashboard.settings.demo_unavailable": "Nao disponivel no modo demo",
   "dashboard.qr.scan_to_order": "Escaneie para pedir",
   "dashboard.qr.a4_downloaded": "Folha A4 baixada",
   "dashboard.qr.poster_downloaded": "Pôster baixado",
@@ -1106,5 +1107,17 @@
   "demo.cta_discover": "Descobrir o modo demo",
   "demo.cta_try": "Ainda nao convencido? Experimente a demo",
   "demo.cta_link": "Descobrir a ferramenta em modo demo",
-  "demo.no_orders": "Restaurante de demonstracao"
+  "demo.no_orders": "Restaurante de demonstracao",
+
+  "home.page_title": "commandeici - Painel restaurante",
+  "home.create_page": "Criar minha pagina",
+  "home.title": "Painel restaurante",
+  "home.description": "Gerencie seus pedidos, cardapio e clientes.",
+  "home.login": "Entrar",
+  "home.create_free": "Criar minha pagina gratis",
+  "home.back_to_site": "Voltar ao site",
+  "dashboard.orders.action_ready": "Pronto",
+  "dashboard.orders.action_done": "Concluido",
+  "dashboard.orders.covers_count": "{count} talher(es)",
+  "dashboard.orders.add_item": "Adicionar"
 }

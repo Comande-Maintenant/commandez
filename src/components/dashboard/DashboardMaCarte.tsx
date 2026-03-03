@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   DndContext,
   closestCenter,
@@ -70,6 +71,7 @@ function SortableItemRow({
   onDelete: () => void;
   onDuplicate: () => void;
 }) {
+  const { t } = useLanguage();
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
   const style = { transform: CSS.Transform.toString(transform), transition };
 
@@ -97,7 +99,7 @@ function SortableItemRow({
       <span className="text-sm font-bold text-foreground shrink-0">{Number(item.price).toFixed(2)} €</span>
       <div className="flex items-center gap-1.5 shrink-0">
         <Switch checked={item.enabled} onCheckedChange={onToggle} className="scale-75" />
-        <button onClick={onDuplicate} className="p-1.5 rounded-lg hover:bg-secondary transition-colors" title="Dupliquer">
+        <button onClick={onDuplicate} className="p-1.5 rounded-lg hover:bg-secondary transition-colors" title={t('dashboard.menu.duplicate')}>
           <Copy className="h-3.5 w-3.5 text-muted-foreground" />
         </button>
         <button onClick={onEdit} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
@@ -127,6 +129,7 @@ function SortableCategoryHeader({
   onRename: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useLanguage();
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: `cat-${name}` });
   const style = { transform: CSS.Transform.toString(transform), transition };
 
@@ -143,7 +146,7 @@ function SortableCategoryHeader({
         {expanded ? <ChevronDown className="h-4 w-4 text-foreground" /> : <ChevronRight className="h-4 w-4 text-foreground" />}
       </button>
       <span className="flex-1 text-sm font-semibold text-foreground">{name}</span>
-      <span className="text-xs text-muted-foreground mr-2">{itemCount} items</span>
+      <span className="text-xs text-muted-foreground mr-2">{itemCount} {t('dashboard.menu.items_count')}</span>
       <button onClick={onRename} className="p-1.5 rounded-lg hover:bg-background/50 transition-colors">
         <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
       </button>
@@ -155,6 +158,7 @@ function SortableCategoryHeader({
 }
 
 export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [items, setItems] = useState<DbMenuItem[]>([]);
   const [categories, setCategories] = useState<string[]>(restaurant.categories ?? []);
   const [loading, setLoading] = useState(true);
@@ -204,15 +208,15 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   const handleDuplicateItem = async (item: DbMenuItem) => {
     if (isDemo) {
       const demoId = crypto.randomUUID();
-      const copy = { ...item, id: demoId, name: item.name + " (copie)" };
+      const copy = { ...item, id: demoId, name: item.name + t('dashboard.menu.copy_suffix') };
       setItems((prev) => [...prev, copy]);
-      toast.success("Item duplique");
+      toast.success(t('dashboard.menu.item_duplicated'));
       return;
     }
     try {
       await insertMenuItem({
         restaurant_id: restaurant.id,
-        name: item.name + " (copie)",
+        name: item.name + t('dashboard.menu.copy_suffix'),
         description: item.description,
         price: item.price,
         category: item.category,
@@ -222,22 +226,22 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       });
       const data = await fetchAllMenuItems(restaurant.id);
       setItems(data);
-      toast.success("Item duplique");
+      toast.success(t('dashboard.menu.item_duplicated'));
     } catch {
-      toast.error("Erreur lors de la duplication");
+      toast.error(t('dashboard.menu.duplicate_error'));
     }
   };
 
   const handleDeleteItem = async (id: string) => {
-    if (!confirm("Supprimer cet item ?")) return;
+    if (!confirm(t('dashboard.menu.delete_item_confirm'))) return;
     if (isDemo) {
       setItems((prev) => prev.filter((i) => i.id !== id));
-      toast.success("Item supprime");
+      toast.success(t('dashboard.menu.item_deleted'));
       return;
     }
     await deleteMenuItem(id);
     setItems((prev) => prev.filter((i) => i.id !== id));
-    toast.success("Item supprime");
+    toast.success(t('dashboard.menu.item_deleted'));
   };
 
   const handleAddItem = async () => {
@@ -261,7 +265,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       } as DbMenuItem]);
       setNewItem({ name: "", description: "", price: "", category: categories[0] || "", image: "" });
       setShowAddItem(false);
-      toast.success("Item ajoute");
+      toast.success(t('dashboard.menu.item_added'));
       return;
     }
     await insertMenuItem({
@@ -276,7 +280,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
     setItems(data);
     setNewItem({ name: "", description: "", price: "", category: categories[0] || "", image: "" });
     setShowAddItem(false);
-    toast.success("Item ajoute");
+    toast.success(t('dashboard.menu.item_added'));
   };
 
   const handleEditSave = async () => {
@@ -284,7 +288,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
     if (isDemo) {
       setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
       setEditItem(null);
-      toast.success("Item modifie");
+      toast.success(t('dashboard.menu.item_modified'));
       return;
     }
     await updateMenuItem(editItem.id, {
@@ -297,7 +301,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
     });
     setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
     setEditItem(null);
-    toast.success("Item modifie");
+    toast.success(t('dashboard.menu.item_modified'));
   };
 
   const handleImageUpload = async (file: File, itemId: string) => {
@@ -307,7 +311,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       const url = URL.createObjectURL(file);
       setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: url } : i)));
       if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: url } : prev);
-      toast.success("Photo ajoutee");
+      toast.success(t('dashboard.menu.photo_added'));
       setUploadingImage(false);
       return;
     }
@@ -317,10 +321,10 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       await updateMenuItem(itemId, { image: url });
       setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: url } : i)));
       if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: url } : prev);
-      toast.success("Photo ajoutee");
+      toast.success(t('dashboard.menu.photo_added'));
     } catch (e) {
       console.error("Image upload error:", e);
-      toast.error("Erreur lors de l'upload");
+      toast.error(t('common.toast.upload_error'));
     } finally {
       setUploadingImage(false);
     }
@@ -330,7 +334,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
     if (isDemo) {
       setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: "" } : i)));
       if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: "" } : prev);
-      toast.success("Photo supprimee");
+      toast.success(t('dashboard.menu.photo_deleted'));
       return;
     }
     try {
@@ -338,10 +342,10 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       await updateMenuItem(itemId, { image: null });
       setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: "" } : i)));
       if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: "" } : prev);
-      toast.success("Photo supprimee");
+      toast.success(t('dashboard.menu.photo_deleted'));
     } catch (e) {
       console.error("Image delete error:", e);
-      toast.error("Erreur lors de la suppression");
+      toast.error(t('common.toast.delete_error'));
     }
   };
 
@@ -352,7 +356,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
     setExpanded((prev) => ({ ...prev, [newCategoryName.trim()]: true }));
     setNewCategoryName("");
     setShowAddCategory(false);
-    toast.success("Catégorie ajoutée");
+    toast.success(t('dashboard.menu.category_added'));
     if (isDemo) return;
     await updateRestaurantCategories(restaurant.id, updated);
   };
@@ -372,7 +376,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
     });
     setRenamingCategory(null);
     setRenameValue("");
-    toast.success("Catégorie renommée");
+    toast.success(t('dashboard.menu.category_renamed'));
     if (isDemo) return;
     await renameCategory(restaurant.id, oldName, newName);
     await updateRestaurantCategories(restaurant.id, updated);
@@ -380,12 +384,12 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
   const handleDeleteCategory = async (cat: string) => {
     const catItems = items.filter((i) => i.category === cat);
-    if (catItems.length > 0 && !confirm(`Supprimer la catégorie "${cat}" et ses ${catItems.length} items ?`)) return;
-    if (catItems.length === 0 && !confirm(`Supprimer la catégorie "${cat}" ?`)) return;
+    if (catItems.length > 0 && !confirm(t('dashboard.menu.delete_category_items_confirm', { name: cat, count: String(catItems.length) }))) return;
+    if (catItems.length === 0 && !confirm(t('dashboard.menu.delete_category_confirm', { name: cat }))) return;
     const updated = categories.filter((c) => c !== cat);
     setCategories(updated);
     setItems((prev) => prev.filter((i) => i.category !== cat));
-    toast.success("Catégorie supprimée");
+    toast.success(t('dashboard.menu.category_deleted'));
     if (isDemo) return;
     for (const item of catItems) {
       await deleteMenuItem(item.id);
@@ -447,13 +451,13 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       {/* Actions bar */}
       <div className="flex items-center gap-2 mb-4">
         <Button size="sm" variant="outline" className="rounded-xl gap-1" onClick={() => setShowAddCategory(true)}>
-          <Plus className="h-4 w-4" />Categorie
+          <Plus className="h-4 w-4" />{t('dashboard.menu.category')}
         </Button>
         <Button size="sm" className="rounded-xl gap-1" onClick={() => { setNewItem((n) => ({ ...n, category: categories[0] || "" })); setShowAddItem(true); }}>
-          <Plus className="h-4 w-4" />Item
+          <Plus className="h-4 w-4" />{t('dashboard.menu.item')}
         </Button>
         <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setShowImport(true)}>
-          <Camera className="h-4 w-4" />Importer
+          <Camera className="h-4 w-4" />{t('dashboard.menu.import')}
         </Button>
       </div>
 
@@ -515,7 +519,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                             />
                           ))}
                           {catItems.length === 0 && (
-                            <p className="text-xs text-muted-foreground py-3 text-center">Aucun item dans cette catégorie</p>
+                            <p className="text-xs text-muted-foreground py-3 text-center">{t('dashboard.menu.no_items_in_category')}</p>
                           )}
                         </div>
                       </SortableContext>
@@ -530,22 +534,22 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
       {categories.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
-          <p className="text-sm">Aucune catégorie. Ajoutez-en une pour commencer.</p>
+          <p className="text-sm">{t('dashboard.menu.no_categories')}</p>
         </div>
       )}
 
       {/* Add category dialog */}
       <Dialog open={showAddCategory} onOpenChange={setShowAddCategory}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Ajouter une catégorie</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('dashboard.menu.add_category')}</DialogTitle></DialogHeader>
           <div className="space-y-3 mt-2">
             <Input
-              placeholder="Nom de la catégorie"
+              placeholder={t('dashboard.menu.category_name')}
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAddCategory()}
             />
-            <Button onClick={handleAddCategory} className="w-full rounded-xl">Ajouter</Button>
+            <Button onClick={handleAddCategory} className="w-full rounded-xl">{t('common.add')}</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -553,7 +557,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       {/* Add item dialog */}
       <Dialog open={showAddItem} onOpenChange={setShowAddItem}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Ajouter un produit</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('dashboard.menu.add_product')}</DialogTitle></DialogHeader>
           <div className="space-y-3 mt-2">
             <select
               value={newItem.category}
@@ -564,11 +568,11 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <Input placeholder="Nom du produit" value={newItem.name} onChange={(e) => setNewItem((n) => ({ ...n, name: e.target.value }))} />
-            <Input placeholder="Description (optionnel)" value={newItem.description} onChange={(e) => setNewItem((n) => ({ ...n, description: e.target.value }))} />
-            <Input type="number" step="0.50" placeholder="Prix (€)" value={newItem.price} onChange={(e) => setNewItem((n) => ({ ...n, price: e.target.value }))} />
-            <p className="text-xs text-muted-foreground">La photo pourra être ajoutée après création.</p>
-            <Button onClick={handleAddItem} className="w-full rounded-xl">Ajouter au menu</Button>
+            <Input placeholder={t('dashboard.menu.product_name')} value={newItem.name} onChange={(e) => setNewItem((n) => ({ ...n, name: e.target.value }))} />
+            <Input placeholder={t('dashboard.menu.description_optional')} value={newItem.description} onChange={(e) => setNewItem((n) => ({ ...n, description: e.target.value }))} />
+            <Input type="number" step="0.50" placeholder={t('dashboard.menu.price_eur')} value={newItem.price} onChange={(e) => setNewItem((n) => ({ ...n, price: e.target.value }))} />
+            <p className="text-xs text-muted-foreground">{t('dashboard.menu.photo_after_creation')}</p>
+            <Button onClick={handleAddItem} className="w-full rounded-xl">{t('dashboard.menu.add_to_menu')}</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -576,22 +580,22 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       {/* Edit item dialog */}
       <Dialog open={!!editItem} onOpenChange={(open) => !open && setEditItem(null)}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Modifier le produit</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('dashboard.menu.edit_product')}</DialogTitle></DialogHeader>
           {editItem && (
             <div className="space-y-3 mt-2">
-              <Input value={editItem.name} onChange={(e) => setEditItem({ ...editItem, name: e.target.value })} placeholder="Nom" />
-              <Input value={editItem.description} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder="Description" />
-              <Input type="number" step="0.50" value={editItem.price} onChange={(e) => setEditItem({ ...editItem, price: parseFloat(e.target.value) || 0 })} placeholder="Prix" />
+              <Input value={editItem.name} onChange={(e) => setEditItem({ ...editItem, name: e.target.value })} placeholder={t('common.name')} />
+              <Input value={editItem.description} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder={t('common.description')} />
+              <Input type="number" step="0.50" value={editItem.price} onChange={(e) => setEditItem({ ...editItem, price: parseFloat(e.target.value) || 0 })} placeholder={t('common.price')} />
 
               {/* Photo upload */}
               <div className="space-y-2">
-                <p className="text-sm font-medium text-foreground">Photo</p>
+                <p className="text-sm font-medium text-foreground">{t('dashboard.menu.photo')}</p>
                 {editItem.image ? (
                   <div className="flex items-center gap-3">
                     <img src={editItem.image} alt="" className="h-16 w-16 rounded-xl object-cover" />
                     <div className="flex gap-2">
                       <label className="cursor-pointer text-xs font-medium px-3 py-1.5 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors">
-                        Changer
+                        {t('dashboard.menu.change')}
                         <input
                           type="file"
                           accept="image/*"
@@ -607,14 +611,14 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                         onClick={() => handleImageDelete(editItem.id)}
                         className="text-xs font-medium px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
                       >
-                        Supprimer
+                        {t('common.delete')}
                       </button>
                     </div>
                   </div>
                 ) : (
                   <label className="flex items-center gap-2 cursor-pointer text-sm font-medium px-4 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors w-fit">
                     {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                    {uploadingImage ? "Upload..." : "Ajouter une photo"}
+                    {uploadingImage ? t('dashboard.menu.uploading') : t('dashboard.menu.add_photo')}
                     <input
                       type="file"
                       accept="image/*"
@@ -632,27 +636,27 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
               {/* Product type */}
               <div className="space-y-1">
-                <p className="text-sm font-medium text-foreground">Type de produit</p>
+                <p className="text-sm font-medium text-foreground">{t('dashboard.menu.product_type')}</p>
                 <select
                   value={editItem.product_type || "simple"}
                   onChange={(e) => setEditItem({ ...editItem, product_type: e.target.value })}
                   className="w-full h-10 rounded-xl border border-input bg-background px-3 text-sm"
                 >
-                  <option value="simple">Simple</option>
-                  <option value="sandwich_personnalisable">Sandwich personnalisable</option>
-                  <option value="sandwich_simple">Sandwich simple</option>
-                  <option value="menu">Menu</option>
-                  <option value="accompagnement">Accompagnement</option>
-                  <option value="boisson">Boisson</option>
-                  <option value="dessert">Dessert</option>
-                  <option value="supplement">Supplement</option>
+                  <option value="simple">{t('dashboard.menu.type_simple')}</option>
+                  <option value="sandwich_personnalisable">{t('dashboard.menu.type_custom_sandwich')}</option>
+                  <option value="sandwich_simple">{t('dashboard.menu.type_simple_sandwich')}</option>
+                  <option value="menu">{t('dashboard.menu.type_menu')}</option>
+                  <option value="accompagnement">{t('dashboard.menu.type_side')}</option>
+                  <option value="boisson">{t('dashboard.menu.type_drink')}</option>
+                  <option value="dessert">{t('dashboard.menu.type_dessert')}</option>
+                  <option value="supplement">{t('dashboard.menu.type_supplement')}</option>
                 </select>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-foreground">Populaire</span>
+                <span className="text-sm text-foreground">{t('menu.popular')}</span>
                 <Switch checked={editItem.popular} onCheckedChange={(v) => setEditItem({ ...editItem, popular: v })} />
               </div>
-              <Button onClick={handleEditSave} className="w-full rounded-xl">Enregistrer</Button>
+              <Button onClick={handleEditSave} className="w-full rounded-xl">{t('common.save')}</Button>
             </div>
           )}
         </DialogContent>

@@ -25,7 +25,40 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 const STORAGE_KEY = "cm_language";
 
+function getUrlLanguage(): Language | null {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    let lang = params.get("lang");
+    if (!lang) return null;
+    // Shopify sends zh-CN, we use zh
+    if (lang.toLowerCase().startsWith("zh")) lang = "zh";
+    lang = lang.toLowerCase();
+    if (SUPPORTED_LANGUAGES.includes(lang as Language)) {
+      return lang as Language;
+    }
+  } catch {
+    // SSR or no window
+  }
+  return null;
+}
+
+function cleanUrlParam() {
+  try {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("lang")) {
+      url.searchParams.delete("lang");
+      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+    }
+  } catch {
+    // ignore
+  }
+}
+
 function getInitialLanguage(): Language {
+  // Priority: ?lang= > localStorage > browser > fr
+  const urlLang = getUrlLanguage();
+  if (urlLang) return urlLang;
+
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && SUPPORTED_LANGUAGES.includes(saved as Language)) {
@@ -41,8 +74,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
   const [, setTranslationsVersion] = useState(0);
 
-  // Load non-fr language on mount if needed
+  // On mount: persist ?lang= to localStorage, load translations, clean URL
   useEffect(() => {
+    const urlLang = getUrlLanguage();
+    if (urlLang) {
+      try { localStorage.setItem(STORAGE_KEY, urlLang); } catch {}
+      cleanUrlParam();
+    }
+
     const initial = getInitialLanguage();
     if (initial !== "fr" && !isLanguageLoaded(initial)) {
       loadLanguage(initial).then(() => {

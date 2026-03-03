@@ -1,35 +1,38 @@
 import { UtensilsCrossed, Palette, QrCode, Tablet, Settings, BarChart3, Users, ChefHat } from "lucide-react";
 import type { DashboardView } from "@/types/dashboard";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   onViewChange: (view: DashboardView) => void;
 }
 
-const items = [
-  { id: "carte" as DashboardView, label: "Ma Carte", desc: "Modifier les plats, prix, catégories", icon: UtensilsCrossed },
-  { id: "customization" as DashboardView, label: "Personnalisation", desc: "Bases, viandes, sauces, garnitures", icon: ChefHat },
-  { id: "page" as DashboardView, label: "Ma Page", desc: "Logo, couleurs, informations", icon: Palette },
-  { id: "qrcodes" as DashboardView, label: "QR Codes", desc: "Générer et télécharger vos QR codes", icon: QrCode },
-  { id: "tablettes" as DashboardView, label: "Mes tablettes", desc: "Gérer vos tablettes", icon: Tablet },
-  { id: "clients" as DashboardView, label: "Mes clients", desc: "Base clients, statistiques, bans", icon: Users },
-  { id: "parametres" as DashboardView, label: "Paramètres", desc: "Horaires, modes, paiement", icon: Settings },
-  { id: "stats" as DashboardView, label: "Statistiques", desc: "Historique, tendances, exports", icon: BarChart3 },
+const itemDefs = [
+  { id: "carte" as DashboardView, labelKey: "dashboard.manage.menu_label", descKey: "dashboard.manage.menu_desc", icon: UtensilsCrossed },
+  { id: "customization" as DashboardView, labelKey: "dashboard.manage.customization_label", descKey: "dashboard.manage.customization_desc", icon: ChefHat },
+  { id: "page" as DashboardView, labelKey: "dashboard.manage.page_label", descKey: "dashboard.manage.page_desc", icon: Palette },
+  { id: "qrcodes" as DashboardView, labelKey: "dashboard.manage.qr_label", descKey: "dashboard.manage.qr_desc", icon: QrCode },
+  { id: "tablettes" as DashboardView, labelKey: "dashboard.manage.tablets_label", descKey: "dashboard.manage.tablets_desc", icon: Tablet },
+  { id: "clients" as DashboardView, labelKey: "dashboard.manage.clients_label", descKey: "dashboard.manage.clients_desc", icon: Users },
+  { id: "parametres" as DashboardView, labelKey: "dashboard.manage.settings_label", descKey: "dashboard.manage.settings_desc", icon: Settings },
+  { id: "stats" as DashboardView, labelKey: "dashboard.manage.stats_label", descKey: "dashboard.manage.stats_desc", icon: BarChart3 },
 ];
 
 export const GererMenu = ({ onViewChange }: Props) => {
+  const { t } = useLanguage();
+
   return (
     <div>
-      <h2 className="text-xl font-bold text-foreground mb-6">Gerer mon restaurant</h2>
+      <h2 className="text-xl font-bold text-foreground mb-6">{t('dashboard.manage.title')}</h2>
       <div className="grid grid-cols-2 gap-4">
-        {items.map((item) => (
+        {itemDefs.map((item) => (
           <button
             key={item.id}
             onClick={() => onViewChange(item.id)}
             className="bg-card rounded-2xl border border-border p-6 hover:shadow-md cursor-pointer transition-all text-left active:scale-[0.98]"
           >
             <item.icon className="h-8 w-8 text-foreground mb-3" />
-            <p className="text-sm font-semibold text-foreground">{item.label}</p>
-            <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+            <p className="text-sm font-semibold text-foreground">{t(item.labelKey)}</p>
+            <p className="text-xs text-muted-foreground mt-1">{t(item.descKey)}</p>
           </button>
         ))}
       </div>

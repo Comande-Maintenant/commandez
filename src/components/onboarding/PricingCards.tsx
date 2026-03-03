@@ -1,6 +1,7 @@
 import { Check, Gift, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getPricingPlans } from '@/services/subscription';
+import { useLanguage } from '@/context/LanguageContext';
 import type { SubscriptionPlan } from '@/types/onboarding';
 
 interface PricingCardsProps {
@@ -9,7 +10,8 @@ interface PricingCardsProps {
 }
 
 export function PricingCards({ onSelect, selected }: PricingCardsProps) {
-  const plans = getPricingPlans();
+  const { t } = useLanguage();
+  const plans = getPricingPlans(t);
 
   return (
     <div className="space-y-6">
@@ -17,9 +19,9 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
       <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-4 max-w-2xl mx-auto">
         <Gift className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm font-semibold text-green-800">14 jours d'essai gratuit</p>
+          <p className="text-sm font-semibold text-green-800">{t('subscription.trial_banner')}</p>
           <p className="text-xs text-green-700 mt-0.5">
-            Testez sans engagement, vous ne serez débité qu'après la période d'essai.
+            {t('subscription.trial_desc')}
           </p>
         </div>
       </div>
@@ -57,21 +59,21 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
                   {plan.price.toFixed(2).replace('.', ',')}
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  EUR/mois
+                  {t('subscription.price_per_month')}
                 </span>
               </div>
 
               {isAnnual && plan.totalPrice && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  (soit {plan.totalPrice.toFixed(2).replace('.', ',')} EUR/an)
+                  {t('subscription.annual_total', { total: plan.totalPrice.toFixed(2).replace('.', ',') })}
                 </p>
               )}
 
               <p className="text-xs mt-2">
                 {isAnnual ? (
-                  <span className="text-primary font-medium">Économisez 120 EUR/an</span>
+                  <span className="text-primary font-medium">{t('subscription.save_annual', { amount: 120 })}</span>
                 ) : (
-                  <span className="text-muted-foreground">Sans engagement</span>
+                  <span className="text-muted-foreground">{t('subscription.no_commitment_label')}</span>
                 )}
               </p>
 
@@ -83,7 +85,7 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
                   onSelect(plan.id as SubscriptionPlan);
                 }}
               >
-                {isSelected ? 'Sélectionné' : 'Choisir cette formule'}
+                {isSelected ? t('subscription.selected') : t('subscription.choose_this_plan')}
               </Button>
             </div>
           );
@@ -92,7 +94,7 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
 
       {/* Features list */}
       <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground max-w-2xl mx-auto">
-        <p className="font-medium text-foreground mb-1">Inclus dans votre abonnement :</p>
+        <p className="font-medium text-foreground mb-1">{t('subscription.included')}</p>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1">
           {plans[0].features.map((feature) => (
             <li key={feature} className="flex items-start gap-2">
@@ -102,15 +104,14 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
           ))}
         </ul>
         <p className="mt-3 text-xs">
-          14 jours d'essai gratuit, carte bancaire requise.
-          Vos clients ne paient pas en ligne. Le paiement se fait sur place, comme d'habitude.
+          {t('subscription.pricing_fine_print')}
         </p>
       </div>
 
       {/* Security footer */}
       <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground max-w-2xl mx-auto">
         <Lock className="h-3.5 w-3.5" />
-        <span>Paiement sécurisé. Aucun débit avant 14 jours.</span>
+        <span>{t('subscription.secure_payment')}</span>
       </div>
     </div>
   );

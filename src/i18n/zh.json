@@ -829,6 +829,7 @@
   "dashboard.settings.disable_info": "您的餐厅将对客户不可见。数据将保留90天：您可以随时重新激活。",
   "dashboard.settings.disable_confirm": "确认请输入餐厅的准确名称：",
   "dashboard.settings.disable_button": "停用",
+  "dashboard.settings.demo_unavailable": "演示模式下不可用",
 
   "dashboard.qr.scan_to_order": "扫码下单",
   "dashboard.qr.a4_downloaded": "A4页面已下载",
@@ -1146,5 +1147,17 @@
   "demo.cta_discover": "探索演示模式",
   "demo.cta_try": "还没决定？试试演示",
   "demo.cta_link": "在演示模式中探索工具",
-  "demo.no_orders": "演示餐厅"
+  "demo.no_orders": "演示餐厅",
+
+  "home.page_title": "commandeici - 餐厅管理",
+  "home.create_page": "创建我的页面",
+  "home.title": "餐厅管理",
+  "home.description": "管理您的订单、菜单和客户。",
+  "home.login": "登录",
+  "home.create_free": "免费创建我的页面",
+  "home.back_to_site": "返回网站",
+  "dashboard.orders.action_ready": "已备好",
+  "dashboard.orders.action_done": "已完成",
+  "dashboard.orders.covers_count": "{count} 位",
+  "dashboard.orders.add_item": "添加"
 }
