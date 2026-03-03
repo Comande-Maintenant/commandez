@@ -1148,13 +1148,8 @@
 
   "nav.back": "Retour",
 
-  "demo.banner_text": "Mode demo : decouvrez votre futur dashboard",
-  "demo.banner_cta": "Creer ma page gratuitement",
-  "demo.readonly_toast": "Creez votre compte pour debloquer cette fonctionnalite : 14 jours d'essai gratuit",
-  "demo.readonly_menu": "Creez votre compte pour personnaliser votre menu",
-  "demo.readonly_settings": "Creez votre compte pour configurer votre restaurant",
-  "demo.readonly_orders": "Creez votre compte pour gerer vos commandes",
-  "demo.readonly_page": "Creez votre compte pour personnaliser votre page",
+  "demo.banner_text": "Mode demo : testez librement, tout est interactif !",
+  "demo.banner_cta": "Creer ma page : 14 jours gratuits",
   "demo.cta_discover": "Decouvrir en mode demo",
   "demo.cta_try": "Pas encore convaincu ? Essayez le mode demo",
   "demo.cta_link": "Decouvrir l'outil en mode demo",

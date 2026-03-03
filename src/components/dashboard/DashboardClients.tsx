@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from "react";
 import { Search, Phone, Mail, ShoppingBag, Euro, Star, ShieldBan, ShieldCheck, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import { fetchCustomers, fetchDemoCustomers, unbanCustomer } from "@/lib/api";
 import type { DbRestaurant, DbCustomer } from "@/types/database";
-import { useLanguage } from "@/context/LanguageContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,7 +17,6 @@ type SortKey = "last_order" | "total_orders" | "total_spent";
 type FilterKey = "all" | "regulars" | "banned";
 
 export const DashboardClients = ({ restaurant, isDemo }: Props) => {
-  const { t } = useLanguage();
   const [customers, setCustomers] = useState<DbCustomer[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -79,7 +77,13 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
   }, [customers, search, sort, filter]);
 
   const handleUnban = async (customer: DbCustomer) => {
-    if (isDemo) { toast.info(t("demo.readonly_toast")); return; }
+    if (isDemo) {
+      setCustomers((prev) =>
+        prev.map((c) => (c.id === customer.id ? { ...c, is_banned: false, banned_at: null, banned_reason: "", ban_expires_at: null } : c))
+      );
+      toast.success(`${customer.customer_name || customer.customer_phone} debanni`);
+      return;
+    }
     try {
       await unbanCustomer(customer.id);
       setCustomers((prev) =>
@@ -319,7 +323,16 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                       size="sm"
                       variant="outline"
                       className="rounded-xl gap-1.5 text-destructive hover:text-destructive"
-                      onClick={() => { if (isDemo) { toast.info(t("demo.readonly_toast")); return; } setBanTarget(customer); }}
+                      onClick={() => {
+                        if (isDemo) {
+                          setCustomers((prev) =>
+                            prev.map((c) => (c.id === customer.id ? { ...c, is_banned: true, banned_at: new Date().toISOString(), banned_reason: "Demo" } : c))
+                          );
+                          toast.success(`${customer.customer_name || customer.customer_phone} banni`);
+                          return;
+                        }
+                        setBanTarget(customer);
+                      }}
                     >
                       <ShieldBan className="h-3.5 w-3.5" />
                       Bannir

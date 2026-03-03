@@ -50,7 +50,6 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { MenuImportModal } from "@/components/dashboard/MenuImportModal";
-import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -156,7 +155,6 @@ function SortableCategoryHeader({
 }
 
 export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
-  const { t } = useLanguage();
   const [items, setItems] = useState<DbMenuItem[]>([]);
   const [categories, setCategories] = useState<string[]>(restaurant.categories ?? []);
   const [loading, setLoading] = useState(true);
@@ -194,16 +192,23 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
   useEffect(() => { loadItems(); }, [loadItems]);
 
-  const demoGuard = () => { if (isDemo) { toast.info(t("demo.readonly_menu")); return true; } return false; };
-
   const toggleItem = async (id: string, enabled: boolean) => {
-    if (demoGuard()) return;
+    if (isDemo) {
+      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, enabled: !enabled } : i)));
+      return;
+    }
     await updateMenuItem(id, { enabled: !enabled });
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, enabled: !enabled } : i)));
   };
 
   const handleDuplicateItem = async (item: DbMenuItem) => {
-    if (demoGuard()) return;
+    if (isDemo) {
+      const demoId = crypto.randomUUID();
+      const copy = { ...item, id: demoId, name: item.name + " (copie)" };
+      setItems((prev) => [...prev, copy]);
+      toast.success("Item duplique");
+      return;
+    }
     try {
       await insertMenuItem({
         restaurant_id: restaurant.id,
@@ -224,16 +229,41 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleDeleteItem = async (id: string) => {
-    if (demoGuard()) return;
     if (!confirm("Supprimer cet item ?")) return;
+    if (isDemo) {
+      setItems((prev) => prev.filter((i) => i.id !== id));
+      toast.success("Item supprime");
+      return;
+    }
     await deleteMenuItem(id);
     setItems((prev) => prev.filter((i) => i.id !== id));
     toast.success("Item supprime");
   };
 
   const handleAddItem = async () => {
-    if (demoGuard()) return;
     if (!newItem.name || !newItem.price) return;
+    if (isDemo) {
+      const demoId = crypto.randomUUID();
+      setItems((prev) => [...prev, {
+        id: demoId,
+        restaurant_id: restaurant.id,
+        name: newItem.name,
+        description: newItem.description,
+        price: parseFloat(newItem.price),
+        category: newItem.category,
+        image: newItem.image || "",
+        enabled: true,
+        popular: false,
+        sort_order: items.length,
+        supplements: [],
+        sauces: [],
+        product_type: "simple",
+      } as DbMenuItem]);
+      setNewItem({ name: "", description: "", price: "", category: categories[0] || "", image: "" });
+      setShowAddItem(false);
+      toast.success("Item ajoute");
+      return;
+    }
     await insertMenuItem({
       restaurant_id: restaurant.id,
       name: newItem.name,
@@ -250,8 +280,13 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleEditSave = async () => {
-    if (demoGuard()) return;
     if (!editItem) return;
+    if (isDemo) {
+      setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
+      setEditItem(null);
+      toast.success("Item modifie");
+      return;
+    }
     await updateMenuItem(editItem.id, {
       name: editItem.name,
       description: editItem.description,
@@ -266,8 +301,16 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleImageUpload = async (file: File, itemId: string) => {
-    if (demoGuard()) return;
     setUploadingImage(true);
+    if (isDemo) {
+      // Use local object URL for demo (no storage upload)
+      const url = URL.createObjectURL(file);
+      setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: url } : i)));
+      if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: url } : prev);
+      toast.success("Photo ajoutee");
+      setUploadingImage(false);
+      return;
+    }
     try {
       const blob = await resizeImageForMenu(file);
       const url = await uploadMenuItemImage(restaurant.id, itemId, blob);
@@ -284,7 +327,12 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleImageDelete = async (itemId: string) => {
-    if (demoGuard()) return;
+    if (isDemo) {
+      setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, image: "" } : i)));
+      if (editItem?.id === itemId) setEditItem((prev) => prev ? { ...prev, image: "" } : prev);
+      toast.success("Photo supprimee");
+      return;
+    }
     try {
       await deleteMenuItemImage(restaurant.id, itemId);
       await updateMenuItem(itemId, { image: null });
@@ -298,26 +346,23 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleAddCategory = async () => {
-    if (demoGuard()) return;
     if (!newCategoryName.trim()) return;
     const updated = [...categories, newCategoryName.trim()];
     setCategories(updated);
-    await updateRestaurantCategories(restaurant.id, updated);
     setExpanded((prev) => ({ ...prev, [newCategoryName.trim()]: true }));
     setNewCategoryName("");
     setShowAddCategory(false);
     toast.success("Catégorie ajoutée");
+    if (isDemo) return;
+    await updateRestaurantCategories(restaurant.id, updated);
   };
 
   const handleRenameCategory = async () => {
-    if (demoGuard()) return;
     if (!renamingCategory || !renameValue.trim()) return;
     const oldName = renamingCategory;
     const newName = renameValue.trim();
-    await renameCategory(restaurant.id, oldName, newName);
     const updated = categories.map((c) => (c === oldName ? newName : c));
     setCategories(updated);
-    await updateRestaurantCategories(restaurant.id, updated);
     setItems((prev) => prev.map((i) => (i.category === oldName ? { ...i, category: newName } : i)));
     setExpanded((prev) => {
       const n = { ...prev };
@@ -328,27 +373,28 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
     setRenamingCategory(null);
     setRenameValue("");
     toast.success("Catégorie renommée");
+    if (isDemo) return;
+    await renameCategory(restaurant.id, oldName, newName);
+    await updateRestaurantCategories(restaurant.id, updated);
   };
 
   const handleDeleteCategory = async (cat: string) => {
-    if (demoGuard()) return;
     const catItems = items.filter((i) => i.category === cat);
     if (catItems.length > 0 && !confirm(`Supprimer la catégorie "${cat}" et ses ${catItems.length} items ?`)) return;
     if (catItems.length === 0 && !confirm(`Supprimer la catégorie "${cat}" ?`)) return;
-    // Delete all items in this category
+    const updated = categories.filter((c) => c !== cat);
+    setCategories(updated);
+    setItems((prev) => prev.filter((i) => i.category !== cat));
+    toast.success("Catégorie supprimée");
+    if (isDemo) return;
     for (const item of catItems) {
       await deleteMenuItem(item.id);
     }
-    const updated = categories.filter((c) => c !== cat);
-    setCategories(updated);
     await updateRestaurantCategories(restaurant.id, updated);
-    setItems((prev) => prev.filter((i) => i.category !== cat));
-    toast.success("Catégorie supprimée");
   };
 
   // DnD for categories
   const handleCategoryDragEnd = async (event: DragEndEvent) => {
-    if (demoGuard()) return;
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -358,12 +404,12 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
     const reordered = arrayMove(categories, oldIndex, newIndex);
     setCategories(reordered);
+    if (isDemo) return;
     await updateRestaurantCategories(restaurant.id, reordered);
   };
 
   // DnD for items within a category
   const handleItemDragEnd = async (event: DragEndEvent, cat: string) => {
-    if (demoGuard()) return;
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -384,6 +430,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       return [...rest, ...reordered.map((item, i) => ({ ...item, sort_order: i }))];
     });
 
+    if (isDemo) return;
     await batchUpdateSortOrder(updates);
   };
 

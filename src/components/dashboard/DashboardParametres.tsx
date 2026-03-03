@@ -28,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useLanguage } from "@/context/LanguageContext";
 
 interface SoundControls {
   audioUnlocked: boolean;
@@ -70,7 +69,6 @@ const paymentOptions = [
 const orderedDays = [1, 2, 3, 4, 5, 6, 0];
 
 export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
-  const { t } = useLanguage();
   const [saving, setSaving] = useState(false);
   const [isAccepting, setIsAccepting] = useState(restaurant.is_accepting_orders);
   const [availabilityMode, setAvailabilityMode] = useState(restaurant.availability_mode || "manual");
@@ -118,14 +116,18 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   };
 
   const handleToggleAccepting = async (val: boolean) => {
-    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
     setIsAccepting(val);
+    if (isDemo) return;
     await updateRestaurant(restaurant.id, { is_accepting_orders: val } as any);
   };
 
   const handleSave = async () => {
-    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
     setSaving(true);
+    if (isDemo) {
+      toast.success("Paramètres enregistrés");
+      setSaving(false);
+      return;
+    }
     try {
       // Save restaurant settings
       await updateRestaurant(restaurant.id, {
@@ -174,8 +176,12 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   const [promoLoading, setPromoLoading] = useState(false);
 
   const handleApplyPromo = async () => {
-    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
     if (!promoInput.trim()) return;
+    if (isDemo) {
+      toast.success("Code promo applique !");
+      setPromoInput("");
+      return;
+    }
     setPromoLoading(true);
     try {
       const { data } = await supabase.functions.invoke("validate-promo", {
@@ -197,7 +203,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   const [deactivateConfirm, setDeactivateConfirm] = useState("");
 
   const handleDeactivateRestaurant = async () => {
-    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
+    if (isDemo) { toast.info("Non disponible en mode demo"); return; }
     if (deactivateConfirm !== restaurant.name) {
       toast.error("Le nom saisi ne correspond pas");
       return;

@@ -11,7 +11,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { POSAddItemModal } from "./pos/POSAddItemModal";
 import { BanDialog } from "./BanDialog";
 import { toast } from "sonner";
-import { useLanguage } from "@/context/LanguageContext";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
@@ -37,7 +36,6 @@ interface Props {
 }
 
 export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) => {
-  const { t } = useLanguage();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
@@ -115,10 +113,25 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const newCount = orders.filter((o) => o.status === "new").length;
 
   const advanceStatus = async (orderId: string, currentStatus: OrderStatus) => {
-    if (isDemo) { toast.info(t("demo.readonly_orders")); return; }
     const cfg = statusConfig[currentStatus];
     if (!cfg.next) return;
     setAdvancing(orderId);
+
+    if (isDemo) {
+      // Interactive demo: update local state only, no DB write
+      const now = new Date().toISOString();
+      setOrders((prev) => prev.map((o) => {
+        if (o.id !== orderId) return o;
+        const updates: Partial<DbOrder> = { status: cfg.next! };
+        if (cfg.next === "preparing") updates.accepted_at = now;
+        if (cfg.next === "ready") updates.ready_at = now;
+        if (cfg.next === "done") updates.completed_at = now;
+        return { ...o, ...updates };
+      }));
+      setAdvancing(null);
+      return;
+    }
+
     try {
       await updateOrderStatus(orderId, cfg.next);
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: cfg.next! } : o)));
@@ -398,7 +411,11 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                 <Switch
                   checked={item.enabled}
                   onCheckedChange={async (val) => {
-                    if (isDemo) { toast.info(t("demo.readonly_menu")); return; }
+                    if (isDemo) {
+                      setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
+                      toast.success(val ? `${item.name} disponible` : `${item.name} en rupture`);
+                      return;
+                    }
                     try {
                       await updateMenuItem(item.id, { enabled: val });
                       setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));

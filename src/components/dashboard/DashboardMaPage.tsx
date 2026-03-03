@@ -14,7 +14,6 @@ import type { DbRestaurant } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -25,7 +24,6 @@ const primarySwatches = ["#000000", "#1a1a2e", "#16213e", "#e63946", "#2d6a4f", 
 const bgSwatches = ["#ffffff", "#fafafa", "#f5f5f5", "#fef3c7", "#ecfdf5", "#eff6ff"];
 
 export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
-  const { t } = useLanguage();
   const [primaryColor, setPrimaryColor] = useState(restaurant.primary_color || "#000000");
   const [bgColor, setBgColor] = useState(restaurant.bg_color || "#ffffff");
   const [name, setName] = useState(restaurant.name || "");
@@ -51,8 +49,12 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleSaveColors = async () => {
-    if (isDemo) { toast.info(t("demo.readonly_page")); return; }
     setSaving(true);
+    if (isDemo) {
+      toast.success("Couleurs enregistrées");
+      setSaving(false);
+      return;
+    }
     try {
       await updateRestaurant(restaurant.id, {
         primary_color: primaryColor,
@@ -66,8 +68,12 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleSaveInfo = async () => {
-    if (isDemo) { toast.info(t("demo.readonly_page")); return; }
     setSaving(true);
+    if (isDemo) {
+      toast.success("Informations enregistrées");
+      setSaving(false);
+      return;
+    }
     try {
       await updateRestaurant(restaurant.id, {
         name,
@@ -85,7 +91,14 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleUpload = async (file: File, type: "logo" | "cover") => {
-    if (isDemo) { toast.info(t("demo.readonly_page")); return; }
+    if (isDemo) {
+      // Use local object URL for demo
+      const url = URL.createObjectURL(file);
+      if (type === "logo") setLogoPreview(url);
+      else setCoverPreview(url);
+      toast.success(`${type === "logo" ? "Logo" : "Couverture"} mise à jour`);
+      return;
+    }
     try {
       const url = await uploadRestaurantImage(restaurant.id, file, type);
       if (type === "logo") {

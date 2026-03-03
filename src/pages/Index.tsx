@@ -41,11 +41,18 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm">
-        <div className="max-w-lg mx-auto px-4 h-14 flex items-center">
+      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
           <a href="https://commandeici.com" className="font-semibold text-lg text-foreground hover:opacity-80">
             commande<span className="text-muted-foreground">ici</span>
           </a>
+          <Button
+            size="sm"
+            className="rounded-xl text-xs font-semibold"
+            onClick={() => navigate("/inscription")}
+          >
+            Creer ma page
+          </Button>
         </div>
       </header>
 

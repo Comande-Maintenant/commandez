@@ -138,7 +138,8 @@ const AdminPage = () => {
   const toggleAccepting = async () => {
     if (!restaurant) return;
     if (isDemo) {
-      toast.info(t("demo.readonly_settings"));
+      setRestaurant({ ...restaurant, is_accepting_orders: !restaurant.is_accepting_orders });
+      toast.success(!restaurant.is_accepting_orders ? "Commandes activees" : "Commandes desactivees");
       return;
     }
     const next = !restaurant.is_accepting_orders;
