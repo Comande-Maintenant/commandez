@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
+import { fetchOrderById, subscribeToOrderStatus, advanceDemoOrder } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -94,7 +94,7 @@ const SuiviPage = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { isLoggedIn, signUp } = useCustomerAuth();
-  const [order, setOrder] = useState<(DbOrder & { restaurant: { name: string; slug: string; primary_color: string; phone: string } }) | null>(null);
+  const [order, setOrder] = useState<(DbOrder & { restaurant: { name: string; slug: string; primary_color: string; phone: string; is_demo?: boolean } }) | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const confettiRef = useRef<HTMLCanvasElement>(null);
@@ -124,6 +124,31 @@ const SuiviPage = () => {
     });
     return unsub;
   }, [orderId]);
+
+  // Auto-advance demo orders as fallback
+  useEffect(() => {
+    if (!order || !order.restaurant?.is_demo) return;
+    if (order.status === "done") return;
+
+    const createdAt = new Date(order.created_at).getTime();
+    const schedule: { status: string; target: string; delayMs: number }[] = [
+      { status: "new", target: "preparing", delayMs: 60000 },
+      { status: "preparing", target: "ready", delayMs: 80000 },
+      { status: "ready", target: "done", delayMs: 95000 },
+    ];
+
+    const current = schedule.find((s) => s.status === order.status);
+    if (!current) return;
+
+    const elapsed = Date.now() - createdAt;
+    const remaining = Math.max(0, current.delayMs - elapsed);
+
+    const timer = setTimeout(() => {
+      advanceDemoOrder(order.id, current.target).catch(() => {});
+    }, remaining);
+
+    return () => clearTimeout(timer);
+  }, [order?.status, order?.restaurant?.is_demo, order?.id, order?.created_at]);
 
   // Vibrate + confetti on ready
   useEffect(() => {
@@ -205,6 +230,26 @@ const SuiviPage = () => {
       </div>
 
       <div className="max-w-lg mx-auto px-4 pb-8">
+        {/* Demo CTA banner */}
+        {order.restaurant?.is_demo && (
+          <div className="mb-6 flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200">
+            <p className="text-sm font-medium text-emerald-800">{t("demo.suivi_banner")}</p>
+            <a
+              href="/admin/demo?view=cuisine"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors flex-shrink-0"
+            >
+              {t("demo.suivi_cta")}
+            </a>
+          </div>
+        )}
+
+        {/* Auto-advance notice */}
+        {order.restaurant?.is_demo && order.status !== "done" && order.status !== "ready" && (
+          <p className="text-xs text-center text-muted-foreground mb-4">{t("demo.auto_advance")}</p>
+        )}
+
         {/* Status headline */}
         <AnimatePresence mode="wait">
           <motion.div

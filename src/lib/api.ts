@@ -22,6 +22,16 @@ export async function fetchDemoCustomers(restaurantId: string): Promise<DbCustom
   return (data ?? []) as unknown as DbCustomer[];
 }
 
+export async function advanceDemoOrder(orderId: string, newStatus: string): Promise<DbOrder> {
+  const { data, error } = await supabase.rpc("advance_demo_order", {
+    p_order_id: orderId,
+    p_new_status: newStatus,
+  });
+  if (error) throw error;
+  const rows = data as unknown as DbOrder[];
+  return rows[0];
+}
+
 export async function fetchRestaurants(): Promise<DbRestaurant[]> {
   const { data, error } = await supabase
     .from("restaurants")
@@ -264,7 +274,7 @@ export async function uploadRestaurantImage(restaurantId: string, file: File, ty
   return data.publicUrl;
 }
 
-export async function fetchOrderById(orderId: string): Promise<(DbOrder & { restaurant: Pick<DbRestaurant, 'name' | 'slug' | 'primary_color'> & { phone: string } }) | null> {
+export async function fetchOrderById(orderId: string): Promise<(DbOrder & { restaurant: Pick<DbRestaurant, 'name' | 'slug' | 'primary_color'> & { phone: string; is_demo?: boolean } }) | null> {
   const { data, error } = await supabase.rpc("get_order_for_tracking", { p_order_id: orderId });
   if (error) throw error;
   if (!data) return null;
@@ -272,7 +282,7 @@ export async function fetchOrderById(orderId: string): Promise<(DbOrder & { rest
   const rest = raw.restaurant;
   return {
     ...raw,
-    restaurant: { name: rest.name, slug: rest.slug, primary_color: rest.primary_color, phone: rest.restaurant_phone },
+    restaurant: { name: rest.name, slug: rest.slug, primary_color: rest.primary_color, phone: rest.restaurant_phone, is_demo: rest.is_demo },
   };
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle, CreditCard, Banknote } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -25,9 +25,11 @@ const OrderPage = () => {
   const [restaurantPhone, setRestaurantPhone] = useState<string | null>(null);
   const [estimatedMinutes, setEstimatedMinutes] = useState(15);
   const [banned, setBanned] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<string>("card");
   const clientIpRef = useRef<string | null>(null);
 
-  // Pre-fill from localStorage
+  // Pre-fill from localStorage (or demo defaults)
   useEffect(() => {
     try {
       const raw = localStorage.getItem("cm_customer");
@@ -44,8 +46,9 @@ const OrderPage = () => {
   useEffect(() => {
     if (!restaurantId) return;
     fetchRestaurantById(restaurantId).then((r) => {
-      if (r?.restaurant_phone) setRestaurantPhone(r.restaurant_phone);
-      if (r?.prep_time_config) {
+      if (!r) return;
+      if (r.restaurant_phone) setRestaurantPhone(r.restaurant_phone);
+      if (r.prep_time_config) {
         const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
         const est = Math.min(
           r.prep_time_config.default_minutes + itemCount * r.prep_time_config.per_item_minutes,
@@ -53,9 +56,17 @@ const OrderPage = () => {
         );
         setEstimatedMinutes(est);
       }
+      // Detect demo mode
+      if ((r as any).is_demo) {
+        setIsDemo(true);
+        // Pre-fill demo defaults if empty
+        setName((prev) => prev || "Client Demo");
+        setPhone((prev) => prev || "06 00 00 00 00");
+        return; // Skip ban check for demo
+      }
     });
     fetchClientIp().then((ip) => { clientIpRef.current = ip; });
-    // Check ban
+    // Check ban (skipped for demo via early return above)
     try {
       const raw = localStorage.getItem("cm_customer");
       if (raw) {
@@ -75,29 +86,32 @@ const OrderPage = () => {
     if (!restaurantId || submitting) return;
     setSubmitting(true);
     try {
-      // Check subscription status before placing order
-      const resto = await fetchRestaurantById(restaurantId);
-      if (resto) {
-        const status = resto.subscription_status;
-        if (status === "expired" || status === "cancelled" || status === "past_due" || status === "pending_payment") {
-          toast.error(t("order.restaurant_unavailable"));
-          setSubmitting(false);
-          return;
-        }
-        // Real-time trial check
-        if (status === "trial" && resto.trial_end_date) {
-          const trialEnd = new Date(resto.trial_end_date);
-          if (resto.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + resto.bonus_weeks * 7);
-          if (trialEnd < new Date()) {
+      // Skip subscription check for demo orders
+      if (!isDemo) {
+        const resto = await fetchRestaurantById(restaurantId);
+        if (resto) {
+          const status = resto.subscription_status;
+          if (status === "expired" || status === "cancelled" || status === "past_due" || status === "pending_payment") {
             toast.error(t("order.restaurant_unavailable"));
             setSubmitting(false);
             return;
+          }
+          if (status === "trial" && resto.trial_end_date) {
+            const trialEnd = new Date(resto.trial_end_date);
+            if (resto.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + resto.bonus_weeks * 7);
+            if (trialEnd < new Date()) {
+              toast.error(t("order.restaurant_unavailable"));
+              setSubmitting(false);
+              return;
+            }
           }
         }
       }
 
       // Save customer info to localStorage
-      localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email }));
+      if (!isDemo) {
+        localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email }));
+      }
 
       const orderItems = items.map((i) => ({
         name: i.menuItem.name,
@@ -115,12 +129,13 @@ const OrderPage = () => {
         customer_phone: phone,
         customer_email: email || undefined,
         order_type: "collect",
+        source: isDemo ? "demo" : undefined,
         items: orderItems,
         subtotal,
         total,
         client_ip: clientIpRef.current,
         pickup_time: pickupTime,
-        payment_method: 'card',
+        payment_method: paymentMethod,
       };
       // Attach customer_user_id if logged in
       if (isLoggedIn && user) {
@@ -133,11 +148,11 @@ const OrderPage = () => {
         createdAt: Date.now(),
       }));
       // Save last order for reorder feature (with full customizations)
-      if (restaurantId) {
+      if (restaurantId && !isDemo) {
         localStorage.setItem(`last-order-${restaurantId}`, JSON.stringify(orderItems));
       }
       // Update customer profile stats if logged in
-      if (isLoggedIn && user) {
+      if (isLoggedIn && user && !isDemo) {
         incrementCustomerStats(user.id, total).catch(() => {});
       }
       clearCart();
@@ -226,6 +241,27 @@ const OrderPage = () => {
               />
             </div>
           )}
+
+          {/* Payment method selector */}
+          <div className="p-4 bg-secondary/50 rounded-2xl space-y-3">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.payment_method")}</h2>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setPaymentMethod("card")}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${paymentMethod === "card" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
+              >
+                <CreditCard className="h-4 w-4" />
+                {t("order.payment_card")}
+              </button>
+              <button
+                onClick={() => setPaymentMethod("cash")}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${paymentMethod === "cash" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
+              >
+                <Banknote className="h-4 w-4" />
+                {t("order.payment_cash")}
+              </button>
+            </div>
+          </div>
 
           <div className="p-4 bg-secondary/50 rounded-2xl">
             <div className="flex justify-between font-semibold text-foreground"><span>{t("order.total_to_pay")}</span><span>{total.toFixed(2)} €</span></div>

@@ -688,6 +688,19 @@ const RestaurantPage = () => {
           </div>
         </motion.div>
 
+        {/* Demo banner */}
+        {(restaurant as any).is_demo && (
+          <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200">
+            <p className="text-sm font-medium text-emerald-800">{t("demo.client_banner")}</p>
+            <a
+              href={`/inscription?lang=${new URLSearchParams(window.location.search).get("lang") || "fr"}`}
+              className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors flex-shrink-0"
+            >
+              {t("demo.client_cta")}
+            </a>
+          </div>
+        )}
+
         {/* Customer recognition banner */}
         {customerName && !activeOrderId && (
           <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-secondary/80 border border-border">

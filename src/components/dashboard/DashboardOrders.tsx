@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle, ShieldBan } from "lucide-react";
-import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
@@ -62,8 +62,13 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
 
   useEffect(() => {
     loadOrders();
-    // No realtime subscription in demo mode
-    if (isDemo) return;
+    // Demo mode: poll every 5s instead of realtime subscription
+    if (isDemo) {
+      const demoPoll = setInterval(() => {
+        loadOrders().catch(() => {});
+      }, 5000);
+      return () => clearInterval(demoPoll);
+    }
     const unsub = subscribeToOrders(restaurant.id, (newOrder) => {
       setOrders((prev) => {
         const exists = prev.find((o) => o.id === newOrder.id);
@@ -120,16 +125,12 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     setAdvancing(orderId);
 
     if (isDemo) {
-      // Interactive demo: update local state only, no DB write
-      const now = new Date().toISOString();
-      setOrders((prev) => prev.map((o) => {
-        if (o.id !== orderId) return o;
-        const updates: Partial<DbOrder> = { status: cfg.next! };
-        if (cfg.next === "preparing") updates.accepted_at = now;
-        if (cfg.next === "ready") updates.ready_at = now;
-        if (cfg.next === "done") updates.completed_at = now;
-        return { ...o, ...updates };
-      }));
+      try {
+        const updated = await advanceDemoOrder(orderId, cfg.next);
+        setOrders((prev) => prev.map((o) => (o.id === orderId ? updated : o)));
+      } catch (e) {
+        console.error("Demo advance error:", e);
+      }
       setAdvancing(null);
       return;
     }
