@@ -688,15 +688,17 @@ const RestaurantPage = () => {
           </div>
         </motion.div>
 
-        {/* Demo banner */}
+        {/* Demo banner - promote kitchen/dashboard view */}
         {(restaurant as any).is_demo && (
           <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200">
             <p className="text-sm font-medium text-emerald-800">{t("demo.client_banner")}</p>
             <a
-              href={`/inscription?lang=${new URLSearchParams(window.location.search).get("lang") || "fr"}`}
+              href="/admin/demo"
+              target="_blank"
+              rel="noopener noreferrer"
               className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors flex-shrink-0"
             >
-              {t("demo.client_cta")}
+              {t("demo.suivi_cta")}
             </a>
           </div>
         )}
@@ -897,6 +899,18 @@ const RestaurantPage = () => {
             </span>
           </div>
         </motion.div>
+
+        {/* Demo CTA - create page */}
+        {(restaurant as any).is_demo && (
+          <div className="mt-8 text-center">
+            <a
+              href={`/inscription?lang=${new URLSearchParams(window.location.search).get("lang") || "fr"}`}
+              className="inline-block px-6 py-3 rounded-full text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors"
+            >
+              {t("demo.client_cta")}
+            </a>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="mt-8 mb-4 text-center">

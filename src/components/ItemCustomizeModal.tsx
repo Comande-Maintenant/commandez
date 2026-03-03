@@ -85,13 +85,13 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
 
               {translated.description && <p className="text-gray-500 text-sm">{translated.description}</p>}
 
-              {item.sauces.length > 0 && (
+              {(item.sauces ?? []).length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">
                     {t("item.sauces")} <span className="text-gray-400 font-normal">({t("item.sauces_max", { max: 3 })})</span>
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {item.sauces.map((sauce) => {
+                    {(item.sauces ?? []).map((sauce) => {
                       const selected = selectedSauces.includes(sauce);
                       return (
                         <button
@@ -113,11 +113,11 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
                 </div>
               )}
 
-              {item.supplements.length > 0 && (
+              {(item.supplements ?? []).length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">{t("item.supplements")}</h4>
                   <div className="space-y-2">
-                    {item.supplements.map((sup) => {
+                    {(item.supplements ?? []).map((sup) => {
                       const selected = selectedSupplements.find((s) => s.id === sup.id);
                       return (
                         <button

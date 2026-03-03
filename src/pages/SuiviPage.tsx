@@ -132,9 +132,9 @@ const SuiviPage = () => {
 
     const createdAt = new Date(order.created_at).getTime();
     const schedule: { status: string; target: string; delayMs: number }[] = [
-      { status: "new", target: "preparing", delayMs: 60000 },
-      { status: "preparing", target: "ready", delayMs: 80000 },
-      { status: "ready", target: "done", delayMs: 95000 },
+      { status: "new", target: "preparing", delayMs: 10000 },
+      { status: "preparing", target: "ready", delayMs: 20000 },
+      { status: "ready", target: "done", delayMs: 30000 },
     ];
 
     const current = schedule.find((s) => s.status === order.status);
