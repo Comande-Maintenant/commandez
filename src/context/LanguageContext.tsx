@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
-import { getTranslations, detectBrowserLanguage, SUPPORTED_LANGUAGES, type Language } from "@/i18n";
+import { getTranslations, loadLanguage, isLanguageLoaded, detectBrowserLanguage, SUPPORTED_LANGUAGES, type Language } from "@/i18n";
 
 interface MenuTranslatable {
   name: string;
@@ -39,13 +39,31 @@ function getInitialLanguage(): Language {
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const [, setTranslationsVersion] = useState(0);
+
+  // Load non-fr language on mount if needed
+  useEffect(() => {
+    const initial = getInitialLanguage();
+    if (initial !== "fr" && !isLanguageLoaded(initial)) {
+      loadLanguage(initial).then(() => {
+        setTranslationsVersion((v) => v + 1);
+      });
+    }
+  }, []);
 
   const changeLanguage = useCallback((lang: Language) => {
-    setLanguage(lang);
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch {
       // ignore
+    }
+
+    if (isLanguageLoaded(lang)) {
+      setLanguage(lang);
+    } else {
+      loadLanguage(lang).then(() => {
+        setLanguage(lang);
+      });
     }
   }, []);
 

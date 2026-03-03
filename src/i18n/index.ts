@@ -1,15 +1,4 @@
 import fr from "./fr.json";
-import en from "./en.json";
-import es from "./es.json";
-import de from "./de.json";
-import it from "./it.json";
-import pt from "./pt.json";
-import nl from "./nl.json";
-import ar from "./ar.json";
-import zh from "./zh.json";
-import ja from "./ja.json";
-import ko from "./ko.json";
-import ru from "./ru.json";
 
 export const SUPPORTED_LANGUAGES = ["fr", "en", "es", "de", "it", "pt", "nl", "ar", "zh", "ja", "ko", "ru"] as const;
 export type Language = (typeof SUPPORTED_LANGUAGES)[number];
@@ -29,12 +18,56 @@ export const LANGUAGES = [
   { code: "ru" as const, name: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", flag: "\ud83c\uddf7\ud83c\uddfa" },
 ] as const;
 
-const translations: Record<Language, Record<string, string>> = {
-  fr, en, es, de, it, pt, nl, ar, zh, ja, ko, ru,
+// Dynamic import loaders for non-fr languages
+const languageLoaders: Record<string, () => Promise<{ default: Record<string, string> }>> = {
+  en: () => import("./en.json"),
+  es: () => import("./es.json"),
+  de: () => import("./de.json"),
+  it: () => import("./it.json"),
+  pt: () => import("./pt.json"),
+  nl: () => import("./nl.json"),
+  ar: () => import("./ar.json"),
+  zh: () => import("./zh.json"),
+  ja: () => import("./ja.json"),
+  ko: () => import("./ko.json"),
+  ru: () => import("./ru.json"),
 };
 
+// In-memory cache for loaded translations
+const loadedTranslations: Partial<Record<Language, Record<string, string>>> = { fr };
+
+/**
+ * Load a language's translations dynamically.
+ * Returns cached result if already loaded.
+ */
+export async function loadLanguage(lang: Language): Promise<Record<string, string>> {
+  if (loadedTranslations[lang]) {
+    return loadedTranslations[lang]!;
+  }
+
+  const loader = languageLoaders[lang];
+  if (!loader) {
+    return fr;
+  }
+
+  const module = await loader();
+  loadedTranslations[lang] = module.default;
+  return module.default;
+}
+
+/**
+ * Check if a language's translations are already loaded.
+ */
+export function isLanguageLoaded(lang: Language): boolean {
+  return lang in loadedTranslations;
+}
+
+/**
+ * Get translations for a language. Returns fr as fallback if the language
+ * hasn't been loaded yet.
+ */
 export function getTranslations(lang: Language): Record<string, string> {
-  return translations[lang] || translations.fr;
+  return loadedTranslations[lang] || fr;
 }
 
 export function detectBrowserLanguage(): Language {
