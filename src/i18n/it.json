@@ -1140,5 +1140,16 @@
   "client.days_ago": "{days} giorni fa",
   "client.restaurant_fallback": "Ristorante",
   "client.generic_error": "Errore",
-  "nav.back": "Indietro"
+  "nav.back": "Indietro",
+  "demo.banner_text": "Modalita demo: scopri il tuo futuro pannello",
+  "demo.banner_cta": "Crea la mia pagina gratis",
+  "demo.readonly_toast": "Crea il tuo account per sbloccare questa funzione: 14 giorni di prova gratuita",
+  "demo.readonly_menu": "Crea il tuo account per personalizzare il tuo menu",
+  "demo.readonly_settings": "Crea il tuo account per configurare il tuo ristorante",
+  "demo.readonly_orders": "Crea il tuo account per gestire i tuoi ordini",
+  "demo.readonly_page": "Crea il tuo account per personalizzare la tua pagina",
+  "demo.cta_discover": "Scopri la modalita demo",
+  "demo.cta_try": "Non sei convinto? Prova la demo",
+  "demo.cta_link": "Scopri lo strumento in modalita demo",
+  "demo.no_orders": "Ristorante dimostrativo"
 }

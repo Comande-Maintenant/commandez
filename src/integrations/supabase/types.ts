@@ -261,6 +261,7 @@ export type Database = {
           deactivated_at: string | null
           scheduled_deletion_at: string | null
           deactivation_visit_count: number | null
+          is_demo: boolean | null
         }
         Insert: {
           address?: string | null
@@ -310,6 +311,7 @@ export type Database = {
           deactivated_at?: string | null
           scheduled_deletion_at?: string | null
           deactivation_visit_count?: number | null
+          is_demo?: boolean | null
         }
         Update: {
           address?: string | null
@@ -359,6 +361,7 @@ export type Database = {
           deactivated_at?: string | null
           scheduled_deletion_at?: string | null
           deactivation_visit_count?: number | null
+          is_demo?: boolean | null
         }
         Relationships: []
       }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle, ShieldBan } from "lucide-react";
-import { fetchOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { POSAddItemModal } from "./pos/POSAddItemModal";
 import { BanDialog } from "./BanDialog";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
@@ -32,9 +33,11 @@ const filterTabs: { id: OrderStatus | "all"; label: string }[] = [
 interface Props {
   restaurant: DbRestaurant;
   onNewOrderSound?: () => void;
+  isDemo?: boolean;
 }
 
-export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
+export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
@@ -46,10 +49,12 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
   const [banTarget, setBanTarget] = useState<{ customer_name: string; customer_phone: string; restaurant_id: string; id?: string } | null>(null);
 
   const loadOrders = useCallback(async () => {
-    const data = await fetchOrders(restaurant.id);
+    const data = isDemo
+      ? await fetchDemoOrders(restaurant.id)
+      : await fetchOrders(restaurant.id);
     setOrders(data);
     setLoading(false);
-  }, [restaurant.id]);
+  }, [restaurant.id, isDemo]);
 
   useEffect(() => {
     fetchMenuItems(restaurant.id).then(setMenuItems);
@@ -57,6 +62,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
 
   useEffect(() => {
     loadOrders();
+    // No realtime subscription in demo mode
+    if (isDemo) return;
     const unsub = subscribeToOrders(restaurant.id, (newOrder) => {
       setOrders((prev) => {
         const exists = prev.find((o) => o.id === newOrder.id);
@@ -108,6 +115,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
   const newCount = orders.filter((o) => o.status === "new").length;
 
   const advanceStatus = async (orderId: string, currentStatus: OrderStatus) => {
+    if (isDemo) { toast.info(t("demo.readonly_orders")); return; }
     const cfg = statusConfig[currentStatus];
     if (!cfg.next) return;
     setAdvancing(orderId);
@@ -390,6 +398,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound }: Props) => {
                 <Switch
                   checked={item.enabled}
                   onCheckedChange={async (val) => {
+                    if (isDemo) { toast.info(t("demo.readonly_menu")); return; }
                     try {
                       await updateMenuItem(item.id, { enabled: val });
                       setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));

@@ -1100,5 +1100,16 @@
   "client.days_ago": "Ha {days} dias",
   "client.restaurant_fallback": "Restaurante",
   "client.generic_error": "Erro",
-  "nav.back": "Voltar"
+  "nav.back": "Voltar",
+  "demo.banner_text": "Modo demo: descubra o seu futuro painel",
+  "demo.banner_cta": "Criar minha pagina gratuitamente",
+  "demo.readonly_toast": "Crie sua conta para desbloquear esta funcionalidade: 14 dias de teste gratis",
+  "demo.readonly_menu": "Crie sua conta para personalizar seu cardapio",
+  "demo.readonly_settings": "Crie sua conta para configurar seu restaurante",
+  "demo.readonly_orders": "Crie sua conta para gerenciar seus pedidos",
+  "demo.readonly_page": "Crie sua conta para personalizar sua pagina",
+  "demo.cta_discover": "Descobrir o modo demo",
+  "demo.cta_try": "Ainda nao convencido? Experimente a demo",
+  "demo.cta_link": "Descobrir a ferramenta em modo demo",
+  "demo.no_orders": "Restaurante de demonstracao"
 }

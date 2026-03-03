@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts";
 import { TrendingUp, ShoppingBag, Receipt, Euro, Clock, Flame, Trophy } from "lucide-react";
-import { fetchOrders } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders } from "@/lib/api";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +14,7 @@ type Period = "day" | "week" | "month";
 
 interface Props {
   restaurant: DbRestaurant;
+  isDemo?: boolean;
 }
 
 const periodLabels: Record<Period, string> = {
@@ -43,17 +44,18 @@ function formatHour(h: number) {
   return `${h}h`;
 }
 
-export const DashboardStats = ({ restaurant }: Props) => {
+export const DashboardStats = ({ restaurant, isDemo }: Props) => {
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<Period>("day");
+  const [period, setPeriod] = useState<Period>("month");
 
   useEffect(() => {
-    fetchOrders(restaurant.id).then((data) => {
+    const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
+    fetchFn.then((data) => {
       setOrders(data);
       setLoading(false);
     });
-  }, [restaurant.id]);
+  }, [restaurant.id, isDemo]);
 
   const stats = useMemo(() => {
     const start = startOfPeriod(period);

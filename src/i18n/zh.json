@@ -1140,5 +1140,16 @@
   "client.days_ago": "{days} 天前",
   "client.restaurant_fallback": "餐厅",
   "client.generic_error": "错误",
-  "nav.back": "返回"
+  "nav.back": "返回",
+  "demo.banner_text": "演示模式：探索您未来的管理面板",
+  "demo.banner_cta": "免费创建我的页面",
+  "demo.readonly_toast": "创建账户以解锁此功能：14天免费试用",
+  "demo.readonly_menu": "创建账户以自定义您的菜单",
+  "demo.readonly_settings": "创建账户以配置您的餐厅",
+  "demo.readonly_orders": "创建账户以管理您的订单",
+  "demo.readonly_page": "创建账户以自定义您的页面",
+  "demo.cta_discover": "探索演示模式",
+  "demo.cta_try": "还没决定？试试演示",
+  "demo.cta_link": "在演示模式中探索工具",
+  "demo.no_orders": "演示餐厅"
 }

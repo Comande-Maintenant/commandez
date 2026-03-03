@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface SoundControls {
   audioUnlocked: boolean;
@@ -44,6 +45,7 @@ interface SoundControls {
 interface Props {
   restaurant: DbRestaurant;
   sound?: SoundControls;
+  isDemo?: boolean;
 }
 
 const availabilityModes = [
@@ -67,7 +69,8 @@ const paymentOptions = [
 
 const orderedDays = [1, 2, 3, 4, 5, 6, 0];
 
-export const DashboardParametres = ({ restaurant, sound }: Props) => {
+export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [saving, setSaving] = useState(false);
   const [isAccepting, setIsAccepting] = useState(restaurant.is_accepting_orders);
   const [availabilityMode, setAvailabilityMode] = useState(restaurant.availability_mode || "manual");
@@ -115,11 +118,13 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
   };
 
   const handleToggleAccepting = async (val: boolean) => {
+    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
     setIsAccepting(val);
     await updateRestaurant(restaurant.id, { is_accepting_orders: val } as any);
   };
 
   const handleSave = async () => {
+    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
     setSaving(true);
     try {
       // Save restaurant settings
@@ -144,6 +149,7 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
   };
 
   const handleLogout = async () => {
+    if (isDemo) { window.location.href = "/"; return; }
     await supabase.auth.signOut();
     window.location.href = "/";
   };
@@ -168,6 +174,7 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
   const [promoLoading, setPromoLoading] = useState(false);
 
   const handleApplyPromo = async () => {
+    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
     if (!promoInput.trim()) return;
     setPromoLoading(true);
     try {
@@ -190,6 +197,7 @@ export const DashboardParametres = ({ restaurant, sound }: Props) => {
   const [deactivateConfirm, setDeactivateConfirm] = useState("");
 
   const handleDeactivateRestaurant = async () => {
+    if (isDemo) { toast.info(t("demo.readonly_settings")); return; }
     if (deactivateConfirm !== restaurant.name) {
       toast.error("Le nom saisi ne correspond pas");
       return;

@@ -1100,5 +1100,16 @@
   "client.days_ago": "{days} dagen geleden",
   "client.restaurant_fallback": "Restaurant",
   "client.generic_error": "Fout",
-  "nav.back": "Terug"
+  "nav.back": "Terug",
+  "demo.banner_text": "Demomodus: ontdek uw toekomstige dashboard",
+  "demo.banner_cta": "Maak mijn pagina gratis aan",
+  "demo.readonly_toast": "Maak een account aan om deze functie te ontgrendelen: 14 dagen gratis uitproberen",
+  "demo.readonly_menu": "Maak een account aan om uw menu aan te passen",
+  "demo.readonly_settings": "Maak een account aan om uw restaurant te configureren",
+  "demo.readonly_orders": "Maak een account aan om uw bestellingen te beheren",
+  "demo.readonly_page": "Maak een account aan om uw pagina aan te passen",
+  "demo.cta_discover": "Ontdek de demomodus",
+  "demo.cta_try": "Nog niet overtuigd? Probeer de demo",
+  "demo.cta_link": "Ontdek de tool in demomodus",
+  "demo.no_orders": "Demonstratierestaurant"
 }

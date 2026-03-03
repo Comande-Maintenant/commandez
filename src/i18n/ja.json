@@ -1140,5 +1140,16 @@
   "client.days_ago": "{days} 日前",
   "client.restaurant_fallback": "レストラン",
   "client.generic_error": "エラー",
-  "nav.back": "戻る"
+  "nav.back": "戻る",
+  "demo.banner_text": "デモモード：あなたの未来のダッシュボードを発見",
+  "demo.banner_cta": "無料でページを作成",
+  "demo.readonly_toast": "アカウントを作成してこの機能をアンロック：14日間無料お試し",
+  "demo.readonly_menu": "アカウントを作成してメニューをカスタマイズ",
+  "demo.readonly_settings": "アカウントを作成してレストランを設定",
+  "demo.readonly_orders": "アカウントを作成して注文を管理",
+  "demo.readonly_page": "アカウントを作成してページをカスタマイズ",
+  "demo.cta_discover": "デモモードを発見",
+  "demo.cta_try": "まだ迷っていますか？デモをお試しください",
+  "demo.cta_link": "デモモードでツールを発見",
+  "demo.no_orders": "デモレストラン"
 }

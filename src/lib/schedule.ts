@@ -88,6 +88,10 @@ export function canPlaceOrder(restaurant: DbRestaurant): {
   canOrder: boolean;
   reason: string | null;
 } {
+  if ((restaurant as any).is_demo) {
+    return { canOrder: false, reason: "demo.no_orders" };
+  }
+
   if (!restaurant.is_accepting_orders) {
     return { canOrder: false, reason: "schedule.not_accepting" };
   }

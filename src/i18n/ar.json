@@ -1140,5 +1140,16 @@
   "client.days_ago": "منذ {days} ايام",
   "client.restaurant_fallback": "مطعم",
   "client.generic_error": "خطا",
-  "nav.back": "رجوع"
+  "nav.back": "رجوع",
+  "demo.banner_text": "الوضع التجريبي: اكتشف لوحة التحكم المستقبلية",
+  "demo.banner_cta": "انشئ صفحتي مجانا",
+  "demo.readonly_toast": "انشئ حسابك لفتح هذه الميزة: 14 يوم تجربة مجانية",
+  "demo.readonly_menu": "انشئ حسابك لتخصيص قائمتك",
+  "demo.readonly_settings": "انشئ حسابك لتكوين مطعمك",
+  "demo.readonly_orders": "انشئ حسابك لادارة طلباتك",
+  "demo.readonly_page": "انشئ حسابك لتخصيص صفحتك",
+  "demo.cta_discover": "اكتشف الوضع التجريبي",
+  "demo.cta_try": "غير مقتنع بعد؟ جرب العرض التوضيحي",
+  "demo.cta_link": "اكتشف الاداة في الوضع التجريبي",
+  "demo.no_orders": "مطعم تجريبي"
 }

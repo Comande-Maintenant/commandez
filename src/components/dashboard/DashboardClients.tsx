@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { Search, Phone, Mail, ShoppingBag, Euro, Star, ShieldBan, ShieldCheck, Calendar, ChevronDown, ChevronUp } from "lucide-react";
-import { fetchCustomers, unbanCustomer } from "@/lib/api";
+import { fetchCustomers, fetchDemoCustomers, unbanCustomer } from "@/lib/api";
 import type { DbRestaurant, DbCustomer } from "@/types/database";
+import { useLanguage } from "@/context/LanguageContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,12 +11,14 @@ import { toast } from "sonner";
 
 interface Props {
   restaurant: DbRestaurant;
+  isDemo?: boolean;
 }
 
 type SortKey = "last_order" | "total_orders" | "total_spent";
 type FilterKey = "all" | "regulars" | "banned";
 
-export const DashboardClients = ({ restaurant }: Props) => {
+export const DashboardClients = ({ restaurant, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [customers, setCustomers] = useState<DbCustomer[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -26,7 +29,9 @@ export const DashboardClients = ({ restaurant }: Props) => {
 
   const loadCustomers = async () => {
     try {
-      const data = await fetchCustomers(restaurant.id);
+      const data = isDemo
+        ? await fetchDemoCustomers(restaurant.id)
+        : await fetchCustomers(restaurant.id);
       setCustomers(data);
     } catch {
       toast.error("Erreur chargement clients");
@@ -74,6 +79,7 @@ export const DashboardClients = ({ restaurant }: Props) => {
   }, [customers, search, sort, filter]);
 
   const handleUnban = async (customer: DbCustomer) => {
+    if (isDemo) { toast.info(t("demo.readonly_toast")); return; }
     try {
       await unbanCustomer(customer.id);
       setCustomers((prev) =>
@@ -313,7 +319,7 @@ export const DashboardClients = ({ restaurant }: Props) => {
                       size="sm"
                       variant="outline"
                       className="rounded-xl gap-1.5 text-destructive hover:text-destructive"
-                      onClick={() => setBanTarget(customer)}
+                      onClick={() => { if (isDemo) { toast.info(t("demo.readonly_toast")); return; } setBanTarget(customer); }}
                     >
                       <ShieldBan className="h-3.5 w-3.5" />
                       Bannir

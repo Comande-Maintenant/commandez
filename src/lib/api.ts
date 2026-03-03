@@ -1,6 +1,27 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { DbRestaurant, DbMenuItem, DbOrder, DbTablet, DbCustomer, DbOwner } from "@/types/database";
 
+// ── Demo mode RPCs ──
+
+export async function fetchDemoRestaurant(slug: string): Promise<DbRestaurant | null> {
+  const { data, error } = await supabase.rpc("get_demo_restaurant", { p_slug: slug });
+  if (error) throw error;
+  const rows = data as unknown as DbRestaurant[];
+  return rows && rows.length > 0 ? rows[0] : null;
+}
+
+export async function fetchDemoOrders(restaurantId: string): Promise<DbOrder[]> {
+  const { data, error } = await supabase.rpc("get_demo_orders", { p_restaurant_id: restaurantId });
+  if (error) throw error;
+  return (data ?? []) as unknown as DbOrder[];
+}
+
+export async function fetchDemoCustomers(restaurantId: string): Promise<DbCustomer[]> {
+  const { data, error } = await supabase.rpc("get_demo_customers", { p_restaurant_id: restaurantId });
+  if (error) throw error;
+  return (data ?? []) as unknown as DbCustomer[];
+}
+
 export async function fetchRestaurants(): Promise<DbRestaurant[]> {
   const { data, error } = await supabase
     .from("restaurants")

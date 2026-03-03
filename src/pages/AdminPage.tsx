@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX } from "lucide-react";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchRestaurantBySlug, updateRestaurant } from "@/lib/api";
+import { fetchRestaurantBySlug, fetchDemoRestaurant, updateRestaurant } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
 import { DashboardOrders } from "@/components/dashboard/DashboardOrders";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
@@ -29,6 +29,7 @@ import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
 import { supabase } from "@/integrations/supabase/client";
 import type { DashboardView } from "@/types/dashboard";
 import { SubscriptionGate } from "@/components/auth/SubscriptionGate";
+import { useLanguage } from "@/context/LanguageContext";
 
 const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer", "clients", "customization"];
 
@@ -40,6 +41,9 @@ const isOpsView = (v: DashboardView) => ["cuisine", "caisse", "en-direct"].inclu
 
 const AdminPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  const isDemo = slug === "demo";
   const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<DashboardView>(() => {
@@ -66,8 +70,12 @@ const AdminPage = () => {
 
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
-  // Auth check
+  // Auth check - skip for demo
   useEffect(() => {
+    if (isDemo) {
+      setAuthChecked(true);
+      return;
+    }
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) {
         setAuthError("not_logged_in");
@@ -76,19 +84,21 @@ const AdminPage = () => {
       }
       setAuthChecked(true);
     });
-  }, []);
+  }, [isDemo]);
 
+  // Fetch restaurant - use demo RPC for demo mode
   useEffect(() => {
     if (!slug) return;
-    fetchRestaurantBySlug(slug).then((r) => {
+    const fetchFn = isDemo ? fetchDemoRestaurant(slug) : fetchRestaurantBySlug(slug);
+    fetchFn.then((r) => {
       setRestaurant(r);
       setLoading(false);
-      // Check onboarding
-      if (r && !localStorage.getItem(`cm_onboarding_done_${r.slug}`)) {
+      // No onboarding tour for demo
+      if (r && !isDemo && !localStorage.getItem(`cm_onboarding_done_${r.slug}`)) {
         setTimeout(() => setShowOnboarding(true), 1000);
       }
     });
-  }, [slug]);
+  }, [slug, isDemo]);
 
   // PWA install prompt
   useEffect(() => {
@@ -127,13 +137,17 @@ const AdminPage = () => {
 
   const toggleAccepting = async () => {
     if (!restaurant) return;
+    if (isDemo) {
+      toast.info(t("demo.readonly_settings"));
+      return;
+    }
     const next = !restaurant.is_accepting_orders;
     try {
       await updateRestaurant(restaurant.id, { is_accepting_orders: next } as any);
       setRestaurant({ ...restaurant, is_accepting_orders: next });
-      toast.success(next ? "Commandes activées" : "Commandes désactivées");
+      toast.success(next ? "Commandes activees" : "Commandes desactivees");
     } catch {
-      toast.error("Erreur lors de la mise à jour");
+      toast.error("Erreur lors de la mise a jour");
     }
   };
 
@@ -145,7 +159,8 @@ const AdminPage = () => {
     );
   }
 
-  if (authError === "not_logged_in") {
+  // Auth gate - skip for demo
+  if (!isDemo && authError === "not_logged_in") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -168,8 +183,8 @@ const AdminPage = () => {
     );
   }
 
-  // Owner check - only the restaurant owner can access admin
-  if (!restaurant.owner_id || !authUserId || authUserId !== restaurant.owner_id) {
+  // Owner check - skip for demo
+  if (!isDemo && (!restaurant.owner_id || !authUserId || authUserId !== restaurant.owner_id)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -181,10 +196,29 @@ const AdminPage = () => {
     );
   }
 
-  return (
-    <SubscriptionGate restaurantId={restaurant.id}>
-    <div className="min-h-screen bg-secondary/50 lg:flex" data-blurred={blurred}>
+  const dashboardContent = (
+    <div className={`min-h-screen bg-secondary/50 lg:flex ${isDemo ? "pt-12" : ""}`} data-blurred={blurred}>
       <style>{`[data-blurred="true"] .blur-sensitive { filter: blur(8px); user-select: none; }`}</style>
+
+      {/* Demo banner */}
+      {isDemo && (
+        <div className="fixed top-0 left-0 right-0 z-[60] bg-emerald-500 text-white">
+          <div className="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
+            <p className="text-sm font-medium truncate">
+              {t("demo.banner_text")}
+            </p>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="rounded-xl text-xs font-semibold flex-shrink-0 ml-3 bg-white text-emerald-700 hover:bg-emerald-50"
+              onClick={() => navigate("/inscription")}
+            >
+              {t("demo.banner_cta")}
+            </Button>
+          </div>
+        </div>
+      )}
+
       <AdminSidebar
         activeView={activeView}
         onViewChange={handleViewChange}
@@ -193,10 +227,10 @@ const AdminPage = () => {
 
       <div className="flex-1 lg:ml-60 pb-20 lg:pb-0">
         {/* Header */}
-        <header className="bg-background border-b border-border sticky top-0 z-50">
+        <header className="bg-background border-b border-border sticky top-0 z-50" style={isDemo ? { top: "3rem" } : undefined}>
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
-              <Link to={`/${slug}`} className="p-2 -ml-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+              <Link to={isDemo ? "/" : `/${slug}`} className="p-2 -ml-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className="h-5 w-5 text-foreground" />
               </Link>
               <div className="min-w-0">
@@ -206,7 +240,7 @@ const AdminPage = () => {
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               {/* Sound toggle (cuisine view) */}
-              {isOpsView(activeView) && (
+              {isOpsView(activeView) && !isDemo && (
                 <button
                   data-tour="son"
                   onClick={() => {
@@ -255,8 +289,8 @@ const AdminPage = () => {
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-          {/* Audio unlock banner for mobile */}
-          {isOpsView(activeView) && !sound.audioUnlocked && (
+          {/* Audio unlock banner for mobile - not in demo */}
+          {!isDemo && isOpsView(activeView) && !sound.audioUnlocked && (
             <button
               onClick={sound.unlockAudio}
               className="w-full mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center gap-2 text-sm font-medium text-amber-800 hover:bg-amber-100 transition-colors"
@@ -266,8 +300,8 @@ const AdminPage = () => {
             </button>
           )}
 
-          {/* Reactivation banner */}
-          {restaurant.deactivated_at && (
+          {/* Reactivation banner - not in demo */}
+          {!isDemo && restaurant.deactivated_at && (
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="text-sm text-amber-900">
                 <p className="font-medium">
@@ -295,13 +329,13 @@ const AdminPage = () => {
                       is_accepting_orders: true,
                       deactivation_visit_count: 0,
                     });
-                    toast.success("Restaurant réactivé !");
+                    toast.success("Restaurant reactive !");
                   } catch {
-                    toast.error("Erreur lors de la réactivation");
+                    toast.error("Erreur lors de la reactivation");
                   }
                 }}
               >
-                Réactiver
+                Reactiver
               </Button>
             </div>
           )}
@@ -324,16 +358,16 @@ const AdminPage = () => {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
             >
-              {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} onNewOrderSound={sound.play} />}
+              {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} onNewOrderSound={sound.play} isDemo={isDemo} />}
               {activeView === "caisse" && <DashboardPOS restaurant={restaurant} />}
-              {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} />}
-              {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} />}
-              {activeView === "page" && <DashboardMaPage restaurant={restaurant} />}
+              {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} isDemo={isDemo} />}
+              {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} isDemo={isDemo} />}
+              {activeView === "page" && <DashboardMaPage restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "qrcodes" && <DashboardQRCodes restaurant={restaurant} />}
               {activeView === "tablettes" && <DashboardTablettes restaurant={restaurant} />}
-              {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} />}
-              {activeView === "stats" && <DashboardStats restaurant={restaurant} />}
-              {activeView === "clients" && <DashboardClients restaurant={restaurant} />}
+              {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} isDemo={isDemo} />}
+              {activeView === "stats" && <DashboardStats restaurant={restaurant} isDemo={isDemo} />}
+              {activeView === "clients" && <DashboardClients restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "customization" && <DashboardCustomization restaurant={restaurant} />}
               {activeView === "gerer" && <GererMenu onViewChange={handleViewChange} />}
             </motion.div>
@@ -347,8 +381,8 @@ const AdminPage = () => {
         newOrderCount={orderCounts.newCount}
       />
 
-      {/* PWA install banner */}
-      {showPwaBanner && (
+      {/* PWA install banner - not in demo */}
+      {!isDemo && showPwaBanner && (
         <div className="fixed bottom-16 lg:bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
           <div className="bg-card border border-border rounded-2xl p-4 shadow-lg flex items-center justify-between gap-3">
             <div>
@@ -388,8 +422,8 @@ const AdminPage = () => {
         onNavigate={(v) => handleViewChange(v as DashboardView)}
       />
 
-      {/* Onboarding tour */}
-      {showOnboarding && restaurant && (
+      {/* Onboarding tour - not in demo */}
+      {!isDemo && showOnboarding && restaurant && (
         <OnboardingTour
           onComplete={() => {
             setShowOnboarding(false);
@@ -398,6 +432,16 @@ const AdminPage = () => {
         />
       )}
     </div>
+  );
+
+  // Skip SubscriptionGate for demo
+  if (isDemo) {
+    return dashboardContent;
+  }
+
+  return (
+    <SubscriptionGate restaurantId={restaurant.id}>
+      {dashboardContent}
     </SubscriptionGate>
   );
 };

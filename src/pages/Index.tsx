@@ -78,6 +78,13 @@ const Index = () => {
             >
               Creer ma page gratuitement
             </Button>
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/admin/demo")}
+              className="w-full h-10 rounded-xl text-sm text-muted-foreground hover:text-foreground"
+            >
+              Decouvrir en mode demo &rarr;
+            </Button>
           </div>
 
           <div className="space-y-2 pt-2">

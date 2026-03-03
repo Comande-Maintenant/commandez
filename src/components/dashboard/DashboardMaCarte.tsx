@@ -50,9 +50,11 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { MenuImportModal } from "@/components/dashboard/MenuImportModal";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurant: DbRestaurant;
+  isDemo?: boolean;
 }
 
 // Sortable item row
@@ -153,7 +155,8 @@ function SortableCategoryHeader({
   );
 }
 
-export const DashboardMaCarte = ({ restaurant }: Props) => {
+export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
+  const { t } = useLanguage();
   const [items, setItems] = useState<DbMenuItem[]>([]);
   const [categories, setCategories] = useState<string[]>(restaurant.categories ?? []);
   const [loading, setLoading] = useState(true);
@@ -191,12 +194,16 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
 
   useEffect(() => { loadItems(); }, [loadItems]);
 
+  const demoGuard = () => { if (isDemo) { toast.info(t("demo.readonly_menu")); return true; } return false; };
+
   const toggleItem = async (id: string, enabled: boolean) => {
+    if (demoGuard()) return;
     await updateMenuItem(id, { enabled: !enabled });
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, enabled: !enabled } : i)));
   };
 
   const handleDuplicateItem = async (item: DbMenuItem) => {
+    if (demoGuard()) return;
     try {
       await insertMenuItem({
         restaurant_id: restaurant.id,
@@ -217,6 +224,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleDeleteItem = async (id: string) => {
+    if (demoGuard()) return;
     if (!confirm("Supprimer cet item ?")) return;
     await deleteMenuItem(id);
     setItems((prev) => prev.filter((i) => i.id !== id));
@@ -224,6 +232,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleAddItem = async () => {
+    if (demoGuard()) return;
     if (!newItem.name || !newItem.price) return;
     await insertMenuItem({
       restaurant_id: restaurant.id,
@@ -241,6 +250,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleEditSave = async () => {
+    if (demoGuard()) return;
     if (!editItem) return;
     await updateMenuItem(editItem.id, {
       name: editItem.name,
@@ -256,6 +266,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleImageUpload = async (file: File, itemId: string) => {
+    if (demoGuard()) return;
     setUploadingImage(true);
     try {
       const blob = await resizeImageForMenu(file);
@@ -273,6 +284,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleImageDelete = async (itemId: string) => {
+    if (demoGuard()) return;
     try {
       await deleteMenuItemImage(restaurant.id, itemId);
       await updateMenuItem(itemId, { image: null });
@@ -286,6 +298,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleAddCategory = async () => {
+    if (demoGuard()) return;
     if (!newCategoryName.trim()) return;
     const updated = [...categories, newCategoryName.trim()];
     setCategories(updated);
@@ -297,6 +310,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleRenameCategory = async () => {
+    if (demoGuard()) return;
     if (!renamingCategory || !renameValue.trim()) return;
     const oldName = renamingCategory;
     const newName = renameValue.trim();
@@ -317,6 +331,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
   };
 
   const handleDeleteCategory = async (cat: string) => {
+    if (demoGuard()) return;
     const catItems = items.filter((i) => i.category === cat);
     if (catItems.length > 0 && !confirm(`Supprimer la catégorie "${cat}" et ses ${catItems.length} items ?`)) return;
     if (catItems.length === 0 && !confirm(`Supprimer la catégorie "${cat}" ?`)) return;
@@ -333,6 +348,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
 
   // DnD for categories
   const handleCategoryDragEnd = async (event: DragEndEvent) => {
+    if (demoGuard()) return;
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -347,6 +363,7 @@ export const DashboardMaCarte = ({ restaurant }: Props) => {
 
   // DnD for items within a category
   const handleItemDragEnd = async (event: DragEndEvent, cat: string) => {
+    if (demoGuard()) return;
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 

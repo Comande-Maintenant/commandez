@@ -80,6 +80,7 @@ export interface DbRestaurant {
   bonus_weeks: number;
   trial_end_date: string | null;
   subscription_status: string | null;
+  is_demo?: boolean;
 }
 
 export interface DbMenuItem {

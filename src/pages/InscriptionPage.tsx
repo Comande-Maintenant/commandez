@@ -292,6 +292,18 @@ const InscriptionPage = () => {
       )}
 
       <main className="max-w-lg mx-auto px-4 py-6">
+        {/* Demo link */}
+        {step === 1 && (
+          <div className="text-center mb-4">
+            <Link
+              to="/admin/demo"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
+            >
+              Pas encore convaincu ? Essayez le mode demo
+            </Link>
+          </div>
+        )}
+
         <AnimatePresence mode="wait">
           {/* STEP 1: Account */}
           {step === 1 && (

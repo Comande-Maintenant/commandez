@@ -344,6 +344,16 @@ const ConnexionPage = () => {
                       Creer mon compte gratuitement &rarr;
                     </Link>
                   </div>
+
+                  {/* Demo link */}
+                  <div className="text-center">
+                    <Link
+                      to="/admin/demo"
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
+                    >
+                      Decouvrir l'outil en mode demo
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>

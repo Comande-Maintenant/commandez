@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Euro, ShoppingBag, Receipt, TrendingUp } from "lucide-react";
-import { fetchOrders } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders } from "@/lib/api";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import type { LiveVisitor, VisitorAlert } from "@/types/visitor";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,18 +14,20 @@ interface Props {
   restaurant: DbRestaurant;
   visitors: LiveVisitor[];
   alerts: VisitorAlert[];
+  isDemo?: boolean;
 }
 
-export const DashboardEnDirect = ({ restaurant, visitors, alerts }: Props) => {
+export const DashboardEnDirect = ({ restaurant, visitors, alerts, isDemo }: Props) => {
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchOrders(restaurant.id).then((data) => {
+    const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
+    fetchFn.then((data) => {
       setOrders(data);
       setLoading(false);
     });
-  }, [restaurant.id]);
+  }, [restaurant.id, isDemo]);
 
   const todayStats = useMemo(() => {
     const now = new Date();
