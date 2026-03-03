@@ -77,6 +77,14 @@ export async function createOrder(order: {
   pickup_time?: string | null;
   payment_method?: string;
 }): Promise<DbOrder> {
+  // Server-side price validation
+  const { data: valid, error: validErr } = await supabase.rpc("validate_order_total", {
+    p_items: order.items,
+    p_claimed_total: order.total,
+  });
+  if (validErr || !valid) {
+    throw new Error("Le total de la commande ne correspond pas aux prix du menu.");
+  }
   const { data, error } = await supabase
     .from("orders")
     .insert(order)
@@ -236,14 +244,9 @@ export async function uploadRestaurantImage(restaurantId: string, file: File, ty
 }
 
 export async function fetchOrderById(orderId: string): Promise<(DbOrder & { restaurant: Pick<DbRestaurant, 'name' | 'slug' | 'primary_color'> & { phone: string } }) | null> {
-  const { data, error } = await supabase
-    .from("orders")
-    .select("*, restaurant:restaurants(name, slug, primary_color, restaurant_phone)")
-    .eq("id", orderId)
-    .maybeSingle();
+  const { data, error } = await supabase.rpc("get_order_for_tracking", { p_order_id: orderId });
   if (error) throw error;
   if (!data) return null;
-  // Remap restaurant_phone -> phone for convenience
   const raw = data as any;
   const rest = raw.restaurant;
   return {
@@ -253,48 +256,35 @@ export async function fetchOrderById(orderId: string): Promise<(DbOrder & { rest
 }
 
 export function subscribeToOrderStatus(orderId: string, callback: (order: DbOrder) => void): () => void {
-  const channel = supabase
-    .channel(`order-track-${orderId}`)
-    .on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "orders",
-        filter: `id=eq.${orderId}`,
-      },
-      (payload) => {
-        callback(payload.new as unknown as DbOrder);
+  // Poll via RPC every 3s (orders SELECT is owner-only, anonymous can't use Realtime)
+  let lastStatus: string | null = null;
+  const poll = async () => {
+    const { data } = await supabase.rpc("get_order_for_tracking", { p_order_id: orderId });
+    if (data) {
+      const order = data as any;
+      if (order.status !== lastStatus) {
+        lastStatus = order.status;
+        callback(order as unknown as DbOrder);
       }
-    )
-    .subscribe();
-
-  return () => {
-    supabase.removeChannel(channel);
+    }
   };
+  poll(); // initial fetch
+  const interval = setInterval(poll, 3000);
+  return () => clearInterval(interval);
 }
 
 export async function incrementDeactivationVisits(restaurantId: string) {
-  const { data } = await supabase
-    .from("restaurants")
-    .select("deactivation_visit_count")
-    .eq("id", restaurantId)
-    .single();
-  const current = (data as any)?.deactivation_visit_count || 0;
-  await supabase
-    .from("restaurants")
-    .update({ deactivation_visit_count: current + 1 })
-    .eq("id", restaurantId);
+  await supabase.rpc("increment_deactivation_visits", {
+    p_restaurant_id: restaurantId,
+  });
 }
 
 export async function fetchActiveOrderCount(restaurantId: string): Promise<number> {
-  const { count, error } = await supabase
-    .from("orders")
-    .select("*", { count: "exact", head: true })
-    .eq("restaurant_id", restaurantId)
-    .in("status", ["new", "preparing"]);
+  const { data, error } = await supabase.rpc("get_active_order_count", {
+    p_restaurant_id: restaurantId,
+  });
   if (error) return 0;
-  return count ?? 0;
+  return data ?? 0;
 }
 
 // --- Tablets ---
@@ -668,22 +658,11 @@ export async function fetchCustomerOrders(userId: string): Promise<(DbOrder & { 
 }
 
 export async function linkOrdersToUser(userId: string, email: string, phone?: string): Promise<void> {
-  // Link by email
-  if (email) {
-    await supabase
-      .from("orders")
-      .update({ customer_user_id: userId })
-      .eq("customer_email", email)
-      .is("customer_user_id", null);
-  }
-  // Link by phone
-  if (phone) {
-    await supabase
-      .from("orders")
-      .update({ customer_user_id: userId })
-      .eq("customer_phone", phone)
-      .is("customer_user_id", null);
-  }
+  await supabase.rpc("link_orders_to_user", {
+    p_user_id: userId,
+    p_email: email || "",
+    p_phone: phone || "",
+  });
 }
 
 export async function incrementCustomerStats(userId: string, orderTotal: number): Promise<void> {

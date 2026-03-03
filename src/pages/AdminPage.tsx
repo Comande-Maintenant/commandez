@@ -169,7 +169,7 @@ const AdminPage = () => {
   }
 
   // Owner check - only the restaurant owner can access admin
-  if (authUserId && restaurant.owner_id && authUserId !== restaurant.owner_id) {
+  if (!restaurant.owner_id || !authUserId || authUserId !== restaurant.owner_id) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">

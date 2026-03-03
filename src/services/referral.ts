@@ -87,11 +87,11 @@ export async function processReferral(refereeRestaurantId: string, refCode: stri
       completed_at: new Date().toISOString(),
     });
 
-    // Add +4 weeks to the referrer
-    await supabase
-      .from("restaurants")
-      .update({ bonus_weeks: (referrer.bonus_weeks || 0) + 4 })
-      .eq("id", referrer.id);
+    // Add +4 weeks to the referrer (via SECURITY DEFINER RPC)
+    await supabase.rpc("grant_referral_bonus", {
+      p_referrer_id: referrer.id,
+      p_bonus_weeks: 4,
+    });
 
     // Set the referee's referred_by and extend trial to 8 weeks (4 base + 4 bonus)
     const eightWeeksFromNow = new Date();
