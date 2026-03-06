@@ -177,9 +177,10 @@ const OrderPage = () => {
       }
       clearCart();
       navigate("/suivi/" + order.id);
-    } catch (e) {
+    } catch (e: any) {
       console.error("Order error:", e);
-      toast.error(t("order.error_generic"));
+      const msg = e?.message || e?.details || String(e);
+      toast.error(`Erreur: ${msg}`);
     } finally {
       setSubmitting(false);
     }
