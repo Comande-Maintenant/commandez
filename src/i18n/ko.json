@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "완료",
   "dashboard.orders.covers_count": "{count}인분",
   "dashboard.orders.add_item": "추가",
-  "restaurant.show_phone": "전화번호 표시"
+  "restaurant.show_phone": "전화번호 표시",
+  "custom.nature": "플레인"
 }

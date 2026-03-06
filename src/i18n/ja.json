@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "完了",
   "dashboard.orders.covers_count": "{count}名",
   "dashboard.orders.add_item": "追加",
-  "restaurant.show_phone": "電話番号を表示"
+  "restaurant.show_phone": "電話番号を表示",
+  "custom.nature": "プレーン"
 }

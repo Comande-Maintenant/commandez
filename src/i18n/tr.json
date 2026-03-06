@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "Tamamlandi",
   "dashboard.orders.covers_count": "{count} kisilik",
   "dashboard.orders.add_item": "Ekle",
-  "restaurant.show_phone": "Telefon numarasini goster"
+  "restaurant.show_phone": "Telefon numarasini goster",
+  "custom.nature": "Sade"
 }

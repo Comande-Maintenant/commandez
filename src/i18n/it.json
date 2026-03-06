@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "Completato",
   "dashboard.orders.covers_count": "{count} coperto/i",
   "dashboard.orders.add_item": "Aggiungi",
-  "restaurant.show_phone": "Mostra numero"
+  "restaurant.show_phone": "Mostra numero",
+  "custom.nature": "Al naturale"
 }

@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "Завершен",
   "dashboard.orders.covers_count": "{count} прибор(ов)",
   "dashboard.orders.add_item": "Добавить",
-  "restaurant.show_phone": "Показать номер"
+  "restaurant.show_phone": "Показать номер",
+  "custom.nature": "Без добавок"
 }

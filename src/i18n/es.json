@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "Terminada",
   "dashboard.orders.covers_count": "{count} cubierto(s)",
   "dashboard.orders.add_item": "Agregar",
-  "restaurant.show_phone": "Mostrar numero"
+  "restaurant.show_phone": "Mostrar numero",
+  "custom.nature": "Sin nada"
 }

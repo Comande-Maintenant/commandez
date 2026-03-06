@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "Hoan tat",
   "dashboard.orders.covers_count": "{count} nguoi",
   "dashboard.orders.add_item": "Them",
-  "restaurant.show_phone": "Hien thi so dien thoai"
+  "restaurant.show_phone": "Hien thi so dien thoai",
+  "custom.nature": "Khong them"
 }

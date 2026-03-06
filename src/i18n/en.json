@@ -1142,5 +1142,6 @@
   "dashboard.orders.action_done": "Done",
   "dashboard.orders.covers_count": "{count} cover(s)",
   "dashboard.orders.add_item": "Add",
-  "restaurant.show_phone": "Show phone number"
+  "restaurant.show_phone": "Show phone number",
+  "custom.nature": "Plain"
 }

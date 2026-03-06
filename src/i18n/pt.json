@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "Concluido",
   "dashboard.orders.covers_count": "{count} talher(es)",
   "dashboard.orders.add_item": "Adicionar",
-  "restaurant.show_phone": "Mostrar numero"
+  "restaurant.show_phone": "Mostrar numero",
+  "custom.nature": "Simples"
 }

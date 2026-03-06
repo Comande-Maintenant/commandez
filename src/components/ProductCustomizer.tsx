@@ -474,12 +474,27 @@ export const ProductCustomizer = ({
     setGarnitureState((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleWithAll = () => {
-    setGarnitureState((prev) => {
-      const next = { ...prev };
-      garnitures.forEach((g) => { next[g.id] = g.is_default; });
+  // Check if all garnitures are currently selected
+  const allGarnituresSelected = useMemo(() => {
+    return garnitures.every((g) => garnitureState[g.id]);
+  }, [garnitures, garnitureState]);
+
+  const handleGarnitureComplet = () => {
+    setGarnitureState(() => {
+      const next: Record<string, boolean> = {};
+      garnitures.forEach((g) => { next[g.id] = true; });
       return next;
     });
+    setTimeout(() => goNext(), 200);
+  };
+
+  const handleGarnitureNature = () => {
+    setGarnitureState(() => {
+      const next: Record<string, boolean> = {};
+      garnitures.forEach((g) => { next[g.id] = false; });
+      return next;
+    });
+    setTimeout(() => goNext(), 200);
   };
 
   const handleAddToCart = () => {
@@ -835,13 +850,30 @@ export const ProductCustomizer = ({
                         <div>
                           <div className="flex items-center justify-between mb-3">
                             <h4 className="text-sm font-semibold text-gray-900">{t(currentStep.label_i18n)}</h4>
-                            <button
-                              onClick={handleWithAll}
-                              className="text-xs font-semibold px-3 py-1.5 rounded-full text-white"
-                              style={{ backgroundColor: accent }}
-                            >
-                              {t("custom.complet")}
-                            </button>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={handleGarnitureComplet}
+                                className="text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
+                                style={
+                                  allGarnituresSelected
+                                    ? { backgroundColor: accent, color: "#fff" }
+                                    : { backgroundColor: "#f3f4f6", color: "#374151" }
+                                }
+                              >
+                                {t("custom.complet")}
+                              </button>
+                              <button
+                                onClick={handleGarnitureNature}
+                                className="text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
+                                style={
+                                  !allGarnituresSelected && garnitures.every((g) => !garnitureState[g.id])
+                                    ? { backgroundColor: accent, color: "#fff" }
+                                    : { backgroundColor: "#f3f4f6", color: "#374151" }
+                                }
+                              >
+                                {t("custom.nature")}
+                              </button>
+                            </div>
                           </div>
                           <div className="space-y-2">
                             {currentResolved.options.map((option) => (
@@ -1029,7 +1061,8 @@ export const ProductCustomizer = ({
             </div>
 
             {/* Sticky footer */}
-            <div className="flex-shrink-0 px-4 py-3 border-t border-gray-100">
+            <div className="flex-shrink-0 px-4 py-3 pb-6 border-t border-gray-100"
+              style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
               {currentStep?.step_type === "recap" ? (
                 <button
                   onClick={handleAddToCart}

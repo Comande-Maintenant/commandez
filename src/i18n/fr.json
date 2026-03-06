@@ -131,7 +131,6 @@
   "custom.no_supplement": "Pas de supplement",
   "custom.choose_supplements": "Des supplements ?",
   "custom.frites_option": "Des frites ?",
-
   "common.save": "Enregistrer",
   "common.cancel": "Annuler",
   "common.delete": "Supprimer",
@@ -159,14 +158,12 @@
   "common.price": "Prix",
   "common.total": "Total",
   "common.min_unit": "min",
-
   "common.toast.save_error": "Erreur lors de la sauvegarde",
   "common.toast.upload_error": "Erreur lors de l'upload",
   "common.toast.delete_error": "Erreur lors de la suppression",
   "common.toast.update_error": "Erreur lors de la mise a jour",
   "common.toast.link_copied": "Lien copie !",
   "common.toast.copy_error": "Impossible de copier",
-
   "time.just_now": "A l'instant",
   "time.ago_min": "Il y a {n} min",
   "time.ago_hours": "Il y a {n}h",
@@ -176,10 +173,8 @@
   "time.today": "Aujourd'hui",
   "time.yesterday": "Hier",
   "time.days_ago": "Il y a {n} jours",
-
   "notfound.title": "Page introuvable",
   "notfound.back_home": "Retour a l'accueil",
-
   "auth.welcome": "Bienvenue !",
   "auth.welcome_desc": "Vous etes a 3 minutes de ne plus subir les commissions.",
   "auth.welcome_back": "Bon retour",
@@ -217,7 +212,6 @@
   "auth.step_menu": "Ajouter votre menu",
   "auth.step_share": "Partager votre lien",
   "auth.step_orders": "Recevoir vos premieres commandes directes",
-
   "auth.signup.step_account": "Compte",
   "auth.signup.step_restaurant": "Restaurant",
   "auth.signup.step_menu": "Carte",
@@ -259,7 +253,6 @@
   "auth.signup.email_taken": "Cet email est deja utilise. Connectez-vous ou utilisez un autre email.",
   "auth.signup.signup_error": "Erreur lors de l'inscription.",
   "auth.signup.creation_error": "Erreur lors de la creation. Veuillez reessayer.",
-
   "auth.reset.email_required": "Entrez votre adresse email.",
   "auth.reset.email_sent_title": "Email envoye !",
   "auth.reset.email_sent_desc": "Si un compte existe avec cette adresse, vous recevrez un lien dans quelques instants.",
@@ -290,7 +283,6 @@
   "auth.reset.confirm_password": "Confirmer le mot de passe",
   "auth.reset.confirm_placeholder": "Confirmez votre mot de passe",
   "auth.reset.reset_button": "Reinitialiser",
-
   "auth.customer.login_success": "Connexion reussie !",
   "auth.customer.login_error": "Erreur de connexion",
   "auth.customer.password_too_short": "Le mot de passe doit faire au moins 6 caracteres",
@@ -312,7 +304,6 @@
   "auth.customer.signup_failed": "Inscription echouee",
   "auth.customer.login_failed": "Connexion echouee",
   "auth.customer.owner_account_error": "Ce compte est un compte restaurateur. Utilisez la page admin.",
-
   "subscription.choose_plan": "Choisissez votre formule",
   "subscription.no_commitment": "Sans engagement, resiliable a tout moment.",
   "subscription.trial_banner": "14 jours d'essai gratuit",
@@ -363,7 +354,6 @@
   "subscription.selected": "Selectionne",
   "subscription.choose_this_plan": "Choisir cette formule",
   "subscription.pricing_fine_print": "14 jours d'essai gratuit, carte bancaire requise. Vos clients ne paient pas en ligne. Le paiement se fait sur place, comme d'habitude.",
-
   "subscription.features.custom_page": "Page de commande personnalisee",
   "subscription.features.realtime_menu": "Menu modifiable en temps reel",
   "subscription.features.zero_commission": "0% de commission sur les commandes",
@@ -380,7 +370,6 @@
   "subscription.features.ocr_menu": "Analyse OCR de votre carte",
   "subscription.features.priority_support": "Support prioritaire",
   "subscription.features.advanced_stats": "Statistiques avancees",
-
   "subscription.gate.trial": "Essai gratuit",
   "subscription.gate.days_remaining": "{days} jour(s) restant(s).",
   "subscription.gate.activate": "Activer",
@@ -388,7 +377,6 @@
   "subscription.gate.payment_desc": "Votre dernier paiement a echoue. Mettez a jour vos informations de paiement pour continuer a utiliser commandeici.",
   "subscription.gate.manage_payment": "Gerer mon paiement",
   "subscription.gate.redirect_note": "Vous serez redirige vers votre espace client.",
-
   "onboarding.success.online": "{name} est en ligne !",
   "onboarding.success.trial_started": "Votre essai gratuit de 14 jours a commence. Partagez votre page avec vos clients.",
   "onboarding.success.go_dashboard": "Acceder a mon tableau de bord",
@@ -406,7 +394,6 @@
   "onboarding.success.promo_question": "Vous avez un code promo ?",
   "onboarding.success.activate_button": "Activer mon essai gratuit",
   "onboarding.success.fine_print": "Le paiement s'ouvre dans un nouvel onglet. Vous ne serez debite que dans 14 jours.",
-
   "onboarding.upload.loading_1": "Nous analysons votre carte pour vous faire gagner du temps...",
   "onboarding.upload.loading_2": "Notre IA structure vos plats, categories et prix...",
   "onboarding.upload.loading_3": "Vous n'aurez plus qu'a verifier et ajuster si necessaire.",
@@ -430,7 +417,6 @@
   "onboarding.upload.analyze_files": "Analyser mes {count} fichiers",
   "onboarding.upload.analyze_menu": "Analyser ma carte",
   "onboarding.upload.manual_create": "Creer ma carte manuellement",
-
   "onboarding.review.new_category": "Nouvelle categorie",
   "onboarding.review.summary": "{categories} categories, {items} articles detectes",
   "onboarding.review.category": "Categorie",
@@ -440,7 +426,6 @@
   "onboarding.review.add_item": "Ajouter un article",
   "onboarding.review.back": "Retour",
   "onboarding.review.validate": "Valider ma carte",
-
   "onboarding.place.confirm_desc": "Verifiez et completez les informations de votre restaurant.",
   "onboarding.place.name": "Nom",
   "onboarding.place.address": "Adresse",
@@ -483,7 +468,6 @@
   "onboarding.place.manual_city_placeholder": "Paris",
   "onboarding.place.manual_phone": "Telephone (optionnel)",
   "onboarding.place.manual_phone_placeholder": "01 23 45 67 89",
-
   "onboarding.colors.recommended": "Recommande",
   "onboarding.colors.preview_name": "Votre Restaurant",
   "onboarding.colors.live_preview": "Apercu en temps reel",
@@ -493,7 +477,6 @@
   "onboarding.colors.primary": "Couleur principale",
   "onboarding.colors.custom": "Personnalise",
   "onboarding.colors.background": "Couleur de fond",
-
   "suivi.received": "Commande recue",
   "suivi.preparing": "En preparation",
   "suivi.almost_ready": "Bientot prete",
@@ -523,7 +506,6 @@
   "suivi.create_button": "Creer mon profil",
   "suivi.no_thanks": "Non merci",
   "suivi.call_restaurant": "Appeler le restaurant",
-
   "client.profile_updated": "Profil mis a jour",
   "client.save_error": "Erreur lors de la sauvegarde",
   "client.profile_deleted": "Profil supprime",
@@ -547,7 +529,6 @@
   "client.delete_profile": "Supprimer mon profil",
   "client.delete_confirm_title": "Supprimer votre profil ?",
   "client.delete_confirm_desc": "Cette action est irreversible. Vos donnees seront supprimees definitivement.",
-
   "pickup.title": "Quand souhaitez-vous recuperer votre commande ?",
   "pickup.asap": "Des que possible",
   "pickup.asap_time": "Environ {minutes} min",
@@ -558,7 +539,6 @@
   "pickup.lunch": " - midi",
   "pickup.dinner": " - soir",
   "pickup.tomorrow": "Demain",
-
   "dashboard.nav.kitchen": "Cuisine",
   "dashboard.nav.pos": "Caisse",
   "dashboard.nav.live": "En direct",
@@ -570,7 +550,6 @@
   "dashboard.nav.settings": "Parametres",
   "dashboard.nav.stats": "Statistiques",
   "dashboard.nav.manage": "Gerer",
-
   "dashboard.admin.orders_enabled": "Commandes activees",
   "dashboard.admin.orders_disabled": "Commandes desactivees",
   "dashboard.admin.login_required": "Connexion requise",
@@ -593,7 +572,6 @@
   "dashboard.admin.reactivate": "Reactiver",
   "dashboard.admin.install_app": "Installer l'application",
   "dashboard.admin.quick_access": "Acces rapide depuis votre ecran d'accueil",
-
   "dashboard.orders.status_new": "Nouvelle",
   "dashboard.orders.status_preparing": "En preparation",
   "dashboard.orders.status_ready": "Prete",
@@ -624,7 +602,6 @@
   "dashboard.orders.no_items": "Aucun plat",
   "dashboard.orders.item_available": "{name} disponible",
   "dashboard.orders.item_out_of_stock": "{name} en rupture",
-
   "dashboard.stats.today": "Aujourd'hui",
   "dashboard.stats.this_week": "Cette semaine",
   "dashboard.stats.this_month": "Ce mois",
@@ -643,7 +620,6 @@
   "dashboard.stats.total_historical": "Total historique",
   "dashboard.stats.orders_suffix": "commandes",
   "dashboard.stats.demand_forecast": "Prevision de demande",
-
   "dashboard.live.unknown": "Inconnu",
   "dashboard.live.daily_stats": "Stats du jour",
   "dashboard.live.revenue_today": "CA du jour",
@@ -670,7 +646,6 @@
   "dashboard.live.compact_online": "En ligne:",
   "dashboard.live.compact_carts": "Paniers:",
   "dashboard.live.compact_preparing": "En prep:",
-
   "dashboard.menu.copy_suffix": " (copie)",
   "dashboard.menu.item_duplicated": "Item duplique",
   "dashboard.menu.duplicate_error": "Erreur lors de la duplication",
@@ -714,7 +689,6 @@
   "dashboard.menu.type_drink": "Boisson",
   "dashboard.menu.type_dessert": "Dessert",
   "dashboard.menu.type_supplement": "Supplement",
-
   "dashboard.page.colors_saved": "Couleurs enregistrees",
   "dashboard.page.info_saved": "Informations enregistrees",
   "dashboard.page.image_updated": "{type} mise a jour",
@@ -740,7 +714,6 @@
   "dashboard.page.page_preview": "Apercu de votre page",
   "dashboard.page.view_page": "Voir ma page",
   "dashboard.page.preview_title": "Apercu de la page",
-
   "dashboard.clients.load_error": "Erreur chargement clients",
   "dashboard.clients.title": "Mes clients",
   "dashboard.clients.total": "Total clients",
@@ -767,7 +740,6 @@
   "dashboard.clients.unban": "Debannir",
   "dashboard.clients.ban": "Bannir",
   "dashboard.clients.unbanned": "debanni",
-
   "dashboard.settings.manual": "Manuel",
   "dashboard.settings.manual_desc": "Activez/desactivez manuellement",
   "dashboard.settings.automatic": "Automatique",
@@ -835,7 +807,6 @@
   "dashboard.settings.disable_confirm": "Pour confirmer, saisissez le nom exact de votre restaurant :",
   "dashboard.settings.disable_button": "Desactiver",
   "dashboard.settings.demo_unavailable": "Non disponible en mode demo",
-
   "dashboard.qr.scan_to_order": "Scannez pour commander",
   "dashboard.qr.a4_downloaded": "Fiche A4 telechargee",
   "dashboard.qr.poster_downloaded": "Affiche vitrine telechargee",
@@ -856,7 +827,6 @@
   "dashboard.qr.pos_desc": "Ce QR code ouvre directement la caisse sur tablette :",
   "dashboard.qr.tip_title": "Astuce",
   "dashboard.qr.tip_text": "Imprimez la fiche A4 et decoupez les QR codes pour vos tables. Le format SVG est ideal pour une impression grand format sans perte de qualite.",
-
   "dashboard.tablets.usage_kitchen": "Cuisine",
   "dashboard.tablets.usage_pos": "Caisse",
   "dashboard.tablets.usage_service": "Service client",
@@ -892,7 +862,6 @@
   "dashboard.tablets.usage_label": "Usage",
   "dashboard.tablets.notes_label": "Notes (optionnel)",
   "dashboard.tablets.notes_placeholder": "Informations supplementaires...",
-
   "dashboard.customization.title": "Personnalisation commande",
   "dashboard.customization.modified": "Modifie",
   "dashboard.customization.added": "Ajoute",
@@ -928,7 +897,6 @@
   "dashboard.customization.default_label": "Par defaut",
   "dashboard.customization.optional_label": "Optionnel",
   "dashboard.customization.empty_state": "Aucun element. Cliquez \"Ajouter\" pour commencer.",
-
   "dashboard.manage.title": "Gerer mon restaurant",
   "dashboard.manage.menu_label": "Ma Carte",
   "dashboard.manage.menu_desc": "Modifier les plats, prix, categories",
@@ -946,7 +914,6 @@
   "dashboard.manage.settings_desc": "Horaires, modes, paiement",
   "dashboard.manage.stats_label": "Statistiques",
   "dashboard.manage.stats_desc": "Historique, tendances, exports",
-
   "dashboard.schedule.sunday": "Dimanche",
   "dashboard.schedule.monday": "Lundi",
   "dashboard.schedule.tuesday": "Mardi",
@@ -959,7 +926,6 @@
   "dashboard.schedule.closed": "Ferme",
   "dashboard.schedule.to": "a",
   "dashboard.schedule.add_slot": "Ajouter un creneau",
-
   "dashboard.ban.success": "{name} a ete banni",
   "dashboard.ban.error": "Erreur lors du bannissement",
   "dashboard.ban.title": "Bannir un client",
@@ -971,7 +937,6 @@
   "dashboard.ban.30_days": "30 jours",
   "dashboard.ban.permanent": "Permanent",
   "dashboard.ban.confirm": "Confirmer le ban",
-
   "dashboard.import.conversion_error": "{count} fichier(s) non convertis",
   "dashboard.import.no_usable_files": "Aucun fichier exploitable.",
   "dashboard.import.analysis_error": "Erreur lors de l'analyse",
@@ -989,7 +954,6 @@
   "dashboard.import.analyzing": "Analyse en cours...",
   "dashboard.import.ai_reading": "L'IA lit votre document et extrait les elements.",
   "dashboard.import.adding_items": "Ajout des elements a votre carte...",
-
   "dashboard.demand.tip_title": "Conseil du moment",
   "dashboard.demand.calendar_title": "Calendrier de la semaine",
   "dashboard.demand.lunch": "Midi",
@@ -1001,7 +965,6 @@
   "dashboard.demand.hourly_title": "Prevision horaire du jour",
   "dashboard.demand.intensity": "Intensite",
   "dashboard.demand.now": "Maintenant",
-
   "dashboard.referral.title": "Parrainage",
   "dashboard.referral.description": "Parrainez un collegue, gagnez 4 semaines gratuites chacun.",
   "dashboard.referral.referrals": "Parrainages",
@@ -1016,7 +979,6 @@
   "dashboard.referral.whatsapp_message": "Salut ! Je te recommande commandeici pour gerer tes commandes. Utilise mon code et on gagne tous les deux 4 semaines gratuites : {url}",
   "dashboard.referral.email_subject": "Je te recommande commandeici",
   "dashboard.referral.email_body": "Salut,\n\nJe te recommande commandeici pour gerer tes commandes directes sans commission. Utilise mon lien et on gagne tous les deux 4 semaines gratuites :\n\n{url}",
-
   "dashboard.assistant.shortcut_stock": "Gerer les ruptures",
   "dashboard.assistant.shortcut_ban": "Bannir un client",
   "dashboard.assistant.shortcut_supplements": "Ajouter des supplements",
@@ -1031,7 +993,6 @@
   "dashboard.assistant.contact_support": "Contacter le support",
   "dashboard.assistant.fallback": "Je n'ai pas trouve de reponse a votre question. Contactez-nous a contact@commandeici.com pour plus d'aide.",
   "dashboard.assistant.input_placeholder": "Tapez votre question...",
-
   "dashboard.onboarding.step_kitchen": "Cuisine",
   "dashboard.onboarding.step_kitchen_desc": "Ici, vous recevez et gerez toutes les commandes. Acceptez, preparez, et marquez comme prete en un clic.",
   "dashboard.onboarding.step_pos": "Caisse",
@@ -1044,7 +1005,6 @@
   "dashboard.onboarding.step_availability_desc": "Ce toggle active ou desactive les commandes instantanement. Pratique pour les pauses ou fermetures.",
   "dashboard.onboarding.step_sound": "Son",
   "dashboard.onboarding.step_sound_desc": "Activez le son pour etre alerte a chaque nouvelle commande. Indispensable en service !",
-
   "pos.order_type": "Type de commande",
   "pos.dine_in": "Sur place",
   "pos.takeaway": "A emporter",
@@ -1108,7 +1068,6 @@
   "pos.complete_no": "Complet sans {item}",
   "pos.drinks_label": "Boissons",
   "pos.desserts_label": "Desserts",
-
   "restaurant.not_found": "Restaurant introuvable",
   "restaurant.deactivated": "Ce restaurant n'est plus disponible pour le moment.",
   "restaurant.activating": "Cette page est en cours d'activation.",
@@ -1130,11 +1089,9 @@
   "restaurant.add_button": "Ajouter",
   "restaurant.reorder_success": "Commande ajoutee au panier !",
   "restaurant.show_phone": "Afficher le numero",
-
   "payment.card": "CB",
   "payment.cash": "Especes",
   "payment.ticket_restaurant": "Ticket restaurant",
-
   "schedule.sunday": "Dimanche",
   "schedule.monday": "Lundi",
   "schedule.tuesday": "Mardi",
@@ -1143,18 +1100,14 @@
   "schedule.friday": "Vendredi",
   "schedule.saturday": "Samedi",
   "schedule.not_accepting": "Ce restaurant n'accepte pas de commandes pour le moment.",
-
   "order.restaurant_unavailable": "Ce restaurant n'accepte pas de commandes pour le moment.",
   "order.error_generic": "Une erreur est survenue. Veuillez reessayer.",
-
   "client.today": "Aujourd'hui",
   "client.yesterday": "Hier",
   "client.days_ago": "Il y a {days} jours",
   "client.restaurant_fallback": "Restaurant",
   "client.generic_error": "Erreur",
-
   "nav.back": "Retour",
-
   "demo.banner_text": "Mode demo : testez librement, tout est interactif !",
   "demo.banner_cta": "Creer ma page : 14 jours gratuits",
   "demo.cta_discover": "Decouvrir en mode demo",
@@ -1179,7 +1132,6 @@
   "order.payment_method": "Mode de paiement",
   "order.payment_card": "Carte bancaire",
   "order.payment_cash": "Especes",
-
   "home.page_title": "commandeici - Espace restaurateur",
   "home.create_page": "Creer ma page",
   "home.title": "Espace restaurateur",
@@ -1187,9 +1139,9 @@
   "home.login": "Se connecter",
   "home.create_free": "Creer ma page gratuitement",
   "home.back_to_site": "Retour au site",
-
   "dashboard.orders.action_ready": "Prete",
   "dashboard.orders.action_done": "Terminee",
   "dashboard.orders.covers_count": "{count} couvert(s)",
-  "dashboard.orders.add_item": "Ajouter"
+  "dashboard.orders.add_item": "Ajouter",
+  "custom.nature": "Nature"
 }

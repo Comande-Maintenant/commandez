@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "已完成",
   "dashboard.orders.covers_count": "{count} 位",
   "dashboard.orders.add_item": "添加",
-  "restaurant.show_phone": "显示电话号码"
+  "restaurant.show_phone": "显示电话号码",
+  "custom.nature": "原味"
 }

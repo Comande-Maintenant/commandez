@@ -1127,5 +1127,6 @@
   "dashboard.orders.action_done": "Abgeschlossen",
   "dashboard.orders.covers_count": "{count} Gedeck(e)",
   "dashboard.orders.add_item": "Hinzufugen",
-  "restaurant.show_phone": "Telefonnummer anzeigen"
+  "restaurant.show_phone": "Telefonnummer anzeigen",
+  "custom.nature": "Ohne alles"
 }
