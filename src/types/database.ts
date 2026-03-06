@@ -137,6 +137,7 @@ export interface DbOrder {
   accepted_at: string | null;
   ready_at: string | null;
   completed_at: string | null;
+  estimated_ready_at: string | null;
   created_at: string;
   updated_at: string;
 }

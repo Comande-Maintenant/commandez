@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
+import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
 import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useLanguage } from "@/context/LanguageContext";
@@ -54,6 +54,13 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const [selectedOrder, setSelectedOrder] = useState<DbOrder | null>(null);
   const [rupturesOpen, setRupturesOpen] = useState(false);
   const [banTarget, setBanTarget] = useState<{ customer_name: string; customer_phone: string; restaurant_id: string; id?: string } | null>(null);
+
+  // Tick for countdown timers on cards (re-render every 5s)
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => setTick((t) => t + 1), 5000);
+    return () => clearInterval(iv);
+  }, []);
 
   // Demo auto-orders
   const demoIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -189,6 +196,14 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     setSelectedOrder(updatedOrder);
   };
 
+  // Calculate default prep time
+  const getDefaultPrepMinutes = (order: DbOrder) => {
+    const cfg = restaurant.prep_time_config;
+    if (!cfg) return 15;
+    const itemCount = ((order.items as any[]) || []).reduce((s: number, i: any) => s + (i.quantity || 1), 0);
+    return Math.min(cfg.default_minutes + itemCount * cfg.per_item_minutes, cfg.max_minutes);
+  };
+
   // Quick advance from card (without opening detail)
   const quickAdvance = async (e: React.MouseEvent, order: DbOrder) => {
     e.stopPropagation();
@@ -197,10 +212,15 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     if (!next) return;
 
     try {
+      const estimatedMinutes = next === "preparing" ? getDefaultPrepMinutes(order) : undefined;
       if (isDemo) {
         await advanceDemoOrder(order.id, next);
+        if (next === "preparing") {
+          const estAt = new Date(Date.now() + (estimatedMinutes || 15) * 60000).toISOString();
+          setOrders((prev) => prev.map((o) => o.id === order.id ? { ...o, estimated_ready_at: estAt } : o));
+        }
       } else {
-        await updateOrderStatus(order.id, next);
+        await updateOrderStatus(order.id, next, estimatedMinutes);
       }
       handleStatusChange(order.id, next);
     } catch {
@@ -321,6 +341,18 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           const statusFlow: Record<string, string> = { new: "Accepter", preparing: "Prete", ready: "Terminee" };
           const nextLabel = statusFlow[st];
 
+          // Timer countdown for card
+          const estReady = order.estimated_ready_at;
+          let timerLabel: string | null = null;
+          let timerUrgent = false;
+          if (estReady && (st === "preparing" || st === "new")) {
+            const remainSec = Math.max(0, Math.floor((new Date(estReady).getTime() - Date.now()) / 1000));
+            const m = Math.floor(remainSec / 60);
+            const s = remainSec % 60;
+            timerLabel = `${m}:${String(s).padStart(2, "0")}`;
+            if (remainSec <= 60) timerUrgent = true;
+          }
+
           return (
             <motion.div
               key={order.id}
@@ -330,13 +362,21 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
               onClick={() => setSelectedOrder(order)}
               className={`rounded-2xl border border-border border-l-4 p-3 sm:p-4 cursor-pointer hover:shadow-md active:shadow-sm transition-all ${statusColors[st]} ${st === "new" ? "animate-pulse-subtle" : ""}`}
             >
-              {/* Top row: number + badge + time */}
+              {/* Top row: number + badge + timer + time */}
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <span className="text-base sm:text-lg font-bold text-foreground">{formatDisplayNumber(order)}</span>
                   <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${badge.class}`}>{badge.text}</span>
                   {(order as any).source === "pos" && (
                     <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Caisse</span>
+                  )}
+                  {timerLabel && (
+                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 ${
+                      timerUrgent ? "bg-red-100 text-red-700" : "bg-purple-100 text-purple-700"
+                    }`}>
+                      <Timer className="h-3 w-3" />
+                      {timerLabel}
+                    </span>
                   )}
                 </div>
                 <span className="text-xs text-muted-foreground">{timeSince(order.created_at)}</span>
@@ -407,6 +447,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
             orderIndex={selectedIndex >= 0 ? selectedIndex : 0}
             totalOrders={filtered.length}
             menuItems={menuItems}
+            prepTimeConfig={restaurant.prep_time_config}
             isDemo={isDemo}
             onClose={() => setSelectedOrder(null)}
             onStatusChange={handleStatusChange}

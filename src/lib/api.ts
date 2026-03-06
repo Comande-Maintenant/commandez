@@ -137,10 +137,15 @@ export async function fetchOrders(restaurantId: string): Promise<DbOrder[]> {
   return (data ?? []) as unknown as DbOrder[];
 }
 
-export async function updateOrderStatus(orderId: string, status: string) {
+export async function updateOrderStatus(orderId: string, status: string, estimatedMinutes?: number) {
   const updates: Record<string, any> = { status };
   const now = new Date().toISOString();
-  if (status === "preparing") updates.accepted_at = now;
+  if (status === "preparing") {
+    updates.accepted_at = now;
+    if (estimatedMinutes) {
+      updates.estimated_ready_at = new Date(Date.now() + estimatedMinutes * 60000).toISOString();
+    }
+  }
   if (status === "ready") updates.ready_at = now;
   if (status === "done") updates.completed_at = now;
   const { error } = await supabase
@@ -154,6 +159,14 @@ export async function updateOrderItems(orderId: string, items: any[], total: num
   const { error } = await supabase
     .from("orders")
     .update({ items, subtotal: total, total })
+    .eq("id", orderId);
+  if (error) throw error;
+}
+
+export async function updateOrderEstimatedReady(orderId: string, estimatedReadyAt: string | null) {
+  const { error } = await supabase
+    .from("orders")
+    .update({ estimated_ready_at: estimatedReadyAt })
     .eq("id", orderId);
   if (error) throw error;
 }

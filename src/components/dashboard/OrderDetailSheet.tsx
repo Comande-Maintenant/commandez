@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   ArrowLeft,
   Check,
   X,
   Clock,
+  Timer,
   Phone,
   ShoppingBag,
   UtensilsCrossed,
@@ -19,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDisplayNumber } from "@/lib/orderNumber";
-import { updateOrderItems, updateOrderStatus, advanceDemoOrder } from "@/lib/api";
+import { updateOrderItems, updateOrderStatus, updateOrderEstimatedReady, advanceDemoOrder } from "@/lib/api";
 import type { DbOrder, DbMenuItem } from "@/types/database";
 import { toast } from "sonner";
 
@@ -30,6 +31,7 @@ interface Props {
   orderIndex: number;
   totalOrders: number;
   menuItems: DbMenuItem[];
+  prepTimeConfig?: { default_minutes: number; per_item_minutes: number; max_minutes: number } | null;
   isDemo?: boolean;
   onClose: () => void;
   onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
@@ -57,6 +59,7 @@ export const OrderDetailSheet = ({
   orderIndex,
   totalOrders,
   menuItems,
+  prepTimeConfig,
   isDemo,
   onClose,
   onStatusChange,
@@ -71,11 +74,59 @@ export const OrderDetailSheet = ({
   const [editTotal, setEditTotal] = useState(Number(order.total));
   const [manualTotalEdit, setManualTotalEdit] = useState(false);
   const [addingItem, setAddingItem] = useState(false);
+  const [editingTimer, setEditingTimer] = useState(false);
+  const [timerMinutes, setTimerMinutes] = useState(15);
+  const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
 
   const status = order.status as OrderStatus;
   const action = statusActions[status];
   const statusLabel = statusLabels[status];
   const items = (order.items as any[]) || [];
+
+  // Calculate default prep time from config
+  const defaultPrepMinutes = useMemo(() => {
+    if (!prepTimeConfig) return 15;
+    const itemCount = items.reduce((s, i) => s + (i.quantity || 1), 0);
+    return Math.min(
+      prepTimeConfig.default_minutes + itemCount * prepTimeConfig.per_item_minutes,
+      prepTimeConfig.max_minutes
+    );
+  }, [prepTimeConfig, items]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (!order.estimated_ready_at) {
+      setRemainingSeconds(null);
+      return;
+    }
+    const update = () => {
+      const diff = Math.max(0, Math.floor((new Date(order.estimated_ready_at!).getTime() - Date.now()) / 1000));
+      setRemainingSeconds(diff);
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [order.estimated_ready_at]);
+
+  const formatCountdown = (totalSec: number) => {
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
+  };
+
+  const handleSetTimer = async (minutes: number) => {
+    const estimatedAt = new Date(Date.now() + minutes * 60000).toISOString();
+    try {
+      if (!isDemo) {
+        await updateOrderEstimatedReady(order.id, estimatedAt);
+      }
+      onOrderUpdated({ ...order, estimated_ready_at: estimatedAt });
+      setEditingTimer(false);
+      toast.success(`Temps estime : ${minutes} min`);
+    } catch {
+      toast.error("Erreur");
+    }
+  };
 
   const timeSince = (dateStr: string) => {
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
@@ -95,8 +146,14 @@ export const OrderDetailSheet = ({
     try {
       if (isDemo) {
         await advanceDemoOrder(order.id, action.next);
+        // Set timer locally for demo
+        if (action.next === "preparing") {
+          const estimatedAt = new Date(Date.now() + defaultPrepMinutes * 60000).toISOString();
+          onOrderUpdated({ ...order, status: action.next, estimated_ready_at: estimatedAt });
+        }
       } else {
-        await updateOrderStatus(order.id, action.next);
+        const estimatedMinutes = action.next === "preparing" ? defaultPrepMinutes : undefined;
+        await updateOrderStatus(order.id, action.next, estimatedMinutes);
       }
       onStatusChange(order.id, action.next);
     } catch {
@@ -288,6 +345,93 @@ export const OrderDetailSheet = ({
           </div>
         </div>
 
+        {/* Prep time timer */}
+        {(status === "preparing" || status === "new") && (
+          <div className="py-3 border-b border-border">
+            {!editingTimer ? (
+              <button
+                onClick={() => {
+                  setTimerMinutes(
+                    remainingSeconds !== null
+                      ? Math.max(1, Math.ceil(remainingSeconds / 60))
+                      : defaultPrepMinutes
+                  );
+                  setEditingTimer(true);
+                }}
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Timer className="h-5 w-5 text-foreground" />
+                  <span className="text-sm font-medium text-foreground">Temps de preparation</span>
+                </div>
+                {remainingSeconds !== null ? (
+                  <span className={`text-lg font-bold tabular-nums ${remainingSeconds <= 60 ? "text-red-600" : remainingSeconds <= 180 ? "text-amber-600" : "text-foreground"}`}>
+                    {formatCountdown(remainingSeconds)}
+                  </span>
+                ) : (
+                  <span className="text-sm text-muted-foreground">Definir</span>
+                )}
+              </button>
+            ) : (
+              <div className="p-3 rounded-xl bg-secondary/50 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Timer className="h-5 w-5 text-foreground" />
+                    <span className="text-sm font-medium text-foreground">Ajuster le temps</span>
+                  </div>
+                  <button
+                    onClick={() => setEditingTimer(false)}
+                    className="text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    Annuler
+                  </button>
+                </div>
+                {/* Quick select buttons */}
+                <div className="flex flex-wrap gap-2">
+                  {[5, 10, 15, 20, 25, 30, 45, 60].map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setTimerMinutes(m)}
+                      className={`px-3 py-2 rounded-xl text-sm font-medium border-2 transition-all min-h-[44px] ${
+                        timerMinutes === m
+                          ? "border-foreground bg-foreground text-primary-foreground"
+                          : "border-border hover:border-foreground/30"
+                      }`}
+                    >
+                      {m} min
+                    </button>
+                  ))}
+                </div>
+                {/* Custom input */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setTimerMinutes(Math.max(1, timerMinutes - 1))}
+                    className="w-10 h-10 rounded-xl border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <div className="flex-1 text-center">
+                    <span className="text-2xl font-bold text-foreground tabular-nums">{timerMinutes}</span>
+                    <span className="text-sm text-muted-foreground ms-1">min</span>
+                  </div>
+                  <button
+                    onClick={() => setTimerMinutes(timerMinutes + 1)}
+                    className="w-10 h-10 rounded-xl border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+                <Button
+                  onClick={() => handleSetTimer(timerMinutes)}
+                  className="w-full h-12 rounded-xl text-sm font-semibold"
+                >
+                  Valider - pret dans {timerMinutes} min
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Items - read only or edit mode */}
         {!editing ? (
           <div className="py-4">
@@ -396,7 +540,7 @@ export const OrderDetailSheet = ({
                     <div className="flex items-center gap-2 mt-1">
                       <Input
                         type="number"
-                        step="0.01"
+                        step="0.50"
                         min="0"
                         value={item.price}
                         onChange={(e) => updateEditItemPrice(i, parseFloat(e.target.value) || 0)}
@@ -490,7 +634,7 @@ export const OrderDetailSheet = ({
                 <div className="flex items-center gap-2">
                   <Input
                     type="number"
-                    step="0.01"
+                    step="0.50"
                     min="0"
                     value={editTotal.toFixed(2)}
                     onChange={(e) => {

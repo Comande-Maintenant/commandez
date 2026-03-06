@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -208,10 +208,22 @@ const SuiviPage = () => {
   }, [order]);
 
   const estimatedMinutes = getEstimatedMinutes();
+
+  // Use estimated_ready_at from restaurateur if available
+  const remainingMinutes = useMemo(() => {
+    if (order?.estimated_ready_at) {
+      const remaining = Math.max(0, Math.ceil((new Date(order.estimated_ready_at).getTime() - Date.now()) / 60000));
+      return remaining;
+    }
+    const elapsedMs = order ? Date.now() - new Date(order.created_at).getTime() : 0;
+    return Math.max(0, Math.ceil(estimatedMinutes - elapsedMs / 60000));
+  }, [order, estimatedMinutes]);
+
   const elapsedMs = order ? Date.now() - new Date(order.created_at).getTime() : 0;
   const elapsedMinutes = elapsedMs / 60000;
-  const elapsedRatio = Math.min(elapsedMinutes / estimatedMinutes, 1);
-  const remainingMinutes = Math.max(0, Math.ceil(estimatedMinutes - elapsedMinutes));
+  const elapsedRatio = order?.estimated_ready_at
+    ? Math.min(1, 1 - (remainingMinutes / Math.max(1, estimatedMinutes)))
+    : Math.min(elapsedMinutes / estimatedMinutes, 1);
 
   const activeStepIndex = order ? getStepIndex(order.status, elapsedRatio) : 0;
 
