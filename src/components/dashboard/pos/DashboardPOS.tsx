@@ -19,6 +19,7 @@ import { POSBoissons } from "./POSBoissons";
 import { POSDesserts } from "./POSDesserts";
 import { POSRecap } from "./POSRecap";
 import { POSSuccess } from "./POSSuccess";
+import { POSSimple } from "./POSSimple";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -211,6 +212,77 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   };
 
   const config = restaurant.customization_config;
+  const [simpleSubmitting, setSimpleSubmitting] = useState(false);
+
+  // Simplified POS when no customization config (e.g. demo, or simple restaurants)
+  if (!config) {
+    const handleSimpleSubmit = async (items: any[], total: number, orderType: string, customerName: string, covers: number, paymentMethod: string) => {
+      setSimpleSubmitting(true);
+      try {
+        await createOrder({
+          restaurant_id: restaurant.id,
+          customer_name: customerName,
+          customer_phone: "",
+          order_type: orderType,
+          source: isDemo ? "demo" : "pos",
+          covers,
+          items,
+          subtotal: total,
+          total,
+          payment_method: paymentMethod,
+        });
+        toast.success("Commande envoyee !");
+      } catch (e) {
+        toast.error("Erreur lors de l'envoi");
+      } finally {
+        setSimpleSubmitting(false);
+      }
+    };
+
+    return (
+      <div className="relative">
+        {/* A encaisser panel */}
+        {readyOrders.length > 0 && (
+          <div className="mb-6 bg-card rounded-2xl border border-border overflow-hidden">
+            <button
+              onClick={() => setReadyExpanded(!readyExpanded)}
+              className="w-full flex items-center justify-between px-4 py-3 hover:bg-secondary/50 transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-foreground">A encaisser</span>
+                <span className="bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))] text-xs font-bold px-2 py-0.5 rounded-full">
+                  {readyOrders.length}
+                </span>
+              </div>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${readyExpanded ? "rotate-180" : ""}`} />
+            </button>
+            {readyExpanded && (
+              <div className="px-4 pb-3 space-y-2">
+                {readyOrders.map((order) => (
+                  <div key={order.id} className="flex items-center justify-between bg-secondary/50 rounded-xl px-3 py-2">
+                    <div className="min-w-0">
+                      <span className="text-sm font-bold text-foreground">{formatDisplayNumber(order)}</span>
+                      <span className="text-sm text-muted-foreground ml-2">{order.customer_name}</span>
+                      <span className="text-sm font-medium text-foreground ml-2">{Number(order.total).toFixed(2)} EUR</span>
+                    </div>
+                    <Button size="sm" variant="outline" className="rounded-xl gap-1 min-h-[36px] flex-shrink-0" onClick={() => markAsDone(order.id)}>
+                      <Check className="h-4 w-4" /> Paye
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        <POSSimple
+          menuItems={menuItems}
+          availablePaymentMethods={restaurant.payment_methods || ["cash", "card"]}
+          onSubmit={handleSimpleSubmit}
+          submitting={simpleSubmitting}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
