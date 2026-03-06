@@ -153,6 +153,15 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
           </div>
         </div>
 
+        {/* Add more items */}
+        <button
+          onClick={() => setScreen("menu")}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all"
+        >
+          <Plus className="h-4 w-4" />
+          Ajouter un article
+        </button>
+
         {/* Payment */}
         <div className="flex gap-2 flex-wrap">
           {(availablePaymentMethods.length > 0 ? availablePaymentMethods : ["cash", "card"]).map((m) => (

@@ -1,4 +1,4 @@
-import { ArrowLeft, UtensilsCrossed, ShoppingBag, Phone, Pencil, CreditCard, Banknote, Ticket, Timer, Plus, Minus } from "lucide-react";
+import { ArrowLeft, UtensilsCrossed, ShoppingBag, Phone, Pencil, CreditCard, Banknote, Ticket, Timer, Plus, Minus, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,7 @@ interface Props {
   onSetNotes: (notes: string) => void;
   onSetPaymentMethod: (method: string) => void;
   onEditPerson: (index: number) => void;
+  onAddPerson: () => void;
   onSubmit: () => void;
   onBack: () => void;
   submitting: boolean;
@@ -58,6 +59,7 @@ export const POSRecap = ({
   onSetNotes,
   onSetPaymentMethod,
   onEditPerson,
+  onAddPerson,
   onSubmit,
   onBack,
   submitting,
@@ -124,6 +126,15 @@ export const POSRecap = ({
             </div>
           );
         })}
+
+        {/* Add person button */}
+        <button
+          onClick={onAddPerson}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border-2 border-dashed border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all"
+        >
+          <UserPlus className="h-4 w-4" />
+          Ajouter une personne
+        </button>
 
         {/* Drinks section */}
         {drinks.length > 0 && (

@@ -447,6 +447,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
             onSetNotes={(notes) => setState((s) => ({ ...s, notes }))}
             onSetPaymentMethod={(method) => setState((s) => ({ ...s, paymentMethod: method }))}
             onEditPerson={handleEditPerson}
+            onAddPerson={handleAddPerson}
             onSubmit={handleSubmit}
             onBack={() => setScreen("desserts")}
             submitting={state.submitting}
