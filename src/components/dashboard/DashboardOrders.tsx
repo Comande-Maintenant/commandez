@@ -404,13 +404,31 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                 )}
               </div>
 
-              {/* Items summary (compact) */}
-              <div className="text-sm text-muted-foreground mb-2 line-clamp-2">
+              {/* Items detail for kitchen */}
+              <div className="space-y-1.5 mb-2">
                 {orderItems.map((item: any, i: number) => (
-                  <span key={i}>
-                    {i > 0 && " - "}
-                    <span className="text-foreground font-medium">{item.quantity > 1 ? `${item.quantity}x ` : ""}{item.name}</span>
-                  </span>
+                  <div key={i} className="text-sm">
+                    <span className="text-foreground font-semibold">
+                      {item.quantity > 1 ? `${item.quantity}x ` : ""}{item.name}
+                    </span>
+                    {item.viande_choice && (
+                      <span className="text-foreground font-medium ml-1">- {item.viande_choice}</span>
+                    )}
+                    {item.garniture_choices?.length > 0 && (
+                      <p className="text-muted-foreground text-xs ml-3">{item.garniture_choices.join(", ")}</p>
+                    )}
+                    {item.sauces?.length > 0 && (
+                      <p className="text-muted-foreground text-xs ml-3">Sauce : {item.sauces.join(", ")}</p>
+                    )}
+                    {item.supplements?.length > 0 && (
+                      <p className="text-muted-foreground text-xs ml-3">
+                        + {item.supplements.map((s: any) => typeof s === "string" ? s : s.name).join(", ")}
+                      </p>
+                    )}
+                    {item.notes && (
+                      <p className="text-amber-600 text-xs ml-3 italic">{item.notes}</p>
+                    )}
+                  </div>
                 ))}
               </div>
 

@@ -54,22 +54,49 @@ export function generateDemoOrders(restaurantId: string): DbOrder[] {
     date.setDate(date.getDate() - daysAgo);
     const dayOfWeek = date.getDay();
 
-    // Target ~25K CA over 30 days = ~833/day, ticket moyen ~12 = ~70 orders/day
-    // Weekends busier, Mon-Tue quieter, Sunday closed
-    if (dayOfWeek === 0) continue; // Closed on Sunday
-    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
-    const isQuiet = dayOfWeek === 1 || dayOfWeek === 2;
-    const baseOrders = isWeekend ? 85 : isQuiet ? 55 : 70;
-    const variance = Math.floor(rand() * 12) - 5;
-    const dayOrderCount = Math.max(30, baseOrders + variance);
+    // Closed on Sunday
+    if (dayOfWeek === 0) continue;
+
+    // Base order count by day of week with realistic variation
+    const dayBases: Record<number, number> = {
+      1: 48, // Monday - quiet
+      2: 52, // Tuesday - quiet
+      3: 65, // Wednesday - average
+      4: 72, // Thursday - picking up
+      5: 95, // Friday - busy
+      6: 88, // Saturday - busy
+    };
+    const baseOrders = dayBases[dayOfWeek] || 65;
+
+    // High variance: some days are great, some are bad (-30% to +25%)
+    // Use daysAgo as extra seed for day-level variation
+    const dayVariance = Math.floor(rand() * 40) - 18; // -18 to +21
+    const weatherPenalty = rand() < 0.12 ? -Math.floor(rand() * 20) - 10 : 0; // 12% bad weather days
+    const eventBonus = rand() < 0.08 ? Math.floor(rand() * 25) + 10 : 0; // 8% event days (match, fete)
+    const dayOrderCount = Math.max(20, baseOrders + dayVariance + weatherPenalty + eventBonus);
+
+    // Lunch/dinner split varies by day
+    const lunchRatio = 0.35 + rand() * 0.2; // 35-55% lunch
 
     for (let j = 0; j < dayOrderCount; j++) {
-      // Distribute across lunch (11-14) and dinner (18-22) peaks
-      const isLunch = rand() < 0.45;
-      const hour = isLunch
-        ? 11 + Math.floor(rand() * 3)
-        : 18 + Math.floor(rand() * 4);
-      const minute = Math.floor(rand() * 60);
+      // Distribute across lunch (11-14:30) and dinner (18-22:30) with variable peaks
+      const isLunch = rand() < lunchRatio;
+      let hour: number;
+      let minute: number;
+
+      if (isLunch) {
+        // Lunch peak around 12:15 with gaussian-ish distribution
+        const offset = (rand() + rand()) / 2; // pseudo-gaussian 0-1
+        const totalMinutes = Math.floor(offset * 210); // span 3.5h = 210min from 11:00
+        hour = 11 + Math.floor(totalMinutes / 60);
+        minute = totalMinutes % 60;
+      } else {
+        // Dinner peak around 19:45
+        const offset = (rand() + rand()) / 2;
+        const totalMinutes = Math.floor(offset * 270); // span 4.5h = 270min from 18:00
+        hour = 18 + Math.floor(totalMinutes / 60);
+        minute = totalMinutes % 60;
+      }
 
       const orderDate = new Date(date);
       orderDate.setHours(hour, minute, Math.floor(rand() * 60), 0);
@@ -77,14 +104,15 @@ export function generateDemoOrders(restaurantId: string): DbOrder[] {
       // Skip future times for today
       if (daysAgo === 0 && orderDate > now) continue;
 
-      // 1-3 main items per order + sides + drinks for ~12 EUR average
-      const itemCount = 1 + Math.floor(rand() * 2);
+      // Variable item count: some orders are small (1 item), some big (3-4 items for groups)
+      const isGroup = rand() < 0.15; // 15% group orders
+      const itemCount = isGroup ? 2 + Math.floor(rand() * 3) : 1 + Math.floor(rand() * 2);
       const items: any[] = [];
       let total = 0;
 
       for (let k = 0; k < itemCount; k++) {
         const item = pick(DEMO_ITEMS, rand);
-        const qty = rand() < 0.15 ? 2 : 1;
+        const qty = isGroup && rand() < 0.3 ? 2 : rand() < 0.1 ? 2 : 1;
         items.push({
           name: item.name,
           quantity: qty,
@@ -93,32 +121,39 @@ export function generateDemoOrders(restaurantId: string): DbOrder[] {
         total += item.price * qty;
       }
 
-      // 40% chance of frites side
-      if (rand() < 0.4) {
-        items.push({ name: "Barquette Frites", quantity: 1, price: 3 });
-        total += 3;
+      // Frites: more likely with groups
+      if (rand() < (isGroup ? 0.65 : 0.35)) {
+        const fQty = isGroup && rand() < 0.4 ? 2 : 1;
+        items.push({ name: "Barquette Frites", quantity: fQty, price: 3 });
+        total += 3 * fQty;
       }
 
-      // 70% chance of a drink
-      if (rand() < 0.7) {
+      // Drinks: groups almost always, solo sometimes
+      if (rand() < (isGroup ? 0.9 : 0.6)) {
         const drink = pick(DEMO_DRINKS, rand);
-        const dQty = rand() < 0.3 ? 2 : 1;
+        const dQty = isGroup ? 1 + Math.floor(rand() * 3) : rand() < 0.2 ? 2 : 1;
         items.push({ name: drink.name, quantity: dQty, price: drink.price });
         total += drink.price * dQty;
       }
 
-      // 20% chance supplement (fromage/oeuf)
-      if (rand() < 0.2) {
-        items.push({ name: "Fromage", quantity: 1, price: 1 });
+      // Supplements: fromage, oeuf
+      if (rand() < 0.25) {
+        const suppName = rand() < 0.6 ? "Fromage" : "Oeuf";
+        items.push({ name: suppName, quantity: 1, price: 1 });
         total += 1;
       }
 
       const name = pick(DEMO_NAMES, rand);
       const orderType = rand() < 0.35 ? "sur_place" : "collect";
-      const prepMs = (8 + Math.floor(rand() * 15)) * 60000;
-      const acceptedAt = new Date(orderDate.getTime() + 60000 + Math.floor(rand() * 120000));
+
+      // Variable prep times: quick orders vs slow ones
+      const basePrepMin = isGroup ? 12 + Math.floor(rand() * 10) : 6 + Math.floor(rand() * 12);
+      const prepMs = basePrepMin * 60000;
+      const acceptDelay = 30000 + Math.floor(rand() * 180000); // 30s to 3.5min to accept
+      const acceptedAt = new Date(orderDate.getTime() + acceptDelay);
       const readyAt = new Date(acceptedAt.getTime() + prepMs);
-      const completedAt = new Date(readyAt.getTime() + 60000 + Math.floor(rand() * 180000));
+      const pickupDelay = 30000 + Math.floor(rand() * 300000); // 30s to 5min to pick up
+      const completedAt = new Date(readyAt.getTime() + pickupDelay);
 
       orders.push({
         id: `demo-${daysAgo}-${j}`,
@@ -136,7 +171,7 @@ export function generateDemoOrders(restaurantId: string): DbOrder[] {
         accepted_at: acceptedAt.toISOString(),
         ready_at: readyAt.toISOString(),
         completed_at: completedAt.toISOString(),
-        covers: orderType === "sur_place" ? 1 + Math.floor(rand() * 4) : null,
+        covers: orderType === "sur_place" ? 1 + Math.floor(rand() * (isGroup ? 6 : 3)) : null,
       } as any);
     }
   }
