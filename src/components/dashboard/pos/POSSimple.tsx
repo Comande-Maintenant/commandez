@@ -1,63 +1,56 @@
-import { useState } from "react";
-import { ShoppingBag, UtensilsCrossed, Plus, Minus, Trash2, ChevronRight, Check } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { ShoppingBag, UtensilsCrossed, Plus, Minus, Trash2, ChevronRight, Check, ArrowLeft } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useLanguage } from "@/context/LanguageContext";
+import { useCart } from "@/context/CartContext";
+import { MenuItemCard } from "@/components/MenuItemCard";
+import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
+import type { UniversalCustomizationData } from "@/types/customization";
 import type { DbMenuItem } from "@/types/database";
 
-interface CartLine {
-  item: DbMenuItem;
-  qty: number;
-}
-
 interface Props {
+  restaurantId: string;
+  restaurantSlug: string;
   menuItems: DbMenuItem[];
+  primaryColor: string;
   availablePaymentMethods: string[];
   onSubmit: (items: any[], total: number, orderType: string, customerName: string, covers: number, paymentMethod: string) => Promise<void>;
   submitting: boolean;
 }
 
-export const POSSimple = ({ menuItems, availablePaymentMethods, onSubmit, submitting }: Props) => {
-  const { t } = useLanguage();
-  const [cart, setCart] = useState<CartLine[]>([]);
+export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColor, availablePaymentMethods, onSubmit, submitting }: Props) => {
+  const { items, subtotal, clearCart } = useCart();
+  const [customizationData, setCustomizationData] = useState<UniversalCustomizationData | null>(null);
   const [orderType, setOrderType] = useState<"sur_place" | "collect">("sur_place");
   const [customerName, setCustomerName] = useState("");
   const [covers, setCovers] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [screen, setScreen] = useState<"menu" | "recap" | "success">("menu");
-  const [displayNumber, setDisplayNumber] = useState("");
+
+  useEffect(() => {
+    clearCart();
+    fetchUniversalCustomizationData(restaurantId).then(setCustomizationData);
+  }, [restaurantId]);
 
   const categories = [...new Set(menuItems.filter((i) => i.enabled).map((i) => i.category))];
-  const total = cart.reduce((s, l) => s + l.item.price * l.qty, 0);
-
-  const addItem = (item: DbMenuItem) => {
-    setCart((prev) => {
-      const existing = prev.find((l) => l.item.id === item.id);
-      if (existing) return prev.map((l) => l.item.id === item.id ? { ...l, qty: l.qty + 1 } : l);
-      return [...prev, { item, qty: 1 }];
-    });
-  };
-
-  const updateQty = (itemId: string, delta: number) => {
-    setCart((prev) =>
-      prev
-        .map((l) => l.item.id === itemId ? { ...l, qty: l.qty + delta } : l)
-        .filter((l) => l.qty > 0)
-    );
-  };
 
   const handleSubmit = async () => {
-    const items = cart.map((l) => ({
-      name: l.item.name,
-      menu_item_id: l.item.id,
-      quantity: l.qty,
-      price: l.item.price,
-      sauces: [],
-      supplements: [],
+    const orderItems = items.map((i) => ({
+      name: i.menuItem.name,
+      menu_item_id: i.menuItem.id,
+      quantity: i.quantity,
+      price: i.totalPrice,
+      sauces: i.selectedSauces,
+      supplements: i.selectedSupplements.map((s) => ({ name: s.name, price: s.price })),
+      viande_choice: i.viandeChoice || null,
+      garniture_choices: i.garnitureChoices || null,
     }));
+    const total = subtotal;
     const name = customerName || `Caisse (${covers} pers.)`;
-    await onSubmit(items, total, orderType, name, covers, paymentMethod);
+    await onSubmit(orderItems, total, orderType, name, covers, paymentMethod);
+    clearCart();
+    setScreen("success");
   };
 
   if (screen === "success") {
@@ -71,8 +64,7 @@ export const POSSimple = ({ menuItems, availablePaymentMethods, onSubmit, submit
           <Check className="h-10 w-10 text-green-600" />
         </motion.div>
         <p className="text-2xl font-bold text-foreground mb-2">Commande envoyee</p>
-        {displayNumber && <p className="text-lg text-muted-foreground mb-6">{displayNumber}</p>}
-        <Button onClick={() => { setCart([]); setCustomerName(""); setCovers(1); setScreen("menu"); }} className="rounded-xl">
+        <Button onClick={() => { setCustomerName(""); setCovers(1); setScreen("menu"); }} className="rounded-xl">
           Nouvelle commande
         </Button>
       </div>
@@ -84,7 +76,7 @@ export const POSSimple = ({ menuItems, availablePaymentMethods, onSubmit, submit
       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
         <div className="flex items-center gap-3 mb-2">
           <button onClick={() => setScreen("menu")} className="p-2 rounded-xl hover:bg-secondary">
-            <Minus className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5" />
           </button>
           <h2 className="text-lg font-bold text-foreground">Recap commande</h2>
         </div>
@@ -123,15 +115,21 @@ export const POSSimple = ({ menuItems, availablePaymentMethods, onSubmit, submit
 
         {/* Items */}
         <div className="bg-secondary/50 rounded-xl p-3 space-y-2">
-          {cart.map((line) => (
-            <div key={line.item.id} className="flex items-center justify-between text-sm">
-              <span className="text-foreground">{line.qty}x {line.item.name}</span>
-              <span className="font-medium">{(line.item.price * line.qty).toFixed(2)} €</span>
+          {items.map((line) => (
+            <div key={line.id} className="flex items-center justify-between text-sm">
+              <div>
+                <span className="text-foreground font-medium">{line.quantity}x {line.menuItem.name}</span>
+                {line.viandeChoice && <span className="text-muted-foreground text-xs ml-1">({line.viandeChoice})</span>}
+                {line.selectedSauces.length > 0 && (
+                  <p className="text-xs text-muted-foreground">{line.selectedSauces.join(", ")}</p>
+                )}
+              </div>
+              <span className="font-medium">{(line.totalPrice * line.quantity).toFixed(2)} €</span>
             </div>
           ))}
           <div className="border-t pt-2 mt-2 flex justify-between font-bold text-foreground">
             <span>Total</span>
-            <span>{total.toFixed(2)} €</span>
+            <span>{subtotal.toFixed(2)} €</span>
           </div>
         </div>
 
@@ -150,32 +148,33 @@ export const POSSimple = ({ menuItems, availablePaymentMethods, onSubmit, submit
 
         <Button
           onClick={handleSubmit}
-          disabled={submitting || cart.length === 0}
+          disabled={submitting || items.length === 0}
           className="w-full h-14 rounded-xl text-base font-semibold"
         >
-          {submitting ? "..." : `Envoyer - ${total.toFixed(2)} €`}
+          {submitting ? "..." : `Envoyer - ${subtotal.toFixed(2)} €`}
         </Button>
       </motion.div>
     );
   }
 
-  // Menu screen
+  // Menu screen - reuse MenuItemCard with full customization
   return (
     <div className="space-y-4">
       {/* Floating cart bar */}
-      {cart.length > 0 && (
+      {items.length > 0 && (
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="sticky top-16 z-40 bg-foreground text-primary-foreground rounded-xl p-3 flex items-center justify-between shadow-lg"
+          className="sticky top-16 z-40 rounded-xl p-3 flex items-center justify-between shadow-lg text-white"
+          style={{ backgroundColor: primaryColor }}
         >
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-4 w-4" />
-            <span className="text-sm font-medium">{cart.reduce((s, l) => s + l.qty, 0)} articles</span>
-            <span className="font-bold">{total.toFixed(2)} €</span>
+            <span className="text-sm font-medium">{items.reduce((s, l) => s + l.quantity, 0)} articles</span>
+            <span className="font-bold">{subtotal.toFixed(2)} €</span>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setCart([])} className="p-1.5 rounded-lg hover:bg-white/20 transition-colors">
+            <button onClick={clearCart} className="p-1.5 rounded-lg hover:bg-white/20 transition-colors">
               <Trash2 className="h-4 w-4" />
             </button>
             <Button
@@ -190,46 +189,26 @@ export const POSSimple = ({ menuItems, availablePaymentMethods, onSubmit, submit
         </motion.div>
       )}
 
-      {/* Categories + items grid */}
+      {/* Menu items by category */}
       {categories.map((cat) => {
-        const items = menuItems.filter((i) => i.enabled && i.category === cat);
-        if (items.length === 0) return null;
+        const catItems = menuItems.filter((i) => i.enabled && i.category === cat);
+        if (catItems.length === 0) return null;
         return (
           <div key={cat}>
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">{cat}</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-              {items.map((item) => {
-                const inCart = cart.find((l) => l.item.id === item.id);
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => addItem(item)}
-                    className={`relative text-left p-3 rounded-xl border-2 transition-all hover:shadow-sm ${
-                      inCart ? "border-foreground bg-secondary" : "border-border bg-card"
-                    }`}
-                  >
-                    <p className="text-sm font-medium text-foreground leading-tight">{item.name}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{item.price.toFixed(2)} €</p>
-                    {inCart && (
-                      <div className="absolute top-1 right-1 flex items-center gap-1">
-                        <button
-                          onClick={(e) => { e.stopPropagation(); updateQty(item.id, -1); }}
-                          className="w-6 h-6 rounded-full bg-foreground text-primary-foreground flex items-center justify-center text-xs"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="text-xs font-bold text-foreground w-4 text-center">{inCart.qty}</span>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); updateQty(item.id, 1); }}
-                          className="w-6 h-6 rounded-full bg-foreground text-primary-foreground flex items-center justify-center text-xs"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
+            <div className="space-y-2">
+              {catItems.map((item, i) => (
+                <MenuItemCard
+                  key={item.id}
+                  item={item}
+                  index={i}
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurantId}
+                  primaryColor={primaryColor}
+                  customizationData={customizationData}
+                  menuItems={menuItems}
+                />
+              ))}
             </div>
           </div>
         );

@@ -275,7 +275,10 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
           </div>
         )}
         <POSSimple
+          restaurantId={restaurant.id}
+          restaurantSlug={restaurant.slug}
           menuItems={menuItems}
+          primaryColor={restaurant.primary_color || "#10B981"}
           availablePaymentMethods={restaurant.payment_methods || ["cash", "card"]}
           onSubmit={handleSimpleSubmit}
           submitting={simpleSubmitting}

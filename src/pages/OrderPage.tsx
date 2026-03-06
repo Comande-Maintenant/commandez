@@ -191,7 +191,7 @@ const OrderPage = () => {
     } catch (e: any) {
       console.error("Order error:", e);
       const msg = e?.message || e?.details || String(e);
-      toast.error(`Erreur: ${msg}`);
+      toast.error("Erreur lors de l'envoi de la commande");
     } finally {
       setSubmitting(false);
     }
