@@ -19,10 +19,12 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
   const { t, tMenu } = useLanguage();
   const [selectedSauces, setSelectedSauces] = useState<string[]>([]);
   const [selectedSupplements, setSelectedSupplements] = useState<Supplement[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
 
   const accent = primaryColor || "#10B981";
   const translated = tMenu(item);
+  const variants = item.variants ?? [];
 
   const toggleSauce = (sauce: string) => {
     setSelectedSauces((prev) =>
@@ -36,18 +38,29 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
     );
   };
 
+  const basePrice = variants.length > 0 && selectedVariant !== null
+    ? variants[selectedVariant].price
+    : item.price;
+
   const unitPrice = useMemo(() => {
-    return item.price + selectedSupplements.reduce((sum, s) => sum + s.price, 0);
-  }, [item.price, selectedSupplements]);
+    return basePrice + selectedSupplements.reduce((sum, s) => sum + s.price, 0);
+  }, [basePrice, selectedSupplements]);
 
   const total = unitPrice * quantity;
 
+  const canAdd = variants.length === 0 || selectedVariant !== null;
+
   const handleAdd = () => {
+    if (!canAdd) return;
+    const syntheticItem = variants.length > 0 && selectedVariant !== null
+      ? { ...item, name: `${item.name} (${variants[selectedVariant].name})`, price: variants[selectedVariant].price }
+      : item;
     for (let i = 0; i < quantity; i++) {
-      addItem(item, selectedSauces, selectedSupplements, restaurantSlug, restaurantId);
+      addItem(syntheticItem, selectedSauces, selectedSupplements, restaurantSlug, restaurantId);
     }
     setSelectedSauces([]);
     setSelectedSupplements([]);
+    setSelectedVariant(null);
     setQuantity(1);
     onClose();
   };
@@ -84,6 +97,30 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
               )}
 
               {translated.description && <p className="text-gray-500 text-sm">{translated.description}</p>}
+
+              {variants.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-900 mb-2">{t("custom.choose_size")}</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {variants.map((v, idx) => {
+                      const isSelected = selectedVariant === idx;
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => setSelectedVariant(idx)}
+                          className={`p-3 rounded-xl border-2 text-left transition-all active:scale-[0.97] ${
+                            isSelected ? "border-current" : "border-gray-200"
+                          }`}
+                          style={isSelected ? { borderColor: accent, backgroundColor: `${accent}10` } : {}}
+                        >
+                          <p className="text-sm font-medium text-gray-900">{v.name}</p>
+                          <p className="text-sm font-bold mt-0.5" style={{ color: accent }}>{v.price.toFixed(2)} €</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {(item.sauces ?? []).length > 0 && (
                 <div>
@@ -162,7 +199,8 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
             <div className="sticky bottom-0 p-4 bg-white border-t border-gray-100">
               <button
                 onClick={handleAdd}
-                className="w-full h-14 text-base font-semibold rounded-2xl text-white transition-opacity hover:opacity-90 active:scale-[0.98]"
+                disabled={!canAdd}
+                className="w-full h-14 text-base font-semibold rounded-2xl text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
                 style={{ backgroundColor: accent }}
               >
                 {t("item.add_to_cart", { price: total.toFixed(2) })}
