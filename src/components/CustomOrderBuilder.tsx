@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Check, ChevronDown, ChevronRight } from "lucide-react";
+import { ShoppingBag, Check, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import type { CustomizationConfig, CustomizationStep, DbMenuItem } from "@/types/database";
@@ -463,6 +463,17 @@ export function CustomOrderBuilder({
                 >
                   <div className="px-3 py-2.5 flex items-center justify-between">
                     <div className="flex items-center gap-2">
+                      {isCurrent && idx > 0 && (
+                        <button
+                          onClick={() => {
+                            setActiveStep(idx - 1);
+                            scrollToStep(idx - 1);
+                          }}
+                          className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors hover:bg-gray-100 active:bg-gray-200"
+                        >
+                          <ChevronLeft className="h-4 w-4 text-gray-500" />
+                        </button>
+                      )}
                       <div
                         className="h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
                         style={{
@@ -523,7 +534,16 @@ export function CustomOrderBuilder({
             className="mt-4 pt-4 border-t border-gray-100"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-500">{t("custom.your_selection")}</span>
+              <button
+                onClick={() => {
+                  setActiveStep(steps.length - 1);
+                  scrollToStep(steps.length - 1);
+                }}
+                className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                Modifier
+              </button>
               <span className="text-base font-bold" style={{ color: primaryColor }}>
                 {t("custom.total", { price: totalPrice.toFixed(2) })}
               </span>
