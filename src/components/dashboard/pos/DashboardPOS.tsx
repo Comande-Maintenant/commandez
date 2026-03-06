@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { ChevronDown, Check } from "lucide-react";
-import { fetchMenuItems, createOrder, fetchOrders, updateOrderStatus, subscribeToOrders } from "@/lib/api";
+import { fetchMenuItems, createOrder, fetchOrders, fetchDemoOrders, updateOrderStatus, advanceDemoOrder, subscribeToOrders } from "@/lib/api";
 import { buildOrderItems, calculateGrandTotal } from "@/lib/posHelpers";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
@@ -24,6 +24,7 @@ import { toast } from "sonner";
 
 interface Props {
   restaurant: DbRestaurant;
+  isDemo?: boolean;
 }
 
 const createEmptyPerson = (index: number): POSPersonOrder => ({
@@ -50,7 +51,7 @@ const initialState = {
   submitting: false,
 };
 
-export const DashboardPOS = ({ restaurant }: Props) => {
+export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [state, setState] = useState(initialState);
   const [readyOrders, setReadyOrders] = useState<DbOrder[]>([]);
@@ -62,9 +63,20 @@ export const DashboardPOS = ({ restaurant }: Props) => {
 
   // Fetch and subscribe to ready orders for "A encaisser" panel
   useEffect(() => {
-    fetchOrders(restaurant.id).then((orders) => {
+    const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
+    fetchFn.then((orders) => {
       setReadyOrders(orders.filter((o) => o.status === "ready"));
     });
+
+    if (isDemo) {
+      // Poll in demo mode
+      const poll = setInterval(() => {
+        fetchDemoOrders(restaurant.id).then((orders) => {
+          setReadyOrders(orders.filter((o) => o.status === "ready"));
+        });
+      }, 5000);
+      return () => clearInterval(poll);
+    }
 
     const unsub = subscribeToOrders(restaurant.id, (order) => {
       setReadyOrders((prev) => {
@@ -78,7 +90,7 @@ export const DashboardPOS = ({ restaurant }: Props) => {
     });
 
     return unsub;
-  }, [restaurant.id]);
+  }, [restaurant.id, isDemo]);
 
   const setScreen = (screen: POSScreen) =>
     setState((s) => ({ ...s, screen }));
@@ -161,7 +173,7 @@ export const DashboardPOS = ({ restaurant }: Props) => {
         customer_name: customerName,
         customer_phone: "",
         order_type: state.orderType,
-        source: "pos",
+        source: isDemo ? "demo" : "pos",
         covers: personCount,
         items: allItems,
         subtotal: total,
@@ -186,7 +198,11 @@ export const DashboardPOS = ({ restaurant }: Props) => {
 
   const markAsDone = async (orderId: string) => {
     try {
-      await updateOrderStatus(orderId, "done");
+      if (isDemo) {
+        await advanceDemoOrder(orderId, "done");
+      } else {
+        await updateOrderStatus(orderId, "done");
+      }
       setReadyOrders((prev) => prev.filter((o) => o.id !== orderId));
       toast.success("Commande terminee");
     } catch {

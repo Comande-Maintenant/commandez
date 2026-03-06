@@ -360,7 +360,7 @@ const AdminPage = () => {
               transition={{ duration: 0.2 }}
             >
               {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} onNewOrderSound={sound.play} isDemo={isDemo} />}
-              {activeView === "caisse" && <DashboardPOS restaurant={restaurant} />}
+              {activeView === "caisse" && <DashboardPOS restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} isDemo={isDemo} />}
               {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "page" && <DashboardMaPage restaurant={restaurant} isDemo={isDemo} />}
