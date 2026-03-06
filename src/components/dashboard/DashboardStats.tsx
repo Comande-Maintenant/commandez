@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts";
 import { TrendingUp, ShoppingBag, Receipt, Euro, Clock, Flame, Trophy } from "lucide-react";
 import { fetchOrders, fetchDemoOrders } from "@/lib/api";
+import { generateDemoOrders } from "@/lib/demoData";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,7 +55,16 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
   useEffect(() => {
     const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
     fetchFn.then((data) => {
-      setOrders(data);
+      if (isDemo) {
+        // Merge generated historical data with real recent demo orders
+        const generated = generateDemoOrders(restaurant.id);
+        const realIds = new Set(data.map((o: any) => o.id));
+        const merged = [...generated.filter((g) => !realIds.has(g.id)), ...data];
+        merged.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        setOrders(merged);
+      } else {
+        setOrders(data);
+      }
       setLoading(false);
     });
   }, [restaurant.id, isDemo]);

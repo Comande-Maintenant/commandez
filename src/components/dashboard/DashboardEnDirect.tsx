@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Euro, ShoppingBag, Receipt, TrendingUp } from "lucide-react";
 import { fetchOrders, fetchDemoOrders } from "@/lib/api";
+import { generateDemoOrders } from "@/lib/demoData";
 import type { DbRestaurant, DbOrder } from "@/types/database";
 import type { LiveVisitor, VisitorAlert } from "@/types/visitor";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,7 +25,15 @@ export const DashboardEnDirect = ({ restaurant, visitors, alerts, isDemo }: Prop
   useEffect(() => {
     const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
     fetchFn.then((data) => {
-      setOrders(data);
+      if (isDemo) {
+        const generated = generateDemoOrders(restaurant.id);
+        const realIds = new Set(data.map((o: any) => o.id));
+        const merged = [...generated.filter((g) => !realIds.has(g.id)), ...data];
+        merged.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        setOrders(merged);
+      } else {
+        setOrders(data);
+      }
       setLoading(false);
     });
   }, [restaurant.id, isDemo]);
