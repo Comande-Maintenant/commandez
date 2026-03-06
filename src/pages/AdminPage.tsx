@@ -417,11 +417,13 @@ const AdminPage = () => {
         </div>
       )}
 
-      {/* Assistant chatbot */}
-      <AssistantChatbot
-        activeView={activeView}
-        onNavigate={(v) => handleViewChange(v as DashboardView)}
-      />
+      {/* Assistant chatbot - only in "gerer" admin views */}
+      {!isOpsView(activeView) && (
+        <AssistantChatbot
+          activeView={activeView}
+          onNavigate={(v) => handleViewChange(v as DashboardView)}
+        />
+      )}
 
       {/* Onboarding tour - not in demo */}
       {!isDemo && showOnboarding && restaurant && (
