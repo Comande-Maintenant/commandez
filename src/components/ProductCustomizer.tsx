@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, ChevronLeft, Check, Minus, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DbMenuItem } from "@/types/database";
@@ -610,7 +611,7 @@ export const ProductCustomizer = ({
 
   const currentResolved = resolvedSteps[stepIndex] ?? null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
@@ -1085,7 +1086,8 @@ export const ProductCustomizer = ({
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
