@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} het hang",
   "dashboard.stats.today": "Hom nay",
   "dashboard.stats.this_week": "Tuan nay",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Thang nay",
   "dashboard.stats.revenue": "Doanh thu",
   "dashboard.stats.orders": "Don hang",

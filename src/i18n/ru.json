@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} нет в наличии",
   "dashboard.stats.today": "Сегодня",
   "dashboard.stats.this_week": "Эта неделя",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Этот месяц",
   "dashboard.stats.revenue": "Выручка",
   "dashboard.stats.orders": "Заказы",

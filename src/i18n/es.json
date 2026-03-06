@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} agotado",
   "dashboard.stats.today": "Hoy",
   "dashboard.stats.this_week": "Esta semana",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Este mes",
   "dashboard.stats.revenue": "Facturacion",
   "dashboard.stats.orders": "Pedidos",

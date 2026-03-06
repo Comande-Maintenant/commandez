@@ -605,6 +605,7 @@
   "dashboard.orders.item_out_of_stock": "{name} en rupture",
   "dashboard.stats.today": "Aujourd'hui",
   "dashboard.stats.this_week": "Cette semaine",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Ce mois",
   "dashboard.stats.revenue": "Chiffre d'affaires",
   "dashboard.stats.orders": "Commandes",

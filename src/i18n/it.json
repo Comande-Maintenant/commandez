@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} esaurito",
   "dashboard.stats.today": "Oggi",
   "dashboard.stats.this_week": "Questa settimana",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Questo mese",
   "dashboard.stats.revenue": "Fatturato",
   "dashboard.stats.orders": "Ordini",

@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} 品切れ",
   "dashboard.stats.today": "今日",
   "dashboard.stats.this_week": "今週",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "今月",
   "dashboard.stats.revenue": "売上",
   "dashboard.stats.orders": "注文数",

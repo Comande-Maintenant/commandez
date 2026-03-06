@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} tukendi",
   "dashboard.stats.today": "Bugun",
   "dashboard.stats.this_week": "Bu hafta",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Bu ay",
   "dashboard.stats.revenue": "Ciro",
   "dashboard.stats.orders": "Siparisler",

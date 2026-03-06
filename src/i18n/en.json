@@ -605,6 +605,7 @@
   "dashboard.orders.item_out_of_stock": "{name} out of stock",
   "dashboard.stats.today": "Today",
   "dashboard.stats.this_week": "This week",
+  "dashboard.stats.last_30_days": "30 days",
   "dashboard.stats.this_month": "This month",
   "dashboard.stats.revenue": "Revenue",
   "dashboard.stats.orders": "Orders",

@@ -663,6 +663,7 @@
   "dashboard.orders.item_out_of_stock": "{name} uitverkocht",
   "dashboard.stats.today": "Vandaag",
   "dashboard.stats.this_week": "Deze week",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Deze maand",
   "dashboard.stats.revenue": "Omzet",
   "dashboard.stats.orders": "Bestellingen",

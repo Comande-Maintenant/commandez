@@ -663,6 +663,7 @@
   "dashboard.orders.item_out_of_stock": "{name} esgotado",
   "dashboard.stats.today": "Hoje",
   "dashboard.stats.this_week": "Esta semana",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Este mês",
   "dashboard.stats.revenue": "Faturamento",
   "dashboard.stats.orders": "Pedidos",

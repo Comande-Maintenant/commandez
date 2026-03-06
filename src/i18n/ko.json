@@ -663,6 +663,7 @@
   "dashboard.orders.item_out_of_stock": "{name} 품절",
   "dashboard.stats.today": "오늘",
   "dashboard.stats.this_week": "이번 주",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "이번 달",
   "dashboard.stats.revenue": "매출",
   "dashboard.stats.orders": "주문",

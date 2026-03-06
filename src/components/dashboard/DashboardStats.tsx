@@ -12,7 +12,7 @@ import { DemandCalendar } from "@/components/dashboard/DemandCalendar";
 import { DemandHourlyChart } from "@/components/dashboard/DemandHourlyChart";
 import { DemandTip } from "@/components/dashboard/DemandTip";
 
-type Period = "day" | "week" | "month";
+type Period = "day" | "week" | "30days" | "month";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -22,6 +22,7 @@ interface Props {
 const periodLabelKeys: Record<Period, string> = {
   day: "dashboard.stats.today",
   week: "dashboard.stats.this_week",
+  "30days": "dashboard.stats.last_30_days",
   month: "dashboard.stats.this_month",
 };
 
@@ -32,6 +33,12 @@ function startOfPeriod(period: Period): Date {
     const d = new Date(now);
     const day = d.getDay() || 7;
     d.setDate(d.getDate() - day + 1);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+  if (period === "30days") {
+    const d = new Date(now);
+    d.setDate(d.getDate() - 29);
     d.setHours(0, 0, 0, 0);
     return d;
   }
@@ -50,7 +57,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
   const { t } = useLanguage();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<Period>("month");
+  const [period, setPeriod] = useState<Period>("30days");
 
   useEffect(() => {
     const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
@@ -156,7 +163,18 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
       }
       return days;
     }
-    // month
+    if (period === "30days") {
+      const days: { label: string; CA: number; Commandes: number }[] = [];
+      const now = new Date();
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        const dayOrders = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
+        days.push({ label: formatShortDate(d), CA: +dayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2), Commandes: dayOrders.length });
+      }
+      return days;
+    }
+    // month (current calendar month)
     const days: { label: string; CA: number; Commandes: number }[] = [];
     const now = new Date();
     const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
@@ -196,7 +214,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
     <div className="space-y-6">
       <Tabs value={period} onValueChange={(v) => setPeriod(v as Period)}>
         <TabsList className="rounded-xl">
-          {(["day", "week", "month"] as Period[]).map((p) => (
+          {(["day", "week", "30days", "month"] as Period[]).map((p) => (
             <TabsTrigger key={p} value={p} className="rounded-lg text-sm">{t(periodLabelKeys[p])}</TabsTrigger>
           ))}
         </TabsList>

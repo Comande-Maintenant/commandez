@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} نفد",
   "dashboard.stats.today": "اليوم",
   "dashboard.stats.this_week": "هذا الأسبوع",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "هذا الشهر",
   "dashboard.stats.revenue": "الإيرادات",
   "dashboard.stats.orders": "الطلبات",

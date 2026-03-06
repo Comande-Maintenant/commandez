@@ -663,6 +663,7 @@
   "dashboard.orders.item_out_of_stock": "{name} ausverkauft",
   "dashboard.stats.today": "Heute",
   "dashboard.stats.this_week": "Diese Woche",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "Diesen Monat",
   "dashboard.stats.revenue": "Umsatz",
   "dashboard.stats.orders": "Bestellungen",

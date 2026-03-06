@@ -600,6 +600,7 @@
   "dashboard.orders.item_out_of_stock": "{name} 缺货",
   "dashboard.stats.today": "今天",
   "dashboard.stats.this_week": "本周",
+  "dashboard.stats.last_30_days": "30 jours",
   "dashboard.stats.this_month": "本月",
   "dashboard.stats.revenue": "营收",
   "dashboard.stats.orders": "订单",
