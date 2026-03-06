@@ -81,6 +81,7 @@ const App = () => (
               <Route path="/super-admin" element={<SuperAdminPage />} />
               <Route path="/profil" element={<CustomerProfilePage />} />
               <Route path="/signup" element={<Navigate to="/inscription" replace />} />
+              <Route path="/demo" element={<RestaurantPage />} />
               <Route path="/:slug" element={<RestaurantPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

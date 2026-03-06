@@ -1,8 +1,12 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /demo
+Disallow: /antalya-kebab-moneteau
 
 User-agent: Bingbot
 Allow: /
+Disallow: /demo
+Disallow: /antalya-kebab-moneteau
 
 User-agent: Twitterbot
 Allow: /
@@ -12,3 +16,4 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /demo

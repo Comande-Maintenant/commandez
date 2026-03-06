@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -120,8 +120,63 @@ const DAY_KEYS = [
   "schedule.thursday", "schedule.friday", "schedule.saturday",
 ];
 
+const DEMO_SLUG = "antalya-kebab-moneteau";
+
+function setDemoMeta(isDemo: boolean) {
+  // Helper to set or remove a meta tag
+  const setMeta = (name: string, content: string, attr = "name") => {
+    let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute(attr, name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute("content", content);
+  };
+  if (isDemo) {
+    setMeta("description", "Page de demonstration de commandeici, application de commande en ligne pour restaurants. Decouvrez comment vos clients passeront commande. Essayez gratuitement.");
+    setMeta("robots", "noindex, nofollow");
+    setMeta("og:title", "Demo - Application de commande en ligne pour restaurants", "property");
+    setMeta("og:description", "Decouvrez notre application de commande en ligne. Cette page est une demonstration avec un menu exemple.", "property");
+    setMeta("og:type", "website", "property");
+    // Remove any Restaurant schema.org JSON-LD
+    document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => {
+      try {
+        const data = JSON.parse(el.textContent || "");
+        if (data["@type"] === "Restaurant" || data["@type"] === "FoodEstablishment" || data["@type"] === "LocalBusiness") {
+          el.remove();
+        }
+      } catch { /* ignore */ }
+    });
+    // Add SoftwareApplication schema
+    let ldEl = document.getElementById("demo-ld-json");
+    if (!ldEl) {
+      ldEl = document.createElement("script");
+      ldEl.id = "demo-ld-json";
+      ldEl.setAttribute("type", "application/ld+json");
+      ldEl.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: "commandeici",
+        applicationCategory: "BusinessApplication",
+        description: "Application de commande en ligne pour restaurants",
+        url: "https://commandeici.com",
+      });
+      document.head.appendChild(ldEl);
+    }
+  } else {
+    // Clean up demo meta if navigating away
+    const robotsMeta = document.querySelector('meta[name="robots"]');
+    if (robotsMeta?.getAttribute("content") === "noindex, nofollow") robotsMeta.remove();
+    document.getElementById("demo-ld-json")?.remove();
+  }
+}
+
 const RestaurantPage = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug: paramSlug } = useParams<{ slug: string }>();
+  const location = useLocation();
+  const isDemoRoute = location.pathname === "/demo";
+  const slug = isDemoRoute ? DEMO_SLUG : paramSlug;
   const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
@@ -167,9 +222,21 @@ const RestaurantPage = () => {
           setLoading(false);
           return;
         }
+        // Redirect demo restaurant slug to /demo for SEO
+        if ((r as any).is_demo && !isDemoRoute) {
+          navigate("/demo", { replace: true });
+          return;
+        }
         const items = await fetchMenuItems(r.id);
         setMenuItems(items);
-        document.title = `${r.name} - ${r.city || ""}`;
+        // SEO: demo pages get generic title, real restaurants get their name
+        if ((r as any).is_demo) {
+          document.title = "Demonstration - Application de commande en ligne pour restaurants | commandeici";
+          setDemoMeta(true);
+        } else {
+          document.title = `${r.name} - ${r.city || ""}`;
+          setDemoMeta(false);
+        }
         // Inject reorder from profile page
         try {
           const reorderRaw = localStorage.getItem("cm_reorder");
@@ -320,6 +387,7 @@ const RestaurantPage = () => {
     setTimeout(() => { isScrollingRef.current = false; }, 800);
   }, []);
 
+  const isDemo = !!(restaurant as any)?.is_demo;
   const primary = useMemo(() => softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color]);
   const bg = UNIVERSAL_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
@@ -464,6 +532,21 @@ const RestaurantPage = () => {
 
   return (
     <div className="relative min-h-screen pb-28" dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
+      {/* Sticky demo banner - always visible, not dismissable */}
+      {isDemo && (
+        <div className="sticky top-0 z-50 bg-indigo-600 text-white px-4 py-2 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-sm font-semibold whitespace-nowrap">MODE DEMO</span>
+            <span className="text-xs opacity-90 hidden sm:inline truncate">{t("demo.sticky_text")}</span>
+          </div>
+          <a
+            href="/inscription"
+            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-white text-indigo-700 hover:bg-indigo-50 transition-colors"
+          >
+            {t("demo.seo_banner_cta")}
+          </a>
+        </div>
+      )}
       {/* Full-page background gradient: warm beige only, no restaurant color */}
       <div
         className="absolute inset-x-0 top-0 pointer-events-none"
@@ -537,7 +620,9 @@ const RestaurantPage = () => {
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{restaurant.name}</h1>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+                    {isDemo ? t("demo.page_title") : restaurant.name}
+                  </h1>
                   {restaurant.is_accepting_orders ? (
                     <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-emerald-500">
                       {t("status.open")}
@@ -548,7 +633,10 @@ const RestaurantPage = () => {
                     </span>
                   )}
                 </div>
-                {restaurant.cuisine && (
+                {isDemo && (
+                  <p className="text-xs text-indigo-600 mt-0.5">{restaurant.name} ({t("demo.fictional_menu")})</p>
+                )}
+                {!isDemo && restaurant.cuisine && (
                   <p className="text-sm text-gray-500 mt-0.5">{restaurant.cuisine}</p>
                 )}
                 {(restaurant.rating > 0) && (
@@ -691,18 +779,27 @@ const RestaurantPage = () => {
           </div>
         </motion.div>
 
-        {/* Demo banner - promote kitchen/dashboard view */}
-        {(restaurant as any).is_demo && (
-          <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200">
-            <p className="text-sm font-medium text-emerald-800">{t("demo.client_banner")}</p>
-            <a
-              href="/admin/demo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors flex-shrink-0"
-            >
-              {t("demo.suivi_cta")}
-            </a>
+        {/* Demo banner - inline, links to dashboard + inscription */}
+        {isDemo && (
+          <div className="mt-4 px-4 py-3 rounded-xl bg-indigo-50 border border-indigo-200">
+            <p className="text-sm font-semibold text-indigo-900">{t("demo.seo_banner_title")}</p>
+            <p className="text-xs text-indigo-700 mt-1">{t("demo.seo_banner_text")}</p>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <a
+                href="/admin/demo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-indigo-500 hover:bg-indigo-600 transition-colors"
+              >
+                {t("demo.suivi_cta")}
+              </a>
+              <a
+                href="/inscription"
+                className="px-3 py-1.5 rounded-full text-xs font-semibold text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition-colors"
+              >
+                {t("demo.seo_banner_cta")}
+              </a>
+            </div>
           </div>
         )}
 
@@ -903,24 +1000,35 @@ const RestaurantPage = () => {
           </div>
         </motion.div>
 
-        {/* Demo CTA - create page */}
-        {(restaurant as any).is_demo && (
-          <div className="mt-8 text-center">
-            <a
-              href={`/inscription?lang=${new URLSearchParams(window.location.search).get("lang") || "fr"}`}
-              className="inline-block px-6 py-3 rounded-full text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors"
-            >
-              {t("demo.client_cta")}
+        {/* Footer */}
+        {isDemo ? (
+          <div className="mt-8 mb-4 p-5 rounded-2xl bg-indigo-50 border border-indigo-200 text-center">
+            <p className="text-sm font-semibold text-indigo-900">{t("demo.footer_title")}</p>
+            <p className="text-xs text-indigo-700 mt-1">{t("demo.footer_text")}</p>
+            <div className="flex flex-wrap justify-center gap-3 mt-3">
+              <a
+                href="/inscription"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+              >
+                {t("demo.footer_cta_signup")}
+              </a>
+              <a
+                href="https://commandeici.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold text-indigo-700 bg-white border border-indigo-200 hover:bg-indigo-50 transition-colors"
+              >
+                {t("demo.footer_cta_site")}
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-8 mb-4 text-center">
+            <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+              {t("footer.powered_by")}
             </a>
           </div>
         )}
-
-        {/* Footer */}
-        <div className="mt-8 mb-4 text-center">
-          <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-            {t("footer.powered_by")}
-          </a>
-        </div>
       </div>
 
       {/* Floating cart bar */}
