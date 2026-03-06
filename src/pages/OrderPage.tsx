@@ -59,9 +59,15 @@ const OrderPage = () => {
       // Detect demo mode
       if ((r as any).is_demo) {
         setIsDemo(true);
-        // Pre-fill demo defaults if empty
-        setName((prev) => prev || "Client Demo");
-        setPhone((prev) => prev || "06 00 00 00 00");
+        // Pre-fill with random realistic demo data
+        const demoNames = ["Marie Dupont", "Thomas Martin", "Julie Bernard", "Lucas Petit", "Emma Moreau", "Hugo Leroy", "Lea Simon", "Nathan Robert", "Camille Laurent", "Theo Durand"];
+        const demoPhones = ["06 12 34 56 78", "07 65 43 21 09", "06 98 76 54 32", "07 23 45 67 89", "06 45 67 89 01"];
+        const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+        const demoName = pick(demoNames);
+        const demoEmail = demoName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", ".") + "@demo.com";
+        setName((prev) => prev || demoName);
+        setPhone((prev) => prev || pick(demoPhones));
+        setEmail((prev) => prev || demoEmail);
         return; // Skip ban check for demo
       }
     });
