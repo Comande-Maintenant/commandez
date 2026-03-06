@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { X, ChevronLeft, Check, Minus, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DbMenuItem } from "@/types/database";
@@ -36,8 +36,13 @@ function resolveStepOptions(
   menuItems: DbMenuItem[],
 ): ResolvedStep["options"] {
   switch (step.data_source) {
-    case "restaurant_bases":
-      return data.bases.map((b) => ({
+    case "restaurant_bases": {
+      const groupFilter = step.config?.base_group as string | undefined;
+      let bases = data.bases;
+      if (groupFilter) {
+        bases = bases.filter((b) => b.group === groupFilter);
+      }
+      return bases.map((b) => ({
         id: b.id,
         name: b.name,
         name_translations: b.name_translations,
@@ -45,6 +50,7 @@ function resolveStepOptions(
         image: b.image,
         meta: { max_viandes: b.max_viandes },
       }));
+    }
     case "restaurant_viandes":
       return data.viandes.map((v) => ({
         id: v.id,
@@ -103,12 +109,31 @@ function resolveStepOptions(
           image: m.image,
         }));
     }
-    case "none":
+    case "none": {
+      // Support inline options from step config
+      const inlineOptions = step.config?.options as Array<{ id: string; name: string; price: number }> | undefined;
+      if (inlineOptions) {
+        return inlineOptions.map((o) => ({ id: o.id, name: o.name, price: o.price }));
+      }
       return [];
+    }
     default:
       return [];
   }
 }
+
+// Product types that use the configurable flow (viande -> garniture -> sauce -> frites)
+const CONFIGURABLE_PRODUCT_TYPES = ["sandwich", "galette", "tacos", "assiette", "hamburger"];
+
+// Which product types have a size/taille step (using restaurant_bases)
+const PRODUCT_TYPE_BASE_GROUP: Record<string, { group: string; label: string }> = {
+  galette: { group: "galette", label: "custom.choose_size" },
+  tacos: { group: "tacos", label: "custom.choose_size" },
+  assiette: { group: "assiette", label: "custom.choose_size" },
+};
+
+// Which product types offer the frites option
+const HAS_FRITES_OPTION = ["sandwich", "galette", "tacos", "hamburger"];
 
 // Build filtered steps based on product_type
 function buildStepsFromTemplates(
@@ -127,6 +152,37 @@ function buildStepsFromTemplates(
     steps = steps.filter((s) =>
       s.step_key !== "base" && s.step_key !== "viande"
     );
+  } else if (CONFIGURABLE_PRODUCT_TYPES.includes(productType)) {
+    // Determine which steps this product type needs
+    const baseConfig = PRODUCT_TYPE_BASE_GROUP[productType];
+    const hasFrites = HAS_FRITES_OPTION.includes(productType);
+
+    const allowedKeys = new Set<string>();
+    if (baseConfig) allowedKeys.add("base");
+    allowedKeys.add("viande");
+    allowedKeys.add("garniture");
+    allowedKeys.add("sauce");
+    allowedKeys.add("supplement");
+    if (hasFrites) allowedKeys.add("frites");
+    if (productType === "assiette") allowedKeys.add("accompagnement");
+    allowedKeys.add("recap");
+
+    steps = steps.filter((s) => allowedKeys.has(s.step_key));
+
+    // Tag base step with group filter and relabel
+    if (baseConfig) {
+      steps = steps.map((s) => {
+        if (s.step_key === "base") {
+          return { ...s, config: { ...s.config, base_group: baseConfig.group }, label_i18n: baseConfig.label };
+        }
+        return s;
+      });
+    }
+
+    // For hamburger: no viande step (the product IS the viande choice)
+    if (productType === "hamburger") {
+      steps = steps.filter((s) => s.step_key !== "viande" && s.step_key !== "base");
+    }
   }
 
   // Filter upsell steps based on config
@@ -187,6 +243,24 @@ export const ProductCustomizer = ({
   const [fritesSauces, setFritesSauces] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
 
+  // Pre-select viande if item name matches a viande (e.g. "Kebab" item -> pre-select Kebab viande)
+  useEffect(() => {
+    if (!open) return;
+    const matchedViande = viandes.find(
+      (v) => v.name.toLowerCase() === item.name.toLowerCase()
+    );
+    if (matchedViande && CONFIGURABLE_PRODUCT_TYPES.includes(productType)) {
+      setStepSelections("viande", t("custom.choose_meat"), [
+        { id: matchedViande.id, name: matchedViande.name, price: Number(matchedViande.supplement) },
+      ]);
+      // Skip viande step if it's the first step (sandwich without base step)
+      const viandeStepIdx = steps.findIndex((s) => s.step_key === "viande");
+      if (viandeStepIdx === 0) {
+        setStepIndex(1);
+      }
+    }
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const freeSaucesSandwich = config?.free_sauces_sandwich ?? 3;
   const freeSaucesFrites = config?.free_sauces_frites ?? 2;
   const extraSaucePrice = config?.extra_sauce_price ?? 0.50;
@@ -232,20 +306,34 @@ export const ProductCustomizer = ({
   // Price calculation
   const totalPrice = useMemo(() => {
     let total = 0;
+    const isConfigurable = CONFIGURABLE_PRODUCT_TYPES.includes(productType);
 
-    // Base price (from selected base or item price)
+    // Base price: from selected base (taille) or from item itself
     const baseSel = getStepSelections("base");
     if (baseSel.length > 0) {
       total += baseSel[0].price;
-    } else if (productType === "sandwich_simple") {
+    } else if (isConfigurable || productType === "sandwich_simple") {
+      // For sandwich, hamburger etc. the item.price is the base price
       total += item.price;
     }
 
-    // Viande supplements
+    // Viande supplements (extra viandes cost)
     const viandeSel = getStepSelections("viande");
-    viandeSel.forEach((v) => { total += v.price; });
+    const viandeStep = steps.find((s) => s.step_key === "viande");
+    const extraViandePrice = (viandeStep?.config?.extra_viande_price as number) ?? 0;
+    viandeSel.forEach((v, idx) => {
+      // First viande is included in base price; extras cost extraViandePrice (or use supplement)
+      total += v.price;
+      if (idx > 0 && extraViandePrice > 0) total += extraViandePrice;
+    });
 
-    // Accompagnement
+    // Frites step (inline options with price)
+    const fritesSel = getStepSelections("frites");
+    if (fritesSel.length > 0) {
+      total += fritesSel[0].price;
+    }
+
+    // Accompagnement (for assiettes)
     if (selectedAccompagnement) {
       if (isMenu) {
         // Included in menu price
@@ -273,8 +361,16 @@ export const ProductCustomizer = ({
       total += dessertSel[0].price;
     }
 
+    // Supplements (fromage, oeuf, etc.) and any other custom multi_select steps
+    const handledKeys = new Set(["base", "viande", "sauce", "frites", "accompagnement", "boisson", "dessert", "garniture"]);
+    for (const [key, sel] of selections.entries()) {
+      if (!handledKeys.has(key)) {
+        sel.selections.forEach((s) => { total += s.price; });
+      }
+    }
+
     return total;
-  }, [getStepSelections, selectedAccompagnement, accompSize, fritesSauces, isMenu, item.price, productType, freeSaucesFrites, extraSaucePrice]);
+  }, [getStepSelections, selections, selectedAccompagnement, accompSize, fritesSauces, isMenu, item.price, productType, freeSaucesFrites, extraSaucePrice, steps]);
 
   const goNext = useCallback(() => {
     if (stepIndex < steps.length - 1) setStepIndex(stepIndex + 1);
@@ -398,11 +494,35 @@ export const ProductCustomizer = ({
       .map((g) => ({ name: g.name, level: "oui" as const }));
 
     const viandeChoice = viandeSel.map((v) => v.name).join(", ");
+    const fritesSel = getStepSelections("frites");
     const extraCost = totalPrice - (baseSel.length > 0 ? baseSel[0].price : item.price);
+
+    // Build standardized display name for cart
+    let displayName = "";
+    const isConfigurable = CONFIGURABLE_PRODUCT_TYPES.includes(productType);
+
+    if (isConfigurable && viandeSel.length > 0) {
+      // Base name: from taille selection, or item name, or fallback to product type label
+      let baseName = baseSel.length > 0 ? baseSel[0].name : item.name;
+      // Avoid "Kebab Kebab" when item name matches viande (shortcut items)
+      const matchesViande = viandeSel.length === 1 && viandeSel[0].name.toLowerCase() === baseName.toLowerCase();
+      if (matchesViande && !baseSel.length) {
+        baseName = "Sandwich"; // Kebab shortcut -> "Sandwich Kebab"
+      }
+      if (productType === "tacos" || productType === "assiette") {
+        displayName = `${baseName} ${viandeSel.length} viande${viandeSel.length > 1 ? "s" : ""} (${viandeChoice})`;
+      } else {
+        displayName = `${baseName} ${viandeChoice}`;
+      }
+    } else if (isConfigurable && productType === "hamburger") {
+      displayName = item.name;
+    } else {
+      displayName = baseSel.length > 0 ? baseSel[0].name : item.name;
+    }
 
     const syntheticItem: DbMenuItem = {
       ...item,
-      name: baseSel.length > 0 ? baseSel[0].name : item.name,
+      name: displayName,
       price: baseSel.length > 0 ? baseSel[0].price : item.price,
     };
 
@@ -666,12 +786,15 @@ export const ProductCustomizer = ({
                       )}
 
                       {/* MULTI SELECT */}
-                      {currentStep.step_type === "multi_select" && (
+                      {currentStep.step_type === "multi_select" && (() => {
+                        // Max depends on step: viande uses base's max_viandes, others unlimited
+                        const stepMax = currentStep.step_key === "viande" ? maxViandes : 99;
+                        return (
                         <div>
                           <h4 className="text-sm font-semibold text-gray-900 mb-1">{t(currentStep.label_i18n)}</h4>
-                          {maxViandes > 1 && maxViandes < 99 && (
+                          {stepMax > 1 && stepMax < 99 && (
                             <p className="text-xs text-gray-500 mb-3">
-                              {getStepSelections(currentStep.step_key).length}/{maxViandes} {t("custom.max_selections", { max: String(maxViandes) })}
+                              {getStepSelections(currentStep.step_key).length}/{stepMax} {t("custom.max_selections", { max: String(stepMax) })}
                             </p>
                           )}
                           <div className="grid grid-cols-2 gap-2">
@@ -681,7 +804,7 @@ export const ProductCustomizer = ({
                               return (
                                 <button
                                   key={option.id}
-                                  onClick={() => handleMultiSelect(currentStep.step_key, t(currentStep.label_i18n), option, maxViandes)}
+                                  onClick={() => handleMultiSelect(currentStep.step_key, t(currentStep.label_i18n), option, stepMax)}
                                   className={`p-3 rounded-xl border-2 text-left transition-all active:scale-[0.97] ${
                                     isSelected ? "border-current" : "border-gray-200"
                                   }`}
@@ -698,8 +821,14 @@ export const ProductCustomizer = ({
                               );
                             })}
                           </div>
+                          {!currentStep.required && (
+                            <button onClick={goNext} className="mt-4 text-sm font-medium text-gray-500 underline">
+                              {t("custom.skip")}
+                            </button>
+                          )}
                         </div>
-                      )}
+                        );
+                      })()}
 
                       {/* TOGGLE GROUP (garnitures) */}
                       {currentStep.step_type === "toggle_group" && (

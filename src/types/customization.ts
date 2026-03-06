@@ -3,6 +3,11 @@ export type ProductType =
   | "sandwich_simple"
   | "menu"
   | "accompagnement"
+  | "sandwich"
+  | "galette"
+  | "tacos"
+  | "assiette"
+  | "hamburger"
   | "boisson"
   | "dessert"
   | "supplement"
@@ -16,6 +21,7 @@ export interface DbBase {
   price: number;
   max_viandes: number;
   image: string | null;
+  group: string | null;
   sort_order: number;
   enabled: boolean;
 }

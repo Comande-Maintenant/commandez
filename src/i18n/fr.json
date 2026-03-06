@@ -16,6 +16,9 @@
   "cart.subtotal": "Sous-total",
   "cart.your_cart": "Votre panier",
   "cart.clear": "Vider le panier",
+  "cart.upsell_title": "Envie d'autre chose ?",
+  "cart.upsell_dessert": "Ajouter un dessert",
+  "cart.upsell_boisson": "Ajouter une boisson",
   "cart.view": "Voir le panier",
   "cart.meat_label": "Viande : {value}",
   "cart.topping_label": "Garniture : {value}",
@@ -126,6 +129,8 @@
   "custom.meat_slot": "Viande {number}",
   "custom.no_sauce": "Pas de sauce",
   "custom.no_supplement": "Pas de supplement",
+  "custom.choose_supplements": "Des supplements ?",
+  "custom.frites_option": "Des frites ?",
 
   "common.save": "Enregistrer",
   "common.cancel": "Annuler",

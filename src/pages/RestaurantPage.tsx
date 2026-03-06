@@ -199,11 +199,14 @@ const RestaurantPage = () => {
         } catch { /* ignore */ }
         // Fetch customization data if any item has a customizable product_type
         const hasCustomizable = items.some((m) =>
-          ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement"].includes(m.product_type || "")
+          ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement", "sandwich", "galette", "tacos", "assiette", "hamburger"].includes(m.product_type || "")
         );
         if (hasCustomizable) {
           fetchUniversalCustomizationData(r.id).then((cd) => {
-            if (cd.stepTemplates.length > 0 || cd.bases.length > 0) setCustomizationData(cd);
+            // Always set if we have step templates OR any customization data
+            if (cd.stepTemplates.length > 0 || cd.bases.length > 0 || cd.viandes.length > 0 || cd.sauces.length > 0) {
+              setCustomizationData(cd);
+            }
           }).catch(() => {});
         }
         // Fetch active order count for wait estimate
@@ -813,7 +816,7 @@ const RestaurantPage = () => {
             {/* Menu Sections */}
             <div className="mt-6 space-y-8">
               {activeCategories.map((cat) => {
-                const catItems = menuItems.filter((m) => m.category === cat);
+                const catItems = menuItems.filter((m) => m.category === cat && m.product_type !== "supplement");
                 if (catItems.length === 0) return null;
                 return (
                   <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} data-category={cat} className="scroll-mt-20">
@@ -954,7 +957,7 @@ const RestaurantPage = () => {
       </AnimatePresence>
 
       {/* Cart sheet (hidden trigger, opened programmatically) */}
-      <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
+      <CartSheet open={cartOpen} onOpenChange={setCartOpen} menuItems={menuItems} onScrollToCategory={scrollToCategory} />
     </div>
   );
 };

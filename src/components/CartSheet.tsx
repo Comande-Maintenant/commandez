@@ -1,17 +1,20 @@
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, UtensilsCrossed, GlassWater } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
+import type { DbMenuItem } from "@/types/database";
 
 interface CartSheetProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  menuItems?: DbMenuItem[];
+  onScrollToCategory?: (category: string) => void;
 }
 
-export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
+export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }: CartSheetProps) => {
   const { items, totalItems, subtotal, updateQuantity, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -20,6 +23,25 @@ export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
     onOpenChange?.(false);
     navigate("/order");
   };
+
+  const handleGoToCategory = (category: string) => {
+    onOpenChange?.(false);
+    onScrollToCategory?.(category);
+  };
+
+  // Detect if desserts or boissons exist in the menu
+  const hasDesserts = menuItems?.some((m) => m.category?.toLowerCase().includes("dessert") && m.enabled) ?? false;
+  const hasBoissons = menuItems?.some((m) =>
+    (m.category?.toLowerCase().includes("boisson") || m.category?.toLowerCase().includes("drink")) && m.enabled
+  ) ?? false;
+
+  // Find the exact category names for navigation
+  const dessertCategory = menuItems?.find((m) => m.category?.toLowerCase().includes("dessert") && m.enabled)?.category;
+  const boissonCategory = menuItems?.find((m) =>
+    (m.category?.toLowerCase().includes("boisson") || m.category?.toLowerCase().includes("drink")) && m.enabled
+  )?.category;
+
+  const showUpsell = items.length > 0 && (hasDesserts || hasBoissons) && onScrollToCategory;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -142,6 +164,35 @@ export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
                   </div>
                 </div>
               ))}
+
+              {/* Upsell section */}
+              {showUpsell && (
+                <div className="mt-2 pt-3 border-t border-border/50">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                    {t("cart.upsell_title")}
+                  </p>
+                  <div className="flex gap-2">
+                    {hasDesserts && dessertCategory && (
+                      <button
+                        onClick={() => handleGoToCategory(dessertCategory)}
+                        className="flex-1 flex items-center gap-2 p-3 rounded-xl bg-amber-50 hover:bg-amber-100 transition-colors text-left"
+                      >
+                        <UtensilsCrossed className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                        <span className="text-xs font-medium text-amber-800">{t("cart.upsell_dessert")}</span>
+                      </button>
+                    )}
+                    {hasBoissons && boissonCategory && (
+                      <button
+                        onClick={() => handleGoToCategory(boissonCategory)}
+                        className="flex-1 flex items-center gap-2 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors text-left"
+                      >
+                        <GlassWater className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <span className="text-xs font-medium text-blue-800">{t("cart.upsell_boisson")}</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="p-4 border-t border-border space-y-3">
