@@ -201,25 +201,6 @@ const AdminPage = () => {
     <div className="min-h-screen bg-secondary/50 lg:flex" data-blurred={blurred}>
       <style>{`[data-blurred="true"] .blur-sensitive { filter: blur(8px); user-select: none; }`}</style>
 
-      {/* Demo banner - inline, not fixed, so it doesn't cover content */}
-      {isDemo && (
-        <div className="bg-emerald-500 text-white lg:ms-60">
-          <div className="max-w-6xl mx-auto px-4 h-10 flex items-center justify-between">
-            <p className="text-xs font-medium truncate">
-              {t("demo.banner_text")}
-            </p>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="rounded-xl text-xs font-semibold flex-shrink-0 ms-3 h-7 bg-white text-emerald-700 hover:bg-emerald-50"
-              onClick={() => navigate("/inscription")}
-            >
-              {t("demo.banner_cta")}
-            </Button>
-          </div>
-        </div>
-      )}
-
       <AdminSidebar
         activeView={activeView}
         onViewChange={handleViewChange}
@@ -227,6 +208,25 @@ const AdminPage = () => {
       />
 
       <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
+        {/* Demo banner */}
+        {isDemo && (
+          <div className="bg-emerald-500 text-white">
+            <div className="max-w-6xl mx-auto px-4 h-10 flex items-center justify-between">
+              <p className="text-xs font-medium truncate">
+                {t("demo.banner_text")}
+              </p>
+              <Button
+                size="sm"
+                variant="secondary"
+                className="rounded-xl text-xs font-semibold flex-shrink-0 ms-3 h-7 bg-white text-emerald-700 hover:bg-emerald-50"
+                onClick={() => navigate("/inscription")}
+              >
+                {t("demo.banner_cta")}
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <header className="bg-background border-b border-border sticky top-0 z-50">
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
