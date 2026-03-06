@@ -279,7 +279,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
         </button>
         <div className="bg-card rounded-2xl border border-border p-3">
           <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">CA jour</p>
-          <p className="text-lg sm:text-xl font-bold mt-0.5 text-foreground blur-sensitive">{todayRevenue.toFixed(0)} €</p>
+          <p className="text-lg sm:text-xl font-bold mt-0.5 text-foreground blur-sensitive">{todayRevenue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} €</p>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, AreaChart, Area } from "recharts";
 import { TrendingUp, ShoppingBag, Receipt, Euro, Clock, Flame, Trophy } from "lucide-react";
 import { fetchOrders, fetchDemoOrders } from "@/lib/api";
 import { generateDemoOrders } from "@/lib/demoData";
@@ -13,6 +13,7 @@ import { DemandHourlyChart } from "@/components/dashboard/DemandHourlyChart";
 import { DemandTip } from "@/components/dashboard/DemandTip";
 
 type Period = "day" | "week" | "30days" | "month";
+type KpiKey = "revenue" | "orders" | "avg" | "time";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -53,17 +54,25 @@ function formatHour(h: number) {
   return `${h}h`;
 }
 
+/** Format number with space as thousands separator: 26346.00 -> 26 346.00 */
+function formatMoney(n: number, decimals = 2): string {
+  const fixed = n.toFixed(decimals);
+  const [intPart, decPart] = fixed.split(".");
+  const withSpaces = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return decPart ? `${withSpaces}.${decPart}` : withSpaces;
+}
+
 export const DashboardStats = ({ restaurant, isDemo }: Props) => {
   const { t } = useLanguage();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("30days");
+  const [selectedKpi, setSelectedKpi] = useState<KpiKey>("revenue");
 
   useEffect(() => {
     const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
     fetchFn.then((data) => {
       if (isDemo) {
-        // Merge generated historical data with real recent demo orders
         const generated = generateDemoOrders(restaurant.id);
         const realIds = new Set(data.map((o: any) => o.id));
         const merged = [...generated.filter((g) => !realIds.has(g.id)), ...data];
@@ -83,7 +92,6 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
     const count = filtered.length;
     const avg = count > 0 ? revenue / count : 0;
 
-    // Average preparation time (accepted_at -> completed_at)
     let avgPrepTime = 0;
     const withTimestamps = filtered.filter(
       (o) => (o as any).accepted_at && (o as any).completed_at
@@ -97,7 +105,6 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
       avgPrepTime = totalMins / withTimestamps.length;
     }
 
-    // Peak hour
     const hourCounts: Record<number, number> = {};
     filtered.forEach((o) => {
       const h = new Date(o.created_at).getHours();
@@ -112,7 +119,6 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
       }
     }
 
-    // Top 5 items
     const itemCounts: Record<string, number> = {};
     filtered.forEach((o) => {
       const items = (o.items as any[]) || [];
@@ -124,7 +130,6 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5);
 
-    // Busiest day
     const dayCounts: Record<string, number> = {};
     filtered.forEach((o) => {
       const d = new Date(o.created_at).toLocaleDateString("fr-FR", { weekday: "long" });
@@ -142,49 +147,68 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
     return { revenue, count, avg, filtered, avgPrepTime, peakHour, topItems, busiestDay, busiestCount };
   }, [orders, period]);
 
+  // Build chart data with all metrics
   const chartData = useMemo(() => {
+    const buildBucket = (bucketOrders: DbOrder[]) => {
+      const ca = bucketOrders.reduce((s, o) => s + Number(o.total), 0);
+      const count = bucketOrders.length;
+      const avg = count > 0 ? ca / count : 0;
+      const withTime = bucketOrders.filter((o) => (o as any).accepted_at && (o as any).completed_at);
+      let avgTime = 0;
+      if (withTime.length > 0) {
+        avgTime = withTime.reduce((s, o) => s + (new Date((o as any).completed_at).getTime() - new Date((o as any).accepted_at).getTime()) / 60000, 0) / withTime.length;
+      }
+      return { CA: +ca.toFixed(2), Commandes: count, Panier: +avg.toFixed(2), Temps: +avgTime.toFixed(0) };
+    };
+
     if (period === "day") {
-      const hours: Record<number, number> = {};
-      for (let h = 0; h < 24; h++) hours[h] = 0;
-      stats.filtered.forEach((o) => {
-        const h = new Date(o.created_at).getHours();
-        hours[h] += Number(o.total);
-      });
-      return Object.entries(hours).map(([h, total]) => ({ label: formatHour(Number(h)), CA: +total.toFixed(2), Commandes: stats.filtered.filter((o) => new Date(o.created_at).getHours() === Number(h)).length }));
+      const result: any[] = [];
+      for (let h = 0; h < 24; h++) {
+        const bucket = stats.filtered.filter((o) => new Date(o.created_at).getHours() === h);
+        result.push({ label: formatHour(h), ...buildBucket(bucket) });
+      }
+      return result;
     }
     if (period === "week") {
-      const days: { label: string; CA: number; Commandes: number }[] = [];
+      const result: any[] = [];
       const start = startOfPeriod("week");
       for (let i = 0; i < 7; i++) {
         const d = new Date(start);
         d.setDate(d.getDate() + i);
-        const dayOrders = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
-        days.push({ label: d.toLocaleDateString("fr-FR", { weekday: "short" }), CA: +dayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2), Commandes: dayOrders.length });
+        const bucket = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
+        result.push({ label: d.toLocaleDateString("fr-FR", { weekday: "short" }), ...buildBucket(bucket) });
       }
-      return days;
+      return result;
     }
     if (period === "30days") {
-      const days: { label: string; CA: number; Commandes: number }[] = [];
+      const result: any[] = [];
       const now = new Date();
       for (let i = 29; i >= 0; i--) {
         const d = new Date(now);
         d.setDate(d.getDate() - i);
-        const dayOrders = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
-        days.push({ label: formatShortDate(d), CA: +dayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2), Commandes: dayOrders.length });
+        const bucket = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
+        result.push({ label: formatShortDate(d), ...buildBucket(bucket) });
       }
-      return days;
+      return result;
     }
-    // month (current calendar month)
-    const days: { label: string; CA: number; Commandes: number }[] = [];
+    // month
+    const result: any[] = [];
     const now = new Date();
     const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
     for (let i = 1; i <= daysInMonth; i++) {
       const d = new Date(now.getFullYear(), now.getMonth(), i);
-      const dayOrders = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
-      days.push({ label: `${i}`, CA: +dayOrders.reduce((s, o) => s + Number(o.total), 0).toFixed(2), Commandes: dayOrders.length });
+      const bucket = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
+      result.push({ label: `${i}`, ...buildBucket(bucket) });
     }
-    return days;
+    return result;
   }, [stats, period]);
+
+  const kpiChartConfig: Record<KpiKey, { dataKey: string; color: string; label: string; unit: string; type: "bar" | "line" | "area" }> = {
+    revenue: { dataKey: "CA", color: "hsl(var(--primary))", label: "CA", unit: " €", type: "bar" },
+    orders: { dataKey: "Commandes", color: "#3B82F6", label: "Commandes", unit: "", type: "area" },
+    avg: { dataKey: "Panier", color: "#8B5CF6", label: "Panier moyen", unit: " €", type: "line" },
+    time: { dataKey: "Temps", color: "#F59E0B", label: "Temps moyen", unit: " min", type: "line" },
+  };
 
   if (loading) {
     return (
@@ -197,18 +221,21 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
     );
   }
 
-  const kpis = [
-    { label: t('dashboard.stats.revenue'), value: `${stats.revenue.toFixed(2)} €`, icon: Euro, accent: true },
-    { label: t('dashboard.stats.orders'), value: stats.count, icon: ShoppingBag },
-    { label: t('dashboard.stats.avg_basket'), value: `${stats.avg.toFixed(2)} €`, icon: Receipt },
+  const hasTime = stats.avgPrepTime > 0 && stats.count >= 10;
+
+  const kpis: { key: KpiKey; label: string; value: string; icon: any; accent?: boolean }[] = [
+    { key: "revenue", label: t('dashboard.stats.revenue'), value: `${formatMoney(stats.revenue)} €`, icon: Euro, accent: true },
+    { key: "orders", label: t('dashboard.stats.orders'), value: formatMoney(stats.count, 0), icon: ShoppingBag },
+    { key: "avg", label: t('dashboard.stats.avg_basket'), value: `${formatMoney(stats.avg)} €`, icon: Receipt },
     {
-      label: stats.avgPrepTime > 0 && stats.count >= 10 ? t('dashboard.stats.avg_time') : t('dashboard.stats.total_orders'),
-      value: stats.avgPrepTime > 0 && stats.count >= 10
-        ? `${Math.round(stats.avgPrepTime)} min`
-        : orders.length,
-      icon: stats.avgPrepTime > 0 && stats.count >= 10 ? Clock : TrendingUp,
+      key: "time",
+      label: hasTime ? t('dashboard.stats.avg_time') : t('dashboard.stats.total_orders'),
+      value: hasTime ? `${Math.round(stats.avgPrepTime)} min` : formatMoney(orders.length, 0),
+      icon: hasTime ? Clock : TrendingUp,
     },
   ];
+
+  const activeChart = kpiChartConfig[selectedKpi];
 
   return (
     <div className="space-y-6">
@@ -220,53 +247,71 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
         </TabsList>
       </Tabs>
 
+      {/* KPI cards - clickable */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {kpis.map((kpi) => (
-          <Card key={kpi.label} className="rounded-2xl border-border">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <kpi.icon className="h-4 w-4 text-muted-foreground" />
-                <p className="text-xs text-muted-foreground">{kpi.label}</p>
-              </div>
-              <p className={`text-2xl font-bold blur-sensitive ${kpi.accent ? "text-[hsl(var(--primary))]" : "text-foreground"}`}>{kpi.value}</p>
-            </CardContent>
-          </Card>
+          <button
+            key={kpi.key}
+            onClick={() => setSelectedKpi(kpi.key)}
+            className={`text-left rounded-2xl border p-4 transition-all hover:shadow-sm ${
+              selectedKpi === kpi.key
+                ? "border-foreground/30 ring-2 ring-foreground/10 bg-card shadow-sm"
+                : "border-border bg-card"
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <kpi.icon className={`h-4 w-4 ${selectedKpi === kpi.key ? "text-foreground" : "text-muted-foreground"}`} />
+              <p className="text-xs text-muted-foreground">{kpi.label}</p>
+            </div>
+            <p className={`text-xl sm:text-2xl font-bold blur-sensitive ${kpi.accent ? "text-[hsl(var(--primary))]" : "text-foreground"}`}>{kpi.value}</p>
+          </button>
         ))}
       </div>
 
+      {/* Dynamic chart based on selected KPI */}
       <Card className="rounded-2xl border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">{t('dashboard.stats.revenue_period', { period: t(periodLabelKeys[period]) })}</CardTitle>
+          <CardTitle className="text-base font-semibold">
+            {activeChart.label} - {t(periodLabelKeys[period])}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-64 blur-sensitive">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
-                <Bar dataKey="CA" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">{t('dashboard.stats.orders_period', { period: t(periodLabelKeys[period]) })}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-52 blur-sensitive">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
-                <Line type="monotone" dataKey="Commandes" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
-              </LineChart>
+              {activeChart.type === "bar" ? (
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                  <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))" }}
+                    formatter={(value: any) => [`${value}${activeChart.unit}`, activeChart.label]}
+                  />
+                  <Bar dataKey={activeChart.dataKey} fill={activeChart.color} radius={[6, 6, 0, 0]} />
+                </BarChart>
+              ) : activeChart.type === "area" ? (
+                <AreaChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))" }}
+                    formatter={(value: any) => [`${value}${activeChart.unit}`, activeChart.label]}
+                  />
+                  <Area type="monotone" dataKey={activeChart.dataKey} stroke={activeChart.color} fill={activeChart.color} fillOpacity={0.15} strokeWidth={2} />
+                </AreaChart>
+              ) : (
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                  <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))" }}
+                    formatter={(value: any) => [`${value}${activeChart.unit}`, activeChart.label]}
+                  />
+                  <Line type="monotone" dataKey={activeChart.dataKey} stroke={activeChart.color} strokeWidth={2} dot={{ r: 3 }} />
+                </LineChart>
+              )}
             </ResponsiveContainer>
           </div>
         </CardContent>
@@ -327,7 +372,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
                 )}
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">{t('dashboard.stats.total_historical')}</span>
-                  <span className="font-medium text-foreground">{orders.length} {t('dashboard.stats.orders_suffix')}</span>
+                  <span className="font-medium text-foreground">{formatMoney(orders.length, 0)} {t('dashboard.stats.orders_suffix')}</span>
                 </div>
               </div>
             </CardContent>
