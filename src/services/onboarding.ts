@@ -185,7 +185,7 @@ const KEBAB_DEFAULTS: CuisineDefaults = {
     free_sauces_frites: 2,
     extra_sauce_price: 0.50,
     suggest_sauce_from_sandwich: true,
-    enable_boisson_upsell: false,
+    enable_boisson_upsell: true,
     enable_dessert_upsell: false,
   },
 };
