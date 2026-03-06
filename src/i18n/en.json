@@ -91,7 +91,7 @@
   "custom.required": "Required",
   "custom.optional": "Optional",
   "custom.max_selections": "max {max}",
-  "custom.add_to_cart": "Add to cart - {price} €",
+  "custom.add_to_cart": "Add to order",
   "custom.your_selection": "Your selection",
   "custom.base_price": "Base: {price} €",
   "custom.total": "Total: {price} €",

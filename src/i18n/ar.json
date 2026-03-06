@@ -88,7 +88,7 @@
   "custom.required": "مطلوب",
   "custom.optional": "اختياري",
   "custom.max_selections": "الحد الأقصى {max}",
-  "custom.add_to_cart": "أضف إلى السلة - {price} €",
+  "custom.add_to_cart": "أضف إلى الطلب",
   "custom.your_selection": "اختيارك",
   "custom.base_price": "الأساس: {price} €",
   "custom.total": "المجموع: {price} €",

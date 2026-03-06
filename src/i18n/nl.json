@@ -88,7 +88,7 @@
   "custom.required": "Verplicht",
   "custom.optional": "Optioneel",
   "custom.max_selections": "max {max}",
-  "custom.add_to_cart": "Toevoegen aan winkelwagen - {price} €",
+  "custom.add_to_cart": "Toevoegen aan bestelling",
   "custom.your_selection": "Uw selectie",
   "custom.base_price": "Basis: {price} €",
   "custom.total": "Totaal: {price} €",

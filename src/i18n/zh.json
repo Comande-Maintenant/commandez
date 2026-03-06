@@ -88,7 +88,7 @@
   "custom.required": "必选",
   "custom.optional": "可选",
   "custom.max_selections": "最多 {max} 项",
-  "custom.add_to_cart": "加入购物车 - {price} €",
+  "custom.add_to_cart": "加入订单",
   "custom.your_selection": "您的选择",
   "custom.base_price": "基础价: {price} €",
   "custom.total": "总计: {price} €",

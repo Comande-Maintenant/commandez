@@ -88,7 +88,7 @@
   "custom.required": "Обязательно",
   "custom.optional": "Необязательно",
   "custom.max_selections": "макс. {max}",
-  "custom.add_to_cart": "В корзину - {price} €",
+  "custom.add_to_cart": "Добавить к заказу",
   "custom.your_selection": "Ваш выбор",
   "custom.base_price": "Базовая цена: {price} €",
   "custom.total": "Итого: {price} €",

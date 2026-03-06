@@ -88,7 +88,7 @@
   "custom.required": "Obrigatório",
   "custom.optional": "Opcional",
   "custom.max_selections": "máx {max}",
-  "custom.add_to_cart": "Adicionar ao carrinho - {price} €",
+  "custom.add_to_cart": "Adicionar ao pedido",
   "custom.your_selection": "Sua seleção",
   "custom.base_price": "Base: {price} €",
   "custom.total": "Total: {price} €",

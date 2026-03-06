@@ -88,7 +88,7 @@
   "custom.required": "必須",
   "custom.optional": "任意",
   "custom.max_selections": "最大 {max}",
-  "custom.add_to_cart": "カートに追加 - {price} €",
+  "custom.add_to_cart": "注文に追加",
   "custom.your_selection": "選択内容",
   "custom.base_price": "基本価格: {price} €",
   "custom.total": "合計: {price} €",

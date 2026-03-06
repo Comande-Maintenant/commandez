@@ -88,7 +88,7 @@
   "custom.required": "필수",
   "custom.optional": "선택",
   "custom.max_selections": "최대 {max}개",
-  "custom.add_to_cart": "장바구니에 추가 - {price} €",
+  "custom.add_to_cart": "주문에 추가",
   "custom.your_selection": "선택 내역",
   "custom.base_price": "기본가: {price} €",
   "custom.total": "총액: {price} €",

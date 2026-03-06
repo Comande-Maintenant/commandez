@@ -88,7 +88,7 @@
   "custom.required": "Bat buoc",
   "custom.optional": "Tuy chon",
   "custom.max_selections": "toi da {max}",
-  "custom.add_to_cart": "Them vao gio - {price} €",
+  "custom.add_to_cart": "Them vao don",
   "custom.your_selection": "Lua chon cua ban",
   "custom.base_price": "Phan chinh : {price} €",
   "custom.total": "Tong : {price} €",

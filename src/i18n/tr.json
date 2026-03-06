@@ -88,7 +88,7 @@
   "custom.required": "Zorunlu",
   "custom.optional": "Istege bagli",
   "custom.max_selections": "en fazla {max}",
-  "custom.add_to_cart": "Sepete ekle - {price} €",
+  "custom.add_to_cart": "Siparise ekle",
   "custom.your_selection": "Seciminiz",
   "custom.base_price": "Taban : {price} €",
   "custom.total": "Toplam : {price} €",
