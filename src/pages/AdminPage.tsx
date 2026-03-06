@@ -210,15 +210,15 @@ const AdminPage = () => {
       <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
         {/* Demo banner */}
         {isDemo && (
-          <div className="bg-emerald-500 text-white">
-            <div className="max-w-6xl mx-auto px-4 h-10 flex items-center justify-between">
-              <p className="text-xs font-medium truncate">
+          <div className="bg-emerald-500 text-white sticky top-0 z-50">
+            <div className="max-w-6xl mx-auto px-4 h-8 flex items-center justify-between">
+              <p className="text-[11px] font-medium truncate">
                 {t("demo.banner_text")}
               </p>
               <Button
                 size="sm"
                 variant="secondary"
-                className="rounded-xl text-xs font-semibold flex-shrink-0 ms-3 h-7 bg-white text-emerald-700 hover:bg-emerald-50"
+                className="rounded-lg text-[11px] font-semibold flex-shrink-0 ms-2 h-6 px-2 bg-white text-emerald-700 hover:bg-emerald-50"
                 onClick={() => navigate("/inscription")}
               >
                 {t("demo.banner_cta")}
@@ -228,7 +228,7 @@ const AdminPage = () => {
         )}
 
         {/* Header */}
-        <header className="bg-background border-b border-border sticky top-0 z-50">
+        <header className={`bg-background border-b border-border sticky ${isDemo ? "top-8" : "top-0"} z-50`}>
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
               <Link to={isDemo ? "/demo" : `/${slug}`} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
