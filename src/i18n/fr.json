@@ -110,6 +110,7 @@
   "custom.free_sauces": "{count} gratuites",
   "custom.extra_sauce": "+{price} € par sauce",
   "custom.choose_size": "Choisissez la taille",
+  "custom.choose_option": "Accompagnement",
   "custom.choose_formula": "Choisissez la formule",
   "custom.choose_protein": "Choisissez la proteine",
   "custom.choose_filling": "Choisissez la garniture",

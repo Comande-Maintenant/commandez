@@ -100,10 +100,13 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
 
               {variants.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900 mb-2">{t("custom.choose_size")}</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                    {variants.every((v) => v.price === variants[0].price) ? t("custom.choose_option") : t("custom.choose_size")}
+                  </h4>
                   <div className="grid grid-cols-2 gap-2">
                     {variants.map((v, idx) => {
                       const isSelected = selectedVariant === idx;
+                      const allSamePrice = variants.every((vv) => vv.price === variants[0].price);
                       return (
                         <button
                           key={idx}
@@ -114,7 +117,9 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
                           style={isSelected ? { borderColor: accent, backgroundColor: `${accent}10` } : {}}
                         >
                           <p className="text-sm font-medium text-gray-900">{v.name}</p>
-                          <p className="text-sm font-bold mt-0.5" style={{ color: accent }}>{v.price.toFixed(2)} €</p>
+                          {!allSamePrice && (
+                            <p className="text-sm font-bold mt-0.5" style={{ color: accent }}>{v.price.toFixed(2)} €</p>
+                          )}
                         </button>
                       );
                     })}
