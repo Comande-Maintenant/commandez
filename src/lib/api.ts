@@ -108,13 +108,15 @@ export async function createOrder(order: {
   pickup_time?: string | null;
   payment_method?: string;
 }): Promise<DbOrder> {
-  // Server-side price validation
-  const { data: valid, error: validErr } = await supabase.rpc("validate_order_total", {
-    p_items: order.items,
-    p_claimed_total: order.total,
-  });
-  if (validErr || !valid) {
-    throw new Error("Le total de la commande ne correspond pas aux prix du menu.");
+  // Server-side price validation (skip for demo orders)
+  if (order.source !== "demo") {
+    const { data: valid, error: validErr } = await supabase.rpc("validate_order_total", {
+      p_items: order.items,
+      p_claimed_total: order.total,
+    });
+    if (validErr || !valid) {
+      throw new Error("Le total de la commande ne correspond pas aux prix du menu.");
+    }
   }
   const { data, error } = await supabase
     .from("orders")
