@@ -759,6 +759,8 @@
   "dashboard.settings.clients_can_order": "Khach co the dat hang",
   "dashboard.settings.orders_suspended": "Don hang tam ngung",
   "dashboard.settings.order_modes": "Che do dat hang",
+  "dashboard.prep.title": "A preparer ({count} commandes)",
+  "dashboard.prep.nothing": "Aucune commande en attente.",
   "dashboard.settings.dine_in_capacity": "Places sur place",
   "dashboard.settings.dine_in_capacity_desc": "Nombre maximum de couverts pour manger sur place.",
   "dashboard.settings.estimated_time": "Thoi gian du kien",

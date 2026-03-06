@@ -759,6 +759,8 @@
   "dashboard.settings.clients_can_order": "Los clientes pueden pedir",
   "dashboard.settings.orders_suspended": "Pedidos suspendidos",
   "dashboard.settings.order_modes": "Modos de pedido",
+  "dashboard.prep.title": "A preparer ({count} commandes)",
+  "dashboard.prep.nothing": "Aucune commande en attente.",
   "dashboard.settings.dine_in_capacity": "Places sur place",
   "dashboard.settings.dine_in_capacity_desc": "Nombre maximum de couverts pour manger sur place.",
   "dashboard.settings.estimated_time": "Tiempo estimado",

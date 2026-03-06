@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { POSAddItemModal } from "./pos/POSAddItemModal";
 import { BanDialog } from "./BanDialog";
+import { PrepSummaryBoard } from "./PrepSummaryBoard";
 import { toast } from "sonner";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
@@ -214,6 +215,9 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           </div>
         ))}
       </div>
+
+      {/* Prep summary for kitchen */}
+      <PrepSummaryBoard orders={orders} />
 
       {/* Last order + Ruptures */}
       <div className="flex items-center justify-between mb-4">
