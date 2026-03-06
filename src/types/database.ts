@@ -64,6 +64,7 @@ export interface DbRestaurant {
   availability_mode: string;
   schedule: any;
   order_mode: string;
+  dine_in_capacity: number | null;
   notification_sound: string;
   prep_time_config: {
     default_minutes: number;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle, CreditCard, Banknote } from "lucide-react";
+import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle, CreditCard, Banknote, UtensilsCrossed } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -37,6 +37,10 @@ const OrderPage = () => {
     return false;
   });
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
+  const [orderType, setOrderType] = useState<"collect" | "sur_place">("collect");
+  const [covers, setCovers] = useState(1);
+  const [dineInEnabled, setDineInEnabled] = useState(false);
+  const [dineInCapacity, setDineInCapacity] = useState<number | null>(null);
   const clientIpRef = useRef<string | null>(null);
 
   // Pre-fill from localStorage (or demo defaults)
@@ -65,6 +69,12 @@ const OrderPage = () => {
           r.prep_time_config.max_minutes
         );
         setEstimatedMinutes(est);
+      }
+      // Detect dine-in availability
+      const mode = r.order_mode || "pickup";
+      if (mode.includes("on_site")) {
+        setDineInEnabled(true);
+        setDineInCapacity((r as any).dine_in_capacity ?? null);
       }
       // Detect demo mode
       if ((r as any).is_demo) {
@@ -148,7 +158,8 @@ const OrderPage = () => {
         customer_name: name,
         customer_phone: phone,
         customer_email: email || undefined,
-        order_type: "collect",
+        order_type: orderType,
+        covers: orderType === "sur_place" ? covers : undefined,
         source: demoOrder ? "demo" : undefined,
         items: orderItems,
         subtotal,
@@ -251,8 +262,50 @@ const OrderPage = () => {
             <Input placeholder={t("order.email_optional")} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
           </div>
 
+          {/* Order type selector */}
+          {dineInEnabled && (
+            <div className="p-4 bg-secondary/50 rounded-2xl space-y-3">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.order_type")}</h2>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setOrderType("collect")}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${orderType === "collect" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  {t("order.takeaway")}
+                </button>
+                <button
+                  onClick={() => setOrderType("sur_place")}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${orderType === "sur_place" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
+                >
+                  <UtensilsCrossed className="h-4 w-4" />
+                  {t("order.dine_in")}
+                </button>
+              </div>
+              {orderType === "sur_place" && (
+                <div className="space-y-2">
+                  <label className="text-sm text-muted-foreground">{t("order.covers")}</label>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setCovers(Math.max(1, covers - 1))}
+                      className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-lg font-medium hover:bg-secondary transition-colors"
+                    >-</button>
+                    <span className="text-lg font-bold text-foreground w-8 text-center">{covers}</span>
+                    <button
+                      onClick={() => setCovers(Math.min(dineInCapacity || 20, covers + 1))}
+                      className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-lg font-medium hover:bg-secondary transition-colors"
+                    >+</button>
+                  </div>
+                  {dineInCapacity && (
+                    <p className="text-xs text-muted-foreground">{t("order.capacity_info", { max: dineInCapacity })}</p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Pickup time picker */}
-          {restaurantId && (
+          {restaurantId && orderType === "collect" && (
             <div className="p-4 bg-secondary/50 rounded-2xl">
               <PickupTimePicker
                 restaurantId={restaurantId}

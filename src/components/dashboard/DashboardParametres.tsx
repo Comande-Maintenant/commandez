@@ -79,6 +79,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   const [estimatedTime, setEstimatedTime] = useState(restaurant.estimated_time || "20-30 min");
   const [paymentMethods, setPaymentMethods] = useState<string[]>(restaurant.payment_methods ?? []);
   const [prepTime, setPrepTime] = useState(restaurant.prep_time_config ?? { default_minutes: 20, per_item_minutes: 3, max_minutes: 90 });
+  const [dineInCapacity, setDineInCapacity] = useState(String(restaurant.dine_in_capacity ?? ""));
   const [phoneNumber, setPhoneNumber] = useState(restaurant.restaurant_phone || "");
   const [schedule, setSchedule] = useState<ScheduleDay[]>([]);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
@@ -140,6 +141,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
         payment_methods: paymentMethods,
         prep_time_config: prepTime,
         restaurant_phone: phoneNumber,
+        dine_in_capacity: dineInCapacity ? parseInt(dineInCapacity) || null : null,
       } as any);
 
       // Save schedule as JSON (supports multi-slots per day)
@@ -291,6 +293,23 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             </label>
           ))}
         </div>
+
+        {/* Dine-in capacity */}
+        {selectedOrderModes.includes("on_site") && (
+          <div className="p-3 rounded-xl bg-secondary/50 space-y-2">
+            <label className="text-sm font-medium text-foreground">{t('dashboard.settings.dine_in_capacity')}</label>
+            <Input
+              type="number"
+              min={1}
+              max={500}
+              value={dineInCapacity}
+              onChange={(e) => setDineInCapacity(e.target.value)}
+              placeholder="15"
+              className="mt-1"
+            />
+            <p className="text-xs text-muted-foreground">{t('dashboard.settings.dine_in_capacity_desc')}</p>
+          </div>
+        )}
 
         <div className="space-y-3 pt-3 border-t border-border">
           <div>
