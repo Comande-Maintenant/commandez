@@ -208,28 +208,27 @@ const AdminPage = () => {
       />
 
       <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
-        {/* Demo banner */}
-        {isDemo && (
-          <div className="bg-emerald-500 text-white sticky top-0 z-50">
-            <div className="max-w-6xl mx-auto px-4 h-8 flex items-center justify-between">
-              <p className="text-[11px] font-medium truncate">
-                {t("demo.banner_text")}
-              </p>
-              <Button
-                size="sm"
-                variant="secondary"
-                className="rounded-lg text-[11px] font-semibold flex-shrink-0 ms-2 h-6 px-2 bg-white text-emerald-700 hover:bg-emerald-50"
-                onClick={() => navigate("/inscription")}
-              >
-                {t("demo.banner_cta")}
-              </Button>
+        {/* Header (+ demo banner) - single sticky block */}
+        <div className="sticky top-0 z-50">
+          {isDemo && (
+            <div className="bg-emerald-500 text-white">
+              <div className="max-w-6xl mx-auto px-4 h-8 flex items-center justify-between">
+                <p className="text-[11px] font-medium truncate">
+                  {t("demo.banner_text")}
+                </p>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="rounded-lg text-[11px] font-semibold flex-shrink-0 ms-2 h-6 px-2 bg-white text-emerald-700 hover:bg-emerald-50"
+                  onClick={() => navigate("/inscription")}
+                >
+                  {t("demo.banner_cta")}
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
-
-        {/* Header */}
-        <header className={`bg-background border-b border-border sticky ${isDemo ? "top-8" : "top-0"} z-50`}>
-          <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+          )}
+          <header className="bg-background border-b border-border">
+            <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
               <Link to={isDemo ? "/demo" : `/${slug}`} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
@@ -286,7 +285,8 @@ const AdminPage = () => {
               </div>
             </div>
           </div>
-        </header>
+          </header>
+        </div>
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
