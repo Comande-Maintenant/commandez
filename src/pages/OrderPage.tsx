@@ -119,16 +119,21 @@ const OrderPage = () => {
         localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email }));
       }
 
-      const orderItems = items.map((i) => ({
-        name: i.menuItem.name,
-        menu_item_id: i.menuItem.id,
-        quantity: i.quantity,
-        sauces: i.selectedSauces,
-        supplements: i.selectedSupplements.map((s) => ({ name: s.name, price: s.price })),
-        price: i.totalPrice,
-        viande_choice: i.viandeChoice || null,
-        garniture_choices: i.garnitureChoices || null,
-      }));
+      const orderItems = items.map((i) => {
+        const suppTotal = i.selectedSupplements.reduce((sum, s) => sum + s.price, 0);
+        const extraCost = Math.max(0, +(i.totalPrice - i.menuItem.price - suppTotal).toFixed(2));
+        return {
+          name: i.menuItem.name,
+          menu_item_id: i.menuItem.id,
+          quantity: i.quantity,
+          sauces: i.selectedSauces,
+          supplements: i.selectedSupplements.map((s) => ({ name: s.name, price: s.price })),
+          price: i.totalPrice,
+          extra_cost: extraCost,
+          viande_choice: i.viandeChoice || null,
+          garniture_choices: i.garnitureChoices || null,
+        };
+      });
       const orderPayload: Parameters<typeof createOrder>[0] = {
         restaurant_id: restaurantId,
         customer_name: name,
