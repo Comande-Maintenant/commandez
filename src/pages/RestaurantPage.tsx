@@ -454,8 +454,8 @@ const RestaurantPage = () => {
     );
   }
 
-  // Subscription pending_payment - page not yet activated
-  if (restaurant.subscription_status === "pending_payment") {
+  // Subscription pending_payment - page not yet activated (skip for demo)
+  if (restaurant.subscription_status === "pending_payment" && !isDemo) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-sm mx-auto px-4">
@@ -472,11 +472,13 @@ const RestaurantPage = () => {
     );
   }
 
-  // Subscription expired/cancelled/past_due - public page unavailable
+  // Subscription expired/cancelled/past_due - public page unavailable (skip for demo)
   if (
-    restaurant.subscription_status === "expired" ||
-    restaurant.subscription_status === "cancelled" ||
-    restaurant.subscription_status === "past_due"
+    !isDemo && (
+      restaurant.subscription_status === "expired" ||
+      restaurant.subscription_status === "cancelled" ||
+      restaurant.subscription_status === "past_due"
+    )
   ) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
