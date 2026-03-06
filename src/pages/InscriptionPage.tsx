@@ -24,6 +24,7 @@ import {
   createRestaurantFromOnboarding,
   createMenuItemsFromAnalysis,
   generateSlug,
+  seedCuisineDefaults,
 } from '@/services/onboarding';
 import { getPlaceDetails } from '@/services/google-places';
 import { processReferral } from '@/services/referral';
@@ -245,6 +246,9 @@ const InscriptionPage = () => {
       if (menuCategories.length > 0) {
         await createMenuItemsFromAnalysis(restaurant.id, menuCategories);
       }
+
+      // Seed cuisine-specific defaults (garnitures, sauces, config)
+      await seedCuisineDefaults(restaurant.id, restaurantData?.cuisine_type || 'generic');
 
       // Store parsed schedule JSON + set auto mode
       if (restaurantData?.useAutoHours && restaurantData.parsedSchedule) {
