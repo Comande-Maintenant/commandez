@@ -107,6 +107,7 @@ export async function createOrder(order: {
   client_ip?: string | null;
   pickup_time?: string | null;
   payment_method?: string;
+  estimated_ready_at?: string;
 }): Promise<DbOrder> {
   // Server-side price validation (skip for demo orders)
   if (order.source !== "demo") {

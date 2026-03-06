@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { ShoppingBag, UtensilsCrossed, Plus, Minus, Trash2, ChevronRight, Check, ArrowLeft } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { ShoppingBag, UtensilsCrossed, Plus, Minus, Trash2, ChevronRight, Check, ArrowLeft, Timer } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,17 +9,24 @@ import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
 import type { UniversalCustomizationData } from "@/types/customization";
 import type { DbMenuItem } from "@/types/database";
 
+interface PrepTimeConfig {
+  default_minutes: number;
+  per_item_minutes: number;
+  max_minutes: number;
+}
+
 interface Props {
   restaurantId: string;
   restaurantSlug: string;
   menuItems: DbMenuItem[];
   primaryColor: string;
   availablePaymentMethods: string[];
-  onSubmit: (items: any[], total: number, orderType: string, customerName: string, covers: number, paymentMethod: string) => Promise<void>;
+  prepTimeConfig?: PrepTimeConfig | null;
+  onSubmit: (items: any[], total: number, orderType: string, customerName: string, covers: number, paymentMethod: string, estimatedMinutes: number) => Promise<void>;
   submitting: boolean;
 }
 
-export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColor, availablePaymentMethods, onSubmit, submitting }: Props) => {
+export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColor, availablePaymentMethods, prepTimeConfig, onSubmit, submitting }: Props) => {
   const { items, subtotal, clearCart } = useCart();
   const [customizationData, setCustomizationData] = useState<UniversalCustomizationData | null>(null);
   const [orderType, setOrderType] = useState<"sur_place" | "collect">("sur_place");
@@ -27,6 +34,19 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
   const [covers, setCovers] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [screen, setScreen] = useState<"menu" | "recap" | "success">("menu");
+  const [prepMinutes, setPrepMinutes] = useState(10);
+
+  // Calculate default prep time based on item count
+  const defaultPrepMinutes = useMemo(() => {
+    const itemCount = items.reduce((s, l) => s + l.quantity, 0);
+    const cfg = prepTimeConfig || { default_minutes: 10, per_item_minutes: 2, max_minutes: 60 };
+    return Math.min(cfg.default_minutes + itemCount * cfg.per_item_minutes, cfg.max_minutes);
+  }, [items, prepTimeConfig]);
+
+  // Reset prep time when items change
+  useEffect(() => {
+    setPrepMinutes(defaultPrepMinutes);
+  }, [defaultPrepMinutes]);
 
   useEffect(() => {
     clearCart();
@@ -48,7 +68,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
     }));
     const total = subtotal;
     const name = customerName || `Caisse (${covers} pers.)`;
-    await onSubmit(orderItems, total, orderType, name, covers, paymentMethod);
+    await onSubmit(orderItems, total, orderType, name, covers, paymentMethod, prepMinutes);
     clearCart();
     setScreen("success");
   };
@@ -144,6 +164,31 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
               {m === "cash" ? "Especes" : m === "card" ? "CB" : m === "ticket_restaurant" ? "Ticket resto" : m}
             </button>
           ))}
+        </div>
+
+        {/* Estimated prep time */}
+        <div className="bg-secondary/50 rounded-xl p-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Timer className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">Temps de preparation</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPrepMinutes(Math.max(1, prepMinutes - 5))}
+                className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors"
+              >
+                <Minus className="h-3.5 w-3.5" />
+              </button>
+              <span className="text-lg font-bold text-foreground min-w-[48px] text-center">{prepMinutes} min</span>
+              <button
+                onClick={() => setPrepMinutes(Math.min(120, prepMinutes + 5))}
+                className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
         </div>
 
         <Button

@@ -1,4 +1,4 @@
-import { ArrowLeft, UtensilsCrossed, ShoppingBag, Phone, Pencil, CreditCard, Banknote, Ticket } from "lucide-react";
+import { ArrowLeft, UtensilsCrossed, ShoppingBag, Phone, Pencil, CreditCard, Banknote, Ticket, Timer, Plus, Minus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,8 @@ interface Props {
   onSubmit: () => void;
   onBack: () => void;
   submitting: boolean;
+  prepMinutes: number;
+  onSetPrepMinutes: (minutes: number) => void;
 }
 
 const orderTypeConfig: Record<POSOrderType, { labelKey: string; icon: typeof UtensilsCrossed }> = {
@@ -59,6 +61,8 @@ export const POSRecap = ({
   onSubmit,
   onBack,
   submitting,
+  prepMinutes,
+  onSetPrepMinutes,
 }: Props) => {
   const { t } = useLanguage();
   const grandTotal = calculateGrandTotal(persons, drinks, desserts);
@@ -230,8 +234,31 @@ export const POSRecap = ({
         </div>
       </div>
 
-      {/* Total + submit */}
+      {/* Prep time + Total + submit */}
       <div className="px-4 py-4 border-t border-border bg-background space-y-3">
+        {/* Estimated prep time */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Timer className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-foreground">Preparation</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onSetPrepMinutes(Math.max(1, prepMinutes - 5))}
+              className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors"
+            >
+              <Minus className="h-3.5 w-3.5" />
+            </button>
+            <span className="text-lg font-bold text-foreground min-w-[48px] text-center">{prepMinutes} min</span>
+            <button
+              onClick={() => onSetPrepMinutes(Math.min(120, prepMinutes + 5))}
+              className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors"
+            >
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+
         <div className="flex justify-between items-center">
           <span className="text-lg font-bold text-foreground">{t('pos.total')}</span>
           <span className="text-2xl font-bold text-foreground">{grandTotal.toFixed(2)} €</span>

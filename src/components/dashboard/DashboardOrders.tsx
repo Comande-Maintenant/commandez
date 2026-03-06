@@ -30,11 +30,12 @@ const statusBadge: Record<OrderStatus, { text: string; class: string }> = {
   done: { text: "Terminee", class: "bg-gray-100 text-gray-600" },
 };
 
-const filterTabsDef: { id: OrderStatus | "all"; label: string }[] = [
-  { id: "all", label: "Toutes" },
+type KitchenFilter = "active" | "new" | "preparing" | "done";
+
+const filterTabsDef: { id: KitchenFilter; label: string }[] = [
+  { id: "active", label: "A faire" },
   { id: "new", label: "Nouvelles" },
   { id: "preparing", label: "En cours" },
-  { id: "ready", label: "Pretes" },
   { id: "done", label: "Terminees" },
 ];
 
@@ -48,7 +49,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const { t } = useLanguage();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
-  const [filter, setFilter] = useState<OrderStatus | "all">("all");
+  const [filter, setFilter] = useState<KitchenFilter>("active");
   const [loading, setLoading] = useState(true);
   const [disconnected, setDisconnected] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<DbOrder | null>(null);
@@ -129,14 +130,17 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     return () => clearInterval(interval);
   }, [restaurant.availability_mode]);
 
-  const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
-  const activeOrders = filtered.filter((o) => o.status !== "done");
-  const doneOrders = filtered.filter((o) => o.status === "done");
+  // Kitchen only sees new + preparing (active). "ready" goes to caisse. "done" is archive.
+  const kitchenOrders = orders.filter((o) => o.status === "new" || o.status === "preparing");
+  const filtered = filter === "active"
+    ? kitchenOrders
+    : filter === "done"
+      ? orders.filter((o) => o.status === "done" || o.status === "ready")
+      : orders.filter((o) => o.status === filter);
 
   // Count by status
   const newCount = orders.filter((o) => o.status === "new").length;
   const preparingCount = orders.filter((o) => o.status === "preparing").length;
-  const readyCount = orders.filter((o) => o.status === "ready").length;
 
   const todayOrders = orders.filter((o) => {
     const d = new Date(o.created_at);
@@ -175,16 +179,21 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       }
     }
 
-    // Auto-advance to next order or close detail
+    // Auto-advance to next kitchen order or close detail
+    // In kitchen: "ready" means the order leaves the kitchen → move to next
     const remaining = orders
-      .filter((o) => o.id !== orderId && o.status !== "done")
+      .filter((o) => o.id !== orderId && (o.status === "new" || o.status === "preparing"))
       .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
-    if (remaining.length > 0 && (newStatus === "done" || newStatus === "ready")) {
-      // Move to next pending order
-      setSelectedOrder(remaining[0]);
-    } else if (newStatus !== "done") {
-      // Update selected order in place
+    if (newStatus === "ready" || newStatus === "done") {
+      // Order left the kitchen → show next pending or close
+      if (remaining.length > 0) {
+        setSelectedOrder(remaining[0]);
+      } else {
+        setSelectedOrder(null);
+      }
+    } else if (newStatus === "preparing") {
+      // Just accepted - update in place
       setSelectedOrder((prev) => prev ? { ...prev, status: newStatus } : null);
     } else {
       setSelectedOrder(null);
@@ -254,28 +263,21 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
         </div>
       )}
 
-      {/* Stats counters */}
-      <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-4">
+      {/* Stats counters - kitchen only sees new + preparing */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
         <button
-          onClick={() => setFilter(newCount > 0 ? "new" : "all")}
+          onClick={() => setFilter(newCount > 0 ? "new" : "active")}
           className={`bg-card rounded-2xl border border-border p-3 text-left transition-all hover:shadow-sm ${filter === "new" ? "ring-2 ring-amber-400" : ""}`}
         >
           <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">Nouvelles</p>
           <p className={`text-xl sm:text-2xl font-bold mt-0.5 ${newCount > 0 ? "text-amber-600" : "text-foreground"}`}>{newCount}</p>
         </button>
         <button
-          onClick={() => setFilter(preparingCount > 0 ? "preparing" : "all")}
+          onClick={() => setFilter(preparingCount > 0 ? "preparing" : "active")}
           className={`bg-card rounded-2xl border border-border p-3 text-left transition-all hover:shadow-sm ${filter === "preparing" ? "ring-2 ring-blue-400" : ""}`}
         >
           <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">En cours</p>
           <p className="text-xl sm:text-2xl font-bold mt-0.5 text-foreground">{preparingCount}</p>
-        </button>
-        <button
-          onClick={() => setFilter(readyCount > 0 ? "ready" : "all")}
-          className={`bg-card rounded-2xl border border-border p-3 text-left transition-all hover:shadow-sm ${filter === "ready" ? "ring-2 ring-emerald-400" : ""}`}
-        >
-          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">Pretes</p>
-          <p className={`text-xl sm:text-2xl font-bold mt-0.5 ${readyCount > 0 ? "text-emerald-600" : "text-foreground"}`}>{readyCount}</p>
         </button>
         <div className="bg-card rounded-2xl border border-border p-3">
           <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">CA jour</p>
