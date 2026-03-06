@@ -104,6 +104,7 @@ const SuiviPage = () => {
   const [profileDismissed, setProfileDismissed] = useState(() => {
     try { return localStorage.getItem("cm_profile_dismissed") === "true"; } catch { return false; }
   });
+  const [demoCountdown, setDemoCountdown] = useState<number | null>(null);
 
   useEffect(() => {
     if (!orderId) return;
@@ -132,9 +133,9 @@ const SuiviPage = () => {
 
     const createdAt = new Date(order.created_at).getTime();
     const schedule: { status: string; target: string; delayMs: number }[] = [
-      { status: "new", target: "preparing", delayMs: 10000 },
-      { status: "preparing", target: "ready", delayMs: 20000 },
-      { status: "ready", target: "done", delayMs: 30000 },
+      { status: "new", target: "preparing", delayMs: 5000 },
+      { status: "preparing", target: "ready", delayMs: 10000 },
+      { status: "ready", target: "done", delayMs: 15000 },
     ];
 
     const current = schedule.find((s) => s.status === order.status);
@@ -149,6 +150,32 @@ const SuiviPage = () => {
 
     return () => clearTimeout(timer);
   }, [order?.status, order?.restaurant?.is_demo, order?.id, order?.created_at]);
+
+  // Demo countdown: simulate estimated time ticking down over 15 seconds
+  useEffect(() => {
+    if (!order?.restaurant?.is_demo) return;
+    if (order.status === "ready" || order.status === "done") {
+      setDemoCountdown(0);
+      return;
+    }
+    const totalDemoMs = 15000; // 3 steps x 5 sec
+    const createdAt = new Date(order.created_at).getTime();
+    const est = (() => {
+      const items = Array.isArray(order.items) ? order.items : [];
+      const itemCount = items.reduce((sum: number, i: any) => sum + (i.quantity || 1), 0);
+      return Math.min(15 + itemCount * 2, 45);
+    })();
+
+    const tick = () => {
+      const elapsed = Date.now() - createdAt;
+      const ratio = Math.min(elapsed / totalDemoMs, 1);
+      const remaining = Math.max(0, Math.ceil(est * (1 - ratio)));
+      setDemoCountdown(remaining);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [order?.restaurant?.is_demo, order?.status, order?.created_at, order?.items]);
 
   // Vibrate + confetti on ready
   useEffect(() => {
@@ -230,6 +257,14 @@ const SuiviPage = () => {
       </div>
 
       <div className="max-w-lg mx-auto px-4 pb-8">
+        {/* Order number hero */}
+        <div className="text-center mb-6">
+          <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">{t("suivi.your_order")}</p>
+          <p className="text-4xl font-black tracking-wider" style={{ color: primary }}>
+            {formatDisplayNumber(order)}
+          </p>
+        </div>
+
         {/* Demo CTA banner */}
         {order.restaurant?.is_demo && (
           <div className="mb-6 flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200">
@@ -287,7 +322,7 @@ const SuiviPage = () => {
                   </>
                 ) : (
                   <>
-                    <p className="text-2xl font-bold text-gray-900">{t("suivi.time_remaining", { minutes: remainingMinutes })}</p>
+                    <p className="text-2xl font-bold text-gray-900">{t("suivi.time_remaining", { minutes: order.restaurant?.is_demo && demoCountdown !== null ? demoCountdown : remainingMinutes })}</p>
                     <p className="text-sm text-gray-500 mt-1">{ORDER_TYPE_KEYS[order.order_type] ? t(ORDER_TYPE_KEYS[order.order_type]) : order.order_type}</p>
                   </>
                 )}

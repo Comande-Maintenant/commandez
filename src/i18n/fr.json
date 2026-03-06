@@ -488,6 +488,7 @@
   "suivi.back": "Retour",
   "suivi.back_to_restaurant": "Retour au restaurant",
   "suivi.order_number": "Commande {number}",
+  "suivi.your_order": "Votre commande",
   "suivi.done_title": "Merci et bon appetit !",
   "suivi.done_subtitle": "Votre commande est terminee",
   "suivi.ready_title": "Votre commande est prete !",
