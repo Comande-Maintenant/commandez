@@ -25,7 +25,17 @@ const OrderPage = () => {
   const [restaurantPhone, setRestaurantPhone] = useState<string | null>(null);
   const [estimatedMinutes, setEstimatedMinutes] = useState(15);
   const [banned, setBanned] = useState(false);
-  const [isDemo, setIsDemo] = useState(false);
+  const [isDemo, setIsDemo] = useState(() => {
+    // Detect demo immediately from cart slug to avoid race condition
+    try {
+      const raw = localStorage.getItem("resto-order-cart");
+      if (raw) {
+        const cart = JSON.parse(raw);
+        if (cart.restaurantSlug === "antalya-kebab-moneteau") return true;
+      }
+    } catch {}
+    return false;
+  });
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
   const clientIpRef = useRef<string | null>(null);
 
@@ -92,30 +102,29 @@ const OrderPage = () => {
     if (!restaurantId || submitting) return;
     setSubmitting(true);
     try {
-      // Skip subscription check for demo orders
-      if (!isDemo) {
-        const resto = await fetchRestaurantById(restaurantId);
-        if (resto) {
-          const status = resto.subscription_status;
-          if (status === "expired" || status === "cancelled" || status === "past_due" || status === "pending_payment") {
+      // Check subscription (skip for demo restaurants)
+      const resto = await fetchRestaurantById(restaurantId);
+      const demoOrder = isDemo || !!(resto as any)?.is_demo;
+      if (!demoOrder && resto) {
+        const status = resto.subscription_status;
+        if (status === "expired" || status === "cancelled" || status === "past_due" || status === "pending_payment") {
+          toast.error(t("order.restaurant_unavailable"));
+          setSubmitting(false);
+          return;
+        }
+        if (status === "trial" && resto.trial_end_date) {
+          const trialEnd = new Date(resto.trial_end_date);
+          if (resto.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + resto.bonus_weeks * 7);
+          if (trialEnd < new Date()) {
             toast.error(t("order.restaurant_unavailable"));
             setSubmitting(false);
             return;
-          }
-          if (status === "trial" && resto.trial_end_date) {
-            const trialEnd = new Date(resto.trial_end_date);
-            if (resto.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + resto.bonus_weeks * 7);
-            if (trialEnd < new Date()) {
-              toast.error(t("order.restaurant_unavailable"));
-              setSubmitting(false);
-              return;
-            }
           }
         }
       }
 
       // Save customer info to localStorage
-      if (!isDemo) {
+      if (!demoOrder) {
         localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email }));
       }
 
@@ -140,7 +149,7 @@ const OrderPage = () => {
         customer_phone: phone,
         customer_email: email || undefined,
         order_type: "collect",
-        source: isDemo ? "demo" : undefined,
+        source: demoOrder ? "demo" : undefined,
         items: orderItems,
         subtotal,
         total,
@@ -159,11 +168,11 @@ const OrderPage = () => {
         createdAt: Date.now(),
       }));
       // Save last order for reorder feature (with full customizations)
-      if (restaurantId && !isDemo) {
+      if (restaurantId && !demoOrder) {
         localStorage.setItem(`last-order-${restaurantId}`, JSON.stringify(orderItems));
       }
       // Update customer profile stats if logged in
-      if (isLoggedIn && user && !isDemo) {
+      if (isLoggedIn && user && !demoOrder) {
         incrementCustomerStats(user.id, total).catch(() => {});
       }
       clearCart();
