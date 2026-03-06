@@ -95,6 +95,25 @@ function SortableItemRow({
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-foreground truncate">{item.name}</p>
         {item.description && <p className="text-xs text-muted-foreground truncate">{item.description}</p>}
+        {((item.variants ?? []).length > 0 || (item.sauces ?? []).length > 0 || (item.supplements ?? []).length > 0) && (
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {(item.variants ?? []).length > 0 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                {(item.variants ?? []).length} taille{(item.variants ?? []).length > 1 ? "s" : ""}
+              </span>
+            )}
+            {(item.sauces ?? []).length > 0 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">
+                {(item.sauces ?? []).length} sauce{(item.sauces ?? []).length > 1 ? "s" : ""}
+              </span>
+            )}
+            {(item.supplements ?? []).length > 0 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">
+                {(item.supplements ?? []).length} suppl.
+              </span>
+            )}
+          </div>
+        )}
       </div>
       <span className="text-sm font-bold text-foreground shrink-0">{Number(item.price).toFixed(2)} €</span>
       <div className="flex items-center gap-1.5 shrink-0">
@@ -223,6 +242,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
         image: item.image || undefined,
         supplements: item.supplements,
         sauces: item.sauces,
+        variants: item.variants,
       });
       const data = await fetchAllMenuItems(restaurant.id);
       setItems(data);
@@ -286,11 +306,22 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   const handleEditSave = async () => {
     if (!editItem) return;
     if (isDemo) {
-      setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
+      const cleaned = {
+        ...editItem,
+        variants: (editItem.variants ?? []).filter((v) => v.name.trim()),
+        sauces: (editItem.sauces ?? []).filter((s) => s.trim()),
+        supplements: (editItem.supplements ?? []).filter((s) => s.name.trim()),
+      };
+      if (cleaned.variants.length === 0) cleaned.variants = undefined as any;
+      setItems((prev) => prev.map((i) => (i.id === editItem.id ? cleaned : i)));
       setEditItem(null);
       toast.success(t('dashboard.menu.item_modified'));
       return;
     }
+    // Filter out empty variants/sauces/supplements before saving
+    const cleanVariants = (editItem.variants ?? []).filter((v) => v.name.trim());
+    const cleanSauces = (editItem.sauces ?? []).filter((s) => s.trim());
+    const cleanSupplements = (editItem.supplements ?? []).filter((s) => s.name.trim());
     await updateMenuItem(editItem.id, {
       name: editItem.name,
       description: editItem.description,
@@ -298,6 +329,9 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       image: editItem.image,
       popular: editItem.popular,
       product_type: editItem.product_type || "simple",
+      variants: cleanVariants.length > 0 ? cleanVariants : null,
+      sauces: cleanSauces,
+      supplements: cleanSupplements,
     });
     setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
     setEditItem(null);
@@ -579,10 +613,10 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
       {/* Edit item dialog */}
       <Dialog open={!!editItem} onOpenChange={(open) => !open && setEditItem(null)}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{t('dashboard.menu.edit_product')}</DialogTitle></DialogHeader>
           {editItem && (
-            <div className="space-y-3 mt-2">
+            <div className="space-y-4 mt-2">
               <Input value={editItem.name} onChange={(e) => setEditItem({ ...editItem, name: e.target.value })} placeholder={t('common.name')} />
               <Input value={editItem.description} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder={t('common.description')} />
               <Input type="number" step="0.50" value={editItem.price} onChange={(e) => setEditItem({ ...editItem, price: parseFloat(e.target.value) || 0 })} placeholder={t('common.price')} />
@@ -652,10 +686,164 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                   <option value="supplement">{t('dashboard.menu.type_supplement')}</option>
                 </select>
               </div>
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">{t('menu.popular')}</span>
                 <Switch checked={editItem.popular} onCheckedChange={(v) => setEditItem({ ...editItem, popular: v })} />
               </div>
+
+              {/* ── Variants editor ── */}
+              <div className="space-y-2 border-t border-border pt-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-foreground">Tailles / Options</p>
+                  <button
+                    onClick={() => setEditItem({
+                      ...editItem,
+                      variants: [...(editItem.variants ?? []), { name: "", price: editItem.price }],
+                    })}
+                    className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
+                  >
+                    <Plus className="h-3 w-3" /> Ajouter
+                  </button>
+                </div>
+                {(editItem.variants ?? []).length === 0 && (
+                  <p className="text-xs text-muted-foreground">Pas de variante. Le prix de base sera utilise.</p>
+                )}
+                {(editItem.variants ?? []).map((v, vi) => (
+                  <div key={vi} className="flex items-center gap-2">
+                    <Input
+                      value={v.name}
+                      onChange={(e) => {
+                        const arr = [...(editItem.variants ?? [])];
+                        arr[vi] = { ...arr[vi], name: e.target.value };
+                        setEditItem({ ...editItem, variants: arr });
+                      }}
+                      placeholder="Nom (ex: Petit, Grand)"
+                      className="flex-1 h-9 text-sm"
+                    />
+                    <Input
+                      type="number"
+                      step="0.50"
+                      value={v.price}
+                      onChange={(e) => {
+                        const arr = [...(editItem.variants ?? [])];
+                        arr[vi] = { ...arr[vi], price: parseFloat(e.target.value) || 0 };
+                        setEditItem({ ...editItem, variants: arr });
+                      }}
+                      placeholder="Prix"
+                      className="w-20 h-9 text-sm"
+                    />
+                    <span className="text-xs text-muted-foreground">€</span>
+                    <button
+                      onClick={() => {
+                        const arr = (editItem.variants ?? []).filter((_, i) => i !== vi);
+                        setEditItem({ ...editItem, variants: arr });
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors shrink-0"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* ── Sauces editor ── */}
+              <div className="space-y-2 border-t border-border pt-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-foreground">Sauces</p>
+                  <button
+                    onClick={() => setEditItem({
+                      ...editItem,
+                      sauces: [...(editItem.sauces ?? []), ""],
+                    })}
+                    className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
+                  >
+                    <Plus className="h-3 w-3" /> Ajouter
+                  </button>
+                </div>
+                {(editItem.sauces ?? []).length === 0 && (
+                  <p className="text-xs text-muted-foreground">Aucune sauce. Le client ne verra pas de choix de sauce.</p>
+                )}
+                {(editItem.sauces ?? []).map((sauce, si) => (
+                  <div key={si} className="flex items-center gap-2">
+                    <Input
+                      value={sauce}
+                      onChange={(e) => {
+                        const arr = [...(editItem.sauces ?? [])];
+                        arr[si] = e.target.value;
+                        setEditItem({ ...editItem, sauces: arr });
+                      }}
+                      placeholder="Nom de la sauce"
+                      className="flex-1 h-9 text-sm"
+                    />
+                    <button
+                      onClick={() => {
+                        const arr = (editItem.sauces ?? []).filter((_, i) => i !== si);
+                        setEditItem({ ...editItem, sauces: arr });
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors shrink-0"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* ── Supplements editor ── */}
+              <div className="space-y-2 border-t border-border pt-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-foreground">Supplements</p>
+                  <button
+                    onClick={() => setEditItem({
+                      ...editItem,
+                      supplements: [...(editItem.supplements ?? []), { id: crypto.randomUUID(), name: "", price: 0 }],
+                    })}
+                    className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
+                  >
+                    <Plus className="h-3 w-3" /> Ajouter
+                  </button>
+                </div>
+                {(editItem.supplements ?? []).length === 0 && (
+                  <p className="text-xs text-muted-foreground">Aucun supplement. Le client ne verra pas d'options en plus.</p>
+                )}
+                {(editItem.supplements ?? []).map((sup, si) => (
+                  <div key={sup.id} className="flex items-center gap-2">
+                    <Input
+                      value={sup.name}
+                      onChange={(e) => {
+                        const arr = [...(editItem.supplements ?? [])];
+                        arr[si] = { ...arr[si], name: e.target.value };
+                        setEditItem({ ...editItem, supplements: arr });
+                      }}
+                      placeholder="Nom (ex: Fromage)"
+                      className="flex-1 h-9 text-sm"
+                    />
+                    <Input
+                      type="number"
+                      step="0.50"
+                      value={sup.price}
+                      onChange={(e) => {
+                        const arr = [...(editItem.supplements ?? [])];
+                        arr[si] = { ...arr[si], price: parseFloat(e.target.value) || 0 };
+                        setEditItem({ ...editItem, supplements: arr });
+                      }}
+                      placeholder="Prix"
+                      className="w-20 h-9 text-sm"
+                    />
+                    <span className="text-xs text-muted-foreground">€</span>
+                    <button
+                      onClick={() => {
+                        const arr = (editItem.supplements ?? []).filter((_, i) => i !== si);
+                        setEditItem({ ...editItem, supplements: arr });
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors shrink-0"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
               <Button onClick={handleEditSave} className="w-full rounded-xl">{t('common.save')}</Button>
             </div>
           )}

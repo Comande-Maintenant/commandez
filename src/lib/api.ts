@@ -189,6 +189,7 @@ export async function insertMenuItem(item: {
   image?: string;
   supplements?: any;
   sauces?: string[];
+  variants?: Array<{ name: string; price: number }>;
 }) {
   const { error } = await supabase
     .from("menu_items")
