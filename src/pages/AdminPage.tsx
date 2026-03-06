@@ -231,7 +231,7 @@ const AdminPage = () => {
         <header className="bg-background border-b border-border sticky top-0 z-50">
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
-              <Link to={isDemo ? "/" : `/${slug}`} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+              <Link to={isDemo ? "/demo" : `/${slug}`} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </Link>
               <div className="min-w-0">
