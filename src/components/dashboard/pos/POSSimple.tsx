@@ -93,7 +93,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
 
   if (screen === "recap") {
     return (
-      <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+      <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4 pb-4">
         <div className="flex items-center gap-3 mb-2">
           <button onClick={() => setScreen("menu")} className="p-2 rounded-xl hover:bg-secondary">
             <ArrowLeft className="h-5 w-5" />
@@ -213,13 +213,13 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
 
   // Menu screen - reuse MenuItemCard with full customization
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-4">
       {/* Floating cart bar */}
       {items.length > 0 && (
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="sticky top-16 z-40 rounded-xl p-3 flex items-center justify-between shadow-lg text-white"
+          className="sticky top-0 z-40 rounded-xl p-3 flex items-center justify-between shadow-lg text-white"
           style={{ backgroundColor: primaryColor }}
         >
           <div className="flex items-center gap-2">
