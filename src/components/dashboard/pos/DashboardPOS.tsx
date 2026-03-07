@@ -215,7 +215,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
         await updateOrderStatus(orderId, "done");
       }
       setReadyOrders((prev) => prev.filter((o) => o.id !== orderId));
-      toast.success("Commande encaissee");
+      toast.success("Commande encaissée");
     } catch {
       toast.error("Erreur lors de la mise a jour");
     }
@@ -241,7 +241,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
         payment_method: paymentMethod,
         estimated_ready_at: estimatedReadyAt,
       });
-      toast.success("Commande envoyee !");
+      toast.success("Commande envoyée !");
     } catch (e) {
       toast.error("Erreur lors de l'envoi");
     } finally {
@@ -282,7 +282,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-foreground">{formatDisplayNumber(order)}</span>
-                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Prete</span>
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Prête</span>
                   {(order as any).source === "pos" && (
                     <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Caisse</span>
                   )}

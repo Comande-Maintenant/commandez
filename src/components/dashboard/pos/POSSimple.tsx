@@ -83,7 +83,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
         >
           <Check className="h-10 w-10 text-green-600" />
         </motion.div>
-        <p className="text-2xl font-bold text-foreground mb-2">Commande envoyee</p>
+        <p className="text-2xl font-bold text-foreground mb-2">Commande envoyée</p>
         <Button onClick={() => { setCustomerName(""); setCovers(1); setScreen("menu"); }} className="rounded-xl">
           Nouvelle commande
         </Button>
@@ -243,9 +243,36 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
         </motion.div>
       )}
 
+      {/* Popular items first */}
+      {(() => {
+        const popularItems = menuItems.filter((i) => i.enabled && i.popular);
+        if (popularItems.length === 0) return null;
+        return (
+          <div>
+            <h3 className="text-sm font-semibold text-amber-600 uppercase tracking-wider mb-2">⭐ Populaires</h3>
+            <div className="space-y-2">
+              {popularItems.map((item, i) => (
+                <MenuItemCard
+                  key={`pop-${item.id}`}
+                  item={item}
+                  index={i}
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurantId}
+                  primaryColor={primaryColor}
+                  customizationData={customizationData}
+                  menuItems={menuItems}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Menu items by category */}
       {categories.map((cat) => {
-        const catItems = menuItems.filter((i) => i.enabled && i.category === cat);
+        const catItems = menuItems
+          .filter((i) => i.enabled && i.category === cat)
+          .sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
         if (catItems.length === 0) return null;
         return (
           <div key={cat}>

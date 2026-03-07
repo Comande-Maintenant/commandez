@@ -26,17 +26,17 @@ const statusColors: Record<OrderStatus, string> = {
 const statusBadge: Record<OrderStatus, { text: string; class: string }> = {
   new: { text: "Nouvelle", class: "bg-amber-100 text-amber-800" },
   preparing: { text: "En cours", class: "bg-blue-100 text-blue-800" },
-  ready: { text: "Prete", class: "bg-emerald-100 text-emerald-800" },
-  done: { text: "Terminee", class: "bg-gray-100 text-gray-600" },
+  ready: { text: "Prête", class: "bg-emerald-100 text-emerald-800" },
+  done: { text: "Terminée", class: "bg-gray-100 text-gray-600" },
 };
 
 type KitchenFilter = "active" | "new" | "preparing" | "done";
 
 const filterTabsDef: { id: KitchenFilter; label: string }[] = [
-  { id: "active", label: "A faire" },
+  { id: "active", label: "À faire" },
   { id: "new", label: "Nouvelles" },
   { id: "preparing", label: "En cours" },
-  { id: "done", label: "Terminees" },
+  { id: "done", label: "Terminées" },
 ];
 
 interface Props {
@@ -292,7 +292,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       <div className="flex items-center justify-between mb-3">
         <div className="text-sm text-muted-foreground">
           {todayDoneOrders.length > 0 && (
-            <span>{todayDoneOrders.length} commande{todayDoneOrders.length > 1 ? "s" : ""} terminee{todayDoneOrders.length > 1 ? "s" : ""}</span>
+            <span>{todayDoneOrders.length} commande{todayDoneOrders.length > 1 ? "s" : ""} terminée{todayDoneOrders.length > 1 ? "s" : ""}</span>
           )}
         </div>
         <Button
@@ -340,7 +340,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           const badge = statusBadge[st];
           const orderItems = (order.items as any[]) || [];
           const itemCount = orderItems.reduce((s, i) => s + (i.quantity || 1), 0);
-          const statusFlow: Record<string, string> = { new: "Accepter", preparing: "Prete", ready: "Terminee" };
+          const statusFlow: Record<string, string> = { new: "Accepter", preparing: "Prête", ready: "Terminée" };
           const nextLabel = statusFlow[st];
 
           // Timer countdown for card
@@ -415,7 +415,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                       <span className="text-foreground font-medium ml-1">- {item.viande_choice}</span>
                     )}
                     {item.garniture_choices?.length > 0 && (
-                      <p className="text-muted-foreground text-xs ml-3">{item.garniture_choices.join(", ")}</p>
+                      <p className="text-muted-foreground text-xs ml-3">{item.garniture_choices.map((g: any) => typeof g === "string" ? g : g.name).join(", ")}</p>
                     )}
                     {item.sauces?.length > 0 && (
                       <p className="text-muted-foreground text-xs ml-3">Sauce : {item.sauces.join(", ")}</p>
