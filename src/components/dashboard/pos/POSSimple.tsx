@@ -240,13 +240,13 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
 
   // Menu screen - reuse MenuItemCard with full customization
   return (
-    <div className="space-y-4 pb-4">
-      {/* Floating cart bar */}
+    <div className="space-y-4 pb-20">
+      {/* Floating cart bar - fixed at bottom above nav */}
       {items.length > 0 && (
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="sticky top-0 z-40 rounded-xl p-3 flex items-center justify-between shadow-lg text-white"
+          className="fixed bottom-[56px] lg:bottom-0 left-0 right-0 lg:left-60 z-40 mx-3 lg:mx-auto lg:max-w-6xl rounded-xl p-3 flex items-center justify-between shadow-lg text-white"
           style={{ backgroundColor: primaryColor }}
         >
           <div className="flex items-center gap-2">
