@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX, X } from "lucide-react";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug, fetchDemoRestaurant, updateRestaurant } from "@/lib/api";
@@ -46,6 +46,7 @@ const AdminPage = () => {
   const isDemo = slug === "demo";
   const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
   const [loading, setLoading] = useState(true);
+  const [demoBannerDismissed, setDemoBannerDismissed] = useState(() => sessionStorage.getItem("demo_banner_dismissed") === "1");
   const [activeView, setActiveView] = useState<DashboardView>(() => {
     const params = new URLSearchParams(window.location.search);
     const view = params.get("view");
@@ -210,20 +211,29 @@ const AdminPage = () => {
       <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
         {/* Header (+ demo banner) - single sticky block */}
         <div className="sticky top-0 z-50">
-          {isDemo && (
+          {isDemo && !demoBannerDismissed && (
             <div className="bg-emerald-500 text-white">
               <div className="max-w-6xl mx-auto px-4 h-8 flex items-center justify-between">
                 <p className="text-[11px] font-medium truncate">
                   {t("demo.banner_text")}
                 </p>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="rounded-lg text-[11px] font-semibold flex-shrink-0 ms-2 h-6 px-2 bg-white text-emerald-700 hover:bg-emerald-50"
-                  onClick={() => navigate("/inscription")}
-                >
-                  {t("demo.banner_cta")}
-                </Button>
+                <div className="flex items-center gap-1 flex-shrink-0 ms-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="rounded-lg text-[11px] font-semibold h-6 px-2 bg-white text-emerald-700 hover:bg-emerald-50"
+                    onClick={() => navigate("/inscription")}
+                  >
+                    {t("demo.banner_cta")}
+                  </Button>
+                  <button
+                    onClick={() => { setDemoBannerDismissed(true); sessionStorage.setItem("demo_banner_dismissed", "1"); }}
+                    className="p-1 rounded hover:bg-emerald-600 transition-colors"
+                    aria-label="Fermer"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           )}
