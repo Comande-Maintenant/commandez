@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
+import { fetchOrdersByPeriod } from "@/lib/api";
 import type { UniversalCustomizationData } from "@/types/customization";
 import type { DbMenuItem } from "@/types/database";
 
@@ -48,10 +49,36 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
     setPrepMinutes(defaultPrepMinutes);
   }, [defaultPrepMinutes]);
 
+  const [topItemIds, setTopItemIds] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     clearCart();
     fetchUniversalCustomizationData(restaurantId).then(setCustomizationData);
+    // Compute popular items from last 14 days of orders
+    const since = new Date();
+    since.setDate(since.getDate() - 14);
+    fetchOrdersByPeriod(restaurantId, since).then((orders) => {
+      const counts: Record<string, number> = {};
+      for (const order of orders) {
+        for (const item of (order.items as any[]) || []) {
+          const id = item.menu_item_id;
+          if (id) counts[id] = (counts[id] || 0) + (item.quantity || 1);
+        }
+      }
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      const topIds = new Set(sorted.slice(0, 6).map(([id]) => id));
+      setTopItemIds(topIds);
+    }).catch(() => {});
   }, [restaurantId]);
+
+  // Popular items: from real order data, fallback to static `popular` flag
+  const popularItems = useMemo(() => {
+    const enabled = menuItems.filter((i) => i.enabled);
+    if (topItemIds.size > 0) {
+      return enabled.filter((i) => topItemIds.has(i.id));
+    }
+    return enabled.filter((i) => i.popular);
+  }, [menuItems, topItemIds]);
 
   const categories = [...new Set(menuItems.filter((i) => i.enabled).map((i) => i.category))];
 
@@ -244,29 +271,25 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
       )}
 
       {/* Popular items first */}
-      {(() => {
-        const popularItems = menuItems.filter((i) => i.enabled && i.popular);
-        if (popularItems.length === 0) return null;
-        return (
-          <div>
-            <h3 className="text-sm font-semibold text-amber-600 uppercase tracking-wider mb-2">⭐ Populaires</h3>
-            <div className="space-y-2">
-              {popularItems.map((item, i) => (
-                <MenuItemCard
-                  key={`pop-${item.id}`}
-                  item={item}
-                  index={i}
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurantId}
-                  primaryColor={primaryColor}
-                  customizationData={customizationData}
-                  menuItems={menuItems}
-                />
-              ))}
-            </div>
+      {popularItems.length > 0 && (
+        <div>
+          <h3 className="text-sm font-semibold text-amber-600 uppercase tracking-wider mb-2">Populaires</h3>
+          <div className="space-y-2">
+            {popularItems.map((item, i) => (
+              <MenuItemCard
+                key={`pop-${item.id}`}
+                item={item}
+                index={i}
+                restaurantSlug={restaurantSlug}
+                restaurantId={restaurantId}
+                primaryColor={primaryColor}
+                customizationData={customizationData}
+                menuItems={menuItems}
+              />
+            ))}
           </div>
-        );
-      })()}
+        </div>
+      )}
 
       {/* Menu items by category */}
       {categories.map((cat) => {
