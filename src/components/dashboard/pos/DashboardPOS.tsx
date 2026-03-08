@@ -22,6 +22,7 @@ import { POSSuccess } from "./POSSuccess";
 import { POSSimple } from "./POSSimple";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 type CaisseTab = "commande" | "encaissement";
 
@@ -60,6 +61,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const [state, setState] = useState(initialState);
   const [readyOrders, setReadyOrders] = useState<DbOrder[]>([]);
   const [activeTab, setActiveTab] = useState<CaisseTab>("commande");
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchMenuItems(restaurant.id).then(setMenuItems);
@@ -175,7 +177,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
       const personCount = state.persons.filter((p) => p.customization).length;
       const customerName =
         state.customerName ||
-        `Caisse${state.tableNumber ? ` T${state.tableNumber}` : ""} (${personCount} pers.)`;
+        t("pos.caisse_name").replace("{table}", state.tableNumber ? ` T${state.tableNumber}` : "").replace("{count}", String(personCount));
 
       const estimatedReadyAt = new Date(Date.now() + state.prepMinutes * 60000).toISOString();
       const order = await createOrder({
@@ -202,7 +204,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
         submitting: false,
       }));
     } catch (e) {
-      toast.error("Erreur lors de l'envoi de la commande");
+      toast.error(t("pos.order_error"));
       setState((s) => ({ ...s, submitting: false }));
     }
   };
@@ -215,9 +217,9 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
         await updateOrderStatus(orderId, "done");
       }
       setReadyOrders((prev) => prev.filter((o) => o.id !== orderId));
-      toast.success("Commande encaissée");
+      toast.success(t("pos.order_cashed"));
     } catch {
-      toast.error("Erreur lors de la mise a jour");
+      toast.error(t("pos.update_error"));
     }
   };
 
@@ -241,9 +243,9 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
         payment_method: paymentMethod,
         estimated_ready_at: estimatedReadyAt,
       });
-      toast.success("Commande envoyée !");
+      toast.success(t("pos.order_sent_toast"));
     } catch (e) {
-      toast.error("Erreur lors de l'envoi");
+      toast.error(t("pos.send_error"));
     } finally {
       setSimpleSubmitting(false);
     }
@@ -251,9 +253,9 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
 
   const timeSince = (dateStr: string) => {
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return "A l'instant";
-    if (mins < 60) return `il y a ${mins} min`;
-    return `il y a ${Math.floor(mins / 60)}h`;
+    if (mins < 1) return t("pos.just_now");
+    if (mins < 60) return t("pos.minutes_ago").replace("{mins}", String(mins));
+    return t("pos.hours_ago").replace("{hours}", String(Math.floor(mins / 60)));
   };
 
   // Encaissement view - full order cards for ready orders
@@ -262,8 +264,8 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
       return (
         <div className="text-center py-16 text-muted-foreground">
           <Check className="h-10 w-10 mx-auto mb-3 opacity-40" />
-          <p className="text-sm">Aucune commande a encaisser</p>
-          <p className="text-xs mt-1">Les commandes marquees "prete" en cuisine apparaitront ici</p>
+          <p className="text-sm">{t("pos.no_orders_to_cash")}</p>
+          <p className="text-xs mt-1">{t("pos.ready_orders_hint")}</p>
         </div>
       );
     }
@@ -282,9 +284,9 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-foreground">{formatDisplayNumber(order)}</span>
-                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Prête</span>
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">{t("pos.ready_badge")}</span>
                   {(order as any).source === "pos" && (
-                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Caisse</span>
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{t("dashboard.nav.pos")}</span>
                   )}
                 </div>
                 <span className="text-xs text-muted-foreground">{timeSince(order.created_at)}</span>
@@ -295,12 +297,12 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
                 <span className="font-medium text-foreground">{order.customer_name}</span>
                 <span className="text-muted-foreground">-</span>
                 <span className="text-muted-foreground flex items-center gap-1">
-                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> A emporter</>}
-                  {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> Sur place</>}
-                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> Tel</>}
+                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> {t("pos.takeaway")}</>}
+                  {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> {t("pos.dine_in")}</>}
+                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> {t("pos.phone")}</>}
                 </span>
                 {(order as any).covers && (
-                  <span className="text-xs text-muted-foreground">({(order as any).covers} couverts)</span>
+                  <span className="text-xs text-muted-foreground">{t("pos.covers_info").replace("{count}", String((order as any).covers))}</span>
                 )}
               </div>
 
@@ -316,7 +318,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
                         <span className="text-muted-foreground text-xs ml-1">({item.viande_choice})</span>
                       )}
                       {item.sauces?.length > 0 && (
-                        <p className="text-xs text-muted-foreground">Sauce : {item.sauces.join(", ")}</p>
+                        <p className="text-xs text-muted-foreground">{t("pos.sauce_label").replace("{value}", item.sauces.join(", "))}</p>
                       )}
                       {item.summary && !item.sauces?.length && (
                         <p className="text-xs text-muted-foreground truncate">{item.summary}</p>
@@ -333,7 +335,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
               {order.payment_method && (
                 <div className="mb-3">
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-secondary text-foreground">
-                    {order.payment_method === "cash" ? "Especes" : order.payment_method === "card" ? "CB" : order.payment_method === "ticket_restaurant" ? "Ticket resto" : order.payment_method}
+                    {order.payment_method === "cash" ? t("pos.cash") : order.payment_method === "card" ? t("pos.card") : order.payment_method === "ticket_restaurant" ? t("pos.meal_voucher") : order.payment_method}
                   </span>
                 </div>
               )}
@@ -342,14 +344,14 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
               <div className="flex items-center justify-between pt-3 border-t border-border">
                 <div>
                   <span className="text-xl font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} €</span>
-                  <span className="text-xs text-muted-foreground ms-2">{itemCount} article{itemCount > 1 ? "s" : ""}</span>
+                  <span className="text-xs text-muted-foreground ms-2">{t("pos.articles_count").replace("{count}", String(itemCount))}</span>
                 </div>
                 <Button
                   onClick={() => markAsDone(order.id)}
                   className="h-12 rounded-xl gap-2 text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white min-w-[140px]"
                 >
                   <Check className="h-4 w-4" />
-                  Encaisse
+                  {t("pos.cash_out")}
                 </Button>
               </div>
             </div>
@@ -386,7 +388,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
             key={`person_builder_${state.currentPerson}`}
             config={config}
             personIndex={state.currentPerson}
-            personLabel={state.persons[state.currentPerson]?.label || "Personne 1"}
+            personLabel={state.persons[state.currentPerson]?.label || t("pos.person").replace("{n}", "1")}
             totalPersons={state.persons.length}
             existingCustomization={state.persons[state.currentPerson]?.customization}
             onSave={handleSavePerson}
@@ -475,7 +477,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
           }`}
         >
           <Plus className="h-4 w-4" />
-          Prise de commande
+          {t("pos.take_order")}
         </button>
         <button
           onClick={() => setActiveTab("encaissement")}
@@ -486,7 +488,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
           }`}
         >
           <Check className="h-4 w-4" />
-          A encaisser
+          {t("pos.to_collect")}
           {readyOrders.length > 0 && (
             <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center ${
               activeTab === "encaissement"

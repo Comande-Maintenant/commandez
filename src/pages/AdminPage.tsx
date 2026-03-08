@@ -140,16 +140,16 @@ const AdminPage = () => {
     if (!restaurant) return;
     if (isDemo) {
       setRestaurant({ ...restaurant, is_accepting_orders: !restaurant.is_accepting_orders });
-      toast.success(!restaurant.is_accepting_orders ? "Commandes activees" : "Commandes desactivees");
+      toast.success(!restaurant.is_accepting_orders ? t("dashboard.admin.orders_enabled") : t("dashboard.admin.orders_disabled"));
       return;
     }
     const next = !restaurant.is_accepting_orders;
     try {
       await updateRestaurant(restaurant.id, { is_accepting_orders: next } as any);
       setRestaurant({ ...restaurant, is_accepting_orders: next });
-      toast.success(next ? "Commandes activees" : "Commandes desactivees");
+      toast.success(next ? t("dashboard.admin.orders_enabled") : t("dashboard.admin.orders_disabled"));
     } catch {
-      toast.error("Erreur lors de la mise a jour");
+      toast.error(t("dashboard.admin.update_error"));
     }
   };
 
@@ -166,9 +166,9 @@ const AdminPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Connexion requise</h1>
-          <p className="text-muted-foreground mb-4">Connectez-vous pour acceder au tableau de bord.</p>
-          <Link to="/connexion" className="text-sm text-foreground underline">Se connecter</Link>
+          <h1 className="text-2xl font-bold text-foreground mb-2">{t("dashboard.admin.login_required")}</h1>
+          <p className="text-muted-foreground mb-4">{t("dashboard.admin.login_required_desc")}</p>
+          <Link to="/connexion" className="text-sm text-foreground underline">{t("dashboard.admin.login")}</Link>
         </div>
       </div>
     );
@@ -178,8 +178,8 @@ const AdminPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground">Restaurant introuvable</h1>
-          <Link to="/connexion" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">Retour</Link>
+          <h1 className="text-2xl font-bold text-foreground">{t("dashboard.admin.not_found")}</h1>
+          <Link to="/connexion" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">{t("dashboard.admin.back")}</Link>
         </div>
       </div>
     );
@@ -190,9 +190,9 @@ const AdminPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Acces refuse</h1>
-          <p className="text-muted-foreground mb-4">Vous n'etes pas le proprietaire de ce restaurant.</p>
-          <Link to="/connexion" className="text-sm text-foreground underline">Retour</Link>
+          <h1 className="text-2xl font-bold text-foreground mb-2">{t("dashboard.admin.access_denied")}</h1>
+          <p className="text-muted-foreground mb-4">{t("dashboard.admin.not_owner")}</p>
+          <Link to="/connexion" className="text-sm text-foreground underline">{t("dashboard.admin.back")}</Link>
         </div>
       </div>
     );
@@ -229,7 +229,7 @@ const AdminPage = () => {
                   <button
                     onClick={() => { setDemoBannerDismissed(true); sessionStorage.setItem("demo_banner_dismissed", "1"); }}
                     className="p-1 rounded hover:bg-emerald-600 transition-colors"
-                    aria-label="Fermer"
+                    aria-label={t("dashboard.admin.close")}
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -260,8 +260,8 @@ const AdminPage = () => {
                     sound.toggleMuted();
                   }}
                   className="p-2 rounded-xl hover:bg-secondary transition-colors"
-                  title={sound.muted ? "Activer le son" : "Couper le son"}
-                  aria-label={sound.muted ? "Activer le son" : "Couper le son"}
+                  title={sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
+                  aria-label={sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
                 >
                   {sound.muted || !sound.audioUnlocked ? (
                     <VolumeX className="h-4 w-4 text-muted-foreground" />
@@ -275,8 +275,8 @@ const AdminPage = () => {
               <button
                 onClick={toggleBlur}
                 className="p-2 rounded-xl hover:bg-secondary transition-colors"
-                title={blurred ? "Afficher les montants" : "Masquer les montants"}
-                aria-label={blurred ? "Afficher les montants" : "Masquer les montants"}
+                title={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
+                aria-label={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
               >
                 {blurred ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
               </button>
@@ -285,7 +285,7 @@ const AdminPage = () => {
               <div className="flex items-center gap-2" data-tour="disponible">
                 <span className={`h-2 w-2 rounded-full flex-shrink-0 ${restaurant.is_accepting_orders ? "bg-[hsl(var(--success))]" : "bg-destructive"}`} />
                 <span className={`text-xs font-medium hidden sm:inline ${restaurant.is_accepting_orders ? "text-[hsl(var(--success))]" : "text-destructive"}`}>
-                  {restaurant.is_accepting_orders ? "Disponible" : "Indisponible"}
+                  {restaurant.is_accepting_orders ? t("dashboard.admin.available") : t("dashboard.admin.unavailable")}
                 </span>
                 <Switch
                   checked={restaurant.is_accepting_orders}
@@ -307,7 +307,7 @@ const AdminPage = () => {
               className="w-full mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center gap-2 text-sm font-medium text-amber-800 hover:bg-amber-100 transition-colors"
             >
               <Volume2 className="h-4 w-4" />
-              Appuyez pour activer le son des notifications
+              {t("dashboard.admin.enable_sound_prompt")}
             </button>
           )}
 
@@ -316,9 +316,9 @@ const AdminPage = () => {
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="text-sm text-amber-900">
                 <p className="font-medium">
-                  Votre restaurant est desactive depuis le {new Date(restaurant.deactivated_at).toLocaleDateString("fr-FR")}.
+                  {t("dashboard.admin.disabled_since").replace("{date}", new Date(restaurant.deactivated_at).toLocaleDateString("fr-FR"))}
                   {(restaurant.deactivation_visit_count > 0) && (
-                    <> {restaurant.deactivation_visit_count} personne{restaurant.deactivation_visit_count > 1 ? "s ont" : " a"} essaye de commander.</>
+                    <>{" "}{t("dashboard.admin.people_tried").replace("{count}", String(restaurant.deactivation_visit_count))}</>
                   )}
                 </p>
               </div>
@@ -340,13 +340,13 @@ const AdminPage = () => {
                       is_accepting_orders: true,
                       deactivation_visit_count: 0,
                     });
-                    toast.success("Restaurant reactive !");
+                    toast.success(t("dashboard.admin.restaurant_reactivated"));
                   } catch {
-                    toast.error("Erreur lors de la reactivation");
+                    toast.error(t("dashboard.admin.reactivation_error"));
                   }
                 }}
               >
-                Reactiver
+                {t("dashboard.admin.reactivate")}
               </Button>
             </div>
           )}
@@ -397,8 +397,8 @@ const AdminPage = () => {
         <div className="fixed bottom-16 lg:bottom-4 inset-x-4 z-50 max-w-md mx-auto">
           <div className="bg-card border border-border rounded-2xl p-4 shadow-lg flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-foreground">Installer l'application</p>
-              <p className="text-xs text-muted-foreground">Acces rapide depuis votre ecran d'accueil</p>
+              <p className="text-sm font-semibold text-foreground">{t("dashboard.admin.install_app")}</p>
+              <p className="text-xs text-muted-foreground">{t("dashboard.admin.quick_access")}</p>
             </div>
             <div className="flex gap-2 flex-shrink-0">
               <Button
@@ -410,7 +410,7 @@ const AdminPage = () => {
                   localStorage.setItem("cm_pwa_dismissed", "true");
                 }}
               >
-                Plus tard
+                {t("dashboard.admin.later")}
               </Button>
               <Button
                 size="sm"
@@ -420,7 +420,7 @@ const AdminPage = () => {
                   setShowPwaBanner(false);
                 }}
               >
-                Installer
+                {t("dashboard.admin.install_button")}
               </Button>
             </div>
           </div>

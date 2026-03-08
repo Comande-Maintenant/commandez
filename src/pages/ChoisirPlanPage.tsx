@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, Tag, Loader2, Gift, Lock } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,18 +10,6 @@ import {
   buildCheckoutUrl,
   PLAN_PRICES,
 } from "@/services/shopify-checkout";
-
-const features = [
-  "Page de commande personnalisée",
-  "Menu modifiable en temps réel",
-  "0% de commission sur les commandes",
-  "Dashboard et statistiques",
-  "Base clients avec historique",
-  "Notifications en temps réel",
-  "QR Code aux couleurs de votre resto",
-  "Traduction auto en 12 langues",
-  "Support reactif",
-];
 
 interface PromoResult {
   valid: boolean;
@@ -32,6 +21,20 @@ interface PromoResult {
 
 const ChoisirPlanPage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const features = [
+    t("plan.feature_1"),
+    t("plan.feature_2"),
+    t("plan.feature_3"),
+    t("plan.feature_4"),
+    t("plan.feature_5"),
+    t("plan.feature_6"),
+    t("plan.feature_7"),
+    t("plan.feature_8"),
+    t("plan.feature_9"),
+  ];
+
   const [plan, setPlan] = useState<"monthly" | "annual">("monthly");
   const [promoCode, setPromoCode] = useState("");
   const [promoResult, setPromoResult] = useState<PromoResult | null>(null);
@@ -80,12 +83,12 @@ const ChoisirPlanPage = () => {
       if (error) throw error;
       setPromoResult(data as PromoResult);
       if (data?.valid) {
-        toast.success("Code promo appliqué !");
+        toast.success(t("plan.promo_applied"));
       } else {
-        toast.error(data?.error || "Code invalide");
+        toast.error(data?.error || t("plan.invalid_code"));
       }
     } catch {
-      toast.error("Erreur lors de la validation");
+      toast.error(t("plan.validation_error"));
     } finally {
       setPromoLoading(false);
     }
@@ -93,7 +96,7 @@ const ChoisirPlanPage = () => {
 
   const handleCheckout = async () => {
     if (!restaurantId || !restaurantSlug || !email) {
-      toast.error("Impossible de continuer. Vérifiez votre connexion.");
+      toast.error(t("plan.checkout_error"));
       return;
     }
 
@@ -121,7 +124,7 @@ const ChoisirPlanPage = () => {
 
       window.location.href = url;
     } catch (err: any) {
-      toast.error(err.message || "Erreur lors de la redirection");
+      toast.error(err.message || t("plan.redirect_error"));
       setRedirecting(false);
     }
   };
@@ -153,19 +156,19 @@ const ChoisirPlanPage = () => {
 
       <main className="max-w-2xl mx-auto px-4 py-10">
         <h1 className="text-2xl font-bold text-foreground mb-2">
-          Choisissez votre formule
+          {t("plan.choose_plan")}
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Sans engagement, résiliable à tout moment.
+          {t("plan.no_commitment")}
         </p>
 
         {/* Trial reassurance banner */}
         <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-4 mb-8">
           <Gift className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-green-800">14 jours d'essai gratuit</p>
+            <p className="text-sm font-semibold text-green-800">{t("plan.free_trial")}</p>
             <p className="text-xs text-green-700 mt-0.5">
-              Testez sans engagement, vous ne serez débité qu'après la période d'essai.
+              {t("plan.free_trial_desc")}
             </p>
           </div>
         </div>
@@ -181,13 +184,13 @@ const ChoisirPlanPage = () => {
                 : "border-border hover:border-primary/30"
             }`}
           >
-            <h3 className="font-semibold text-foreground text-lg">Mensuel</h3>
+            <h3 className="font-semibold text-foreground text-lg">{t("plan.monthly")}</h3>
             <div className="flex items-baseline gap-1 mt-2">
               <span className="text-3xl font-bold text-foreground">29,99</span>
-              <span className="text-sm text-muted-foreground">EUR/mois</span>
+              <span className="text-sm text-muted-foreground">{t("plan.per_month")}</span>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Sans engagement
+              {t("plan.no_commitment_short")}
             </p>
             {plan === "monthly" && (
               <div className="absolute top-3 right-3 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
@@ -206,18 +209,18 @@ const ChoisirPlanPage = () => {
             }`}
           >
             <div className="absolute -top-3 left-4 bg-primary text-primary-foreground text-xs font-semibold px-3 py-0.5 rounded-full">
-              Populaire
+              {t("plan.popular")}
             </div>
-            <h3 className="font-semibold text-foreground text-lg">Annuel</h3>
+            <h3 className="font-semibold text-foreground text-lg">{t("plan.annual")}</h3>
             <div className="flex items-baseline gap-1 mt-2">
               <span className="text-3xl font-bold text-foreground">19,99</span>
-              <span className="text-sm text-muted-foreground">EUR/mois</span>
+              <span className="text-sm text-muted-foreground">{t("plan.per_month")}</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              (soit 239,88 EUR/an)
+              {t("plan.annual_total").replace("{price}", "239,88")}
             </p>
             <p className="text-xs text-primary font-medium mt-1">
-              Économisez 120 EUR/an
+              {t("plan.annual_savings").replace("{amount}", "120")}
             </p>
             {plan === "annual" && (
               <div className="absolute top-3 right-3 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
@@ -230,7 +233,7 @@ const ChoisirPlanPage = () => {
         {/* Features */}
         <div className="bg-card rounded-xl border border-border p-5 mb-6">
           <p className="text-sm font-semibold text-foreground mb-3">
-            Inclus dans votre abonnement :
+            {t("plan.included")}
           </p>
           <ul className="space-y-2">
             {features.map((f) => (
@@ -250,7 +253,7 @@ const ChoisirPlanPage = () => {
           <div className="flex items-center gap-2 mb-3">
             <Tag className="h-4 w-4 text-muted-foreground" />
             <h3 className="text-sm font-semibold text-foreground">
-              Code promotionnel
+              {t("plan.promo_code")}
             </h3>
           </div>
           <div className="flex gap-2">
@@ -271,7 +274,7 @@ const ChoisirPlanPage = () => {
               {promoLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Appliquer"
+                t("plan.apply")
               )}
             </Button>
           </div>
@@ -288,16 +291,16 @@ const ChoisirPlanPage = () => {
         {/* Recap */}
         <div className="bg-muted/50 rounded-xl p-5 mb-6">
           <h3 className="text-sm font-semibold text-foreground mb-3">
-            Récapitulatif
+            {t("plan.summary")}
           </h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Aujourd'hui</span>
+              <span className="text-muted-foreground">{t("plan.today")}</span>
               <span className="font-semibold text-foreground">0,00 EUR</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">
-                Premier prélèvement le {firstPaymentStr}
+                {t("plan.first_payment").replace("{date}", firstPaymentStr)}
               </span>
               <span className="font-semibold text-foreground">
                 {price.toFixed(2)} EUR
@@ -305,7 +308,7 @@ const ChoisirPlanPage = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">
-                Puis chaque {plan === "annual" ? "année" : "mois"}
+                {t("plan.then_each").replace("{period}", plan === "annual" ? t("plan.year") : t("plan.month"))}
               </span>
               <span className="text-muted-foreground">
                 {price.toFixed(2)} EUR
@@ -324,20 +327,20 @@ const ChoisirPlanPage = () => {
           {redirecting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              Redirection vers le paiement...
+              {t("plan.redirecting")}
             </>
           ) : (
-            "Continuer vers le paiement"
+            t("plan.continue_payment")
           )}
         </Button>
 
         <p className="text-xs text-center text-muted-foreground mt-3">
-          Aucun paiement aujourd'hui. Votre essai gratuit de 14 jours commence maintenant.
+          {t("plan.no_payment_today")}
         </p>
 
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4">
           <Lock className="h-3.5 w-3.5" />
-          <span>Paiement sécurisé. Aucun débit avant 14 jours.</span>
+          <span>{t("plan.secure_payment")}</span>
         </div>
       </main>
     </div>

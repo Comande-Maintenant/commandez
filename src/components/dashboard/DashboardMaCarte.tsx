@@ -695,7 +695,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
               {/* ── Variants editor ── */}
               <div className="space-y-2 border-t border-border pt-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-foreground">Tailles / Options</p>
+                  <p className="text-sm font-medium text-foreground">{t("dashboard.customization.sizes_label")}</p>
                   <button
                     onClick={() => setEditItem({
                       ...editItem,
@@ -703,11 +703,11 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                     })}
                     className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
                   >
-                    <Plus className="h-3 w-3" /> Ajouter
+                    <Plus className="h-3 w-3" /> {t("dashboard.customization.add")}
                   </button>
                 </div>
                 {(editItem.variants ?? []).length === 0 && (
-                  <p className="text-xs text-muted-foreground">Pas de variante. Le prix de base sera utilise.</p>
+                  <p className="text-xs text-muted-foreground">{t("dashboard.customization.no_variants")}</p>
                 )}
                 {(editItem.variants ?? []).map((v, vi) => (
                   <div key={vi} className="flex items-center gap-2">
@@ -718,7 +718,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                         arr[vi] = { ...arr[vi], name: e.target.value };
                         setEditItem({ ...editItem, variants: arr });
                       }}
-                      placeholder="Nom (ex: Petit, Grand)"
+                      placeholder={t("dashboard.customization.variant_name")}
                       className="flex-1 h-9 text-sm"
                     />
                     <Input
@@ -730,7 +730,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                         arr[vi] = { ...arr[vi], price: parseFloat(e.target.value) || 0 };
                         setEditItem({ ...editItem, variants: arr });
                       }}
-                      placeholder="Prix"
+                      placeholder={t("dashboard.customization.variant_price")}
                       className="w-20 h-9 text-sm"
                     />
                     <span className="text-xs text-muted-foreground">€</span>
@@ -750,7 +750,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
               {/* ── Sauces editor ── */}
               <div className="space-y-2 border-t border-border pt-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-foreground">Sauces</p>
+                  <p className="text-sm font-medium text-foreground">{t("dashboard.customization.sauces_section")}</p>
                   <button
                     onClick={() => setEditItem({
                       ...editItem,
@@ -758,11 +758,11 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                     })}
                     className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
                   >
-                    <Plus className="h-3 w-3" /> Ajouter
+                    <Plus className="h-3 w-3" /> {t("dashboard.customization.add")}
                   </button>
                 </div>
                 {(editItem.sauces ?? []).length === 0 && (
-                  <p className="text-xs text-muted-foreground">Aucune sauce. Le client ne verra pas de choix de sauce.</p>
+                  <p className="text-xs text-muted-foreground">{t("dashboard.customization.no_sauces")}</p>
                 )}
                 {(editItem.sauces ?? []).map((sauce, si) => (
                   <div key={si} className="flex items-center gap-2">
@@ -773,7 +773,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                         arr[si] = e.target.value;
                         setEditItem({ ...editItem, sauces: arr });
                       }}
-                      placeholder="Nom de la sauce"
+                      placeholder={t("dashboard.customization.sauce_name")}
                       className="flex-1 h-9 text-sm"
                     />
                     <button
@@ -792,7 +792,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
               {/* ── Supplements editor ── */}
               <div className="space-y-2 border-t border-border pt-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-foreground">Supplements</p>
+                  <p className="text-sm font-medium text-foreground">{t("dashboard.customization.supplements_section")}</p>
                   <button
                     onClick={() => setEditItem({
                       ...editItem,
@@ -800,11 +800,11 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                     })}
                     className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
                   >
-                    <Plus className="h-3 w-3" /> Ajouter
+                    <Plus className="h-3 w-3" /> {t("dashboard.customization.add")}
                   </button>
                 </div>
                 {(editItem.supplements ?? []).length === 0 && (
-                  <p className="text-xs text-muted-foreground">Aucun supplement. Le client ne verra pas d'options en plus.</p>
+                  <p className="text-xs text-muted-foreground">{t("dashboard.customization.no_supplements")}</p>
                 )}
                 {(editItem.supplements ?? []).map((sup, si) => (
                   <div key={sup.id} className="flex items-center gap-2">
@@ -815,7 +815,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                         arr[si] = { ...arr[si], name: e.target.value };
                         setEditItem({ ...editItem, supplements: arr });
                       }}
-                      placeholder="Nom (ex: Fromage)"
+                      placeholder={t("dashboard.customization.supplement_name")}
                       className="flex-1 h-9 text-sm"
                     />
                     <Input
@@ -827,7 +827,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                         arr[si] = { ...arr[si], price: parseFloat(e.target.value) || 0 };
                         setEditItem({ ...editItem, supplements: arr });
                       }}
-                      placeholder="Prix"
+                      placeholder={t("dashboard.customization.variant_price")}
                       className="w-20 h-9 text-sm"
                     />
                     <span className="text-xs text-muted-foreground">€</span>

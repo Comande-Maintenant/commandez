@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Tablet, Plus, Pencil, Mail } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,19 +27,6 @@ interface Props {
   restaurant: DbRestaurant;
 }
 
-const USAGE_LABELS: Record<string, string> = {
-  cuisine: "Cuisine",
-  caisse: "Caisse",
-  service_client: "Service client",
-  autre: "Autre",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  active: "Active",
-  inactive: "Inactive",
-  maintenance: "Maintenance",
-};
-
 const STATUS_COLORS: Record<string, string> = {
   active: "bg-green-100 text-green-800",
   inactive: "bg-red-100 text-red-800",
@@ -51,6 +39,21 @@ function maskSerial(serial: string): string {
 }
 
 export const DashboardTablettes = ({ restaurant }: Props) => {
+  const { t } = useLanguage();
+
+  const USAGE_LABELS: Record<string, string> = {
+    cuisine: t("dashboard.tablets.usage_kitchen"),
+    caisse: t("dashboard.tablets.usage_pos"),
+    service_client: t("dashboard.tablets.usage_service"),
+    autre: t("dashboard.tablets.usage_other"),
+  };
+
+  const STATUS_LABELS: Record<string, string> = {
+    active: t("dashboard.tablets.status_active"),
+    inactive: t("dashboard.tablets.status_inactive"),
+    maintenance: t("dashboard.tablets.status_maintenance"),
+  };
+
   const [tablets, setTablets] = useState<DbTablet[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -68,7 +71,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
       const data = await fetchTablets(restaurant.id);
       setTablets(data);
     } catch {
-      toast.error("Erreur lors du chargement des tablettes");
+      toast.error(t("dashboard.tablets.load_error"));
     } finally {
       setLoading(false);
     }
@@ -102,11 +105,11 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
 
   const handleSave = async () => {
     if (!serialNumber.trim()) {
-      toast.error("Le numéro de série est requis");
+      toast.error(t("dashboard.tablets.serial_required"));
       return;
     }
     if (serialNumber.trim().length > 20) {
-      toast.error("Le numéro de série ne doit pas dépasser 20 caractères");
+      toast.error(t("dashboard.tablets.serial_too_long"));
       return;
     }
 
@@ -119,7 +122,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
           usage_type: usageType as DbTablet["usage_type"],
           notes: notes.trim(),
         });
-        toast.success("Tablette mise à jour");
+        toast.success(t("dashboard.tablets.updated"));
       } else {
         await insertTablet({
           restaurant_id: restaurant.id,
@@ -128,7 +131,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
           usage_type: usageType,
           notes: notes.trim(),
         });
-        toast.success("Tablette ajoutee");
+        toast.success(t("dashboard.tablets.added"));
       }
       setDialogOpen(false);
       resetForm();
@@ -136,9 +139,9 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
     } catch (err: any) {
       const msg = err?.message || "";
       if (msg.includes("unique") || msg.includes("duplicate")) {
-        toast.error("Ce numéro de série est déjà enregistré");
+        toast.error(t("dashboard.tablets.serial_exists"));
       } else {
-        toast.error("Erreur lors de l'enregistrement");
+        toast.error(t("dashboard.tablets.save_error"));
       }
     } finally {
       setSaving(false);
@@ -152,10 +155,10 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
         status: newStatus,
         deactivated_at: newStatus === "inactive" ? new Date().toISOString() : null,
       });
-      toast.success(newStatus === "active" ? "Tablette réactivée" : "Tablette désactivée");
+      toast.success(newStatus === "active" ? t("dashboard.tablets.reactivated") : t("dashboard.tablets.deactivated"));
       await loadTablets();
     } catch {
-      toast.error("Erreur lors de la mise à jour");
+      toast.error(t("dashboard.tablets.save_error"));
     }
   };
 
@@ -166,25 +169,25 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground">Mes tablettes</h2>
+          <h2 className="text-xl font-bold text-foreground">{t("dashboard.tablets.title")}</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Gérez les tablettes associées à votre restaurant.
+            {t("dashboard.tablets.subtitle")}
           </p>
         </div>
         <Button onClick={openAdd} className="rounded-xl gap-2">
           <Plus className="h-4 w-4" />
-          Ajouter
+          {t("dashboard.tablets.add_button")}
         </Button>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-muted-foreground text-sm">Chargement...</div>
+        <div className="text-center py-12 text-muted-foreground text-sm">{t("dashboard.tablets.loading")}</div>
       ) : tablets.length === 0 ? (
         <div className="text-center py-12 bg-card border border-border rounded-2xl">
           <Tablet className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-muted-foreground text-sm">Aucune tablette enregistrée</p>
+          <p className="text-muted-foreground text-sm">{t("dashboard.tablets.empty_state")}</p>
           <p className="text-xs text-muted-foreground mt-1">
-            Ajoutez vos tablettes pour les gérer depuis cet espace.
+            {t("dashboard.tablets.empty_subtitle")}
           </p>
         </div>
       ) : (
@@ -203,7 +206,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <p className="font-semibold text-foreground text-sm">
-                        {tablet.name || "Tablette"}
+                        {tablet.name || t("dashboard.tablets.fallback_name")}
                       </p>
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[tablet.status]}`}>
                         {STATUS_LABELS[tablet.status]}
@@ -222,7 +225,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
                       size="sm"
                       className="rounded-xl"
                       onClick={() => openEdit(tablet)}
-                      aria-label="Modifier la tablette"
+                      aria-label={t("dashboard.tablets.edit_tablet")}
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </Button>
@@ -232,7 +235,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
                       className="rounded-xl text-red-600 hover:text-red-700"
                       onClick={() => handleDeactivate(tablet)}
                     >
-                      Desactiver
+                      {t("dashboard.tablets.disable")}
                     </Button>
                   </div>
                 </div>
@@ -244,7 +247,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
           {inactiveTablets.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                Inactives
+                {t("dashboard.tablets.inactive_section")}
               </h3>
               {inactiveTablets.map((tablet) => (
                 <div
@@ -257,7 +260,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <p className="font-semibold text-foreground text-sm">
-                        {tablet.name || "Tablette"}
+                        {tablet.name || t("dashboard.tablets.fallback_name")}
                       </p>
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[tablet.status]}`}>
                         {STATUS_LABELS[tablet.status]}
@@ -273,7 +276,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
                     className="rounded-xl flex-shrink-0"
                     onClick={() => handleDeactivate(tablet)}
                   >
-                    Reactiver
+                    {t("dashboard.tablets.reactivate")}
                   </Button>
                 </div>
               ))}
@@ -285,14 +288,14 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
       {/* Contact CTA */}
       <div className="bg-secondary/50 rounded-2xl p-5 text-center">
         <p className="text-sm text-muted-foreground mb-2">
-          Besoin de tablettes pour votre restaurant ?
+          {t("dashboard.tablets.cta_text")}
         </p>
         <a
           href="mailto:contact@commandeici.com?subject=Location tablettes"
           className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline hover:opacity-80"
         >
           <Mail className="h-4 w-4" />
-          Contactez-nous pour la location
+          {t("dashboard.tablets.cta_link")}
         </a>
       </div>
 
@@ -301,12 +304,12 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {editingTablet ? "Modifier la tablette" : "Ajouter une tablette"}
+              {editingTablet ? t("dashboard.tablets.edit_tablet") : t("dashboard.tablets.add_title")}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div>
-              <Label htmlFor="serial">Numéro de série (max 20 car.)</Label>
+              <Label htmlFor="serial">{t("dashboard.tablets.serial_label")}</Label>
               <Input
                 id="serial"
                 value={serialNumber}
@@ -316,35 +319,35 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
               />
             </div>
             <div>
-              <Label htmlFor="tablet-name">Nom (optionnel)</Label>
+              <Label htmlFor="tablet-name">{t("dashboard.tablets.name_label")}</Label>
               <Input
                 id="tablet-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Tablette cuisine 1"
+                placeholder={t("dashboard.tablets.name_placeholder")}
               />
             </div>
             <div>
-              <Label>Usage</Label>
+              <Label>{t("dashboard.tablets.usage_label")}</Label>
               <Select value={usageType} onValueChange={setUsageType}>
                 <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cuisine">Cuisine</SelectItem>
-                  <SelectItem value="caisse">Caisse</SelectItem>
-                  <SelectItem value="service_client">Service client</SelectItem>
-                  <SelectItem value="autre">Autre</SelectItem>
+                  <SelectItem value="cuisine">{t("dashboard.tablets.usage_kitchen")}</SelectItem>
+                  <SelectItem value="caisse">{t("dashboard.tablets.usage_pos")}</SelectItem>
+                  <SelectItem value="service_client">{t("dashboard.tablets.usage_service")}</SelectItem>
+                  <SelectItem value="autre">{t("dashboard.tablets.usage_other")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label htmlFor="tablet-notes">Notes (optionnel)</Label>
+              <Label htmlFor="tablet-notes">{t("dashboard.tablets.notes_label")}</Label>
               <Textarea
                 id="tablet-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Informations supplementaires..."
+                placeholder={t("dashboard.tablets.notes_placeholder")}
                 rows={2}
               />
             </div>
@@ -354,14 +357,14 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
                 className="flex-1 rounded-xl"
                 onClick={() => { setDialogOpen(false); resetForm(); }}
               >
-                Annuler
+                {t("dashboard.tablets.cancel")}
               </Button>
               <Button
                 className="flex-1 rounded-xl"
                 onClick={handleSave}
                 disabled={saving}
               >
-                {saving ? "Enregistrement..." : editingTablet ? "Enregistrer" : "Ajouter"}
+                {saving ? t("dashboard.tablets.saving") : editingTablet ? t("dashboard.tablets.save") : t("dashboard.tablets.add_button")}
               </Button>
             </div>
           </div>

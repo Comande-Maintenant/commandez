@@ -2,6 +2,7 @@ import { Plus, Copy, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export interface ScheduleSlot {
   open: string;
@@ -14,7 +15,6 @@ export interface ScheduleDay {
   slots: ScheduleSlot[];
 }
 
-const dayNames = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 const orderedDays = [1, 2, 3, 4, 5, 6, 0];
 
 const defaultSchedule: ScheduleDay[] = orderedDays.map((d) => ({
@@ -29,6 +29,10 @@ interface Props {
 }
 
 export const ScheduleEditor = ({ schedule, onChange }: Props) => {
+  const { t } = useLanguage();
+
+  const dayNames = [t("dashboard.schedule.sunday"), t("dashboard.schedule.monday"), t("dashboard.schedule.tuesday"), t("dashboard.schedule.wednesday"), t("dashboard.schedule.thursday"), t("dashboard.schedule.friday"), t("dashboard.schedule.saturday")];
+
   const days = orderedDays.map(
     (d) => schedule.find((s) => s.day === d) ?? defaultSchedule.find((s) => s.day === d)!
   );
@@ -75,9 +79,9 @@ export const ScheduleEditor = ({ schedule, onChange }: Props) => {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-sm font-medium text-foreground">Horaires par jour</p>
+        <p className="text-sm font-medium text-foreground">{t("dashboard.schedule.title")}</p>
         <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={copyToAll}>
-          <Copy className="h-3.5 w-3.5" />Copier lundi à tous
+          <Copy className="h-3.5 w-3.5" />{t("dashboard.schedule.copy_monday")}
         </Button>
       </div>
       <div className="bg-card rounded-2xl border border-border overflow-hidden divide-y divide-border">
@@ -90,7 +94,7 @@ export const ScheduleEditor = ({ schedule, onChange }: Props) => {
                 className="scale-75 shrink-0"
               />
               <span className="text-sm font-medium text-foreground w-24">{dayNames[day.day]}</span>
-              {!day.enabled && <span className="text-sm text-muted-foreground">Ferme</span>}
+              {!day.enabled && <span className="text-sm text-muted-foreground">{t("dashboard.schedule.closed")}</span>}
             </div>
             {day.enabled && (
               <div className="ml-11 space-y-2">
@@ -102,7 +106,7 @@ export const ScheduleEditor = ({ schedule, onChange }: Props) => {
                       onChange={(e) => updateSlot(day.day, si, "open", e.target.value)}
                       className="w-28 h-8 text-sm"
                     />
-                    <span className="text-xs text-muted-foreground">a</span>
+                    <span className="text-xs text-muted-foreground">{t("dashboard.schedule.to")}</span>
                     <Input
                       type="time"
                       value={slot.close}
@@ -123,7 +127,7 @@ export const ScheduleEditor = ({ schedule, onChange }: Props) => {
                   onClick={() => addSlot(day.day)}
                   className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Plus className="h-3 w-3" />Ajouter un créneau
+                  <Plus className="h-3 w-3" />{t("dashboard.schedule.add_slot")}
                 </button>
               </div>
             )}

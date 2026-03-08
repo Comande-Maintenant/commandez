@@ -275,7 +275,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
       resetForm();
       toast.success(editId ? t('dashboard.customization.modified') : t('dashboard.customization.added'));
     } catch {
-      toast.error("Erreur");
+      toast.error(t("dashboard.customization.error"));
     }
   };
 
@@ -289,7 +289,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
       else if (activeTab === "accompagnements") { await deleteAccompagnement(id); setAccompagnements(await fetchAllAccompagnements(restaurant.id)); }
       toast.success(t('dashboard.customization.deleted'));
     } catch {
-      toast.error("Erreur");
+      toast.error(t("dashboard.customization.error"));
     }
   };
 
@@ -312,7 +312,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
         if (item) { await updateAccompagnement(id, { enabled: !item.enabled }); setAccompagnements(await fetchAllAccompagnements(restaurant.id)); }
       }
     } catch {
-      toast.error("Erreur");
+      toast.error(t("dashboard.customization.error"));
     }
   };
 
@@ -368,9 +368,9 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
         enable_boisson_upsell: cfgBoissonUpsell,
         enable_dessert_upsell: cfgDessertUpsell,
       });
-      toast.success("Configuration enregistrée");
+      toast.success(t("dashboard.customization.config_saved"));
     } catch {
-      toast.error("Erreur");
+      toast.error(t("dashboard.customization.error"));
     }
   };
 
@@ -451,30 +451,30 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
       {activeTab === "config" && (
         <div className="space-y-4 max-w-md">
           <div>
-            <label className="text-sm font-medium text-foreground">Sauces gratuites sandwich</label>
+            <label className="text-sm font-medium text-foreground">{t("dashboard.customization.free_sauces_sandwich")}</label>
             <Input type="number" value={cfgFreeSandwich} onChange={(e) => setCfgFreeSandwich(e.target.value)} className="mt-1" />
           </div>
           <div>
-            <label className="text-sm font-medium text-foreground">Sauces gratuites frites</label>
+            <label className="text-sm font-medium text-foreground">{t("dashboard.customization.free_sauces_fries")}</label>
             <Input type="number" value={cfgFreeFrites} onChange={(e) => setCfgFreeFrites(e.target.value)} className="mt-1" />
           </div>
           <div>
-            <label className="text-sm font-medium text-foreground">Prix sauce supplementaire (€)</label>
+            <label className="text-sm font-medium text-foreground">{t("dashboard.customization.extra_sauce_price")}</label>
             <Input type="number" step="0.10" value={cfgExtraSauce} onChange={(e) => setCfgExtraSauce(e.target.value)} className="mt-1" />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-foreground">Suggérer sauce sandwich pour frites</span>
+            <span className="text-sm text-foreground">{t("dashboard.customization.suggest_sauce_fries")}</span>
             <Switch checked={cfgSuggestSauce} onCheckedChange={setCfgSuggestSauce} />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-foreground">Upsell boisson</span>
+            <span className="text-sm text-foreground">{t("dashboard.customization.upsell_drink")}</span>
             <Switch checked={cfgBoissonUpsell} onCheckedChange={setCfgBoissonUpsell} />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-foreground">Upsell dessert</span>
+            <span className="text-sm text-foreground">{t("dashboard.customization.upsell_dessert")}</span>
             <Switch checked={cfgDessertUpsell} onCheckedChange={setCfgDessertUpsell} />
           </div>
-          <Button onClick={handleSaveConfig} className="w-full rounded-xl">Enregistrer</Button>
+          <Button onClick={handleSaveConfig} className="w-full rounded-xl">{t("dashboard.customization.save")}</Button>
         </div>
       )}
 
@@ -482,7 +482,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
       {activeTab !== "config" && (
         <>
           <Button size="sm" className="rounded-xl gap-1 mb-3" onClick={openAdd}>
-            <Plus className="h-4 w-4" />Ajouter
+            <Plus className="h-4 w-4" />{t("dashboard.customization.add")}
           </Button>
 
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -492,7 +492,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
                   let extra = "";
                   if (activeTab === "bases") {
                     const b = item as DbBase;
-                    extra = `${Number(b.price).toFixed(2)} € - ${b.max_viandes} viande(s) max`;
+                    extra = `${Number(b.price).toFixed(2)} € - ${b.max_viandes} ${t("dashboard.customization.meats_max")}`;
                   } else if (activeTab === "viandes") {
                     const v = item as DbViande;
                     extra = Number(v.supplement) > 0 ? `+${Number(v.supplement).toFixed(2)} €` : t('dashboard.customization.included');
@@ -502,8 +502,8 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
                   } else if (activeTab === "sauces") {
                     const s = item as DbSauce;
                     const parts = [];
-                    if (s.is_for_sandwich) parts.push("Sandwich");
-                    if (s.is_for_frites) parts.push("Frites");
+                    if (s.is_for_sandwich) parts.push(t("dashboard.customization.sandwich"));
+                    if (s.is_for_frites) parts.push(t("dashboard.customization.frites"));
                     extra = parts.join(" + ");
                   } else if (activeTab === "accompagnements") {
                     const a = item as DbAccompagnement;
@@ -546,17 +546,17 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
             {activeTab === "bases" && (
               <>
                 <Input type="number" step="0.50" placeholder={t('dashboard.customization.price')} value={formPrice} onChange={(e) => setFormPrice(e.target.value)} />
-                <Input type="number" placeholder="Max viandes" value={formMaxViandes} onChange={(e) => setFormMaxViandes(e.target.value)} />
+                <Input type="number" placeholder={t("dashboard.customization.max_meats")} value={formMaxViandes} onChange={(e) => setFormMaxViandes(e.target.value)} />
               </>
             )}
 
             {activeTab === "viandes" && (
-              <Input type="number" step="0.50" placeholder="Supplement (€, 0 si inclus)" value={formSupplement} onChange={(e) => setFormSupplement(e.target.value)} />
+              <Input type="number" step="0.50" placeholder={t("dashboard.customization.supplement_price")} value={formSupplement} onChange={(e) => setFormSupplement(e.target.value)} />
             )}
 
             {activeTab === "garnitures" && (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-foreground">Inclus par defaut</span>
+                <span className="text-sm text-foreground">{t("dashboard.customization.included_default")}</span>
                 <Switch checked={formIsDefault} onCheckedChange={setFormIsDefault} />
               </div>
             )}
@@ -564,11 +564,11 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
             {activeTab === "sauces" && (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-foreground">Pour sandwich</span>
+                  <span className="text-sm text-foreground">{t("dashboard.customization.for_sandwich")}</span>
                   <Switch checked={formForSandwich} onCheckedChange={setFormForSandwich} />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-foreground">Pour frites</span>
+                  <span className="text-sm text-foreground">{t("dashboard.customization.for_fries")}</span>
                   <Switch checked={formForFrites} onCheckedChange={setFormForFrites} />
                 </div>
               </>
@@ -577,20 +577,20 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
             {activeTab === "accompagnements" && (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-foreground">Tailles (petit/moyen/grand)</span>
+                  <span className="text-sm text-foreground">{t("dashboard.customization.sizes")}</span>
                   <Switch checked={formHasSizes} onCheckedChange={setFormHasSizes} />
                 </div>
                 {formHasSizes ? (
                   <div className="grid grid-cols-3 gap-2">
-                    <Input type="number" step="0.50" placeholder="Petit (€)" value={formPriceSmall} onChange={(e) => setFormPriceSmall(e.target.value)} />
-                    <Input type="number" step="0.50" placeholder="Moyen (€)" value={formPriceMedium} onChange={(e) => setFormPriceMedium(e.target.value)} />
-                    <Input type="number" step="0.50" placeholder="Grand (€)" value={formPriceLarge} onChange={(e) => setFormPriceLarge(e.target.value)} />
+                    <Input type="number" step="0.50" placeholder={t("dashboard.customization.size_small")} value={formPriceSmall} onChange={(e) => setFormPriceSmall(e.target.value)} />
+                    <Input type="number" step="0.50" placeholder={t("dashboard.customization.size_medium")} value={formPriceMedium} onChange={(e) => setFormPriceMedium(e.target.value)} />
+                    <Input type="number" step="0.50" placeholder={t("dashboard.customization.size_large")} value={formPriceLarge} onChange={(e) => setFormPriceLarge(e.target.value)} />
                   </div>
                 ) : (
                   <Input type="number" step="0.50" placeholder={t('dashboard.customization.price')} value={formPriceDefault} onChange={(e) => setFormPriceDefault(e.target.value)} />
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-foreground">Option sauce</span>
+                  <span className="text-sm text-foreground">{t("dashboard.customization.sauce_option")}</span>
                   <Switch checked={formHasSauceOption} onCheckedChange={setFormHasSauceOption} />
                 </div>
               </>
