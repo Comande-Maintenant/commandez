@@ -85,7 +85,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
                 style={{ backgroundColor: primaryColor || "#10B981" }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
-                aria-label="Ajouter au panier"
+                aria-label={t("custom.add_to_cart")}
               >
                 <Plus className="h-3.5 w-3.5" />
               </motion.div>
@@ -97,7 +97,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
                 style={{ backgroundColor: primaryColor || "#10B981" }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
-                aria-label="Ajouter au panier"
+                aria-label={t("custom.add_to_cart")}
               >
                 <Plus className="h-4 w-4" />
               </motion.div>

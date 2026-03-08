@@ -23,21 +23,14 @@ const statusColors: Record<OrderStatus, string> = {
   done: "border-l-gray-300 bg-card",
 };
 
-const statusBadge: Record<OrderStatus, { text: string; class: string }> = {
-  new: { text: "Nouvelle", class: "bg-amber-100 text-amber-800" },
-  preparing: { text: "En cours", class: "bg-blue-100 text-blue-800" },
-  ready: { text: "Prête", class: "bg-emerald-100 text-emerald-800" },
-  done: { text: "Terminée", class: "bg-gray-100 text-gray-600" },
+const statusBadgeClass: Record<OrderStatus, string> = {
+  new: "bg-amber-100 text-amber-800",
+  preparing: "bg-blue-100 text-blue-800",
+  ready: "bg-emerald-100 text-emerald-800",
+  done: "bg-gray-100 text-gray-600",
 };
 
 type KitchenFilter = "active" | "new" | "preparing" | "done";
-
-const filterTabsDef: { id: KitchenFilter; label: string }[] = [
-  { id: "active", label: "À faire" },
-  { id: "new", label: "Nouvelles" },
-  { id: "preparing", label: "En cours" },
-  { id: "done", label: "Terminées" },
-];
 
 interface Props {
   restaurant: DbRestaurant;
@@ -47,6 +40,20 @@ interface Props {
 
 export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) => {
   const { t } = useLanguage();
+
+  const statusBadge: Record<OrderStatus, { text: string; class: string }> = {
+    new: { text: t("dashboard.orders.status_new"), class: statusBadgeClass.new },
+    preparing: { text: t("dashboard.orders.status_preparing"), class: statusBadgeClass.preparing },
+    ready: { text: t("dashboard.orders.status_ready"), class: statusBadgeClass.ready },
+    done: { text: t("dashboard.orders.status_done"), class: statusBadgeClass.done },
+  };
+
+  const filterTabsDef: { id: KitchenFilter; label: string }[] = [
+    { id: "active", label: t("dashboard.orders.filter_all") },
+    { id: "new", label: t("dashboard.orders.filter_new") },
+    { id: "preparing", label: t("dashboard.orders.filter_in_progress") },
+    { id: "done", label: t("dashboard.orders.filter_done") },
+  ];
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [filter, setFilter] = useState<KitchenFilter>("active");
@@ -233,7 +240,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       }
       handleStatusChange(order.id, next);
     } catch {
-      toast.error("Erreur");
+      toast.error(t("common.error"));
     }
   };
 
@@ -269,18 +276,18 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           onClick={() => setFilter(newCount > 0 ? "new" : "active")}
           className={`bg-card rounded-2xl border border-border p-3 text-left transition-all hover:shadow-sm ${filter === "new" ? "ring-2 ring-amber-400" : ""}`}
         >
-          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">Nouvelles</p>
+          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{t("dashboard.orders.filter_new")}</p>
           <p className={`text-xl sm:text-2xl font-bold mt-0.5 ${newCount > 0 ? "text-amber-600" : "text-foreground"}`}>{newCount}</p>
         </button>
         <button
           onClick={() => setFilter(preparingCount > 0 ? "preparing" : "active")}
           className={`bg-card rounded-2xl border border-border p-3 text-left transition-all hover:shadow-sm ${filter === "preparing" ? "ring-2 ring-blue-400" : ""}`}
         >
-          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">En cours</p>
+          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{t("dashboard.orders.filter_in_progress")}</p>
           <p className="text-xl sm:text-2xl font-bold mt-0.5 text-foreground">{preparingCount}</p>
         </button>
         <div className="bg-card rounded-2xl border border-border p-3">
-          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">CA jour</p>
+          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{t("dashboard.orders.revenue_today")}</p>
           <p className="text-lg sm:text-xl font-bold mt-0.5 text-foreground blur-sensitive">{todayRevenue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} €</p>
         </div>
       </div>
@@ -292,7 +299,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       <div className="flex items-center justify-between mb-3">
         <div className="text-sm text-muted-foreground">
           {todayDoneOrders.length > 0 && (
-            <span>{todayDoneOrders.length} commande{todayDoneOrders.length > 1 ? "s" : ""} terminée{todayDoneOrders.length > 1 ? "s" : ""}</span>
+            <span>{todayDoneOrders.length} {t("dashboard.orders.status_done").toLowerCase()}</span>
           )}
         </div>
         <Button
@@ -302,7 +309,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           onClick={() => setRupturesOpen(true)}
         >
           <AlertTriangle className="h-3.5 w-3.5" />
-          Ruptures
+          {t("dashboard.orders.out_of_stock")}
         </Button>
       </div>
 
@@ -331,7 +338,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           <div className="text-center py-16 text-muted-foreground">
             <Package className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p className="text-sm">
-              {filter === "all" ? "Aucune commande" : "Aucune commande dans cette categorie"}
+              {t("dashboard.orders.no_orders_filtered")}
             </p>
           </div>
         )}
@@ -340,7 +347,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           const badge = statusBadge[st];
           const orderItems = (order.items as any[]) || [];
           const itemCount = orderItems.reduce((s, i) => s + (i.quantity || 1), 0);
-          const statusFlow: Record<string, string> = { new: "Accepter", preparing: "Prête", ready: "Terminée" };
+          const statusFlow: Record<string, string> = { new: t("dashboard.orders.action_accept"), preparing: t("dashboard.orders.action_ready"), ready: t("dashboard.orders.action_done") };
           const nextLabel = statusFlow[st];
 
           // Timer countdown for card
@@ -370,7 +377,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                   <span className="text-base sm:text-lg font-bold text-foreground">{formatDisplayNumber(order)}</span>
                   <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${badge.class}`}>{badge.text}</span>
                   {(order as any).source === "pos" && (
-                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Caisse</span>
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{t("dashboard.orders.source_pos")}</span>
                   )}
                   {timerLabel && (
                     <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 ${
@@ -389,9 +396,9 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                 <span className="font-medium text-foreground">{order.customer_name}</span>
                 <span className="text-muted-foreground">-</span>
                 <span className="text-muted-foreground flex items-center gap-1">
-                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> A emporter</>}
-                  {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> Sur place</>}
-                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> Tel</>}
+                  {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> {t("dashboard.orders.takeaway")}</>}
+                  {order.order_type === "sur_place" && <><UtensilsCrossed className="h-3.5 w-3.5" /> {t("dashboard.orders.dine_in")}</>}
+                  {order.order_type === "telephone" && <><Phone className="h-3.5 w-3.5" /> {t("dashboard.orders.phone")}</>}
                 </span>
                 {order.pickup_time && (
                   <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-700 flex items-center gap-0.5">
@@ -400,7 +407,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                   </span>
                 )}
                 {!order.pickup_time && (order.order_type === "collect" || order.order_type === "a_emporter") && (
-                  <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700">Des que possible</span>
+                  <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700">{t("pickup.asap")}</span>
                 )}
               </div>
 
@@ -418,7 +425,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                       <p className="text-muted-foreground text-xs ml-3">{item.garniture_choices.map((g: any) => typeof g === "string" ? g : g.name).join(", ")}</p>
                     )}
                     {item.sauces?.length > 0 && (
-                      <p className="text-muted-foreground text-xs ml-3">Sauce : {item.sauces.join(", ")}</p>
+                      <p className="text-muted-foreground text-xs ml-3">{t("item.sauces")} : {item.sauces.join(", ")}</p>
                     )}
                     {item.supplements?.length > 0 && (
                       <p className="text-muted-foreground text-xs ml-3">
@@ -436,7 +443,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
               <div className="flex items-center justify-between pt-2 border-t border-border/50">
                 <div className="flex items-center gap-3">
                   <span className="text-base font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} €</span>
-                  <span className="text-xs text-muted-foreground">{itemCount} article{itemCount > 1 ? "s" : ""}</span>
+                  <span className="text-xs text-muted-foreground">{t("cart.items").replace("{count}", String(itemCount))}</span>
                 </div>
                 {nextLabel && (
                   <Button
@@ -490,7 +497,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           onClose={() => setBanTarget(null)}
           onBanned={() => {
             setBanTarget(null);
-            toast.success("Client banni");
+            toast.success(t("dashboard.orders.client_banned"));
           }}
           restaurantId={restaurant.id}
         />
@@ -500,11 +507,11 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       <Sheet open={rupturesOpen} onOpenChange={setRupturesOpen}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Gestion des ruptures</SheetTitle>
+            <SheetTitle>{t("dashboard.orders.stock_management")}</SheetTitle>
           </SheetHeader>
           <div className="mt-4 space-y-2">
             {menuItems.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-8">Aucun produit</p>
+              <p className="text-sm text-muted-foreground text-center py-8">{t("dashboard.orders.no_items")}</p>
             )}
             {menuItems.map((item) => (
               <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/50">
@@ -520,15 +527,15 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                   onCheckedChange={async (val) => {
                     if (isDemo) {
                       setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
-                      toast.success(val ? `${item.name} disponible` : `${item.name} en rupture`);
+                      toast.success(val ? t("dashboard.orders.item_available").replace("{name}", item.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", item.name));
                       return;
                     }
                     try {
                       await updateMenuItem(item.id, { enabled: val });
                       setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
-                      toast.success(val ? `${item.name} disponible` : `${item.name} en rupture`);
+                      toast.success(val ? t("dashboard.orders.item_available").replace("{name}", item.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", item.name));
                     } catch {
-                      toast.error("Erreur");
+                      toast.error(t("common.error"));
                     }
                   }}
                 />

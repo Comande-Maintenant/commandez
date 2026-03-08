@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { useLanguage } from "@/context/LanguageContext";
 import { updateOrderItems, updateOrderStatus, updateOrderEstimatedReady, advanceDemoOrder } from "@/lib/api";
 import type { DbOrder, DbMenuItem } from "@/types/database";
 import { toast } from "sonner";
@@ -40,18 +41,18 @@ interface Props {
   onNext?: () => void;
 }
 
-const statusActions: Record<OrderStatus, { next?: OrderStatus; label: string; rejectLabel?: string; color: string }> = {
-  new: { next: "preparing", label: "Accepter la commande", rejectLabel: "Refuser", color: "bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800" },
-  preparing: { next: "ready", label: "Commande prete", color: "bg-blue-600 hover:bg-blue-700 active:bg-blue-800" },
-  ready: { next: "done", label: "Commande terminee", color: "bg-foreground hover:bg-foreground/90" },
-  done: { label: "Terminee", color: "bg-muted" },
+const statusActionColors: Record<OrderStatus, string> = {
+  new: "bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800",
+  preparing: "bg-blue-600 hover:bg-blue-700 active:bg-blue-800",
+  ready: "bg-foreground hover:bg-foreground/90",
+  done: "bg-muted",
 };
 
-const statusLabels: Record<OrderStatus, { text: string; color: string }> = {
-  new: { text: "Nouvelle", color: "bg-amber-100 text-amber-800 border-amber-200" },
-  preparing: { text: "En preparation", color: "bg-blue-100 text-blue-800 border-blue-200" },
-  ready: { text: "Prete", color: "bg-emerald-100 text-emerald-800 border-emerald-200" },
-  done: { text: "Terminee", color: "bg-gray-100 text-gray-600 border-gray-200" },
+const statusLabelColors: Record<OrderStatus, string> = {
+  new: "bg-amber-100 text-amber-800 border-amber-200",
+  preparing: "bg-blue-100 text-blue-800 border-blue-200",
+  ready: "bg-emerald-100 text-emerald-800 border-emerald-200",
+  done: "bg-gray-100 text-gray-600 border-gray-200",
 };
 
 export const OrderDetailSheet = ({
@@ -67,6 +68,22 @@ export const OrderDetailSheet = ({
   onPrev,
   onNext,
 }: Props) => {
+  const { t } = useLanguage();
+
+  const statusActions: Record<OrderStatus, { next?: OrderStatus; label: string; rejectLabel?: string; color: string }> = {
+    new: { next: "preparing", label: t("dashboard.orders.accept_order"), rejectLabel: t("dashboard.orders.reject"), color: statusActionColors.new },
+    preparing: { next: "ready", label: t("dashboard.orders.order_ready"), color: statusActionColors.preparing },
+    ready: { next: "done", label: t("dashboard.orders.order_done"), color: statusActionColors.ready },
+    done: { label: t("dashboard.orders.status_done"), color: statusActionColors.done },
+  };
+
+  const statusLabels: Record<OrderStatus, { text: string; color: string }> = {
+    new: { text: t("dashboard.orders.status_new"), color: statusLabelColors.new },
+    preparing: { text: t("dashboard.orders.status_preparing"), color: statusLabelColors.preparing },
+    ready: { text: t("dashboard.orders.status_ready"), color: statusLabelColors.ready },
+    done: { text: t("dashboard.orders.status_done"), color: statusLabelColors.done },
+  };
+
   const [advancing, setAdvancing] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editItems, setEditItems] = useState<any[]>([]);
@@ -122,17 +139,17 @@ export const OrderDetailSheet = ({
       }
       onOrderUpdated({ ...order, estimated_ready_at: estimatedAt });
       setEditingTimer(false);
-      toast.success(`Temps estime : ${minutes} min`);
+      toast.success(t("dashboard.orders.estimated_time").replace("{min}", String(minutes)));
     } catch {
-      toast.error("Erreur");
+      toast.error(t("common.error"));
     }
   };
 
   const timeSince = (dateStr: string) => {
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return "A l'instant";
-    if (mins < 60) return `il y a ${mins} min`;
-    return `il y a ${Math.floor(mins / 60)}h${mins % 60 > 0 ? `${String(mins % 60).padStart(2, "0")}` : ""}`;
+    if (mins < 1) return t("time.just_now");
+    if (mins < 60) return `${mins} min`;
+    return `${Math.floor(mins / 60)}h${mins % 60 > 0 ? `${String(mins % 60).padStart(2, "0")}` : ""}`;
   };
 
   const orderTime = new Date(order.created_at).toLocaleTimeString("fr-FR", {
@@ -157,7 +174,7 @@ export const OrderDetailSheet = ({
       }
       onStatusChange(order.id, action.next);
     } catch {
-      toast.error("Erreur");
+      toast.error(t("common.error"));
     }
     setAdvancing(false);
   };
@@ -172,7 +189,7 @@ export const OrderDetailSheet = ({
       }
       onStatusChange(order.id, "done");
     } catch {
-      toast.error("Erreur");
+      toast.error(t("common.error"));
     }
     setAdvancing(false);
   };
@@ -245,9 +262,9 @@ export const OrderDetailSheet = ({
       };
       onOrderUpdated(updatedOrder);
       setEditing(false);
-      toast.success("Commande modifiee");
+      toast.success(t("dashboard.orders.order_modified"));
     } catch {
-      toast.error("Erreur lors de la modification");
+      toast.error(t("dashboard.orders.modify_error"));
     }
     setAdvancing(false);
   };
@@ -319,27 +336,27 @@ export const OrderDetailSheet = ({
             )}
             <span className="flex items-center gap-1">
               {(order.order_type === "collect" || order.order_type === "a_emporter") && (
-                <><ShoppingBag className="h-4 w-4" /> A emporter</>
+                <><ShoppingBag className="h-4 w-4" /> {t("dashboard.orders.takeaway")}</>
               )}
               {order.order_type === "sur_place" && (
-                <><UtensilsCrossed className="h-4 w-4" /> Sur place</>
+                <><UtensilsCrossed className="h-4 w-4" /> {t("dashboard.orders.dine_in")}</>
               )}
               {order.order_type === "telephone" && (
-                <><Phone className="h-4 w-4" /> Telephone</>
+                <><Phone className="h-4 w-4" /> {t("dashboard.orders.phone")}</>
               )}
             </span>
             {(order as any).covers && (
-              <span>{(order as any).covers} couverts</span>
+              <span>{t("dashboard.orders.covers_count").replace("{count}", String((order as any).covers))}</span>
             )}
             {order.pickup_time && (
               <span className="flex items-center gap-1 font-semibold text-blue-700">
                 <Clock className="h-4 w-4" />
-                Retrait {new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                {t("dashboard.orders.pickup_at_label").replace("{time}", new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }))}
               </span>
             )}
             {order.payment_method && (
               <span className="px-2 py-0.5 rounded-full bg-secondary text-xs font-medium">
-                {order.payment_method === "cash" ? "Especes" : order.payment_method === "card" ? "CB" : order.payment_method === "ticket_restaurant" ? "Ticket resto" : order.payment_method}
+                {order.payment_method === "cash" ? t("pos.cash") : order.payment_method === "card" ? t("pos.card") : order.payment_method === "ticket_restaurant" ? t("pos.meal_voucher") : order.payment_method}
               </span>
             )}
           </div>
@@ -362,14 +379,14 @@ export const OrderDetailSheet = ({
               >
                 <div className="flex items-center gap-2">
                   <Timer className="h-5 w-5 text-foreground" />
-                  <span className="text-sm font-medium text-foreground">Temps de preparation</span>
+                  <span className="text-sm font-medium text-foreground">{t("pos.prep_time")}</span>
                 </div>
                 {remainingSeconds !== null ? (
                   <span className={`text-lg font-bold tabular-nums ${remainingSeconds <= 60 ? "text-red-600" : remainingSeconds <= 180 ? "text-amber-600" : "text-foreground"}`}>
                     {formatCountdown(remainingSeconds)}
                   </span>
                 ) : (
-                  <span className="text-sm text-muted-foreground">Definir</span>
+                  <span className="text-sm text-muted-foreground">{t("dashboard.orders.set_timer")}</span>
                 )}
               </button>
             ) : (
@@ -377,13 +394,13 @@ export const OrderDetailSheet = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Timer className="h-5 w-5 text-foreground" />
-                    <span className="text-sm font-medium text-foreground">Ajuster le temps</span>
+                    <span className="text-sm font-medium text-foreground">{t("dashboard.orders.adjust_time")}</span>
                   </div>
                   <button
                     onClick={() => setEditingTimer(false)}
                     className="text-xs text-muted-foreground hover:text-foreground"
                   >
-                    Annuler
+                    {t("common.cancel")}
                   </button>
                 </div>
                 {/* Quick select buttons */}
@@ -425,7 +442,7 @@ export const OrderDetailSheet = ({
                   onClick={() => handleSetTimer(timerMinutes)}
                   className="w-full h-12 rounded-xl text-sm font-semibold"
                 >
-                  Valider - pret dans {timerMinutes} min
+                  {t("dashboard.orders.ready_in").replace("{min}", String(timerMinutes))}
                 </Button>
               </div>
             )}
@@ -436,14 +453,14 @@ export const OrderDetailSheet = ({
         {!editing ? (
           <div className="py-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-semibold text-foreground">Articles</h3>
+              <h3 className="text-base font-semibold text-foreground">{t("dashboard.orders.articles")}</h3>
               {status !== "done" && (
                 <button
                   onClick={startEdit}
                   className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-xl hover:bg-secondary"
                 >
                   <Pencil className="h-3.5 w-3.5" />
-                  Modifier
+                  {t("common.edit")}
                 </button>
               )}
             </div>
@@ -467,7 +484,7 @@ export const OrderDetailSheet = ({
                     )}
                     {/* Sauces */}
                     {item.sauces && item.sauces.length > 0 && (
-                      <p className="text-sm text-muted-foreground">Sauce : {item.sauces.join(", ")}</p>
+                      <p className="text-sm text-muted-foreground">{t("item.sauces")} : {item.sauces.join(", ")}</p>
                     )}
                     {/* Supplements */}
                     {item.supplements && item.supplements.length > 0 && (
@@ -481,12 +498,12 @@ export const OrderDetailSheet = ({
                     )}
                     {/* Base choice */}
                     {item.base_choice && (
-                      <p className="text-sm text-muted-foreground">Base : {item.base_choice}</p>
+                      <p className="text-sm text-muted-foreground">{t("dashboard.orders.base_label").replace("{value}", item.base_choice)}</p>
                     )}
                     {/* Accompagnement */}
                     {item.accompagnement_choice && (
                       <p className="text-sm text-muted-foreground">
-                        Accompagnement : {typeof item.accompagnement_choice === "string" ? item.accompagnement_choice : item.accompagnement_choice.name}
+                        {t("dashboard.orders.side_label").replace("{value}", typeof item.accompagnement_choice === "string" ? item.accompagnement_choice : item.accompagnement_choice.name)}
                       </p>
                     )}
                   </div>
@@ -500,7 +517,7 @@ export const OrderDetailSheet = ({
             {/* Notes */}
             {order.notes && (
               <div className="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200">
-                <p className="text-sm text-amber-800 font-medium">Note : {order.notes}</p>
+                <p className="text-sm text-amber-800 font-medium">{t("dashboard.orders.note")} : {order.notes}</p>
               </div>
             )}
 
@@ -516,12 +533,12 @@ export const OrderDetailSheet = ({
           /* EDIT MODE */
           <div className="py-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-semibold text-foreground">Modifier la commande</h3>
+              <h3 className="text-base font-semibold text-foreground">{t("dashboard.orders.edit_order")}</h3>
               <button
                 onClick={() => setEditing(false)}
                 className="text-sm text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-xl hover:bg-secondary"
               >
-                Annuler
+                {t("common.cancel")}
               </button>
             </div>
 
@@ -581,14 +598,14 @@ export const OrderDetailSheet = ({
                 className="w-full mt-3 py-3 border-2 border-dashed border-border rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors flex items-center justify-center gap-2"
               >
                 <Plus className="h-4 w-4" />
-                Ajouter un article
+                {t("pos.add_item")}
               </button>
             ) : (
               <div className="mt-3 border border-border rounded-xl p-3 max-h-64 overflow-y-auto">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-semibold text-foreground">Choisir un article</h4>
+                  <h4 className="text-sm font-semibold text-foreground">{t("dashboard.orders.choose_item")}</h4>
                   <button onClick={() => setAddingItem(false)} className="text-xs text-muted-foreground hover:text-foreground">
-                    Fermer
+                    {t("common.close")}
                   </button>
                 </div>
                 {categories.map((cat) => {
@@ -617,11 +634,11 @@ export const OrderDetailSheet = ({
 
             {/* Notes */}
             <div className="mt-4">
-              <label className="text-sm font-medium text-foreground mb-1 block">Note</label>
+              <label className="text-sm font-medium text-foreground mb-1 block">{t("dashboard.orders.note")}</label>
               <Textarea
                 value={editNotes}
                 onChange={(e) => setEditNotes(e.target.value)}
-                placeholder="Note pour cette commande..."
+                placeholder={t("dashboard.orders.note_placeholder")}
                 className="rounded-xl resize-none text-sm"
                 rows={2}
               />
@@ -654,7 +671,7 @@ export const OrderDetailSheet = ({
                   }}
                   className="text-xs text-blue-600 hover:underline"
                 >
-                  Recalculer automatiquement
+                  {t("dashboard.orders.auto_recalc")}
                 </button>
               )}
             </div>
@@ -664,7 +681,7 @@ export const OrderDetailSheet = ({
               disabled={advancing}
               className="w-full mt-4 h-14 rounded-xl text-base font-semibold"
             >
-              {advancing ? "..." : "Valider les modifications"}
+              {advancing ? "..." : t("dashboard.orders.validate_changes")}
             </Button>
           </div>
         )}
@@ -682,7 +699,7 @@ export const OrderDetailSheet = ({
                 className="h-14 rounded-xl text-base font-semibold flex-shrink-0 min-w-[120px] border-destructive text-destructive hover:bg-destructive/10"
               >
                 <X className="h-5 w-5 me-1" />
-                Refuser
+                {t("dashboard.orders.reject")}
               </Button>
             )}
             {action.next && (
@@ -714,7 +731,7 @@ export const OrderDetailSheet = ({
               onClick={onClose}
               className="w-full h-14 rounded-xl text-base font-semibold"
             >
-              Fermer
+              {t("common.close")}
             </Button>
           </div>
         </div>

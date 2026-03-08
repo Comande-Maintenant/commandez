@@ -211,7 +211,7 @@ export function CustomOrderBuilder({
       const names = viandeOpts.map((id) => viandeStep?.options.find((o) => o.id === id)?.name).filter(Boolean);
       parts.push(names.join("/"));
     }
-    return parts.join(" ") || "Kebab personnalisé";
+    return parts.join(" ") || t("custom.title");
   }, [selections, steps]);
 
   // Build description from garniture, sauce, supplement
@@ -237,7 +237,7 @@ export function CustomOrderBuilder({
       description: buildDescription(),
       price: totalPrice,
       image: "",
-      category: "Personnalisation",
+      category: t("custom.personalization"),
       popular: false,
       enabled: true,
       supplements: [],
@@ -291,19 +291,19 @@ export function CustomOrderBuilder({
     const isLast = stepIdx === steps.length - 1;
 
     // Skip label for optional empty steps
-    const skipLabel = stepDef.skip_label || (stepDef.id === "sauces" ? "Pas de sauce" : stepDef.id === "supplements" ? "Pas de supplement" : "Passer");
+    const skipLabel = stepDef.skip_label || (stepDef.id === "sauces" ? t("custom.no_sauce") : stepDef.id === "supplements" ? t("custom.no_supplement") : t("custom.skip"));
 
     if (stepDef.required && !fulfilled) {
       return (
         <div className="mt-3 w-full text-center text-sm font-medium py-2.5 rounded-xl text-gray-400 bg-gray-100">
-          Sélectionnez d'abord
+          {t("custom.select_first")}
         </div>
       );
     }
 
     const label = !stepDef.required && selected.length === 0
       ? skipLabel
-      : isLast ? "Terminer" : "Continuer";
+      : isLast ? t("custom.finish") : t("custom.next");
 
     return (
       <button
@@ -335,7 +335,7 @@ export function CustomOrderBuilder({
               {/* Slot header */}
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-semibold text-gray-900">
-                  Viande {slotIdx + 1}
+                  {t("custom.meat_slot").replace("{number}", String(slotIdx + 1))}
                 </span>
                 <span
                   className="text-xs font-medium px-2 py-0.5 rounded-full"
@@ -344,7 +344,7 @@ export function CustomOrderBuilder({
                     color: slotIdx === 0 ? primaryColor : "#9ca3af",
                   }}
                 >
-                  {slotIdx === 0 ? "obligatoire" : "optionnel"}
+                  {slotIdx === 0 ? t("custom.required_badge") : t("custom.optional_badge")}
                 </span>
                 {isSlotFilled && (
                   <span className="text-sm font-medium ml-auto" style={{ color: primaryColor }}>
@@ -542,7 +542,7 @@ export function CustomOrderBuilder({
                 className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
-                Modifier
+                {t("custom.previous")}
               </button>
               <span className="text-base font-bold" style={{ color: primaryColor }}>
                 {t("custom.total", { price: totalPrice.toFixed(2) })}

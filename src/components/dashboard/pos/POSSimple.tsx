@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
 import { fetchOrdersByPeriod } from "@/lib/api";
@@ -29,6 +30,7 @@ interface Props {
 
 export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColor, availablePaymentMethods, prepTimeConfig, onSubmit, submitting }: Props) => {
   const { items, subtotal, clearCart } = useCart();
+  const { t } = useLanguage();
   const [customizationData, setCustomizationData] = useState<UniversalCustomizationData | null>(null);
   const [orderType, setOrderType] = useState<"sur_place" | "collect">("sur_place");
   const [customerName, setCustomerName] = useState("");
@@ -94,7 +96,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
       garniture_choices: i.garnitureChoices || null,
     }));
     const total = subtotal;
-    const name = customerName || `Caisse (${covers} pers.)`;
+    const name = customerName || t("pos.pos_name").replace("{covers}", String(covers));
     await onSubmit(orderItems, total, orderType, name, covers, paymentMethod, prepMinutes);
     clearCart();
     setScreen("success");
@@ -110,9 +112,9 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
         >
           <Check className="h-10 w-10 text-green-600" />
         </motion.div>
-        <p className="text-2xl font-bold text-foreground mb-2">Commande envoyée</p>
+        <p className="text-2xl font-bold text-foreground mb-2">{t("pos.order_sent")}</p>
         <Button onClick={() => { setCustomerName(""); setCovers(1); setScreen("menu"); }} className="rounded-xl">
-          Nouvelle commande
+          {t("pos.new_order")}
         </Button>
       </div>
     );
@@ -125,7 +127,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
           <button onClick={() => setScreen("menu")} className="p-2 rounded-xl hover:bg-secondary">
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h2 className="text-lg font-bold text-foreground">Recap commande</h2>
+          <h2 className="text-lg font-bold text-foreground">{t("pos.recap")}</h2>
         </div>
 
         {/* Order type */}
@@ -134,19 +136,19 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
             onClick={() => setOrderType("sur_place")}
             className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${orderType === "sur_place" ? "border-foreground bg-foreground text-primary-foreground" : "border-border"}`}
           >
-            <UtensilsCrossed className="h-4 w-4" /> Sur place
+            <UtensilsCrossed className="h-4 w-4" /> {t("pos.dine_in")}
           </button>
           <button
             onClick={() => setOrderType("collect")}
             className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${orderType === "collect" ? "border-foreground bg-foreground text-primary-foreground" : "border-border"}`}
           >
-            <ShoppingBag className="h-4 w-4" /> A emporter
+            <ShoppingBag className="h-4 w-4" /> {t("pos.takeaway")}
           </button>
         </div>
 
         {orderType === "sur_place" && (
           <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">Couverts :</span>
+            <span className="text-sm text-muted-foreground">{t("pos.covers_label")}</span>
             <button onClick={() => setCovers(Math.max(1, covers - 1))} className="w-8 h-8 rounded-lg border flex items-center justify-center">-</button>
             <span className="font-bold">{covers}</span>
             <button onClick={() => setCovers(covers + 1)} className="w-8 h-8 rounded-lg border flex items-center justify-center">+</button>
@@ -154,7 +156,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
         )}
 
         <Input
-          placeholder="Nom client (optionnel)"
+          placeholder={t("pos.customer_name")}
           value={customerName}
           onChange={(e) => setCustomerName(e.target.value)}
           className="h-12 rounded-xl"
@@ -175,7 +177,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
             </div>
           ))}
           <div className="border-t pt-2 mt-2 flex justify-between font-bold text-foreground">
-            <span>Total</span>
+            <span>{t("pos.total")}</span>
             <span>{subtotal.toFixed(2)} €</span>
           </div>
         </div>
@@ -186,7 +188,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all"
         >
           <Plus className="h-4 w-4" />
-          Ajouter un article
+          {t("pos.add_item")}
         </button>
 
         {/* Payment */}
@@ -197,7 +199,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
               onClick={() => setPaymentMethod(m)}
               className={`px-4 py-2 rounded-xl text-sm font-medium border-2 transition-all ${paymentMethod === m ? "border-foreground bg-foreground text-primary-foreground" : "border-border"}`}
             >
-              {m === "cash" ? "Especes" : m === "card" ? "CB" : m === "ticket_restaurant" ? "Ticket resto" : m}
+              {m === "cash" ? t("pos.cash") : m === "card" ? t("pos.card") : m === "ticket_restaurant" ? t("pos.meal_voucher") : m}
             </button>
           ))}
         </div>
@@ -207,7 +209,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Timer className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-foreground">Temps de preparation</span>
+              <span className="text-sm font-medium text-foreground">{t("pos.prep_time")}</span>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -232,7 +234,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
           disabled={submitting || items.length === 0}
           className="w-full h-14 rounded-xl text-base font-semibold"
         >
-          {submitting ? "..." : `Envoyer - ${subtotal.toFixed(2)} €`}
+          {submitting ? t("pos.sending") : `${t("pos.send_to_kitchen")} - ${subtotal.toFixed(2)} €`}
         </Button>
       </motion.div>
     );
@@ -251,7 +253,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
         >
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-4 w-4" />
-            <span className="text-sm font-medium">{items.reduce((s, l) => s + l.quantity, 0)} articles</span>
+            <span className="text-sm font-medium">{t("cart.items").replace("{count}", String(items.reduce((s, l) => s + l.quantity, 0)))}</span>
             <span className="font-bold">{subtotal.toFixed(2)} €</span>
           </div>
           <div className="flex items-center gap-2">
@@ -264,7 +266,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
               className="rounded-lg gap-1"
               onClick={() => setScreen("recap")}
             >
-              Valider <ChevronRight className="h-4 w-4" />
+              {t("pos.validate")} <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </motion.div>
@@ -273,7 +275,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
       {/* Popular items first */}
       {popularItems.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-amber-600 uppercase tracking-wider mb-2">Populaires</h3>
+          <h3 className="text-sm font-semibold text-amber-600 uppercase tracking-wider mb-2">{t("pos.popular")}</h3>
           <div className="space-y-2">
             {popularItems.map((item, i) => (
               <MenuItemCard

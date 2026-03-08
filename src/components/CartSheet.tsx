@@ -86,22 +86,22 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
                     <h4 className="text-sm font-medium text-foreground">{item.menuItem.name}</h4>
                     {item.viandeChoice && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        Viande : {item.viandeChoice}
+                        {t("cart.meat_label").replace("{value}", item.viandeChoice)}
                       </p>
                     )}
                     {item.garnitureChoices && item.garnitureChoices.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        Garniture : {item.garnitureChoices.map((g) => g.level === "x2" ? `${g.name} x2` : g.name).join(", ")}
+                        {t("cart.topping_label").replace("{value}", item.garnitureChoices.map((g) => g.level === "x2" ? `${g.name} x2` : g.name).join(", "))}
                       </p>
                     )}
                     {item.baseChoice && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        Base : {item.baseChoice}
+                        {t("cart.base_label").replace("{value}", item.baseChoice)}
                       </p>
                     )}
                     {item.selectedSauces.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        Sauces : {item.selectedSauces.join(", ")}
+                        {t("cart.sauces_label").replace("{value}", item.selectedSauces.join(", "))}
                       </p>
                     )}
                     {item.accompagnementChoice && (
@@ -141,14 +141,14 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
                     </p>
                   </div>
                   <div className="flex flex-col items-end justify-between">
-                    <button onClick={() => removeItem(item.id)} className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors" aria-label="Supprimer">
+                    <button onClick={() => removeItem(item.id)} className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors" aria-label={t("cart.remove")}>
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-full bg-background"
-                        aria-label="Reduire quantite"
+                        aria-label={t("cart.decrease")}
                       >
                         <Minus className="h-3 w-3" />
                       </button>
@@ -156,7 +156,7 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-full bg-background"
-                        aria-label="Augmenter quantite"
+                        aria-label={t("cart.increase")}
                       >
                         <Plus className="h-3 w-3" />
                       </button>
