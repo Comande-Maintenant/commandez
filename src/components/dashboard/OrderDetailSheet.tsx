@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { formatOrderTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
 import { updateOrderItems, updateOrderStatus, updateOrderEstimatedReady, advanceDemoOrder } from "@/lib/api";
 import type { DbOrder, DbMenuItem, DbCustomer } from "@/types/database";
@@ -152,14 +153,7 @@ export const OrderDetailSheet = ({
     }
   };
 
-  const timeSince = (dateStr: string) => {
-    const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return t("time.just_now");
-    if (mins < 60) return t("dashboard.orders.time_minutes", { mins: String(mins) });
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return t("dashboard.orders.time_hours", { h: String(h), m: m > 0 ? String(m).padStart(2, "0") : "00" });
-  };
+  const timeSince = (dateStr: string) => formatOrderTime(dateStr, language, t);
 
   const orderTime = new Date(order.created_at).toLocaleTimeString(locale, {
     hour: "2-digit",

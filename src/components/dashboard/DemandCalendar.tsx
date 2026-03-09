@@ -66,8 +66,8 @@ export const DemandCalendar = () => {
         <div className="flex flex-wrap gap-3 mt-4 text-xs">
           <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-emerald-100" /> {t("dashboard.demand.calm")}</span>
           <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-amber-100" /> {t("dashboard.demand.moderate")}</span>
-          <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-rose-100" /> {t("dashboard.demand.busy")}</span>
-          <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-red-100" /> {t("dashboard.demand.very_busy")}</span>
+          <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-orange-200" /> {t("dashboard.demand.busy")}</span>
+          <span className="flex items-center gap-1"><span className="h-3 w-3 rounded bg-red-200" /> {t("dashboard.demand.very_busy")}</span>
         </div>
       </CardContent>
     </Card>

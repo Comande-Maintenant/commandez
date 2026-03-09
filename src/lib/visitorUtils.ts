@@ -45,7 +45,12 @@ export function debounce<T extends (...args: any[]) => any>(fn: T, ms: number) {
 
 export function classifyActivity(lastActive: string): "active" | "idle" | "inactive" {
   const elapsed = Date.now() - new Date(lastActive).getTime();
-  if (elapsed < 3 * 60 * 1000) return "active";
-  if (elapsed < 5 * 60 * 1000) return "idle";
-  return "inactive";
+  if (elapsed < 5 * 60 * 1000) return "active";      // < 5 min = active
+  if (elapsed < 15 * 60 * 1000) return "idle";        // 5-15 min = idle
+  return "inactive";                                   // > 15 min = inactive
+}
+
+// Filter visitors within the 30-minute window
+export function isWithin30Min(lastActive: string): boolean {
+  return Date.now() - new Date(lastActive).getTime() < 30 * 60 * 1000;
 }

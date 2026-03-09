@@ -164,10 +164,10 @@
   "time.ago_hours": "منذ {n} ساعة",
   "time.ago_days": "منذ {n} يوم",
   "time.ago_months": "منذ {n} شهر",
-  "time.never": "أبدا",
+  "time.never": "أبداً",
   "time.today": "اليوم",
   "time.yesterday": "أمس",
-  "time.days_ago": "منذ {n} يوم",
+  "time.days_ago": "منذ {d} يوم",
   "notfound.title": "الصفحة غير موجودة",
   "notfound.back_home": "العودة إلى الرئيسية",
   "auth.welcome": "مرحبا!",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "حفظ",
   "customer.note.cancel": "إلغاء",
   "customer.note.saved": "تم حفظ الملاحظة",
-  "customer.note.empty": "لا توجد ملاحظات"
+  "customer.note.empty": "لا توجد ملاحظات",
+  "time.few_seconds": "منذ ثوانٍ قليلة",
+  "time.minutes_ago": "منذ {min} دقيقة",
+  "time.yesterday_at": "أمس في {time}",
+  "time.date_at": "{date} في {time}",
+  "time.hours_ago": "منذ {h} ساعة",
+  "time.months_ago": "منذ {m} شهر",
+  "visitors.title": "الزوار",
+  "visitors.last_30_min": "آخر 30 دقيقة",
+  "visitors.none": "لا يوجد زوار حالياً"
 }

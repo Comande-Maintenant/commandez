@@ -179,7 +179,7 @@
   "time.never": "Nooit",
   "time.today": "Vandaag",
   "time.yesterday": "Gisteren",
-  "time.days_ago": "{n} dagen geleden",
+  "time.days_ago": "{d}d geleden",
   "suivi.received": "Bestelling ontvangen",
   "suivi.preparing": "In bereiding",
   "suivi.almost_ready": "Bijna klaar",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "Opslaan",
   "customer.note.cancel": "Annuleren",
   "customer.note.saved": "Notitie opgeslagen",
-  "customer.note.empty": "Geen notities"
+  "customer.note.empty": "Geen notities",
+  "time.few_seconds": "Een paar seconden geleden",
+  "time.minutes_ago": "{min} min geleden",
+  "time.yesterday_at": "Gisteren om {time}",
+  "time.date_at": "{date} om {time}",
+  "time.hours_ago": "{h}u geleden",
+  "time.months_ago": "{m} maanden geleden",
+  "visitors.title": "Bezoekers",
+  "visitors.last_30_min": "Laatste 30 minuten",
+  "visitors.none": "Geen bezoekers op dit moment"
 }

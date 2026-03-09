@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Search, Phone, Mail, ShoppingBag, Euro, Star, ShieldBan, ShieldCheck, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import { fetchCustomers, fetchDemoCustomers, unbanCustomer } from "@/lib/api";
+import { formatRelativeTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbCustomer } from "@/types/database";
 import { Input } from "@/components/ui/input";
@@ -18,7 +19,7 @@ type SortKey = "last_order" | "total_orders" | "total_spent";
 type FilterKey = "all" | "regulars" | "banned";
 
 export const DashboardClients = ({ restaurant, isDemo }: Props) => {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
   const locale = LOCALE_MAP[language] || "fr-FR";
@@ -101,16 +102,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
     }
   };
 
-  const timeSince = (dateStr: string | null) => {
-    if (!dateStr) return "Jamais";
-    const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return "A l'instant";
-    if (mins < 60) return `Il y a ${mins} min`;
-    if (mins < 1440) return `Il y a ${Math.floor(mins / 60)}h`;
-    const days = Math.floor(mins / 1440);
-    if (days < 30) return `Il y a ${days}j`;
-    return `Il y a ${Math.floor(days / 30)} mois`;
-  };
+  const timeSince = (dateStr: string | null) => formatRelativeTime(dateStr, language, t);
 
   if (loading) {
     return (

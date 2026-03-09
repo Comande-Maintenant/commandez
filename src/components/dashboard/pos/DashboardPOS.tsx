@@ -4,6 +4,7 @@ import { ChevronDown, Check, Plus, Phone, ShoppingBag, UtensilsCrossed, Clock, T
 import { fetchMenuItems, createOrder, fetchOrders, fetchDemoOrders, updateOrderStatus, advanceDemoOrder, subscribeToOrders } from "@/lib/api";
 import { buildOrderItems, calculateGrandTotal } from "@/lib/posHelpers";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { formatOrderTime } from "@/lib/formatOrderTime";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import type {
   POSOrderType as POSOrderTypeValue,
@@ -62,7 +63,15 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const [readyOrders, setReadyOrders] = useState<DbOrder[]>([]);
   const [doneOrders, setDoneOrders] = useState<DbOrder[]>([]);
   const [activeTab, setActiveTab] = useState<CaisseTab>("commande");
-  const { t } = useLanguage();
+  const [expandedDoneId, setExpandedDoneId] = useState<string | null>(null);
+  const { t, language } = useLanguage();
+
+  // Tick for live timestamp updates on encaissement cards
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => setTick((v) => v + 1), 15000);
+    return () => clearInterval(iv);
+  }, []);
 
   useEffect(() => {
     fetchMenuItems(restaurant.id).then(setMenuItems);
@@ -270,12 +279,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
     }
   };
 
-  const timeSince = (dateStr: string) => {
-    const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return t("pos.just_now");
-    if (mins < 60) return t("pos.minutes_ago").replace("{mins}", String(mins));
-    return t("pos.hours_ago").replace("{hours}", String(Math.floor(mins / 60)));
-  };
+  const timeSince = (dateStr: string) => formatOrderTime(dateStr, language, t);
 
   // Encaissement view - ready orders + done history
   const renderEncaissement = () => {
@@ -391,10 +395,12 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
               const itemSummary = orderItems
                 .map((i: any) => `${i.quantity > 1 ? i.quantity + "x " : ""}${i.name}`)
                 .join(", ");
+              const isExpanded = expandedDoneId === order.id;
               return (
                 <div
                   key={order.id}
-                  className="rounded-xl border border-border/50 p-3 opacity-50"
+                  onClick={() => setExpandedDoneId(isExpanded ? null : order.id)}
+                  className="rounded-xl border border-border/50 p-3 opacity-60 hover:opacity-90 cursor-pointer transition-all hover:shadow-sm"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
@@ -418,6 +424,39 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
                       {Number(order.total).toFixed(2)} €
                     </span>
                   </div>
+
+                  {/* Expanded detail */}
+                  {isExpanded && (
+                    <div className="mt-3 pt-3 border-t border-border/50 space-y-1.5">
+                      {orderItems.map((item: any, i: number) => (
+                        <div key={i} className="flex justify-between text-sm">
+                          <div className="min-w-0 flex-1">
+                            <span className="text-foreground font-medium">
+                              {item.quantity > 1 && `${item.quantity}x `}{item.name}
+                            </span>
+                            {item.viande_choice && (
+                              <span className="text-muted-foreground text-xs ml-1">({item.viande_choice})</span>
+                            )}
+                            {item.sauces?.length > 0 && (
+                              <p className="text-xs text-muted-foreground">{item.sauces.join(", ")}</p>
+                            )}
+                            {item.summary && !item.sauces?.length && (
+                              <p className="text-xs text-muted-foreground truncate">{item.summary}</p>
+                            )}
+                          </div>
+                          <span className="text-foreground font-medium ms-2 flex-shrink-0 blur-sensitive">
+                            {((item.price || 0) * (item.quantity || 1)).toFixed(2)} €
+                          </span>
+                        </div>
+                      ))}
+                      <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                        <span className="text-base font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} €</span>
+                        {(order as any).covers && (
+                          <span className="text-xs text-muted-foreground">{t("pos.covers_info").replace("{count}", String((order as any).covers))}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}

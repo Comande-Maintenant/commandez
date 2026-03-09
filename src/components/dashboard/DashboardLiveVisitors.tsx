@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Smartphone, Monitor, QrCode, Link2, Eye, ShoppingCart, Users, AlertTriangle } from "lucide-react";
 import type { LiveVisitor, VisitorAlert } from "@/types/visitor";
+import { formatOrderTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
@@ -69,26 +70,30 @@ function SourceIcon({ source }: { source: string }) {
 }
 
 export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  const minutesSince = (iso: string): string => {
-    const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
-    if (mins < 1) return t("time.just_now");
-    if (mins < 60) return t("time.ago_min").replace("{n}", String(mins));
-    return t("time.ago_hours").replace("{n}", String(Math.floor(mins / 60)));
-  };
+  const minutesSince = (iso: string): string => formatOrderTime(iso, language, t);
 
   if (visitors.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         <Users className="h-8 w-8 mx-auto mb-2 opacity-40" />
-        <p className="text-sm">{t("dashboard.live.no_visitors")}</p>
+        <p className="text-sm">{t("visitors.none")}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4 mb-6">
+      {/* Visitor count header */}
+      <div className="flex items-center gap-2">
+        <Users className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">
+          {visitors.length} {t("visitors.title").toLowerCase()}
+        </span>
+        <span className="text-xs text-muted-foreground">({t("visitors.last_30_min")})</span>
+      </div>
+
       {/* Alert pills */}
       {alerts.length > 0 && (
         <div className="flex flex-wrap gap-2">

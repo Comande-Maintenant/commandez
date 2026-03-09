@@ -3,6 +3,7 @@ import { X, Flag, Phone, Mail, ShoppingBag, Calendar, Star, Save, Edit2, AlertTr
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { updateCustomerNote, banCustomer, unbanCustomer, fetchCustomerByPhone } from "@/lib/api";
+import { formatRelativeTime } from "@/lib/formatOrderTime";
 import type { DbCustomer } from "@/types/database";
 import { BanDialog } from "./BanDialog";
 import { toast } from "sonner";
@@ -65,14 +66,7 @@ export const CustomerMiniProfile = ({ customer, restaurantId, onClose, onUpdated
     return new Date(d).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" });
   };
 
-  const timeSince = (d: string | null) => {
-    if (!d) return "-";
-    const mins = Math.floor((Date.now() - new Date(d).getTime()) / 60000);
-    if (mins < 60) return t("dashboard.orders.time_minutes", { mins: String(mins) });
-    if (mins < 1440) return t("dashboard.orders.time_hours", { h: String(Math.floor(mins / 60)), m: String(mins % 60).padStart(2, "0") });
-    const days = Math.floor(mins / 1440);
-    return `${days}j`;
-  };
+  const timeSince = (d: string | null) => formatRelativeTime(d, language, t);
 
   const initials = customer.customer_name
     .split(" ")

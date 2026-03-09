@@ -165,7 +165,7 @@
   "common.toast.update_error": "Erreur lors de la mise a jour",
   "common.toast.link_copied": "Lien copie !",
   "common.toast.copy_error": "Impossible de copier",
-  "time.just_now": "A l'instant",
+  "time.just_now": "À l'instant",
   "time.ago_min": "Il y a {n} min",
   "time.ago_hours": "Il y a {n}h",
   "time.ago_days": "Il y a {n}j",
@@ -173,7 +173,7 @@
   "time.never": "Jamais",
   "time.today": "Aujourd'hui",
   "time.yesterday": "Hier",
-  "time.days_ago": "Il y a {n} jours",
+  "time.days_ago": "Il y a {d}j",
   "notfound.title": "Page introuvable",
   "notfound.back_home": "Retour a l'accueil",
   "auth.welcome": "Bienvenue !",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "Enregistrer",
   "customer.note.cancel": "Annuler",
   "customer.note.saved": "Note enregistree",
-  "customer.note.empty": "Aucune note"
+  "customer.note.empty": "Aucune note",
+  "time.few_seconds": "Il y a quelques secondes",
+  "time.minutes_ago": "Il y a {min} min",
+  "time.yesterday_at": "Hier à {time}",
+  "time.date_at": "{date} à {time}",
+  "time.hours_ago": "Il y a {h}h",
+  "time.months_ago": "Il y a {m} mois",
+  "visitors.title": "Visiteurs",
+  "visitors.last_30_min": "30 dernières minutes",
+  "visitors.none": "Aucun visiteur en ce moment"
 }

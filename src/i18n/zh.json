@@ -167,7 +167,7 @@
   "time.never": "从未",
   "time.today": "今天",
   "time.yesterday": "昨天",
-  "time.days_ago": "{n} 天前",
+  "time.days_ago": "{d} 天前",
   "notfound.title": "页面未找到",
   "notfound.back_home": "返回首页",
   "auth.welcome": "欢迎！",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "保存",
   "customer.note.cancel": "取消",
   "customer.note.saved": "备注已保存",
-  "customer.note.empty": "暂无备注"
+  "customer.note.empty": "暂无备注",
+  "time.few_seconds": "几秒前",
+  "time.minutes_ago": "{min} 分钟前",
+  "time.yesterday_at": "昨天 {time}",
+  "time.date_at": "{date} {time}",
+  "time.hours_ago": "{h} 小时前",
+  "time.months_ago": "{m} 个月前",
+  "visitors.title": "访客",
+  "visitors.last_30_min": "最近30分钟",
+  "visitors.none": "目前没有访客"
 }

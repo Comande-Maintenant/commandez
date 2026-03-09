@@ -179,7 +179,7 @@
   "time.never": "없음",
   "time.today": "오늘",
   "time.yesterday": "어제",
-  "time.days_ago": "{n}일 전",
+  "time.days_ago": "{d}일 전",
   "suivi.received": "주문 접수",
   "suivi.preparing": "준비 중",
   "suivi.almost_ready": "거의 완료",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "저장",
   "customer.note.cancel": "취소",
   "customer.note.saved": "메모가 저장되었습니다",
-  "customer.note.empty": "메모 없음"
+  "customer.note.empty": "메모 없음",
+  "time.few_seconds": "몇 초 전",
+  "time.minutes_ago": "{min}분 전",
+  "time.yesterday_at": "어제 {time}",
+  "time.date_at": "{date} {time}",
+  "time.hours_ago": "{h}시간 전",
+  "time.months_ago": "{m}개월 전",
+  "visitors.title": "방문자",
+  "visitors.last_30_min": "최근 30분",
+  "visitors.none": "현재 방문자 없음"
 }

@@ -179,7 +179,7 @@
   "time.never": "Nunca",
   "time.today": "Hoje",
   "time.yesterday": "Ontem",
-  "time.days_ago": "Há {n} dias",
+  "time.days_ago": "Há {d}d",
   "suivi.received": "Pedido recebido",
   "suivi.preparing": "Em preparação",
   "suivi.almost_ready": "Quase pronto",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "Salvar",
   "customer.note.cancel": "Cancelar",
   "customer.note.saved": "Nota salva",
-  "customer.note.empty": "Sem notas"
+  "customer.note.empty": "Sem notas",
+  "time.few_seconds": "Há alguns segundos",
+  "time.minutes_ago": "Há {min} min",
+  "time.yesterday_at": "Ontem às {time}",
+  "time.date_at": "{date} às {time}",
+  "time.hours_ago": "Há {h}h",
+  "time.months_ago": "Há {m} meses",
+  "visitors.title": "Visitantes",
+  "visitors.last_30_min": "Últimos 30 minutos",
+  "visitors.none": "Nenhum visitante agora"
 }

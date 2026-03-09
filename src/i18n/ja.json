@@ -167,7 +167,7 @@
   "time.never": "なし",
   "time.today": "今日",
   "time.yesterday": "昨日",
-  "time.days_ago": "{n}日前",
+  "time.days_ago": "{d}日前",
   "notfound.title": "ページが見つかりません",
   "notfound.back_home": "ホームに戻る",
   "auth.welcome": "ようこそ！",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "保存",
   "customer.note.cancel": "キャンセル",
   "customer.note.saved": "メモを保存しました",
-  "customer.note.empty": "メモなし"
+  "customer.note.empty": "メモなし",
+  "time.few_seconds": "数秒前",
+  "time.minutes_ago": "{min}分前",
+  "time.yesterday_at": "昨日 {time}",
+  "time.date_at": "{date} {time}",
+  "time.hours_ago": "{h}時間前",
+  "time.months_ago": "{m}ヶ月前",
+  "visitors.title": "訪問者",
+  "visitors.last_30_min": "過去30分",
+  "visitors.none": "現在訪問者はいません"
 }

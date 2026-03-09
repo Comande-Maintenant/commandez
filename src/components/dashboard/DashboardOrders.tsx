@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
 import { fetchOrders, fetchDemoOrders, fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder, fetchCustomers, fetchDemoCustomers } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { formatOrderTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer } from "@/types/database";
 import { Button } from "@/components/ui/button";
@@ -183,14 +184,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const todayDoneOrders = todayOrders.filter((o) => o.status === "done");
   const todayRevenue = todayDoneOrders.reduce((s, o) => s + Number(o.total), 0);
 
-  const timeSince = (dateStr: string) => {
-    const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
-    if (mins < 1) return t('time.just_now');
-    if (mins < 60) return t("dashboard.orders.time_minutes", { mins: String(mins) });
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return t("dashboard.orders.time_hours", { h: String(h), m: String(m).padStart(2, "0") });
-  };
+  const timeSince = (dateStr: string) => formatOrderTime(dateStr, language, t);
 
   const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));

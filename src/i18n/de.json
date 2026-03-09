@@ -179,7 +179,7 @@
   "time.never": "Nie",
   "time.today": "Heute",
   "time.yesterday": "Gestern",
-  "time.days_ago": "Vor {n} Tagen",
+  "time.days_ago": "Vor {d}T",
   "suivi.received": "Bestellung eingegangen",
   "suivi.preparing": "In Zubereitung",
   "suivi.almost_ready": "Fast fertig",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "Speichern",
   "customer.note.cancel": "Abbrechen",
   "customer.note.saved": "Notiz gespeichert",
-  "customer.note.empty": "Keine Notizen"
+  "customer.note.empty": "Keine Notizen",
+  "time.few_seconds": "Vor wenigen Sekunden",
+  "time.minutes_ago": "Vor {min} Min.",
+  "time.yesterday_at": "Gestern um {time}",
+  "time.date_at": "{date} um {time}",
+  "time.hours_ago": "Vor {h} Std.",
+  "time.months_ago": "Vor {m} Mon.",
+  "visitors.title": "Besucher",
+  "visitors.last_30_min": "Letzte 30 Minuten",
+  "visitors.none": "Keine Besucher gerade"
 }

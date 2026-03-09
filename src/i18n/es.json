@@ -167,7 +167,7 @@
   "time.never": "Nunca",
   "time.today": "Hoy",
   "time.yesterday": "Ayer",
-  "time.days_ago": "Hace {n} dias",
+  "time.days_ago": "Hace {d}d",
   "notfound.title": "Pagina no encontrada",
   "notfound.back_home": "Volver al inicio",
   "auth.welcome": "Bienvenido!",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "Guardar",
   "customer.note.cancel": "Cancelar",
   "customer.note.saved": "Nota guardada",
-  "customer.note.empty": "Sin notas"
+  "customer.note.empty": "Sin notas",
+  "time.few_seconds": "Hace unos segundos",
+  "time.minutes_ago": "Hace {min} min",
+  "time.yesterday_at": "Ayer a las {time}",
+  "time.date_at": "{date} a las {time}",
+  "time.hours_ago": "Hace {h}h",
+  "time.months_ago": "Hace {m} meses",
+  "visitors.title": "Visitantes",
+  "visitors.last_30_min": "Últimos 30 minutos",
+  "visitors.none": "Ningún visitante ahora"
 }

@@ -173,7 +173,7 @@
   "time.never": "Never",
   "time.today": "Today",
   "time.yesterday": "Yesterday",
-  "time.days_ago": "{n} days ago",
+  "time.days_ago": "{d}d ago",
   "notfound.title": "Page not found",
   "notfound.back_home": "Back to home",
   "auth.welcome": "Welcome!",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "Save",
   "customer.note.cancel": "Cancel",
   "customer.note.saved": "Note saved",
-  "customer.note.empty": "No notes"
+  "customer.note.empty": "No notes",
+  "time.few_seconds": "A few seconds ago",
+  "time.minutes_ago": "{min} min ago",
+  "time.yesterday_at": "Yesterday at {time}",
+  "time.date_at": "{date} at {time}",
+  "time.hours_ago": "{h}h ago",
+  "time.months_ago": "{m}mo ago",
+  "visitors.title": "Visitors",
+  "visitors.last_30_min": "Last 30 minutes",
+  "visitors.none": "No visitors right now"
 }

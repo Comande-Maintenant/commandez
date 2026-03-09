@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { classifyActivity } from "@/lib/visitorUtils";
+import { classifyActivity, isWithin30Min } from "@/lib/visitorUtils";
 import type { LiveVisitor, VisitorAlert, VisitorPresencePayload } from "@/types/visitor";
 
 export function useLiveVisitors(restaurantId: string | null) {
@@ -14,10 +14,13 @@ export function useLiveVisitors(restaurantId: string | null) {
 
     for (const [key, presences] of Object.entries(state)) {
       for (const p of presences) {
+        const payload = p as unknown as VisitorPresencePayload;
+        // Only include visitors active within the last 30 minutes
+        if (!isWithin30Min(payload.last_active)) continue;
         liveVisitors.push({
-          ...(p as unknown as VisitorPresencePayload),
+          ...payload,
           presence_ref: (p as any).presence_ref || key,
-          activity: classifyActivity((p as unknown as VisitorPresencePayload).last_active),
+          activity: classifyActivity(payload.last_active),
         });
       }
     }

@@ -167,7 +167,7 @@
   "time.never": "Никогда",
   "time.today": "Сегодня",
   "time.yesterday": "Вчера",
-  "time.days_ago": "{n} дн. назад",
+  "time.days_ago": "{d}д назад",
   "notfound.title": "Страница не найдена",
   "notfound.back_home": "На главную",
   "auth.welcome": "Добро пожаловать!",
@@ -1388,5 +1388,14 @@
   "customer.note.save": "Сохранить",
   "customer.note.cancel": "Отмена",
   "customer.note.saved": "Заметка сохранена",
-  "customer.note.empty": "Нет заметок"
+  "customer.note.empty": "Нет заметок",
+  "time.few_seconds": "Несколько секунд назад",
+  "time.minutes_ago": "{min} мин. назад",
+  "time.yesterday_at": "Вчера в {time}",
+  "time.date_at": "{date} в {time}",
+  "time.hours_ago": "{h}ч назад",
+  "time.months_ago": "{m} мес. назад",
+  "visitors.title": "Посетители",
+  "visitors.last_30_min": "За 30 минут",
+  "visitors.none": "Сейчас нет посетителей"
 }
