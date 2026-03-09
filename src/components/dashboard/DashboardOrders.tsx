@@ -181,6 +181,35 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     return () => clearInterval(interval);
   }, [restaurant.availability_mode]);
 
+  // Get customer from map, or build a minimal fallback from order data
+  const getCustomerForOrder = (order: DbOrder): DbCustomer | null => {
+    const existing = customersMap.get(order.customer_phone);
+    if (existing) return existing;
+    if (!order.customer_phone) return null;
+    return {
+      id: "",
+      restaurant_id: restaurant.id,
+      customer_name: order.customer_name,
+      customer_phone: order.customer_phone,
+      customer_email: (order as any).customer_email || "",
+      total_orders: 1,
+      total_spent: Number(order.total),
+      average_basket: Number(order.total),
+      first_order_at: order.created_at,
+      last_order_at: order.created_at,
+      favorite_items: [],
+      last_items: [],
+      notes: "",
+      is_banned: false,
+      banned_at: null,
+      banned_reason: "",
+      ban_expires_at: null,
+      flagged: false,
+      created_at: order.created_at,
+      updated_at: order.created_at,
+    } as DbCustomer;
+  };
+
   // Kitchen only sees new + preparing (active). "ready" goes to caisse. "done" is archive.
   const kitchenOrders = orders.filter((o) => o.status === "new" || o.status === "preparing");
   const filtered = filter === "active"
@@ -436,7 +465,11 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
               {/* Client + order type */}
               <div className="flex items-center gap-2 mb-2 text-sm flex-wrap">
                 <button
-                  onClick={(e) => { e.stopPropagation(); const c = customersMap.get(order.customer_phone); if (c) setProfileCustomer(c); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const c = getCustomerForOrder(order);
+                    if (c) setProfileCustomer(c);
+                  }}
                   className="font-medium text-foreground hover:text-primary hover:underline transition-colors inline-flex items-center"
                 >
                   {order.customer_name}
@@ -594,7 +627,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
             menuItems={menuItems}
             prepTimeConfig={restaurant.prep_time_config}
             isDemo={isDemo}
-            customer={customersMap.get(selectedOrder.customer_phone) ?? null}
+            customer={getCustomerForOrder(selectedOrder)}
             onCustomerClick={(c) => { setSelectedOrder(null); setProfileCustomer(c); }}
             onClose={() => setSelectedOrder(null)}
             onStatusChange={handleStatusChange}
