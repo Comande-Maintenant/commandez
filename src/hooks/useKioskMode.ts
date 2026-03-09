@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const KIOSK_KEY = "cm_kiosk_active";
+const KIOSK_CONFIG_KEY = "cm_kiosk_config";
 
 export interface KioskConfig {
   allowTakeaway: boolean;
@@ -31,6 +32,14 @@ function parseConfig(params: URLSearchParams): KioskConfig {
   };
 }
 
+function loadStoredConfig(): KioskConfig {
+  try {
+    const raw = sessionStorage.getItem(KIOSK_CONFIG_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return DEFAULT_CONFIG;
+}
+
 export function useKioskMode() {
   const [searchParams] = useSearchParams();
 
@@ -43,11 +52,22 @@ export function useKioskMode() {
     return sessionStorage.getItem(KIOSK_KEY) === "1";
   }, [searchParams]);
 
-  const config = useMemo(() => parseConfig(searchParams), [searchParams]);
+  const config = useMemo(() => {
+    const hasKioskParam = searchParams.get("kiosk") === "true" || searchParams.get("mode") === "kiosk";
+    if (hasKioskParam) {
+      // Parse from URL and persist
+      const parsed = parseConfig(searchParams);
+      sessionStorage.setItem(KIOSK_CONFIG_KEY, JSON.stringify(parsed));
+      return parsed;
+    }
+    // Fallback to stored config (e.g. on /order page)
+    return loadStoredConfig();
+  }, [searchParams]);
 
   return { isKiosk, config };
 }
 
 export function clearKioskSession() {
   sessionStorage.removeItem(KIOSK_KEY);
+  sessionStorage.removeItem(KIOSK_CONFIG_KEY);
 }

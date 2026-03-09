@@ -275,7 +275,7 @@ const OrderPage = () => {
                 <div className="p-4 bg-secondary/50 rounded-2xl space-y-3">
                   <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("kiosk.table_number")}</h2>
                   <Input
-                    placeholder={t("kiosk.table_number.placeholder")}
+                    placeholder={t("kiosk.table_placeholder")}
                     value={tableNumber}
                     onChange={(e) => setTableNumber(e.target.value.replace(/\D/g, "").slice(0, 3))}
                     inputMode="numeric"
