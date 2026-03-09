@@ -1,9 +1,20 @@
 const VISITOR_KEY = "cm_visitor_id";
 
+function generateUUID(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  // Fallback for older browsers (Chrome < 92, old Android WebViews)
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 export function getOrCreateVisitorId(): string {
   let id = localStorage.getItem(VISITOR_KEY);
   if (!id) {
-    id = crypto.randomUUID();
+    id = generateUUID();
     localStorage.setItem(VISITOR_KEY, id);
   }
   return id;

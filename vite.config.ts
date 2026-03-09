@@ -13,8 +13,8 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Target es2020 for compatibility with older Android WebViews (Fully Kiosk Browser etc.)
-    target: "es2020",
+    // Target es2018 for compatibility with older Android WebViews (Fully Kiosk Browser, Chrome 81 etc.)
+    target: "es2018",
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
