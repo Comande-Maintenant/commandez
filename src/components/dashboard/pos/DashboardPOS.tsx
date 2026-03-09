@@ -60,6 +60,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [state, setState] = useState(initialState);
   const [readyOrders, setReadyOrders] = useState<DbOrder[]>([]);
+  const [doneOrders, setDoneOrders] = useState<DbOrder[]>([]);
   const [activeTab, setActiveTab] = useState<CaisseTab>("commande");
   const { t } = useLanguage();
 
@@ -67,31 +68,45 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
     fetchMenuItems(restaurant.id).then(setMenuItems);
   }, [restaurant.id]);
 
-  // Fetch and subscribe to ready orders for "A encaisser" panel
+  // Fetch and subscribe to ready + done orders for "A encaisser" panel
+  const updateOrderLists = (orders: DbOrder[]) => {
+    setReadyOrders(orders.filter((o) => o.status === "ready"));
+    const today = new Date().toDateString();
+    setDoneOrders(
+      orders
+        .filter((o) => o.status === "done" && new Date(o.created_at).toDateString() === today)
+        .sort((a, b) => new Date(b.completed_at || b.created_at).getTime() - new Date(a.completed_at || a.created_at).getTime())
+    );
+  };
+
   useEffect(() => {
     const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
-    fetchFn.then((orders) => {
-      setReadyOrders(orders.filter((o) => o.status === "ready"));
-    });
+    fetchFn.then(updateOrderLists);
 
     if (isDemo) {
       const poll = setInterval(() => {
-        fetchDemoOrders(restaurant.id).then((orders) => {
-          setReadyOrders(orders.filter((o) => o.status === "ready"));
-        });
+        fetchDemoOrders(restaurant.id).then(updateOrderLists);
       }, 5000);
       return () => clearInterval(poll);
     }
 
     const unsub = subscribeToOrders(restaurant.id, (order) => {
-      setReadyOrders((prev) => {
-        if (order.status === "ready") {
+      if (order.status === "ready") {
+        setReadyOrders((prev) => {
           const exists = prev.find((o) => o.id === order.id);
           if (exists) return prev.map((o) => (o.id === order.id ? order : o));
           return [order, ...prev];
-        }
-        return prev.filter((o) => o.id !== order.id);
-      });
+        });
+      } else if (order.status === "done") {
+        setReadyOrders((prev) => prev.filter((o) => o.id !== order.id));
+        setDoneOrders((prev) => {
+          const exists = prev.find((o) => o.id === order.id);
+          if (exists) return prev.map((o) => (o.id === order.id ? order : o));
+          return [order, ...prev];
+        });
+      } else {
+        setReadyOrders((prev) => prev.filter((o) => o.id !== order.id));
+      }
     });
 
     return unsub;
@@ -216,7 +231,11 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
       } else {
         await updateOrderStatus(orderId, "done");
       }
+      const completed = readyOrders.find((o) => o.id === orderId);
       setReadyOrders((prev) => prev.filter((o) => o.id !== orderId));
+      if (completed) {
+        setDoneOrders((prev) => [{ ...completed, status: "done", completed_at: new Date().toISOString() }, ...prev]);
+      }
       toast.success(t("pos.order_cashed"));
     } catch {
       toast.error(t("pos.update_error"));
@@ -258,20 +277,13 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
     return t("pos.hours_ago").replace("{hours}", String(Math.floor(mins / 60)));
   };
 
-  // Encaissement view - full order cards for ready orders
+  // Encaissement view - ready orders + done history
   const renderEncaissement = () => {
-    if (readyOrders.length === 0) {
-      return (
-        <div className="text-center py-16 text-muted-foreground">
-          <Check className="h-10 w-10 mx-auto mb-3 opacity-40" />
-          <p className="text-sm">{t("pos.no_orders_to_cash")}</p>
-          <p className="text-xs mt-1">{t("pos.ready_orders_hint")}</p>
-        </div>
-      );
-    }
+    const hasNothing = readyOrders.length === 0 && doneOrders.length === 0;
 
     return (
       <div className="space-y-3">
+        {/* Ready orders - active */}
         {readyOrders.map((order) => {
           const orderItems = (order.items as any[]) || [];
           const itemCount = orderItems.reduce((s, i) => s + (i.quantity || 1), 0);
@@ -357,6 +369,60 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
             </div>
           );
         })}
+
+        {/* Empty state - only if no ready AND no done */}
+        {hasNothing && (
+          <div className="text-center py-16 text-muted-foreground">
+            <Check className="h-10 w-10 mx-auto mb-3 opacity-40" />
+            <p className="text-sm">{t("pos.no_orders_to_cash")}</p>
+            <p className="text-xs mt-1">{t("pos.ready_orders_hint")}</p>
+          </div>
+        )}
+
+        {/* Done orders - grayed out history */}
+        {doneOrders.length > 0 && (
+          <>
+            {readyOrders.length > 0 && <div className="border-t border-border my-2" />}
+            <p className="text-xs text-muted-foreground font-medium mb-2">
+              {t("dashboard.orders.filter_done")} ({doneOrders.length})
+            </p>
+            {doneOrders.map((order) => {
+              const orderItems = (order.items as any[]) || [];
+              const itemSummary = orderItems
+                .map((i: any) => `${i.quantity > 1 ? i.quantity + "x " : ""}${i.name}`)
+                .join(", ");
+              return (
+                <div
+                  key={order.id}
+                  className="rounded-xl border border-border/50 p-3 opacity-50"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-muted-foreground">{formatDisplayNumber(order)}</span>
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                        {t("dashboard.orders.status_done")}
+                      </span>
+                      {order.payment_method && (
+                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-secondary text-muted-foreground">
+                          {order.payment_method === "cash" ? t("pos.cash") : order.payment_method === "card" ? t("pos.card") : order.payment_method === "ticket_restaurant" ? t("pos.meal_voucher") : order.payment_method}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">{timeSince(order.created_at)}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground line-clamp-1 flex-1 me-2">
+                      {order.customer_name} - {itemSummary}
+                    </p>
+                    <span className="text-sm font-semibold text-muted-foreground blur-sensitive flex-shrink-0">
+                      {Number(order.total).toFixed(2)} €
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
     );
   };
