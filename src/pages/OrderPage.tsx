@@ -17,7 +17,7 @@ import { formatDisplayNumber } from "@/lib/orderNumber";
 const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
   const navigate = useNavigate();
-  const { t, isRTL } = useLanguage();
+  const { t, tMenu, isRTL } = useLanguage();
   const { user, isLoggedIn } = useCustomerAuth();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -259,7 +259,7 @@ const OrderPage = () => {
             <h3 className="font-semibold text-foreground">{t("order.summary")}</h3>
             {items.map((item) => (
               <div key={item.id} className="flex justify-between text-muted-foreground">
-                <span>{item.quantity}x {item.menuItem.name}</span>
+                <span>{item.quantity}x {tMenu(item.menuItem).name}</span>
                 <span>{(item.totalPrice * item.quantity).toFixed(2)} €</span>
               </div>
             ))}

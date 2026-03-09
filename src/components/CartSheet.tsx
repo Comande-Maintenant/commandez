@@ -17,7 +17,7 @@ interface CartSheetProps {
 export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }: CartSheetProps) => {
   const { items, totalItems, subtotal, updateQuantity, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, tMenu, tText } = useLanguage();
 
   const handleOrder = () => {
     onOpenChange?.(false);
@@ -83,42 +83,42 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
               {items.map((item) => (
                 <div key={item.id} className="flex gap-3 p-3 bg-secondary/50 rounded-xl">
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-foreground">{item.menuItem.name}</h4>
+                    <h4 className="text-sm font-medium text-foreground">{tMenu(item.menuItem).name}</h4>
                     {item.viandeChoice && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {t("cart.meat_label").replace("{value}", item.viandeChoice)}
+                        {t("cart.meat_label").replace("{value}", tText(item.viandeChoice))}
                       </p>
                     )}
                     {item.garnitureChoices && item.garnitureChoices.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {t("cart.topping_label").replace("{value}", item.garnitureChoices.map((g) => g.level === "x2" ? `${g.name} x2` : g.name).join(", "))}
+                        {t("cart.topping_label").replace("{value}", item.garnitureChoices.map((g) => g.level === "x2" ? `${tText(g.name)} x2` : tText(g.name)).join(", "))}
                       </p>
                     )}
                     {item.baseChoice && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {t("cart.base_label").replace("{value}", item.baseChoice)}
+                        {t("cart.base_label").replace("{value}", tText(item.baseChoice))}
                       </p>
                     )}
                     {item.selectedSauces.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {t("cart.sauces_label").replace("{value}", item.selectedSauces.join(", "))}
+                        {t("cart.sauces_label").replace("{value}", item.selectedSauces.map((s) => tText(s)).join(", "))}
                       </p>
                     )}
                     {item.accompagnementChoice && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        + {item.accompagnementChoice.name}
-                        {item.accompagnementChoice.size ? ` (${item.accompagnementChoice.size})` : ""}
-                        {item.accompagnementChoice.sauces?.length ? ` - ${item.accompagnementChoice.sauces.join(", ")}` : ""}
+                        + {tText(item.accompagnementChoice.name)}
+                        {item.accompagnementChoice.size ? ` (${tText(item.accompagnementChoice.size)})` : ""}
+                        {item.accompagnementChoice.sauces?.length ? ` - ${item.accompagnementChoice.sauces.map((s) => tText(s)).join(", ")}` : ""}
                       </p>
                     )}
                     {item.drinkChoice && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        + {item.drinkChoice.name}
+                        + {tText(item.drinkChoice.name)}
                       </p>
                     )}
                     {item.dessertChoice && (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        + {item.dessertChoice.name}
+                        + {tText(item.dessertChoice.name)}
                       </p>
                     )}
                     {/* Generic custom choices (non-kebab cuisines) */}
@@ -126,14 +126,14 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
                       <>
                         {item.customChoices.filter((c) => c.selections.length > 0).map((choice) => (
                           <p key={choice.stepKey} className="text-xs text-muted-foreground mt-0.5">
-                            {choice.stepLabel} : {choice.selections.map((s) => s.name).join(", ")}
+                            {tText(choice.stepLabel)} : {choice.selections.map((s) => tText(s.name)).join(", ")}
                           </p>
                         ))}
                       </>
                     )}
                     {item.selectedSupplements.length > 0 && (
                       <p className="text-xs text-muted-foreground">
-                        + {item.selectedSupplements.map((s) => s.name).join(", ")}
+                        + {item.selectedSupplements.map((s) => tText(s.name)).join(", ")}
                       </p>
                     )}
                     <p className="text-sm font-semibold text-foreground mt-1">

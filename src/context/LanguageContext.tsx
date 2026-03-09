@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 import { getTranslations, loadLanguage, isLanguageLoaded, detectBrowserLanguage, SUPPORTED_LANGUAGES, type Language } from "@/i18n";
+import { translateMenuText } from "@/lib/menuTranslations";
 
 interface MenuTranslatable {
   name: string;
@@ -18,6 +19,8 @@ interface LanguageContextValue {
   t: (key: string, params?: Record<string, string | number>) => string;
   tMenu: (item: MenuTranslatable) => { name: string; description?: string };
   tCategory: (name: string, categoryTranslations?: Record<string, Record<string, string>> | null) => string;
+  /** Translate any free text (sauce name, supplement, etc.) using predefined dictionary */
+  tText: (text: string) => string;
   isRTL: boolean;
 }
 
@@ -122,12 +125,20 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const tMenu = useCallback(
     (item: MenuTranslatable) => {
-      if (language === "fr" || !item.translations?.[language]) {
+      if (language === "fr") {
         return { name: item.name, description: item.description };
       }
+      // 1. Check DB translations
+      if (item.translations?.[language]) {
+        return {
+          name: item.translations[language].name || item.name,
+          description: item.translations[language].description || item.description,
+        };
+      }
+      // 2. Fallback to predefined dictionary
       return {
-        name: item.translations[language].name || item.name,
-        description: item.translations[language].description || item.description,
+        name: translateMenuText(item.name, language),
+        description: item.description ? translateMenuText(item.description, language) : item.description,
       };
     },
     [language]
@@ -135,10 +146,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const tCategory = useCallback(
     (name: string, categoryTranslations?: Record<string, Record<string, string>> | null) => {
-      if (language === "fr" || !categoryTranslations?.[language]?.[name]) {
-        return name;
+      if (language === "fr") return name;
+      // 1. Check DB translations
+      if (categoryTranslations?.[language]?.[name]) {
+        return categoryTranslations[language][name];
       }
-      return categoryTranslations[language][name];
+      // 2. Fallback to predefined dictionary
+      return translateMenuText(name, language);
+    },
+    [language]
+  );
+
+  const tText = useCallback(
+    (text: string) => {
+      if (language === "fr" || !text) return text;
+      return translateMenuText(text, language);
     },
     [language]
   );
@@ -151,7 +173,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [language, isRTL]);
 
   return (
-    <LanguageContext.Provider value={{ language, changeLanguage, t, tMenu, tCategory, isRTL }}>
+    <LanguageContext.Provider value={{ language, changeLanguage, t, tMenu, tCategory, tText, isRTL }}>
       {children}
     </LanguageContext.Provider>
   );
