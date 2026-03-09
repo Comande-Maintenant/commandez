@@ -89,7 +89,24 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     const data = isDemo
       ? await fetchDemoOrders(restaurant.id)
       : await fetchOrders(restaurant.id);
-    setOrders(data);
+    if (isDemo) {
+      // Preserve locally-set estimated_ready_at (not stored server-side for demo)
+      setOrders((prev) => {
+        const localEstimates = new Map<string, string>();
+        prev.forEach((o) => {
+          if (o.estimated_ready_at) localEstimates.set(o.id, o.estimated_ready_at);
+        });
+        return data.map((o) => {
+          const localEst = localEstimates.get(o.id);
+          if (!o.estimated_ready_at && localEst) {
+            return { ...o, estimated_ready_at: localEst };
+          }
+          return o;
+        });
+      });
+    } else {
+      setOrders(data);
+    }
     setLoading(false);
   }, [restaurant.id, isDemo]);
 
