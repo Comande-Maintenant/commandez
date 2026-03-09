@@ -15,7 +15,6 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
     <div
       className="fixed inset-0 z-[100] flex flex-col items-center justify-between bg-background cursor-pointer select-none py-8 sm:py-12 overflow-y-auto"
       onClick={onStart}
-      onTouchStart={onStart}
     >
       {/* Spacer top */}
       <div className="flex-1" />
@@ -65,8 +64,11 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
       {/* Spacer between CTA and languages */}
       <div className="flex-1 min-h-6" />
 
-      {/* Language selector at bottom */}
-      <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 px-4 max-w-lg">
+      {/* Language selector at bottom - stopPropagation to avoid triggering onStart */}
+      <div
+        className="flex flex-wrap justify-center gap-1.5 sm:gap-2 px-4 max-w-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
         {LANGUAGES.map((lang) => (
           <button
             key={lang.code}
