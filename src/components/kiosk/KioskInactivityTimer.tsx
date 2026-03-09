@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
@@ -69,39 +68,79 @@ export const KioskInactivityTimer = ({ timeoutSeconds, onReset, disabled }: Prop
     resetTimer();
   };
 
+  if (!showWarning) return null;
+
   return (
-    <AnimatePresence>
-      {showWarning && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={handleStillHere}
-          onTouchStart={handleStillHere}
+    <div
+      onClick={handleStillHere}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 110,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        WebkitTapHighlightColor: "transparent",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          backgroundColor: "#ffffff",
+          borderRadius: "24px",
+          padding: "32px",
+          boxShadow: "0 25px 50px rgba(0, 0, 0, 0.3)",
+          textAlign: "center",
+          maxWidth: "360px",
+          width: "calc(100% - 48px)",
+          margin: "0 auto",
+        }}
+      >
+        <p
+          style={{
+            fontSize: "24px",
+            fontWeight: "bold",
+            color: "#111827",
+            marginBottom: "16px",
+            margin: "0 0 16px 0",
+          }}
         >
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.9 }}
-            className="bg-card rounded-3xl p-8 shadow-2xl text-center max-w-sm mx-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="text-2xl font-bold text-foreground mb-4">
-              {t("kiosk.inactivity.still_here")}
-            </p>
-            <p className="text-muted-foreground mb-6">
-              {t("kiosk.inactivity.reset_warning").replace("{seconds}", String(countdown))}
-            </p>
-            <button
-              onClick={handleStillHere}
-              className="w-full py-4 rounded-2xl bg-primary text-primary-foreground text-lg font-bold"
-            >
-              {t("kiosk.inactivity.continue")}
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          {t("kiosk.inactivity.still_here")}
+        </p>
+        <p
+          style={{
+            fontSize: "16px",
+            color: "#6B7280",
+            marginBottom: "24px",
+            margin: "0 0 24px 0",
+          }}
+        >
+          {t("kiosk.inactivity.reset_warning").replace("{seconds}", String(countdown))}
+        </p>
+        <button
+          onClick={handleStillHere}
+          style={{
+            width: "100%",
+            padding: "16px",
+            borderRadius: "16px",
+            backgroundColor: "hsl(var(--primary, 160 84% 39%))",
+            color: "#ffffff",
+            fontSize: "18px",
+            fontWeight: "bold",
+            border: "none",
+            cursor: "pointer",
+            WebkitTapHighlightColor: "transparent",
+          }}
+        >
+          {t("kiosk.inactivity.continue")}
+        </button>
+      </div>
+    </div>
   );
 };

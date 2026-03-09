@@ -52,7 +52,7 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "var(--background, #ffffff)",
+        backgroundColor: "#ffffff",
         cursor: "pointer",
         userSelect: "none",
         WebkitUserSelect: "none",
