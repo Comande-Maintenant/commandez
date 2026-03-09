@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
 import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
-import { getGarnitureColor } from "@/lib/garnitureColors";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
@@ -435,31 +434,14 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                             <span className="text-foreground font-semibold ms-1">- {item.viande_choice}</span>
                           )}
                           {item.garniture_choices?.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-0.5 ms-3">
-                              {item.garniture_choices.map((g: any, gi: number) => {
-                                const name = typeof g === "string" ? g : g.name;
-                                const color = getGarnitureColor(name);
-                                return (
-                                  <span key={gi} className="inline-flex items-center gap-1 text-sm">
-                                    {color && <span className={`inline-block h-2.5 w-2.5 rounded-full ${color.dot} flex-shrink-0`} />}
-                                    <span className="text-foreground">{name}</span>
-                                  </span>
-                                );
-                              })}
-                            </div>
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">
+                              {item.garniture_choices.map((g: any) => typeof g === "string" ? g : g.name).join(", ")}
+                            </p>
                           )}
                           {item.sauces?.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-0.5 ms-3">
-                              {item.sauces.map((s: string, si: number) => {
-                                const color = getGarnitureColor(s);
-                                return (
-                                  <span key={si} className="inline-flex items-center gap-1 text-sm">
-                                    {color && <span className={`inline-block h-2.5 w-2.5 rounded-full ${color.dot} flex-shrink-0`} />}
-                                    <span className="text-foreground">{s}</span>
-                                  </span>
-                                );
-                              })}
-                            </div>
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">
+                              {t("item.sauces")} : {item.sauces.join(", ")}
+                            </p>
                           )}
                           {item.supplements?.length > 0 && (
                             <p className="text-foreground text-sm ms-3 mt-0.5">
