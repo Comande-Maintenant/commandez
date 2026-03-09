@@ -716,11 +716,12 @@ const RestaurantPage = () => {
               </div>
             </div>
 
-            {restaurant.description && (
+            {!isKiosk && restaurant.description && (
               <p className="text-sm text-gray-600 mt-3">{restaurant.description}</p>
             )}
 
-            {/* Info: address, phone, hours */}
+            {/* Info: address, phone, hours - hidden in kiosk */}
+            {!isKiosk && (
             <div className="mt-4 space-y-2 text-sm text-gray-600">
               {(restaurant.address || restaurant.city) && (
                 <div className="flex items-start gap-2">
@@ -765,9 +766,10 @@ const RestaurantPage = () => {
                 </div>
               ) : null}
             </div>
+            )}
 
-            {/* Payment methods */}
-            {payments.length > 0 && (
+            {/* Payment methods - hidden in kiosk */}
+            {!isKiosk && payments.length > 0 && (
               <div className="flex flex-wrap items-center gap-2 mt-4">
                 {payments.map((method) => {
                   const config = PAYMENT_ICONS[method];
@@ -786,7 +788,8 @@ const RestaurantPage = () => {
               </div>
             )}
 
-            {/* Reassurance block */}
+            {/* Reassurance block - hidden in kiosk */}
+            {!isKiosk && (
             <motion.div
               className="mt-4 p-3.5 rounded-xl flex items-start gap-3"
               style={{
@@ -806,9 +809,10 @@ const RestaurantPage = () => {
                 <p className="text-xs mt-0.5" style={{ color: primary }}>{t("reassurance.subtitle")}</p>
               </div>
             </motion.div>
+            )}
 
-            {/* Wait estimate + active orders */}
-            {activeOrderCount > 0 && (
+            {/* Wait estimate + active orders - hidden in kiosk */}
+            {!isKiosk && activeOrderCount > 0 && (
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span
                   className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full"
@@ -822,7 +826,7 @@ const RestaurantPage = () => {
                 </span>
               </div>
             )}
-            {activeOrderCount === 0 && orderCheck.canOrder && (
+            {!isKiosk && activeOrderCount === 0 && orderCheck.canOrder && (
               <div className="mt-3">
                 <span
                   className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full"
