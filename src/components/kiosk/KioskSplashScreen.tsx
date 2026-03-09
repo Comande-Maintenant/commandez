@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { LANGUAGES } from "@/i18n";
 import type { DbRestaurant } from "@/types/database";
@@ -8,8 +9,26 @@ interface Props {
   onStart: () => void;
 }
 
+const PHRASES = [
+  "kiosk.splash.phrase1",
+  "kiosk.splash.phrase2",
+  "kiosk.splash.phrase3",
+  "kiosk.splash.phrase4",
+  "kiosk.splash.phrase5",
+];
+
+const CYCLE_MS = 3000;
+
 export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
   const { t, language, changeLanguage } = useLanguage();
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhraseIndex((prev) => (prev + 1) % PHRASES.length);
+    }, CYCLE_MS);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div
@@ -19,7 +38,7 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
       {/* Spacer top */}
       <div className="flex-1" />
 
-      {/* Restaurant branding + CTA */}
+      {/* Restaurant branding + rotating phrase + CTA */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -47,6 +66,22 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
           {restaurant.city && (
             <p className="text-base sm:text-lg text-muted-foreground mt-1">{restaurant.city}</p>
           )}
+        </div>
+
+        {/* Rotating phrases */}
+        <div className="h-8 sm:h-10 flex items-center justify-center overflow-hidden mt-2">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={phraseIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="text-base sm:text-lg text-muted-foreground font-medium"
+            >
+              {t(PHRASES[phraseIndex])}
+            </motion.p>
+          </AnimatePresence>
         </div>
 
         {/* Pulsing CTA */}
