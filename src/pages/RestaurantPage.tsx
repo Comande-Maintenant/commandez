@@ -269,8 +269,8 @@ const RestaurantPage = () => {
           setLoading(false);
           return;
         }
-        // Redirect demo restaurant slug to /demo for SEO
-        if ((r as any).is_demo && !isDemoRoute) {
+        // Redirect demo restaurant slug to /demo for SEO (skip in kiosk mode)
+        if ((r as any).is_demo && !isDemoRoute && !isKiosk) {
           navigate("/demo", { replace: true });
           return;
         }
