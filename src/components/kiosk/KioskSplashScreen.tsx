@@ -68,9 +68,9 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "16px",
+          gap: "24px",
           textAlign: "center",
-          padding: "0 24px",
+          padding: "0 32px",
           transform: fadeIn ? "scale(1)" : "scale(0.9)",
           transition: "transform 0.5s ease",
         }}
@@ -80,9 +80,9 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
             src={restaurant.image}
             alt={restaurant.name}
             style={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "24px",
+              width: "120px",
+              height: "120px",
+              borderRadius: "28px",
               objectFit: "cover",
               boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
             }}
@@ -90,9 +90,9 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
         ) : (
           <div
             style={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "24px",
+              width: "120px",
+              height: "120px",
+              borderRadius: "28px",
               backgroundColor: "hsl(var(--primary) / 0.1)",
               display: "flex",
               alignItems: "center",

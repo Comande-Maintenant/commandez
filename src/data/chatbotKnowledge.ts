@@ -71,12 +71,12 @@ export const chatbotKnowledge: ChatbotEntry[] = [
     answer: "Deux méthodes : (1) Depuis une commande dans la vue Cuisine, cliquez sur l'icône bouclier à côté du nom. (2) Depuis Gérer > Mes clients, trouvez le client et cliquez sur Bannir. Vous pouvez choisir une durée (7j, 30j ou permanent) et ajouter une raison.",
     action: { label: "Aller à Mes clients", view: "clients" },
   },
-  // Tablettes
+  // Borne client
   {
-    keywords: ["tablette", "tablet", "appareil", "ecran", "ipad"],
-    question: "Comment configurer une tablette ?",
-    answer: "Allez dans Gérer > Mes tablettes. Ajoutez une tablette avec son numéro de série et son usage (cuisine, caisse, service client). La tablette accède au même tableau de bord que votre téléphone.",
-    action: { label: "Aller aux Tablettes", view: "tablettes" },
+    keywords: ["tablette", "tablet", "appareil", "ecran", "ipad", "borne", "kiosk"],
+    question: "Comment configurer une borne ou tablette client ?",
+    answer: "Allez dans Gérer > Borne client. Configurez les modes (sur place, emporter), activez le kiosk et scannez le QR code depuis la tablette.",
+    action: { label: "Aller à la Borne", view: "borne" },
   },
   // Caisse
   {

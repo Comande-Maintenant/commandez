@@ -10,7 +10,6 @@ import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
 import { DashboardMaPage } from "@/components/dashboard/DashboardMaPage";
 import { DashboardQRCodes } from "@/components/dashboard/DashboardQRCodes";
-import { DashboardTablettes } from "@/components/dashboard/DashboardTablettes";
 import { DashboardBorneClient } from "@/components/dashboard/DashboardBorneClient";
 import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
 import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
@@ -34,7 +33,7 @@ import { OrderHistorySheet } from "@/components/dashboard/OrderHistorySheet";
 import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
 import { useLanguage } from "@/context/LanguageContext";
 
-const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "borne", "parametres", "stats", "gerer", "clients", "customization"];
+const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "borne", "parametres", "stats", "gerer", "clients", "customization"];
 
 function isValidView(v: string): v is DashboardView {
   return validViews.includes(v as DashboardView);
@@ -244,9 +243,9 @@ const AdminPage = () => {
           <header className="bg-background border-b border-border">
             <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
-              <Link to={isDemo ? "/demo" : `/${slug}`} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+              <button onClick={() => navigate(-1)} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
-              </Link>
+              </button>
               <div className="min-w-0">
                 <h1 className="text-base font-semibold text-foreground truncate">{restaurant.name}</h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">{t("dashboard.admin.dashboard_subtitle")}</p>
@@ -405,7 +404,6 @@ const AdminPage = () => {
               {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "page" && <DashboardMaPage restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "qrcodes" && <DashboardQRCodes restaurant={restaurant} />}
-              {activeView === "tablettes" && <DashboardTablettes restaurant={restaurant} />}
               {activeView === "borne" && <DashboardBorneClient restaurant={restaurant} />}
               {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} isDemo={isDemo} />}
               {activeView === "stats" && <DashboardStats restaurant={restaurant} isDemo={isDemo} />}

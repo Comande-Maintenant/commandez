@@ -72,6 +72,7 @@ export interface DbRestaurant {
     max_minutes: number;
   };
   customization_config: CustomizationConfig | null;
+  out_of_stock_ingredients: string[];
   cuisine_type?: string;
   deactivated_at: string | null;
   scheduled_deletion_at: string | null;
@@ -100,19 +101,6 @@ export interface DbMenuItem {
   translations?: Record<string, { name: string; description?: string }>;
   product_type?: string;
   variants?: Array<{ name: string; price: number }>;
-}
-
-export interface DbTablet {
-  id: string;
-  restaurant_id: string;
-  serial_number: string;
-  name: string;
-  usage_type: 'cuisine' | 'caisse' | 'service_client' | 'autre';
-  status: 'active' | 'inactive' | 'maintenance';
-  activated_at: string;
-  deactivated_at: string | null;
-  notes: string;
-  created_at: string;
 }
 
 export interface DbOrder {

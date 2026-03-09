@@ -1,4 +1,4 @@
-import { UtensilsCrossed, Palette, QrCode, Tablet, Monitor, Settings, BarChart3, Users, ChefHat } from "lucide-react";
+import { UtensilsCrossed, Palette, QrCode, Monitor, Settings, BarChart3, Users, ChefHat } from "lucide-react";
 import type { DashboardView } from "@/types/dashboard";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -11,7 +11,6 @@ const itemDefs = [
   { id: "customization" as DashboardView, labelKey: "dashboard.manage.customization_label", descKey: "dashboard.manage.customization_desc", icon: ChefHat },
   { id: "page" as DashboardView, labelKey: "dashboard.manage.page_label", descKey: "dashboard.manage.page_desc", icon: Palette },
   { id: "qrcodes" as DashboardView, labelKey: "dashboard.manage.qr_label", descKey: "dashboard.manage.qr_desc", icon: QrCode },
-  { id: "tablettes" as DashboardView, labelKey: "dashboard.manage.tablets_label", descKey: "dashboard.manage.tablets_desc", icon: Tablet },
   { id: "borne" as DashboardView, labelKey: "dashboard.manage.kiosk_label", descKey: "dashboard.manage.kiosk_desc", icon: Monitor },
   { id: "clients" as DashboardView, labelKey: "dashboard.manage.clients_label", descKey: "dashboard.manage.clients_desc", icon: Users },
   { id: "parametres" as DashboardView, labelKey: "dashboard.manage.settings_label", descKey: "dashboard.manage.settings_desc", icon: Settings },

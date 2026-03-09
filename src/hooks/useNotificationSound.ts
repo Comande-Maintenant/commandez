@@ -236,38 +236,36 @@ export function useNotificationSound(): SoundControls {
 
   const playOnce = useCallback(() => {
     const vol = (volumeRef.current / 100) * 0.6;
+    let soundPlayed = false;
 
     // Layer 1: Fully Kiosk Browser native sound
     if (isFullyKiosk()) {
       try {
-        // Use a data URI beep as Fully Kiosk can play URLs
         window.fully!.playSound("content://settings/system/notification_sound", false);
-        return;
+        soundPlayed = true;
       } catch {}
     }
 
-    // Layer 2: Web Audio API
-    const ctx = getOrCreateCtx();
-    if (ctx && ctx.state === "running") {
-      try {
-        SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
-        return;
-      } catch {}
-    }
-
-    // Layer 3: Resume suspended context and retry
-    if (ctx && ctx.state === "suspended") {
-      ctx.resume().then(() => {
-        setAudioUnlocked(true);
+    // Layer 2: Web Audio API (context already running)
+    if (!soundPlayed) {
+      const ctx = getOrCreateCtx();
+      if (ctx && ctx.state === "running") {
         try {
           SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
+          soundPlayed = true;
         } catch {}
-      }).catch(() => {});
-      return;
+      } else if (ctx && ctx.state === "suspended") {
+        // Layer 3: Try to resume (may fail without user gesture)
+        ctx.resume().then(() => {
+          setAudioUnlocked(true);
+          try {
+            SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
+          } catch {}
+        }).catch(() => {});
+      }
     }
 
-    // Layer 4: Visual fallback
-    flashScreen();
+    // Visual fallback is handled by play()
   }, [getOrCreateCtx]);
 
   const stopRepeat = useCallback(() => {

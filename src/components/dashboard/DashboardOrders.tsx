@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
-import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders, fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
@@ -56,6 +56,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   ];
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
+  const [allMenuItems, setAllMenuItems] = useState<DbMenuItem[]>([]);
+  const [outOfStockIngredients, setOutOfStockIngredients] = useState<string[]>(restaurant.out_of_stock_ingredients ?? []);
   const [filter, setFilter] = useState<KitchenFilter>("active");
   const [loading, setLoading] = useState(true);
   const [disconnected, setDisconnected] = useState(false);
@@ -83,6 +85,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
 
   useEffect(() => {
     fetchMenuItems(restaurant.id).then(setMenuItems);
+    fetchAllMenuItems(restaurant.id).then(setAllMenuItems);
   }, [restaurant.id]);
 
   useEffect(() => {
@@ -539,38 +542,95 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           <SheetHeader>
             <SheetTitle>{t("dashboard.orders.stock_management")}</SheetTitle>
           </SheetHeader>
-          <div className="mt-4 space-y-2">
-            {menuItems.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-8">{t("dashboard.orders.no_items")}</p>
-            )}
-            {menuItems.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/50">
-                <div className="flex items-center gap-3 min-w-0">
-                  {item.image && <img src={item.image} alt="" className="h-8 w-8 rounded-lg object-cover shrink-0" />}
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">{item.category}</p>
+          <div className="mt-4 space-y-5">
+            {/* Section: Ingredients (sauces, supplements) */}
+            {(() => {
+              const ingredientSet = new Set<string>();
+              allMenuItems.forEach((item) => {
+                item.sauces?.forEach((s) => ingredientSet.add(s));
+                item.supplements?.forEach((s) => ingredientSet.add(s.name));
+              });
+              const ingredients = [...ingredientSet].sort();
+              if (ingredients.length === 0) return null;
+              return (
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                    {t("dashboard.orders.ingredients_stock")}
+                  </p>
+                  <div className="space-y-1.5">
+                    {ingredients.map((name) => {
+                      const isOut = outOfStockIngredients.includes(name);
+                      return (
+                        <div key={name} className={`flex items-center justify-between p-2.5 rounded-xl ${isOut ? "bg-red-50" : "bg-secondary/50"}`}>
+                          <span className={`text-sm ${isOut ? "text-red-700 line-through" : "text-foreground"}`}>{name}</span>
+                          <Switch
+                            checked={!isOut}
+                            onCheckedChange={async (available) => {
+                              const updated = available
+                                ? outOfStockIngredients.filter((i) => i !== name)
+                                : [...outOfStockIngredients, name];
+                              setOutOfStockIngredients(updated);
+                              if (isDemo) {
+                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", name) : t("dashboard.orders.item_out_of_stock").replace("{name}", name));
+                                return;
+                              }
+                              try {
+                                await updateRestaurant(restaurant.id, { out_of_stock_ingredients: updated } as any);
+                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", name) : t("dashboard.orders.item_out_of_stock").replace("{name}", name));
+                              } catch {
+                                toast.error(t("common.error"));
+                              }
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-                <Switch
-                  checked={item.enabled}
-                  onCheckedChange={async (val) => {
-                    if (isDemo) {
-                      setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
-                      toast.success(val ? t("dashboard.orders.item_available").replace("{name}", item.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", item.name));
-                      return;
-                    }
-                    try {
-                      await updateMenuItem(item.id, { enabled: val });
-                      setMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
-                      toast.success(val ? t("dashboard.orders.item_available").replace("{name}", item.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", item.name));
-                    } catch {
-                      toast.error(t("common.error"));
-                    }
-                  }}
-                />
+              );
+            })()}
+
+            {/* Section: Menu items */}
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                {t("dashboard.orders.items_stock")}
+              </p>
+              {allMenuItems.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-8">{t("dashboard.orders.no_items")}</p>
+              )}
+              <div className="space-y-1.5">
+                {allMenuItems.map((item) => (
+                  <div key={item.id} className={`flex items-center justify-between p-2.5 rounded-xl ${!item.enabled ? "bg-red-50" : "bg-secondary/50"}`}>
+                    <div className="flex items-center gap-3 min-w-0">
+                      {item.image && <img src={item.image} alt="" className="h-8 w-8 rounded-lg object-cover shrink-0" />}
+                      <div className="min-w-0">
+                        <p className={`text-sm font-medium truncate ${!item.enabled ? "text-red-700 line-through" : "text-foreground"}`}>{item.name}</p>
+                        <p className="text-xs text-muted-foreground">{item.category}</p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={item.enabled}
+                      onCheckedChange={async (val) => {
+                        if (isDemo) {
+                          setAllMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
+                          setMenuItems((prev) => val ? [...prev, { ...item, enabled: val }] : prev.filter((m) => m.id !== item.id));
+                          toast.success(val ? t("dashboard.orders.item_available").replace("{name}", item.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", item.name));
+                          return;
+                        }
+                        try {
+                          await updateMenuItem(item.id, { enabled: val });
+                          setAllMenuItems((prev) => prev.map((m) => m.id === item.id ? { ...m, enabled: val } : m));
+                          setMenuItems((prev) => val ? [...prev, { ...item, enabled: val }] : prev.filter((m) => m.id !== item.id));
+                          toast.success(val ? t("dashboard.orders.item_available").replace("{name}", item.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", item.name));
+                        } catch {
+                          toast.error(t("common.error"));
+                        }
+                      }}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </SheetContent>
       </Sheet>

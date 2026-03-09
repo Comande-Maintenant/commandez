@@ -13,6 +13,7 @@ interface Props {
   restaurantId: string;
   customizationConfig: CustomizationConfig;
   primaryColor: string;
+  outOfStockIngredients?: string[];
 }
 
 const NON_SAVORY_KEYWORDS = ["dessert", "boisson", "drink", "sucre", "sweet", "glace", "patisserie", "cookie", "gateau"];
@@ -37,6 +38,7 @@ export const SavoryItemDrawer = ({
   restaurantId,
   customizationConfig,
   primaryColor,
+  outOfStockIngredients = [],
 }: Props) => {
   const { addItem } = useCart();
   const { t, tMenu } = useLanguage();
@@ -56,10 +58,11 @@ export const SavoryItemDrawer = ({
   const [selectedSupplements, setSelectedSupplements] = useState<Supplement[]>([]);
   const [quantity, setQuantity] = useState(1);
 
-  // Sauces: use config step or fallback to item.sauces
-  const availableSauces = saucesStep
+  // Sauces: use config step or fallback to item.sauces, filter out-of-stock
+  const availableSauces = (saucesStep
     ? saucesStep.options.map((o) => o.name)
-    : item.sauces;
+    : item.sauces
+  ).filter((s) => !outOfStockIngredients.includes(s));
 
   // Viande cost
   const viandeCost = useMemo(() => {
@@ -422,13 +425,13 @@ export const SavoryItemDrawer = ({
               )}
 
               {/* Supplements section */}
-              {item.supplements.length > 0 && (
+              {item.supplements.filter((s) => !outOfStockIngredients.includes(s.name)).length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">
                     {t("item.supplements")}
                   </h4>
                   <div className="space-y-2">
-                    {item.supplements.map((sup) => {
+                    {item.supplements.filter((s) => !outOfStockIngredients.includes(s.name)).map((sup) => {
                       const selected = selectedSupplements.find(
                         (s) => s.id === sup.id
                       );

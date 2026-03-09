@@ -1063,6 +1063,7 @@ const RestaurantPage = () => {
                             customizationConfig={restaurant.customization_config}
                             customizationData={customizationData}
                             menuItems={menuItems}
+                            outOfStockIngredients={restaurant.out_of_stock_ingredients ?? []}
                           />
                         ))}
                       </motion.div>

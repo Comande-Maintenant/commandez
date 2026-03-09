@@ -5,7 +5,6 @@ export type DashboardView =
   | "carte"
   | "page"
   | "qrcodes"
-  | "tablettes"
   | "borne"
   | "parametres"
   | "stats"

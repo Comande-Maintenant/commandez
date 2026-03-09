@@ -19,11 +19,12 @@ interface Props {
   customizationConfig?: CustomizationConfig | null;
   customizationData?: UniversalCustomizationData | null;
   menuItems?: DbMenuItem[];
+  outOfStockIngredients?: string[];
 }
 
 const CUSTOMIZABLE_TYPES = ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement", "sandwich", "galette", "tacos", "assiette", "hamburger"];
 
-export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems }: Props) => {
+export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems, outOfStockIngredients }: Props) => {
   const [open, setOpen] = useState(false);
   const { t, tMenu } = useLanguage();
   const translated = tMenu(item);
@@ -126,6 +127,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
           restaurantId={restaurantId}
           customizationConfig={customizationConfig}
           primaryColor={primaryColor || "#10B981"}
+          outOfStockIngredients={outOfStockIngredients}
         />
       ) : (
         <ItemCustomizeModal
@@ -135,6 +137,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
           primaryColor={primaryColor}
+          outOfStockIngredients={outOfStockIngredients}
         />
       )}
     </>

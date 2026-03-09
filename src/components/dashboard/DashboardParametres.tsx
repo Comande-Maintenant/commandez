@@ -218,7 +218,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   };
 
   return (
-    <div className="max-w-xl space-y-6">
+    <div className="max-w-xl lg:max-w-2xl space-y-6">
       {/* Availability */}
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
