@@ -1,8 +1,10 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getHourlyChartData } from "@/lib/demandPatterns";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const DemandHourlyChart = () => {
+  const { t } = useLanguage();
   const today = new Date();
   const data = getHourlyChartData(today.getDay());
   const currentHour = `${today.getHours()}h`;
@@ -10,7 +12,7 @@ export const DemandHourlyChart = () => {
   return (
     <Card className="rounded-2xl border-border">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">Prevision horaire du jour</CardTitle>
+        <CardTitle className="text-base font-semibold">{t("dashboard.demand.hourly_title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-52">
@@ -32,14 +34,14 @@ export const DemandHourlyChart = () => {
                   background: "hsl(var(--card))",
                   color: "hsl(var(--foreground))",
                 }}
-                formatter={(value: number) => [`${value}%`, "Intensite"]}
+                formatter={(value: number) => [`${value}%`, t("dashboard.demand.intensity")]}
               />
               <ReferenceLine
                 x={currentHour}
                 stroke="hsl(var(--primary))"
                 strokeWidth={2}
                 strokeDasharray="4 4"
-                label={{ value: "Maintenant", position: "top", fontSize: 10, fill: "hsl(var(--primary))" }}
+                label={{ value: t("dashboard.demand.now"), position: "top", fontSize: 10, fill: "hsl(var(--primary))" }}
               />
               <Bar dataKey="intensite" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} opacity={0.8} />
             </BarChart>

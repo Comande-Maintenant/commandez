@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Smartphone, Monitor, QrCode, Link2, Eye, ShoppingCart, Users, AlertTriangle } from "lucide-react";
 import type { LiveVisitor, VisitorAlert } from "@/types/visitor";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   visitors: LiveVisitor[];
@@ -13,20 +14,13 @@ const activityDot: Record<string, string> = {
   inactive: "bg-red-400",
 };
 
-const activityLabel: Record<string, string> = {
-  active: "Actif",
-  idle: "Inactif",
-  inactive: "Parti ?",
+const activityKey: Record<string, string> = {
+  active: "dashboard.live.active",
+  idle: "dashboard.live.inactive",
+  inactive: "dashboard.live.gone",
 };
 
-function minutesSince(iso: string): string {
-  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
-  if (mins < 1) return "A l'instant";
-  if (mins < 60) return `${mins} min`;
-  return `${Math.floor(mins / 60)}h${mins % 60 > 0 ? String(mins % 60).padStart(2, "0") : ""}`;
-}
-
-function AlertPill({ alert }: { alert: VisitorAlert }) {
+function AlertPill({ alert, t }: { alert: VisitorAlert; t: (key: string) => string }) {
   if (alert.type === "rush") {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
@@ -34,7 +28,7 @@ function AlertPill({ alert }: { alert: VisitorAlert }) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
         </span>
-        Rush : {alert.count} visiteurs !
+        {t("dashboard.live.rush_alert").replace("{count}", String(alert.count))}
       </span>
     );
   }
@@ -45,7 +39,7 @@ function AlertPill({ alert }: { alert: VisitorAlert }) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
         </span>
-        Va commander !
+        {t("dashboard.live.about_to_order")}
       </span>
     );
   }
@@ -53,7 +47,7 @@ function AlertPill({ alert }: { alert: VisitorAlert }) {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
         <ShoppingCart className="h-3 w-3" />
-        Grosse commande : {alert.total.toFixed(2)} EUR
+        {t("dashboard.live.big_order").replace("{amount}", alert.total.toFixed(2))}
       </span>
     );
   }
@@ -61,7 +55,7 @@ function AlertPill({ alert }: { alert: VisitorAlert }) {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
         <AlertTriangle className="h-3 w-3" />
-        Hesite
+        {t("dashboard.live.hesitating")}
       </span>
     );
   }
@@ -75,11 +69,20 @@ function SourceIcon({ source }: { source: string }) {
 }
 
 export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
+  const { t } = useLanguage();
+
+  const minutesSince = (iso: string): string => {
+    const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 1) return t("time.just_now");
+    if (mins < 60) return t("time.ago_min").replace("{n}", String(mins));
+    return t("time.ago_hours").replace("{n}", String(Math.floor(mins / 60)));
+  };
+
   if (visitors.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         <Users className="h-8 w-8 mx-auto mb-2 opacity-40" />
-        <p className="text-sm">Aucun visiteur en ce moment</p>
+        <p className="text-sm">{t("dashboard.live.no_visitors")}</p>
       </div>
     );
   }
@@ -90,7 +93,7 @@ export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
       {alerts.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {alerts.map((alert, i) => (
-            <AlertPill key={i} alert={alert} />
+            <AlertPill key={i} alert={alert} t={t} />
           ))}
         </div>
       )}
@@ -107,7 +110,7 @@ export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className={`h-2.5 w-2.5 rounded-full ${activityDot[v.activity]}`} />
-                <span className="text-sm font-medium text-foreground">Visiteur</span>
+                <span className="text-sm font-medium text-foreground">{t("dashboard.live.visitor")}</span>
                 {v.device === "mobile" ? (
                   <Smartphone className="h-3.5 w-3.5 text-muted-foreground" />
                 ) : (
@@ -116,7 +119,7 @@ export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
                 <SourceIcon source={v.source} />
               </div>
               <span className="text-xs text-muted-foreground">
-                {activityLabel[v.activity]} - {minutesSince(v.arrived_at)}
+                {t(activityKey[v.activity])} - {minutesSince(v.arrived_at)}
               </span>
             </div>
 
@@ -124,7 +127,7 @@ export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
             {v.cart_count > 0 && (
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1.5">
                 <ShoppingCart className="h-3 w-3" />
-                <span>{v.cart_count} article{v.cart_count > 1 ? "s" : ""} - {v.cart_total.toFixed(2)} EUR</span>
+                <span>{v.cart_count} {t("dashboard.live.items")} - {v.cart_total.toFixed(2)} EUR</span>
               </div>
             )}
             {v.cart_items.length > 0 && (
@@ -138,7 +141,7 @@ export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
                 </span>
-                Formulaire de commande
+                {t("dashboard.live.order_form")}
               </span>
             ) : v.page_section.startsWith("category:") ? (
               <span className="mt-2 inline-block px-2 py-0.5 rounded-full text-xs bg-secondary text-muted-foreground">

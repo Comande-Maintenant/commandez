@@ -10,6 +10,7 @@ import { DemandTip } from "@/components/dashboard/DemandTip";
 import { DemandCalendar } from "@/components/dashboard/DemandCalendar";
 import { DemandHourlyChart } from "@/components/dashboard/DemandHourlyChart";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -21,6 +22,7 @@ interface Props {
 export const DashboardEnDirect = ({ restaurant, visitors, alerts, isDemo }: Props) => {
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
@@ -52,14 +54,14 @@ export const DashboardEnDirect = ({ restaurant, visitors, alerts, isDemo }: Prop
     todayOrders.forEach((o) => {
       const items = (o.items as any[]) || [];
       items.forEach((item: any) => {
-        const name = item.name || "Inconnu";
+        const name = item.name || t("dashboard.live.unknown");
         itemCounts[name] = (itemCounts[name] || 0) + (item.quantity || 1);
       });
     });
     const topItem = Object.entries(itemCounts).sort((a, b) => b[1] - a[1])[0];
 
     return { revenue, count, avg, topItem: topItem ? `${topItem[0]} (${topItem[1]}x)` : "-" };
-  }, [orders]);
+  }, [orders, t]);
 
   return (
     <div className="space-y-6">
@@ -68,7 +70,7 @@ export const DashboardEnDirect = ({ restaurant, visitors, alerts, isDemo }: Prop
 
       {/* Stats du jour */}
       <div>
-        <h3 className="text-base font-semibold text-foreground mb-3">Stats du jour</h3>
+        <h3 className="text-base font-semibold text-foreground mb-3">{t("dashboard.live.daily_stats")}</h3>
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-20 rounded-2xl" />)}
@@ -76,10 +78,10 @@ export const DashboardEnDirect = ({ restaurant, visitors, alerts, isDemo }: Prop
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "CA du jour", value: `${todayStats.revenue.toFixed(2)} EUR`, icon: Euro, accent: true, sensitive: true },
-              { label: "Commandes", value: todayStats.count, icon: ShoppingBag, sensitive: true },
-              { label: "Ticket moyen", value: `${todayStats.avg.toFixed(2)} EUR`, icon: Receipt, sensitive: true },
-              { label: "Top plat", value: todayStats.topItem, icon: TrendingUp },
+              { label: t("dashboard.live.revenue_today"), value: `${todayStats.revenue.toFixed(2)} EUR`, icon: Euro, accent: true, sensitive: true },
+              { label: t("dashboard.live.orders"), value: todayStats.count, icon: ShoppingBag, sensitive: true },
+              { label: t("dashboard.live.avg_ticket"), value: `${todayStats.avg.toFixed(2)} EUR`, icon: Receipt, sensitive: true },
+              { label: t("dashboard.live.top_dish"), value: todayStats.topItem, icon: TrendingUp },
             ].map((kpi) => (
               <Card key={kpi.label} className="rounded-2xl border-border">
                 <CardContent className="p-3 sm:p-4">

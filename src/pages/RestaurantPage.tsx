@@ -560,20 +560,22 @@ const RestaurantPage = () => {
       />
 
       {/* Cover / Hero */}
-      <div className="relative h-[200px] sm:h-64 overflow-hidden" style={{ zIndex: 1 }}>
-        <img
-          src={restaurant.cover_image || getDefaultCoverImage(restaurant.cuisine)}
-          alt={restaurant.name}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.25) 70%, #F5EDE4 100%)`
-          }}
-        />
-        <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
+      <div className="relative h-[200px] sm:h-64" style={{ zIndex: 1 }}>
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src={restaurant.cover_image || getDefaultCoverImage(restaurant.cuisine)}
+            alt={restaurant.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.25) 70%, #F5EDE4 100%)`
+            }}
+          />
+        </div>
+        <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
           <button
             onClick={() => window.history.length > 1 ? navigate(-1) : window.location.href = "https://commandeici.com"}
             className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"

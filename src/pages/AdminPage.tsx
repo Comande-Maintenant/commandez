@@ -248,7 +248,7 @@ const AdminPage = () => {
               </Link>
               <div className="min-w-0">
                 <h1 className="text-base font-semibold text-foreground truncate">{restaurant.name}</h1>
-                <p className="text-xs text-muted-foreground hidden sm:block">Dashboard</p>
+                <p className="text-xs text-muted-foreground hidden sm:block">{t("dashboard.admin.dashboard_subtitle")}</p>
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">

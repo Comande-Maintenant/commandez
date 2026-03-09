@@ -1,6 +1,7 @@
 import { Users, ShoppingCart, ChefHat, TrendingUp } from "lucide-react";
 import type { LiveVisitor, VisitorAlert } from "@/types/visitor";
 import { getIntensityLabel, WEEKLY_PATTERNS } from "@/lib/demandPatterns";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   visitors: LiveVisitor[];
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, compact = false }: Props) => {
+  const { t } = useLanguage();
   const activeVisitors = visitors.filter((v) => v.activity === "active").length;
   const cartsWithItems = visitors.filter((v) => v.cart_count > 0);
   const totalCartValue = cartsWithItems.reduce((s, v) => s + v.cart_total, 0);
@@ -22,15 +24,15 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, c
   const isDinner = hour >= 18 && hour < 22;
   const pattern = WEEKLY_PATTERNS[now.getDay()];
   const currentIntensity = isLunch ? pattern.midi : isDinner ? pattern.soir : Math.min(pattern.midi, pattern.soir) * 0.3;
-  const demandLabel = getIntensityLabel(currentIntensity);
+  const demandLabel = t(getIntensityLabel(currentIntensity));
 
   if (compact) {
     return (
       <div className="bg-card rounded-xl border border-border px-3 py-2 mb-4">
         <div className="flex items-center gap-4 text-xs">
-          <span>En ligne: {visitors.length}</span>
-          <span>Paniers: {cartsWithItems.length}</span>
-          <span>En prep: {orderCounts.preparingCount}</span>
+          <span>{t("dashboard.live.compact_online")} {visitors.length}</span>
+          <span>{t("dashboard.live.compact_carts")} {cartsWithItems.length}</span>
+          <span>{t("dashboard.live.compact_preparing")} {orderCounts.preparingCount}</span>
           <span className="font-semibold">{demandLabel}</span>
         </div>
       </div>
@@ -49,11 +51,11 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, c
             <Users className={`h-4 w-4 ${hasRush ? "text-red-600" : "text-emerald-600"}`} />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">En ligne</p>
+            <p className="text-xs text-muted-foreground">{t("dashboard.live.online")}</p>
             <p className="text-lg font-bold text-foreground">
               {visitors.length}
               {activeVisitors < visitors.length && (
-                <span className="text-xs font-normal text-muted-foreground ml-1">({activeVisitors} actifs)</span>
+                <span className="text-xs font-normal text-muted-foreground ml-1">({activeVisitors} {t("dashboard.live.online_suffix")})</span>
               )}
             </p>
           </div>
@@ -68,7 +70,7 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, c
             <ShoppingCart className="h-4 w-4 text-amber-600" />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">Paniers</p>
+            <p className="text-xs text-muted-foreground">{t("dashboard.live.carts")}</p>
             <p className="text-lg font-bold text-foreground">
               {cartsWithItems.length}
               {totalCartValue > 0 && (
@@ -87,11 +89,11 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, c
             <ChefHat className="h-4 w-4 text-blue-600" />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">En préparation</p>
+            <p className="text-xs text-muted-foreground">{t("dashboard.live.preparing")}</p>
             <p className="text-lg font-bold text-foreground">
               {orderCounts.preparingCount}
               {orderCounts.newCount > 0 && (
-                <span className="text-xs font-semibold text-amber-600 ml-1">+{orderCounts.newCount} nouvelle{orderCounts.newCount > 1 ? "s" : ""}</span>
+                <span className="text-xs font-semibold text-amber-600 ml-1">+{orderCounts.newCount} {t("dashboard.live.new_suffix")}</span>
               )}
             </p>
           </div>
@@ -106,7 +108,7 @@ export const LiveSummaryBanner = ({ visitors, alerts, orderCounts, onNavigate, c
             <TrendingUp className="h-4 w-4 text-purple-600" />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">Demande</p>
+            <p className="text-xs text-muted-foreground">{t("dashboard.live.demand")}</p>
             <p className="text-lg font-bold text-foreground">{demandLabel}</p>
           </div>
         </button>

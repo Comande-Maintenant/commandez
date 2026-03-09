@@ -32,17 +32,17 @@ export function getIntensityColor(value: number): string {
   return "bg-red-100 text-red-800";
 }
 
+// Returns an i18n key - callers must wrap with t()
 export function getIntensityLabel(value: number): string {
-  if (value < 30) return "Calme";
-  if (value < 55) return "Moyen";
-  if (value < 75) return "Fort";
-  return "Tres fort";
+  if (value < 30) return "dashboard.demand.calm";
+  if (value < 55) return "dashboard.demand.moderate";
+  if (value < 75) return "dashboard.demand.busy";
+  return "dashboard.demand.very_busy";
 }
 
-const DAY_NAMES = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
-
+// Returns an i18n key - callers must wrap with t()
 export function getDayName(dayIndex: number): string {
-  return DAY_NAMES[dayIndex] || "";
+  return `dashboard.demand.day_${dayIndex}`;
 }
 
 // Ordered for display: Lun -> Dim
@@ -50,57 +50,32 @@ export function getWeekDays(): number[] {
   return [1, 2, 3, 4, 5, 6, 0];
 }
 
+// Returns an i18n key - callers must wrap with t()
 export function getCurrentDemandTip(): string {
   const now = new Date();
   const hour = now.getHours();
   const day = now.getDay();
   const pattern = WEEKLY_PATTERNS[day];
 
-  // Morning prep window
   if (hour >= 8 && hour < 11) {
-    if (pattern.midi >= 70) {
-      return "Le midi s'annonce chargé. Pensez à préparer les ingrédients en avance.";
-    }
-    return "Midi devrait être tranquille, bon moment pour mettre à jour la carte.";
+    return pattern.midi >= 70 ? "dashboard.demand.tip_morning_busy" : "dashboard.demand.tip_morning_calm";
   }
-
-  // Lunch rush
   if (hour >= 11 && hour < 14) {
-    if (pattern.midi >= 70) {
-      return "C'est le rush du midi. Concentrez-vous sur la rapidite de service.";
-    }
-    return "Flux modere au dejeuner. Profitez-en pour soigner la presentation.";
+    return pattern.midi >= 70 ? "dashboard.demand.tip_lunch_busy" : "dashboard.demand.tip_lunch_calm";
   }
-
-  // Afternoon lull
   if (hour >= 14 && hour < 17) {
-    if (pattern.soir >= 75) {
-      return "Ce soir s'annonce tres charge. Preparez les stocks des plats populaires.";
-    }
-    return "Profitez du creux pour reapprovisionner et preparer le service du soir.";
+    return pattern.soir >= 75 ? "dashboard.demand.tip_afternoon_busy" : "dashboard.demand.tip_afternoon_calm";
   }
-
-  // Evening prep
   if (hour >= 17 && hour < 19) {
-    if (pattern.soir >= 75) {
-      return "Gros rush prevu ce soir. Tout est pret ?";
-    }
-    return "Soiree calme prevue, l'occasion de tester de nouvelles recettes.";
+    return pattern.soir >= 75 ? "dashboard.demand.tip_evening_prep_busy" : "dashboard.demand.tip_evening_prep_calm";
   }
-
-  // Evening service
   if (hour >= 19 && hour < 22) {
-    if (pattern.soir >= 75) {
-      return "Plein rush du soir. Gardez le rythme !";
-    }
-    return "Service du soir en cours. Flux normal.";
+    return pattern.soir >= 75 ? "dashboard.demand.tip_evening_busy" : "dashboard.demand.tip_evening_calm";
   }
-
-  // Late / closed
   if (day === 5 || day === 6) {
-    return "Demain sera une journee chargee, reposez-vous bien.";
+    return "dashboard.demand.tip_late_weekend";
   }
-  return "Bonne fin de journee. A demain !";
+  return "dashboard.demand.tip_late_default";
 }
 
 export function getHourlyChartData(dayOfWeek: number): { hour: string; intensite: number }[] {
