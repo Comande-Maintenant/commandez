@@ -494,6 +494,22 @@ export async function unbanCustomer(customerId: string) {
   if (error) throw error;
 }
 
+export async function updateCustomerNote(
+  customerId: string,
+  note: string,
+  flagged: boolean
+) {
+  const { error } = await supabase
+    .from("restaurant_customers")
+    .update({
+      notes: note,
+      flagged,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", customerId);
+  if (error) throw error;
+}
+
 export async function isCustomerBanned(
   restaurantId: string,
   phone: string,

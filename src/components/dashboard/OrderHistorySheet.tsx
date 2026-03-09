@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Clock, ShoppingBag, UtensilsCrossed, Phone, Package, X } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { fetchOrders, fetchDemoOrders } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders, fetchCustomers, fetchDemoCustomers } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useLanguage } from "@/context/LanguageContext";
-import type { DbOrder } from "@/types/database";
+import type { DbOrder, DbCustomer } from "@/types/database";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CustomerBadge } from "./CustomerBadge";
 
 interface Props {
   restaurantId: string;
@@ -32,6 +33,7 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [customersMap, setCustomersMap] = useState<Map<string, DbCustomer>>(new Map());
 
   // Only fetch when opened (lazy load)
   useEffect(() => {
@@ -51,6 +53,14 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
     }).catch(() => {
       setLoading(false);
     });
+
+    // Load customers for badges
+    const custFn = isDemo ? fetchDemoCustomers(restaurantId) : fetchCustomers(restaurantId);
+    custFn.then((custs) => {
+      const map = new Map<string, DbCustomer>();
+      custs.forEach((c: DbCustomer) => map.set(c.customer_phone, c));
+      setCustomersMap(map);
+    }).catch(() => {});
   }, [open, loaded, restaurantId, isDemo]);
 
   // Reset cache when closed to allow refresh on next open
@@ -134,7 +144,10 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
                   {order.customer_name && (
                     <>
                       <span>-</span>
-                      <span className="font-medium text-foreground">{order.customer_name}</span>
+                      <span className="font-medium text-foreground">
+                        {order.customer_name}
+                        <CustomerBadge customer={customersMap.get(order.customer_phone) ?? null} compact />
+                      </span>
                     </>
                   )}
                 </div>

@@ -22,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useLanguage } from "@/context/LanguageContext";
 import { updateOrderItems, updateOrderStatus, updateOrderEstimatedReady, advanceDemoOrder } from "@/lib/api";
-import type { DbOrder, DbMenuItem } from "@/types/database";
+import type { DbOrder, DbMenuItem, DbCustomer } from "@/types/database";
 import { toast } from "sonner";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
@@ -39,6 +39,8 @@ interface Props {
   onOrderUpdated: (order: DbOrder) => void;
   onPrev?: () => void;
   onNext?: () => void;
+  customer?: DbCustomer | null;
+  onCustomerClick?: (customer: DbCustomer) => void;
 }
 
 const statusActionColors: Record<OrderStatus, string> = {
@@ -67,6 +69,8 @@ export const OrderDetailSheet = ({
   onOrderUpdated,
   onPrev,
   onNext,
+  customer,
+  onCustomerClick,
 }: Props) => {
   const { t, language } = useLanguage();
 
@@ -329,9 +333,33 @@ export const OrderDetailSheet = ({
         {/* Customer info */}
         <div className="py-4 border-b border-border">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-xl font-bold text-foreground">{order.customer_name}</h2>
+            <div className="flex items-center gap-2">
+              {customer && onCustomerClick ? (
+                <button onClick={() => onCustomerClick(customer)} className="text-xl font-bold text-foreground hover:text-primary hover:underline transition-colors inline-flex items-center gap-1">
+                  {order.customer_name}
+                  {customer.is_banned && <span className="text-xs font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-700">{t("customer.badge.banned")}</span>}
+                  {customer.flagged && !customer.is_banned && <span className="text-xs font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-700">{t("customer.badge.flagged")}</span>}
+                  {customer.total_orders >= 10 && !customer.is_banned && <span className="text-xs font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">{t("customer.badge.loyal")}</span>}
+                </button>
+              ) : (
+                <h2 className="text-xl font-bold text-foreground">{order.customer_name}</h2>
+              )}
+            </div>
             <span className="text-sm text-muted-foreground">{orderTime} - {timeSince(order.created_at)}</span>
           </div>
+          {/* Customer stats row */}
+          {customer && (
+            <div className="flex gap-3 mb-2 text-xs">
+              <span className="text-muted-foreground">{customer.total_orders} {t("customer.profile.orders_count").toLowerCase()}</span>
+              <span className="text-muted-foreground blur-sensitive">{t("customer.profile.avg_basket")} {Number(customer.average_basket).toFixed(2)}€</span>
+            </div>
+          )}
+          {/* Customer note */}
+          {customer?.notes && (
+            <div className={`mb-2 p-2 rounded-lg text-xs ${customer.flagged ? "bg-red-50 border border-red-200 text-red-800" : "bg-amber-50 text-amber-800"}`}>
+              {customer.notes}
+            </div>
+          )}
           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             {order.customer_phone && (
               <a href={`tel:${order.customer_phone}`} className="flex items-center gap-1 hover:text-foreground">

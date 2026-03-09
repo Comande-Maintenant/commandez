@@ -150,6 +150,7 @@ export interface DbCustomer {
   ban_expires_at: string | null;
   banned_ip: string;
   notes: string;
+  flagged: boolean;
   created_at: string;
   updated_at: string;
 }

@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
-import { fetchOrders, fetchDemoOrders, fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders, fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder, fetchCustomers, fetchDemoCustomers } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useLanguage } from "@/context/LanguageContext";
-import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
+import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,6 +12,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { OrderDetailSheet } from "./OrderDetailSheet";
 import { BanDialog } from "./BanDialog";
 import { PrepSummaryBoard } from "./PrepSummaryBoard";
+import { CustomerBadge } from "./CustomerBadge";
+import { CustomerMiniProfile } from "./CustomerMiniProfile";
 import { toast } from "sonner";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
@@ -69,6 +71,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const [banTarget, setBanTarget] = useState<{ customer_name: string; customer_phone: string; restaurant_id: string; id?: string } | null>(null);
   const [popupOrder, setPopupOrder] = useState<DbOrder | null>(null);
   const popupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [customersMap, setCustomersMap] = useState<Map<string, DbCustomer>>(new Map());
+  const [profileCustomer, setProfileCustomer] = useState<DbCustomer | null>(null);
 
   // Tick for countdown timers on cards (re-render every 5s)
   const [, setTick] = useState(0);
@@ -88,10 +92,20 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     setLoading(false);
   }, [restaurant.id, isDemo]);
 
+  const loadCustomers = useCallback(async () => {
+    try {
+      const data = isDemo ? await fetchDemoCustomers(restaurant.id) : await fetchCustomers(restaurant.id);
+      const map = new Map<string, DbCustomer>();
+      data.forEach((c) => map.set(c.customer_phone, c));
+      setCustomersMap(map);
+    } catch {}
+  }, [restaurant.id, isDemo]);
+
   useEffect(() => {
     fetchMenuItems(restaurant.id).then(setMenuItems);
     fetchAllMenuItems(restaurant.id).then(setAllMenuItems);
-  }, [restaurant.id]);
+    loadCustomers();
+  }, [restaurant.id, loadCustomers]);
 
   useEffect(() => {
     loadOrders();
@@ -409,8 +423,14 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
               </div>
 
               {/* Client + order type */}
-              <div className="flex items-center gap-2 mb-2 text-sm">
-                <span className="font-medium text-foreground">{order.customer_name}</span>
+              <div className="flex items-center gap-2 mb-2 text-sm flex-wrap">
+                <button
+                  onClick={(e) => { e.stopPropagation(); const c = customersMap.get(order.customer_phone); if (c) setProfileCustomer(c); }}
+                  className="font-medium text-foreground hover:text-primary hover:underline transition-colors inline-flex items-center"
+                >
+                  {order.customer_name}
+                  <CustomerBadge customer={customersMap.get(order.customer_phone) ?? null} compact />
+                </button>
                 <span className="text-muted-foreground">-</span>
                 <span className="text-muted-foreground flex items-center gap-1">
                   {(order.order_type === "collect" || order.order_type === "a_emporter") && <><ShoppingBag className="h-3.5 w-3.5" /> {t("dashboard.orders.takeaway")}</>}
@@ -427,6 +447,23 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                   <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700">{t("pickup.asap")}</span>
                 )}
               </div>
+
+              {/* Customer note visible on card */}
+              {(() => {
+                const cust = customersMap.get(order.customer_phone);
+                if (!cust?.notes) return null;
+                return (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setProfileCustomer(cust); }}
+                    className={`mb-2 px-2.5 py-1.5 rounded-lg text-xs text-start w-full ${
+                      cust.flagged ? "bg-red-50 border border-red-200 text-red-800" : "bg-amber-50 text-amber-800"
+                    }`}
+                  >
+                    {cust.flagged && <AlertTriangle className="inline h-3 w-3 me-1" />}
+                    {cust.notes.length > 60 ? cust.notes.slice(0, 60) + "..." : cust.notes}
+                  </button>
+                );
+              })()}
 
               {/* Items detail for kitchen - food items */}
               {(() => {
@@ -546,6 +583,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
             menuItems={menuItems}
             prepTimeConfig={restaurant.prep_time_config}
             isDemo={isDemo}
+            customer={customersMap.get(selectedOrder.customer_phone) ?? null}
+            onCustomerClick={(c) => { setSelectedOrder(null); setProfileCustomer(c); }}
             onClose={() => setSelectedOrder(null)}
             onStatusChange={handleStatusChange}
             onOrderUpdated={handleOrderUpdated}
@@ -735,6 +774,25 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
         }
         .animate-pulse-subtle { animation: pulse-subtle 2s ease-in-out infinite; }
       `}</style>
+
+      {/* Customer mini profile panel */}
+      <AnimatePresence>
+        {profileCustomer && (
+          <CustomerMiniProfile
+            customer={profileCustomer}
+            restaurantId={restaurant.id}
+            onClose={() => setProfileCustomer(null)}
+            onUpdated={(updated) => {
+              setCustomersMap((prev) => {
+                const next = new Map(prev);
+                next.set(updated.customer_phone, updated);
+                return next;
+              });
+              setProfileCustomer(updated);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
