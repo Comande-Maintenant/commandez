@@ -429,7 +429,17 @@ const RestaurantPage = () => {
   const scrollToCategory = useCallback((cat: string) => {
     setActiveCategory(cat);
     isScrollingRef.current = true;
-    sectionRefs.current[cat]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const el = sectionRefs.current[cat];
+    if (el) {
+      // Manual scroll with offset for sticky header (works on all WebViews)
+      const headerOffset = 80;
+      const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      try {
+        window.scrollTo({ top: y, behavior: "smooth" });
+      } catch {
+        window.scrollTo(0, y);
+      }
+    }
     // Re-enable observer after scroll settles
     setTimeout(() => { isScrollingRef.current = false; }, 800);
   }, []);
