@@ -19,6 +19,7 @@ import { QuickColorPicker } from '@/components/onboarding/QuickColorPicker';
 import { PricingCards } from '@/components/onboarding/PricingCards';
 import { OnboardingSuccess } from '@/components/onboarding/OnboardingSuccess';
 import { toast } from 'sonner';
+import { LanguageSelector } from '@/components/restaurant/LanguageSelector';
 import {
   createOwner,
   createRestaurantFromOnboarding,
@@ -296,9 +297,12 @@ const InscriptionPage = () => {
             <ArrowLeft className="h-4 w-4" />
             <span className="font-semibold text-lg">commandeici</span>
           </a>
-          {step < 6 && (
-            <span className="text-xs text-muted-foreground">{t('auth.signup.step_counter', { step })}</span>
-          )}
+          <div className="flex items-center gap-3">
+            {step < 6 && (
+              <span className="text-xs text-muted-foreground">{t('auth.signup.step_counter', { step })}</span>
+            )}
+            <LanguageSelector />
+          </div>
         </div>
       </header>
 

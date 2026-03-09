@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useLanguage } from '@/context/LanguageContext';
+import { LanguageSelector } from '@/components/restaurant/LanguageSelector';
 
 const ConnexionPage = () => {
   const { t, changeLanguage } = useLanguage();
@@ -117,7 +118,7 @@ const ConnexionPage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Mobile header only */}
       <header className="lg:hidden border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-lg mx-auto px-4 h-14 flex items-center">
+        <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
           <a
             href="https://commandeici.com"
             className="flex items-center gap-2 text-foreground hover:opacity-80"
@@ -125,6 +126,7 @@ const ConnexionPage = () => {
             <ArrowLeft className="h-4 w-4" />
             <span className="font-semibold text-lg">commandeici</span>
           </a>
+          <LanguageSelector />
         </div>
       </header>
 
@@ -185,6 +187,10 @@ const ConnexionPage = () => {
         {/* ── Right Panel (form) ── */}
         <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
           <div className="w-full max-w-md">
+            {/* Desktop language selector */}
+            <div className="hidden lg:flex justify-end mb-4">
+              <LanguageSelector />
+            </div>
             {/* Mobile mini-message */}
             {!isFirstLogin && (
               <p className="lg:hidden text-sm text-primary font-medium mb-4 text-center">
