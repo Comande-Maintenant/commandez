@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "Do uong co con co san tai quay.",
   "dashboard.menu.alcohol_badge": "Ruou - quay",
   "dashboard.menu.alcohol_label": "Chua con",
-  "dashboard.menu.alcohol_desc": "An khoi dat hang truc tuyen (chi ban tai quay)"
+  "dashboard.menu.alcohol_desc": "An khoi dat hang truc tuyen (chi ban tai quay)",
+  "options.fries_inside": "Khoai chien ben trong?",
+  "options.fries_inside_yes": "Co khoai chien",
+  "options.fries_inside_no": "Khong khoai chien",
+  "options.sides": "Mon an kem",
+  "options.sides_included": "Bao gom {count}",
+  "options.sides_extra": "+{price} cho mon an kem them",
+  "options.sauces_free_remaining": "{count}/{total} sot mien phi",
+  "options.sauces_all_free_used": "Da het sot mien phi",
+  "options.sauces_extra": "+{price} cho sot them",
+  "options.sauces_extra_total": "{count} sot them: +{total} EUR",
+  "options.free_then_paid_label": "X mien phi, sau do tinh them",
+  "options.free_then_paid_free_count": "So luong mien phi",
+  "options.free_then_paid_extra_price": "Gia moi lua chon them",
+  "options.free_then_paid_no_limit": "Khong gioi han"
 }

@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "المشروبات الكحولية متوفرة في الكاونتر.",
   "dashboard.menu.alcohol_badge": "كحول - كاونتر",
   "dashboard.menu.alcohol_label": "يحتوي على كحول",
-  "dashboard.menu.alcohol_desc": "مخفي من الطلب عبر الإنترنت (البيع في الكاونتر فقط)"
+  "dashboard.menu.alcohol_desc": "مخفي من الطلب عبر الإنترنت (البيع في الكاونتر فقط)",
+  "options.fries_inside": "بطاطس بالداخل؟",
+  "options.fries_inside_yes": "مع بطاطس",
+  "options.fries_inside_no": "بدون بطاطس",
+  "options.sides": "مرافقات",
+  "options.sides_included": "{count} مشمولة",
+  "options.sides_extra": "+{price} لكل مرافق إضافي",
+  "options.sauces_free_remaining": "{count}/{total} صلصات مجانية",
+  "options.sauces_all_free_used": "تم استخدام الصلصات المجانية",
+  "options.sauces_extra": "+{price} لكل صلصة إضافية",
+  "options.sauces_extra_total": "{count} صلصة إضافية: +{total} يورو",
+  "options.free_then_paid_label": "X مجاني ثم إضافي",
+  "options.free_then_paid_free_count": "عدد الخيارات المجانية",
+  "options.free_then_paid_extra_price": "سعر كل خيار إضافي",
+  "options.free_then_paid_no_limit": "بلا حدود"
 }

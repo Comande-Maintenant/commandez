@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "酒精饮料可在柜台购买。",
   "dashboard.menu.alcohol_badge": "酒精 - 柜台",
   "dashboard.menu.alcohol_label": "含酒精",
-  "dashboard.menu.alcohol_desc": "隐藏在线订购（仅柜台销售）"
+  "dashboard.menu.alcohol_desc": "隐藏在线订购（仅柜台销售）",
+  "options.fries_inside": "加薯条？",
+  "options.fries_inside_yes": "加薯条",
+  "options.fries_inside_no": "不加薯条",
+  "options.sides": "配菜",
+  "options.sides_included": "包含{count}份",
+  "options.sides_extra": "额外配菜+{price}",
+  "options.sauces_free_remaining": "{count}/{total}份免费酱料",
+  "options.sauces_all_free_used": "免费酱料已用完",
+  "options.sauces_extra": "额外酱料+{price}",
+  "options.sauces_extra_total": "{count}份额外酱料：+{total}欧元",
+  "options.free_then_paid_label": "X份免费，之后收费",
+  "options.free_then_paid_free_count": "免费选择数量",
+  "options.free_then_paid_extra_price": "每份额外收费",
+  "options.free_then_paid_no_limit": "无限制"
 }

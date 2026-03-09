@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "주류는 카운터에서 구매하실 수 있습니다.",
   "dashboard.menu.alcohol_badge": "주류 - 카운터",
   "dashboard.menu.alcohol_label": "주류 포함",
-  "dashboard.menu.alcohol_desc": "온라인 주문에서 숨김 (카운터 판매만 가능)"
+  "dashboard.menu.alcohol_desc": "온라인 주문에서 숨김 (카운터 판매만 가능)",
+  "options.fries_inside": "감자튀김 넣기?",
+  "options.fries_inside_yes": "감자튀김 포함",
+  "options.fries_inside_no": "감자튀김 없이",
+  "options.sides": "사이드",
+  "options.sides_included": "{count}개 포함",
+  "options.sides_extra": "추가 사이드 +{price}",
+  "options.sauces_free_remaining": "{count}/{total} 무료 소스",
+  "options.sauces_all_free_used": "무료 소스 사용 완료",
+  "options.sauces_extra": "추가 소스 +{price}",
+  "options.sauces_extra_total": "추가 소스 {count}개: +{total}EUR",
+  "options.free_then_paid_label": "X개 무료, 이후 추가 요금",
+  "options.free_then_paid_free_count": "무료 선택 수",
+  "options.free_then_paid_extra_price": "추가 선택당 가격",
+  "options.free_then_paid_no_limit": "제한 없음"
 }

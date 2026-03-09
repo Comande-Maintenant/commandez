@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { X, Minus, Plus, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DbMenuItem, Supplement } from "@/types/database";
+import type { SauceConfig } from "@/types/customization";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -13,9 +14,10 @@ interface Props {
   restaurantId: string;
   primaryColor?: string;
   outOfStockIngredients?: string[];
+  sauceConfig?: SauceConfig;
 }
 
-export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restaurantId, primaryColor, outOfStockIngredients = [] }: Props) => {
+export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restaurantId, primaryColor, outOfStockIngredients = [], sauceConfig = { freeCount: 3, extraPrice: 0.50 } }: Props) => {
   const { addItem } = useCart();
   const { t, tMenu } = useLanguage();
   const [selectedSauces, setSelectedSauces] = useState<string[]>([]);
@@ -29,9 +31,15 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
 
   const toggleSauce = (sauce: string) => {
     setSelectedSauces((prev) =>
-      prev.includes(sauce) ? prev.filter((s) => s !== sauce) : prev.length < 3 ? [...prev, sauce] : prev
+      prev.includes(sauce) ? prev.filter((s) => s !== sauce) : [...prev, sauce]
     );
   };
+
+  // Sauce extra cost (free_then_paid)
+  const sauceCost = useMemo(() => {
+    const paidCount = Math.max(0, selectedSauces.length - sauceConfig.freeCount);
+    return paidCount * sauceConfig.extraPrice;
+  }, [selectedSauces.length, sauceConfig.freeCount, sauceConfig.extraPrice]);
 
   const toggleSupplement = (sup: Supplement) => {
     setSelectedSupplements((prev) =>
@@ -44,8 +52,8 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
     : item.price;
 
   const unitPrice = useMemo(() => {
-    return basePrice + selectedSupplements.reduce((sum, s) => sum + s.price, 0);
-  }, [basePrice, selectedSupplements]);
+    return basePrice + selectedSupplements.reduce((sum, s) => sum + s.price, 0) + sauceCost;
+  }, [basePrice, selectedSupplements, sauceCost]);
 
   const total = unitPrice * quantity;
 
@@ -57,7 +65,9 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
       ? { ...item, name: `${item.name} (${variants[selectedVariant].name})`, price: variants[selectedVariant].price }
       : item;
     for (let i = 0; i < quantity; i++) {
-      addItem(syntheticItem, selectedSauces, selectedSupplements, restaurantSlug, restaurantId);
+      addItem(syntheticItem, selectedSauces, selectedSupplements, restaurantSlug, restaurantId, {
+        sauceExtraCost: sauceCost,
+      });
     }
     setSelectedSauces([]);
     setSelectedSupplements([]);
@@ -131,11 +141,21 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
               {(item.sauces ?? []).filter((s) => !outOfStockIngredients.includes(s)).length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                    {t("item.sauces")} <span className="text-gray-400 font-normal">({t("item.sauces_max", { max: 3 })})</span>
+                    {t("item.sauces")}
                   </h4>
+                  <p className="text-xs text-gray-500 mb-2">
+                    {selectedSauces.length <= sauceConfig.freeCount
+                      ? t("options.sauces_free_remaining").replace("{count}", String(selectedSauces.length)).replace("{total}", String(sauceConfig.freeCount))
+                      : t("options.sauces_extra_total")
+                          .replace("{count}", String(selectedSauces.length - sauceConfig.freeCount))
+                          .replace("{total}", sauceCost.toFixed(2))
+                    }
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {(item.sauces ?? []).filter((s) => !outOfStockIngredients.includes(s)).map((sauce) => {
                       const selected = selectedSauces.includes(sauce);
+                      const sauceIdx = selectedSauces.indexOf(sauce);
+                      const isPaid = selected && sauceIdx >= sauceConfig.freeCount;
                       return (
                         <button
                           key={sauce}
@@ -149,6 +169,9 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
                         >
                           {selected && <Check className="inline h-3 w-3 mr-1" />}
                           {sauce}
+                          {isPaid && (
+                            <span className="ml-1 text-xs opacity-80">+{sauceConfig.extraPrice.toFixed(2)}€</span>
+                          )}
                         </button>
                       );
                     })}

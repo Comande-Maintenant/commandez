@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "Le bevande alcoliche sono disponibili al bancone.",
   "dashboard.menu.alcohol_badge": "Alcol - bancone",
   "dashboard.menu.alcohol_label": "Contiene alcol",
-  "dashboard.menu.alcohol_desc": "Nascosto dagli ordini online (solo vendita al bancone)"
+  "dashboard.menu.alcohol_desc": "Nascosto dagli ordini online (solo vendita al bancone)",
+  "options.fries_inside": "Patatine dentro?",
+  "options.fries_inside_yes": "Con patatine",
+  "options.fries_inside_no": "Senza patatine",
+  "options.sides": "Contorni",
+  "options.sides_included": "{count} inclusi",
+  "options.sides_extra": "+{price} per contorno extra",
+  "options.sauces_free_remaining": "{count}/{total} salse gratuite",
+  "options.sauces_all_free_used": "Salse gratuite esaurite",
+  "options.sauces_extra": "+{price} per salsa extra",
+  "options.sauces_extra_total": "{count} salsa/e extra: +{total} EUR",
+  "options.free_then_paid_label": "X gratis, poi supplemento",
+  "options.free_then_paid_free_count": "Numero di scelte gratuite",
+  "options.free_then_paid_extra_price": "Prezzo per scelta extra",
+  "options.free_then_paid_no_limit": "Nessun limite"
 }

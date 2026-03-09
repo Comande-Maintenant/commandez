@@ -84,6 +84,13 @@ export interface DbOrderConfig {
   enable_boisson_upsell: boolean;
   enable_dessert_upsell: boolean;
   pain_supplement_price: number;
+  free_accompagnements: number;
+  extra_accompagnement_price: number;
+}
+
+export interface SauceConfig {
+  freeCount: number;
+  extraPrice: number;
 }
 
 export interface CustomizationData {

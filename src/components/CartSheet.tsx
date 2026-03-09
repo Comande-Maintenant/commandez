@@ -99,9 +99,20 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
                         {t("cart.base_label").replace("{value}", tText(item.baseChoice))}
                       </p>
                     )}
+                    {item.fritesInside !== undefined && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {item.fritesInside ? t("options.fries_inside_yes") : t("options.fries_inside_no")}
+                      </p>
+                    )}
                     {item.selectedSauces.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {t("cart.sauces_label").replace("{value}", item.selectedSauces.map((s) => tText(s)).join(", "))}
+                        {item.sauceExtraCost && item.sauceExtraCost > 0 ? ` (+${item.sauceExtraCost.toFixed(2)}€)` : ""}
+                      </p>
+                    )}
+                    {item.accompagnementChoices && item.accompagnementChoices.length > 0 && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        + {item.accompagnementChoices.map((a) => tText(a.name)).join(", ")}
                       </p>
                     )}
                     {item.accompagnementChoice && (

@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "Alcoholische dranken zijn verkrijgbaar aan de toonbank.",
   "dashboard.menu.alcohol_badge": "Alcohol - toonbank",
   "dashboard.menu.alcohol_label": "Bevat alcohol",
-  "dashboard.menu.alcohol_desc": "Verborgen voor online bestellingen (alleen balieverkoop)"
+  "dashboard.menu.alcohol_desc": "Verborgen voor online bestellingen (alleen balieverkoop)",
+  "options.fries_inside": "Friet erin?",
+  "options.fries_inside_yes": "Met friet",
+  "options.fries_inside_no": "Zonder friet",
+  "options.sides": "Bijgerechten",
+  "options.sides_included": "{count} inbegrepen",
+  "options.sides_extra": "+{price} per extra bijgerecht",
+  "options.sauces_free_remaining": "{count}/{total} gratis sauzen",
+  "options.sauces_all_free_used": "Gratis sauzen op",
+  "options.sauces_extra": "+{price} per extra saus",
+  "options.sauces_extra_total": "{count} extra saus(en): +{total} EUR",
+  "options.free_then_paid_label": "X gratis, daarna toeslag",
+  "options.free_then_paid_free_count": "Aantal gratis keuzes",
+  "options.free_then_paid_extra_price": "Prijs per extra keuze",
+  "options.free_then_paid_no_limit": "Geen limiet"
 }

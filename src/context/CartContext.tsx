@@ -11,10 +11,13 @@ export interface CartItem {
   garnitureChoices?: { name: string; level: "oui" | "x2" }[];
   viandeChoice?: string;
   baseChoice?: string;
+  fritesInside?: boolean;
   accompagnementChoice?: { name: string; size?: string; sauces?: string[] };
+  accompagnementChoices?: { name: string; size?: string; sauces?: string[] }[];
   drinkChoice?: { name: string; price: number };
   dessertChoice?: { name: string; price: number };
   customChoices?: StepSelection[];
+  sauceExtraCost?: number;
   totalPrice: number;
 }
 
@@ -22,7 +25,7 @@ interface CartContextType {
   items: CartItem[];
   restaurantSlug: string | null;
   restaurantId: string | null;
-  addItem: (item: DbMenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string, restaurantId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number }; customChoices?: StepSelection[] }) => void;
+  addItem: (item: DbMenuItem, sauces: string[], supplements: Supplement[], restaurantSlug: string, restaurantId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; fritesInside?: boolean; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; accompagnementChoices?: { name: string; size?: string; sauces?: string[] }[]; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number }; customChoices?: StepSelection[]; sauceExtraCost?: number }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -53,14 +56,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     saveCart(state.items, state.restaurantSlug, state.restaurantId);
   }, [state]);
 
-  const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number }; customChoices?: StepSelection[] }) => {
+  const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; fritesInside?: boolean; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; accompagnementChoices?: { name: string; size?: string; sauces?: string[] }[]; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number }; customChoices?: StepSelection[]; sauceExtraCost?: number }) => {
     setState((prev) => {
       let items = prev.items;
       if (prev.restaurantSlug && prev.restaurantSlug !== slug) {
         items = [];
       }
       const suppTotal = supplements.reduce((sum, s) => sum + s.price, 0);
-      const totalPrice = menuItem.price + suppTotal + (options?.extraCost || 0);
+      const sauceExtra = options?.sauceExtraCost || 0;
+      const totalPrice = menuItem.price + suppTotal + (options?.extraCost || 0) + sauceExtra;
       const cartId = `${menuItem.id}-${Date.now()}`;
       return {
         items: [...items, {
@@ -72,10 +76,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           garnitureChoices: options?.garnitureChoices,
           viandeChoice: options?.viandeChoice,
           baseChoice: options?.baseChoice,
+          fritesInside: options?.fritesInside,
           accompagnementChoice: options?.accompagnementChoice,
+          accompagnementChoices: options?.accompagnementChoices,
           drinkChoice: options?.drinkChoice,
           dessertChoice: options?.dessertChoice,
           customChoices: options?.customChoices,
+          sauceExtraCost: sauceExtra > 0 ? sauceExtra : undefined,
           totalPrice,
         }],
         restaurantSlug: slug,

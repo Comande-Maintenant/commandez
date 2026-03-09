@@ -346,6 +346,11 @@ export const ProductCustomizer = ({
       }
     }
 
+    // Extra sandwich sauces (free_then_paid)
+    const sauceSel = getStepSelections("sauce");
+    const extraSandwichSauces = Math.max(0, sauceSel.length - freeSaucesSandwich);
+    total += extraSandwichSauces * extraSaucePrice;
+
     // Extra frites sauces
     const extraFritesSauces = Math.max(0, fritesSauces.length - freeSaucesFrites);
     total += extraFritesSauces * extraSaucePrice;
@@ -371,7 +376,7 @@ export const ProductCustomizer = ({
     }
 
     return total;
-  }, [getStepSelections, selections, selectedAccompagnement, accompSize, fritesSauces, isMenu, item.price, productType, freeSaucesFrites, extraSaucePrice, steps]);
+  }, [getStepSelections, selections, selectedAccompagnement, accompSize, fritesSauces, isMenu, item.price, productType, freeSaucesSandwich, freeSaucesFrites, extraSaucePrice, steps]);
 
   const goNext = useCallback(() => {
     if (stepIndex < steps.length - 1) setStepIndex(stepIndex + 1);
@@ -428,7 +433,7 @@ export const ProductCustomizer = ({
     setStepSelections(stepKey, label, next);
   };
 
-  // Handle chip_select (sauces)
+  // Handle chip_select (sauces) - unlimited, free_then_paid
   const handleChipSelect = (stepKey: string, label: string, option: ResolvedStep["options"][0]) => {
     const current = getStepSelections(stepKey);
     const exists = current.find((s) => s.id === option.id);
@@ -436,7 +441,6 @@ export const ProductCustomizer = ({
     if (exists) {
       next = current.filter((s) => s.id !== option.id);
     } else {
-      if (current.length >= freeSaucesSandwich) return;
       next = [...current, { id: option.id, name: option.name, price: 0 }];
     }
     setStepSelections(stepKey, label, next);
@@ -894,39 +898,51 @@ export const ProductCustomizer = ({
                         </div>
                       )}
 
-                      {/* CHIP SELECT (sauces) */}
-                      {currentStep.step_type === "chip_select" && (
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 mb-1">{t(currentStep.label_i18n)}</h4>
-                          <p className="text-xs text-gray-500 mb-3">
-                            {t("custom.free_sauces", { count: String(freeSaucesSandwich) })}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {currentResolved.options.map((option) => {
-                              const sel = getStepSelections(currentStep.step_key);
-                              const isSelected = sel.some((s) => s.id === option.id);
-                              return (
-                                <button
-                                  key={option.id}
-                                  onClick={() => handleChipSelect(currentStep.step_key, t(currentStep.label_i18n), option)}
-                                  className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
-                                    isSelected ? "text-white" : "bg-gray-100 text-gray-700"
-                                  }`}
-                                  style={isSelected ? { backgroundColor: accent } : {}}
-                                >
-                                  {tName(option.name_translations, option.name)}
-                                </button>
-                              );
-                            })}
+                      {/* CHIP SELECT (sauces) - unlimited with free_then_paid */}
+                      {currentStep.step_type === "chip_select" && (() => {
+                        const sel = getStepSelections(currentStep.step_key);
+                        const extraCount = Math.max(0, sel.length - freeSaucesSandwich);
+                        const extraCost = extraCount * extraSaucePrice;
+                        return (
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-900 mb-1">{t(currentStep.label_i18n)}</h4>
+                            <p className="text-xs text-gray-500 mb-3">
+                              {sel.length <= freeSaucesSandwich
+                                ? t("options.sauces_free_remaining").replace("{count}", String(sel.length)).replace("{total}", String(freeSaucesSandwich))
+                                : t("options.sauces_extra_total").replace("{count}", String(extraCount)).replace("{total}", extraCost.toFixed(2))
+                              }
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {currentResolved.options.map((option) => {
+                                const isSelected = sel.some((s) => s.id === option.id);
+                                const sauceIdx = sel.findIndex((s) => s.id === option.id);
+                                const isPaid = isSelected && sauceIdx >= freeSaucesSandwich;
+                                return (
+                                  <button
+                                    key={option.id}
+                                    onClick={() => handleChipSelect(currentStep.step_key, t(currentStep.label_i18n), option)}
+                                    className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
+                                      isSelected ? "text-white" : "bg-gray-100 text-gray-700"
+                                    }`}
+                                    style={isSelected ? { backgroundColor: accent } : {}}
+                                  >
+                                    {tName(option.name_translations, option.name)}
+                                    {isPaid && (
+                                      <span className="ml-1 text-xs opacity-80">+{extraSaucePrice.toFixed(2)}€</span>
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <button
+                              onClick={goNext}
+                              className="mt-4 text-sm font-medium text-gray-500 underline"
+                            >
+                              {t("custom.skip")}
+                            </button>
                           </div>
-                          <button
-                            onClick={goNext}
-                            className="mt-4 text-sm font-medium text-gray-500 underline"
-                          >
-                            {t("custom.skip")}
-                          </button>
-                        </div>
-                      )}
+                        );
+                      })()}
 
                       {/* UPSELL (boisson/dessert) */}
                       {currentStep.step_type === "upsell" && (

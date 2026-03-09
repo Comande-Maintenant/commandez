@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { X, Minus, Plus, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DbMenuItem, Supplement, CustomizationConfig, CustomizationOption } from "@/types/database";
+import type { SauceConfig } from "@/types/customization";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -14,6 +15,7 @@ interface Props {
   customizationConfig: CustomizationConfig;
   primaryColor: string;
   outOfStockIngredients?: string[];
+  sauceConfig?: SauceConfig;
 }
 
 const NON_SAVORY_KEYWORDS = ["dessert", "boisson", "drink", "sucre", "sweet", "glace", "patisserie", "cookie", "gateau"];
@@ -39,6 +41,7 @@ export const SavoryItemDrawer = ({
   customizationConfig,
   primaryColor,
   outOfStockIngredients = [],
+  sauceConfig = { freeCount: 3, extraPrice: 0.50 },
 }: Props) => {
   const { addItem } = useCart();
   const { t, tMenu } = useLanguage();
@@ -56,7 +59,11 @@ export const SavoryItemDrawer = ({
   const [garniture, setGarniture] = useState<Record<string, GarnitureLevel>>({});
   const [selectedSauces, setSelectedSauces] = useState<string[]>([]);
   const [selectedSupplements, setSelectedSupplements] = useState<Supplement[]>([]);
+  const [fritesInside, setFritesInside] = useState(false);
   const [quantity, setQuantity] = useState(1);
+
+  // Frites inside toggle: for tacos and kebab/galette/durum products
+  const showFritesInside = /tacos|galette|durum|kebab/i.test(item.name) || /tacos|galette/i.test(item.product_type || "");
 
   // Sauces: use config step or fallback to item.sauces, filter out-of-stock
   const availableSauces = (saucesStep
@@ -91,7 +98,13 @@ export const SavoryItemDrawer = ({
     [selectedSupplements]
   );
 
-  const unitPrice = item.price + viandeCost + garnitureCost + suppCost;
+  // Sauce extra cost (free_then_paid)
+  const sauceCost = useMemo(() => {
+    const paidCount = Math.max(0, selectedSauces.length - sauceConfig.freeCount);
+    return paidCount * sauceConfig.extraPrice;
+  }, [selectedSauces.length, sauceConfig.freeCount, sauceConfig.extraPrice]);
+
+  const unitPrice = item.price + viandeCost + garnitureCost + suppCost + sauceCost;
   const total = unitPrice * quantity;
 
   // Viande selection
@@ -139,9 +152,7 @@ export const SavoryItemDrawer = ({
     setSelectedSauces((prev) =>
       prev.includes(sauce)
         ? prev.filter((s) => s !== sauce)
-        : prev.length < 3
-          ? [...prev, sauce]
-          : prev
+        : [...prev, sauce]
     );
   };
 
@@ -178,7 +189,9 @@ export const SavoryItemDrawer = ({
       addItem(item, selectedSauces, selectedSupplements, restaurantSlug, restaurantId, {
         garnitureChoices,
         viandeChoice,
+        fritesInside: showFritesInside ? fritesInside : undefined,
         extraCost,
+        sauceExtraCost: sauceCost,
       });
     }
 
@@ -187,6 +200,7 @@ export const SavoryItemDrawer = ({
     setGarniture({});
     setSelectedSauces([]);
     setSelectedSupplements([]);
+    setFritesInside(false);
     setQuantity(1);
     onClose();
   };
@@ -390,18 +404,61 @@ export const SavoryItemDrawer = ({
                 </div>
               )}
 
+              {/* Frites inside toggle */}
+              {showFritesInside && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                    {t("options.fries_inside")}
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setFritesInside(true)}
+                      className="px-4 py-3 rounded-xl text-sm font-medium transition-all text-center"
+                      style={
+                        fritesInside
+                          ? { backgroundColor: accent, color: "#ffffff" }
+                          : { backgroundColor: "#f3f4f6", color: "#374151" }
+                      }
+                    >
+                      {fritesInside && <Check className="inline h-3 w-3 mr-1" />}
+                      {t("options.fries_inside_yes")}
+                    </button>
+                    <button
+                      onClick={() => setFritesInside(false)}
+                      className="px-4 py-3 rounded-xl text-sm font-medium transition-all text-center"
+                      style={
+                        !fritesInside
+                          ? { backgroundColor: accent, color: "#ffffff" }
+                          : { backgroundColor: "#f3f4f6", color: "#374151" }
+                      }
+                    >
+                      {!fritesInside && <Check className="inline h-3 w-3 mr-1" />}
+                      {t("options.fries_inside_no")}
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Sauces section */}
               {availableSauces.length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                    {t("item.sauces")}{" "}
-                    <span className="text-gray-400 font-normal">
-                      ({t("item.sauces_max", { max: 3 })})
-                    </span>
+                    {t("item.sauces")}
                   </h4>
+                  {/* Free/paid indicator */}
+                  <p className="text-xs text-gray-500 mb-2">
+                    {selectedSauces.length <= sauceConfig.freeCount
+                      ? t("options.sauces_free_remaining").replace("{count}", String(selectedSauces.length)).replace("{total}", String(sauceConfig.freeCount))
+                      : t("options.sauces_extra_total")
+                          .replace("{count}", String(selectedSauces.length - sauceConfig.freeCount))
+                          .replace("{total}", sauceCost.toFixed(2))
+                    }
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {availableSauces.map((sauce) => {
                       const selected = selectedSauces.includes(sauce);
+                      const sauceIdx = selectedSauces.indexOf(sauce);
+                      const isPaid = selected && sauceIdx >= sauceConfig.freeCount;
                       return (
                         <button
                           key={sauce}
@@ -417,6 +474,9 @@ export const SavoryItemDrawer = ({
                             <Check className="inline h-3 w-3 mr-1" />
                           )}
                           {sauce}
+                          {isPaid && (
+                            <span className="ml-1 text-xs opacity-80">+{sauceConfig.extraPrice.toFixed(2)}€</span>
+                          )}
                         </button>
                       );
                     })}

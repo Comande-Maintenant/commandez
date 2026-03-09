@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "アルコール飲料はカウンターでご購入いただけます。",
   "dashboard.menu.alcohol_badge": "アルコール - カウンター",
   "dashboard.menu.alcohol_label": "アルコール含有",
-  "dashboard.menu.alcohol_desc": "オンライン注文から非表示（カウンター販売のみ）"
+  "dashboard.menu.alcohol_desc": "オンライン注文から非表示（カウンター販売のみ）",
+  "options.fries_inside": "フライドポテト入り？",
+  "options.fries_inside_yes": "ポテト入り",
+  "options.fries_inside_no": "ポテトなし",
+  "options.sides": "サイドメニュー",
+  "options.sides_included": "{count}品含む",
+  "options.sides_extra": "追加+{price}/品",
+  "options.sauces_free_remaining": "{count}/{total}無料ソース",
+  "options.sauces_all_free_used": "無料ソース使用済み",
+  "options.sauces_extra": "追加ソース+{price}",
+  "options.sauces_extra_total": "追加ソース{count}品：+{total}EUR",
+  "options.free_then_paid_label": "X品無料、以降追加料金",
+  "options.free_then_paid_free_count": "無料の選択数",
+  "options.free_then_paid_extra_price": "追加1品の価格",
+  "options.free_then_paid_no_limit": "制限なし"
 }

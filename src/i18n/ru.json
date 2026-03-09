@@ -1319,5 +1319,19 @@
   "menu.alcohol_counter_notice": "Алкогольные напитки доступны у стойки.",
   "dashboard.menu.alcohol_badge": "Алкоголь - стойка",
   "dashboard.menu.alcohol_label": "Содержит алкоголь",
-  "dashboard.menu.alcohol_desc": "Скрыто из онлайн-заказов (только продажа у стойки)"
+  "dashboard.menu.alcohol_desc": "Скрыто из онлайн-заказов (только продажа у стойки)",
+  "options.fries_inside": "Картофель внутри?",
+  "options.fries_inside_yes": "С картофелем",
+  "options.fries_inside_no": "Без картофеля",
+  "options.sides": "Гарниры",
+  "options.sides_included": "{count} включено",
+  "options.sides_extra": "+{price} за доп. гарнир",
+  "options.sauces_free_remaining": "{count}/{total} бесплатных соусов",
+  "options.sauces_all_free_used": "Бесплатные соусы использованы",
+  "options.sauces_extra": "+{price} за доп. соус",
+  "options.sauces_extra_total": "{count} доп. соус(а): +{total} EUR",
+  "options.free_then_paid_label": "X бесплатно, далее доплата",
+  "options.free_then_paid_free_count": "Кол-во бесплатных",
+  "options.free_then_paid_extra_price": "Цена за доп. выбор",
+  "options.free_then_paid_no_limit": "Без ограничений"
 }

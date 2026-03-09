@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import type { DbMenuItem, CustomizationConfig } from "@/types/database";
-import type { UniversalCustomizationData } from "@/types/customization";
+import type { UniversalCustomizationData, SauceConfig } from "@/types/customization";
 import { useLanguage } from "@/context/LanguageContext";
 import { ItemCustomizeModal } from "./ItemCustomizeModal";
 import { SavoryItemDrawer, isSavoryItem } from "./SavoryItemDrawer";
@@ -37,6 +37,11 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
   const useNewCustomizer = CUSTOMIZABLE_TYPES.includes(productType) && !!customizationData;
   const garnitureStep = customizationConfig?.steps?.find((s) => s.id === "garniture");
   const useLegacyDrawer = !useNewCustomizer && isSavoryItem(item.category) && !!garnitureStep && !!customizationConfig;
+
+  // Extract sauce pricing config for legacy components
+  const sauceConfig: SauceConfig = customizationData?.config
+    ? { freeCount: customizationData.config.free_sauces_sandwich, extraPrice: customizationData.config.extra_sauce_price }
+    : { freeCount: 3, extraPrice: 0.50 };
 
   return (
     <>
@@ -128,6 +133,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
           customizationConfig={customizationConfig}
           primaryColor={primaryColor || "#10B981"}
           outOfStockIngredients={outOfStockIngredients}
+          sauceConfig={sauceConfig}
         />
       ) : (
         <ItemCustomizeModal
@@ -138,6 +144,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
           restaurantId={restaurantId}
           primaryColor={primaryColor}
           outOfStockIngredients={outOfStockIngredients}
+          sauceConfig={sauceConfig}
         />
       )}
     </>
