@@ -76,12 +76,18 @@
 - `src/components/dashboard/referral/ReferralSection.tsx` : UI parrainage
 - `src/components/CustomOrderBuilder.tsx` : configurateur multi-etapes
 - `src/context/CartContext.tsx` : panier (localStorage)
-- `src/context/LanguageContext.tsx` : i18n 12 langues
+- `src/context/LanguageContext.tsx` : i18n 14 langues
 
 ## i18n
-- 12 langues : fr/en/es/de/it/pt/nl/ar/zh/ja/ko/ru
+- 14 langues : fr/en/es/de/it/pt/nl/ar/zh/ja/ko/ru/tr/vi
+- **1283 cles** par fichier, parite parfaite entre les 14 langues (mars 2026)
 - Fichiers : `src/i18n/*.json`
+- Hook : `useLanguage()` -> `t("key")`, `tMenu(item)`, `tCategory(cat)`, `language`, `isRTL`
+- Placeholders : `{value}`, `{count}`, `{date}` etc. remplaces via `.replace("{key}", val)`
+- Lazy import : seul fr.json charge statiquement, autres langues en dynamic import
+- Fallback : cle absente -> retour au francais
 - **Format category_translations DB** : `{ lang: { catName: translation } }` (PAS l'inverse)
+- **Theme Shopify** : liens internes avec `{{ routes.root_url }}` pour persistance langue entre pages
 
 ## Cross-domain Auth
 - Cookie `commandeici_user=1` set sur `domain=.commandeici.com` quand connecte

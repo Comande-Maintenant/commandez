@@ -286,10 +286,13 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{t("dashboard.orders.filter_in_progress")}</p>
           <p className="text-xl sm:text-2xl font-bold mt-0.5 text-foreground">{preparingCount}</p>
         </button>
-        <div className="bg-card rounded-2xl border border-border p-3">
-          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{t("dashboard.orders.revenue_today")}</p>
-          <p className="text-lg sm:text-xl font-bold mt-0.5 text-foreground blur-sensitive">{todayRevenue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} €</p>
-        </div>
+        <button
+          onClick={() => setFilter("done")}
+          className={`bg-card rounded-2xl border border-border p-3 text-left transition-all hover:shadow-sm ${filter === "done" ? "ring-2 ring-gray-400" : ""}`}
+        >
+          <p className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{t("dashboard.orders.filter_done")}</p>
+          <p className="text-xl sm:text-2xl font-bold mt-0.5 text-foreground">{todayDoneOrders.length}</p>
+        </button>
       </div>
 
       {/* Prep summary for kitchen */}
