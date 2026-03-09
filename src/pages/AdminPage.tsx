@@ -11,6 +11,7 @@ import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
 import { DashboardMaPage } from "@/components/dashboard/DashboardMaPage";
 import { DashboardQRCodes } from "@/components/dashboard/DashboardQRCodes";
 import { DashboardTablettes } from "@/components/dashboard/DashboardTablettes";
+import { DashboardBorneClient } from "@/components/dashboard/DashboardBorneClient";
 import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
 import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
 import { DashboardEnDirect } from "@/components/dashboard/DashboardEnDirect";
@@ -33,7 +34,7 @@ import { OrderHistorySheet } from "@/components/dashboard/OrderHistorySheet";
 import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
 import { useLanguage } from "@/context/LanguageContext";
 
-const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer", "clients", "customization"];
+const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "borne", "parametres", "stats", "gerer", "clients", "customization"];
 
 function isValidView(v: string): v is DashboardView {
   return validViews.includes(v as DashboardView);
@@ -399,6 +400,7 @@ const AdminPage = () => {
               {activeView === "page" && <DashboardMaPage restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "qrcodes" && <DashboardQRCodes restaurant={restaurant} />}
               {activeView === "tablettes" && <DashboardTablettes restaurant={restaurant} />}
+              {activeView === "borne" && <DashboardBorneClient restaurant={restaurant} />}
               {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} isDemo={isDemo} />}
               {activeView === "stats" && <DashboardStats restaurant={restaurant} isDemo={isDemo} />}
               {activeView === "clients" && <DashboardClients restaurant={restaurant} isDemo={isDemo} />}

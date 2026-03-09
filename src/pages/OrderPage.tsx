@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
 import { PickupTimePicker } from "@/components/PickupTimePicker";
 import { toast } from "sonner";
+import { useKioskMode } from "@/hooks/useKioskMode";
+import { formatDisplayNumber } from "@/lib/orderNumber";
 
 const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
@@ -36,8 +38,10 @@ const OrderPage = () => {
     } catch {}
     return false;
   });
-  const [paymentMethod, setPaymentMethod] = useState<string>("card");
-  const [orderType, setOrderType] = useState<"collect" | "sur_place">("collect");
+  const { isKiosk, config: kioskConfig } = useKioskMode();
+  const [paymentMethod, setPaymentMethod] = useState<string>(isKiosk && kioskConfig.defaultPayment === "counter" ? "cash" : "card");
+  const [orderType, setOrderType] = useState<"collect" | "sur_place">(isKiosk ? "sur_place" : "collect");
+  const [tableNumber, setTableNumber] = useState("");
   const [covers, setCovers] = useState(1);
   const [dineInEnabled, setDineInEnabled] = useState(false);
   const [dineInCapacity, setDineInCapacity] = useState<number | null>(null);
@@ -153,14 +157,15 @@ const OrderPage = () => {
           garniture_choices: i.garnitureChoices || null,
         };
       });
+      const kioskName = isKiosk ? (tableNumber ? `Borne T${tableNumber}` : "Borne") : name;
       const orderPayload: Parameters<typeof createOrder>[0] = {
         restaurant_id: restaurantId,
-        customer_name: name,
-        customer_phone: phone,
-        customer_email: email || undefined,
+        customer_name: isKiosk ? kioskName : name,
+        customer_phone: isKiosk ? "" : phone,
+        customer_email: isKiosk ? undefined : (email || undefined),
         order_type: orderType,
         covers: orderType === "sur_place" ? covers : undefined,
-        source: demoOrder ? "demo" : undefined,
+        source: demoOrder ? "demo" : (isKiosk ? "kiosk" : undefined),
         items: orderItems,
         subtotal,
         total,
@@ -187,6 +192,15 @@ const OrderPage = () => {
         incrementCustomerStats(user.id, total).catch(() => {});
       }
       clearCart();
+      // Kiosk mode: go back to restaurant with confirmation overlay
+      if (isKiosk) {
+        const displayNum = formatDisplayNumber(order);
+        navigate(`/${restaurantSlug}?kiosk=true`, {
+          state: { kioskOrder: { number: displayNum, paymentMethod: paymentMethod } },
+          replace: true,
+        });
+        return;
+      }
       navigate("/suivi/" + order.id);
     } catch (e: any) {
       console.error("Order error:", e);
@@ -234,7 +248,7 @@ const OrderPage = () => {
           <button onClick={() => navigate(-1)} className="p-2" aria-label={t("nav.back")}>
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
-          <h1 className="text-lg font-semibold text-foreground">{t("order.place_order")}</h1>
+          <h1 className={`font-semibold text-foreground ${isKiosk ? "text-xl" : "text-lg"}`}>{t("order.place_order")}</h1>
         </div>
       </header>
 
@@ -255,15 +269,34 @@ const OrderPage = () => {
           </div>
 
           {/* Customer info */}
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.your_info")}</h2>
-          <div className="space-y-3">
-            <Input placeholder={t("order.your_name")} value={name} onChange={(e) => setName(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
-            <Input placeholder={t("order.phone")} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
-            <Input placeholder={t("order.email_optional")} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
-          </div>
+          {isKiosk ? (
+            <>
+              {kioskConfig.askTable && (
+                <div className="p-4 bg-secondary/50 rounded-2xl space-y-3">
+                  <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("kiosk.table_number")}</h2>
+                  <Input
+                    placeholder={t("kiosk.table_number.placeholder")}
+                    value={tableNumber}
+                    onChange={(e) => setTableNumber(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                    inputMode="numeric"
+                    className="h-16 rounded-2xl bg-background border-2 border-border text-2xl text-center font-bold"
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.your_info")}</h2>
+              <div className="space-y-3">
+                <Input placeholder={t("order.your_name")} value={name} onChange={(e) => setName(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+                <Input placeholder={t("order.phone")} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+                <Input placeholder={t("order.email_optional")} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+              </div>
+            </>
+          )}
 
-          {/* Order type selector */}
-          {dineInEnabled && (
+          {/* Order type selector - hidden in kiosk (forced sur_place) unless takeaway allowed */}
+          {!isKiosk && dineInEnabled && (
             <div className="p-4 bg-secondary/50 rounded-2xl space-y-3">
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.order_type")}</h2>
               <div className="flex gap-3">
@@ -304,8 +337,8 @@ const OrderPage = () => {
             </div>
           )}
 
-          {/* Pickup time picker */}
-          {restaurantId && orderType === "collect" && (
+          {/* Pickup time picker - hidden in kiosk */}
+          {!isKiosk && restaurantId && orderType === "collect" && (
             <div className="p-4 bg-secondary/50 rounded-2xl">
               <PickupTimePicker
                 restaurantId={restaurantId}
@@ -341,8 +374,8 @@ const OrderPage = () => {
             <div className="flex justify-between font-semibold text-foreground"><span>{t("order.total_to_pay")}</span><span>{total.toFixed(2)} €</span></div>
           </div>
 
-          {/* Reminder block */}
-          <div className="rounded-xl border-l-4 border-amber-400 bg-amber-50 p-4 space-y-2">
+          {/* Reminder block - hidden in kiosk */}
+          {!isKiosk && <div className="rounded-xl border-l-4 border-amber-400 bg-amber-50 p-4 space-y-2">
             <div className="flex items-start gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
               <div className="space-y-1.5 text-sm text-amber-900">
@@ -356,11 +389,11 @@ const OrderPage = () => {
                 )}
               </div>
             </div>
-          </div>
+          </div>}
 
           <Button
             onClick={handleConfirm}
-            disabled={!name || !phone || submitting}
+            disabled={(!isKiosk && (!name || !phone)) || submitting}
             className="w-full h-14 text-base font-semibold rounded-2xl"
             size="lg"
           >

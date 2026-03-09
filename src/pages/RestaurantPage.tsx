@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer, Maximize } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug, fetchMenuItems, incrementDeactivationVisits, fetchActiveOrderCount, isCustomerBanned } from "@/lib/api";
@@ -17,6 +17,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
 import { toast } from "sonner";
+import { useKioskMode } from "@/hooks/useKioskMode";
+import { KioskSplashScreen } from "@/components/kiosk/KioskSplashScreen";
+import { KioskConfirmation } from "@/components/kiosk/KioskConfirmation";
+import { KioskInactivityTimer } from "@/components/kiosk/KioskInactivityTimer";
 
 const DEFAULT_PRIMARY = "#10B981";
 const UNIVERSAL_BG = "#FFF8F0";
@@ -195,9 +199,40 @@ const RestaurantPage = () => {
   const isScrollingRef = useRef(false);
   const [scrolled, setScrolled] = useState(false);
   const heroSentinelRef = useRef<HTMLDivElement>(null);
-  const { totalItems, subtotal, addItem } = useCart();
+  const { totalItems, subtotal, addItem, clearCart } = useCart();
   const { t, tCategory, isRTL } = useLanguage();
   const { updateSection } = useVisitorTracking(restaurant?.id ?? null);
+  const { isKiosk, config: kioskConfig } = useKioskMode();
+  const [kioskSplash, setKioskSplash] = useState(true);
+  const [kioskOrder, setKioskOrder] = useState<{ number: string; paymentMethod: string } | null>(null);
+
+  // Detect kiosk confirmation from OrderPage navigation
+  useEffect(() => {
+    const state = location.state as any;
+    if (state?.kioskOrder) {
+      setKioskOrder(state.kioskOrder);
+      setKioskSplash(false);
+      // Clean navigation state
+      window.history.replaceState({}, "", window.location.href);
+    }
+  }, [location.state]);
+
+  // Request fullscreen on kiosk start
+  const handleKioskStart = useCallback(() => {
+    setKioskSplash(false);
+    if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  }, []);
+
+  // Reset kiosk to splash
+  const handleKioskReset = useCallback(() => {
+    setKioskOrder(null);
+    clearCart();
+    // Clear any customer session data for kiosk
+    sessionStorage.removeItem("cm_kiosk_customer");
+    setKioskSplash(true);
+  }, [clearCart]);
 
   useEffect(() => {
     if (!slug) return;
@@ -533,9 +568,33 @@ const RestaurantPage = () => {
   const initial = restaurant.name?.charAt(0)?.toUpperCase() || "R";
 
   return (
-    <div className="relative min-h-screen pb-28" dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
+    <div className={`relative min-h-screen pb-28 ${isKiosk ? "kiosk-mode" : ""}`} dir={isRTL ? "rtl" : "ltr"} style={{ ...cssVars, backgroundColor: bg }}>
+      {/* Kiosk overlays */}
+      {isKiosk && kioskSplash && restaurant && (
+        <KioskSplashScreen restaurant={restaurant} onStart={handleKioskStart} />
+      )}
+      {isKiosk && kioskOrder && (
+        <KioskConfirmation
+          orderNumber={kioskOrder.number}
+          paymentMethod={kioskOrder.paymentMethod}
+          onReset={handleKioskReset}
+        />
+      )}
+      {isKiosk && !kioskSplash && !kioskOrder && (
+        <KioskInactivityTimer
+          timeoutSeconds={kioskConfig.timeoutSeconds}
+          onReset={handleKioskReset}
+        />
+      )}
+
+      {/* Kiosk touch target CSS */}
+      {isKiosk && (
+        <style>{`.kiosk-mode button, .kiosk-mode [role="button"] { min-height: 48px; }
+.kiosk-mode .menu-item-card { min-height: 56px; }`}</style>
+      )}
+
       {/* Sticky demo banner - always visible, not dismissable */}
-      {isDemo && (
+      {isDemo && !isKiosk && (
         <div className="sticky top-0 z-50 bg-indigo-600 text-white px-4 py-2 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-sm font-semibold whitespace-nowrap">MODE DEMO</span>
@@ -576,15 +635,17 @@ const RestaurantPage = () => {
           />
         </div>
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
-          <button
-            onClick={() => window.history.length > 1 ? navigate(-1) : window.location.href = "https://commandeici.com"}
-            className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
-            aria-label={t("nav.back")}
-          >
-            <ArrowLeft className="h-5 w-5 text-white" />
-          </button>
+          {!isKiosk ? (
+            <button
+              onClick={() => window.history.length > 1 ? navigate(-1) : window.location.href = "https://commandeici.com"}
+              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
+              aria-label={t("nav.back")}
+            >
+              <ArrowLeft className="h-5 w-5 text-white" />
+            </button>
+          ) : <div />}
           <div className="flex items-center gap-2">
-            <CustomerAvatar />
+            {!isKiosk && <CustomerAvatar />}
             <LanguageSelector />
           </div>
         </div>
@@ -784,7 +845,7 @@ const RestaurantPage = () => {
         </motion.div>
 
         {/* Demo banner - inline, links to dashboard + inscription */}
-        {isDemo && (
+        {isDemo && !isKiosk && (
           <div className="mt-4 px-4 py-3 rounded-xl bg-indigo-50 border border-indigo-200">
             <p className="text-sm font-semibold text-indigo-900">{t("demo.seo_banner_title")}</p>
             <p className="text-xs text-indigo-700 mt-1">{t("demo.seo_banner_text")}</p>
@@ -808,7 +869,7 @@ const RestaurantPage = () => {
         )}
 
         {/* Customer recognition banner */}
-        {customerName && !activeOrderId && (
+        {!isKiosk && customerName && !activeOrderId && (
           <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-secondary/80 border border-border">
             <p className="text-sm text-foreground">
               {t("restaurant.greeting", { name: customerName })}
@@ -827,7 +888,7 @@ const RestaurantPage = () => {
         )}
 
         {/* Active order banner */}
-        {activeOrderId && (
+        {!isKiosk && activeOrderId && (
           <motion.button
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -841,7 +902,7 @@ const RestaurantPage = () => {
         )}
 
         {/* Reorder banner */}
-        {lastOrderItems && lastOrderItems.length > 0 && !activeOrderId && (
+        {!isKiosk && lastOrderItems && lastOrderItems.length > 0 && !activeOrderId && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -955,8 +1016,8 @@ const RestaurantPage = () => {
           </>
         )}
 
-        {/* How it works section */}
-        <motion.div
+        {/* How it works section - hidden in kiosk */}
+        {!isKiosk && <motion.div
           className="mt-12 rounded-2xl p-6"
           style={{
             background: "rgba(255,255,255,0.55)",
@@ -1002,10 +1063,10 @@ const RestaurantPage = () => {
               {t("how.order_from_phone")}
             </span>
           </div>
-        </motion.div>
+        </motion.div>}
 
         {/* Footer */}
-        {isDemo ? (
+        {isKiosk ? null : isDemo ? (
           <div className="mt-8 mb-4 p-5 rounded-2xl bg-indigo-50 border border-indigo-200 text-center">
             <p className="text-sm font-semibold text-indigo-900">{t("demo.footer_title")}</p>
             <p className="text-xs text-indigo-700 mt-1">{t("demo.footer_text")}</p>

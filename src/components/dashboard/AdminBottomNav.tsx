@@ -7,7 +7,7 @@ interface Props {
   newOrderCount: number;
 }
 
-const adminViews = new Set(["carte", "page", "qrcodes", "tablettes", "parametres", "stats", "clients"]);
+const adminViews = new Set(["carte", "page", "qrcodes", "tablettes", "borne", "parametres", "stats", "clients"]);
 
 const items: { id: DashboardView; label: string; icon: typeof Flame }[] = [
   { id: "cuisine", label: "Cuisine", icon: Flame },

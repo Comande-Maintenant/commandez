@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Flame, Receipt, Eye, UtensilsCrossed, Palette, QrCode, Tablet, Settings, BarChart3, ChevronDown, Users } from "lucide-react";
+import { Flame, Receipt, Eye, UtensilsCrossed, Palette, QrCode, Tablet, Monitor, Settings, BarChart3, ChevronDown, Users } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DashboardView } from "@/types/dashboard";
 
@@ -20,12 +20,13 @@ const adminItemsDef: { id: DashboardView; tKey: string; icon: typeof Flame }[] =
   { id: "page", tKey: "dashboard.nav.page", icon: Palette },
   { id: "qrcodes", tKey: "dashboard.nav.qrcodes", icon: QrCode },
   { id: "tablettes", tKey: "dashboard.nav.tablets", icon: Tablet },
+  { id: "borne", tKey: "dashboard.nav.kiosk", icon: Monitor },
   { id: "clients", tKey: "dashboard.nav.clients", icon: Users },
   { id: "parametres", tKey: "dashboard.nav.settings", icon: Settings },
   { id: "stats", tKey: "dashboard.nav.stats", icon: BarChart3 },
 ];
 
-const isAdminView = (v: DashboardView) => ["carte", "page", "qrcodes", "tablettes", "parametres", "stats", "clients"].includes(v);
+const isAdminView = (v: DashboardView) => ["carte", "page", "qrcodes", "tablettes", "borne", "parametres", "stats", "clients"].includes(v);
 
 export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props) => {
   const { t } = useLanguage();

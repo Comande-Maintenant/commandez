@@ -6,6 +6,7 @@ export type DashboardView =
   | "page"
   | "qrcodes"
   | "tablettes"
+  | "borne"
   | "parametres"
   | "stats"
   | "gerer"
