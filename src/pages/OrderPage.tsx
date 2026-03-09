@@ -155,6 +155,14 @@ const OrderPage = () => {
           extra_cost: extraCost,
           viande_choice: i.viandeChoice || null,
           garniture_choices: i.garnitureChoices || null,
+          base_choice: i.baseChoice || null,
+          frites_inside: i.fritesInside ?? null,
+          accompagnement_choice: i.accompagnementChoice || null,
+          accompagnement_choices: i.accompagnementChoices || null,
+          drink_choice: i.drinkChoice || null,
+          dessert_choice: i.dessertChoice || null,
+          sauce_extra_cost: i.sauceExtraCost || null,
+          custom_choices: i.customChoices?.filter((c) => c.selections.length > 0) || null,
         };
       });
       const kioskName = isKiosk ? (tableNumber ? `Borne T${tableNumber}` : "Borne") : name;

@@ -500,11 +500,33 @@ export const OrderDetailSheet = ({
                     {item.base_choice && (
                       <p className="text-sm text-muted-foreground">{t("dashboard.orders.base_label").replace("{value}", item.base_choice)}</p>
                     )}
+                    {/* Frites inside */}
+                    {item.frites_inside !== undefined && item.frites_inside !== null && (
+                      <p className="text-sm text-muted-foreground">
+                        {item.frites_inside ? t("options.fries_inside_yes") : t("options.fries_inside_no")}
+                      </p>
+                    )}
                     {/* Accompagnement */}
                     {item.accompagnement_choice && (
                       <p className="text-sm text-muted-foreground">
                         {t("dashboard.orders.side_label").replace("{value}", typeof item.accompagnement_choice === "string" ? item.accompagnement_choice : item.accompagnement_choice.name)}
+                        {item.accompagnement_choice.size ? ` (${item.accompagnement_choice.size})` : ""}
+                        {item.accompagnement_choice.sauces?.length ? ` - ${item.accompagnement_choice.sauces.join(", ")}` : ""}
                       </p>
+                    )}
+                    {/* Multi accompagnements (assiettes) */}
+                    {item.accompagnement_choices?.length > 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        + {item.accompagnement_choices.map((a: any) => a.name).join(", ")}
+                      </p>
+                    )}
+                    {/* Drink */}
+                    {item.drink_choice && (
+                      <p className="text-sm text-muted-foreground">+ {item.drink_choice.name}</p>
+                    )}
+                    {/* Dessert */}
+                    {item.dessert_choice && (
+                      <p className="text-sm text-muted-foreground">+ {item.dessert_choice.name}</p>
                     )}
                   </div>
                   <p className="text-base font-semibold text-foreground tabular-nums flex-shrink-0 blur-sensitive">

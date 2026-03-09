@@ -450,6 +450,14 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                               {item.garniture_choices.map((g: any) => typeof g === "string" ? g : g.name).join(", ")}
                             </p>
                           )}
+                          {item.base_choice && (
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">{item.base_choice}</p>
+                          )}
+                          {item.frites_inside !== undefined && item.frites_inside !== null && (
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">
+                              {item.frites_inside ? t("options.fries_inside_yes") : t("options.fries_inside_no")}
+                            </p>
+                          )}
                           {item.sauces?.length > 0 && (
                             <p className="text-muted-foreground text-sm ms-3 mt-0.5">
                               {t("item.sauces")} : {item.sauces.join(", ")}
@@ -459,6 +467,24 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                             <p className="text-foreground text-sm ms-3 mt-0.5">
                               + {item.supplements.map((s: any) => typeof s === "string" ? s : s.name).join(", ")}
                             </p>
+                          )}
+                          {item.accompagnement_choice && (
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">
+                              + {item.accompagnement_choice.name}
+                              {item.accompagnement_choice.size ? ` (${item.accompagnement_choice.size})` : ""}
+                              {item.accompagnement_choice.sauces?.length ? ` - ${item.accompagnement_choice.sauces.join(", ")}` : ""}
+                            </p>
+                          )}
+                          {item.accompagnement_choices?.length > 0 && (
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">
+                              + {item.accompagnement_choices.map((a: any) => a.name).join(", ")}
+                            </p>
+                          )}
+                          {item.drink_choice && (
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">+ {item.drink_choice.name}</p>
+                          )}
+                          {item.dessert_choice && (
+                            <p className="text-muted-foreground text-sm ms-3 mt-0.5">+ {item.dessert_choice.name}</p>
                           )}
                           {item.notes && (
                             <p className="text-amber-600 text-sm ms-3 italic font-medium mt-0.5">{item.notes}</p>
