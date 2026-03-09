@@ -951,7 +951,7 @@ const RestaurantPage = () => {
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
               <div
-                className={`sticky ${isDemo ? "top-[40px]" : "top-0"} z-30 mt-4 -mx-4 px-4 py-3 transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
+                className={`sticky ${isDemo && !isKiosk ? "top-[40px]" : "top-0"} z-30 mt-4 -mx-4 px-4 py-3 transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
                 style={{
                   background: "rgba(255,255,255,0.55)",
                   backdropFilter: "blur(16px)",
