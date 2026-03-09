@@ -258,16 +258,22 @@ const AdminPage = () => {
                 <button
                   data-tour="son"
                   onClick={() => {
+                    if (sound.isRepeating) {
+                      sound.stopRepeat();
+                      return;
+                    }
                     if (!sound.audioUnlocked) {
                       sound.unlockAudio();
                     }
                     sound.toggleMuted();
                   }}
-                  className="p-2 rounded-xl hover:bg-secondary transition-colors"
-                  title={sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
-                  aria-label={sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
+                  className={`p-2 rounded-xl hover:bg-secondary transition-colors ${sound.isRepeating ? "animate-pulse" : ""}`}
+                  title={sound.isRepeating ? t("dashboard.admin.stop_alert") : sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
+                  aria-label={sound.isRepeating ? t("dashboard.admin.stop_alert") : sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
                 >
-                  {sound.muted || !sound.audioUnlocked ? (
+                  {sound.isRepeating ? (
+                    <Volume2 className="h-4 w-4 text-emerald-500" />
+                  ) : sound.muted || !sound.audioUnlocked ? (
                     <VolumeX className="h-4 w-4 text-muted-foreground" />
                   ) : (
                     <Volume2 className="h-4 w-4 text-foreground" />

@@ -30,17 +30,7 @@ import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-interface SoundControls {
-  audioUnlocked: boolean;
-  unlockAudio: () => void;
-  play: () => void;
-  testPlay: () => void;
-  volume: number;
-  setVolume: (v: number) => void;
-  muted: boolean;
-  setMuted: (m: boolean) => void;
-  toggleMuted: () => void;
-}
+import type { SoundControls } from "@/hooks/useNotificationSound";
 
 interface Props {
   restaurant: DbRestaurant;
@@ -414,26 +404,66 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
               <Switch checked={!sound.muted} onCheckedChange={(val) => sound.setMuted(!val)} />
             </div>
 
-            {/* Volume slider */}
             {!sound.muted && (
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm text-muted-foreground flex items-center gap-1.5">
-                    {sound.volume === 0 ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-                    Volume
-                  </label>
-                  <span className="text-sm font-medium text-foreground">{sound.volume}%</span>
+              <>
+                {/* Sound type selector */}
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">{t('dashboard.settings.sound_choice')}</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(["classic", "urgent", "soft"] as const).map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => {
+                          sound.setSoundType(type);
+                          // Auto-play preview
+                          setTimeout(() => sound.testPlay(), 50);
+                        }}
+                        className={`p-3 rounded-xl border text-center transition-all ${
+                          sound.soundType === type
+                            ? "border-foreground bg-secondary"
+                            : "border-border hover:bg-secondary/50"
+                        }`}
+                      >
+                        <span className="text-lg block mb-1">
+                          {type === "classic" ? "🔔" : type === "urgent" ? "🚨" : "🔕"}
+                        </span>
+                        <span className="text-xs font-medium text-foreground">
+                          {t(`dashboard.settings.sound_${type}`)}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  step={5}
-                  value={sound.volume}
-                  onChange={(e) => sound.setVolume(parseInt(e.target.value))}
-                  className="w-full"
-                />
-              </div>
+
+                {/* Volume slider */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm text-muted-foreground flex items-center gap-1.5">
+                      {sound.volume === 0 ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                      Volume
+                    </label>
+                    <span className="text-sm font-medium text-foreground">{sound.volume}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={sound.volume}
+                    onChange={(e) => sound.setVolume(parseInt(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+
+                {/* Repeat toggle */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{t('dashboard.settings.repeat_sound')}</p>
+                    <p className="text-xs text-muted-foreground">{t('dashboard.settings.repeat_sound_desc')}</p>
+                  </div>
+                  <Switch checked={sound.repeatEnabled} onCheckedChange={sound.setRepeatEnabled} />
+                </div>
+              </>
             )}
 
             {/* Test button */}
