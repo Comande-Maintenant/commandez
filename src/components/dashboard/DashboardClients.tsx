@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Search, Phone, Mail, ShoppingBag, Euro, Star, ShieldBan, ShieldCheck, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import { fetchCustomers, fetchDemoCustomers, unbanCustomer } from "@/lib/api";
+import { generateDemoCustomers } from "@/lib/demoData";
 import { formatRelativeTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbCustomer } from "@/types/database";
@@ -34,10 +35,12 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
 
   const loadCustomers = async () => {
     try {
-      const data = isDemo
-        ? await fetchDemoCustomers(restaurant.id)
-        : await fetchCustomers(restaurant.id);
-      setCustomers(data);
+      if (isDemo) {
+        setCustomers(generateDemoCustomers(restaurant.id));
+      } else {
+        const data = await fetchCustomers(restaurant.id);
+        setCustomers(data);
+      }
     } catch {
       toast.error("Erreur chargement clients");
     } finally {
