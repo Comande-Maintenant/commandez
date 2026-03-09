@@ -720,11 +720,29 @@ const RestaurantPage = () => {
                   <p className="text-sm text-gray-500 mt-0.5">{restaurant.cuisine}</p>
                 )}
                 {(restaurant.rating > 0) && (
-                  <div className="flex items-center gap-1 mt-1">
-                    <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                    <span className="text-sm font-semibold text-gray-900">{restaurant.rating}</span>
+                  <div className="flex items-center gap-1.5 mt-1.5">
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((i) => {
+                        const diff = restaurant.rating - i + 1;
+                        if (diff >= 1) {
+                          return <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />;
+                        }
+                        if (diff >= 0.3) {
+                          return (
+                            <div key={i} className="relative h-4 w-4">
+                              <Star className="absolute inset-0 h-4 w-4 text-gray-200 fill-gray-200" />
+                              <div className="absolute inset-0 overflow-hidden" style={{ width: "50%" }}>
+                                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                              </div>
+                            </div>
+                          );
+                        }
+                        return <Star key={i} className="h-4 w-4 text-gray-200 fill-gray-200" />;
+                      })}
+                    </div>
+                    <span className="text-sm font-bold text-gray-900">{restaurant.rating}</span>
                     {restaurant.review_count > 0 && (
-                      <span className="text-sm text-gray-500">({t("info.reviews", { count: restaurant.review_count })})</span>
+                      <span className="text-sm text-gray-400">({restaurant.review_count})</span>
                     )}
                   </div>
                 )}
@@ -753,21 +771,27 @@ const RestaurantPage = () => {
                   />
                 </div>
               )}
-              {/* Schedule-based hours display */}
+              {/* Schedule-based hours display as pills */}
               {availability.currentCloseTime ? (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
-                  <span>
-                    {availability.todaySlots.length > 1
-                      ? availability.todaySlots.map((s) => `${s.open}-${s.close}`).join(", ")
-                      : t("restaurant.closes_at", { time: availability.currentCloseTime })
-                    }
-                  </span>
+                <div className="flex flex-wrap items-center gap-2 mt-1">
+                  {availability.todaySlots.map((slot, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
+                      style={{ backgroundColor: primaryLight, color: primaryDark }}
+                    >
+                      <Clock className="h-3.5 w-3.5" />
+                      {slot.open} - {slot.close}
+                    </span>
+                  ))}
                 </div>
               ) : availability.nextOpenInfo ? (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
-                  <span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
+                    style={{ backgroundColor: "#FEF3C7", color: "#92400E" }}
+                  >
+                    <Clock className="h-3.5 w-3.5" />
                     {availability.nextOpenInfo.isToday
                       ? t("restaurant.opens_today_at", { time: availability.nextOpenInfo.time })
                       : t("restaurant.opens_day_at", { day: t(DAY_KEYS[availability.nextOpenInfo.dayIndex!]), time: availability.nextOpenInfo.time })
@@ -775,9 +799,14 @@ const RestaurantPage = () => {
                   </span>
                 </div>
               ) : restaurant.hours ? (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 flex-shrink-0" style={{ color: primary }} />
-                  <span>{restaurant.hours}</span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
+                    style={{ backgroundColor: primaryLight, color: primaryDark }}
+                  >
+                    <Clock className="h-3.5 w-3.5" />
+                    {restaurant.hours}
+                  </span>
                 </div>
               ) : null}
             </div>
