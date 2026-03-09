@@ -100,17 +100,17 @@ function SortableItemRow({
           <div className="flex flex-wrap gap-1 mt-0.5">
             {(item.variants ?? []).length > 0 && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                {(item.variants ?? []).length} taille{(item.variants ?? []).length > 1 ? "s" : ""}
+                {t("dashboard.menu.sizes_count", { count: String((item.variants ?? []).length) })}
               </span>
             )}
             {(item.sauces ?? []).length > 0 && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">
-                {(item.sauces ?? []).length} sauce{(item.sauces ?? []).length > 1 ? "s" : ""}
+                {t("dashboard.menu.sauces_count", { count: String((item.sauces ?? []).length) })}
               </span>
             )}
             {(item.supplements ?? []).length > 0 && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">
-                {(item.supplements ?? []).length} suppl.
+                {t("dashboard.menu.supplements_short", { count: String((item.supplements ?? []).length) })}
               </span>
             )}
             {item.is_alcohol && (

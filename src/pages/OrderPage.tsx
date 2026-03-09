@@ -165,7 +165,7 @@ const OrderPage = () => {
           custom_choices: i.customChoices?.filter((c) => c.selections.length > 0) || null,
         };
       });
-      const kioskName = isKiosk ? (tableNumber ? `Borne T${tableNumber}` : "Borne") : name;
+      const kioskName = isKiosk ? (tableNumber ? t("kiosk.terminal_name_table", { table: tableNumber }) : t("kiosk.terminal_name")) : name;
       const orderPayload: Parameters<typeof createOrder>[0] = {
         restaurant_id: restaurantId,
         customer_name: isKiosk ? kioskName : name,
@@ -213,7 +213,7 @@ const OrderPage = () => {
     } catch (e: any) {
       console.error("Order error:", e);
       const msg = e?.message || e?.details || String(e);
-      toast.error("Erreur lors de l'envoi de la commande");
+      toast.error(t("order.submit_error"));
     } finally {
       setSubmitting(false);
     }

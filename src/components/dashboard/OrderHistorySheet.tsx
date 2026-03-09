@@ -24,7 +24,11 @@ const statusConfig: Record<string, { icon: string; class: string }> = {
 };
 
 export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
+  const locale = LOCALE_MAP[language] || "fr-FR";
+
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -58,7 +62,7 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
   }, [open]);
 
   const formatTime = (dateStr: string) => {
-    return new Date(dateStr).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    return new Date(dateStr).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
   };
 
   const orderTypeIcon = (type: string) => {

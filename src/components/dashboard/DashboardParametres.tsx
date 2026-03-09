@@ -41,7 +41,10 @@ interface Props {
 const orderedDays = [1, 2, 3, 4, 5, 6, 0];
 
 export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
+  const locale = LOCALE_MAP[language] || "fr-FR";
 
   const availabilityModes = useMemo(() => [
     { id: "manual", label: t('dashboard.settings.manual'), desc: t('dashboard.settings.manual_desc') },
@@ -440,7 +443,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-sm text-muted-foreground flex items-center gap-1.5">
                       {sound.volume === 0 ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-                      Volume
+                      {t("dashboard.settings.volume")}
                     </label>
                     <span className="text-sm font-medium text-foreground">{sound.volume}%</span>
                   </div>
@@ -525,7 +528,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
               <span className="text-sm text-muted-foreground">{t('dashboard.settings.plan')}</span>
               <span className="text-sm font-medium text-foreground">
                 {subscription.plan === "annual" ? t('dashboard.settings.annual') : t('dashboard.settings.monthly')}{" "}
-                ({PLAN_PRICES[subscription.plan].toFixed(2)} EUR/{subscription.plan === "annual" ? "an" : "mois"})
+                ({PLAN_PRICES[subscription.plan].toFixed(2)} EUR/{subscription.plan === "annual" ? t("dashboard.settings.annual_short") : t("dashboard.settings.monthly_short")})
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -552,7 +555,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{t('dashboard.settings.trial_end')}</span>
                 <span className="text-sm font-medium text-foreground">
-                  {new Date(subscription.trial_end).toLocaleDateString("fr-FR")}
+                  {new Date(subscription.trial_end).toLocaleDateString(locale)}
                 </span>
               </div>
             )}

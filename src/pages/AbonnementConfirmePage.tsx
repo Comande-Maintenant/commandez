@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 const MAX_POLL_MS = 60_000;
 const POLL_INTERVAL_MS = 2_000;
@@ -14,6 +15,7 @@ const POLL_INTERVAL_MS = 2_000;
  */
 const AbonnementConfirmePage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [status, setStatus] = useState<"polling" | "confirmed" | "timeout">("polling");
 
   useEffect(() => {
@@ -78,10 +80,10 @@ const AbonnementConfirmePage = () => {
           <>
             <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-foreground mb-2">
-              Activation en cours...
+              {t("subscription.activating")}
             </h2>
             <p className="text-sm text-muted-foreground">
-              Nous confirmons votre abonnement. Cela peut prendre quelques secondes.
+              {t("subscription.activating_desc")}
             </p>
           </>
         )}
@@ -90,10 +92,10 @@ const AbonnementConfirmePage = () => {
           <>
             <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-foreground mb-2">
-              Abonnement active !
+              {t("subscription.activated")}
             </h2>
             <p className="text-sm text-muted-foreground">
-              Redirection vers votre tableau de bord...
+              {t("subscription.activated_desc")}
             </p>
           </>
         )}
@@ -102,19 +104,17 @@ const AbonnementConfirmePage = () => {
           <>
             <AlertCircle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-foreground mb-2">
-              Confirmation en attente
+              {t("subscription.pending")}
             </h2>
             <p className="text-sm text-muted-foreground mb-4">
-              Votre paiement est en cours de traitement. Si vous avez bien
-              termine le paiement sur Shopify, votre abonnement sera active dans
-              les prochaines minutes.
+              {t("subscription.pending_desc")}
             </p>
             <Button
               onClick={() => window.location.reload()}
               variant="outline"
               className="w-full"
             >
-              Vérifier à nouveau
+              {t("subscription.check_again")}
             </Button>
           </>
         )}

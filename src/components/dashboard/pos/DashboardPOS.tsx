@@ -31,9 +31,9 @@ interface Props {
   isDemo?: boolean;
 }
 
-const createEmptyPerson = (index: number): POSPersonOrder => ({
+const createEmptyPerson = (index: number, t?: (key: string, params?: Record<string, string>) => string): POSPersonOrder => ({
   personIndex: index,
-  label: `Personne ${index + 1}`,
+  label: t ? t("pos.person_label", { n: String(index + 1) }) : `Person ${index + 1}`,
   customization: null,
   itemPrice: 0,
 });
@@ -124,7 +124,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   };
 
   const handleSelectOrderType = (orderType: POSOrderTypeValue) => {
-    const persons: POSPersonOrder[] = [createEmptyPerson(0)];
+    const persons: POSPersonOrder[] = [createEmptyPerson(0, t)];
     setState((s) => ({
       ...s,
       orderType,
@@ -158,7 +158,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const handleAddPerson = useCallback(() => {
     setState((s) => {
       const newIndex = s.persons.length;
-      const persons = [...s.persons, createEmptyPerson(newIndex)];
+      const persons = [...s.persons, createEmptyPerson(newIndex, t)];
       return { ...s, persons, currentPerson: newIndex, screen: "person_builder" };
     });
   }, []);

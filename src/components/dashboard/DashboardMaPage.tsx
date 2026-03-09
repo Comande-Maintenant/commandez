@@ -157,7 +157,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
             <div className="w-10 h-10 rounded-full" style={{ backgroundColor: primaryColor }} />
             <div>
               <p className="font-bold" style={{ color: primaryColor }}>{name || t('dashboard.page.preview_name')}</p>
-              <p className="text-sm opacity-60" style={{ color: primaryColor }}>{t('dashboard.page.live_preview')}</p>
+              <p className="text-sm opacity-60" style={{ color: primaryColor }}>{t("dashboard.page.live_preview")}</p>
             </div>
           </div>
           <div className="inline-block px-4 py-2 rounded-full text-sm font-medium text-white" style={{ backgroundColor: primaryColor }}>

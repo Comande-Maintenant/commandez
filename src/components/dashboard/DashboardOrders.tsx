@@ -39,7 +39,10 @@ interface Props {
 }
 
 export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
+  const locale = LOCALE_MAP[language] || "fr-FR";
 
   const statusBadge: Record<OrderStatus, { text: string; class: string }> = {
     new: { text: t("dashboard.orders.status_new"), class: statusBadgeClass.new },
@@ -169,8 +172,10 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const timeSince = (dateStr: string) => {
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
     if (mins < 1) return t('time.just_now');
-    if (mins < 60) return `${mins} min`;
-    return `${Math.floor(mins / 60)}h${String(mins % 60).padStart(2, "0")}`;
+    if (mins < 60) return t("dashboard.orders.time_minutes", { mins: String(mins) });
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return t("dashboard.orders.time_hours", { h: String(h), m: String(m).padStart(2, "0") });
   };
 
   const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
@@ -415,7 +420,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                 {order.pickup_time && (
                   <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-700 flex items-center gap-0.5">
                     <Clock className="h-3 w-3" />
-                    {new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                    {new Date(order.pickup_time).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
                   </span>
                 )}
                 {!order.pickup_time && (order.order_type === "collect" || order.order_type === "a_emporter") && (
@@ -601,7 +606,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                   {(po.order_type === "collect" || po.order_type === "a_emporter") && <span className="ms-2">📦 {t("dashboard.orders.takeaway")}</span>}
                 </div>
                 <p className="text-sm text-muted-foreground mb-4">
-                  {poItemCount} {poItemCount > 1 ? "articles" : "article"} — {po.total.toFixed(2)} €
+                  {poItemCount} {t("dashboard.orders.articles_label")} — {po.total.toFixed(2)} €
                 </p>
                 <div className="flex gap-2">
                   <button

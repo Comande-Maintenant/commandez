@@ -273,7 +273,7 @@ export const SavoryItemDrawer = ({
                 <button
                   onClick={onClose}
                   className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                  aria-label="Fermer"
+                  aria-label={t("custom.close")}
                 >
                   <X className="h-5 w-5 text-gray-400" />
                 </button>
@@ -291,7 +291,7 @@ export const SavoryItemDrawer = ({
                       : viandeStep.title}
                     {isTacos && (
                       <span className="text-gray-400 font-normal ml-1">
-                        (max 3)
+                        ({t("custom.max_count", { max: "3" })})
                       </span>
                     )}
                   </h4>
@@ -328,7 +328,7 @@ export const SavoryItemDrawer = ({
                   </div>
                   {isTacos && (
                     <p className="text-xs text-gray-400 mt-1.5">
-                      Viande 1 obligatoire, 2 et 3 optionnelles
+                      {t("custom.meat_requirement")}
                     </p>
                   )}
                 </div>
@@ -353,7 +353,7 @@ export const SavoryItemDrawer = ({
                       }
                     >
                       {isComplet && <Check className="inline h-3 w-3 mr-0.5" />}
-                      Complet
+                      {t("custom.complet")}
                     </button>
                   </div>
                   <div className="space-y-1.5">
@@ -393,7 +393,7 @@ export const SavoryItemDrawer = ({
                                   level === l ? l : "non"
                                 )}
                               >
-                                {l === "non" ? "Non" : l === "oui" ? "Oui" : "x2"}
+                                {l === "non" ? t("custom.no") : l === "oui" ? t("custom.yes") : t("custom.double")}
                               </button>
                             ))}
                           </div>

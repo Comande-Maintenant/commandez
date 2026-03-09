@@ -68,7 +68,10 @@ export const OrderDetailSheet = ({
   onPrev,
   onNext,
 }: Props) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
+  const locale = LOCALE_MAP[language] || "fr-FR";
 
   const statusActions: Record<OrderStatus, { next?: OrderStatus; label: string; rejectLabel?: string; color: string }> = {
     new: { next: "preparing", label: t("dashboard.orders.accept_order"), rejectLabel: t("dashboard.orders.reject"), color: statusActionColors.new },
@@ -148,11 +151,13 @@ export const OrderDetailSheet = ({
   const timeSince = (dateStr: string) => {
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
     if (mins < 1) return t("time.just_now");
-    if (mins < 60) return `${mins} min`;
-    return `${Math.floor(mins / 60)}h${mins % 60 > 0 ? `${String(mins % 60).padStart(2, "0")}` : ""}`;
+    if (mins < 60) return t("dashboard.orders.time_minutes", { mins: String(mins) });
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return t("dashboard.orders.time_hours", { h: String(h), m: m > 0 ? String(m).padStart(2, "0") : "00" });
   };
 
-  const orderTime = new Date(order.created_at).toLocaleTimeString("fr-FR", {
+  const orderTime = new Date(order.created_at).toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -351,7 +356,7 @@ export const OrderDetailSheet = ({
             {order.pickup_time && (
               <span className="flex items-center gap-1 font-semibold text-blue-700">
                 <Clock className="h-4 w-4" />
-                {t("dashboard.orders.pickup_at_label").replace("{time}", new Date(order.pickup_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }))}
+                {t("dashboard.orders.pickup_at_label").replace("{time}", new Date(order.pickup_time).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }))}
               </span>
             )}
             {order.payment_method && (
@@ -545,7 +550,7 @@ export const OrderDetailSheet = ({
 
             {/* Total */}
             <div className="mt-6 pt-4 border-t-2 border-foreground/20 flex justify-between items-center">
-              <span className="text-lg font-bold text-foreground">TOTAL</span>
+              <span className="text-lg font-bold text-foreground">{t("cart.total")}</span>
               <span className="text-2xl font-bold text-foreground tabular-nums blur-sensitive">
                 {Number(order.total).toFixed(2)} €
               </span>

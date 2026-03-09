@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Search, Phone, Mail, ShoppingBag, Euro, Star, ShieldBan, ShieldCheck, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import { fetchCustomers, fetchDemoCustomers, unbanCustomer } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbCustomer } from "@/types/database";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,11 @@ type SortKey = "last_order" | "total_orders" | "total_spent";
 type FilterKey = "all" | "regulars" | "banned";
 
 export const DashboardClients = ({ restaurant, isDemo }: Props) => {
+  const { language } = useLanguage();
+
+  const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
+  const locale = LOCALE_MAP[language] || "fr-FR";
+
   const [customers, setCustomers] = useState<DbCustomer[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -302,7 +308,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                     <p className="text-xs text-destructive">
                       Raison : {customer.banned_reason}
                       {customer.ban_expires_at && (
-                        <> (expire le {new Date(customer.ban_expires_at).toLocaleDateString("fr-FR")})</>
+                        <> (expire le {new Date(customer.ban_expires_at).toLocaleDateString(locale)})</>
                       )}
                     </p>
                   </div>

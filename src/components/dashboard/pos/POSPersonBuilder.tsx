@@ -2,6 +2,7 @@ import { useRef, useCallback, useEffect } from "react";
 import { ArrowLeft, Check, Minus, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 import type { CustomizationConfig } from "@/types/database";
 import type { POSCustomization, GarnitureLevel } from "@/types/pos";
 import { usePOSCustomization } from "./usePOSCustomization";
@@ -30,6 +31,7 @@ export const POSPersonBuilder = ({
   onGoBoissons,
   onBack,
 }: Props) => {
+  const { t } = useLanguage();
   const {
     baseId,
     viandeIds,
@@ -203,7 +205,7 @@ export const POSPersonBuilder = ({
               {viandeStep.title}
             </h3>
             {isMultiMeat && (
-              <p className="text-xs text-muted-foreground mb-3">Multi-viande (max 3)</p>
+              <p className="text-xs text-muted-foreground mb-3">{t("pos.multi_meat_label")}</p>
             )}
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {viandeStep.options.map((opt) => {
@@ -233,7 +235,7 @@ export const POSPersonBuilder = ({
                 }}
                 className="mt-3 w-full text-center text-sm font-medium py-2 rounded-xl text-foreground hover:bg-secondary transition-colors"
               >
-                Continuer
+                {t("pos.continue")}
               </button>
             )}
           </div>
@@ -257,10 +259,10 @@ export const POSPersonBuilder = ({
             >
               {allGarnituresOui ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Check className="h-4 w-4" />Complet
+                  <Check className="h-4 w-4" />{t("pos.complete")}
                 </span>
               ) : (
-                "Complet"
+                t("pos.complete")
               )}
             </button>
 
@@ -288,7 +290,7 @@ export const POSPersonBuilder = ({
               onClick={advanceStep}
               className="mt-3 w-full text-center text-sm font-medium py-2 rounded-xl text-foreground hover:bg-secondary transition-colors"
             >
-              Continuer
+              {t("pos.continue")}
             </button>
           </div>
         )}
@@ -327,13 +329,13 @@ export const POSPersonBuilder = ({
                 onClick={() => { handleClearSauces(); advanceStep(); }}
                 className="flex-1 text-center text-sm font-medium py-2 rounded-xl text-muted-foreground hover:bg-secondary transition-colors"
               >
-                Sans sauce
+                {t("pos.no_sauce")}
               </button>
               <button
                 onClick={advanceStep}
                 className="flex-1 text-center text-sm font-medium py-2 rounded-xl text-foreground hover:bg-secondary transition-colors"
               >
-                Continuer
+                {t("pos.continue")}
               </button>
             </div>
           </div>
@@ -377,7 +379,7 @@ export const POSPersonBuilder = ({
                   if (!opt?.portion_options || opt.portion_options.length === 0) return null;
                   return (
                     <div>
-                      <p className="text-xs text-muted-foreground mb-2">Portion</p>
+                      <p className="text-xs text-muted-foreground mb-2">{t("pos.portion_label")}</p>
                       <div className="flex gap-2">
                         {opt.portion_options.map((p) => (
                           <button
@@ -408,7 +410,7 @@ export const POSPersonBuilder = ({
                   const subSauceOptions = sauceStep?.options || [];
                   return (
                     <div>
-                      <p className="text-xs text-muted-foreground mb-2">Sauce accompagnement</p>
+                      <p className="text-xs text-muted-foreground mb-2">{t("pos.side_sauce_label")}</p>
                       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                         {subSauceOptions.map((s) => {
                           const sel = accompagnement.subSauceId === s.id;
@@ -438,14 +440,14 @@ export const POSPersonBuilder = ({
                 onClick={() => { handleClearAccompagnement(); advanceStep(); }}
                 className="flex-1 text-center text-sm font-medium py-2 rounded-xl text-muted-foreground hover:bg-secondary transition-colors"
               >
-                Sans accompagnement
+                {t("pos.no_side")}
               </button>
               {accompagnement && (
                 <button
                   onClick={advanceStep}
                   className="flex-1 text-center text-sm font-medium py-2 rounded-xl text-foreground hover:bg-secondary transition-colors"
                 >
-                  Continuer
+                  {t("pos.continue")}
                 </button>
               )}
             </div>
@@ -501,7 +503,7 @@ export const POSPersonBuilder = ({
               }}
               className="mt-3 w-full text-center text-sm font-medium py-2 rounded-xl text-muted-foreground hover:bg-secondary transition-colors"
             >
-              Pas de supplement
+              {t("pos.no_supplement")}
             </button>
           </div>
         )}
@@ -528,13 +530,13 @@ export const POSPersonBuilder = ({
               className="flex-1 rounded-xl min-h-[48px] text-sm font-semibold"
               onClick={handleAddPersonAndSave}
             >
-              + Personne
+              {t("pos.add_person")}
             </Button>
             <Button
               className="flex-1 rounded-xl min-h-[48px] text-sm font-semibold"
               onClick={handleGoBoissonsAndSave}
             >
-              Boissons &gt;
+              {t("pos.drinks_next")}
             </Button>
           </div>
         </div>

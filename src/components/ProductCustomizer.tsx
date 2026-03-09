@@ -543,10 +543,10 @@ export const ProductCustomizer = ({
       // Avoid "Kebab Kebab" when item name matches viande (shortcut items)
       const matchesViande = viandeSel.length === 1 && viandeSel[0].name.toLowerCase() === baseName.toLowerCase();
       if (matchesViande && !baseSel.length) {
-        baseName = "Sandwich"; // Kebab shortcut -> "Sandwich Kebab"
+        baseName = t("custom.sandwich_fallback"); // Kebab shortcut -> "Sandwich Kebab"
       }
       if (productType === "tacos" || productType === "assiette") {
-        displayName = `${baseName} ${viandeSel.length} viande${viandeSel.length > 1 ? "s" : ""} (${viandeChoice})`;
+        displayName = `${baseName} ${t("custom.meat_count", { count: String(viandeSel.length) })} (${viandeChoice})`;
       } else {
         displayName = `${baseName} ${viandeChoice}`;
       }
@@ -827,7 +827,7 @@ export const ProductCustomizer = ({
                                         {(["small", "medium", "large"] as const).map((size) => {
                                           const sizePrice = acc[`price_${size}`];
                                           if (sizePrice == null) return null;
-                                          const labels = { small: "Petit", medium: "Moyen", large: "Grand" };
+                                          const labels = { small: t("custom.size_small"), medium: t("custom.size_medium"), large: t("custom.size_large") };
                                           return (
                                             <button
                                               key={size}
@@ -897,7 +897,7 @@ export const ProductCustomizer = ({
                                     <p className="text-sm font-semibold text-gray-900">{tName(option.name_translations, option.name)}</p>
                                     <p className="text-sm font-bold mt-1" style={{ color: accent }}>{option.price.toFixed(2)} €</p>
                                     {(option.meta?.max_viandes as number) > 1 && (
-                                      <p className="text-[11px] text-gray-500 mt-0.5">{option.meta!.max_viandes as number} viandes max</p>
+                                      <p className="text-[11px] text-gray-500 mt-0.5">{t("custom.max_meats_hint", { max: String(option.meta!.max_viandes as number) })}</p>
                                     )}
                                   </button>
                                 );
@@ -1141,7 +1141,7 @@ export const ProductCustomizer = ({
                                   <div key={s.step_key}>
                                     <RecapLine
                                       label={t(s.label_i18n)}
-                                      value={`${selectedAccompagnement.name}${selectedAccompagnement.has_sizes ? ` (${accompSize})` : ""}`}
+                                      value={`${selectedAccompagnement.name}${selectedAccompagnement.has_sizes ? ` (${({ small: t("custom.size_small"), medium: t("custom.size_medium"), large: t("custom.size_large") } as Record<string, string>)[accompSize]})` : ""}`}
                                       price={priceStr}
                                       onClick={() => goToStep(i)}
                                       accent={accent}

@@ -46,12 +46,12 @@ function startOfPeriod(period: Period): Date {
   return new Date(now.getFullYear(), now.getMonth(), 1);
 }
 
-function formatShortDate(d: Date) {
-  return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" });
+function formatShortDate(d: Date, locale: string) {
+  return d.toLocaleDateString(locale, { day: "2-digit", month: "2-digit" });
 }
 
-function formatHour(h: number) {
-  return `${h}h`;
+function formatHour(h: number, hourFormat: string) {
+  return hourFormat.replace("{h}", String(h));
 }
 
 /** Format number with space as thousands separator: 26346.00 -> 26 346.00 */
@@ -62,8 +62,15 @@ function formatMoney(n: number, decimals = 2): string {
   return decPart ? `${withSpaces}.${decPart}` : withSpaces;
 }
 
+const LOCALE_MAP: Record<string, string> = {
+  fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT",
+  pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP",
+  ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN",
+};
+
 export const DashboardStats = ({ restaurant, isDemo }: Props) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const locale = LOCALE_MAP[language] || "fr-FR";
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("30days");
@@ -132,7 +139,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
 
     const dayCounts: Record<string, number> = {};
     filtered.forEach((o) => {
-      const d = new Date(o.created_at).toLocaleDateString("fr-FR", { weekday: "long" });
+      const d = new Date(o.created_at).toLocaleDateString(locale, { weekday: "long" });
       dayCounts[d] = (dayCounts[d] || 0) + 1;
     });
     let busiestDay = "";
@@ -145,7 +152,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
     }
 
     return { revenue, count, avg, filtered, avgPrepTime, peakHour, topItems, busiestDay, busiestCount };
-  }, [orders, period]);
+  }, [orders, period, locale]);
 
   // Build chart data with all metrics
   const chartData = useMemo(() => {
@@ -158,14 +165,14 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
       if (withTime.length > 0) {
         avgTime = withTime.reduce((s, o) => s + (new Date((o as any).completed_at).getTime() - new Date((o as any).accepted_at).getTime()) / 60000, 0) / withTime.length;
       }
-      return { CA: +ca.toFixed(2), Commandes: count, Panier: +avg.toFixed(2), Temps: +avgTime.toFixed(0) };
+      return { revenue: +ca.toFixed(2), orders: count, avg: +avg.toFixed(2), time: +avgTime.toFixed(0) };
     };
 
     if (period === "day") {
       const result: any[] = [];
       for (let h = 0; h < 24; h++) {
         const bucket = stats.filtered.filter((o) => new Date(o.created_at).getHours() === h);
-        result.push({ label: formatHour(h), ...buildBucket(bucket) });
+        result.push({ label: formatHour(h, t("dashboard.stats.hour_format", { h: String(h) })), ...buildBucket(bucket) });
       }
       return result;
     }
@@ -176,7 +183,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
         const d = new Date(start);
         d.setDate(d.getDate() + i);
         const bucket = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
-        result.push({ label: d.toLocaleDateString("fr-FR", { weekday: "short" }), ...buildBucket(bucket) });
+        result.push({ label: d.toLocaleDateString(locale, { weekday: "short" }), ...buildBucket(bucket) });
       }
       return result;
     }
@@ -187,7 +194,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
         const d = new Date(now);
         d.setDate(d.getDate() - i);
         const bucket = stats.filtered.filter((o) => new Date(o.created_at).toDateString() === d.toDateString());
-        result.push({ label: formatShortDate(d), ...buildBucket(bucket) });
+        result.push({ label: formatShortDate(d, locale), ...buildBucket(bucket) });
       }
       return result;
     }
@@ -201,13 +208,13 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
       result.push({ label: `${i}`, ...buildBucket(bucket) });
     }
     return result;
-  }, [stats, period]);
+  }, [stats, period, locale, t]);
 
   const kpiChartConfig: Record<KpiKey, { dataKey: string; color: string; label: string; unit: string; type: "bar" | "line" | "area" }> = {
-    revenue: { dataKey: "CA", color: "hsl(var(--primary))", label: "CA", unit: " €", type: "bar" },
-    orders: { dataKey: "Commandes", color: "#3B82F6", label: "Commandes", unit: "", type: "area" },
-    avg: { dataKey: "Panier", color: "#8B5CF6", label: "Panier moyen", unit: " €", type: "line" },
-    time: { dataKey: "Temps", color: "#F59E0B", label: "Temps moyen", unit: " min", type: "line" },
+    revenue: { dataKey: "revenue", color: "hsl(var(--primary))", label: t("dashboard.stats.revenue_short"), unit: " €", type: "bar" },
+    orders: { dataKey: "orders", color: "#3B82F6", label: t("dashboard.stats.orders_label"), unit: "", type: "area" },
+    avg: { dataKey: "avg", color: "#8B5CF6", label: t("dashboard.stats.avg_basket"), unit: " €", type: "line" },
+    time: { dataKey: "time", color: "#F59E0B", label: t("dashboard.stats.avg_time"), unit: ` ${t("dashboard.stats.min_suffix")}`, type: "line" },
   };
 
   if (loading) {
@@ -230,7 +237,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
     {
       key: "time",
       label: hasTime ? t('dashboard.stats.avg_time') : t('dashboard.stats.total_orders'),
-      value: hasTime ? `${Math.round(stats.avgPrepTime)} min` : formatMoney(orders.length, 0),
+      value: hasTime ? `${Math.round(stats.avgPrepTime)} ${t("dashboard.stats.min_suffix")}` : formatMoney(orders.length, 0),
       icon: hasTime ? Clock : TrendingUp,
     },
   ];
@@ -355,7 +362,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
                 {stats.peakHour >= 0 && (
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">{t('dashboard.stats.peak_hour')}</span>
-                    <span className="font-medium text-foreground">{stats.peakHour}h - {stats.peakHour + 1}h</span>
+                    <span className="font-medium text-foreground">{t("dashboard.stats.hour_format", { h: String(stats.peakHour) })} - {t("dashboard.stats.hour_format", { h: String(stats.peakHour + 1) })}</span>
                   </div>
                 )}
                 {stats.busiestDay && (
@@ -367,7 +374,7 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
                 {stats.avgPrepTime > 0 && (
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">{t('dashboard.stats.avg_prep_time')}</span>
-                    <span className="font-medium text-foreground">{Math.round(stats.avgPrepTime)} min</span>
+                    <span className="font-medium text-foreground">{Math.round(stats.avgPrepTime)} {t("dashboard.stats.min_suffix")}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between">

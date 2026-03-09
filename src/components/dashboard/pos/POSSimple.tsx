@@ -218,7 +218,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
               >
                 <Minus className="h-3.5 w-3.5" />
               </button>
-              <span className="text-lg font-bold text-foreground min-w-[48px] text-center">{prepMinutes} min</span>
+              <span className="text-lg font-bold text-foreground min-w-[48px] text-center">{prepMinutes} {t("dashboard.stats.min_suffix")}</span>
               <button
                 onClick={() => setPrepMinutes(Math.min(120, prepMinutes + 5))}
                 className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors"
