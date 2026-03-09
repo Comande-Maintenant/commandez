@@ -68,6 +68,25 @@ const AdminPage = () => {
   const [pwaPrompt, setPwaPrompt] = useState<any>(null);
   const [showPwaBanner, setShowPwaBanner] = useState(false);
   const sound = useNotificationSound();
+
+  // Auto-unlock audio on first user interaction (critical for tablets)
+  useEffect(() => {
+    const handler = () => {
+      if (!sound.audioUnlocked) {
+        sound.unlockAudio();
+      }
+      // Remove after first trigger
+      document.removeEventListener("click", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+    document.addEventListener("click", handler, { passive: true });
+    document.addEventListener("touchstart", handler, { passive: true });
+    return () => {
+      document.removeEventListener("click", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [sound.audioUnlocked, sound.unlockAudio]);
+
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
   const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
 
@@ -253,7 +272,7 @@ const AdminPage = () => {
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               {/* Sound toggle (cuisine view) */}
-              {isOpsView(activeView) && !isDemo && (
+              {isOpsView(activeView) && (
                 <button
                   data-tour="son"
                   onClick={() => {
@@ -329,8 +348,8 @@ const AdminPage = () => {
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-          {/* Audio unlock banner for mobile - not in demo */}
-          {!isDemo && isOpsView(activeView) && !sound.audioUnlocked && (
+          {/* Audio unlock banner for mobile */}
+          {isOpsView(activeView) && !sound.audioUnlocked && (
             <button
               onClick={sound.unlockAudio}
               className="w-full mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center gap-2 text-sm font-medium text-amber-800 hover:bg-amber-100 transition-colors"
