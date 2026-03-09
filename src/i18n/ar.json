@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "لا توجد طلبات في آخر 24 ساعة",
   "dashboard.history.items_short": "عنصر/عناصر",
   "dashboard.kitchen.beverages_counter": "مشروبات (الكاونتر): {count}",
-  "language.selector": "اللغة",
   "kiosk.splash.touch_to_order": "المس للطلب",
   "kiosk.splash.phrase1": "ماذا نأكل اليوم؟",
   "kiosk.splash.phrase2": "اطلب هنا، سريع وسهل!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "الكشك جاهز، يمكن لعملائك الطلب!",
   "dashboard.nav.kiosk": "كشك العميل",
   "dashboard.manage.kiosk_label": "كشك العميل",
-  "dashboard.manage.kiosk_desc": "وضع الخدمة الذاتية على جهاز لوحي"
+  "dashboard.manage.kiosk_desc": "وضع الخدمة الذاتية على جهاز لوحي",
+  "menu.alcohol_counter_notice": "المشروبات الكحولية متوفرة في الكاونتر.",
+  "dashboard.menu.alcohol_badge": "كحول - كاونتر",
+  "dashboard.menu.alcohol_label": "يحتوي على كحول",
+  "dashboard.menu.alcohol_desc": "مخفي من الطلب عبر الإنترنت (البيع في الكاونتر فقط)"
 }

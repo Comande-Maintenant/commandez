@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "過去24時間に注文はありません",
   "dashboard.history.items_short": "品",
   "dashboard.kitchen.beverages_counter": "ドリンク (カウンター): {count}",
-  "language.selector": "言語",
   "kiosk.splash.touch_to_order": "タッチして注文",
   "kiosk.splash.phrase1": "今日は何を食べる?",
   "kiosk.splash.phrase2": "ここで注文、すぐできます!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "端末の準備完了、お客様が注文できます!",
   "dashboard.nav.kiosk": "セルフオーダー端末",
   "dashboard.manage.kiosk_label": "セルフオーダー端末",
-  "dashboard.manage.kiosk_desc": "タブレットでのセルフサービスモード"
+  "dashboard.manage.kiosk_desc": "タブレットでのセルフサービスモード",
+  "menu.alcohol_counter_notice": "アルコール飲料はカウンターでご購入いただけます。",
+  "dashboard.menu.alcohol_badge": "アルコール - カウンター",
+  "dashboard.menu.alcohol_label": "アルコール含有",
+  "dashboard.menu.alcohol_desc": "オンライン注文から非表示（カウンター販売のみ）"
 }

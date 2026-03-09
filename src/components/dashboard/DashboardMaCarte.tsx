@@ -44,6 +44,7 @@ import {
   deleteMenuItemImage,
 } from "@/lib/api";
 import { resizeImageForMenu } from "@/lib/image";
+import { detectAlcohol } from "@/lib/alcoholDetection";
 import type { DbRestaurant, DbMenuItem, Supplement } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -95,7 +96,7 @@ function SortableItemRow({
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-foreground truncate">{item.name}</p>
         {item.description && <p className="text-xs text-muted-foreground truncate">{item.description}</p>}
-        {((item.variants ?? []).length > 0 || (item.sauces ?? []).length > 0 || (item.supplements ?? []).length > 0) && (
+        {((item.variants ?? []).length > 0 || (item.sauces ?? []).length > 0 || (item.supplements ?? []).length > 0 || item.is_alcohol) && (
           <div className="flex flex-wrap gap-1 mt-0.5">
             {(item.variants ?? []).length > 0 && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
@@ -110,6 +111,11 @@ function SortableItemRow({
             {(item.supplements ?? []).length > 0 && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">
                 {(item.supplements ?? []).length} suppl.
+              </span>
+            )}
+            {item.is_alcohol && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">
+                {t('dashboard.menu.alcohol_badge')}
               </span>
             )}
           </div>
@@ -332,6 +338,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       variants: cleanVariants.length > 0 ? cleanVariants : null,
       sauces: cleanSauces,
       supplements: cleanSupplements,
+      is_alcohol: editItem.is_alcohol ?? false,
     });
     setItems((prev) => prev.map((i) => (i.id === editItem.id ? editItem : i)));
     setEditItem(null);
@@ -617,7 +624,11 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
           <DialogHeader><DialogTitle>{t('dashboard.menu.edit_product')}</DialogTitle></DialogHeader>
           {editItem && (
             <div className="space-y-4 mt-2">
-              <Input value={editItem.name} onChange={(e) => setEditItem({ ...editItem, name: e.target.value })} placeholder={t('common.name')} />
+              <Input value={editItem.name} onChange={(e) => {
+                const name = e.target.value;
+                const autoAlcohol = detectAlcohol(name);
+                setEditItem({ ...editItem, name, is_alcohol: autoAlcohol || editItem.is_alcohol });
+              }} placeholder={t('common.name')} />
               <Input value={editItem.description} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder={t('common.description')} />
               <Input type="number" step="0.50" value={editItem.price} onChange={(e) => setEditItem({ ...editItem, price: parseFloat(e.target.value) || 0 })} placeholder={t('common.price')} />
 
@@ -690,6 +701,15 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">{t('menu.popular')}</span>
                 <Switch checked={editItem.popular} onCheckedChange={(v) => setEditItem({ ...editItem, popular: v })} />
+              </div>
+
+              {/* Alcohol flag */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm text-foreground">{t('dashboard.menu.alcohol_label')}</span>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.menu.alcohol_desc')}</p>
+                </div>
+                <Switch checked={editItem.is_alcohol ?? false} onCheckedChange={(v) => setEditItem({ ...editItem, is_alcohol: v })} />
               </div>
 
               {/* ── Variants editor ── */}

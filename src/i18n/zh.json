@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "最近24小时内没有订单",
   "dashboard.history.items_short": "件",
   "dashboard.kitchen.beverages_counter": "饮品 (吧台): {count}",
-  "language.selector": "语言",
   "kiosk.splash.touch_to_order": "触摸下单",
   "kiosk.splash.phrase1": "今天吃什么?",
   "kiosk.splash.phrase2": "在这里点餐，快捷方便!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "点餐机已就绪，您的顾客可以开始点餐!",
   "dashboard.nav.kiosk": "自助点餐机",
   "dashboard.manage.kiosk_label": "自助点餐机",
-  "dashboard.manage.kiosk_desc": "平板自助服务模式"
+  "dashboard.manage.kiosk_desc": "平板自助服务模式",
+  "menu.alcohol_counter_notice": "酒精饮料可在柜台购买。",
+  "dashboard.menu.alcohol_badge": "酒精 - 柜台",
+  "dashboard.menu.alcohol_label": "含酒精",
+  "dashboard.menu.alcohol_desc": "隐藏在线订购（仅柜台销售）"
 }

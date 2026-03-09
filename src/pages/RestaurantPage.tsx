@@ -1072,6 +1072,13 @@ const RestaurantPage = () => {
                 );
               })}
             </div>
+
+            {/* Alcohol notice */}
+            {!isKiosk && (
+              <p className="mt-6 text-center text-xs text-gray-400 italic">
+                {t("menu.alcohol_counter_notice")}
+              </p>
+            )}
           </>
         )}
 

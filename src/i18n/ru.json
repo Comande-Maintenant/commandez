@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Нет заказов за последние 24 часа",
   "dashboard.history.items_short": "товар(ов)",
   "dashboard.kitchen.beverages_counter": "Напитки (стойка): {count}",
-  "language.selector": "Язык",
   "kiosk.splash.touch_to_order": "Нажмите, чтобы заказать",
   "kiosk.splash.phrase1": "Что будем есть сегодня?",
   "kiosk.splash.phrase2": "Закажите здесь, это быстро!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "Киоск готов, ваши клиенты могут заказывать!",
   "dashboard.nav.kiosk": "Клиентский киоск",
   "dashboard.manage.kiosk_label": "Клиентский киоск",
-  "dashboard.manage.kiosk_desc": "Режим самообслуживания на планшете"
+  "dashboard.manage.kiosk_desc": "Режим самообслуживания на планшете",
+  "menu.alcohol_counter_notice": "Алкогольные напитки доступны у стойки.",
+  "dashboard.menu.alcohol_badge": "Алкоголь - стойка",
+  "dashboard.menu.alcohol_label": "Содержит алкоголь",
+  "dashboard.menu.alcohol_desc": "Скрыто из онлайн-заказов (только продажа у стойки)"
 }

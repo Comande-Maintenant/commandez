@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Geen bestellingen in de afgelopen 24 uur",
   "dashboard.history.items_short": "artikel(en)",
   "dashboard.kitchen.beverages_counter": "Dranken (balie): {count}",
-  "language.selector": "Taal",
   "kiosk.splash.touch_to_order": "Tik om te bestellen",
   "kiosk.splash.phrase1": "Wat eten we vandaag?",
   "kiosk.splash.phrase2": "Bestel hier, snel en makkelijk!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "De kiosk is klaar, uw klanten kunnen bestellen!",
   "dashboard.nav.kiosk": "Klantkiosk",
   "dashboard.manage.kiosk_label": "Klantkiosk",
-  "dashboard.manage.kiosk_desc": "Zelfbedieningsmodus op tablet"
+  "dashboard.manage.kiosk_desc": "Zelfbedieningsmodus op tablet",
+  "menu.alcohol_counter_notice": "Alcoholische dranken zijn verkrijgbaar aan de toonbank.",
+  "dashboard.menu.alcohol_badge": "Alcohol - toonbank",
+  "dashboard.menu.alcohol_label": "Bevat alcohol",
+  "dashboard.menu.alcohol_desc": "Verborgen voor online bestellingen (alleen balieverkoop)"
 }

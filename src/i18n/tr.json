@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Son 24 saatte siparis yok",
   "dashboard.history.items_short": "urun",
   "dashboard.kitchen.beverages_counter": "Icecekler (tezgah): {count}",
-  "language.selector": "Dil",
   "kiosk.splash.touch_to_order": "Siparis vermek icin dokunun",
   "kiosk.splash.phrase1": "Bugun ne yiyoruz?",
   "kiosk.splash.phrase2": "Buradan siparis verin, hizli ve kolay!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "Kiosk hazir, musterileriniz siparis verebilir!",
   "dashboard.nav.kiosk": "Musteri kiosku",
   "dashboard.manage.kiosk_label": "Musteri kiosku",
-  "dashboard.manage.kiosk_desc": "Tablette self-servis modu"
+  "dashboard.manage.kiosk_desc": "Tablette self-servis modu",
+  "menu.alcohol_counter_notice": "Alkollü icecekler tezgahta mevcuttur.",
+  "dashboard.menu.alcohol_badge": "Alkol - tezgah",
+  "dashboard.menu.alcohol_label": "Alkol icerir",
+  "dashboard.menu.alcohol_desc": "Online siparislerden gizlendi (sadece tezgah satisi)"
 }

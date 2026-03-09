@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Aucune commande dans les dernieres 24h",
   "dashboard.history.items_short": "article(s)",
   "dashboard.kitchen.beverages_counter": "Boissons (comptoir) : {count}",
-  "language.selector": "Langue",
   "kiosk.splash.touch_to_order": "Touchez pour commander",
   "kiosk.splash.phrase1": "Qu'est-ce qu'on mange aujourd'hui ?",
   "kiosk.splash.phrase2": "Commandez ici, c'est rapide !",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "La borne est prete, vos clients peuvent commander !",
   "dashboard.nav.kiosk": "Borne client",
   "dashboard.manage.kiosk_label": "Borne client",
-  "dashboard.manage.kiosk_desc": "Mode libre-service sur tablette"
+  "dashboard.manage.kiosk_desc": "Mode libre-service sur tablette",
+  "menu.alcohol_counter_notice": "Des boissons alcoolisees sont disponibles sur place, au comptoir.",
+  "dashboard.menu.alcohol_badge": "Alcool - comptoir",
+  "dashboard.menu.alcohol_label": "Contient de l'alcool",
+  "dashboard.menu.alcohol_desc": "Masque pour la commande en ligne (vente au comptoir uniquement)"
 }

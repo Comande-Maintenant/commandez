@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Khong co don hang trong 24 gio qua",
   "dashboard.history.items_short": "mon",
   "dashboard.kitchen.beverages_counter": "Do uong (quay): {count}",
-  "language.selector": "Ngon ngu",
   "kiosk.splash.touch_to_order": "Cham de dat mon",
   "kiosk.splash.phrase1": "Hom nay an gi nhi?",
   "kiosk.splash.phrase2": "Dat mon tai day, nhanh va tien!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "Ki-ot da san sang, khach hang cua ban co the dat mon!",
   "dashboard.nav.kiosk": "Ki-ot khach hang",
   "dashboard.manage.kiosk_label": "Ki-ot khach hang",
-  "dashboard.manage.kiosk_desc": "Che do tu phuc vu tren may tinh bang"
+  "dashboard.manage.kiosk_desc": "Che do tu phuc vu tren may tinh bang",
+  "menu.alcohol_counter_notice": "Do uong co con co san tai quay.",
+  "dashboard.menu.alcohol_badge": "Ruou - quay",
+  "dashboard.menu.alcohol_label": "Chua con",
+  "dashboard.menu.alcohol_desc": "An khoi dat hang truc tuyen (chi ban tai quay)"
 }

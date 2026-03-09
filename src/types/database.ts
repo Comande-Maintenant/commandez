@@ -101,6 +101,7 @@ export interface DbMenuItem {
   translations?: Record<string, { name: string; description?: string }>;
   product_type?: string;
   variants?: Array<{ name: string; price: number }>;
+  is_alcohol?: boolean;
 }
 
 export interface DbOrder {

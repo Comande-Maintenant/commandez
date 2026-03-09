@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "최근 24시간 동안 주문이 없습니다",
   "dashboard.history.items_short": "개",
   "dashboard.kitchen.beverages_counter": "음료 (카운터): {count}",
-  "language.selector": "언어",
   "kiosk.splash.touch_to_order": "터치하여 주문하기",
   "kiosk.splash.phrase1": "오늘 뭐 먹을까?",
   "kiosk.splash.phrase2": "여기서 주문하세요, 빠르고 간편해요!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "키오스크가 준비되었습니다. 고객이 주문할 수 있습니다!",
   "dashboard.nav.kiosk": "고객 키오스크",
   "dashboard.manage.kiosk_label": "고객 키오스크",
-  "dashboard.manage.kiosk_desc": "태블릿 셀프서비스 모드"
+  "dashboard.manage.kiosk_desc": "태블릿 셀프서비스 모드",
+  "menu.alcohol_counter_notice": "주류는 카운터에서 구매하실 수 있습니다.",
+  "dashboard.menu.alcohol_badge": "주류 - 카운터",
+  "dashboard.menu.alcohol_label": "주류 포함",
+  "dashboard.menu.alcohol_desc": "온라인 주문에서 숨김 (카운터 판매만 가능)"
 }

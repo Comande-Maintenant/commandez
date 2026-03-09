@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Keine Bestellungen in den letzten 24 Stunden",
   "dashboard.history.items_short": "Artikel",
   "dashboard.kitchen.beverages_counter": "Getranke (Theke): {count}",
-  "language.selector": "Sprache",
   "kiosk.splash.touch_to_order": "Zum Bestellen tippen",
   "kiosk.splash.phrase1": "Was essen wir heute?",
   "kiosk.splash.phrase2": "Hier bestellen, schnell und einfach!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "Das Terminal ist bereit, Ihre Kunden konnen bestellen!",
   "dashboard.nav.kiosk": "Kundenterminal",
   "dashboard.manage.kiosk_label": "Kundenterminal",
-  "dashboard.manage.kiosk_desc": "Selbstbedienungsmodus auf Tablet"
+  "dashboard.manage.kiosk_desc": "Selbstbedienungsmodus auf Tablet",
+  "menu.alcohol_counter_notice": "Alkoholische Getranke sind an der Theke erhaltlich.",
+  "dashboard.menu.alcohol_badge": "Alkohol - Theke",
+  "dashboard.menu.alcohol_label": "Enthalt Alkohol",
+  "dashboard.menu.alcohol_desc": "Versteckt fur Online-Bestellungen (nur Thekenverkauf)"
 }

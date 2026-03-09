@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "No orders in the last 24 hours",
   "dashboard.history.items_short": "item(s)",
   "dashboard.kitchen.beverages_counter": "Drinks (counter): {count}",
-  "language.selector": "Language",
   "kiosk.splash.touch_to_order": "Touch to order",
   "kiosk.splash.phrase1": "What are we eating today?",
   "kiosk.splash.phrase2": "Order here, it's quick!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "The kiosk is ready, your customers can start ordering!",
   "dashboard.nav.kiosk": "Customer kiosk",
   "dashboard.manage.kiosk_label": "Customer kiosk",
-  "dashboard.manage.kiosk_desc": "Self-service mode on tablet"
+  "dashboard.manage.kiosk_desc": "Self-service mode on tablet",
+  "menu.alcohol_counter_notice": "Alcoholic beverages are available at the counter.",
+  "dashboard.menu.alcohol_badge": "Alcohol - counter",
+  "dashboard.menu.alcohol_label": "Contains alcohol",
+  "dashboard.menu.alcohol_desc": "Hidden from online ordering (counter sales only)"
 }

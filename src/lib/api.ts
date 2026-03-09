@@ -67,6 +67,7 @@ export async function fetchMenuItems(restaurantId: string): Promise<DbMenuItem[]
     .select("*")
     .eq("restaurant_id", restaurantId)
     .eq("enabled", true)
+    .eq("is_alcohol", false)
     .order("sort_order");
   if (error) throw error;
   return (data ?? []) as unknown as DbMenuItem[];
@@ -117,6 +118,19 @@ export async function createOrder(order: {
     });
     if (validErr || !valid) {
       throw new Error("Le total de la commande ne correspond pas aux prix du menu.");
+    }
+
+    // Alcohol validation: reject orders containing alcohol items
+    const itemIds = (order.items as any[]).map((i: any) => i.id).filter(Boolean);
+    if (itemIds.length > 0) {
+      const { data: alcoholItems } = await supabase
+        .from("menu_items")
+        .select("id")
+        .in("id", itemIds)
+        .eq("is_alcohol", true);
+      if (alcoholItems && alcoholItems.length > 0) {
+        throw new Error("Les produits alcoolisés ne peuvent pas être commandés en ligne.");
+      }
     }
   }
   const { data, error } = await supabase

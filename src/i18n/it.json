@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Nessun ordine nelle ultime 24 ore",
   "dashboard.history.items_short": "articolo/i",
   "dashboard.kitchen.beverages_counter": "Bevande (banco): {count}",
-  "language.selector": "Lingua",
   "kiosk.splash.touch_to_order": "Tocca per ordinare",
   "kiosk.splash.phrase1": "Cosa mangiamo oggi?",
   "kiosk.splash.phrase2": "Ordina qui, e veloce!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "Il chiosco e pronto, i tuoi clienti possono ordinare!",
   "dashboard.nav.kiosk": "Chiosco cliente",
   "dashboard.manage.kiosk_label": "Chiosco cliente",
-  "dashboard.manage.kiosk_desc": "Modalita self-service su tablet"
+  "dashboard.manage.kiosk_desc": "Modalita self-service su tablet",
+  "menu.alcohol_counter_notice": "Le bevande alcoliche sono disponibili al bancone.",
+  "dashboard.menu.alcohol_badge": "Alcol - bancone",
+  "dashboard.menu.alcohol_label": "Contiene alcol",
+  "dashboard.menu.alcohol_desc": "Nascosto dagli ordini online (solo vendita al bancone)"
 }

@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Ningun pedido en las ultimas 24 horas",
   "dashboard.history.items_short": "articulo(s)",
   "dashboard.kitchen.beverages_counter": "Bebidas (barra): {count}",
-  "language.selector": "Idioma",
   "kiosk.splash.touch_to_order": "Toque para pedir",
   "kiosk.splash.phrase1": "Que comemos hoy?",
   "kiosk.splash.phrase2": "Pide aqui, es rapido!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "El terminal esta listo, sus clientes pueden pedir!",
   "dashboard.nav.kiosk": "Terminal cliente",
   "dashboard.manage.kiosk_label": "Terminal cliente",
-  "dashboard.manage.kiosk_desc": "Modo autoservicio en tableta"
+  "dashboard.manage.kiosk_desc": "Modo autoservicio en tableta",
+  "menu.alcohol_counter_notice": "Las bebidas alcoholicas estan disponibles en el mostrador.",
+  "dashboard.menu.alcohol_badge": "Alcohol - mostrador",
+  "dashboard.menu.alcohol_label": "Contiene alcohol",
+  "dashboard.menu.alcohol_desc": "Oculto en pedidos en linea (solo venta en mostrador)"
 }

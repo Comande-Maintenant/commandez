@@ -1275,7 +1275,6 @@
   "dashboard.history.empty": "Nenhum pedido nas ultimas 24 horas",
   "dashboard.history.items_short": "artigo(s)",
   "dashboard.kitchen.beverages_counter": "Bebidas (balcao): {count}",
-  "language.selector": "Idioma",
   "kiosk.splash.touch_to_order": "Toque para pedir",
   "kiosk.splash.phrase1": "O que vamos comer hoje?",
   "kiosk.splash.phrase2": "Peca aqui, e rapido!",
@@ -1316,5 +1315,9 @@
   "admin.kiosk.guide.step3": "O terminal esta pronto, seus clientes podem pedir!",
   "dashboard.nav.kiosk": "Terminal do cliente",
   "dashboard.manage.kiosk_label": "Terminal do cliente",
-  "dashboard.manage.kiosk_desc": "Modo autoatendimento em tablet"
+  "dashboard.manage.kiosk_desc": "Modo autoatendimento em tablet",
+  "menu.alcohol_counter_notice": "Bebidas alcoolicas estao disponiveis no balcao.",
+  "dashboard.menu.alcohol_badge": "Alcool - balcao",
+  "dashboard.menu.alcohol_label": "Contem alcool",
+  "dashboard.menu.alcohol_desc": "Oculto nos pedidos online (apenas venda no balcao)"
 }
