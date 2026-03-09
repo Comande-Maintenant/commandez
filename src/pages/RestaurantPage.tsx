@@ -137,6 +137,18 @@ function setDemoMeta(isDemo: boolean) {
     }
     el.setAttribute("content", content);
   };
+  // Kiosk URLs must never be indexed (duplicate of the public restaurant page)
+  if (new URLSearchParams(window.location.search).get("kiosk") === "true") {
+    setMeta("robots", "noindex, nofollow");
+    // Canonical points to the clean public URL
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", `${window.location.origin}${window.location.pathname}`);
+  }
   if (isDemo) {
     setMeta("description", "Page de demonstration de commandeici, application de commande en ligne pour restaurants. Decouvrez comment vos clients passeront commande. Essayez gratuitement.");
     setMeta("robots", "noindex, nofollow");
