@@ -659,6 +659,8 @@
   "dashboard.orders.client_banned": "고객 차단됨",
   "dashboard.orders.stock_management": "재고 관리",
   "dashboard.orders.no_items": "항목 없음",
+  "dashboard.orders.new_order_popup": "새 주문!",
+  "dashboard.orders.view_order": "보기",
   "dashboard.orders.ingredients_stock": "재료",
   "dashboard.orders.items_stock": "요리",
   "dashboard.orders.item_available": "{name} 이용 가능",

@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "Musteri yasaklandi",
   "dashboard.orders.stock_management": "Stok yonetimi",
   "dashboard.orders.no_items": "Urun yok",
+  "dashboard.orders.new_order_popup": "Yeni siparis!",
+  "dashboard.orders.view_order": "Gor",
   "dashboard.orders.ingredients_stock": "Malzemeler",
   "dashboard.orders.items_stock": "Yemekler",
   "dashboard.orders.item_available": "{name} mevcut",

@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "客がブロックされました",
   "dashboard.orders.stock_management": "在庫管理",
   "dashboard.orders.no_items": "アイテムなし",
+  "dashboard.orders.new_order_popup": "新しい注文!",
+  "dashboard.orders.view_order": "表示",
   "dashboard.orders.ingredients_stock": "食材",
   "dashboard.orders.items_stock": "料理",
   "dashboard.orders.item_available": "{name} 在庫あり",

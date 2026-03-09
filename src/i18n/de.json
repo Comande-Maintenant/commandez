@@ -659,6 +659,8 @@
   "dashboard.orders.client_banned": "Kunde gesperrt",
   "dashboard.orders.stock_management": "Bestandsverwaltung",
   "dashboard.orders.no_items": "Keine Artikel",
+  "dashboard.orders.new_order_popup": "Neue Bestellung!",
+  "dashboard.orders.view_order": "Ansehen",
   "dashboard.orders.ingredients_stock": "Zutaten",
   "dashboard.orders.items_stock": "Gerichte",
   "dashboard.orders.item_available": "{name} verfügbar",

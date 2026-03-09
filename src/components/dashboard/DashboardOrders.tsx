@@ -64,6 +64,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const [selectedOrder, setSelectedOrder] = useState<DbOrder | null>(null);
   const [rupturesOpen, setRupturesOpen] = useState(false);
   const [banTarget, setBanTarget] = useState<{ customer_name: string; customer_phone: string; restaurant_id: string; id?: string } | null>(null);
+  const [popupOrder, setPopupOrder] = useState<DbOrder | null>(null);
+  const popupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Tick for countdown timers on cards (re-render every 5s)
   const [, setTick] = useState(0);
@@ -102,8 +104,12 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
         if (exists) {
           return prev.map((o) => (o.id === newOrder.id ? newOrder : o));
         }
-        if (newOrder.status === "new" && onNewOrderSound) {
-          onNewOrderSound();
+        if (newOrder.status === "new") {
+          if (onNewOrderSound) onNewOrderSound();
+          // Show popup
+          setPopupOrder(newOrder);
+          if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+          popupTimerRef.current = setTimeout(() => setPopupOrder(null), 12000);
         }
         return [newOrder, ...prev];
       });
@@ -535,6 +541,61 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           restaurantId={restaurant.id}
         />
       )}
+
+      {/* New order popup */}
+      <AnimatePresence>
+        {popupOrder && (() => {
+          const po = popupOrder;
+          const poItems = (po.items as any[]) || [];
+          const poItemCount = poItems.reduce((s, i) => s + (i.quantity || 1), 0);
+          return (
+            <motion.div
+              key={po.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => { setPopupOrder(null); setSelectedOrder(po); }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            >
+              <motion.div
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-card rounded-3xl border-2 border-amber-400 shadow-2xl p-6 mx-4 max-w-sm w-full text-center"
+              >
+                <div className="text-4xl mb-3">🔔</div>
+                <p className="text-2xl font-bold text-foreground mb-1">{t("dashboard.orders.new_order_popup")}</p>
+                <p className="text-3xl font-extrabold text-amber-600 mb-3">{formatDisplayNumber(po)}</p>
+                <div className="text-sm text-muted-foreground mb-1">
+                  <span className="font-semibold text-foreground">{po.customer_name}</span>
+                  {po.order_type === "sur_place" && <span className="ms-2">🍽 {t("dashboard.orders.dine_in")}</span>}
+                  {(po.order_type === "collect" || po.order_type === "a_emporter") && <span className="ms-2">📦 {t("dashboard.orders.takeaway")}</span>}
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {poItemCount} {poItemCount > 1 ? "articles" : "article"} — {po.total.toFixed(2)} €
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setPopupOrder(null)}
+                    className="flex-1 px-4 py-3 rounded-2xl bg-secondary text-foreground font-semibold text-sm"
+                  >
+                    OK
+                  </button>
+                  <button
+                    onClick={() => { setPopupOrder(null); setSelectedOrder(po); }}
+                    className="flex-1 px-4 py-3 rounded-2xl bg-amber-500 text-white font-semibold text-sm"
+                  >
+                    {t("dashboard.orders.view_order")}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
 
       {/* Ruptures drawer */}
       <Sheet open={rupturesOpen} onOpenChange={setRupturesOpen}>

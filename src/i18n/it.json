@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "Cliente bannato",
   "dashboard.orders.stock_management": "Gestione esaurimenti",
   "dashboard.orders.no_items": "Nessun piatto",
+  "dashboard.orders.new_order_popup": "Nuovo ordine!",
+  "dashboard.orders.view_order": "Vedi",
   "dashboard.orders.ingredients_stock": "Ingredienti",
   "dashboard.orders.items_stock": "Piatti",
   "dashboard.orders.item_available": "{name} disponibile",

@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "Клиент заблокирован",
   "dashboard.orders.stock_management": "Управление запасами",
   "dashboard.orders.no_items": "Нет позиций",
+  "dashboard.orders.new_order_popup": "Новый заказ!",
+  "dashboard.orders.view_order": "Смотреть",
   "dashboard.orders.ingredients_stock": "Ингредиенты",
   "dashboard.orders.items_stock": "Блюда",
   "dashboard.orders.item_available": "{name} в наличии",

@@ -659,6 +659,8 @@
   "dashboard.orders.client_banned": "Cliente bloqueado",
   "dashboard.orders.stock_management": "Gestão de estoque",
   "dashboard.orders.no_items": "Nenhum item",
+  "dashboard.orders.new_order_popup": "Novo pedido!",
+  "dashboard.orders.view_order": "Ver",
   "dashboard.orders.ingredients_stock": "Ingredientes",
   "dashboard.orders.items_stock": "Pratos",
   "dashboard.orders.item_available": "{name} disponível",

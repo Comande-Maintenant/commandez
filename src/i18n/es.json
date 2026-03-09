@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "Cliente bloqueado",
   "dashboard.orders.stock_management": "Gestion de agotados",
   "dashboard.orders.no_items": "Ningun plato",
+  "dashboard.orders.new_order_popup": "Nuevo pedido!",
+  "dashboard.orders.view_order": "Ver",
   "dashboard.orders.ingredients_stock": "Ingredientes",
   "dashboard.orders.items_stock": "Platos",
   "dashboard.orders.item_available": "{name} disponible",

@@ -113,17 +113,6 @@ const SOUND_PLAYERS: Record<SoundType, (ctx: AudioContext, vol: number) => void>
   soft: playSoft,
 };
 
-// ── Visual fallback: screen flash ──
-function flashScreen() {
-  const el = document.createElement("div");
-  el.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:rgba(16,185,129,0.25);pointer-events:none;transition:opacity 0.5s";
-  document.body.appendChild(el);
-  requestAnimationFrame(() => {
-    el.style.opacity = "0";
-  });
-  setTimeout(() => el.remove(), 600);
-}
-
 // ── Visual fallback: title blink ──
 let titleBlinkInterval: ReturnType<typeof setInterval> | null = null;
 const originalTitle = typeof document !== "undefined" ? document.title : "";
@@ -265,7 +254,7 @@ export function useNotificationSound(): SoundControls {
       }
     }
 
-    // Visual fallback is handled by play()
+    // Visual popup is handled by DashboardOrders
   }, [getOrCreateCtx]);
 
   const stopRepeat = useCallback(() => {
@@ -285,7 +274,7 @@ export function useNotificationSound(): SoundControls {
     playOnce();
 
     // Visual: flash screen
-    flashScreen();
+    // visual popup handled by DashboardOrders
 
     // Visual: title blink if tab not focused
     if (document.hidden) {
@@ -304,7 +293,7 @@ export function useNotificationSound(): SoundControls {
           return;
         }
         playOnce();
-        flashScreen();
+        // visual popup handled by DashboardOrders
       }, REPEAT_INTERVAL_MS);
     }
   }, [playOnce, stopRepeat]);
@@ -327,7 +316,7 @@ export function useNotificationSound(): SoundControls {
   const testPlay = useCallback(() => {
     const ctx = getOrCreateCtx();
     if (!ctx) {
-      flashScreen();
+      // visual popup handled by DashboardOrders
       return;
     }
     if (ctx.state === "suspended") {
@@ -335,7 +324,7 @@ export function useNotificationSound(): SoundControls {
         setAudioUnlocked(true);
         const vol = (volumeRef.current / 100) * 0.6;
         SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
-      }).catch(() => flashScreen());
+      }).catch(() => {});
     } else {
       setAudioUnlocked(true);
       const vol = (volumeRef.current / 100) * 0.6;

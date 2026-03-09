@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "تم حظر العميل",
   "dashboard.orders.stock_management": "إدارة النفاد",
   "dashboard.orders.no_items": "لا توجد أطباق",
+  "dashboard.orders.new_order_popup": "طلب جديد!",
+  "dashboard.orders.view_order": "عرض",
   "dashboard.orders.ingredients_stock": "المكونات",
   "dashboard.orders.items_stock": "الأطباق",
   "dashboard.orders.item_available": "{name} متاح",

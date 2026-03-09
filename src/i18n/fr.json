@@ -602,6 +602,8 @@
   "dashboard.orders.client_banned": "Client banni",
   "dashboard.orders.stock_management": "Gestion des ruptures",
   "dashboard.orders.no_items": "Aucun plat",
+  "dashboard.orders.new_order_popup": "Nouvelle commande !",
+  "dashboard.orders.view_order": "Voir",
   "dashboard.orders.ingredients_stock": "Ingredients",
   "dashboard.orders.items_stock": "Plats",
   "dashboard.orders.item_available": "{name} disponible",

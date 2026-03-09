@@ -659,6 +659,8 @@
   "dashboard.orders.client_banned": "Klant geblokkeerd",
   "dashboard.orders.stock_management": "Voorraadbeheer",
   "dashboard.orders.no_items": "Geen artikelen",
+  "dashboard.orders.new_order_popup": "Nieuwe bestelling!",
+  "dashboard.orders.view_order": "Bekijk",
   "dashboard.orders.ingredients_stock": "Ingredienten",
   "dashboard.orders.items_stock": "Gerechten",
   "dashboard.orders.item_available": "{name} beschikbaar",

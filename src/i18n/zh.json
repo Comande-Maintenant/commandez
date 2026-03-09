@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "客户已封禁",
   "dashboard.orders.stock_management": "库存管理",
   "dashboard.orders.no_items": "无菜品",
+  "dashboard.orders.new_order_popup": "新订单!",
+  "dashboard.orders.view_order": "查看",
   "dashboard.orders.ingredients_stock": "配料",
   "dashboard.orders.items_stock": "菜品",
   "dashboard.orders.item_available": "{name} 有货",

@@ -602,6 +602,8 @@
   "dashboard.orders.client_banned": "Customer banned",
   "dashboard.orders.stock_management": "Stock management",
   "dashboard.orders.no_items": "No items",
+  "dashboard.orders.new_order_popup": "New order!",
+  "dashboard.orders.view_order": "View",
   "dashboard.orders.ingredients_stock": "Ingredients",
   "dashboard.orders.items_stock": "Dishes",
   "dashboard.orders.item_available": "{name} available",

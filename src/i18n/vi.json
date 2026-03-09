@@ -596,6 +596,8 @@
   "dashboard.orders.client_banned": "Khach da bi chan",
   "dashboard.orders.stock_management": "Quan ly ton kho",
   "dashboard.orders.no_items": "Khong co mon",
+  "dashboard.orders.new_order_popup": "Don hang moi!",
+  "dashboard.orders.view_order": "Xem",
   "dashboard.orders.ingredients_stock": "Nguyen lieu",
   "dashboard.orders.items_stock": "Mon an",
   "dashboard.orders.item_available": "{name} con hang",
