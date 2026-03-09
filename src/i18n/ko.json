@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "추가",
   "dashboard.tablets.cancel": "취소",
   "dashboard.tablets.saving": "저장 중...",
-  "dashboard.tablets.save": "저장"
+  "dashboard.tablets.save": "저장",
+  "dashboard.history.title": "내역 (24시간)",
+  "dashboard.history.empty": "최근 24시간 동안 주문이 없습니다",
+  "dashboard.history.items_short": "개",
+  "dashboard.kitchen.beverages_counter": "음료 (카운터): {count}",
+  "language.selector": "언어"
 }

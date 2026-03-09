@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Добавить",
   "dashboard.tablets.cancel": "Отмена",
   "dashboard.tablets.saving": "Сохранение...",
-  "dashboard.tablets.save": "Сохранить"
+  "dashboard.tablets.save": "Сохранить",
+  "dashboard.history.title": "История (24ч)",
+  "dashboard.history.empty": "Нет заказов за последние 24 часа",
+  "dashboard.history.items_short": "товар(ов)",
+  "dashboard.kitchen.beverages_counter": "Напитки (стойка): {count}",
+  "language.selector": "Язык"
 }

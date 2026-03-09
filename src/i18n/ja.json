@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "追加",
   "dashboard.tablets.cancel": "キャンセル",
   "dashboard.tablets.saving": "保存中...",
-  "dashboard.tablets.save": "保存"
+  "dashboard.tablets.save": "保存",
+  "dashboard.history.title": "履歴 (24時間)",
+  "dashboard.history.empty": "過去24時間に注文はありません",
+  "dashboard.history.items_short": "品",
+  "dashboard.kitchen.beverages_counter": "ドリンク (カウンター): {count}",
+  "language.selector": "言語"
 }

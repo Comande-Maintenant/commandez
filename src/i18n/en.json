@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Add",
   "dashboard.tablets.cancel": "Cancel",
   "dashboard.tablets.saving": "Saving...",
-  "dashboard.tablets.save": "Save"
+  "dashboard.tablets.save": "Save",
+  "dashboard.history.title": "History (24h)",
+  "dashboard.history.empty": "No orders in the last 24 hours",
+  "dashboard.history.items_short": "item(s)",
+  "dashboard.kitchen.beverages_counter": "Drinks (counter): {count}",
+  "language.selector": "Language"
 }

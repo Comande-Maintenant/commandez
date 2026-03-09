@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "اضافة",
   "dashboard.tablets.cancel": "الغاء",
   "dashboard.tablets.saving": "جاري الحفظ...",
-  "dashboard.tablets.save": "حفظ"
+  "dashboard.tablets.save": "حفظ",
+  "dashboard.history.title": "السجل (24 ساعة)",
+  "dashboard.history.empty": "لا توجد طلبات في آخر 24 ساعة",
+  "dashboard.history.items_short": "عنصر/عناصر",
+  "dashboard.kitchen.beverages_counter": "مشروبات (الكاونتر): {count}",
+  "language.selector": "اللغة"
 }

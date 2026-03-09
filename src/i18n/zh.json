@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "添加",
   "dashboard.tablets.cancel": "取消",
   "dashboard.tablets.saving": "保存中...",
-  "dashboard.tablets.save": "保存"
+  "dashboard.tablets.save": "保存",
+  "dashboard.history.title": "历史记录 (24小时)",
+  "dashboard.history.empty": "最近24小时内没有订单",
+  "dashboard.history.items_short": "件",
+  "dashboard.kitchen.beverages_counter": "饮品 (吧台): {count}",
+  "language.selector": "语言"
 }

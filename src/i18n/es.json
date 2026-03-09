@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Anadir",
   "dashboard.tablets.cancel": "Cancelar",
   "dashboard.tablets.saving": "Guardando...",
-  "dashboard.tablets.save": "Guardar"
+  "dashboard.tablets.save": "Guardar",
+  "dashboard.history.title": "Historial (24h)",
+  "dashboard.history.empty": "Ningun pedido en las ultimas 24 horas",
+  "dashboard.history.items_short": "articulo(s)",
+  "dashboard.kitchen.beverages_counter": "Bebidas (barra): {count}",
+  "language.selector": "Idioma"
 }

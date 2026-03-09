@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Them",
   "dashboard.tablets.cancel": "Huy",
   "dashboard.tablets.saving": "Dang luu...",
-  "dashboard.tablets.save": "Luu"
+  "dashboard.tablets.save": "Luu",
+  "dashboard.history.title": "Lich su (24h)",
+  "dashboard.history.empty": "Khong co don hang trong 24 gio qua",
+  "dashboard.history.items_short": "mon",
+  "dashboard.kitchen.beverages_counter": "Do uong (quay): {count}",
+  "language.selector": "Ngon ngu"
 }

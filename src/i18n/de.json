@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Hinzufuegen",
   "dashboard.tablets.cancel": "Abbrechen",
   "dashboard.tablets.saving": "Speichern...",
-  "dashboard.tablets.save": "Speichern"
+  "dashboard.tablets.save": "Speichern",
+  "dashboard.history.title": "Verlauf (24h)",
+  "dashboard.history.empty": "Keine Bestellungen in den letzten 24 Stunden",
+  "dashboard.history.items_short": "Artikel",
+  "dashboard.kitchen.beverages_counter": "Getranke (Theke): {count}",
+  "language.selector": "Sprache"
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX, X, Clock } from "lucide-react";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug, fetchDemoRestaurant, updateRestaurant } from "@/lib/api";
@@ -29,6 +29,8 @@ import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
 import { supabase } from "@/integrations/supabase/client";
 import type { DashboardView } from "@/types/dashboard";
 import { SubscriptionGate } from "@/components/auth/SubscriptionGate";
+import { OrderHistorySheet } from "@/components/dashboard/OrderHistorySheet";
+import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
 import { useLanguage } from "@/context/LanguageContext";
 
 const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "tablettes", "parametres", "stats", "gerer", "clients", "customization"];
@@ -70,6 +72,7 @@ const AdminPage = () => {
   const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
 
   const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   // Auth check - skip for demo
   useEffect(() => {
@@ -271,6 +274,23 @@ const AdminPage = () => {
                 </button>
               )}
 
+              {/* History button */}
+              {isOpsView(activeView) && (
+                <button
+                  onClick={() => setHistoryOpen(true)}
+                  className="p-2 rounded-xl hover:bg-secondary transition-colors relative"
+                  title={t("dashboard.history.title")}
+                  aria-label={t("dashboard.history.title")}
+                >
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  {orderCounts.newCount + orderCounts.preparingCount > 0 && (
+                    <span className="absolute -top-0.5 -end-0.5 h-4 min-w-4 px-0.5 flex items-center justify-center rounded-full bg-emerald-500 text-white text-[9px] font-bold">
+                      {orderCounts.newCount + orderCounts.preparingCount}
+                    </span>
+                  )}
+                </button>
+              )}
+
               {/* Blur toggle */}
               <button
                 onClick={toggleBlur}
@@ -280,6 +300,9 @@ const AdminPage = () => {
               >
                 {blurred ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
               </button>
+
+              {/* Language selector */}
+              <LanguageSelector />
 
               {/* Disponible toggle */}
               <div className="flex items-center gap-2" data-tour="disponible">
@@ -351,7 +374,7 @@ const AdminPage = () => {
             </div>
           )}
 
-          {isOpsView(activeView) && activeView !== "caisse" && (
+          {isOpsView(activeView) && activeView !== "caisse" && activeView !== "cuisine" && (
             <LiveSummaryBanner
               visitors={visitors}
               alerts={alerts}
@@ -425,6 +448,16 @@ const AdminPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Order history sheet */}
+      {restaurant && (
+        <OrderHistorySheet
+          restaurantId={restaurant.id}
+          isDemo={isDemo}
+          open={historyOpen}
+          onClose={() => setHistoryOpen(false)}
+        />
       )}
 
       {/* Assistant chatbot - only in "gerer" admin views */}

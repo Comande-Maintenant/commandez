@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
 import { fetchOrders, fetchDemoOrders, fetchMenuItems, updateOrderStatus, updateMenuItem, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { getGarnitureColor } from "@/lib/garnitureColors";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbMenuItem, DbOrder } from "@/types/database";
 import { Button } from "@/components/ui/button";
@@ -411,33 +412,77 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                 )}
               </div>
 
-              {/* Items detail for kitchen */}
-              <div className="space-y-1.5 mb-2">
-                {orderItems.map((item: any, i: number) => (
-                  <div key={i} className="text-sm">
-                    <span className="text-foreground font-semibold">
-                      {item.quantity > 1 ? `${item.quantity}x ` : ""}{item.name}
-                    </span>
-                    {item.viande_choice && (
-                      <span className="text-foreground font-medium ml-1">- {item.viande_choice}</span>
+              {/* Items detail for kitchen - food items */}
+              {(() => {
+                const isDrink = (item: any) =>
+                  item.type === "drink" ||
+                  (item.name && /^(coca|fanta|sprite|orangina|perrier|evian|eau|ice tea|limonade|jus|cafe|the|redbull|ayran|schweppes|oasis|capri|pepsi|7up)/i.test(item.name?.trim())) ||
+                  (item.category && /boisson|drink|beverage/i.test(item.category));
+                const foodItems = orderItems.filter((i: any) => !isDrink(i));
+                const drinkItems = orderItems.filter((i: any) => isDrink(i));
+                const drinkCount = drinkItems.reduce((s: number, i: any) => s + (i.quantity || 1), 0);
+
+                return (
+                  <>
+                    <div className="space-y-2 mb-2">
+                      {foodItems.map((item: any, i: number) => (
+                        <div key={i}>
+                          <span className="text-foreground font-bold text-base">
+                            {item.quantity > 1 && <span className="text-lg me-1">{item.quantity}x</span>}
+                            {item.name}
+                          </span>
+                          {item.viande_choice && (
+                            <span className="text-foreground font-semibold ms-1">- {item.viande_choice}</span>
+                          )}
+                          {item.garniture_choices?.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-0.5 ms-3">
+                              {item.garniture_choices.map((g: any, gi: number) => {
+                                const name = typeof g === "string" ? g : g.name;
+                                const color = getGarnitureColor(name);
+                                return (
+                                  <span key={gi} className="inline-flex items-center gap-1 text-sm">
+                                    {color && <span className={`inline-block h-2.5 w-2.5 rounded-full ${color.dot} flex-shrink-0`} />}
+                                    <span className="text-foreground">{name}</span>
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {item.sauces?.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-0.5 ms-3">
+                              {item.sauces.map((s: string, si: number) => {
+                                const color = getGarnitureColor(s);
+                                return (
+                                  <span key={si} className="inline-flex items-center gap-1 text-sm">
+                                    {color && <span className={`inline-block h-2.5 w-2.5 rounded-full ${color.dot} flex-shrink-0`} />}
+                                    <span className="text-foreground">{s}</span>
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {item.supplements?.length > 0 && (
+                            <p className="text-foreground text-sm ms-3 mt-0.5">
+                              + {item.supplements.map((s: any) => typeof s === "string" ? s : s.name).join(", ")}
+                            </p>
+                          )}
+                          {item.notes && (
+                            <p className="text-amber-600 text-sm ms-3 italic font-medium mt-0.5">{item.notes}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {/* Beverages - collapsed, discrete */}
+                    {drinkCount > 0 && (
+                      <div className="px-2 py-1 rounded-lg bg-secondary/50 text-xs text-muted-foreground mb-2 flex items-center gap-1.5">
+                        <span>☕</span>
+                        <span>{t("dashboard.kitchen.beverages_counter", { count: drinkCount })}</span>
+                        <span className="text-[10px]">({drinkItems.map((d: any) => `${d.quantity > 1 ? d.quantity + "x " : ""}${d.name}`).join(", ")})</span>
+                      </div>
                     )}
-                    {item.garniture_choices?.length > 0 && (
-                      <p className="text-muted-foreground text-xs ml-3">{item.garniture_choices.map((g: any) => typeof g === "string" ? g : g.name).join(", ")}</p>
-                    )}
-                    {item.sauces?.length > 0 && (
-                      <p className="text-muted-foreground text-xs ml-3">{t("item.sauces")} : {item.sauces.join(", ")}</p>
-                    )}
-                    {item.supplements?.length > 0 && (
-                      <p className="text-muted-foreground text-xs ml-3">
-                        + {item.supplements.map((s: any) => typeof s === "string" ? s : s.name).join(", ")}
-                      </p>
-                    )}
-                    {item.notes && (
-                      <p className="text-amber-600 text-xs ml-3 italic">{item.notes}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
+                  </>
+                );
+              })()}
 
               {/* Bottom row: total + action button */}
               <div className="flex items-center justify-between pt-2 border-t border-border/50">

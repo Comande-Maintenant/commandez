@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Ajouter",
   "dashboard.tablets.cancel": "Annuler",
   "dashboard.tablets.saving": "Enregistrement...",
-  "dashboard.tablets.save": "Enregistrer"
+  "dashboard.tablets.save": "Enregistrer",
+  "dashboard.history.title": "Historique (24h)",
+  "dashboard.history.empty": "Aucune commande dans les dernieres 24h",
+  "dashboard.history.items_short": "article(s)",
+  "dashboard.kitchen.beverages_counter": "Boissons (comptoir) : {count}",
+  "language.selector": "Langue"
 }

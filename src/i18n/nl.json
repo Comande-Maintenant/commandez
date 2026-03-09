@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Toevoegen",
   "dashboard.tablets.cancel": "Annuleren",
   "dashboard.tablets.saving": "Opslaan...",
-  "dashboard.tablets.save": "Opslaan"
+  "dashboard.tablets.save": "Opslaan",
+  "dashboard.history.title": "Geschiedenis (24u)",
+  "dashboard.history.empty": "Geen bestellingen in de afgelopen 24 uur",
+  "dashboard.history.items_short": "artikel(en)",
+  "dashboard.kitchen.beverages_counter": "Dranken (balie): {count}",
+  "language.selector": "Taal"
 }

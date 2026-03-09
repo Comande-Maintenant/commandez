@@ -1281,5 +1281,10 @@
   "dashboard.tablets.add_button": "Ekle",
   "dashboard.tablets.cancel": "Iptal",
   "dashboard.tablets.saving": "Kaydediliyor...",
-  "dashboard.tablets.save": "Kaydet"
+  "dashboard.tablets.save": "Kaydet",
+  "dashboard.history.title": "Gecmis (24s)",
+  "dashboard.history.empty": "Son 24 saatte siparis yok",
+  "dashboard.history.items_short": "urun",
+  "dashboard.kitchen.beverages_counter": "Icecekler (tezgah): {count}",
+  "language.selector": "Dil"
 }
