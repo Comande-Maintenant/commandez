@@ -240,8 +240,13 @@ export const ProductCustomizer = ({
     return init;
   });
   const [selectedAccompagnement, setSelectedAccompagnement] = useState<DbAccompagnement | null>(null);
+  const [selectedAccompagnements, setSelectedAccompagnements] = useState<DbAccompagnement[]>([]);
   const [accompSize, setAccompSize] = useState<"small" | "medium" | "large">("medium");
   const [fritesSauces, setFritesSauces] = useState<string[]>([]);
+
+  const isAssiette = productType === "assiette";
+  const freeAccompagnements = config?.free_accompagnements ?? 1;
+  const extraAccompPrice = config?.extra_accompagnement_price ?? 0;
   const [quantity, setQuantity] = useState(1);
 
   // Pre-select viande if item name matches a viande (e.g. "Kebab" item -> pre-select Kebab viande)
@@ -334,8 +339,17 @@ export const ProductCustomizer = ({
       total += fritesSel[0].price;
     }
 
-    // Accompagnement (for assiettes)
-    if (selectedAccompagnement) {
+    // Accompagnement: multi-select for assiettes, single-select otherwise
+    if (isAssiette && selectedAccompagnements.length > 0) {
+      // Each accompagnement has its base price; first N are "free" (included)
+      selectedAccompagnements.forEach((acc, idx) => {
+        const basePrice = Number(acc.price_default ?? 0);
+        total += basePrice;
+        if (idx >= freeAccompagnements) {
+          total += extraAccompPrice;
+        }
+      });
+    } else if (selectedAccompagnement) {
       if (isMenu) {
         // Included in menu price
       } else if (selectedAccompagnement.has_sizes) {
@@ -376,7 +390,7 @@ export const ProductCustomizer = ({
     }
 
     return total;
-  }, [getStepSelections, selections, selectedAccompagnement, accompSize, fritesSauces, isMenu, item.price, productType, freeSaucesSandwich, freeSaucesFrites, extraSaucePrice, steps]);
+  }, [getStepSelections, selections, selectedAccompagnement, selectedAccompagnements, accompSize, fritesSauces, isMenu, isAssiette, freeAccompagnements, extraAccompPrice, item.price, productType, freeSaucesSandwich, freeSaucesFrites, extraSaucePrice, steps]);
 
   const goNext = useCallback(() => {
     if (stepIndex < steps.length - 1) setStepIndex(stepIndex + 1);
@@ -573,13 +587,26 @@ export const ProductCustomizer = ({
       cartOptions.garnitureChoices = chosenGarnitures.length > 0 ? chosenGarnitures : undefined;
       cartOptions.viandeChoice = viandeChoice || undefined;
       cartOptions.baseChoice = baseSel.length > 0 ? baseSel[0].name : undefined;
-      cartOptions.accompagnementChoice = selectedAccompagnement ? {
-        name: selectedAccompagnement.name,
-        size: selectedAccompagnement.has_sizes ? accompSize : undefined,
-        sauces: fritesSauces.length > 0 ? fritesSauces : undefined,
-      } : undefined;
+      if (isAssiette && selectedAccompagnements.length > 0) {
+        cartOptions.accompagnementChoices = selectedAccompagnements.map((a) => ({
+          name: a.name,
+          sauces: a.has_sauce_option && fritesSauces.length > 0 ? fritesSauces : undefined,
+        }));
+      } else {
+        cartOptions.accompagnementChoice = selectedAccompagnement ? {
+          name: selectedAccompagnement.name,
+          size: selectedAccompagnement.has_sizes ? accompSize : undefined,
+          sauces: fritesSauces.length > 0 ? fritesSauces : undefined,
+        } : undefined;
+      }
       cartOptions.drinkChoice = boissonSel.length > 0 ? { name: boissonSel[0].name, price: isMenu ? 0 : boissonSel[0].price } : undefined;
       cartOptions.dessertChoice = dessertSel.length > 0 ? { name: dessertSel[0].name, price: dessertSel[0].price } : undefined;
+    }
+
+    // Sauce extra cost for cart display
+    const extraSandwichSauces = Math.max(0, sauceSel.length - freeSaucesSandwich);
+    if (extraSandwichSauces > 0) {
+      cartOptions.sauceExtraCost = extraSandwichSauces * extraSaucePrice;
     }
 
     for (let i = 0; i < quantity; i++) {
@@ -605,6 +632,7 @@ export const ProductCustomizer = ({
       return init;
     });
     setSelectedAccompagnement(null);
+    setSelectedAccompagnements([]);
     setAccompSize("medium");
     setFritesSauces([]);
     setQuantity(1);
@@ -695,8 +723,78 @@ export const ProductCustomizer = ({
                       {currentStep.step_type === "single_select" && (
                         <div>
                           <h4 className="text-sm font-semibold text-gray-900 mb-3">{t(currentStep.label_i18n)}</h4>
-                          {currentStep.step_key === "accompagnement" ? (
-                            // Special accompagnement handling (sizes + sauce frites)
+                          {currentStep.step_key === "accompagnement" && isAssiette ? (
+                            // Multi-select accompaniments for assiettes
+                            <div className="space-y-2">
+                              <p className="text-xs text-gray-500 mb-2">
+                                {t("options.sides_included").replace("{count}", String(freeAccompagnements))}
+                                {extraAccompPrice > 0 && ` — ${t("options.sides_extra").replace("{price}", extraAccompPrice.toFixed(2))}`}
+                              </p>
+                              {accompagnements.map((acc) => {
+                                const isSelected = selectedAccompagnements.some((a) => a.id === acc.id);
+                                const selIdx = selectedAccompagnements.findIndex((a) => a.id === acc.id);
+                                const isPaid = isSelected && selIdx >= freeAccompagnements;
+                                return (
+                                  <button
+                                    key={acc.id}
+                                    onClick={() => {
+                                      setSelectedAccompagnements((prev) =>
+                                        prev.some((a) => a.id === acc.id)
+                                          ? prev.filter((a) => a.id !== acc.id)
+                                          : [...prev, acc]
+                                      );
+                                    }}
+                                    className={`w-full p-3 rounded-xl border-2 text-left transition-all ${
+                                      isSelected ? "border-current" : "border-gray-200"
+                                    }`}
+                                    style={isSelected ? { borderColor: accent, backgroundColor: `${accent}10` } : {}}
+                                  >
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-2">
+                                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                                          isSelected ? "border-current" : "border-gray-300"
+                                        }`} style={isSelected ? { backgroundColor: accent, borderColor: accent } : {}}>
+                                          {isSelected && <Check className="h-3 w-3 text-white" />}
+                                        </div>
+                                        <span className="text-sm font-medium text-gray-900">{tName(acc.name_translations, acc.name)}</span>
+                                      </div>
+                                      {isPaid && (
+                                        <span className="text-xs font-medium" style={{ color: accent }}>+{extraAccompPrice.toFixed(2)}€</span>
+                                      )}
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                              {/* Sauce frites for selected accompagnements with sauce option */}
+                              {selectedAccompagnements.some((a) => a.has_sauce_option) && (
+                                <div className="mt-3 ml-2">
+                                  <p className="text-xs font-semibold text-gray-700 mb-2">
+                                    {t("custom.same_sauce_frites")} ({t("custom.free_sauces", { count: String(freeSaucesFrites) })})
+                                  </p>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {fritesSauceOptions.map((s) => {
+                                      const sel = fritesSauces.includes(s.name);
+                                      const isFree = fritesSauces.indexOf(s.name) < freeSaucesFrites;
+                                      return (
+                                        <button
+                                          key={s.id}
+                                          onClick={() => handleToggleFritesSauce(s.name)}
+                                          className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                            sel ? "text-white" : "bg-gray-100 text-gray-600"
+                                          }`}
+                                          style={sel ? { backgroundColor: accent } : {}}
+                                        >
+                                          {tName(s.name_translations, s.name)}
+                                          {sel && !isFree && ` +${extraSaucePrice.toFixed(2)}€`}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : currentStep.step_key === "accompagnement" ? (
+                            // Single-select accompagnement (non-assiette)
                             <div className="space-y-2">
                               {accompagnements.map((acc) => {
                                 const selected = selectedAccompagnement?.id === acc.id;
@@ -1003,7 +1101,34 @@ export const ProductCustomizer = ({
                                 );
                               }
 
-                              // For accompagnement, show with size/sauce info
+                              // For accompagnement: multi-select for assiettes, single-select otherwise
+                              if (s.step_key === "accompagnement" && isAssiette && selectedAccompagnements.length > 0) {
+                                const paidCount = Math.max(0, selectedAccompagnements.length - freeAccompagnements);
+                                const accompExtraCost = paidCount * extraAccompPrice;
+                                return (
+                                  <div key={s.step_key}>
+                                    <RecapLine
+                                      label={t(s.label_i18n)}
+                                      value={selectedAccompagnements.map((a) => tName(a.name_translations, a.name)).join(", ")}
+                                      price={accompExtraCost > 0 ? `+${accompExtraCost.toFixed(2)} €` : undefined}
+                                      onClick={() => goToStep(i)}
+                                      accent={accent}
+                                    />
+                                    {fritesSauces.length > 0 && (
+                                      <RecapLine
+                                        label={t("custom.same_sauce_frites")}
+                                        value={fritesSauces.join(", ")}
+                                        price={Math.max(0, fritesSauces.length - freeSaucesFrites) > 0
+                                          ? `+${(Math.max(0, fritesSauces.length - freeSaucesFrites) * extraSaucePrice).toFixed(2)} €`
+                                          : undefined}
+                                        onClick={() => goToStep(i)}
+                                        accent={accent}
+                                      />
+                                    )}
+                                  </div>
+                                );
+                              }
+
                               if (s.step_key === "accompagnement" && selectedAccompagnement) {
                                 const priceStr = isMenu ? undefined : (selectedAccompagnement.has_sizes
                                   ? `${Number(selectedAccompagnement[`price_${accompSize}`] ?? 0).toFixed(2)} €`
