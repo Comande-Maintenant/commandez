@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { LANGUAGES } from "@/i18n";
 import type { DbRestaurant } from "@/types/database";
@@ -22,6 +21,12 @@ const CYCLE_MS = 3000;
 export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
   const { t, language, changeLanguage } = useLanguage();
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const [fadeIn, setFadeIn] = useState(false);
+
+  useEffect(() => {
+    // Trigger entry animation
+    requestAnimationFrame(() => setFadeIn(true));
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,77 +37,169 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-between bg-background cursor-pointer select-none py-8 sm:py-12 overflow-y-auto"
+      className="kiosk-splash"
       onClick={onStart}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 100,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "var(--background, #ffffff)",
+        cursor: "pointer",
+        userSelect: "none",
+        WebkitUserSelect: "none",
+        WebkitTapHighlightColor: "transparent",
+        overflow: "hidden",
+        opacity: fadeIn ? 1 : 0,
+        transition: "opacity 0.4s ease",
+      }}
     >
-      {/* Spacer top */}
-      <div className="flex-1" />
-
-      {/* Restaurant branding + rotating phrase + CTA */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col items-center gap-4 text-center px-6"
+      {/* Restaurant branding */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "16px",
+          textAlign: "center",
+          padding: "0 24px",
+          transform: fadeIn ? "scale(1)" : "scale(0.9)",
+          transition: "transform 0.5s ease",
+        }}
       >
         {restaurant.image ? (
           <img
             src={restaurant.image}
             alt={restaurant.name}
-            className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover shadow-lg"
+            style={{
+              width: "100px",
+              height: "100px",
+              borderRadius: "24px",
+              objectFit: "cover",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
+            }}
           />
         ) : (
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-primary/10 flex items-center justify-center shadow-lg">
-            <span className="text-3xl sm:text-4xl font-bold text-primary">
+          <div
+            style={{
+              width: "100px",
+              height: "100px",
+              borderRadius: "24px",
+              backgroundColor: "hsl(var(--primary) / 0.1)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "36px",
+                fontWeight: "bold",
+                color: "hsl(var(--primary))",
+              }}
+            >
               {restaurant.name?.charAt(0)?.toUpperCase() || "R"}
             </span>
           </div>
         )}
 
         <div>
-          <h1 className="text-2xl sm:text-4xl font-bold text-foreground">
+          <h1
+            style={{
+              fontSize: "28px",
+              fontWeight: "bold",
+              color: "hsl(var(--foreground))",
+              margin: 0,
+              lineHeight: 1.2,
+            }}
+          >
             {restaurant.name}
           </h1>
           {restaurant.city && (
-            <p className="text-base sm:text-lg text-muted-foreground mt-1">{restaurant.city}</p>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "hsl(var(--muted-foreground))",
+                marginTop: "4px",
+              }}
+            >
+              {restaurant.city}
+            </p>
           )}
         </div>
 
-        {/* Rotating phrases */}
-        <div className="h-8 sm:h-10 flex items-center justify-center overflow-hidden mt-2">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={phraseIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="text-base sm:text-lg text-muted-foreground font-medium"
-            >
-              {t(PHRASES[phraseIndex])}
-            </motion.p>
-          </AnimatePresence>
+        {/* Rotating phrases - eye-catching */}
+        <div
+          style={{
+            height: "36px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            marginTop: "8px",
+          }}
+        >
+          <p
+            key={phraseIndex}
+            className="kiosk-phrase"
+            style={{
+              fontSize: "20px",
+              fontWeight: 600,
+              color: "hsl(var(--primary))",
+              margin: 0,
+              animation: "kioskPhraseFade 3s ease-in-out infinite",
+            }}
+          >
+            {t(PHRASES[phraseIndex])}
+          </p>
         </div>
 
         {/* Pulsing CTA */}
-        <motion.div
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="mt-4"
+        <div
+          style={{
+            marginTop: "24px",
+            animation: "kioskPulse 2s ease-in-out infinite",
+          }}
         >
-          <div className="px-8 py-4 sm:px-10 sm:py-5 rounded-2xl bg-primary text-primary-foreground text-lg sm:text-2xl font-bold shadow-lg">
+          <div
+            style={{
+              padding: "18px 40px",
+              borderRadius: "16px",
+              backgroundColor: "hsl(var(--primary))",
+              color: "white",
+              fontSize: "22px",
+              fontWeight: "bold",
+              boxShadow: "0 8px 30px rgba(16, 185, 129, 0.35)",
+            }}
+          >
             {t("kiosk.splash.touch_to_order")}
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
-      {/* Spacer between CTA and languages */}
-      <div className="flex-1 min-h-6" />
-
-      {/* Language selector at bottom - stopPropagation to avoid triggering onStart */}
+      {/* Language flags at bottom */}
       <div
-        className="flex flex-wrap justify-center gap-1.5 sm:gap-2 px-4 max-w-lg"
         onClick={(e) => e.stopPropagation()}
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          left: 0,
+          right: 0,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "6px",
+          padding: "0 16px",
+        }}
       >
         {LANGUAGES.map((lang) => (
           <button
@@ -111,16 +208,41 @@ export const KioskSplashScreen = ({ restaurant, onStart }: Props) => {
               e.stopPropagation();
               changeLanguage(lang.code);
             }}
-            className={`px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-colors ${
-              language === lang.code
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-            }`}
+            style={{
+              padding: "6px 10px",
+              borderRadius: "8px",
+              border: "none",
+              fontSize: "18px",
+              lineHeight: 1,
+              cursor: "pointer",
+              backgroundColor: language === lang.code ? "hsl(var(--primary))" : "hsl(var(--secondary))",
+              opacity: language === lang.code ? 1 : 0.7,
+              transition: "opacity 0.2s, background-color 0.2s",
+              WebkitTapHighlightColor: "transparent",
+              outline: "none",
+            }}
+            aria-label={lang.name}
           >
-            {lang.flag} {lang.name}
+            {lang.flag}
           </button>
         ))}
       </div>
+
+      {/* CSS animations - inline for old WebView compat */}
+      <style>{`
+        @keyframes kioskPulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.06); }
+        }
+        @keyframes kioskPhraseFade {
+          0% { opacity: 0; transform: translateY(12px); }
+          15%, 85% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-12px); }
+        }
+        .kiosk-splash * {
+          -webkit-tap-highlight-color: transparent !important;
+        }
+      `}</style>
     </div>
   );
 };

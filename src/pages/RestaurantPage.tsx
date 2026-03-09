@@ -601,8 +601,11 @@ const RestaurantPage = () => {
 
       {/* Kiosk touch target CSS */}
       {isKiosk && (
-        <style>{`.kiosk-mode button, .kiosk-mode [role="button"] { min-height: 48px; }
-.kiosk-mode .menu-item-card { min-height: 56px; }`}</style>
+        <style>{`.kiosk-mode, .kiosk-mode * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; }
+.kiosk-mode { -webkit-overflow-scrolling: touch; overscroll-behavior: none; }
+.kiosk-mode button, .kiosk-mode [role="button"] { min-height: 48px; outline: none !important; }
+.kiosk-mode .menu-item-card { min-height: 56px; }
+.kiosk-mode button:focus, .kiosk-mode [role="button"]:focus, .kiosk-mode a:focus { outline: none !important; box-shadow: none !important; }`}</style>
       )}
 
       {/* Sticky demo banner - always visible, not dismissable */}

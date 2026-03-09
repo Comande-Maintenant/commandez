@@ -32,7 +32,7 @@ export const KioskConfirmation = ({ orderNumber, paymentMethod, onReset }: Props
   const isCounter = paymentMethod === "cash" || paymentMethod === "counter";
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background select-none">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background select-none" style={{ WebkitTapHighlightColor: "transparent", width: "100%", height: "100%" }}>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
