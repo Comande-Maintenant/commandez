@@ -248,6 +248,8 @@ export const ProductCustomizer = ({
   const freeAccompagnements = config?.free_accompagnements ?? 1;
   const extraAccompPrice = config?.extra_accompagnement_price ?? 0;
   const [quantity, setQuantity] = useState(1);
+  const [fritesInside, setFritesInside] = useState(false);
+  const showFritesInside = /tacos|galette|durum|kebab/i.test(item.name) || ["tacos", "galette"].includes(productType);
 
   // Pre-select viande if item name matches a viande (e.g. "Kebab" item -> pre-select Kebab viande)
   useEffect(() => {
@@ -599,6 +601,7 @@ export const ProductCustomizer = ({
           sauces: fritesSauces.length > 0 ? fritesSauces : undefined,
         } : undefined;
       }
+      if (showFritesInside) cartOptions.fritesInside = fritesInside;
       cartOptions.drinkChoice = boissonSel.length > 0 ? { name: boissonSel[0].name, price: isMenu ? 0 : boissonSel[0].price } : undefined;
       cartOptions.dessertChoice = dessertSel.length > 0 ? { name: dessertSel[0].name, price: dessertSel[0].price } : undefined;
     }
@@ -635,6 +638,7 @@ export const ProductCustomizer = ({
     setSelectedAccompagnements([]);
     setAccompSize("medium");
     setFritesSauces([]);
+    setFritesInside(false);
     setQuantity(1);
     onClose();
   };
@@ -1176,6 +1180,31 @@ export const ProductCustomizer = ({
                               );
                             })}
                           </div>
+
+                          {/* Frites inside toggle for tacos/kebab/galette */}
+                          {showFritesInside && (
+                            <div className="mt-4 p-3 rounded-xl bg-gray-50">
+                              <p className="text-xs font-semibold text-gray-500 uppercase mb-2">{t("options.fries_inside")}</p>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => setFritesInside(true)}
+                                  className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-all"
+                                  style={fritesInside ? { backgroundColor: accent, color: "#fff" } : { backgroundColor: "#f3f4f6", color: "#374151" }}
+                                >
+                                  {fritesInside && <Check className="inline h-3 w-3 mr-1" />}
+                                  {t("options.fries_inside_yes")}
+                                </button>
+                                <button
+                                  onClick={() => setFritesInside(false)}
+                                  className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-all"
+                                  style={!fritesInside ? { backgroundColor: accent, color: "#fff" } : { backgroundColor: "#f3f4f6", color: "#374151" }}
+                                >
+                                  {!fritesInside && <Check className="inline h-3 w-3 mr-1" />}
+                                  {t("options.fries_inside_no")}
+                                </button>
+                              </div>
+                            </div>
+                          )}
 
                           {/* Quantity */}
                           <div className="flex items-center justify-center gap-4 mt-6">
