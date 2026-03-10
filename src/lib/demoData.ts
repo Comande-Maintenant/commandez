@@ -180,73 +180,144 @@ export function generateDemoOrders(restaurantId: string): DbOrder[] {
 }
 
 // ── Demo customers ──
+// Simulates a kebab restaurant with ~1247 total clients over 14 months
+// We generate 50 visible customer cards (most recent/active) + global stats
 
-const DEMO_EMAILS = [
-  "marie.dupont@gmail.com", "thomas.m@outlook.fr", "julie.b89@gmail.com", "",
-  "emma.moreau@yahoo.fr", "h.leroy@free.fr", "lea.simon@gmail.com", "",
-  "camille.l@hotmail.fr", "theo.durand@gmail.com", "", "a.fournier@orange.fr",
-  "chloe.g@gmail.com", "maxime.bonnet@outlook.fr", "", "romain.d@gmail.com",
-  "ines.garcia@gmail.com", "alex.morel@proton.me", "laura.lf@gmail.com", "",
+const DEMO_CUSTOMER_NAMES = [
+  // 50 realistic French names
+  "Marie Dupont", "Thomas Martin", "Julie Bernard", "Lucas Petit",
+  "Emma Moreau", "Hugo Leroy", "Lea Simon", "Nathan Robert",
+  "Camille Laurent", "Theo Durand", "Manon Roux", "Antoine Fournier",
+  "Chloe Girard", "Maxime Bonnet", "Sarah Lambert", "Romain Dubois",
+  "Ines Garcia", "Alexandre Morel", "Laura Lefevre", "Quentin Andre",
+  "Oceane Mercier", "Julien Blanc", "Margot Chevalier", "Bastien Faure",
+  "Pauline Garnier", "Mathis Picard", "Clara Lemoine", "Dylan Perrot",
+  "Amandine Caron", "Kevin Masson", "Elise Gauthier", "Florian Noel",
+  "Melissa Roussel", "Adrien Perez", "Eva Clement", "Vincent Dufour",
+  "Anais Henry", "Jordan Riviere", "Lucie Schmitt", "Arnaud Colin",
+  "Marguerite Lemaire", "Pierre Guerin", "Nadia Benali", "Yann Moulin",
+  "Fatima Diallo", "Sebastien Boyer", "Lina Marchand", "Nicolas Brun",
+  "Sofia Hamidi", "Thibault Leclerc",
 ];
+
+const DEMO_EMAIL_DOMAINS = ["gmail.com", "outlook.fr", "yahoo.fr", "free.fr", "orange.fr", "hotmail.fr", "proton.me"];
 
 const DEMO_FAVORITE_ITEMS_POOL = [
   ["Kebab", "Barquette Frites", "Coca Cola 33cl"],
   ["Tacos", "Ayran"],
   ["Hamburger Double Steak", "Barquette Frites", "Redbull"],
   ["Sandwich", "Eau"],
-  ["Galette", "Salade", "Café"],
+  ["Galette", "Salade", "Cafe"],
   ["Assiette", "Ayran", "Barquette Frites"],
   ["6 Nuggets + frites", "Coca Cola 33cl"],
   ["Kebab", "Tacos", "Barquette Frites", "Coca Cola 33cl"],
   ["Hamburger", "Barquette Frites"],
-  ["Salade", "Eau", "Café"],
+  ["Salade", "Eau", "Cafe"],
+  ["Kebab", "Coca Cola 33cl"],
+  ["Tacos", "Barquette Frites", "Ayran"],
+  ["Sandwich", "Barquette Frites", "Coca Cola 33cl"],
+  ["Assiette", "Salade", "Eau"],
+  ["Hamburger Double Steak", "6 Nuggets + frites", "Redbull"],
 ];
 
 const DEMO_NOTES_POOL = [
-  "", "", "", "", "", "", "", // most have no notes
-  "Allergie gluten - toujours sans pain",
+  "", "", "", "", "", "", "", "", "", "", "", "", // most have no notes
+  "Allergie gluten, toujours sans pain",
   "Demande toujours sauce blanche a part",
   "Client fidele, vient depuis l'ouverture",
   "Passe souvent le vendredi soir",
   "Commande pour le bureau (5-6 pers.)",
   "Prefere bien cuit",
+  "Toujours en livraison",
+  "Aime la sauce piquante",
+  "Vient avec ses enfants le mercredi",
+  "Commande 2x par semaine en moyenne",
 ];
+
+export interface DemoCustomerStats {
+  totalClients: number;
+  regulars: number;
+  banned: number;
+}
+
+export function generateDemoCustomerStats(): DemoCustomerStats {
+  return { totalClients: 1247, regulars: 389, banned: 3 };
+}
 
 export function generateDemoCustomers(restaurantId: string): DbCustomer[] {
   const rand = seededRandom(99);
   const now = new Date();
   const customers: DbCustomer[] = [];
 
-  // Profiles: varied order frequencies and spending
-  const profiles = [
-    // VIPs (10+ orders) - 3 customers
-    { ordersMin: 24, ordersMax: 47, avgMin: 12, avgMax: 22, daysAgoFirst: 180, daysAgoLast: 0 },
-    { ordersMin: 15, ordersMax: 32, avgMin: 10, avgMax: 18, daysAgoFirst: 150, daysAgoLast: 1 },
-    { ordersMin: 12, ordersMax: 20, avgMin: 14, avgMax: 25, daysAgoFirst: 120, daysAgoLast: 2 },
-    // Regulars (5-9 orders) - 5 customers
-    { ordersMin: 6, ordersMax: 9, avgMin: 9, avgMax: 16, daysAgoFirst: 90, daysAgoLast: 3 },
-    { ordersMin: 5, ordersMax: 8, avgMin: 11, avgMax: 20, daysAgoFirst: 75, daysAgoLast: 5 },
-    { ordersMin: 5, ordersMax: 7, avgMin: 8, avgMax: 14, daysAgoFirst: 60, daysAgoLast: 4 },
-    { ordersMin: 5, ordersMax: 9, avgMin: 13, avgMax: 22, daysAgoFirst: 100, daysAgoLast: 7 },
-    { ordersMin: 6, ordersMax: 8, avgMin: 10, avgMax: 15, daysAgoFirst: 45, daysAgoLast: 1 },
-    // Occasionals (2-4 orders) - 7 customers
-    { ordersMin: 2, ordersMax: 4, avgMin: 8, avgMax: 18, daysAgoFirst: 40, daysAgoLast: 8 },
-    { ordersMin: 3, ordersMax: 4, avgMin: 10, avgMax: 16, daysAgoFirst: 30, daysAgoLast: 3 },
-    { ordersMin: 2, ordersMax: 3, avgMin: 12, avgMax: 22, daysAgoFirst: 25, daysAgoLast: 12 },
-    { ordersMin: 2, ordersMax: 4, avgMin: 7, avgMax: 13, daysAgoFirst: 50, daysAgoLast: 15 },
-    { ordersMin: 3, ordersMax: 4, avgMin: 9, avgMax: 15, daysAgoFirst: 20, daysAgoLast: 2 },
-    { ordersMin: 2, ordersMax: 3, avgMin: 14, avgMax: 28, daysAgoFirst: 35, daysAgoLast: 6 },
-    { ordersMin: 2, ordersMax: 2, avgMin: 8, avgMax: 12, daysAgoFirst: 14, daysAgoLast: 10 },
-    // New (1 order) - 3 customers
-    { ordersMin: 1, ordersMax: 1, avgMin: 7, avgMax: 15, daysAgoFirst: 3, daysAgoLast: 3 },
-    { ordersMin: 1, ordersMax: 1, avgMin: 10, avgMax: 20, daysAgoFirst: 1, daysAgoLast: 1 },
-    { ordersMin: 1, ordersMax: 1, avgMin: 12, avgMax: 18, daysAgoFirst: 0, daysAgoLast: 0 },
+  // 50 visible customers - the most recent/active slice of a 1247-client base
+  // Distribution mirrors a real kebab: lots of VIPs/regulars at the top when sorted
+  const profiles: Array<{
+    ordersMin: number; ordersMax: number;
+    avgMin: number; avgMax: number;
+    daysAgoFirst: number; daysAgoLast: number;
+    banned?: boolean; banReason?: string;
+  }> = [
+    // Super VIPs (50+ orders, old clients) - 5
+    { ordersMin: 85, ordersMax: 127, avgMin: 12, avgMax: 18, daysAgoFirst: 420, daysAgoLast: 0 },
+    { ordersMin: 72, ordersMax: 98,  avgMin: 14, avgMax: 22, daysAgoFirst: 400, daysAgoLast: 0 },
+    { ordersMin: 58, ordersMax: 80,  avgMin: 11, avgMax: 16, daysAgoFirst: 380, daysAgoLast: 1 },
+    { ordersMin: 52, ordersMax: 71,  avgMin: 15, avgMax: 24, daysAgoFirst: 350, daysAgoLast: 1 },
+    { ordersMin: 48, ordersMax: 65,  avgMin: 10, avgMax: 15, daysAgoFirst: 300, daysAgoLast: 2 },
+    // VIPs (20-50 orders) - 8
+    { ordersMin: 35, ordersMax: 48,  avgMin: 12, avgMax: 20, daysAgoFirst: 280, daysAgoLast: 0 },
+    { ordersMin: 30, ordersMax: 42,  avgMin: 13, avgMax: 19, daysAgoFirst: 250, daysAgoLast: 1 },
+    { ordersMin: 25, ordersMax: 38,  avgMin: 10, avgMax: 17, daysAgoFirst: 220, daysAgoLast: 2 },
+    { ordersMin: 22, ordersMax: 33,  avgMin: 14, avgMax: 22, daysAgoFirst: 200, daysAgoLast: 3 },
+    { ordersMin: 20, ordersMax: 30,  avgMin: 11, avgMax: 16, daysAgoFirst: 180, daysAgoLast: 1 },
+    { ordersMin: 20, ordersMax: 28,  avgMin: 9,  avgMax: 14, daysAgoFirst: 160, daysAgoLast: 4 },
+    { ordersMin: 18, ordersMax: 26,  avgMin: 15, avgMax: 25, daysAgoFirst: 150, daysAgoLast: 2 },
+    { ordersMin: 15, ordersMax: 24,  avgMin: 12, avgMax: 18, daysAgoFirst: 140, daysAgoLast: 5 },
+    // Regulars (5-15 orders) - 12
+    { ordersMin: 12, ordersMax: 15,  avgMin: 10, avgMax: 16, daysAgoFirst: 120, daysAgoLast: 1 },
+    { ordersMin: 10, ordersMax: 14,  avgMin: 13, avgMax: 20, daysAgoFirst: 100, daysAgoLast: 3 },
+    { ordersMin: 9,  ordersMax: 13,  avgMin: 8,  avgMax: 14, daysAgoFirst: 90,  daysAgoLast: 2 },
+    { ordersMin: 8,  ordersMax: 12,  avgMin: 11, avgMax: 18, daysAgoFirst: 85,  daysAgoLast: 4 },
+    { ordersMin: 7,  ordersMax: 11,  avgMin: 14, avgMax: 22, daysAgoFirst: 75,  daysAgoLast: 1 },
+    { ordersMin: 7,  ordersMax: 10,  avgMin: 9,  avgMax: 15, daysAgoFirst: 70,  daysAgoLast: 6 },
+    { ordersMin: 6,  ordersMax: 9,   avgMin: 12, avgMax: 19, daysAgoFirst: 60,  daysAgoLast: 3 },
+    { ordersMin: 6,  ordersMax: 9,   avgMin: 10, avgMax: 16, daysAgoFirst: 55,  daysAgoLast: 2 },
+    { ordersMin: 5,  ordersMax: 8,   avgMin: 13, avgMax: 21, daysAgoFirst: 50,  daysAgoLast: 5 },
+    { ordersMin: 5,  ordersMax: 8,   avgMin: 8,  avgMax: 13, daysAgoFirst: 45,  daysAgoLast: 1 },
+    { ordersMin: 5,  ordersMax: 7,   avgMin: 11, avgMax: 17, daysAgoFirst: 40,  daysAgoLast: 7 },
+    { ordersMin: 5,  ordersMax: 7,   avgMin: 15, avgMax: 24, daysAgoFirst: 35,  daysAgoLast: 0 },
+    // Occasionals (2-4 orders) - 15
+    { ordersMin: 3, ordersMax: 4, avgMin: 10, avgMax: 18, daysAgoFirst: 30, daysAgoLast: 2 },
+    { ordersMin: 3, ordersMax: 4, avgMin: 8,  avgMax: 14, daysAgoFirst: 28, daysAgoLast: 4 },
+    { ordersMin: 3, ordersMax: 4, avgMin: 12, avgMax: 20, daysAgoFirst: 25, daysAgoLast: 1 },
+    { ordersMin: 2, ordersMax: 4, avgMin: 14, avgMax: 26, daysAgoFirst: 22, daysAgoLast: 3 },
+    { ordersMin: 2, ordersMax: 3, avgMin: 9,  avgMax: 15, daysAgoFirst: 20, daysAgoLast: 6 },
+    { ordersMin: 2, ordersMax: 3, avgMin: 11, avgMax: 18, daysAgoFirst: 18, daysAgoLast: 2 },
+    { ordersMin: 2, ordersMax: 3, avgMin: 7,  avgMax: 12, daysAgoFirst: 15, daysAgoLast: 5 },
+    { ordersMin: 2, ordersMax: 3, avgMin: 13, avgMax: 22, daysAgoFirst: 14, daysAgoLast: 1 },
+    { ordersMin: 2, ordersMax: 3, avgMin: 10, avgMax: 16, daysAgoFirst: 12, daysAgoLast: 3 },
+    { ordersMin: 2, ordersMax: 2, avgMin: 8,  avgMax: 14, daysAgoFirst: 10, daysAgoLast: 4 },
+    { ordersMin: 2, ordersMax: 2, avgMin: 15, avgMax: 25, daysAgoFirst: 8,  daysAgoLast: 1 },
+    { ordersMin: 2, ordersMax: 2, avgMin: 9,  avgMax: 13, daysAgoFirst: 7,  daysAgoLast: 2 },
+    { ordersMin: 2, ordersMax: 2, avgMin: 11, avgMax: 17, daysAgoFirst: 6,  daysAgoLast: 0 },
+    // Banned - 2
+    { ordersMin: 8, ordersMax: 14, avgMin: 10, avgMax: 16, daysAgoFirst: 90, daysAgoLast: 12, banned: true, banReason: "Comportement agressif envers le personnel" },
+    { ordersMin: 3, ordersMax: 5,  avgMin: 8,  avgMax: 12, daysAgoFirst: 45, daysAgoLast: 20, banned: true, banReason: "No-show repete (3 commandes non recuperees)" },
+    // New (1 order, recent) - 5
+    { ordersMin: 1, ordersMax: 1, avgMin: 8,  avgMax: 16, daysAgoFirst: 3, daysAgoLast: 3 },
+    { ordersMin: 1, ordersMax: 1, avgMin: 10, avgMax: 20, daysAgoFirst: 2, daysAgoLast: 2 },
+    { ordersMin: 1, ordersMax: 1, avgMin: 12, avgMax: 18, daysAgoFirst: 1, daysAgoLast: 1 },
+    { ordersMin: 1, ordersMax: 1, avgMin: 7,  avgMax: 14, daysAgoFirst: 0, daysAgoLast: 0 },
+    { ordersMin: 1, ordersMax: 1, avgMin: 14, avgMax: 22, daysAgoFirst: 0, daysAgoLast: 0 },
   ];
 
   for (let i = 0; i < profiles.length; i++) {
     const p = profiles[i];
-    const name = DEMO_NAMES[i];
-    const email = DEMO_EMAILS[i] || "";
+    const name = DEMO_CUSTOMER_NAMES[i];
+    // ~60% have email
+    const hasEmail = rand() < 0.6;
+    const nameParts = name.toLowerCase().split(" ");
+    const emailDomain = DEMO_EMAIL_DOMAINS[Math.floor(rand() * DEMO_EMAIL_DOMAINS.length)];
+    const email = hasEmail ? `${nameParts[0]}.${nameParts[1][0]}${Math.floor(rand() * 100)}@${emailDomain}` : "";
     const phone = `06 ${String(Math.floor(rand() * 100)).padStart(2, "0")} ${String(Math.floor(rand() * 100)).padStart(2, "0")} ${String(Math.floor(rand() * 100)).padStart(2, "0")} ${String(Math.floor(rand() * 100)).padStart(2, "0")}`;
 
     const totalOrders = p.ordersMin + Math.floor(rand() * (p.ordersMax - p.ordersMin + 1));
@@ -266,9 +337,6 @@ export function generateDemoCustomers(restaurantId: string): DbCustomer[] {
 
     const noteIdx = Math.floor(rand() * DEMO_NOTES_POOL.length);
 
-    // 1 banned customer (index 11 = Antoine Fournier)
-    const isBanned = i === 11;
-
     customers.push({
       id: `demo-cust-${i}`,
       restaurant_id: restaurantId,
@@ -282,13 +350,13 @@ export function generateDemoCustomers(restaurantId: string): DbCustomer[] {
       average_basket: avgBasket,
       favorite_items: favorites,
       last_items: lastItems,
-      is_banned: isBanned,
-      banned_at: isBanned ? new Date(now.getTime() - 5 * 86400000).toISOString() : null,
-      banned_reason: isBanned ? "Comportement agressif envers le personnel" : "",
+      is_banned: !!p.banned,
+      banned_at: p.banned ? new Date(now.getTime() - 5 * 86400000).toISOString() : null,
+      banned_reason: p.banReason || "",
       ban_expires_at: null,
       banned_ip: "",
       notes: DEMO_NOTES_POOL[noteIdx],
-      flagged: i === 14, // 1 flagged customer
+      flagged: i === 14,
       created_at: firstDate.toISOString(),
       updated_at: lastDate.toISOString(),
     });

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Search, Phone, Mail, ShoppingBag, Euro, Star, ShieldBan, ShieldCheck, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import { fetchCustomers, fetchDemoCustomers, unbanCustomer } from "@/lib/api";
-import { generateDemoCustomers } from "@/lib/demoData";
+import { generateDemoCustomers, generateDemoCustomerStats } from "@/lib/demoData";
 import { formatRelativeTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DbRestaurant, DbCustomer } from "@/types/database";
@@ -123,20 +123,28 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
       <h2 className="text-xl font-bold text-foreground mb-4">Mes clients</h2>
 
       {/* Stats summary */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="bg-card rounded-2xl border border-border p-3">
-          <p className="text-xs text-muted-foreground">Total clients</p>
-          <p className="text-2xl font-bold text-foreground">{customers.length}</p>
-        </div>
-        <div className="bg-card rounded-2xl border border-border p-3">
-          <p className="text-xs text-muted-foreground">Reguliers (5+)</p>
-          <p className="text-2xl font-bold text-foreground">{customers.filter((c) => c.total_orders >= 5).length}</p>
-        </div>
-        <div className="bg-card rounded-2xl border border-border p-3">
-          <p className="text-xs text-muted-foreground">Bannis</p>
-          <p className="text-2xl font-bold text-destructive">{customers.filter((c) => c.is_banned).length}</p>
-        </div>
-      </div>
+      {(() => {
+        const demoStats = isDemo ? generateDemoCustomerStats() : null;
+        const totalCount = demoStats ? demoStats.totalClients : customers.length;
+        const regularsCount = demoStats ? demoStats.regulars : customers.filter((c) => c.total_orders >= 5).length;
+        const bannedCount = demoStats ? demoStats.banned : customers.filter((c) => c.is_banned).length;
+        return (
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="bg-card rounded-2xl border border-border p-3">
+              <p className="text-xs text-muted-foreground">Total clients</p>
+              <p className="text-2xl font-bold text-foreground">{totalCount.toLocaleString(locale)}</p>
+            </div>
+            <div className="bg-card rounded-2xl border border-border p-3">
+              <p className="text-xs text-muted-foreground">Reguliers (5+)</p>
+              <p className="text-2xl font-bold text-foreground">{regularsCount.toLocaleString(locale)}</p>
+            </div>
+            <div className="bg-card rounded-2xl border border-border p-3">
+              <p className="text-xs text-muted-foreground">Bannis</p>
+              <p className="text-2xl font-bold text-destructive">{bannedCount}</p>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Search + filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
