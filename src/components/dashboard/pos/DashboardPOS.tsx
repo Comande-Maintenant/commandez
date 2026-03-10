@@ -330,7 +330,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
                       <span className="text-foreground font-medium">
                         {item.quantity > 1 && `${item.quantity}x `}{item.name}
                       </span>
-                      {item.viande_choice && (
+                      {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
                         <span className="text-muted-foreground text-xs ml-1">({item.viande_choice})</span>
                       )}
                       {item.sauces?.length > 0 && (
@@ -434,7 +434,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
                             <span className="text-foreground font-medium">
                               {item.quantity > 1 && `${item.quantity}x `}{item.name}
                             </span>
-                            {item.viande_choice && (
+                            {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
                               <span className="text-muted-foreground text-xs ml-1">({item.viande_choice})</span>
                             )}
                             {item.sauces?.length > 0 && (

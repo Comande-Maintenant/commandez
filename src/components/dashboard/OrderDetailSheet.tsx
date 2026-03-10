@@ -500,7 +500,7 @@ export const OrderDetailSheet = ({
                       {item.name}
                     </p>
                     {/* Viande */}
-                    {item.viande_choice && (
+                    {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
                       <p className="text-sm text-muted-foreground mt-0.5">{item.viande_choice}</p>
                     )}
                     {/* Garnitures */}
@@ -599,7 +599,7 @@ export const OrderDetailSheet = ({
                     {item.sauces?.length > 0 && (
                       <p className="text-xs text-muted-foreground">{item.sauces.join(", ")}</p>
                     )}
-                    {item.viande_choice && (
+                    {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
                       <p className="text-xs text-muted-foreground">{item.viande_choice}</p>
                     )}
                     {/* Editable price */}

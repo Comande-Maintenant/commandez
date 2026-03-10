@@ -604,7 +604,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                             {item.quantity > 1 && <span className="text-lg me-1">{item.quantity}x</span>}
                             {item.name}
                           </span>
-                          {item.viande_choice && (
+                          {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
                             <span className="text-foreground font-semibold ms-1">- {item.viande_choice}</span>
                           )}
                           {item.garniture_choices?.length > 0 && (
