@@ -124,9 +124,18 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     fetchMenuItems(restaurant.id).then(setMenuItems);
     fetchAllMenuItems(restaurant.id).then(setAllMenuItems);
     loadCustomers();
-    fetchRestaurantHours(restaurant.id).then((h) =>
-      setRestaurantHours(h.map((r: any) => ({ day_of_week: r.day_of_week, is_open: r.is_open, open_time: r.open_time, close_time: r.close_time })))
-    ).catch(() => {});
+    fetchRestaurantHours(restaurant.id).then((h) => {
+      if (h.length > 0) {
+        setRestaurantHours(h.map((r: any) => ({ day_of_week: r.day_of_week, is_open: r.is_open, open_time: r.open_time, close_time: r.close_time })));
+      } else if (isDemo) {
+        // Default kebab hours for demo: Mon-Sat 11:00-14:30 + 18:00-22:30, closed Sunday
+        const demoHours = [
+          { day_of_week: 0, is_open: false, open_time: "", close_time: "" },
+          ...([1, 2, 3, 4, 5, 6].map((d) => ({ day_of_week: d, is_open: true, open_time: "11:00", close_time: "22:30" }))),
+        ];
+        setRestaurantHours(demoHours);
+      }
+    }).catch(() => {});
   }, [restaurant.id, loadCustomers]);
 
   useEffect(() => {
