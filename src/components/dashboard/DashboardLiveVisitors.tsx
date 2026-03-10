@@ -132,7 +132,7 @@ export const DashboardLiveVisitors = ({ visitors, alerts }: Props) => {
             {v.cart_count > 0 && (
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1.5">
                 <ShoppingCart className="h-3 w-3" />
-                <span>{v.cart_count} {t("dashboard.live.items")} - {v.cart_total.toFixed(2)} EUR</span>
+                <span>{v.cart_count} {t("dashboard.live.items")} - {v.cart_total.toFixed(2)} €</span>
               </div>
             )}
             {v.cart_items.length > 0 && (

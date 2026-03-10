@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Clock, ShoppingBag, UtensilsCrossed, Phone, Package, X } from "lucide-react";
+import { Clock, ShoppingBag, UtensilsCrossed, Phone, Package, ChevronDown, ChevronUp } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { fetchOrders, fetchDemoOrders, fetchCustomers, fetchDemoCustomers } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
@@ -34,6 +34,7 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [customersMap, setCustomersMap] = useState<Map<string, DbCustomer>>(new Map());
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // Only fetch when opened (lazy load)
   useEffect(() => {
@@ -121,10 +122,13 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
               .map((i: any) => `${i.quantity > 1 ? i.quantity + "x " : ""}${i.name}`)
               .join(", ");
 
+            const isExpanded = expandedId === order.id;
+
             return (
               <div
                 key={order.id}
-                className="rounded-xl border border-border p-3 bg-card hover:bg-secondary/30 transition-colors"
+                onClick={() => setExpandedId(isExpanded ? null : order.id)}
+                className="rounded-xl border border-border p-3 bg-card hover:bg-secondary/30 transition-colors cursor-pointer"
               >
                 {/* Top: number + status + time */}
                 <div className="flex items-center justify-between mb-1.5">
@@ -134,7 +138,10 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
                       {t(`dashboard.orders.status_${st}`)}
                     </span>
                   </div>
-                  <span className="text-xs text-muted-foreground">{formatTime(order.created_at)}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground">{formatTime(order.created_at)}</span>
+                    {isExpanded ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />}
+                  </div>
                 </div>
 
                 {/* Order type */}
@@ -152,14 +159,77 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
                   )}
                 </div>
 
-                {/* Items summary */}
-                <p className="text-xs text-muted-foreground line-clamp-2 mb-1.5">{itemSummary}</p>
+                {!isExpanded && (
+                  <>
+                    {/* Items summary (collapsed) */}
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-1.5">{itemSummary}</p>
 
-                {/* Total */}
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} EUR</span>
-                  <span className="text-[10px] text-muted-foreground">{items.reduce((s: number, i: any) => s + (i.quantity || 1), 0)} {t("dashboard.history.items_short")}</span>
-                </div>
+                    {/* Total */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} €</span>
+                      <span className="text-[10px] text-muted-foreground">{items.reduce((s: number, i: any) => s + (i.quantity || 1), 0)} {t("dashboard.history.items_short")}</span>
+                    </div>
+                  </>
+                )}
+
+                {/* Expanded detail */}
+                {isExpanded && (
+                  <div className="mt-2 pt-2 border-t border-border space-y-2">
+                    {items.map((item: any, idx: number) => (
+                      <div key={idx} className="flex justify-between items-start gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-foreground">
+                            {item.quantity > 1 && <span className="text-muted-foreground me-1">{item.quantity}x</span>}
+                            {item.name}
+                            {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
+                              <span className="text-muted-foreground font-normal"> - {item.viande_choice}</span>
+                            )}
+                          </p>
+                          {item.garniture_choices?.length > 0 && (
+                            <p className="text-xs text-muted-foreground">
+                              {item.garniture_choices.map((g: any) => g.name).join(", ")}
+                            </p>
+                          )}
+                          {item.sauces?.length > 0 && (
+                            <p className="text-xs text-muted-foreground">
+                              {t("pos.sauce_label").replace("{value}", item.sauces.join(", "))}
+                            </p>
+                          )}
+                          {item.supplements?.length > 0 && (
+                            <p className="text-xs text-muted-foreground">
+                              +{item.supplements.map((s: any) => typeof s === "string" ? s : s.name).join(", ")}
+                            </p>
+                          )}
+                          {item.frites_inside && (
+                            <p className="text-xs text-muted-foreground">{t("customization.with_fries") || "Avec frites"}</p>
+                          )}
+                        </div>
+                        <span className="text-sm font-medium text-foreground whitespace-nowrap blur-sensitive">
+                          {((item.price || 0) * (item.quantity || 1)).toFixed(2)} €
+                        </span>
+                      </div>
+                    ))}
+
+                    {/* Covers */}
+                    {order.covers && (
+                      <p className="text-xs text-muted-foreground">{order.covers} {t("dashboard.orders.covers")}</p>
+                    )}
+
+                    {/* Total */}
+                    <div className="flex items-center justify-between pt-2 border-t border-border">
+                      <span className="text-sm font-bold text-foreground">Total</span>
+                      <span className="text-sm font-bold text-foreground blur-sensitive">{Number(order.total).toFixed(2)} €</span>
+                    </div>
+
+                    {/* Timestamps */}
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-muted-foreground">
+                      <span>{t("dashboard.orders.status_new")} {formatTime(order.created_at)}</span>
+                      {order.accepted_at && <span>{t("dashboard.orders.status_preparing")} {formatTime(order.accepted_at)}</span>}
+                      {order.ready_at && <span>{t("dashboard.orders.status_ready")} {formatTime(order.ready_at)}</span>}
+                      {order.completed_at && <span>{t("dashboard.orders.status_done")} {formatTime(order.completed_at)}</span>}
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}

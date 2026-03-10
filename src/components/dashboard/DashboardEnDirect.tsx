@@ -78,9 +78,9 @@ export const DashboardEnDirect = ({ restaurant, visitors, alerts, isDemo }: Prop
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: t("dashboard.live.revenue_today"), value: `${todayStats.revenue.toFixed(2)} EUR`, icon: Euro, accent: true, sensitive: true },
+              { label: t("dashboard.live.revenue_today"), value: `${todayStats.revenue.toFixed(2)} €`, icon: Euro, accent: true, sensitive: true },
               { label: t("dashboard.live.orders"), value: todayStats.count, icon: ShoppingBag, sensitive: true },
-              { label: t("dashboard.live.avg_ticket"), value: `${todayStats.avg.toFixed(2)} EUR`, icon: Receipt, sensitive: true },
+              { label: t("dashboard.live.avg_ticket"), value: `${todayStats.avg.toFixed(2)} €`, icon: Receipt, sensitive: true },
               { label: t("dashboard.live.top_dish"), value: todayStats.topItem, icon: TrendingUp },
             ].map((kpi) => (
               <Card key={kpi.label} className="rounded-2xl border-border">

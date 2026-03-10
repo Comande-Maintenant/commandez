@@ -528,7 +528,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
               <span className="text-sm text-muted-foreground">{t('dashboard.settings.plan')}</span>
               <span className="text-sm font-medium text-foreground">
                 {subscription.plan === "annual" ? t('dashboard.settings.annual') : t('dashboard.settings.monthly')}{" "}
-                ({PLAN_PRICES[subscription.plan].toFixed(2)} EUR/{subscription.plan === "annual" ? t("dashboard.settings.annual_short") : t("dashboard.settings.monthly_short")})
+                ({PLAN_PRICES[subscription.plan].toFixed(2)} €/{subscription.plan === "annual" ? t("dashboard.settings.annual_short") : t("dashboard.settings.monthly_short")})
               </span>
             </div>
             <div className="flex items-center justify-between">
