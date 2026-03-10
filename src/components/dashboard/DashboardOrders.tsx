@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
-import { fetchOrders, fetchDemoOrders, fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder, fetchCustomers, fetchDemoCustomers } from "@/lib/api";
+import { fetchOrders, fetchDemoOrders, fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder, fetchCustomers, fetchDemoCustomers, fetchRestaurantHours } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { formatOrderTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
@@ -74,6 +74,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const popupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [customersMap, setCustomersMap] = useState<Map<string, DbCustomer>>(new Map());
   const [profileCustomer, setProfileCustomer] = useState<DbCustomer | null>(null);
+  const [restaurantHours, setRestaurantHours] = useState<{ day_of_week: number; is_open: boolean; open_time: string; close_time: string }[]>([]);
 
   // Tick for countdown timers on cards (re-render every 5s)
   const [, setTick] = useState(0);
@@ -123,6 +124,9 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     fetchMenuItems(restaurant.id).then(setMenuItems);
     fetchAllMenuItems(restaurant.id).then(setAllMenuItems);
     loadCustomers();
+    fetchRestaurantHours(restaurant.id).then((h) =>
+      setRestaurantHours(h.map((r: any) => ({ day_of_week: r.day_of_week, is_open: r.is_open, open_time: r.open_time, close_time: r.close_time })))
+    ).catch(() => {});
   }, [restaurant.id, loadCustomers]);
 
   useEffect(() => {
@@ -231,6 +235,60 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const todayRevenue = todayDoneOrders.reduce((s, o) => s + Number(o.total), 0);
 
   const timeSince = (dateStr: string) => formatOrderTime(dateStr, language, t);
+
+  // Compute next opening message when no orders
+  const getNextOpeningMessage = (): string | null => {
+    if (restaurantHours.length === 0) return null;
+    const now = new Date();
+    const currentDay = now.getDay(); // 0=Sunday
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    // Check if currently within opening hours
+    const todaySchedule = restaurantHours.find((h) => h.day_of_week === currentDay);
+    if (todaySchedule?.is_open && todaySchedule.open_time && todaySchedule.close_time) {
+      const [oh, om] = todaySchedule.open_time.split(":").map(Number);
+      const [ch, cm] = todaySchedule.close_time.split(":").map(Number);
+      const openMin = oh * 60 + om;
+      const closeMin = ch * 60 + cm;
+      if (currentMinutes >= openMin && currentMinutes < closeMin) return null; // we're open, no message needed
+    }
+
+    // Find next opening: check today (later slot) then next 7 days
+    for (let offset = 0; offset <= 7; offset++) {
+      const day = (currentDay + offset) % 7;
+      const schedule = restaurantHours.find((h) => h.day_of_week === day);
+      if (!schedule?.is_open || !schedule.open_time) continue;
+
+      const [oh, om] = schedule.open_time.split(":").map(Number);
+      const openMin = oh * 60 + om;
+
+      // If today, only consider if opening is in the future
+      if (offset === 0 && openMin <= currentMinutes) continue;
+
+      const diffMin = offset === 0
+        ? openMin - currentMinutes
+        : (offset * 1440) + openMin - currentMinutes;
+
+      const hours = Math.floor(diffMin / 60);
+      const mins = diffMin % 60;
+
+      const DAYS = [
+        t("schedule.sunday"), t("schedule.monday"), t("schedule.tuesday"), t("schedule.wednesday"),
+        t("schedule.thursday"), t("schedule.friday"), t("schedule.saturday"),
+      ];
+
+      if (offset === 0) {
+        // Later today
+        if (hours > 0) return t("dashboard.orders.next_opening_hours", { hours: String(hours), minutes: String(mins) });
+        return t("dashboard.orders.next_opening_minutes", { minutes: String(mins) });
+      }
+      if (offset === 1) {
+        return t("dashboard.orders.next_opening_tomorrow", { time: schedule.open_time });
+      }
+      return t("dashboard.orders.next_opening_day", { day: DAYS[day], time: schedule.open_time });
+    }
+    return null;
+  };
 
   const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));
@@ -364,7 +422,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       </div>
 
       {/* Prep summary for kitchen */}
-      <PrepSummaryBoard orders={orders} />
+      <PrepSummaryBoard orders={orders} nextOpeningMessage={getNextOpeningMessage()} />
 
       {/* Ruptures + info row */}
       <div className="flex items-center justify-between mb-3">
@@ -405,14 +463,23 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
 
       {/* Order cards */}
       <div className="space-y-2">
-        {filtered.length === 0 && (
-          <div className="text-center py-16 text-muted-foreground">
-            <Package className="h-10 w-10 mx-auto mb-3 opacity-40" />
-            <p className="text-sm">
-              {t("dashboard.orders.no_orders_filtered")}
-            </p>
-          </div>
-        )}
+        {filtered.length === 0 && (() => {
+          const nextMsg = getNextOpeningMessage();
+          return (
+            <div className="text-center py-16 text-muted-foreground">
+              <Package className="h-10 w-10 mx-auto mb-3 opacity-40" />
+              <p className="text-sm">
+                {t("dashboard.orders.no_orders_filtered")}
+              </p>
+              {nextMsg && (
+                <p className="text-xs mt-2 text-muted-foreground/70">
+                  <Clock className="h-3 w-3 inline -mt-0.5 mr-1" />
+                  {nextMsg}
+                </p>
+              )}
+            </div>
+          );
+        })()}
         {filtered.map((order) => {
           const st = order.status as OrderStatus;
           const badge = statusBadge[st];

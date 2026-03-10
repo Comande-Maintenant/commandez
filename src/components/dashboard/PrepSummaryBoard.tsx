@@ -4,6 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   orders: DbOrder[];
+  nextOpeningMessage?: string | null;
 }
 
 interface PrepLine {
@@ -52,7 +53,7 @@ function buildPrepLines(orders: DbOrder[]): PrepLine[] {
     });
 }
 
-export const PrepSummaryBoard = ({ orders }: Props) => {
+export const PrepSummaryBoard = ({ orders, nextOpeningMessage }: Props) => {
   const { t } = useLanguage();
   const lines = buildPrepLines(orders);
   const activeCount = orders.filter(
@@ -63,6 +64,12 @@ export const PrepSummaryBoard = ({ orders }: Props) => {
     return (
       <div className="bg-card rounded-2xl border border-border p-4 mb-4 text-center">
         <p className="text-sm text-muted-foreground">{t("dashboard.prep.nothing")}</p>
+        {nextOpeningMessage && (
+          <p className="text-xs mt-1.5 text-muted-foreground/70">
+            <Clock className="h-3 w-3 inline -mt-0.5 mr-1" />
+            {nextOpeningMessage}
+          </p>
+        )}
       </div>
     );
   }
