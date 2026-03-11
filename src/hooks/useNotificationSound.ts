@@ -3,10 +3,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 // ── Storage keys ──
 const VOLUME_KEY = "dashboard-notification-volume";
 const MUTED_KEY = "dashboard-notification-muted";
-const SOUND_TYPE_KEY = "dashboard-notification-sound-type";
 const REPEAT_KEY = "dashboard-notification-repeat";
-
-export type SoundType = "classic" | "urgent" | "soft";
 
 function getStored<T>(key: string, fallback: T): T {
   try {
@@ -30,89 +27,6 @@ function isFullyKiosk(): boolean {
   return typeof window.fully?.playSound === "function";
 }
 
-// ── Sound generators (Web Audio API) ──
-
-function playClassic(ctx: AudioContext, vol: number) {
-  // Cash register ding-ding-ding (3 notes ascending)
-  const notes = [
-    { freq: 1800, end: 1200, start: 0, dur: 0.15 },
-    { freq: 2200, end: 1600, start: 0.12, dur: 0.23 },
-    { freq: 2600, end: 2000, start: 0.28, dur: 0.27 },
-  ];
-  for (const n of notes) {
-    const gain = ctx.createGain();
-    gain.connect(ctx.destination);
-    const osc = ctx.createOscillator();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(n.freq, ctx.currentTime + n.start);
-    osc.frequency.exponentialRampToValueAtTime(n.end, ctx.currentTime + n.start + n.dur * 0.6);
-    osc.connect(gain);
-    gain.gain.setValueAtTime(vol, ctx.currentTime + n.start);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + n.start + n.dur);
-    osc.start(ctx.currentTime + n.start);
-    osc.stop(ctx.currentTime + n.start + n.dur);
-  }
-}
-
-function playUrgent(ctx: AudioContext, vol: number) {
-  // Rapid alert beeps: 3 short high-pitch bursts
-  for (let i = 0; i < 3; i++) {
-    const t = ctx.currentTime + i * 0.18;
-    const gain = ctx.createGain();
-    gain.connect(ctx.destination);
-    const osc = ctx.createOscillator();
-    osc.type = "square";
-    osc.frequency.setValueAtTime(1400, t);
-    osc.connect(gain);
-    gain.gain.setValueAtTime(vol * 0.5, t);
-    gain.gain.setValueAtTime(vol * 0.5, t + 0.07);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
-    osc.start(t);
-    osc.stop(t + 0.12);
-  }
-  // Final long tone
-  const t2 = ctx.currentTime + 0.56;
-  const g2 = ctx.createGain();
-  g2.connect(ctx.destination);
-  const o2 = ctx.createOscillator();
-  o2.type = "square";
-  o2.frequency.setValueAtTime(1800, t2);
-  o2.frequency.exponentialRampToValueAtTime(1200, t2 + 0.3);
-  o2.connect(g2);
-  g2.gain.setValueAtTime(vol * 0.4, t2);
-  g2.gain.exponentialRampToValueAtTime(0.001, t2 + 0.3);
-  o2.start(t2);
-  o2.stop(t2 + 0.3);
-}
-
-function playSoft(ctx: AudioContext, vol: number) {
-  // Gentle two-tone chime (triangle wave, warm)
-  const notes = [
-    { freq: 880, start: 0, dur: 0.35 },
-    { freq: 1320, start: 0.25, dur: 0.45 },
-  ];
-  for (const n of notes) {
-    const t = ctx.currentTime + n.start;
-    const gain = ctx.createGain();
-    gain.connect(ctx.destination);
-    const osc = ctx.createOscillator();
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(n.freq, t);
-    osc.connect(gain);
-    gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(vol * 0.7, t + 0.04);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + n.dur);
-    osc.start(t);
-    osc.stop(t + n.dur);
-  }
-}
-
-const SOUND_PLAYERS: Record<SoundType, (ctx: AudioContext, vol: number) => void> = {
-  classic: playClassic,
-  urgent: playUrgent,
-  soft: playSoft,
-};
-
 // ── Visual fallback: title blink ──
 let titleBlinkInterval: ReturnType<typeof setInterval> | null = null;
 const originalTitle = typeof document !== "undefined" ? document.title : "";
@@ -124,7 +38,6 @@ function startTitleBlink(message: string) {
     document.title = on ? message : originalTitle;
     on = !on;
   }, 1000);
-  // Stop after 30s to avoid infinite blink
   setTimeout(stopTitleBlink, 30000);
 }
 
@@ -140,6 +53,9 @@ function stopTitleBlink() {
 
 const REPEAT_INTERVAL_MS = 30_000;
 const MAX_REPEATS = 5;
+const KACHING_PATH = "/sounds/kaching.mp3";
+
+export type SoundType = "classic" | "urgent" | "soft";
 
 export interface SoundControls {
   audioUnlocked: boolean;
@@ -160,31 +76,30 @@ export interface SoundControls {
 }
 
 export function useNotificationSound(): SoundControls {
-  const ctxRef = useRef<AudioContext | null>(null);
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const [volume, setVolumeState] = useState(() => getStored(VOLUME_KEY, 70));
   const [muted, setMutedState] = useState(() => getStored(MUTED_KEY, false));
-  const [soundType, setSoundTypeState] = useState<SoundType>(() => getStored(SOUND_TYPE_KEY, "classic" as SoundType));
+  const [soundType, setSoundTypeState] = useState<SoundType>("classic");
   const [repeatEnabled, setRepeatEnabledState] = useState(() => getStored(REPEAT_KEY, true));
   const [isRepeating, setIsRepeating] = useState(false);
   const repeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const repeatCountRef = useRef(0);
 
-  // Keep refs in sync for use in callbacks
+  // Refs for use in callbacks
   const volumeRef = useRef(volume);
   const mutedRef = useRef(muted);
-  const soundTypeRef = useRef(soundType);
   const repeatEnabledRef = useRef(repeatEnabled);
   useEffect(() => { volumeRef.current = volume; }, [volume]);
   useEffect(() => { mutedRef.current = muted; }, [muted]);
-  useEffect(() => { soundTypeRef.current = soundType; }, [soundType]);
   useEffect(() => { repeatEnabledRef.current = repeatEnabled; }, [repeatEnabled]);
 
-  // Try to detect existing running context on mount
+  // Preload kaching MP3
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
-    if (ctxRef.current && ctxRef.current.state === "running") {
-      setAudioUnlocked(true);
-    }
+    const audio = new Audio(KACHING_PATH);
+    audio.preload = "auto";
+    audio.load();
+    audioRef.current = audio;
   }, []);
 
   // Stop title blink on user activity
@@ -194,118 +109,52 @@ export function useNotificationSound(): SoundControls {
     return () => document.removeEventListener("visibilitychange", handler);
   }, []);
 
-  const getOrCreateCtx = useCallback((): AudioContext | null => {
-    try {
-      if (!ctxRef.current) {
-        ctxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-      }
-      return ctxRef.current;
-    } catch {
-      return null;
-    }
-  }, []);
-
   const unlockAudio = useCallback(() => {
-    const ctx = getOrCreateCtx();
-    if (!ctx) return;
-    if (ctx.state === "suspended") {
-      ctx.resume().then(() => setAudioUnlocked(true)).catch(() => {});
-    } else {
-      setAudioUnlocked(true);
+    if (audioRef.current) {
+      // Play silent (volume 0) to unlock audio on iOS/Safari/Chrome
+      const a = audioRef.current;
+      const prevVol = a.volume;
+      a.volume = 0;
+      a.currentTime = 0;
+      a.play().then(() => {
+        a.pause();
+        a.volume = prevVol;
+        a.currentTime = 0;
+        setAudioUnlocked(true);
+      }).catch(() => {
+        a.volume = prevVol;
+      });
     }
-    // Silent buffer trick for iOS/Safari
-    try {
-      const buf = ctx.createBuffer(1, 1, 22050);
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      src.connect(ctx.destination);
-      src.start(0);
-    } catch {}
-  }, [getOrCreateCtx]);
-
-  // Generate a WAV beep as fallback when Web Audio API fails
-  const fallbackAudioRef = useRef<HTMLAudioElement | null>(null);
-  const getFallbackAudio = useCallback(() => {
-    if (fallbackAudioRef.current) return fallbackAudioRef.current;
-    try {
-      // Generate a simple beep WAV (44100 Hz, mono, 16-bit, ~0.3s)
-      const sampleRate = 44100;
-      const duration = 0.3;
-      const numSamples = Math.floor(sampleRate * duration);
-      const buffer = new ArrayBuffer(44 + numSamples * 2);
-      const view = new DataView(buffer);
-      // WAV header
-      const writeStr = (off: number, str: string) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
-      writeStr(0, "RIFF");
-      view.setUint32(4, 36 + numSamples * 2, true);
-      writeStr(8, "WAVE");
-      writeStr(12, "fmt ");
-      view.setUint32(16, 16, true);
-      view.setUint16(20, 1, true);
-      view.setUint16(22, 1, true);
-      view.setUint32(24, sampleRate, true);
-      view.setUint32(28, sampleRate * 2, true);
-      view.setUint16(32, 2, true);
-      view.setUint16(34, 16, true);
-      writeStr(36, "data");
-      view.setUint32(40, numSamples * 2, true);
-      // Two-tone beep (880Hz then 1320Hz)
-      for (let i = 0; i < numSamples; i++) {
-        const t = i / sampleRate;
-        const freq = t < 0.15 ? 880 : 1320;
-        const envelope = Math.min(1, (duration - t) * 10) * Math.min(1, t * 50);
-        const sample = Math.sin(2 * Math.PI * freq * t) * envelope * 0.4;
-        view.setInt16(44 + i * 2, Math.max(-32768, Math.min(32767, sample * 32767)), true);
-      }
-      const blob = new Blob([buffer], { type: "audio/wav" });
-      const url = URL.createObjectURL(blob);
-      fallbackAudioRef.current = new Audio(url);
-      return fallbackAudioRef.current;
-    } catch { return null; }
   }, []);
 
   const playOnce = useCallback(() => {
-    const vol = (volumeRef.current / 100) * 0.6;
-    let soundPlayed = false;
+    const vol = volumeRef.current / 100;
 
     // Layer 1: Fully Kiosk Browser native sound
     if (isFullyKiosk()) {
       try {
         window.fully!.playSound("content://settings/system/notification_sound", false);
-        soundPlayed = true;
+        return;
       } catch {}
     }
 
-    // Layer 2: Web Audio API (context already running)
-    if (!soundPlayed) {
-      const ctx = getOrCreateCtx();
-      if (ctx && ctx.state === "running") {
+    // Layer 2: HTML Audio (kaching.mp3) - most reliable
+    if (audioRef.current) {
+      const a = audioRef.current;
+      a.volume = vol;
+      a.currentTime = 0;
+      a.play().then(() => {
+        setAudioUnlocked(true);
+      }).catch(() => {
+        // Audio blocked - try cloning (some browsers need fresh elements)
         try {
-          SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
-          soundPlayed = true;
+          const clone = new Audio(KACHING_PATH);
+          clone.volume = vol;
+          clone.play().catch(() => {});
         } catch {}
-      } else if (ctx && ctx.state === "suspended") {
-        ctx.resume().then(() => {
-          setAudioUnlocked(true);
-          try {
-            SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
-          } catch {}
-        }).catch(() => {});
-      }
+      });
     }
-
-    // Layer 3: HTMLAudioElement fallback (works even when AudioContext is blocked)
-    if (!soundPlayed) {
-      try {
-        const audio = getFallbackAudio();
-        if (audio) {
-          audio.volume = vol;
-          audio.currentTime = 0;
-          audio.play().catch(() => {});
-        }
-      } catch {}
-    }
-  }, [getOrCreateCtx, getFallbackAudio]);
+  }, []);
 
   const stopRepeat = useCallback(() => {
     if (repeatRef.current) {
@@ -320,15 +169,11 @@ export function useNotificationSound(): SoundControls {
   const play = useCallback(() => {
     if (mutedRef.current) return;
 
-    // Play the sound immediately
     playOnce();
 
-    // Visual: flash screen
-    // visual popup handled by DashboardOrders
-
-    // Visual: title blink if tab not focused
+    // Title blink if tab not focused
     if (document.hidden) {
-      startTitleBlink("🔔 Nouvelle commande !");
+      startTitleBlink("Nouvelle commande !");
     }
 
     // Repeat logic: ring again every 30s if no interaction
@@ -343,17 +188,14 @@ export function useNotificationSound(): SoundControls {
           return;
         }
         playOnce();
-        // visual popup handled by DashboardOrders
       }, REPEAT_INTERVAL_MS);
     }
   }, [playOnce, stopRepeat]);
 
-  // Stop repeat on any user interaction (they saw the notification)
+  // Stop repeat on any user interaction
   useEffect(() => {
     const handler = () => {
-      if (repeatRef.current) {
-        stopRepeat();
-      }
+      if (repeatRef.current) stopRepeat();
     };
     const events = ["mousedown", "touchstart", "keydown"];
     events.forEach((e) => document.addEventListener(e, handler, { passive: true }));
@@ -364,23 +206,13 @@ export function useNotificationSound(): SoundControls {
   }, [stopRepeat]);
 
   const testPlay = useCallback(() => {
-    const ctx = getOrCreateCtx();
-    if (!ctx) {
-      // visual popup handled by DashboardOrders
-      return;
+    if (audioRef.current) {
+      const a = audioRef.current;
+      a.volume = volumeRef.current / 100;
+      a.currentTime = 0;
+      a.play().then(() => setAudioUnlocked(true)).catch(() => {});
     }
-    if (ctx.state === "suspended") {
-      ctx.resume().then(() => {
-        setAudioUnlocked(true);
-        const vol = (volumeRef.current / 100) * 0.6;
-        SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
-      }).catch(() => {});
-    } else {
-      setAudioUnlocked(true);
-      const vol = (volumeRef.current / 100) * 0.6;
-      SOUND_PLAYERS[soundTypeRef.current](ctx, vol);
-    }
-  }, [getOrCreateCtx]);
+  }, []);
 
   const setVolume = useCallback((v: number) => {
     setVolumeState(v);
@@ -402,7 +234,6 @@ export function useNotificationSound(): SoundControls {
 
   const setSoundType = useCallback((t: SoundType) => {
     setSoundTypeState(t);
-    localStorage.setItem(SOUND_TYPE_KEY, t);
   }, []);
 
   const setRepeatEnabled = useCallback((r: boolean) => {
