@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchOrderById, subscribeToOrderStatus, advanceDemoOrder } from "@/lib/api";
+import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -126,7 +126,8 @@ const SuiviPage = () => {
     return unsub;
   }, [orderId]);
 
-  // Auto-advance demo orders as fallback
+  // Auto-advance demo orders visually (client-side only, no DB change)
+  // The pro dashboard keeps manual control over the real status
   useEffect(() => {
     if (!order || !order.restaurant?.is_demo) return;
     if (order.status === "done") return;
@@ -145,7 +146,8 @@ const SuiviPage = () => {
     const remaining = Math.max(0, current.delayMs - elapsed);
 
     const timer = setTimeout(() => {
-      advanceDemoOrder(order.id, current.target).catch(() => {});
+      // Update only local state, not the database
+      setOrder((prev) => prev ? { ...prev, status: current.target as any } : prev);
     }, remaining);
 
     return () => clearTimeout(timer);
