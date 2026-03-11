@@ -24,7 +24,7 @@ export const LanguageSelector = () => {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium bg-background/80 backdrop-blur-sm border border-border hover:bg-secondary transition-colors"
+        className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-medium hover:bg-secondary transition-colors"
       >
         <Globe className="h-3.5 w-3.5 text-muted-foreground" />
         <span className="text-foreground">{current.flag}</span>
