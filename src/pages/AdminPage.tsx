@@ -69,15 +69,11 @@ const AdminPage = () => {
   const [showPwaBanner, setShowPwaBanner] = useState(false);
   const sound = useNotificationSound();
 
-  // Auto-unlock audio on first user interaction (critical for tablets)
+  // Auto-unlock audio on user interaction (keep trying until unlocked)
   useEffect(() => {
+    if (sound.audioUnlocked) return;
     const handler = () => {
-      if (!sound.audioUnlocked) {
-        sound.unlockAudio();
-      }
-      // Remove after first trigger
-      document.removeEventListener("click", handler);
-      document.removeEventListener("touchstart", handler);
+      sound.unlockAudio();
     };
     document.addEventListener("click", handler, { passive: true });
     document.addEventListener("touchstart", handler, { passive: true });
@@ -316,15 +312,17 @@ const AdminPage = () => {
                 </button>
               )}
 
-              {/* Blur toggle */}
-              <button
-                onClick={toggleBlur}
-                className="p-2 rounded-xl hover:bg-secondary transition-colors"
-                title={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
-                aria-label={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
-              >
-                {blurred ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
-              </button>
+              {/* Blur toggle - only on views with monetary amounts */}
+              {["cuisine", "caisse", "en-direct", "stats", "clients"].includes(activeView) && (
+                <button
+                  onClick={toggleBlur}
+                  className="p-2 rounded-xl hover:bg-secondary transition-colors"
+                  title={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
+                  aria-label={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
+                >
+                  {blurred ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
+                </button>
+              )}
 
               {/* Language selector */}
               <LanguageSelector />

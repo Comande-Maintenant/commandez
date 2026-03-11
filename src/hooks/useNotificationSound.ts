@@ -223,6 +223,47 @@ export function useNotificationSound(): SoundControls {
     } catch {}
   }, [getOrCreateCtx]);
 
+  // Generate a WAV beep as fallback when Web Audio API fails
+  const fallbackAudioRef = useRef<HTMLAudioElement | null>(null);
+  const getFallbackAudio = useCallback(() => {
+    if (fallbackAudioRef.current) return fallbackAudioRef.current;
+    try {
+      // Generate a simple beep WAV (44100 Hz, mono, 16-bit, ~0.3s)
+      const sampleRate = 44100;
+      const duration = 0.3;
+      const numSamples = Math.floor(sampleRate * duration);
+      const buffer = new ArrayBuffer(44 + numSamples * 2);
+      const view = new DataView(buffer);
+      // WAV header
+      const writeStr = (off: number, str: string) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+      writeStr(0, "RIFF");
+      view.setUint32(4, 36 + numSamples * 2, true);
+      writeStr(8, "WAVE");
+      writeStr(12, "fmt ");
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeStr(36, "data");
+      view.setUint32(40, numSamples * 2, true);
+      // Two-tone beep (880Hz then 1320Hz)
+      for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const freq = t < 0.15 ? 880 : 1320;
+        const envelope = Math.min(1, (duration - t) * 10) * Math.min(1, t * 50);
+        const sample = Math.sin(2 * Math.PI * freq * t) * envelope * 0.4;
+        view.setInt16(44 + i * 2, Math.max(-32768, Math.min(32767, sample * 32767)), true);
+      }
+      const blob = new Blob([buffer], { type: "audio/wav" });
+      const url = URL.createObjectURL(blob);
+      fallbackAudioRef.current = new Audio(url);
+      return fallbackAudioRef.current;
+    } catch { return null; }
+  }, []);
+
   const playOnce = useCallback(() => {
     const vol = (volumeRef.current / 100) * 0.6;
     let soundPlayed = false;
@@ -244,7 +285,6 @@ export function useNotificationSound(): SoundControls {
           soundPlayed = true;
         } catch {}
       } else if (ctx && ctx.state === "suspended") {
-        // Layer 3: Try to resume (may fail without user gesture)
         ctx.resume().then(() => {
           setAudioUnlocked(true);
           try {
@@ -254,8 +294,18 @@ export function useNotificationSound(): SoundControls {
       }
     }
 
-    // Visual popup is handled by DashboardOrders
-  }, [getOrCreateCtx]);
+    // Layer 3: HTMLAudioElement fallback (works even when AudioContext is blocked)
+    if (!soundPlayed) {
+      try {
+        const audio = getFallbackAudio();
+        if (audio) {
+          audio.volume = vol;
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
+      } catch {}
+    }
+  }, [getOrCreateCtx, getFallbackAudio]);
 
   const stopRepeat = useCallback(() => {
     if (repeatRef.current) {

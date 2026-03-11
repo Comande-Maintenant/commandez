@@ -86,11 +86,25 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   // Demo auto-orders
   const demoIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const prevOrderIdsRef = useRef<Set<string>>(new Set());
+
   const loadOrders = useCallback(async () => {
     const data = isDemo
       ? await fetchDemoOrders(restaurant.id)
       : await fetchOrders(restaurant.id);
     if (isDemo) {
+      // Detect new orders for sound notification
+      const newNewOrders = data.filter(
+        (o) => o.status === "new" && !prevOrderIdsRef.current.has(o.id)
+      );
+      if (newNewOrders.length > 0 && prevOrderIdsRef.current.size > 0) {
+        if (onNewOrderSound) onNewOrderSound();
+        setPopupOrder(newNewOrders[0]);
+        if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+        popupTimerRef.current = setTimeout(() => setPopupOrder(null), 12000);
+      }
+      prevOrderIdsRef.current = new Set(data.map((o) => o.id));
+
       // Preserve locally-set estimated_ready_at (not stored server-side for demo)
       setOrders((prev) => {
         const localEstimates = new Map<string, string>();
@@ -109,7 +123,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       setOrders(data);
     }
     setLoading(false);
-  }, [restaurant.id, isDemo]);
+  }, [restaurant.id, isDemo, onNewOrderSound]);
 
   const loadCustomers = useCallback(async () => {
     try {
