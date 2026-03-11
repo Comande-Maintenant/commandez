@@ -483,11 +483,13 @@ const AdminPage = () => {
         />
       )}
 
-      {/* Assistant chatbot */}
-      <AssistantChatbot
-        activeView={activeView}
-        onNavigate={(v) => handleViewChange(v as DashboardView)}
-      />
+      {/* Assistant chatbot - only on settings tab */}
+      {activeView === "parametres" && (
+        <AssistantChatbot
+          activeView={activeView}
+          onNavigate={(v) => handleViewChange(v as DashboardView)}
+        />
+      )}
 
       {/* Onboarding tour */}
       {showOnboarding && restaurant && (
