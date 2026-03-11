@@ -51,6 +51,7 @@ export function getWeekDays(): number[] {
 }
 
 // Returns an i18n key - callers must wrap with t()
+// Thresholds aligned with getIntensityLabel: <55 = calm, >=55 = busy
 export function getCurrentDemandTip(): string {
   const now = new Date();
   const hour = now.getHours();
@@ -58,19 +59,19 @@ export function getCurrentDemandTip(): string {
   const pattern = WEEKLY_PATTERNS[day];
 
   if (hour >= 8 && hour < 11) {
-    return pattern.midi >= 70 ? "dashboard.demand.tip_morning_busy" : "dashboard.demand.tip_morning_calm";
+    return pattern.midi >= 55 ? "dashboard.demand.tip_morning_busy" : "dashboard.demand.tip_morning_calm";
   }
   if (hour >= 11 && hour < 14) {
-    return pattern.midi >= 70 ? "dashboard.demand.tip_lunch_busy" : "dashboard.demand.tip_lunch_calm";
+    return pattern.midi >= 55 ? "dashboard.demand.tip_lunch_busy" : "dashboard.demand.tip_lunch_calm";
   }
   if (hour >= 14 && hour < 17) {
-    return pattern.soir >= 75 ? "dashboard.demand.tip_afternoon_busy" : "dashboard.demand.tip_afternoon_calm";
+    return pattern.soir >= 55 ? "dashboard.demand.tip_afternoon_busy" : "dashboard.demand.tip_afternoon_calm";
   }
   if (hour >= 17 && hour < 19) {
-    return pattern.soir >= 75 ? "dashboard.demand.tip_evening_prep_busy" : "dashboard.demand.tip_evening_prep_calm";
+    return pattern.soir >= 55 ? "dashboard.demand.tip_evening_prep_busy" : "dashboard.demand.tip_evening_prep_calm";
   }
   if (hour >= 19 && hour < 22) {
-    return pattern.soir >= 75 ? "dashboard.demand.tip_evening_busy" : "dashboard.demand.tip_evening_calm";
+    return pattern.soir >= 55 ? "dashboard.demand.tip_evening_busy" : "dashboard.demand.tip_evening_calm";
   }
   if (day === 5 || day === 6) {
     return "dashboard.demand.tip_late_weekend";
