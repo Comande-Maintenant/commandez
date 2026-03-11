@@ -746,7 +746,7 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
         />
       )}
 
-      {/* New order popup */}
+      {/* New order banner (top toast) */}
       <AnimatePresence>
         {popupOrder && (() => {
           const po = popupOrder;
@@ -755,47 +755,30 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           return (
             <motion.div
               key={po.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => { setPopupOrder(null); setSelectedOrder(po); }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+              initial={{ y: -80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -80, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 35 }}
+              onClick={() => { setPopupOrder(null); setFilter("active"); }}
+              className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md cursor-pointer"
             >
-              <motion.div
-                initial={{ scale: 0.85, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-card rounded-3xl border-2 border-amber-400 shadow-2xl p-6 mx-4 max-w-sm w-full text-center"
-              >
-                <div className="text-4xl mb-3">🔔</div>
-                <p className="text-2xl font-bold text-foreground mb-1">{t("dashboard.orders.new_order_popup")}</p>
-                <p className="text-3xl font-extrabold text-amber-600 mb-3">{formatDisplayNumber(po)}</p>
-                <div className="text-sm text-muted-foreground mb-1">
-                  <span className="font-semibold text-foreground">{po.customer_name}</span>
-                  {po.order_type === "sur_place" && <span className="ms-2">🍽 {t("dashboard.orders.dine_in")}</span>}
-                  {(po.order_type === "collect" || po.order_type === "a_emporter") && <span className="ms-2">📦 {t("dashboard.orders.takeaway")}</span>}
+              <div className="bg-amber-50 border-2 border-amber-400 rounded-2xl shadow-lg px-4 py-3 flex items-center gap-3">
+                <span className="text-2xl flex-shrink-0">🔔</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-foreground truncate">
+                    {t("dashboard.orders.new_order_popup")} {formatDisplayNumber(po)}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {po.customer_name} — {poItemCount} {t("dashboard.orders.articles_label")} — {po.total.toFixed(2)} €
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {poItemCount} {t("dashboard.orders.articles_label")} — {po.total.toFixed(2)} €
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setPopupOrder(null)}
-                    className="flex-1 px-4 py-3 rounded-2xl bg-secondary text-foreground font-semibold text-sm"
-                  >
-                    OK
-                  </button>
-                  <button
-                    onClick={() => { setPopupOrder(null); setSelectedOrder(po); }}
-                    className="flex-1 px-4 py-3 rounded-2xl bg-amber-500 text-white font-semibold text-sm"
-                  >
-                    {t("dashboard.orders.view_order")}
-                  </button>
-                </div>
-              </motion.div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setPopupOrder(null); }}
+                  className="flex-shrink-0 p-1 rounded-lg hover:bg-amber-100 transition-colors"
+                >
+                  <span className="text-amber-600 text-xs font-semibold">OK</span>
+                </button>
+              </div>
             </motion.div>
           );
         })()}
