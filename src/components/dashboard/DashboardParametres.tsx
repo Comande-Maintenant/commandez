@@ -409,35 +409,6 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
 
             {!sound.muted && (
               <>
-                {/* Sound type selector */}
-                <div>
-                  <p className="text-sm text-muted-foreground mb-2">{t('dashboard.settings.sound_choice')}</p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {(["classic", "urgent", "soft"] as const).map((type) => (
-                      <button
-                        key={type}
-                        onClick={() => {
-                          sound.setSoundType(type);
-                          // Auto-play preview
-                          setTimeout(() => sound.testPlay(), 50);
-                        }}
-                        className={`p-3 rounded-xl border text-center transition-all ${
-                          sound.soundType === type
-                            ? "border-foreground bg-secondary"
-                            : "border-border hover:bg-secondary/50"
-                        }`}
-                      >
-                        <span className="text-lg block mb-1">
-                          {type === "classic" ? "🔔" : type === "urgent" ? "🚨" : "🔕"}
-                        </span>
-                        <span className="text-xs font-medium text-foreground">
-                          {t(`dashboard.settings.sound_${type}`)}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Volume slider */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
