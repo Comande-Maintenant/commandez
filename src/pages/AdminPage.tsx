@@ -112,8 +112,8 @@ const AdminPage = () => {
     fetchFn.then((r) => {
       setRestaurant(r);
       setLoading(false);
-      // No onboarding tour for demo
-      if (r && !isDemo && !localStorage.getItem(`cm_onboarding_done_${r.slug}`)) {
+      // Show onboarding tour if not already completed (or if user restarted it)
+      if (r && !localStorage.getItem(`cm_onboarding_done_${r.slug}`)) {
         setTimeout(() => setShowOnboarding(true), 1000);
       }
     });
@@ -313,7 +313,7 @@ const AdminPage = () => {
               )}
 
               {/* Blur toggle - only on views with monetary amounts */}
-              {["cuisine", "caisse", "en-direct", "stats", "clients"].includes(activeView) && (
+              {["en-direct", "stats", "clients"].includes(activeView) && (
                 <button
                   onClick={toggleBlur}
                   className="p-2 rounded-xl hover:bg-secondary transition-colors"
@@ -483,16 +483,14 @@ const AdminPage = () => {
         />
       )}
 
-      {/* Assistant chatbot - only in "gerer" admin views */}
-      {!isOpsView(activeView) && (
-        <AssistantChatbot
-          activeView={activeView}
-          onNavigate={(v) => handleViewChange(v as DashboardView)}
-        />
-      )}
+      {/* Assistant chatbot */}
+      <AssistantChatbot
+        activeView={activeView}
+        onNavigate={(v) => handleViewChange(v as DashboardView)}
+      />
 
-      {/* Onboarding tour - not in demo */}
-      {!isDemo && showOnboarding && restaurant && (
+      {/* Onboarding tour */}
+      {showOnboarding && restaurant && (
         <OnboardingTour
           onComplete={() => {
             setShowOnboarding(false);

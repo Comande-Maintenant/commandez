@@ -130,7 +130,9 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
   const handleAction = (view: string) => {
     if (view === "__onboarding__") {
       // Trigger onboarding restart
-      const slug = window.location.pathname.split("/admin/")[1]?.split("?")[0];
+      const pathParts = window.location.pathname.split("/");
+      const adminIdx = pathParts.indexOf("admin");
+      const slug = adminIdx >= 0 ? pathParts[adminIdx + 1] : null;
       if (slug) localStorage.removeItem(`cm_onboarding_done_${slug}`);
       window.location.reload();
       return;
