@@ -14,6 +14,8 @@ import {
   Minus,
   ChevronRight,
   ChevronLeft,
+  Undo2,
+  Lock,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -92,8 +94,15 @@ export const OrderDetailSheet = ({
     done: { text: t("dashboard.orders.status_done"), color: statusLabelColors.done },
   };
 
+  const previousStatus: Partial<Record<OrderStatus, OrderStatus>> = {
+    preparing: "new",
+    ready: "preparing",
+    done: "ready",
+  };
+
   const [advancing, setAdvancing] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [originalItemCount, setOriginalItemCount] = useState(0);
   const [editItems, setEditItems] = useState<any[]>([]);
   const [editNotes, setEditNotes] = useState(order.notes || "");
   const [editTotal, setEditTotal] = useState(Number(order.total));
@@ -197,9 +206,29 @@ export const OrderDetailSheet = ({
     setAdvancing(false);
   };
 
+  const handleRevert = async () => {
+    const prev = previousStatus[status];
+    if (!prev) return;
+    setAdvancing(true);
+    try {
+      if (isDemo) {
+        await advanceDemoOrder(order.id, prev);
+      } else {
+        await updateOrderStatus(order.id, prev);
+      }
+      onStatusChange(order.id, prev);
+    } catch {
+      toast.error(t("common.error"));
+    }
+    setAdvancing(false);
+  };
+
   // Edit mode
+  const isDoneEdit = status === "done";
   const startEdit = () => {
-    setEditItems(JSON.parse(JSON.stringify(items)));
+    const itemsCopy = JSON.parse(JSON.stringify(items));
+    setEditItems(itemsCopy);
+    setOriginalItemCount(itemsCopy.length);
     setEditNotes(order.notes || "");
     setEditTotal(Number(order.total));
     setManualTotalEdit(false);
@@ -256,16 +285,30 @@ export const OrderDetailSheet = ({
     setAdvancing(true);
     try {
       await updateOrderItems(order.id, editItems, editTotal);
-      const updatedOrder = {
+      const hasNewItems = isDoneEdit && editItems.length > originalItemCount;
+      let updatedOrder = {
         ...order,
         items: editItems,
         total: editTotal,
         subtotal: editTotal,
         notes: editNotes,
       };
+      // If items were added to a completed order, revert to preparing
+      if (hasNewItems) {
+        const newStatus: OrderStatus = "preparing";
+        if (isDemo) {
+          await advanceDemoOrder(order.id, newStatus);
+        } else {
+          await updateOrderStatus(order.id, newStatus);
+        }
+        updatedOrder = { ...updatedOrder, status: newStatus };
+        onStatusChange(order.id, newStatus);
+        toast.success(t("dashboard.orders.items_added_reopened"));
+      } else {
+        toast.success(t("dashboard.orders.order_modified"));
+      }
       onOrderUpdated(updatedOrder);
       setEditing(false);
-      toast.success(t("dashboard.orders.order_modified"));
     } catch {
       toast.error(t("dashboard.orders.modify_error"));
     }
@@ -481,15 +524,13 @@ export const OrderDetailSheet = ({
           <div className="py-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-foreground">{t("dashboard.orders.articles")}</h3>
-              {status !== "done" && (
-                <button
-                  onClick={startEdit}
-                  className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-xl hover:bg-secondary"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                  {t("common.edit")}
-                </button>
-              )}
+              <button
+                onClick={startEdit}
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-xl hover:bg-secondary"
+              >
+                {status === "done" ? <Plus className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
+                {status === "done" ? t("dashboard.orders.add_items") : t("common.edit")}
+              </button>
             </div>
             <div className="space-y-4">
               {items.map((item: any, i: number) => (
@@ -592,52 +633,68 @@ export const OrderDetailSheet = ({
             </div>
 
             <div className="space-y-3">
-              {editItems.map((item: any, i: number) => (
-                <div key={i} className="flex items-start gap-3 p-3 bg-secondary/50 rounded-xl">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground">{item.name}</p>
-                    {item.sauces?.length > 0 && (
-                      <p className="text-xs text-muted-foreground">{item.sauces.join(", ")}</p>
-                    )}
-                    {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
-                      <p className="text-xs text-muted-foreground">{item.viande_choice}</p>
-                    )}
-                    {/* Editable price */}
-                    <div className="flex items-center gap-2 mt-1">
-                      <Input
-                        type="number"
-                        step="0.50"
-                        min="0"
-                        value={item.price}
-                        onChange={(e) => updateEditItemPrice(i, parseFloat(e.target.value) || 0)}
-                        className="h-8 w-24 text-sm rounded-lg"
-                      />
-                      <span className="text-xs text-muted-foreground">€/u</span>
+              {editItems.map((item: any, i: number) => {
+                const isLocked = isDoneEdit && i < originalItemCount;
+                return (
+                  <div key={i} className={`flex items-start gap-3 p-3 rounded-xl ${isLocked ? "bg-muted/30 opacity-70" : "bg-secondary/50"}`}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        {isLocked && <Lock className="h-3 w-3 text-muted-foreground flex-shrink-0" />}
+                        <p className="text-sm font-semibold text-foreground">{item.name}</p>
+                      </div>
+                      {item.sauces?.length > 0 && (
+                        <p className="text-xs text-muted-foreground">{item.sauces.join(", ")}</p>
+                      )}
+                      {item.viande_choice && !item.name.toLowerCase().includes(item.viande_choice.toLowerCase()) && (
+                        <p className="text-xs text-muted-foreground">{item.viande_choice}</p>
+                      )}
+                      {/* Editable price - locked for paid items */}
+                      {!isLocked && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <Input
+                            type="number"
+                            step="0.50"
+                            min="0"
+                            value={item.price}
+                            onChange={(e) => updateEditItemPrice(i, parseFloat(e.target.value) || 0)}
+                            className="h-8 w-24 text-sm rounded-lg"
+                          />
+                          <span className="text-xs text-muted-foreground">€/u</span>
+                        </div>
+                      )}
+                      {isLocked && (
+                        <p className="text-xs text-muted-foreground mt-1">{((item.price || 0) * (item.quantity || 1)).toFixed(2)} €</p>
+                      )}
                     </div>
+                    {!isLocked && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateEditItemQty(i, -1)}
+                          className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                        >
+                          <Minus className="h-3.5 w-3.5" />
+                        </button>
+                        <span className="w-6 text-center text-sm font-bold">{item.quantity || 1}</span>
+                        <button
+                          onClick={() => updateEditItemQty(i, 1)}
+                          className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => removeEditItem(i)}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-destructive hover:bg-destructive/10 active:bg-destructive/20"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    )}
+                    {isLocked && (
+                      <span className="text-xs text-muted-foreground flex-shrink-0">x{item.quantity || 1}</span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => updateEditItemQty(i, -1)}
-                      className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
-                    >
-                      <Minus className="h-3.5 w-3.5" />
-                    </button>
-                    <span className="w-6 text-center text-sm font-bold">{item.quantity || 1}</span>
-                    <button
-                      onClick={() => updateEditItemQty(i, 1)}
-                      className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => removeEditItem(i)}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-destructive hover:bg-destructive/10 active:bg-destructive/20"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Add item button */}
@@ -737,9 +794,22 @@ export const OrderDetailSheet = ({
       </div>
 
       {/* Bottom action buttons - sticky */}
-      {!editing && status !== "done" && (
+      {!editing && (
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-[71] safe-area-bottom">
           <div className="max-w-2xl mx-auto flex gap-3">
+            {/* Revert button - all statuses except "new" */}
+            {previousStatus[status] && (
+              <Button
+                variant="outline"
+                onClick={handleRevert}
+                disabled={advancing}
+                className="h-14 rounded-xl text-sm font-semibold flex-shrink-0 gap-1.5"
+              >
+                <Undo2 className="h-4 w-4" />
+                {t("dashboard.orders.revert")}
+              </Button>
+            )}
+            {/* Reject button for new orders */}
             {status === "new" && (
               <Button
                 variant="outline"
@@ -751,6 +821,7 @@ export const OrderDetailSheet = ({
                 {t("dashboard.orders.reject")}
               </Button>
             )}
+            {/* Advance button */}
             {action.next && (
               <Button
                 onClick={handleAdvance}
@@ -767,21 +838,16 @@ export const OrderDetailSheet = ({
                 )}
               </Button>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* Done status - show close button */}
-      {!editing && status === "done" && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-[71] safe-area-bottom">
-          <div className="max-w-2xl mx-auto">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="w-full h-14 rounded-xl text-base font-semibold"
-            >
-              {t("common.close")}
-            </Button>
+            {/* Done: close button */}
+            {status === "done" && (
+              <Button
+                variant="outline"
+                onClick={onClose}
+                className="flex-1 h-14 rounded-xl text-base font-semibold"
+              >
+                {t("common.close")}
+              </Button>
+            )}
           </div>
         </div>
       )}

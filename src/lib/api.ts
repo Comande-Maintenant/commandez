@@ -155,6 +155,8 @@ export async function fetchOrders(restaurantId: string): Promise<DbOrder[]> {
 export async function updateOrderStatus(orderId: string, status: string, estimatedMinutes?: number) {
   const updates: Record<string, any> = { status };
   const now = new Date().toISOString();
+
+  // Forward transitions: set timestamps
   if (status === "preparing") {
     updates.accepted_at = now;
     if (estimatedMinutes) {
@@ -163,6 +165,12 @@ export async function updateOrderStatus(orderId: string, status: string, estimat
   }
   if (status === "ready") updates.ready_at = now;
   if (status === "done") updates.completed_at = now;
+
+  // Backward transitions: clear future timestamps
+  if (status === "ready") { updates.completed_at = null; }
+  if (status === "preparing") { updates.ready_at = null; updates.completed_at = null; }
+  if (status === "new") { updates.accepted_at = null; updates.ready_at = null; updates.completed_at = null; updates.estimated_ready_at = null; }
+
   const { error } = await supabase
     .from("orders")
     .update(updates)

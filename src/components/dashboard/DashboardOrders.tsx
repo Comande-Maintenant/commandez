@@ -238,12 +238,16 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   };
 
   // Kitchen only sees new + preparing (active). "ready" goes to caisse. "done" is archive.
-  const kitchenOrders = orders.filter((o) => o.status === "new" || o.status === "preparing");
+  const kitchenOrders = orders
+    .filter((o) => o.status === "new" || o.status === "preparing")
+    .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
   const filtered = filter === "active"
     ? kitchenOrders
     : filter === "done"
       ? orders.filter((o) => o.status === "done" || o.status === "ready")
-      : orders.filter((o) => o.status === filter);
+      : filter === "new" || filter === "preparing"
+        ? orders.filter((o) => o.status === filter).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+        : orders.filter((o) => o.status === filter);
 
   // Count by status
   const newCount = orders.filter((o) => o.status === "new").length;
@@ -348,8 +352,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
       } else {
         setSelectedOrder(null);
       }
-    } else if (newStatus === "preparing") {
-      // Just accepted - update in place
+    } else if (newStatus === "preparing" || newStatus === "new") {
+      // Accepted or reverted - update in place
       setSelectedOrder((prev) => prev ? { ...prev, status: newStatus } : null);
     } else {
       setSelectedOrder(null);
