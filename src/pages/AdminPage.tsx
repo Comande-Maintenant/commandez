@@ -256,17 +256,17 @@ const AdminPage = () => {
             </div>
           )}
           <header className="bg-background border-b border-border">
-            <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <button onClick={() => navigate(-1)} className="p-2 -ms-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+            <div className="max-w-6xl mx-auto px-3 sm:px-4 h-12 sm:h-14 flex items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <button onClick={() => navigate(-1)} className="p-1.5 sm:p-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </button>
               <div className="min-w-0">
-                <h1 className="text-base font-semibold text-foreground truncate">{restaurant.name}</h1>
+                <h1 className="text-sm sm:text-base font-semibold text-foreground truncate">{restaurant.name}</h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">{t("dashboard.admin.dashboard_subtitle")}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-1 sm:gap-2.5 flex-shrink-0">
               {/* Sound toggle (cuisine view) */}
               {isOpsView(activeView) && (
                 <button
@@ -327,8 +327,9 @@ const AdminPage = () => {
               {/* Language selector */}
               <LanguageSelector />
 
-              {/* Disponible toggle */}
-              <div className="flex items-center gap-2" data-tour="disponible">
+              {/* Separator + Disponible toggle */}
+              <div className="h-6 w-px bg-border mx-0.5 sm:mx-1 flex-shrink-0" />
+              <div className="flex items-center gap-1.5 sm:gap-2" data-tour="disponible">
                 <span className={`h-2 w-2 rounded-full flex-shrink-0 ${restaurant.is_accepting_orders ? "bg-[hsl(var(--success))]" : "bg-destructive"}`} />
                 <span className={`text-xs font-medium hidden sm:inline ${restaurant.is_accepting_orders ? "text-[hsl(var(--success))]" : "text-destructive"}`}>
                   {restaurant.is_accepting_orders ? t("dashboard.admin.available") : t("dashboard.admin.unavailable")}
