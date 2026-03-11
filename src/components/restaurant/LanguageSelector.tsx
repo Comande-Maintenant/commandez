@@ -27,7 +27,7 @@ export const LanguageSelector = () => {
         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium bg-background/80 backdrop-blur-sm border border-border hover:bg-secondary transition-colors"
       >
         <Globe className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="text-foreground">{current.flag} {current.name}</span>
+        <span className="text-foreground">{current.flag}</span>
       </button>
 
       {open && (
