@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "Them",
   "dashboard.orders.items_added_reopened": "Da them mon, don hang quay lai chuan bi",
   "dashboard.orders.locked_paid": "Da thanh toan",
+  "dashboard.orders.sent_to_pos": "Da gui den quay tinh tien",
   "dashboard.orders.set_timer": "Dat",
   "dashboard.orders.adjust_time": "Dieu chinh thoi gian",
   "dashboard.orders.ready_in": "Xac nhan - san sang trong {min} phut",

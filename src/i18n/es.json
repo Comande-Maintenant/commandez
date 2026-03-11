@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "Agregar",
   "dashboard.orders.items_added_reopened": "Articulos agregados, pedido reabierto en preparacion",
   "dashboard.orders.locked_paid": "Cobrado",
+  "dashboard.orders.sent_to_pos": "Enviado a caja",
   "dashboard.orders.set_timer": "Definir",
   "dashboard.orders.adjust_time": "Ajustar tiempo",
   "dashboard.orders.ready_in": "Confirmar - listo en {min} min",

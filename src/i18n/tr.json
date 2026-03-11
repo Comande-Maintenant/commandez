@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "Ekle",
   "dashboard.orders.items_added_reopened": "Urunler eklendi, siparis hazirlama asamasina geri dondu",
   "dashboard.orders.locked_paid": "Odendi",
+  "dashboard.orders.sent_to_pos": "Kasaya gonderildi",
   "dashboard.orders.set_timer": "Ayarla",
   "dashboard.orders.adjust_time": "Sureyi ayarla",
   "dashboard.orders.ready_in": "Onayla - {min} dk icinde hazir",

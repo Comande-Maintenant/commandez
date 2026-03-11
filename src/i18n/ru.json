@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "Добавить",
   "dashboard.orders.items_added_reopened": "Товары добавлены, заказ возвращен в подготовку",
   "dashboard.orders.locked_paid": "Оплачено",
+  "dashboard.orders.sent_to_pos": "Отправлено на кассу",
   "dashboard.orders.set_timer": "Установить",
   "dashboard.orders.adjust_time": "Изменить время",
   "dashboard.orders.ready_in": "Подтвердить - готово через {min} мин",

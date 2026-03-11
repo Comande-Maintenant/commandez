@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "Hinzufugen",
   "dashboard.orders.items_added_reopened": "Artikel hinzugefugt, Bestellung wieder in Vorbereitung",
   "dashboard.orders.locked_paid": "Bezahlt",
+  "dashboard.orders.sent_to_pos": "An Kasse gesendet",
   "dashboard.orders.set_timer": "Festlegen",
   "dashboard.orders.adjust_time": "Zeit anpassen",
   "dashboard.orders.ready_in": "Bestatigen - fertig in {min} Min",

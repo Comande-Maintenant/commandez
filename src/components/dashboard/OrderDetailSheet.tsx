@@ -80,10 +80,11 @@ export const OrderDetailSheet = ({
   const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
   const locale = LOCALE_MAP[language] || "fr-FR";
 
+  // Kitchen can only go up to "ready" - encaissement (ready→done) is POS only
   const statusActions: Record<OrderStatus, { next?: OrderStatus; label: string; rejectLabel?: string; color: string }> = {
     new: { next: "preparing", label: t("dashboard.orders.accept_order"), rejectLabel: t("dashboard.orders.reject"), color: statusActionColors.new },
     preparing: { next: "ready", label: t("dashboard.orders.order_ready"), color: statusActionColors.preparing },
-    ready: { next: "done", label: t("dashboard.orders.order_done"), color: statusActionColors.ready },
+    ready: { label: t("dashboard.orders.sent_to_pos"), color: statusActionColors.ready },
     done: { label: t("dashboard.orders.status_done"), color: statusActionColors.done },
   };
 

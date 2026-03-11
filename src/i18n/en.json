@@ -1176,6 +1176,7 @@
   "dashboard.orders.add_items": "Add items",
   "dashboard.orders.items_added_reopened": "Items added, order reopened for preparation",
   "dashboard.orders.locked_paid": "Paid",
+  "dashboard.orders.sent_to_pos": "Sent to checkout",
   "dashboard.orders.set_timer": "Set",
   "dashboard.orders.adjust_time": "Adjust time",
   "dashboard.orders.ready_in": "Confirm - ready in {min} min",

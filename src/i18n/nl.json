@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "Toevoegen",
   "dashboard.orders.items_added_reopened": "Artikelen toegevoegd, bestelling heropend voor bereiding",
   "dashboard.orders.locked_paid": "Betaald",
+  "dashboard.orders.sent_to_pos": "Naar kassa gestuurd",
   "dashboard.orders.set_timer": "Instellen",
   "dashboard.orders.adjust_time": "Tijd aanpassen",
   "dashboard.orders.ready_in": "Bevestigen - klaar in {min} min",

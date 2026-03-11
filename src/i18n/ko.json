@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "추가",
   "dashboard.orders.items_added_reopened": "항목이 추가되었습니다. 주문이 준비 중으로 재개되었습니다",
   "dashboard.orders.locked_paid": "결제완료",
+  "dashboard.orders.sent_to_pos": "계산대로 전송됨",
   "dashboard.orders.set_timer": "설정",
   "dashboard.orders.adjust_time": "시간 조정",
   "dashboard.orders.ready_in": "확인 - {min}분 후 준비 완료",

@@ -1176,6 +1176,7 @@
   "dashboard.orders.add_items": "Ajouter",
   "dashboard.orders.items_added_reopened": "Articles ajoutes, commande rouverte en preparation",
   "dashboard.orders.locked_paid": "Encaisse",
+  "dashboard.orders.sent_to_pos": "Envoyee en caisse",
   "dashboard.orders.set_timer": "Definir",
   "dashboard.orders.adjust_time": "Ajuster le temps",
   "dashboard.orders.ready_in": "Valider - prêt dans {min} min",

@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "إضافة",
   "dashboard.orders.items_added_reopened": "تمت اضافة العناصر، الطلب مفتوح مجددا للتحضير",
   "dashboard.orders.locked_paid": "مدفوع",
+  "dashboard.orders.sent_to_pos": "تم الارسال للكاشير",
   "dashboard.orders.set_timer": "تحديد",
   "dashboard.orders.adjust_time": "ضبط الوقت",
   "dashboard.orders.ready_in": "تاكيد - جاهز في {min} دقيقة",

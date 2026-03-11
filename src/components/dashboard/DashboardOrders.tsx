@@ -376,7 +376,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   // Quick advance from card (without opening detail)
   const quickAdvance = async (e: React.MouseEvent, order: DbOrder) => {
     e.stopPropagation();
-    const statusFlow: Record<string, OrderStatus> = { new: "preparing", preparing: "ready", ready: "done" };
+    // Kitchen max is "ready" - encaissement (ready→done) is POS only
+    const statusFlow: Record<string, OrderStatus> = { new: "preparing", preparing: "ready" };
     const next = statusFlow[order.status];
     if (!next) return;
 
@@ -512,7 +513,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
           const badge = statusBadge[st];
           const orderItems = (order.items as any[]) || [];
           const itemCount = orderItems.reduce((s, i) => s + (i.quantity || 1), 0);
-          const statusFlow: Record<string, string> = { new: t("dashboard.orders.action_accept"), preparing: t("dashboard.orders.action_ready"), ready: t("dashboard.orders.action_done") };
+          // Kitchen max is "ready" - no action_done here (POS only)
+          const statusFlow: Record<string, string> = { new: t("dashboard.orders.action_accept"), preparing: t("dashboard.orders.action_ready") };
           const nextLabel = statusFlow[st];
 
           // Timer countdown for card

@@ -1160,6 +1160,7 @@
   "dashboard.orders.add_items": "添加",
   "dashboard.orders.items_added_reopened": "已添加商品，订单重新进入准备中",
   "dashboard.orders.locked_paid": "已付款",
+  "dashboard.orders.sent_to_pos": "已发送至收银台",
   "dashboard.orders.set_timer": "设置",
   "dashboard.orders.adjust_time": "调整时间",
   "dashboard.orders.ready_in": "确认 - {min}分钟后准备好",
