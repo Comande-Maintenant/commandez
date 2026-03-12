@@ -81,6 +81,7 @@ const SuperAdminPage = () => {
           />
         ) : (
           <>
+            <DemoStats />
             <PlatformStats />
             <AcquisitionFunnel />
             <PlatformAlerts />
@@ -88,7 +89,6 @@ const SuperAdminPage = () => {
               <h2 className="text-lg font-semibold text-foreground mb-4">Prospects / Clients</h2>
               <RestaurantList onSelect={setSelectedRestaurant} />
             </div>
-            <DemoStats />
             <PromoCodesSection />
             <ReferralsSection />
           </>
