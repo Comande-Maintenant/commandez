@@ -80,7 +80,7 @@
 
 ## i18n
 - 14 langues : fr/en/es/de/it/pt/nl/ar/zh/ja/ko/ru/tr/vi
-- **1283 cles** par fichier, parite parfaite entre les 14 langues (mars 2026)
+- **1399 cles** par fichier, parite parfaite entre les 14 langues (mars 2026)
 - Fichiers : `src/i18n/*.json`
 - Hook : `useLanguage()` -> `t("key")`, `tMenu(item)`, `tCategory(cat)`, `language`, `isRTL`
 - Placeholders : `{value}`, `{count}`, `{date}` etc. remplaces via `.replace("{key}", val)`

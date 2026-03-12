@@ -4,9 +4,13 @@ import { ArrowLeft, Loader2, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchOwner } from "@/lib/api";
 import { PlatformStats } from "@/components/super-admin/PlatformStats";
+import { AcquisitionFunnel } from "@/components/super-admin/AcquisitionFunnel";
+import { PlatformAlerts } from "@/components/super-admin/PlatformAlerts";
 import { RestaurantList } from "@/components/super-admin/RestaurantList";
 import { RestaurantDetail } from "@/components/super-admin/RestaurantDetail";
-import { PlatformAlerts } from "@/components/super-admin/PlatformAlerts";
+import { DemoStats } from "@/components/super-admin/DemoStats";
+import { PromoCodesSection } from "@/components/super-admin/PromoCodesSection";
+import { ReferralsSection } from "@/components/super-admin/ReferralsSection";
 
 const SuperAdminPage = () => {
   const [loading, setLoading] = useState(true);
@@ -78,11 +82,15 @@ const SuperAdminPage = () => {
         ) : (
           <>
             <PlatformStats />
+            <AcquisitionFunnel />
             <PlatformAlerts />
             <div>
-              <h2 className="text-lg font-semibold text-foreground mb-4">Tous les restaurants</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-4">Prospects / Clients</h2>
               <RestaurantList onSelect={setSelectedRestaurant} />
             </div>
+            <DemoStats />
+            <PromoCodesSection />
+            <ReferralsSection />
           </>
         )}
       </main>

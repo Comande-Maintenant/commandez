@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer, DbOwner } from "@/types/database";
+import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer, DbOwner, DbSubscription, DbPromoCode } from "@/types/database";
+import { PLAN_PRICES } from "@/services/shopify-checkout";
 
 // ── Demo mode RPCs ──
 
@@ -732,4 +733,221 @@ export async function incrementCustomerStats(userId: string, orderTotal: number)
     })
     .eq("id", userId);
   if (error) throw error;
+}
+
+// ── Super Admin KPIs ──
+
+export interface SuperAdminKPIs {
+  realRestaurants: number;
+  activeSubscribers: number;
+  monthlySubscribers: number;
+  annualSubscribers: number;
+  mrr: number;
+  arr: number;
+}
+
+export async function fetchSuperAdminKPIs(): Promise<SuperAdminKPIs> {
+  const [restaurantsRes, subscriptionsRes] = await Promise.all([
+    supabase.from("restaurants").select("id", { count: "exact", head: true }).eq("is_demo", false),
+    supabase.from("subscriptions").select("status, plan"),
+  ]);
+
+  const realRestaurants = restaurantsRes.count ?? 0;
+  const subs = (subscriptionsRes.data ?? []) as unknown as Pick<DbSubscription, "status" | "plan">[];
+  const activeSubs = subs.filter((s) => s.status === "active");
+  const monthlySubs = activeSubs.filter((s) => s.plan === "monthly").length;
+  const annualSubs = activeSubs.filter((s) => s.plan === "annual").length;
+
+  const mrr = monthlySubs * PLAN_PRICES.monthly + annualSubs * (PLAN_PRICES.annual / 12);
+  const arr = mrr * 12;
+
+  return {
+    realRestaurants,
+    activeSubscribers: activeSubs.length,
+    monthlySubscribers: monthlySubs,
+    annualSubscribers: annualSubs,
+    mrr,
+    arr,
+  };
+}
+
+// ── Acquisition Funnel ──
+
+export interface AcquisitionFunnelData {
+  accounts: number;
+  withRestaurant: number;
+  inTrial: number;
+  paying: number;
+  churned: number;
+}
+
+export async function fetchAcquisitionFunnel(): Promise<AcquisitionFunnelData> {
+  const [ownersRes, restaurantsRes, subscriptionsRes] = await Promise.all([
+    supabase.from("owners").select("id, role"),
+    supabase.from("restaurants").select("id, is_demo, subscription_status, trial_end_date"),
+    supabase.from("subscriptions").select("status, trial_end"),
+  ]);
+
+  const owners = (ownersRes.data ?? []) as unknown as { id: string; role: string }[];
+  const accounts = owners.filter((o) => o.role !== "super_admin").length;
+
+  const restaurants = (restaurantsRes.data ?? []) as unknown as Pick<DbRestaurant, "id" | "is_demo" | "subscription_status" | "trial_end_date">[];
+  const realRestaurants = restaurants.filter((r) => !r.is_demo);
+  const withRestaurant = realRestaurants.length;
+
+  const subs = (subscriptionsRes.data ?? []) as unknown as Pick<DbSubscription, "status" | "trial_end">[];
+  const now = new Date();
+
+  // In trial: subscription status = trial, or restaurant subscription_status = trial/pending_payment with future trial_end
+  const inTrialSubs = subs.filter((s) => s.status === "trial").length;
+  const inTrialLegacy = realRestaurants.filter(
+    (r) =>
+      (r.subscription_status === "trial" || r.subscription_status === "pending_payment") &&
+      r.trial_end_date &&
+      new Date(r.trial_end_date) > now
+  ).length;
+  const inTrial = Math.max(inTrialSubs, inTrialLegacy);
+
+  const paying = subs.filter((s) => s.status === "active").length;
+  const churned = subs.filter((s) => s.status === "cancelled" || s.status === "expired").length;
+
+  return { accounts, withRestaurant, inTrial, paying, churned };
+}
+
+// ── Prospect List ──
+
+export interface ProspectItem {
+  id: string;
+  email: string;
+  phone: string;
+  restaurantName: string | null;
+  restaurantSlug: string | null;
+  restaurantId: string | null;
+  createdAt: string;
+  subscriptionStatus: string | null;
+  trialEndDate: string | null;
+  plan: string | null;
+}
+
+export async function fetchProspectList(): Promise<ProspectItem[]> {
+  const [ownersRes, restaurantsRes, subscriptionsRes] = await Promise.all([
+    supabase.from("owners").select("id, email, phone, role, created_at").order("created_at", { ascending: false }),
+    supabase.from("restaurants").select("id, name, slug, owner_id, is_demo, subscription_status, trial_end_date"),
+    supabase.from("subscriptions").select("restaurant_id, status, plan"),
+  ]);
+
+  const owners = (ownersRes.data ?? []) as unknown as (DbOwner & { created_at: string })[];
+  const restaurants = (restaurantsRes.data ?? []) as unknown as (DbRestaurant & { owner_id: string })[];
+  const subs = (subscriptionsRes.data ?? []) as unknown as Pick<DbSubscription, "restaurant_id" | "status" | "plan">[];
+
+  const realRestaurants = restaurants.filter((r) => !r.is_demo);
+  const subsByRestaurant = new Map(subs.map((s) => [s.restaurant_id, s]));
+
+  return owners
+    .filter((o) => o.role !== "super_admin")
+    .map((owner) => {
+      const resto = realRestaurants.find((r) => r.owner_id === owner.id);
+      const sub = resto ? subsByRestaurant.get(resto.id) : undefined;
+      return {
+        id: owner.id,
+        email: owner.email,
+        phone: owner.phone,
+        restaurantName: resto?.name ?? null,
+        restaurantSlug: resto?.slug ?? null,
+        restaurantId: resto?.id ?? null,
+        createdAt: owner.created_at,
+        subscriptionStatus: sub?.status ?? resto?.subscription_status ?? null,
+        trialEndDate: resto?.trial_end_date ?? null,
+        plan: sub?.plan ?? null,
+      };
+    });
+}
+
+// ── Demo Stats ──
+
+export interface DemoStatsData {
+  totalOrders: number;
+  totalRevenue: number;
+  lastOrderAt: string | null;
+}
+
+export async function fetchDemoStats(): Promise<DemoStatsData> {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("total, created_at")
+    .eq("source", "demo")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  const orders = (data ?? []) as unknown as { total: number; created_at: string }[];
+  return {
+    totalOrders: orders.length,
+    totalRevenue: orders.reduce((s, o) => s + Number(o.total), 0),
+    lastOrderAt: orders.length > 0 ? orders[0].created_at : null,
+  };
+}
+
+// ── Promo Codes ──
+
+export async function fetchAllPromoCodes(): Promise<DbPromoCode[]> {
+  const { data, error } = await supabase
+    .from("promo_codes")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as DbPromoCode[];
+}
+
+// ── Referrals ──
+
+export interface ReferralCodeItem {
+  restaurantId: string;
+  restaurantName: string;
+  referralCode: string;
+}
+
+export interface ReferralRecord {
+  id: string;
+  referrerName: string;
+  refereeName: string | null;
+  refereeEmail: string | null;
+  status: string;
+  bonusWeeks: number;
+  createdAt: string;
+}
+
+export interface AllReferralsData {
+  activeCodes: ReferralCodeItem[];
+  referrals: ReferralRecord[];
+}
+
+export async function fetchAllReferrals(): Promise<AllReferralsData> {
+  const [restaurantsRes, referralsRes] = await Promise.all([
+    supabase.from("restaurants").select("id, name, referral_code, is_demo"),
+    supabase.from("referrals").select("*").order("created_at", { ascending: false }),
+  ]);
+
+  const restaurants = (restaurantsRes.data ?? []) as unknown as Pick<DbRestaurant, "id" | "name" | "referral_code" | "is_demo">[];
+  const referralsRaw = (referralsRes.data ?? []) as unknown as {
+    id: string; referrer_id: string; referee_id: string | null; referee_email: string | null;
+    status: string; bonus_weeks_granted: number; created_at: string;
+  }[];
+
+  const activeCodes: ReferralCodeItem[] = restaurants
+    .filter((r) => r.referral_code && !r.is_demo)
+    .map((r) => ({ restaurantId: r.id, restaurantName: r.name, referralCode: r.referral_code! }));
+
+  const restaurantMap = new Map(restaurants.map((r) => [r.id, r.name]));
+
+  const referrals: ReferralRecord[] = referralsRaw.map((ref) => ({
+    id: ref.id,
+    referrerName: restaurantMap.get(ref.referrer_id) ?? ref.referrer_id,
+    refereeName: ref.referee_id ? (restaurantMap.get(ref.referee_id) ?? null) : null,
+    refereeEmail: ref.referee_email,
+    status: ref.status ?? "pending",
+    bonusWeeks: ref.bonus_weeks_granted ?? 0,
+    createdAt: ref.created_at,
+  }));
+
+  return { activeCodes, referrals };
 }

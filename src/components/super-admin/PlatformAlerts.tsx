@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { AlertTriangle, Clock, Store, Trash2 } from "lucide-react";
+import { AlertTriangle, Clock, Store, Trash2, CreditCard, UserX } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Alert {
-  type: "stale_order" | "inactive_restaurant" | "deletion_pending";
+  type: "stale_order" | "inactive_restaurant" | "deletion_pending" | "trial_expiring" | "pending_payment" | "no_restaurant";
   message: string;
   detail: string;
   severity: "warning" | "danger";
@@ -42,14 +42,16 @@ export const PlatformAlerts = () => {
         });
       }
 
-      // Restaurants inactive > 7 days (no orders)
+      // Restaurants inactive > 7 days (exclude demo)
       const { data: restaurants } = await supabase
         .from("restaurants")
-        .select("id, name, slug")
+        .select("id, name, slug, is_demo")
         .is("deactivated_at", null);
 
+      const realRestaurants = (restaurants ?? []).filter((r: any) => !r.is_demo);
+
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      for (const r of restaurants ?? []) {
+      for (const r of realRestaurants) {
         const { count } = await supabase
           .from("orders")
           .select("*", { count: "exact", head: true })
@@ -83,6 +85,59 @@ export const PlatformAlerts = () => {
           });
         }
       }
+
+      // Trial expiring < 7 days (real restaurants only)
+      const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      const now = new Date().toISOString();
+      for (const r of realRestaurants) {
+        const rAny = r as any;
+        if (
+          rAny.trial_end_date &&
+          rAny.trial_end_date > now &&
+          rAny.trial_end_date < sevenDaysFromNow
+        ) {
+          const daysLeft = Math.ceil((new Date(rAny.trial_end_date).getTime() - Date.now()) / (24 * 60 * 60 * 1000));
+          result.push({
+            type: "trial_expiring",
+            message: `${r.name} : essai expire dans ${daysLeft}j`,
+            detail: `Fin le ${new Date(rAny.trial_end_date).toLocaleDateString("fr-FR")}`,
+            severity: daysLeft <= 3 ? "danger" : "warning",
+          });
+        }
+      }
+
+      // Pending payment
+      const { data: pendingPaymentRestos } = await supabase
+        .from("restaurants")
+        .select("id, name, subscription_status, is_demo")
+        .eq("subscription_status", "pending_payment")
+        .eq("is_demo", false);
+
+      for (const r of pendingPaymentRestos ?? []) {
+        result.push({
+          type: "pending_payment",
+          message: `${r.name} : paiement en attente`,
+          detail: "Le restaurateur n'a pas encore finalise son paiement",
+          severity: "warning",
+        });
+      }
+
+      // Owners without restaurant (exclude super_admin)
+      const { data: owners } = await supabase.from("owners").select("id, email, role");
+      const { data: allRestos } = await supabase.from("restaurants").select("owner_id, is_demo");
+      const ownerIdsWithResto = new Set(
+        ((allRestos ?? []) as any[]).filter((r) => !r.is_demo).map((r) => r.owner_id)
+      );
+      for (const o of (owners ?? []) as any[]) {
+        if (o.role !== "super_admin" && !ownerIdsWithResto.has(o.id)) {
+          result.push({
+            type: "no_restaurant",
+            message: `${o.email} : compte sans restaurant`,
+            detail: "Inscrit mais n'a pas cree de restaurant",
+            severity: "warning",
+          });
+        }
+      }
     } catch (e) {
       console.error("Error loading alerts:", e);
     }
@@ -105,10 +160,13 @@ export const PlatformAlerts = () => {
     );
   }
 
-  const iconMap = {
+  const iconMap: Record<string, any> = {
     stale_order: Clock,
     inactive_restaurant: Store,
     deletion_pending: Trash2,
+    trial_expiring: Clock,
+    pending_payment: CreditCard,
+    no_restaurant: UserX,
   };
 
   return (
@@ -122,7 +180,7 @@ export const PlatformAlerts = () => {
       <CardContent>
         <div className="space-y-2">
           {alerts.map((alert, i) => {
-            const Icon = iconMap[alert.type];
+            const Icon = iconMap[alert.type] || AlertTriangle;
             return (
               <div
                 key={i}
