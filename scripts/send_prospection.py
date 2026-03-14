@@ -30,6 +30,9 @@ RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 FROM_EMAIL = "Sarah de commandeici <sarah@commandeici.com>"
 REPLY_TO = "augustin.foucheres@gmail.com"
 
+SUPABASE_URL = "https://rbqgsxhkccbhqdmdtxwr.supabase.co"
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjIxNTEwOCwiZXhwIjoyMDg3NzkxMTA4fQ.XICYwfF3oEYFG5M-32ltu-D8QI3NlSPwLxBcsl_64No")
+
 # Reject emails that are clearly not real contacts
 JUNK_PATTERNS = [
     ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".js",  # file extensions
@@ -358,6 +361,29 @@ def send_email(to: str, subject: str, html: str, text: str) -> dict:
     return resp.json()
 
 
+def log_to_supabase(resend_id: str, email: str, name: str, city: str):
+    """Log send to Supabase for tracking (non-blocking)."""
+    try:
+        requests.post(
+            f"{SUPABASE_URL}/rest/v1/prospection_sends",
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+                "Prefer": "return=minimal",
+            },
+            json={
+                "resend_id": resend_id,
+                "email": email,
+                "restaurant_name": name,
+                "city": city,
+            },
+            timeout=5,
+        )
+    except Exception as e:
+        print(f"    [supabase log error: {e}]")
+
+
 # ─── Tracking ────────────────────────────────────────────────────────────────────
 
 
@@ -480,6 +506,7 @@ def main():
             }
             sent_count += 1
             print(f"  OK ({resend_id})")
+            log_to_supabase(resend_id, email, name, city)
         except requests.exceptions.HTTPError as e:
             error_count += 1
             status = e.response.status_code if e.response else "?"
@@ -502,6 +529,7 @@ def main():
                     sent_count += 1
                     error_count -= 1
                     print(f"    Retry OK ({resend_id})")
+                    log_to_supabase(resend_id, email, name, city)
                 except Exception as e2:
                     print(f"    Retry FAILED: {e2}")
 

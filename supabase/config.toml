@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.unsubscribe]
 verify_jwt = false
+
+[functions.prospection-webhook]
+verify_jwt = false
