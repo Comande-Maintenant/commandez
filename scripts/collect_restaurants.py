@@ -488,6 +488,7 @@ def main():
     parser.add_argument("--budget", type=float, default=20.0, help="Max budget in USD (default: 20). Stops when estimated cost reached.")
     parser.add_argument("--skip-scrape", action="store_true", help="Skip Phase 3 (email scraping) for speed")
     parser.add_argument("--skip-details", action="store_true", help="Skip Phase 2 (place details) for speed")
+    parser.add_argument("--skip-search", action="store_true", help="Skip Phase 1 (search) - go straight to details/scraping")
     parser.add_argument("--list-cities", action="store_true", help="List all cities with their index and exit")
     parser.add_argument("--stats-only", action="store_true", help="Show stats from existing data and exit")
     args = parser.parse_args()
@@ -582,18 +583,21 @@ def main():
         all_places = {}
         done_combos = set()
 
-    print("=" * 60)
-    print("PHASE 1 : Recherche de restaurants via Google Places")
-    print(f"  Villes : {selected_cities[0]} -> {selected_cities[-1]} ({len(selected_cities)} villes, index {args.cities_from}-{args.cities_to or len(CITIES)})")
-    print(f"  {len(selected_cities)} villes x {len(QUERIES)} types = {len(selected_cities) * len(QUERIES)} recherches max")
-    print(f"  Budget : ${args.budget:.2f}")
-    print("=" * 60)
-
     search_count = 0
     run_cost = 0.0
     budget_exceeded = False
 
-    for city in selected_cities:
+    if args.skip_search:
+        print(f"\n[SKIP] Phase 1 (--skip-search)")
+    else:
+        print("=" * 60)
+        print("PHASE 1 : Recherche de restaurants via Google Places")
+        print(f"  Villes : {selected_cities[0]} -> {selected_cities[-1]} ({len(selected_cities)} villes, index {args.cities_from}-{args.cities_to or len(CITIES)})")
+        print(f"  {len(selected_cities)} villes x {len(QUERIES)} types = {len(selected_cities) * len(QUERIES)} recherches max")
+        print(f"  Budget : ${args.budget:.2f}")
+        print("=" * 60)
+
+    for city in ([] if args.skip_search else selected_cities):
         if budget_exceeded:
             break
         for query_template in QUERIES:
