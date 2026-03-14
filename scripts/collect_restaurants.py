@@ -7,16 +7,18 @@ Usage:
     python3 scripts/collect_restaurants.py
 
 Features:
-    - 40 cities x 6 query types = 240 searches
+    - 300 cities x 40+ query types (all cuisines) = 12000+ searches
+    - Covers all France: grandes villes, villes moyennes, sous-prefectures, DOM-TOM
+    - All cuisine types matching commandeici's 14 languages (fr/en/es/de/it/pt/nl/ar/zh/ja/ko/ru/tr/vi)
     - Automatic pagination (up to 60 results per query)
     - Place Details for website + phone
-    - Website scraping for emails (homepage + contact/legal pages)
+    - Website scraping for emails (homepage + contact/legal pages, 10 threads)
     - Chain filtering (McDo, BK, KFC, etc.)
     - Deduplication by place_id
-    - Resume capability (saves progress every 50 items)
+    - Resume capability (saves progress every 100 items)
     - CSV + JSON output
 
-Estimated API cost: ~$20 for ~4000 restaurants
+Estimated API cost: ~$150-200 for ~30000+ restaurants
 """
 
 import csv
@@ -39,7 +41,9 @@ API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY", "")
 
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "prospection")
 
+# ─── Cities: 300 villes couvrant toute la France (>15k hab + sous-prefectures) ─
 CITIES = [
+    # === Grandes villes (>100k hab) ===
     "Paris", "Lyon", "Marseille", "Toulouse", "Bordeaux",
     "Nice", "Nantes", "Strasbourg", "Montpellier", "Lille",
     "Rennes", "Reims", "Le Havre", "Saint-Etienne", "Toulon",
@@ -48,15 +52,167 @@ CITIES = [
     "Limoges", "Perpignan", "Metz", "Besancon", "Orleans",
     "Rouen", "Mulhouse", "Caen", "Nancy", "Avignon",
     "Poitiers", "La Rochelle", "Pau", "Calais", "Valence",
+    # === Ile-de-France ===
+    "Versailles", "Saint-Denis", "Montreuil", "Argenteuil", "Nanterre",
+    "Boulogne-Billancourt", "Creteil", "Vitry-sur-Seine", "Saint-Maur-des-Fosses",
+    "Colombes", "Asnieres-sur-Seine", "Rueil-Malmaison", "Champigny-sur-Marne",
+    "Aubervilliers", "Aulnay-sous-Bois", "Drancy", "Noisy-le-Grand",
+    "Cergy", "Evry-Courcouronnes", "Meaux", "Melun", "Mantes-la-Jolie",
+    "Sartrouville", "Sarcelles", "Pontoise", "Corbeil-Essonnes",
+    "Savigny-sur-Orge", "Ivry-sur-Seine", "Pantin", "Bondy",
+    "Clamart", "Sevran", "Fontenay-sous-Bois", "Rosny-sous-Bois",
+    "Saint-Ouen-sur-Seine", "Vincennes", "Maisons-Alfort", "Gennevilliers",
+    # === Nord / Hauts-de-France ===
+    "Dunkerque", "Lens", "Bethune", "Douai", "Valenciennes",
+    "Maubeuge", "Cambrai", "Arras", "Boulogne-sur-Mer", "Saint-Omer",
+    "Saint-Quentin", "Laon", "Soissons", "Compiegne", "Beauvais",
+    "Creil", "Senlis", "Abbeville", "Berck", "Tourcoing", "Roubaix",
+    # === Grand Est ===
+    "Colmar", "Troyes", "Charleville-Mezieres", "Sedan", "Epinal",
+    "Haguenau", "Schiltigheim", "Illkirch-Graffenstaden", "Thionville",
+    "Montbeliard", "Belfort", "Sarreguemines", "Forbach", "Saint-Die-des-Vosges",
+    "Bar-le-Duc", "Verdun", "Luneville", "Chaumont", "Saint-Avold",
+    # === Normandie ===
+    "Cherbourg", "Evreux", "Dieppe", "Lisieux", "Alencon",
+    "Saint-Lo", "Coutances", "Granville", "Fecamp", "Elbeuf",
+    "Louviers", "Vernon", "Flers", "Argentan", "Bayeux",
+    # === Bretagne ===
+    "Quimper", "Vannes", "Lorient", "Saint-Malo", "Saint-Brieuc",
+    "Lannion", "Morlaix", "Concarneau", "Vitre", "Fougeres",
+    "Dinan", "Pontivy", "Ploermel", "Guingamp", "Auray",
+    # === Pays de la Loire ===
+    "La Roche-sur-Yon", "Laval", "Saint-Nazaire", "Cholet", "Saumur",
+    "La Fleche", "Fontenay-le-Comte", "Les Sables-d'Olonne", "Challans",
+    "Chateau-Gontier", "Mayenne", "Segre",
+    # === Centre-Val de Loire ===
+    "Bourges", "Chartres", "Blois", "Chateauroux", "Dreux",
+    "Vendome", "Montargis", "Pithiviers", "Gien", "Vierzon",
+    "Issoudun", "Chinon", "Amboise", "Romorantin-Lanthenay",
+    # === Bourgogne-Franche-Comte ===
+    "Chalon-sur-Saone", "Macon", "Auxerre", "Nevers", "Montbeliard",
+    "Sens", "Beaune", "Le Creusot", "Autun", "Dole",
+    "Lons-le-Saunier", "Vesoul", "Gray", "Pontarlier", "Joigny",
+    # === Auvergne-Rhone-Alpes ===
+    "Chambery", "Annecy", "Bourg-en-Bresse", "Roanne", "Vichy",
+    "Montlucon", "Moulins", "Aurillac", "Le Puy-en-Velay", "Thonon-les-Bains",
+    "Vienne", "Romans-sur-Isere", "Montelimar", "Villefranche-sur-Saone",
+    "Saint-Chamond", "Annemasse", "Cluses", "Albertville", "Oyonnax",
+    "Bourgoin-Jallieu", "Voiron", "Sallanches", "Firminy", "Issoire",
+    "Ambert", "Brioude", "Yssingeaux", "Privas", "Aubenas",
+    "Annonay", "Tournon-sur-Rhone", "Crest",
+    # === Nouvelle-Aquitaine ===
+    "Niort", "Agen", "Perigueux", "Dax", "Mont-de-Marsan",
+    "Bergerac", "Sarlat-la-Caneda", "Villeneuve-sur-Lot", "Cognac",
+    "Saintes", "Rochefort", "Royan", "Angouleme", "Tulle",
+    "Brive-la-Gaillarde", "Gueret", "Bressuire", "Oloron-Sainte-Marie",
+    "Bayonne", "Biarritz", "Saint-Jean-de-Luz", "Hendaye", "Arcachon",
+    "Libourne", "Langon", "Marmande", "Chatellerault",
+    # === Occitanie ===
+    "Beziers", "Sete", "Tarbes", "Albi", "Montauban",
+    "Carcassonne", "Narbonne", "Rodez", "Castres", "Cahors",
+    "Millau", "Figeac", "Auch", "Lourdes", "Mende",
+    "Ales", "Lunel", "Agde", "Foix", "Pamiers",
+    "Saint-Gaudens", "Muret", "Lavaur", "Gaillac",
+    # === Provence-Alpes-Cote d'Azur ===
+    "Cannes", "Antibes", "Frejus", "Arles", "Gap",
+    "Grasse", "Draguignan", "Hyeres", "La Seyne-sur-Mer", "Six-Fours-les-Plages",
+    "Salon-de-Provence", "Martigues", "Istres", "Vitrolles", "Aubagne",
+    "La Ciotat", "Manosque", "Digne-les-Bains", "Briancon", "Carpentras",
+    "Orange", "Cavaillon", "Apt", "Menton", "Monaco",
+    # === Corse ===
+    "Ajaccio", "Bastia", "Porto-Vecchio", "Corte", "Calvi",
+    # === DOM-TOM ===
+    "Fort-de-France", "Pointe-a-Pitre", "Saint-Denis Reunion",
+    "Saint-Pierre Reunion", "Le Tampon", "Cayenne", "Noumea",
+    "Mamoudzou", "Papeete",
 ]
 
+# ─── Query types: all cuisines matching our 14 languages + French food ────────
+# Languages supported: fr/en/es/de/it/pt/nl/ar/zh/ja/ko/ru/tr/vi
 QUERIES = [
+    # French / general
+    "restaurant {city}",
+    "brasserie {city}",
+    "bistrot {city}",
+    "creperie {city}",
+    "traiteur {city}",
+    "salon de the {city}",
+    "boulangerie patisserie {city}",
+    # Fast food / street food
     "kebab {city}",
     "pizzeria {city}",
     "fast food {city}",
     "snack {city}",
     "tacos {city}",
     "restaurant rapide {city}",
+    "burger restaurant {city}",
+    "food truck {city}",
+    "bagel sandwich {city}",
+    "poke bowl {city}",
+    # Turkish (tr)
+    "restaurant turc {city}",
+    "grill turc {city}",
+    # Arabic (ar)
+    "restaurant libanais {city}",
+    "restaurant marocain {city}",
+    "restaurant tunisien {city}",
+    "restaurant algerien {city}",
+    "couscous {city}",
+    "restaurant halal {city}",
+    # Chinese (zh)
+    "restaurant chinois {city}",
+    "traiteur chinois {city}",
+    "dim sum {city}",
+    # Japanese (ja)
+    "restaurant japonais {city}",
+    "sushi {city}",
+    "ramen {city}",
+    # Korean (ko)
+    "restaurant coreen {city}",
+    "korean bbq {city}",
+    # Vietnamese (vi)
+    "restaurant vietnamien {city}",
+    "pho {city}",
+    "banh mi {city}",
+    # Italian (it)
+    "restaurant italien {city}",
+    "trattoria {city}",
+    "osteria {city}",
+    # Spanish (es)
+    "restaurant espagnol {city}",
+    "tapas {city}",
+    # Portuguese (pt)
+    "restaurant portugais {city}",
+    "churrasqueira {city}",
+    # German (de)
+    "restaurant allemand {city}",
+    "biergarten {city}",
+    # Indian / South Asian
+    "restaurant indien {city}",
+    "curry {city}",
+    # Thai
+    "restaurant thai {city}",
+    "pad thai {city}",
+    # African
+    "restaurant africain {city}",
+    "mafe {city}",
+    # Greek
+    "restaurant grec {city}",
+    "gyros {city}",
+    # Mexican / Latin
+    "restaurant mexicain {city}",
+    "burrito {city}",
+    # American
+    "chicken wings {city}",
+    "hot dog {city}",
+    "bagel brunch {city}",
+    # Other popular
+    "wok {city}",
+    "noodles {city}",
+    "fish and chips {city}",
+    "fromagerie restaurant {city}",
+    "brunch {city}",
+    "bar a vin {city}",
 ]
 
 CHAIN_KEYWORDS = [
@@ -67,6 +223,9 @@ CHAIN_KEYWORDS = [
     "popeyes", "taco bell", "wendy", "papa john", "little caesars",
     "jack's express", "speed burger", "mcdo", "starbucks", "columbus cafe",
     "nachos", "pitaya", "pokawa", "cojean", "eat sushi", "sushi shop",
+    "planet sushi", "matsuri", "courtepaille", "boco", "exki",
+    "au bureau", "factory & co", "indiana cafe", "bistro regent",
+    "cote sushi", "nooi", "wok to walk", "panda express",
 ]
 
 EMAIL_REGEX = re.compile(
@@ -265,8 +424,56 @@ def detect_type(name: str) -> str:
         return "snack"
     if "burger" in name_lower:
         return "burger"
+    if any(kw in name_lower for kw in ["sushi", "maki", "japonais", "ramen"]):
+        return "japonais"
+    if any(kw in name_lower for kw in ["chinois", "wok", "dim sum", "noodle", "traiteur asiatique"]):
+        return "chinois"
+    if any(kw in name_lower for kw in ["vietnamien", "pho", "banh mi", "bo bun"]):
+        return "vietnamien"
+    if any(kw in name_lower for kw in ["coreen", "korean", "bibimbap"]):
+        return "coreen"
+    if any(kw in name_lower for kw in ["thai", "thailan", "pad thai"]):
+        return "thai"
+    if any(kw in name_lower for kw in ["indien", "tandoori", "curry", "masala", "naan"]):
+        return "indien"
+    if any(kw in name_lower for kw in ["turc", "grill turc", "pide", "lahmacun"]):
+        return "turc"
+    if any(kw in name_lower for kw in ["libanais", "marocain", "tunisien", "algerien", "couscous", "halal", "oriental"]):
+        return "oriental"
+    if any(kw in name_lower for kw in ["grec", "gyros", "souvlaki"]):
+        return "grec"
+    if any(kw in name_lower for kw in ["italien", "trattoria", "osteria", "pasta"]):
+        return "italien"
+    if any(kw in name_lower for kw in ["espagnol", "tapas", "paella"]):
+        return "espagnol"
+    if any(kw in name_lower for kw in ["portugais", "churras"]):
+        return "portugais"
+    if any(kw in name_lower for kw in ["mexicain", "burrito", "taqueria", "enchilada"]):
+        return "mexicain"
+    if any(kw in name_lower for kw in ["africain", "mafe", "thieboudienne", "senegalais"]):
+        return "africain"
+    if any(kw in name_lower for kw in ["creperie", "crepe", "galette"]):
+        return "creperie"
+    if any(kw in name_lower for kw in ["brasserie", "bistrot", "bistro"]):
+        return "brasserie"
+    if any(kw in name_lower for kw in ["boulangerie", "patisserie"]):
+        return "boulangerie"
+    if any(kw in name_lower for kw in ["food truck", "foodtruck"]):
+        return "food-truck"
+    if any(kw in name_lower for kw in ["traiteur"]):
+        return "traiteur"
+    if any(kw in name_lower for kw in ["brunch", "coffee", "cafe "]):
+        return "brunch-cafe"
+    if any(kw in name_lower for kw in ["poke", "bowl", "acai"]):
+        return "poke-bowl"
+    if any(kw in name_lower for kw in ["fish", "poisson", "fruits de mer", "seafood"]):
+        return "poissonnerie"
     if any(kw in name_lower for kw in ["fast", "rapide", "express"]):
         return "fast-food"
+    if any(kw in name_lower for kw in ["chicken", "poulet", "wings"]):
+        return "chicken"
+    if any(kw in name_lower for kw in ["hot dog", "hotdog"]):
+        return "hot-dog"
     return "restaurant"
 
 
@@ -274,7 +481,24 @@ def detect_type(name: str) -> str:
 
 
 def main():
-    if not API_KEY:
+    import argparse
+    parser = argparse.ArgumentParser(description="Collect restaurant emails via Google Places API")
+    parser.add_argument("--cities-from", type=int, default=0, help="Start index in CITIES list (default: 0)")
+    parser.add_argument("--cities-to", type=int, default=None, help="End index in CITIES list (default: all)")
+    parser.add_argument("--budget", type=float, default=20.0, help="Max budget in USD (default: 20). Stops when estimated cost reached.")
+    parser.add_argument("--skip-scrape", action="store_true", help="Skip Phase 3 (email scraping) for speed")
+    parser.add_argument("--skip-details", action="store_true", help="Skip Phase 2 (place details) for speed")
+    parser.add_argument("--list-cities", action="store_true", help="List all cities with their index and exit")
+    parser.add_argument("--stats-only", action="store_true", help="Show stats from existing data and exit")
+    args = parser.parse_args()
+
+    if args.list_cities:
+        for i, city in enumerate(CITIES):
+            print(f"  {i:3d}. {city}")
+        print(f"\nTotal: {len(CITIES)} villes")
+        sys.exit(0)
+
+    if not API_KEY and not args.stats_only:
         print("ERROR: Set GOOGLE_PLACES_API_KEY environment variable")
         print("  export GOOGLE_PLACES_API_KEY='your_key_here'")
         sys.exit(1)
@@ -286,6 +510,61 @@ def main():
     emails_path = os.path.join(OUTPUT_DIR, "restaurants_emails.json")
     csv_all_path = os.path.join(OUTPUT_DIR, "restaurants_all.csv")
     csv_emails_path = os.path.join(OUTPUT_DIR, "restaurants_with_emails.csv")
+    cost_path = os.path.join(OUTPUT_DIR, "api_cost_log.json")
+
+    # Cost tracking
+    COST_PER_TEXT_SEARCH = 0.032  # $32 per 1000
+    COST_PER_DETAIL = 0.017  # $17 per 1000
+
+    def load_cost_log():
+        if os.path.exists(cost_path):
+            with open(cost_path, "r") as f:
+                return json.load(f)
+        return {"total_text_searches": 0, "total_details": 0, "total_cost_usd": 0.0, "runs": []}
+
+    def save_cost_log(log):
+        with open(cost_path, "w") as f:
+            json.dump(log, f, indent=2)
+
+    cost_log = load_cost_log()
+
+    # Select city range
+    selected_cities = CITIES[args.cities_from:args.cities_to]
+    if not selected_cities:
+        print(f"ERROR: no cities in range [{args.cities_from}:{args.cities_to}]")
+        print(f"  Total cities: {len(CITIES)}")
+        sys.exit(1)
+
+    # ─── STATS ONLY MODE ─────────────────────────────────────────────────────
+    if args.stats_only:
+        existing_places = load_json(places_path)
+        existing_details = load_json(details_path)
+        existing_emails = load_json(emails_path)
+        done_combos = set(p.get("search_query", "") for p in existing_places if "search_query" in p)
+        done_cities = set(c.split("|")[0] for c in done_combos)
+        with_website = sum(1 for p in existing_details if p.get("website"))
+        with_emails = sum(1 for p in existing_emails if p.get("emails"))
+        unique_emails = set()
+        for p in existing_emails:
+            unique_emails.update(p.get("emails", []))
+
+        print(f"{'=' * 60}")
+        print(f"STATS ACTUELLES")
+        print(f"{'=' * 60}")
+        print(f"Villes traitees     : {len(done_cities)}/{len(CITIES)}")
+        print(f"Combos city+query   : {len(done_combos)}")
+        print(f"Restos trouves      : {len(existing_places)}")
+        print(f"Avec site web       : {with_website}")
+        print(f"Avec email(s)       : {with_emails}")
+        print(f"Emails uniques      : {len(unique_emails)}")
+        print(f"Cout API cumule     : ${cost_log.get('total_cost_usd', 0):.2f}")
+        print(f"\nProchaines villes non traitees :")
+        count = 0
+        for i, city in enumerate(CITIES):
+            if city not in done_cities and count < 20:
+                print(f"  {i:3d}. {city}")
+                count += 1
+        sys.exit(0)
 
     # ─── PHASE 1: Collect place_ids ──────────────────────────────────────────
 
@@ -305,11 +584,18 @@ def main():
 
     print("=" * 60)
     print("PHASE 1 : Recherche de restaurants via Google Places")
-    print(f"  {len(CITIES)} villes x {len(QUERIES)} types = {len(CITIES) * len(QUERIES)} recherches")
+    print(f"  Villes : {selected_cities[0]} -> {selected_cities[-1]} ({len(selected_cities)} villes, index {args.cities_from}-{args.cities_to or len(CITIES)})")
+    print(f"  {len(selected_cities)} villes x {len(QUERIES)} types = {len(selected_cities) * len(QUERIES)} recherches max")
+    print(f"  Budget : ${args.budget:.2f}")
     print("=" * 60)
 
     search_count = 0
-    for city in CITIES:
+    run_cost = 0.0
+    budget_exceeded = False
+
+    for city in selected_cities:
+        if budget_exceeded:
+            break
         for query_template in QUERIES:
             query = query_template.format(city=city)
             combo_key = f"{city}|{query_template}"
@@ -317,12 +603,23 @@ def main():
             if combo_key in done_combos:
                 continue
 
+            # Budget check
+            if run_cost >= args.budget:
+                print(f"\n  BUDGET ATTEINT (${run_cost:.2f} >= ${args.budget:.2f})")
+                budget_exceeded = True
+                break
+
             print(f"  {query}...", end=" ", flush=True)
             search_count += 1
+            run_cost += COST_PER_TEXT_SEARCH
 
             try:
                 results = collect_all_places(city, query_template)
                 new_count = 0
+                # Count extra pages for cost
+                pages = 1 + (1 if len(results) > 20 else 0) + (1 if len(results) > 40 else 0)
+                run_cost += COST_PER_TEXT_SEARCH * (pages - 1)  # extra pages
+
                 for place in results:
                     pid = place.get("place_id")
                     if pid and pid not in all_places and not is_chain(place.get("name", "")):
@@ -337,7 +634,7 @@ def main():
                             "search_query": combo_key,
                         }
                         new_count += 1
-                print(f"+{new_count} (total: {len(all_places)})")
+                print(f"+{new_count} (total: {len(all_places)}) [${run_cost:.2f}]")
             except Exception as e:
                 print(f"ERROR: {e}")
 
@@ -346,8 +643,20 @@ def main():
         # Save after each city
         save_json(list(all_places.values()), places_path)
 
+    # Update cost log
+    cost_log["total_text_searches"] += search_count
+    cost_log["total_cost_usd"] += run_cost
+    cost_log["runs"].append({
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "cities": f"{selected_cities[0]}-{selected_cities[-1]}",
+        "searches": search_count,
+        "cost_usd": round(run_cost, 2),
+    })
+    save_cost_log(cost_log)
+
     print(f"\nTotal restaurants uniques : {len(all_places)}")
     print(f"Recherches API effectuees : {search_count}")
+    print(f"Cout cette tranche : ${run_cost:.2f}")
 
     # ─── PHASE 2: Get details (website + phone) ─────────────────────────────
 
@@ -369,12 +678,23 @@ def main():
 
     to_fetch = [p for p in places_list if not p.get("details_fetched")]
 
+    if args.skip_details:
+        print(f"\n[SKIP] Phase 2 (--skip-details)")
+        to_fetch = []
+
     print(f"\n{'=' * 60}")
     print(f"PHASE 2 : Details (site web, telephone)")
     print(f"  Deja fait : {len(details_done)}, Reste : {len(to_fetch)}")
     print("=" * 60)
 
+    details_cost = 0.0
+    remaining_budget = args.budget - run_cost
+
     for i, place in enumerate(to_fetch):
+        if details_cost >= remaining_budget:
+            print(f"\n  BUDGET ATTEINT pour les details (${details_cost:.2f})")
+            break
+
         print(f"  [{i+1}/{len(to_fetch)}] {place['name'][:40]}...", end=" ", flush=True)
 
         try:
@@ -383,6 +703,7 @@ def main():
             place["website"] = details.get("website", "")
             place["business_status"] = details.get("business_status", "")
             place["details_fetched"] = True
+            details_cost += COST_PER_DETAIL
 
             if place["website"]:
                 print(f"OK {place['website'][:50]}")
@@ -394,14 +715,22 @@ def main():
 
         time.sleep(0.1)
 
-        if (i + 1) % 50 == 0:
+        if (i + 1) % 100 == 0:
             save_json(places_list, details_path)
-            print(f"  [save {i+1}]")
+            print(f"  [save {i+1}, ${details_cost:.2f}]")
 
     save_json(places_list, details_path)
 
+    # Update cost log
+    cost_log["total_details"] += int(details_cost / COST_PER_DETAIL)
+    cost_log["total_cost_usd"] += details_cost
+    save_cost_log(cost_log)
+
+    run_cost += details_cost
+
     with_website = [p for p in places_list if p.get("website")]
     print(f"\nAvec site web : {len(with_website)}/{len(places_list)}")
+    print(f"Cout total cette tranche : ${run_cost:.2f}")
 
     # ─── PHASE 3: Scrape emails ──────────────────────────────────────────────
 
@@ -417,6 +746,10 @@ def main():
             place["emails_scraped"] = saved.get("emails_scraped", False)
 
     to_scrape = [p for p in with_website if not p.get("emails_scraped")]
+
+    if args.skip_scrape:
+        print(f"\n[SKIP] Phase 3 (--skip-scrape)")
+        to_scrape = []
 
     print(f"\n{'=' * 60}")
     print(f"PHASE 3 : Extraction emails depuis les sites web (10 threads)")

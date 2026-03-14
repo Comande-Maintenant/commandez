@@ -39,18 +39,45 @@ JUNK_PATTERNS = [
     "@sentry", "@wixpress", "@cloudflare", "@jsdelivr", "@webflow",  # platform spam
     "@2x", "@3x",  # image filenames
     "sentry.io", "sentry-next", "wixpress.com",
-    "cimeragency.com", "grow360.fr",  # known agencies, not restaurant owners
 ]
+
+# Domains that are platforms/agencies, not restaurant owners
+JUNK_DOMAINS = {
+    "ionos.fr", "ionos.com", "webador.fr", "partoo.fr", "centralapp.com",
+    "telerama.fr", "menuchic.com", "udevweb.co", "agilibri.fr",
+    "etmerci.co", "dorrparis.fr", "cimeragency.com", "grow360.fr",
+    "deliveroo.fr", "deliveroo.com", "ubereats.com", "justeat.fr",
+    "launchgiftcards.com", "coverpr.co", "example.fr", "example.com",
+    "monsite.com", "domaine.com", "domain.com",
+}
+
+# Placeholder/fake email patterns
+PLACEHOLDER_PATTERNS = [
+    "exemple@", "example@", "test@", "utilisateur@", "monemail@",
+    "nom@domain", "user@domain", "email@domain", "votre@", "your@",
+    "adresse@",
+]
+
+VALID_TLDS = {"com", "fr", "net", "org", "eu", "io", "co", "info", "biz", "dev", "me", "be", "ch", "de", "it", "es", "nl", "lu", "at", "pt", "uk"}
+
 
 def is_clean_email(email: str) -> bool:
     """Filter out junk emails that slipped through scraping."""
     e = email.lower().strip()
     if any(p in e for p in JUNK_PATTERNS):
         return False
-    # Must end with valid TLD, not truncated
+    if any(p in e for p in PLACEHOLDER_PATTERNS):
+        return False
+    # Must have valid format
+    if "@" not in e:
+        return False
     local, domain = e.rsplit("@", 1)
+    # Reject known platform/agency domains
+    if domain in JUNK_DOMAINS:
+        return False
+    # Must end with valid TLD
     tld = domain.split(".")[-1]
-    if tld not in {"com", "fr", "net", "org", "eu", "io", "co", "info", "biz", "dev", "me", "be", "ch", "de", "it", "es", "nl", "lu", "at", "pt", "uk"}:
+    if tld not in VALID_TLDS:
         return False
     # Reject if local part looks like a filename
     if "." in local and local.rsplit(".", 1)[1] in {"png", "jpg", "svg", "gif", "webp", "css", "js"}:
@@ -444,16 +471,30 @@ def main():
     sent_log = load_sent_log()
     print(f"Deja envoyes : {len(sent_log)}")
 
+    # Deduplicate: 1 email per restaurant (pick best: contact@ > first clean)
+    best_per_resto = {}
+    for r in restaurants:
+        email = r.get("email", "").strip().lower()
+        if not email or not is_clean_email(email):
+            continue
+        name = r.get("name", "").strip()
+        if name not in best_per_resto:
+            best_per_resto[name] = {**r, "email": email}
+        else:
+            # Prefer contact@domain or info@domain over random emails
+            current = best_per_resto[name]["email"]
+            if email.startswith("contact@") and not current.startswith("contact@"):
+                best_per_resto[name] = {**r, "email": email}
+
     # Filter unsent + clean
     unsent = []
     skipped_junk = 0
-    for r in restaurants:
-        email = r.get("email", "").strip().lower()
-        if not email or email in sent_log:
+    seen_emails = set()
+    for r in best_per_resto.values():
+        email = r["email"]
+        if email in sent_log or email in seen_emails:
             continue
-        if not is_clean_email(email):
-            skipped_junk += 1
-            continue
+        seen_emails.add(email)
         unsent.append(r)
 
     if skipped_junk:
