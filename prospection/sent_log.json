@@ -1,0 +1,452 @@
+{
+  "restaurant.pantagruel@gmail.com": {
+    "sent_at": "2026-03-14T16:14:14.096318+00:00",
+    "resend_id": "5fad6307-afe7-4b8b-989c-6c18884f2f59",
+    "name": "Restaurant Pantagruel Paris",
+    "city": "Paris"
+  },
+  "artisan@banneton.fr": {
+    "sent_at": "2026-03-14T16:14:15.990398+00:00",
+    "resend_id": "df3551a1-401d-4895-a001-7f7df76da532",
+    "name": "Boulangerie Banneton",
+    "city": "Lyon"
+  },
+  "contact@naturalinncafe.fr": {
+    "sent_at": "2026-03-14T16:14:17.841631+00:00",
+    "resend_id": "806549a3-c809-47b7-b611-e9e985a36682",
+    "name": "Natural'inn Café",
+    "city": "Marseille"
+  },
+  "greenadine21@gmail.com": {
+    "sent_at": "2026-03-14T16:14:19.682564+00:00",
+    "resend_id": "fd2911d7-ac88-44fa-9936-f76cc5770d98",
+    "name": "GREENADINE pizzeria cauderan",
+    "city": "Bordeaux"
+  },
+  "jean.dupont@mail.fr": {
+    "sent_at": "2026-03-14T16:14:21.530807+00:00",
+    "resend_id": "b8d65d25-6746-4fe6-b5b4-7b1c896cf91d",
+    "name": "Prima Bonheur",
+    "city": "Toulouse"
+  },
+  "ari6712@gmail.com": {
+    "sent_at": "2026-03-14T16:14:23.341739+00:00",
+    "resend_id": "8e2b62ae-2912-4373-aa71-118f293c9d00",
+    "name": "One Street",
+    "city": "Strasbourg"
+  },
+  "welcome@backbay.fr": {
+    "sent_at": "2026-03-14T16:14:25.209555+00:00",
+    "resend_id": "1b90a8a2-19b9-4139-adae-1f1252690b6b",
+    "name": "Back Bay",
+    "city": "Nantes"
+  },
+  "contact@laroulettepizzas.fr": {
+    "sent_at": "2026-03-14T16:14:27.064212+00:00",
+    "resend_id": "de788d4c-82b8-4a13-b5a2-e45b8552cb26",
+    "name": "La Roulette, bar à pizzas",
+    "city": "Rennes"
+  },
+  "alexandrafarocha90@gmail.com": {
+    "sent_at": "2026-03-14T16:14:28.861665+00:00",
+    "resend_id": "57ada871-7015-45ca-b337-d5f419725698",
+    "name": "Le Palazzio",
+    "city": "Dijon"
+  },
+  "ragazza.restaurant@hotmail.com": {
+    "sent_at": "2026-03-14T16:14:30.788567+00:00",
+    "resend_id": "2200282a-6738-4a39-9e81-324bd2b57dec",
+    "name": "RAGAZZA",
+    "city": "Nancy"
+  },
+  "rachid.naqiri@gmail.com": {
+    "sent_at": "2026-03-14T16:14:32.587653+00:00",
+    "resend_id": "e34e9dce-0e5a-4bf7-9e31-fa40313fda50",
+    "name": "Food factory",
+    "city": "Lille"
+  },
+  "guindani.najib@gmail.com": {
+    "sent_at": "2026-03-14T16:14:34.397218+00:00",
+    "resend_id": "eb1219ba-109c-4f29-ad78-70860af4538b",
+    "name": "Pizzeria-Dei-Guindani",
+    "city": "Montpellier"
+  },
+  "elpalazzo76@gmail.com": {
+    "sent_at": "2026-03-14T16:14:36.195682+00:00",
+    "resend_id": "b045e687-72a5-4141-8c81-867978912132",
+    "name": "EL PALAZZO",
+    "city": "Rouen"
+  },
+  "contact@ladresse-amiens.fr": {
+    "sent_at": "2026-03-14T16:14:38.027723+00:00",
+    "resend_id": "6d07c69a-fcb7-4723-9067-ec9b522eee40",
+    "name": "L'adresse",
+    "city": "Amiens"
+  },
+  "sav@la-galerie.com": {
+    "sent_at": "2026-03-14T16:14:39.825702+00:00",
+    "resend_id": "8e3ea070-100b-4ddc-9967-c8a5295ace56",
+    "name": "Pizza Tempo Espace Anjou",
+    "city": "Angers"
+  },
+  "lenagehanne@hotmail.fr": {
+    "sent_at": "2026-03-14T16:14:41.641996+00:00",
+    "resend_id": "aa1bfa78-9c8f-49c6-8dec-3fb1ca240750",
+    "name": "L'Ardoise",
+    "city": "Caen"
+  },
+  "service.communication@g-ladalle.com": {
+    "sent_at": "2026-03-14T16:14:43.449340+00:00",
+    "resend_id": "6da89921-fe14-47a7-ad1a-0d4d9e436982",
+    "name": "G LA DALLE - TOULON",
+    "city": "Toulon"
+  },
+  "contact@etre-visible.local.fr": {
+    "sent_at": "2026-03-14T16:14:45.235302+00:00",
+    "resend_id": "4800fc7c-1c89-4ae5-9d61-97f2ac879a0a",
+    "name": "TOUT VA BENE",
+    "city": "Clermont-Ferrand"
+  },
+  "info@sale-e-pepe.fr": {
+    "sent_at": "2026-03-14T16:14:47.268294+00:00",
+    "resend_id": "5d572ff4-73dd-4ae1-81e3-6fcc3cf2a705",
+    "name": "La pizza sale e pepe",
+    "city": "Nice"
+  },
+  "mourad.yourari@gmail.com": {
+    "sent_at": "2026-03-14T16:14:49.109975+00:00",
+    "resend_id": "d2400ef3-e763-4c89-9981-37a2bfcc75ce",
+    "name": "Team Food Chicken",
+    "city": "Brest"
+  },
+  "contact@come-prima.it": {
+    "sent_at": "2026-03-14T16:14:50.972189+00:00",
+    "resend_id": "8afdd7bf-ab8c-4fbc-9569-566562174e91",
+    "name": "Pizzeria Come Prima",
+    "city": "Grenoble"
+  },
+  "firdeus06@live.fr": {
+    "sent_at": "2026-03-14T16:14:52.776749+00:00",
+    "resend_id": "2af8df53-836d-4576-b5cc-c03eae62a4a4",
+    "name": "Kervan Saray",
+    "city": "Mulhouse"
+  },
+  "antonino.donato@gmail.com": {
+    "sent_at": "2026-03-14T16:14:54.617368+00:00",
+    "resend_id": "6b2046a9-0c14-4688-9748-5dd8a24f4151",
+    "name": "Via Veneto",
+    "city": "Aix-en-Provence"
+  },
+  "contact@liziweb.com": {
+    "sent_at": "2026-03-14T16:14:56.419358+00:00",
+    "resend_id": "880f5cd7-7073-413d-ae9c-160d7d506472",
+    "name": "La Sardaigne",
+    "city": "Le Havre"
+  },
+  "loc66.fr@gmail.com": {
+    "sent_at": "2026-03-14T16:14:58.355548+00:00",
+    "resend_id": "2a3da0a3-607e-43e2-bb82-f036bf0a8189",
+    "name": "VENTRAYOU PIZZA PERPIGNAN",
+    "city": "Perpignan"
+  },
+  "contact@pizza-corleone.fr": {
+    "sent_at": "2026-03-14T16:15:00.156847+00:00",
+    "resend_id": "0a5c3b51-d190-4658-8ab5-4e2aabd0c293",
+    "name": "CORLEONE Valence",
+    "city": "Valence"
+  },
+  "contact@bosphorus.fr": {
+    "sent_at": "2026-03-14T16:15:02.299055+00:00",
+    "resend_id": "da4cd594-e20c-4eae-b273-f32bc62eb5dc",
+    "name": "Bosphorus Taste of Turkey",
+    "city": "Saint-Etienne"
+  },
+  "pascal.dicandia@icloud.com": {
+    "sent_at": "2026-03-14T16:15:04.139100+00:00",
+    "resend_id": "6466e4d0-bedb-4679-b82c-0fba347aab62",
+    "name": "Angel's Food",
+    "city": "Metz"
+  },
+  "contact@la-casa-aprile.fr": {
+    "sent_at": "2026-03-14T16:15:05.984010+00:00",
+    "resend_id": "47434c45-cb78-441c-9225-ac30224559da",
+    "name": "La Casa Aprile",
+    "city": "Reims"
+  },
+  "tastytreatorleans@gmail.com": {
+    "sent_at": "2026-03-14T16:15:07.818568+00:00",
+    "resend_id": "5437342f-b830-4a93-95a3-f0562b749bf4",
+    "name": "TastyTreat Orleans",
+    "city": "Orleans"
+  },
+  "salsoul_rabah@yahoo.fr": {
+    "sent_at": "2026-03-14T16:15:09.698722+00:00",
+    "resend_id": "5445c063-1ea9-4100-a596-e6042f99f350",
+    "name": "O'DWICH SNACK",
+    "city": "Tours"
+  },
+  "contact@grilladeettacos.fr": {
+    "sent_at": "2026-03-14T16:15:11.490607+00:00",
+    "resend_id": "70036a49-14a7-4e30-a2e8-50a6bb9e20d4",
+    "name": "Grillade & Tacos Avignon",
+    "city": "Avignon"
+  },
+  "boutique@timebreakpoitiers.fr": {
+    "sent_at": "2026-03-14T16:15:13.307347+00:00",
+    "resend_id": "92442b5a-415c-49da-80ba-5556234afba0",
+    "name": "Time Break | Traiteur - Snacking - Boulangerie - After Work",
+    "city": "Poitiers"
+  },
+  "contact@circuitdelabiere.fr": {
+    "sent_at": "2026-03-14T16:15:15.127904+00:00",
+    "resend_id": "6bbd11a5-8dd8-4311-816c-1349ef52a4d0",
+    "name": "Circuit de la bière",
+    "city": "Le Mans"
+  },
+  "amaga.panino@gmail.com": {
+    "sent_at": "2026-03-14T16:15:16.962118+00:00",
+    "resend_id": "dbe5934e-f2d2-48de-8d01-fca68e5db3ec",
+    "name": "AMAGA",
+    "city": "La Rochelle"
+  },
+  "contact@agence-elypse.com": {
+    "sent_at": "2026-03-14T16:15:18.769394+00:00",
+    "resend_id": "bdc66bb5-685d-42a9-8507-9453ae42f8d9",
+    "name": "Big Smash Nîmes",
+    "city": "Nimes"
+  },
+  "labonnepate30@gmail.com": {
+    "sent_at": "2026-03-14T16:15:20.572842+00:00",
+    "resend_id": "8f62aaa5-77da-4b8a-a340-77ace01e298b",
+    "name": "Francky La Bonne Pâte - Couzeix",
+    "city": "Limoges"
+  },
+  "baoquin.ponouilles@gmail.com": {
+    "sent_at": "2026-03-14T16:15:22.367855+00:00",
+    "resend_id": "a8c135b2-afe0-471d-9807-69bbb7ea46b7",
+    "name": "Po-nouilles",
+    "city": "Pau"
+  },
+  "fanny.dubouclez@gmail.com": {
+    "sent_at": "2026-03-14T16:15:24.195964+00:00",
+    "resend_id": "04bcfe3d-7ccb-4d4c-9daf-932600722281",
+    "name": "L’Escapade",
+    "city": "Besancon"
+  },
+  "contact@steaknshake-calais-coquelles.fr": {
+    "sent_at": "2026-03-14T16:15:25.998844+00:00",
+    "resend_id": "e83dda9e-66e9-4c75-bccb-b68e55f35c01",
+    "name": "Steak 'n Shake",
+    "city": "Calais"
+  },
+  "solera.paris@gmail.com": {
+    "sent_at": "2026-03-14T16:15:27.859681+00:00",
+    "resend_id": "0286e3aa-3aa9-4be8-9f4c-40323d6a9dd1",
+    "name": "Solera Paris : Bar à Cocktail",
+    "city": "Paris"
+  },
+  "okjapizza@gmail.com": {
+    "sent_at": "2026-03-14T16:15:29.675039+00:00",
+    "resend_id": "59dfd91e-66f7-4a8b-9688-8e0c6fc86a30",
+    "name": "OKJA - Pizzeria & Cocktails à Lyon 7",
+    "city": "Lyon"
+  },
+  "contact@assiette-tunisienne.fr": {
+    "sent_at": "2026-03-14T16:15:31.491348+00:00",
+    "resend_id": "ab9eb123-3f38-44a4-8616-366dc0086311",
+    "name": "L'Assiette Tunisienne",
+    "city": "Marseille"
+  },
+  "contact@pausk.com": {
+    "sent_at": "2026-03-14T16:15:33.333368+00:00",
+    "resend_id": "c9385c7a-74ac-4397-918c-a1ffe00b6b6b",
+    "name": "paus'k",
+    "city": "Bordeaux"
+  },
+  "contact@pizzicotto-chicken.fr": {
+    "sent_at": "2026-03-14T16:15:35.127021+00:00",
+    "resend_id": "096bc0d0-9a7e-46e0-9c3f-a3cdff84f062",
+    "name": "Pizzicotto & Chicken - Pizza Toulouse",
+    "city": "Toulouse"
+  },
+  "lepicobello@hotmail.fr": {
+    "sent_at": "2026-03-14T16:15:36.933633+00:00",
+    "resend_id": "bd239329-e767-4544-94ce-a26dc9119e3d",
+    "name": "Picobello",
+    "city": "Strasbourg"
+  },
+  "contact.milopizzeria@gmail.com": {
+    "sent_at": "2026-03-14T16:15:38.714009+00:00",
+    "resend_id": "cb113a16-b4df-4209-99ae-cb4d32b2b90f",
+    "name": "Milo handmade pizzas",
+    "city": "Nantes"
+  },
+  "web@giraudi.com": {
+    "sent_at": "2026-03-14T16:15:40.534181+00:00",
+    "resend_id": "4d963d06-b8f9-4d4a-b876-cc6ae3b59d60",
+    "name": "Villa Tredici",
+    "city": "Rennes"
+  },
+  "bekir@live.fr": {
+    "sent_at": "2026-03-14T16:15:42.313270+00:00",
+    "resend_id": "858d7820-c15c-4cd1-b3ac-9258c2a14d64",
+    "name": "La Pizz'Zola",
+    "city": "Dijon"
+  },
+  "virgil_54840@hotmail.fr": {
+    "sent_at": "2026-03-14T16:15:44.113059+00:00",
+    "resend_id": "7e026104-c33e-46b7-bc5f-0f0c26f9ee6c",
+    "name": "Gilio's Pizza",
+    "city": "Nancy"
+  },
+  "contact@ilristorante.fr": {
+    "sent_at": "2026-03-14T16:15:45.906738+00:00",
+    "resend_id": "dbd84e3a-cd70-4280-9237-f4cfca0869a2",
+    "name": "IL RISTORANTE - Le restaurant Italien de Lille",
+    "city": "Lille"
+  },
+  "contact@aufedebois.fr": {
+    "sent_at": "2026-03-14T16:15:47.756507+00:00",
+    "resend_id": "0278ee8f-72fa-4264-b833-24bf844b9ec6",
+    "name": "Pizza Vera Napoli pizzeria feu de bois montpellier",
+    "city": "Montpellier"
+  },
+  "contact@losteriador.fr": {
+    "sent_at": "2026-03-14T16:15:49.548520+00:00",
+    "resend_id": "06d22b1d-5223-4b7a-bece-adcac3856657",
+    "name": "Bouillon Italia Osteria d’Or",
+    "city": "Rouen"
+  },
+  "hello@mapszi.com": {
+    "sent_at": "2026-03-14T16:15:51.360885+00:00",
+    "resend_id": "5b539bf1-0d98-48fc-bd83-3704af01bc66",
+    "name": "Uno Pizza",
+    "city": "Amiens"
+  },
+  "support@ovhcloud.com": {
+    "sent_at": "2026-03-14T16:15:53.210742+00:00",
+    "resend_id": "191e3a17-1df9-4af7-898b-023b4aa6163b",
+    "name": "Le San Marco – Pizzeria et restaurant italien - Les Ponts-de-Cé",
+    "city": "Angers"
+  },
+  "acadiane.caen@orange.fr": {
+    "sent_at": "2026-03-14T16:15:55.020562+00:00",
+    "resend_id": "a7b00dbc-a8a5-43e9-9cc9-011a58bc9a46",
+    "name": "La Table de l'Acadiane",
+    "city": "Caen"
+  },
+  "contact@pizza-al-calzone.com": {
+    "sent_at": "2026-03-14T16:15:56.854566+00:00",
+    "resend_id": "8d413dd1-9e31-40c2-a8b7-9f8c6763d6c4",
+    "name": "Al calzone",
+    "city": "Toulon"
+  },
+  "info@vesuve.net": {
+    "sent_at": "2026-03-14T16:15:58.685502+00:00",
+    "resend_id": "e06bf86a-bfb5-40be-8889-905dfb77b2f4",
+    "name": "Restaurant-Pizzeria Le Vésuve",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@dipiu.fr": {
+    "sent_at": "2026-03-14T16:16:00.545194+00:00",
+    "resend_id": "002ba516-5048-40c0-a03b-d7255c16ef72",
+    "name": "La Villa d'Este - Restaurant italien Nice",
+    "city": "Nice"
+  },
+  "dhaoui_younes@hotmail.fr": {
+    "sent_at": "2026-03-14T16:16:02.373085+00:00",
+    "resend_id": "71bd50d3-4ac7-4a54-b333-4e951cb5cc98",
+    "name": "Le Djerba",
+    "city": "Brest"
+  },
+  "tmw.38@hotmail.com": {
+    "sent_at": "2026-03-14T16:16:04.181411+00:00",
+    "resend_id": "279fe673-1f61-4d83-bbe4-69f24b8d0182",
+    "name": "HOMS Grillades",
+    "city": "Grenoble"
+  },
+  "hello.maisonnoshaix@gmail.com": {
+    "sent_at": "2026-03-14T16:16:05.975477+00:00",
+    "resend_id": "2b1e75a6-ca1a-4fe7-a403-7ce63135d226",
+    "name": "Maison Nosh - Aix en Provence",
+    "city": "Aix-en-Provence"
+  },
+  "christophe.paillette@hotmail.fr": {
+    "sent_at": "2026-03-14T16:16:07.815965+00:00",
+    "resend_id": "c908af81-9f46-45ef-9460-71a3cdd4e099",
+    "name": "La prise en passant",
+    "city": "Le Havre"
+  },
+  "omegaburgerperpignan@gmail.com": {
+    "sent_at": "2026-03-14T16:16:09.602539+00:00",
+    "resend_id": "4ec2a3d1-aa9c-4d3e-89d5-e27728f7a04f",
+    "name": "Oméga Burger",
+    "city": "Perpignan"
+  },
+  "contact@joyfoods.fr": {
+    "sent_at": "2026-03-14T16:16:11.406646+00:00",
+    "resend_id": "89f3246b-b42c-40c1-8e57-a142d8f830ce",
+    "name": "JOYS TACOS - Valence",
+    "city": "Valence"
+  },
+  "3brasseurs.saintetienne@gmail.com": {
+    "sent_at": "2026-03-14T16:16:13.192293+00:00",
+    "resend_id": "5bf81ba8-3ee7-4b8c-824d-221f7fcc3510",
+    "name": "3 Brasseurs Saint Etienne",
+    "city": "Saint-Etienne"
+  },
+  "contact@croque-studio.com": {
+    "sent_at": "2026-03-14T16:16:14.992558+00:00",
+    "resend_id": "f1ed2641-75cb-429b-a889-60a3d45a4907",
+    "name": "Queen Mamma - Waves",
+    "city": "Metz"
+  },
+  "sav@fivepizzaoriginal.fr": {
+    "sent_at": "2026-03-14T16:16:16.800606+00:00",
+    "resend_id": "336f9c8c-f178-427e-866c-4e8f27d7fc72",
+    "name": "Five Pizza Original Reims",
+    "city": "Reims"
+  },
+  "canotto45100@gmail.com": {
+    "sent_at": "2026-03-14T16:16:18.621780+00:00",
+    "resend_id": "9f27afab-7fa5-40d6-b245-6c6ea2f3ae46",
+    "name": "Canotto",
+    "city": "Orleans"
+  },
+  "chezpiatours@gmail.com": {
+    "sent_at": "2026-03-14T16:16:20.421939+00:00",
+    "resend_id": "54d3baa7-ac8d-46d9-a8c9-b0cd174e8038",
+    "name": "Casa Pia",
+    "city": "Tours"
+  },
+  "contact@fiplink.com": {
+    "sent_at": "2026-03-14T16:16:22.216392+00:00",
+    "resend_id": "4c3ee9e5-abfa-4997-80dc-ab9e37ef94b2",
+    "name": "L'AS PIZZA",
+    "city": "Avignon"
+  },
+  "chez.jade.traiteur@gmail.com": {
+    "sent_at": "2026-03-14T16:16:24.036611+00:00",
+    "resend_id": "cf5b850f-0b60-4833-91d1-abb0fe91bcb7",
+    "name": "Chez Jade",
+    "city": "Poitiers"
+  },
+  "unvoyageadamasse@gmail.com": {
+    "sent_at": "2026-03-14T16:16:25.887971+00:00",
+    "resend_id": "5a20c70b-d438-4647-872b-f1f3588b2ae8",
+    "name": "Un Voyage à Damas - Restaurant Syrien - La Rochelle",
+    "city": "La Rochelle"
+  },
+  "lemarcellino@manger-italien.com": {
+    "sent_at": "2026-03-14T16:16:27.700392+00:00",
+    "resend_id": "c635f40b-5399-47be-9dae-7104c144d798",
+    "name": "Le Marcellino",
+    "city": "Nimes"
+  },
+  "contact@tipiz-pizza.fr": {
+    "sent_at": "2026-03-14T16:16:29.496871+00:00",
+    "resend_id": "15a06a5e-a9dc-45a0-9090-dc7f6dac949d",
+    "name": "TIPIZ' Pizza.",
+    "city": "Limoges"
+  }
+}

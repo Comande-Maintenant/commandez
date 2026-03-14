@@ -3,6 +3,5 @@ restaurants_places.json
 restaurants_details.json
 restaurants_emails.json
 
-# Logs d'envoi (geres par GitHub Actions cache)
-sent_log.json
+# Stats temporaires
 send_stats.json
