@@ -1,0 +1,96 @@
+name: Prospection Emails
+
+on:
+  schedule:
+    # 9h30 heure FR (UTC+2 ete / UTC+1 hiver)
+    # 7h30 UTC = 9h30 CEST (ete) / 8h30 CET (hiver, ok aussi)
+    - cron: '30 7 * * *'
+    # 17h00 heure FR
+    # 15h00 UTC = 17h00 CEST (ete) / 16h00 CET (hiver, ok aussi)
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+    inputs:
+      batch_size:
+        description: 'Number of emails to send'
+        required: false
+        default: '38'
+      dry_run:
+        description: 'Dry run (no actual sending)'
+        required: false
+        default: 'false'
+
+jobs:
+  send-emails:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Restore prospection data
+        uses: actions/cache/restore@v4
+        with:
+          path: prospection/
+          key: prospection-data
+
+      - name: Determine batch size
+        id: batch
+        run: |
+          # Morning (7h30 UTC cron) = 38 emails
+          # Afternoon (15h00 UTC cron) = 37 emails
+          HOUR=$(date -u +%H)
+          if [ "$HOUR" -lt 12 ]; then
+            echo "size=38" >> $GITHUB_OUTPUT
+            echo "slot=matin" >> $GITHUB_OUTPUT
+          else
+            echo "size=37" >> $GITHUB_OUTPUT
+            echo "slot=aprem" >> $GITHUB_OUTPUT
+          fi
+
+          # Override with manual input if workflow_dispatch
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "size=${{ inputs.batch_size }}" >> $GITHUB_OUTPUT
+            echo "slot=manual" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send prospection emails
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          DRY_RUN=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            DRY_RUN="--dry-run"
+          fi
+
+          python3 scripts/send_prospection.py \
+            --batch-size ${{ steps.batch.outputs.size }} \
+            $DRY_RUN
+
+      - name: Save prospection data
+        uses: actions/cache/save@v4
+        with:
+          path: prospection/
+          key: prospection-data-${{ github.run_id }}
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Prospection - ${{ steps.batch.outputs.slot }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f prospection/send_stats.json ]; then
+            TOTAL=$(python3 -c "import json; d=json.load(open('prospection/send_stats.json')); print(d.get('total_sent', 0))")
+            ERRORS=$(python3 -c "import json; d=json.load(open('prospection/send_stats.json')); print(d.get('total_errors', 0))")
+            echo "- **Total envoyes** : $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- **Total erreurs** : $ERRORS" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f prospection/sent_log.json ]; then
+            SENT=$(python3 -c "import json; d=json.load(open('prospection/sent_log.json')); print(len(d))")
+            echo "- **Emails uniques envoyes** : $SENT" >> $GITHUB_STEP_SUMMARY
+          fi
