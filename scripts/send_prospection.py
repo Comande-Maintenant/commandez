@@ -389,10 +389,10 @@ def send_email(to: str, subject: str, html: str, text: str) -> dict:
 
 
 def log_to_supabase(resend_id: str, email: str, name: str, city: str):
-    """Log send to Supabase for tracking (non-blocking)."""
+    """Log send to email_logs table for dashboard tracking (non-blocking)."""
     try:
         requests.post(
-            f"{SUPABASE_URL}/rest/v1/prospection_sends",
+            f"{SUPABASE_URL}/rest/v1/email_logs",
             headers={
                 "apikey": SUPABASE_KEY,
                 "Authorization": f"Bearer {SUPABASE_KEY}",
@@ -400,10 +400,10 @@ def log_to_supabase(resend_id: str, email: str, name: str, city: str):
                 "Prefer": "return=minimal",
             },
             json={
+                "email_type": "prospection_send",
+                "recipient_email": email,
                 "resend_id": resend_id,
-                "email": email,
-                "restaurant_name": name,
-                "city": city,
+                "metadata": {"restaurant_name": name, "city": city},
             },
             timeout=5,
         )

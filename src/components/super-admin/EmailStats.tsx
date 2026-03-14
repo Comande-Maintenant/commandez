@@ -31,6 +31,7 @@ const TYPE_LABELS: Record<string, string> = {
   promo_applied: "Code promo",
   comeback_3days: "Comeback J+3",
   comeback_7days: "Comeback J+7",
+  prospection_send: "Prospection B2B",
 };
 
 function timeAgo(dateStr: string): string {
