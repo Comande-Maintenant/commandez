@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      email_logs: {
+        Row: {
+          id: string
+          user_id: string | null
+          restaurant_id: string | null
+          email_type: string
+          recipient_email: string
+          resend_id: string | null
+          metadata: Json | null
+          sent_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          restaurant_id?: string | null
+          email_type: string
+          recipient_email: string
+          resend_id?: string | null
+          metadata?: Json | null
+          sent_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          restaurant_id?: string | null
+          email_type?: string
+          recipient_email?: string
+          resend_id?: string | null
+          metadata?: Json | null
+          sent_at?: string
+        }
+        Relationships: []
+      }
+      user_email_preferences: {
+        Row: {
+          id: string
+          user_id: string
+          marketing_emails: boolean
+          subscription_emails: boolean
+          referral_emails: boolean
+          unsubscribed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          marketing_emails?: boolean
+          subscription_emails?: boolean
+          referral_emails?: boolean
+          unsubscribed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          marketing_emails?: boolean
+          subscription_emails?: boolean
+          referral_emails?: boolean
+          unsubscribed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       menu_items: {
         Row: {
           category: string

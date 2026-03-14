@@ -1,156 +1,276 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+/**
+ * send-email - Central email sending Edge Function for commandeici
+ *
+ * Receives: { template, to, data, userId, restaurantId }
+ * - Checks user email preferences (respects unsubscribe)
+ * - Anti-duplicate: one-time emails never resent
+ * - Marketing cooldown: max 1 non-transactional per user per 24h
+ * - Sends via Resend API
+ * - Logs in email_logs table
+ */
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-const EMAIL_FROM = "commandeici <contact@commandeici.com>";
+const EMAIL_FROM = "commandeici <noreply@commandeici.com>";
+
+const APP_URL = "https://app.commandeici.com";
+const SITE_URL = "https://commandeici.com";
+const LOGO_URL = "https://cdn.shopify.com/s/files/1/1050/3749/6659/files/commandeici-logo.svg?v=1772387258";
+const PRIMARY_COLOR = "#10B981";
+const COMPANY_ADDRESS = "Bourgogne, France";
+const CONTACT_EMAIL = "contact@commandeici.com";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Email templates
-const templates: Record<string, (data: Record<string, string>) => { subject: string; html: string }> = {
-  // Trial expiring soon (J-7, J-3, J-1)
+// Transactional emails bypass marketing preferences (but not full unsubscribe)
+const TRANSACTIONAL_TYPES = [
+  "subscription_activated", "payment_failed", "subscription_cancelled", "trial_expired",
+];
+
+// One-time emails: never resent to the same user/restaurant
+const ONE_TIME_TYPES = [
+  "referral_completed_referrer", "referral_completed_referee",
+  "comeback_3days", "comeback_7days",
+];
+
+// Marketing cooldown: max 1 non-transactional per 24h
+const MARKETING_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+// ─── Email templates ────────────────────────────────────────────────────────────
+
+type TemplateData = Record<string, string>;
+
+const templates: Record<string, (data: TemplateData) => { subject: string; content: string }> = {
   trial_expiring: (data) => ({
     subject: `Votre essai commandeici se termine dans ${data.daysLeft} jours`,
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        Votre essai gratuit se termine dans <strong>${data.daysLeft} jours</strong>.
-        Pour continuer a recevoir des commandes directes, activez votre abonnement a 19 euros/mois.
-      </p>
-      <a href="https://app.commandeici.com/abonnement" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Activer mon abonnement</a>
-      <p style="margin:16px 0 0;font-size:13px;color:#999;">Sans engagement, arretez quand vous voulez.</p>
-    `),
+    content: `
+      <h2>Bonjour ${data.restaurantName || ""},</h2>
+      <p>Votre essai gratuit se termine dans <strong>${data.daysLeft} jours</strong>.</p>
+      <p>Pour continuer a recevoir des commandes directes, activez votre abonnement.</p>
+      <div class="highlight-box">
+        <p><strong>19 euros/mois</strong>, sans engagement, arretez quand vous voulez.</p>
+      </div>
+      <p><a href="${APP_URL}/abonnement" class="cta-btn">Activer mon abonnement &rarr;</a></p>
+    `,
   }),
 
-  // Trial expired
   trial_expired: (data) => ({
     subject: "Votre essai commandeici est termine",
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        Votre essai gratuit est termine. Votre page est maintenant desactivee.<br>
-        Activez votre abonnement pour la remettre en ligne.
-      </p>
-      <a href="https://app.commandeici.com/abonnement" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Reactiver ma page</a>
-    `),
+    content: `
+      <h2>Bonjour ${data.restaurantName || ""},</h2>
+      <p>Votre essai gratuit est termine. Votre page de commande n'est plus accessible par vos clients.</p>
+      <p>Activez votre abonnement pour la remettre en ligne immediatement.</p>
+      <p><a href="${APP_URL}/abonnement" class="cta-btn">Reactiver ma page &rarr;</a></p>
+      <p style="font-size:13px;color:#6b7280;">Toutes vos donnees (menu, commandes, clients) sont conservees.</p>
+    `,
   }),
 
-  // Referral completed (to referrer)
   referral_completed_referrer: (data) => ({
     subject: "Bravo ! Vous avez gagne 4 semaines gratuites",
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.referrerName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        <strong>${data.refereeName}</strong> s'est inscrit avec votre lien de parrainage !<br>
-        Vous gagnez <strong>4 semaines gratuites</strong> sur votre abonnement.
-      </p>
-      <p style="font-size:15px;color:#555;">Continuez a parrainer pour gagner plus de semaines gratuites.</p>
-    `),
+    content: `
+      <h2>Bonjour ${data.referrerName || ""},</h2>
+      <p><strong>${data.refereeName || "Un restaurateur"}</strong> s'est inscrit avec votre lien de parrainage !</p>
+      <div class="highlight-box">
+        <p>Vous gagnez <strong>4 semaines gratuites</strong> sur votre abonnement.</p>
+      </div>
+      <p>Continuez a parrainer pour gagner plus de semaines gratuites.</p>
+      <p><a href="${APP_URL}/admin" class="cta-btn">Voir mon dashboard &rarr;</a></p>
+    `,
   }),
 
-  // Referral completed (to referee)
   referral_completed_referee: (data) => ({
     subject: "Bienvenue ! Vous avez 8 semaines d'essai",
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.refereeName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        Grace au parrainage de <strong>${data.referrerName}</strong>, vous beneficiez de
-        <strong>8 semaines d'essai gratuit</strong> au lieu de 4 !<br>
-        Profitez-en pour tester toutes les fonctionnalites.
-      </p>
-      <a href="https://app.commandeici.com/inscription" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Commencer</a>
-    `),
+    content: `
+      <h2>Bonjour ${data.refereeName || ""},</h2>
+      <p>Grace au parrainage de <strong>${data.referrerName || "un restaurateur"}</strong>, vous beneficiez de <strong>8 semaines d'essai gratuit</strong> au lieu de 4 !</p>
+      <p>Profitez-en pour configurer votre menu et tester toutes les fonctionnalites.</p>
+      <p><a href="${APP_URL}/inscription" class="cta-btn">Commencer &rarr;</a></p>
+    `,
   }),
 
-  // Subscription activated
   subscription_activated: (data) => ({
     subject: "Votre abonnement commandeici est actif !",
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        Votre abonnement commandeici <strong>${data.plan === "annual" ? "annuel" : "mensuel"}</strong> est maintenant actif.<br>
-        Votre essai gratuit de 14 jours a commence. Le premier prelevement aura lieu le <strong>${data.trialEnd}</strong>.
-      </p>
-      <a href="https://app.commandeici.com/admin" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Acceder a mon dashboard</a>
-      <p style="margin:16px 0 0;font-size:13px;color:#999;">Sans engagement, resiliable a tout moment.</p>
-    `),
+    content: `
+      <h2>Bonjour ${data.restaurantName || ""},</h2>
+      <p>Votre abonnement commandeici <strong>${data.plan === "annual" ? "annuel" : "mensuel"}</strong> est maintenant actif.</p>
+      <p>Votre essai gratuit de 14 jours a commence. Le premier prelevement aura lieu le <strong>${data.trialEnd || ""}</strong>.</p>
+      <div class="highlight-box">
+        <p>Ce qui est inclus :<br>
+        - Page de commande personnalisee<br>
+        - QR code pour vos clients<br>
+        - Dashboard avec suivi des commandes<br>
+        - Base de donnees clients</p>
+      </div>
+      <p><a href="${APP_URL}/admin" class="cta-btn">Acceder a mon dashboard &rarr;</a></p>
+      <p style="font-size:13px;color:#6b7280;">Sans engagement, resiliable a tout moment.</p>
+    `,
   }),
 
-  // Payment failed
   payment_failed: (data) => ({
     subject: "Probleme de paiement sur commandeici",
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        Votre dernier paiement pour commandeici a echoue.<br>
-        Veuillez mettre a jour vos informations de paiement pour continuer a recevoir des commandes.
-      </p>
-      <a href="https://idwzsh-11.myshopify.com/account" style="display:inline-block;background-color:#EF4444;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Mettre a jour mon paiement</a>
-      <p style="margin:16px 0 0;font-size:13px;color:#999;">Si vous avez besoin d'aide, contactez-nous.</p>
-    `),
+    content: `
+      <h2>Bonjour ${data.restaurantName || ""},</h2>
+      <p>Votre dernier paiement pour commandeici a echoue.</p>
+      <p>Mettez a jour vos informations de paiement pour continuer a recevoir des commandes.</p>
+      <p><a href="https://idwzsh-11.myshopify.com/account" class="cta-btn" style="background:#EF4444;">Mettre a jour mon paiement &rarr;</a></p>
+      <p style="font-size:13px;color:#6b7280;">Si vous avez besoin d'aide, repondez directement a cet email.</p>
+    `,
   }),
 
-  // Subscription cancelled
   subscription_cancelled: (data) => ({
     subject: "Votre abonnement commandeici a ete annule",
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        Votre abonnement commandeici a ete annule. Votre page de commande n'est plus accessible par vos clients.<br>
-        Vous pouvez reactiver votre abonnement a tout moment.
-      </p>
-      <a href="https://app.commandeici.com/choisir-plan" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Reactiver mon abonnement</a>
-    `),
+    content: `
+      <h2>Bonjour ${data.restaurantName || ""},</h2>
+      <p>Votre abonnement commandeici a ete annule. Votre page de commande n'est plus accessible par vos clients.</p>
+      <p>Vous pouvez reactiver votre abonnement a tout moment pour remettre votre page en ligne.</p>
+      <p><a href="${APP_URL}/choisir-plan" class="cta-btn">Reactiver mon abonnement &rarr;</a></p>
+      <p style="font-size:13px;color:#6b7280;">Toutes vos donnees sont conservees pendant 90 jours.</p>
+    `,
   }),
 
-  // Promo code applied
   promo_applied: (data) => ({
     subject: "Code promo applique sur commandeici !",
-    html: wrapHtml(`
-      <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;">Bonjour ${data.restaurantName},</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
-        Le code promo <strong>${data.promoCode}</strong> a bien ete applique a votre compte.<br>
-        ${data.promoType === "free_days" ? `Vous beneficiez de ${data.promoValue} jours offerts.` : ""}
-        ${data.promoType === "free_trial_extension" ? `Votre essai gratuit a ete prolonge de ${data.promoValue} jours.` : ""}
+    content: `
+      <h2>Bonjour ${data.restaurantName || ""},</h2>
+      <p>Le code promo <strong>${data.promoCode || ""}</strong> a bien ete applique a votre compte.</p>
+      <div class="highlight-box">
+        <p>${data.promoType === "free_days" ? `${data.promoValue} jours offerts.` : ""}
+        ${data.promoType === "free_trial_extension" ? `Essai gratuit prolonge de ${data.promoValue} jours.` : ""}
         ${data.promoType === "discount_percent" ? `${data.promoValue}% de reduction sur votre premier cycle.` : ""}
-        ${data.promoType === "discount_fixed" ? `${data.promoValue} EUR de reduction sur votre premier cycle.` : ""}
-      </p>
-      <a href="https://app.commandeici.com/admin" style="display:inline-block;background-color:#10B981;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px;">Acceder a mon dashboard</a>
-    `),
+        ${data.promoType === "discount_fixed" ? `${data.promoValue} EUR de reduction sur votre premier cycle.` : ""}</p>
+      </div>
+      <p><a href="${APP_URL}/admin" class="cta-btn">Acceder a mon dashboard &rarr;</a></p>
+    `,
+  }),
+
+  comeback_3days: (data) => ({
+    subject: "Vous n'avez pas encore cree votre page de commande ?",
+    content: `
+      <h2>Bonjour${data.restaurantName ? " " + data.restaurantName : ""},</h2>
+      <p>Vous vous etes inscrit il y a quelques jours mais votre page de commande n'est pas encore en ligne.</p>
+      <p>Ca prend 5 minutes : ajoutez votre menu, personnalisez les couleurs, et partagez le lien a vos clients.</p>
+      <div class="highlight-box">
+        <p><strong>Essai gratuit de 4 semaines</strong> : pas de carte bancaire requise. Testez, et decidez apres.</p>
+      </div>
+      <p><a href="${APP_URL}/inscription" class="cta-btn">Creer ma page &rarr;</a></p>
+    `,
+  }),
+
+  comeback_7days: (data) => ({
+    subject: "Votre page de commande vous attend",
+    content: `
+      <h2>Bonjour${data.restaurantName ? " " + data.restaurantName : ""},</h2>
+      <p>Avec commandeici, vos clients commandent directement depuis leur telephone. Pas de commission, pas d'intermediaire.</p>
+      <p>- QR code pour votre comptoir ou vos tables<br>
+      - Menu en ligne avec photos et personnalisation<br>
+      - Dashboard avec suivi des commandes en temps reel<br>
+      - Base clients pour fidéliser</p>
+      <p><a href="${APP_URL}/inscription" class="cta-btn">Commencer gratuitement &rarr;</a></p>
+      <p style="font-size:13px;color:#6b7280;">Si commandeici ne vous convient pas, pas de souci. Vous pouvez vous desinscrire ci-dessous.</p>
+    `,
   }),
 };
 
-function wrapHtml(content: string): string {
+// ─── HTML wrapper ───────────────────────────────────────────────────────────────
+
+function wrapHtml(content: string, unsubscribeUrl: string): string {
   return `<!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background-color:#f7f7f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f7f7f7;">
-<tr><td align="center" style="padding:24px 16px;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
-<tr><td style="background-color:#10B981;padding:24px 32px;text-align:center;">
-  <h1 style="margin:0;color:#ffffff;font-size:20px;font-weight:700;">commandeici</h1>
-</td></tr>
-<tr><td style="padding:32px 28px;">${content}</td></tr>
-<tr><td style="padding:16px 28px;background-color:#fafafa;border-top:1px solid #eee;text-align:center;">
-  <p style="margin:0;font-size:12px;color:#999;">commandeici &bull; contact@commandeici.com</p>
-</td></tr>
-</table>
-</td></tr>
-</table>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>commandeici</title>
+<style>
+  body { margin: 0; padding: 0; background-color: #f7f7f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 560px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .header { background-color: ${PRIMARY_COLOR}; padding: 24px 32px; text-align: center; }
+  .header img { height: 32px; width: auto; }
+  .header h1 { margin: 0; color: #ffffff; font-size: 20px; font-weight: 700; }
+  .body { padding: 32px 28px; }
+  .body p { color: #1a1a1a; font-size: 15px; line-height: 1.6; margin: 0 0 16px; }
+  .body h2 { color: #111827; font-size: 20px; font-weight: 700; margin: 0 0 16px; }
+  .cta-btn { display: inline-block; background: ${PRIMARY_COLOR}; color: #ffffff !important; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; margin: 8px 0 16px; }
+  .highlight-box { background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
+  .highlight-box p { margin: 0; }
+  .footer { background: #fafafa; padding: 24px 28px; border-top: 1px solid #eee; text-align: center; }
+  .footer p { color: #6b7280; font-size: 12px; line-height: 1.5; margin: 0 0 8px; }
+  .footer a { color: #6b7280; text-decoration: underline; }
+  .divider { border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0; }
+  @media (prefers-color-scheme: dark) {
+    body { background-color: #1a1a1a !important; }
+    .wrapper { background: #262626 !important; }
+    .header { background-color: #059669 !important; }
+    .body p { color: #e5e5e5 !important; }
+    .body h2 { color: #f5f5f5 !important; }
+    .highlight-box { background: #064e3b !important; border-color: #10b981 !important; }
+    .footer { background: #1f1f1f !important; border-color: #404040 !important; }
+    .footer p, .footer a { color: #9ca3af !important; }
+  }
+  @media only screen and (max-width: 620px) {
+    .wrapper { width: 100% !important; border-radius: 0 !important; }
+    .body, .header, .footer { padding: 20px !important; }
+  }
+</style>
+</head>
+<body>
+<div style="background:#f7f7f7;padding:0;">
+<div class="wrapper" style="margin:0 auto;">
+  <div class="header">
+    <a href="${SITE_URL}">
+      <img src="${LOGO_URL}" alt="commandeici" style="height:32px;width:auto;">
+    </a>
+  </div>
+  <div class="body">
+    ${content}
+  </div>
+  <div class="footer">
+    <a href="${SITE_URL}">
+      <img src="${LOGO_URL}" alt="commandeici" style="height:24px;width:auto;margin-bottom:12px;opacity:0.6;">
+    </a>
+    <p><strong>commandeici</strong> - Moins de telephone. Plus de cuisine.</p>
+    <p>Vos clients commandent directement depuis leur telephone.<br>Pas de commission, pas d'intermediaire.</p>
+    <p style="margin-top:12px;">
+      <a href="${SITE_URL}">Site web</a> &nbsp;|&nbsp;
+      <a href="${APP_URL}/inscription">S'inscrire</a> &nbsp;|&nbsp;
+      <a href="mailto:${CONTACT_EMAIL}">Contact</a>
+    </p>
+    <p style="margin-top:12px;font-size:11px;">
+      ${COMPANY_ADDRESS}<br>
+      <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
+    </p>
+    <p style="margin-top:8px;font-size:11px;">
+      <a href="${unsubscribeUrl}">Se desinscrire</a> &nbsp;|&nbsp;
+      <a href="${SITE_URL}/pages/mentions-legales">Mentions legales</a> &nbsp;|&nbsp;
+      <a href="${SITE_URL}/pages/politique-de-confidentialite">Confidentialite</a>
+    </p>
+  </div>
+</div>
+</div>
 </body>
 </html>`;
 }
 
-serve(async (req) => {
+// ─── Main handler ───────────────────────────────────────────────────────────────
+
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { template, to, data } = await req.json();
+    const { template, to, data = {}, userId, restaurantId } = await req.json() as {
+      template: string;
+      to: string;
+      data?: Record<string, string>;
+      userId?: string;
+      restaurantId?: string;
+    };
 
     if (!template || !to || !templates[template]) {
       return new Response(
@@ -159,15 +279,98 @@ serve(async (req) => {
       );
     }
 
-    const { subject, html } = templates[template](data || {});
-
     if (!RESEND_API_KEY) {
-      console.log(`[send-email] Dry run: template=${template}, to=${to}, subject=${subject}`);
+      console.log(`[send-email] Dry run: template=${template}, to=${to}`);
       return new Response(
         JSON.stringify({ success: true, dryRun: true }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+    // ─── Check user email preferences ─────────────────────────────────────────
+    if (userId && !TRANSACTIONAL_TYPES.includes(template)) {
+      const { data: prefs } = await supabase
+        .from("user_email_preferences")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (prefs?.unsubscribed_at) {
+        return new Response(
+          JSON.stringify({ skipped: true, reason: "user_unsubscribed" }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const isReferral = template.startsWith("referral_");
+      if (isReferral && prefs?.referral_emails === false) {
+        return new Response(
+          JSON.stringify({ skipped: true, reason: "referral_emails_disabled" }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (!isReferral && prefs?.marketing_emails === false) {
+        return new Response(
+          JSON.stringify({ skipped: true, reason: "marketing_disabled" }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    // ─── Anti-duplicate ───────────────────────────────────────────────────────
+    const lookupId = userId || restaurantId;
+    const lookupCol = userId ? "user_id" : "restaurant_id";
+
+    if (lookupId) {
+      // One-time emails: check if ever sent
+      if (ONE_TIME_TYPES.includes(template)) {
+        const { data: existing } = await supabase
+          .from("email_logs")
+          .select("id")
+          .eq(lookupCol, lookupId)
+          .eq("email_type", template)
+          .limit(1);
+
+        if (existing && existing.length > 0) {
+          return new Response(
+            JSON.stringify({ skipped: true, reason: "already_sent" }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      }
+
+      // Marketing cooldown: max 1 non-transactional per 24h
+      if (!TRANSACTIONAL_TYPES.includes(template)) {
+        const since = new Date(Date.now() - MARKETING_COOLDOWN_MS).toISOString();
+        const { data: recent } = await supabase
+          .from("email_logs")
+          .select("id")
+          .eq(lookupCol, lookupId)
+          .gte("sent_at", since)
+          .limit(1);
+
+        if (recent && recent.length > 0) {
+          return new Response(
+            JSON.stringify({ skipped: true, reason: "cooldown_24h" }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      }
+    }
+
+    // ─── Generate unsubscribe token ───────────────────────────────────────────
+    const unsubscribeToken = userId
+      ? btoa(JSON.stringify({ uid: userId, ts: Date.now() }))
+      : "";
+    const unsubscribeUrl = `${APP_URL}/unsubscribe${unsubscribeToken ? "?token=" + unsubscribeToken : ""}`;
+
+    // ─── Build and send ───────────────────────────────────────────────────────
+    const { subject, content } = templates[template](data);
+    const html = wrapHtml(content, unsubscribeUrl);
 
     const sendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -178,20 +381,35 @@ serve(async (req) => {
       body: JSON.stringify({ from: EMAIL_FROM, to: [to], subject, html }),
     });
 
+    const result = await sendResponse.json();
+
     if (!sendResponse.ok) {
-      const errText = await sendResponse.text();
-      console.error("[send-email] Resend error:", errText);
+      console.error("[send-email] Resend error:", result);
       return new Response(
-        JSON.stringify({ error: "Failed to send email", details: errText }),
+        JSON.stringify({ error: "Failed to send email", details: result }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const result = await sendResponse.json();
+    // ─── Log the send ─────────────────────────────────────────────────────────
+    try {
+      await supabase.from("email_logs").insert({
+        user_id: userId || null,
+        restaurant_id: restaurantId || null,
+        email_type: template,
+        recipient_email: to,
+        resend_id: result.id || null,
+        metadata: { subject, data },
+      });
+    } catch (logErr) {
+      console.error("[send-email] Log error:", logErr);
+    }
+
     return new Response(
-      JSON.stringify({ success: true, id: result.id }),
+      JSON.stringify({ success: true, id: result.id, template }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
+
   } catch (err) {
     console.error("[send-email] Error:", err);
     return new Response(

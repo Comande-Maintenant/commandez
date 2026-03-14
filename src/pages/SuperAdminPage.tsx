@@ -11,6 +11,7 @@ import { RestaurantDetail } from "@/components/super-admin/RestaurantDetail";
 import { DemoStats } from "@/components/super-admin/DemoStats";
 import { PromoCodesSection } from "@/components/super-admin/PromoCodesSection";
 import { ReferralsSection } from "@/components/super-admin/ReferralsSection";
+import { EmailStats } from "@/components/super-admin/EmailStats";
 
 const SuperAdminPage = () => {
   const [loading, setLoading] = useState(true);
@@ -89,6 +90,7 @@ const SuperAdminPage = () => {
               <h2 className="text-lg font-semibold text-foreground mb-4">Prospects / Clients</h2>
               <RestaurantList onSelect={setSelectedRestaurant} />
             </div>
+            <EmailStats />
             <PromoCodesSection />
             <ReferralsSection />
           </>

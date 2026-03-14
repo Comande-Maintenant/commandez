@@ -1,1 +1,19 @@
 project_id = "rbqgsxhkccbhqdmdtxwr"
+
+[functions.send-email]
+verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.trial-reminders]
+verify_jwt = false
+
+[functions.shopify-webhooks]
+verify_jwt = false
+
+[functions.validate-promo]
+verify_jwt = false
+
+[functions.unsubscribe]
+verify_jwt = false
