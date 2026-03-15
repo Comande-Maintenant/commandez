@@ -30,6 +30,9 @@ RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 FROM_EMAIL = "Sarah de commandeici <sarah@commandeici.com>"
 REPLY_TO = "augustin.foucheres@gmail.com"
 
+# Priority cities: these contacts are sent first (in order)
+PRIORITY_CITIES = ["Dijon"]
+
 SUPABASE_URL = "https://rbqgsxhkccbhqdmdtxwr.supabase.co"
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjIxNTEwOCwiZXhwIjoyMDg3NzkxMTA4fQ.XICYwfF3oEYFG5M-32ltu-D8QI3NlSPwLxBcsl_64No")
 
@@ -681,10 +684,23 @@ def main():
     # Sort retargetable: oldest first
     retargetable.sort(key=lambda x: x.get("days_since", 0), reverse=True)
 
-    print(f"Nouveaux contacts     : {len(unsent)}")
-    print(f"Retargetables (15j+)  : {len(retargetable)}")
+    # Sort unsent: priority cities first
+    def city_priority(item):
+        city = item["restaurant"].get("city", "").strip()
+        for i, pc in enumerate(PRIORITY_CITIES):
+            if city.lower() == pc.lower():
+                return i
+        return len(PRIORITY_CITIES)
 
-    # Priority: unsent first, then retarget to fill the batch
+    unsent.sort(key=city_priority)
+
+    priority_count = sum(1 for u in unsent if city_priority(u) < len(PRIORITY_CITIES))
+    print(f"Nouveaux contacts     : {len(unsent)} (dont {priority_count} prioritaires)")
+    print(f"Retargetables (15j+)  : {len(retargetable)}")
+    if PRIORITY_CITIES:
+        print(f"Villes prioritaires   : {', '.join(PRIORITY_CITIES)}")
+
+    # Priority: unsent first (priority cities at top), then retarget to fill the batch
     combined = unsent + retargetable
 
     if not combined:
