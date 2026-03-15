@@ -348,7 +348,13 @@ function buildDashboard(ss) {
         var status = String(data[i][7]);
         var city = String(data[i][2]).trim();
         var type = String(data[i][4]).trim();
-        var dateStr = String(data[i][0]).substring(0, 10);
+        var rawDate = data[i][0];
+        var dateStr = "";
+        if (rawDate instanceof Date && !isNaN(rawDate.getTime())) {
+          dateStr = Utilities.formatDate(rawDate, "Europe/Paris", "yyyy-MM-dd");
+        } else {
+          dateStr = String(rawDate).substring(0, 10);
+        }
 
         if (status === "Envoye") totalSent++;
         else totalErrors++;
