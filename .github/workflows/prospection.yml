@@ -91,13 +91,16 @@ jobs:
           if [ -f prospection/sent_log.json ]; then
             git add prospection/sent_log.json prospection/send_stats.json
             git diff --cached --quiet && echo "No changes to commit" && exit 0
+            # Stash any other unstaged changes before rebase
+            git stash --include-untracked || true
             git commit -m "chore: update sent_log after batch"
             # Retry push up to 3 times in case of concurrent updates
             for i in 1 2 3; do
-              git pull --rebase origin main && git push origin main && exit 0
+              git pull --rebase origin main && git push origin main && { git stash pop 2>/dev/null || true; exit 0; }
               echo "Push attempt $i failed, retrying..."
               sleep 2
             done
+            git stash pop 2>/dev/null || true
             echo "ERROR: Failed to push after 3 attempts"
             exit 1
           fi
