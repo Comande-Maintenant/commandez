@@ -670,5 +670,365 @@
     "resend_id": "ac6e4fd8-7f3b-49bd-8d13-5b7f426f3be6",
     "name": "THE SMOKED MEAT PARIS 11 - BASTILLE",
     "city": "Paris"
+  },
+  "planetpizz021@gmail.com": {
+    "sent_at": "2026-03-15T17:03:43.312132+00:00",
+    "last_sent_at": "2026-03-15T17:03:43.312132+00:00",
+    "send_count": 1,
+    "resend_id": "b1512a78-e5f8-4294-96e0-9ddb787e76fd",
+    "name": "PLANET'PIZZ",
+    "city": "Dijon"
+  },
+  "chouettepizzadijon@gmail.com": {
+    "sent_at": "2026-03-15T17:03:41.116758+00:00",
+    "last_sent_at": "2026-03-15T17:03:41.116758+00:00",
+    "send_count": 1,
+    "resend_id": "081dadbe-59da-4665-9653-4e48a2a203e2",
+    "name": "Chouette Pizza à Dijon depuis plus de 30 ans, pizzas artisanales, burger maison, en livraison, sur place et à emporter",
+    "city": "Dijon"
+  },
+  "staffpizza21@hotmail.fr": {
+    "sent_at": "2026-03-15T17:03:38.860137+00:00",
+    "last_sent_at": "2026-03-15T17:03:38.860137+00:00",
+    "send_count": 1,
+    "resend_id": "a356a3c3-5361-45f0-8ca9-b828d266fea9",
+    "name": "Staff Pizza",
+    "city": "Dijon"
+  },
+  "axohn@hotmail.com": {
+    "sent_at": "2026-03-15T17:03:36.699983+00:00",
+    "last_sent_at": "2026-03-15T17:03:36.699983+00:00",
+    "send_count": 1,
+    "resend_id": "bd24e680-77ed-4f31-9cea-6dbcacaec4e8",
+    "name": "Le Sommatino",
+    "city": "Dijon"
+  },
+  "contact@casapizzaro-ma.fr": {
+    "sent_at": "2026-03-15T17:03:34.585871+00:00",
+    "last_sent_at": "2026-03-15T17:03:34.585871+00:00",
+    "send_count": 1,
+    "resend_id": "2da291a7-1bda-4730-a03f-759826931e85",
+    "name": "Casa Pizza RO-MA",
+    "city": "Dijon"
+  },
+  "david@dl-c.fr": {
+    "sent_at": "2026-03-15T17:03:32.465458+00:00",
+    "last_sent_at": "2026-03-15T17:03:32.465458+00:00",
+    "send_count": 1,
+    "resend_id": "ae163fb2-be77-43aa-b6a9-3dc765db4eaa",
+    "name": "Marco Polo & Chalet",
+    "city": "Dijon"
+  },
+  "slicepizzafrance@gmail.com": {
+    "sent_at": "2026-03-15T17:03:30.399096+00:00",
+    "last_sent_at": "2026-03-15T17:03:30.399096+00:00",
+    "send_count": 1,
+    "resend_id": "2d0bfe29-bab9-47f8-8dbb-558d63f13c9d",
+    "name": "Slice Pizza",
+    "city": "Dijon"
+  },
+  "zazapizza@gmail.com": {
+    "sent_at": "2026-03-15T17:03:28.236123+00:00",
+    "last_sent_at": "2026-03-15T17:03:28.236123+00:00",
+    "send_count": 1,
+    "resend_id": "8da93731-2359-4ef8-8e7a-acc6f31d37ae",
+    "name": "ZAZA pizza",
+    "city": "Dijon"
+  },
+  "acquafarinaca@gmail.com": {
+    "sent_at": "2026-03-15T17:03:25.621806+00:00",
+    "last_sent_at": "2026-03-15T17:03:25.621806+00:00",
+    "send_count": 1,
+    "resend_id": "c618d157-1dcf-44b2-a609-b7d9e6a3e2b3",
+    "name": "Acqua e Farina",
+    "city": "Dijon"
+  },
+  "contact@casabella-pizza.com": {
+    "sent_at": "2026-03-15T17:03:23.389545+00:00",
+    "last_sent_at": "2026-03-15T17:03:23.389545+00:00",
+    "send_count": 1,
+    "resend_id": "9c929baa-d318-4207-b4ab-0cced1262926",
+    "name": "CASA BELLA",
+    "city": "Dijon"
+  },
+  "ifratellidijon@gmail.com": {
+    "sent_at": "2026-03-15T17:03:21.28019+00:00",
+    "last_sent_at": "2026-03-15T17:03:21.28019+00:00",
+    "send_count": 1,
+    "resend_id": "3df88b66-51a7-4483-9b0c-367a2dd98e4a",
+    "name": "i Fratelli",
+    "city": "Dijon"
+  },
+  "dallozio21@gmail.com": {
+    "sent_at": "2026-03-15T17:03:19.188655+00:00",
+    "last_sent_at": "2026-03-15T17:03:19.188655+00:00",
+    "send_count": 1,
+    "resend_id": "7ad03cb5-dd47-43ca-8fd7-868857ecab84",
+    "name": "Dallo Zio Dijon",
+    "city": "Dijon"
+  },
+  "sevdaozdemir@sfr.fr": {
+    "sent_at": "2026-03-15T17:03:16.930617+00:00",
+    "last_sent_at": "2026-03-15T17:03:16.930617+00:00",
+    "send_count": 1,
+    "resend_id": "b673a4cc-6ea8-4b30-bb62-b5276921c014",
+    "name": "Gevrey Kebab",
+    "city": "Dijon"
+  },
+  "akkus22+1@live.fr": {
+    "sent_at": "2026-03-15T17:03:14.82073+00:00",
+    "last_sent_at": "2026-03-15T17:03:14.82073+00:00",
+    "send_count": 1,
+    "resend_id": "ff6a31bb-9d6b-439e-9dc4-04d1a288fcdc",
+    "name": "OZAN KEBAB",
+    "city": "Dijon"
+  },
+  "osummum21@gmail.com": {
+    "sent_at": "2026-03-15T17:03:11.166563+00:00",
+    "last_sent_at": "2026-03-15T17:03:11.166563+00:00",
+    "send_count": 1,
+    "resend_id": "4406968e-4151-4145-8f92-b28e2afb2499",
+    "name": "O'SUMMUM",
+    "city": "Dijon"
+  },
+  "contact@lacabaneaburger.fr": {
+    "sent_at": "2026-03-15T17:03:09.035414+00:00",
+    "last_sent_at": "2026-03-15T17:03:09.035414+00:00",
+    "send_count": 1,
+    "resend_id": "353d65a7-e93f-4cc9-863a-7e749ebb1f7c",
+    "name": "La Cabane à Burger Dijon",
+    "city": "Dijon"
+  },
+  "contact@les-olives.fr": {
+    "sent_at": "2026-03-15T17:03:06.916491+00:00",
+    "last_sent_at": "2026-03-15T17:03:06.916491+00:00",
+    "send_count": 1,
+    "resend_id": "6f48df48-6529-419c-ae07-3ef815671b97",
+    "name": "Les Olives",
+    "city": "Dijon"
+  },
+  "jacques@martin.com": {
+    "sent_at": "2026-03-15T17:03:04.675218+00:00",
+    "last_sent_at": "2026-03-15T17:03:04.675218+00:00",
+    "send_count": 1,
+    "resend_id": "0f2192a9-86b9-4a83-a921-9091368fa8e2",
+    "name": "Restaurant Akdeniz",
+    "city": "Dijon"
+  },
+  "contact@bwagence.fr": {
+    "sent_at": "2026-03-15T17:03:01.285376+00:00",
+    "last_sent_at": "2026-03-15T17:03:01.285376+00:00",
+    "send_count": 1,
+    "resend_id": "acf86768-01e0-47e6-93ea-6ace3d37e497",
+    "name": "Pizz N' Go",
+    "city": "Dijon"
+  },
+  "info@cigkoftem.com": {
+    "sent_at": "2026-03-15T17:02:59.047314+00:00",
+    "last_sent_at": "2026-03-15T17:02:59.047314+00:00",
+    "send_count": 1,
+    "resend_id": "86da436a-3272-4b93-8ecf-3c15f3acd092",
+    "name": "Cigkoftem Dijon",
+    "city": "Dijon"
+  },
+  "chez.lancien@gmail.com": {
+    "sent_at": "2026-03-15T17:02:56.181894+00:00",
+    "last_sent_at": "2026-03-15T17:02:56.181894+00:00",
+    "send_count": 1,
+    "resend_id": "1a67f502-252e-4b90-8b09-5d21284a2ac8",
+    "name": "Chez L'ancien Dijon",
+    "city": "Dijon"
+  },
+  "amir_shabnam2003@yahoo.fr": {
+    "sent_at": "2026-03-15T17:02:53.639216+00:00",
+    "last_sent_at": "2026-03-15T17:02:53.639216+00:00",
+    "send_count": 1,
+    "resend_id": "9a84b354-757f-41fd-809f-ab6913967531",
+    "name": "SHAH KEBAB",
+    "city": "Dijon"
+  },
+  "gozleon21@gmail.com": {
+    "sent_at": "2026-03-15T17:02:51.445369+00:00",
+    "last_sent_at": "2026-03-15T17:02:51.445369+00:00",
+    "send_count": 1,
+    "resend_id": "50aecd71-a608-485d-9352-29e9ee7c9ffd",
+    "name": "Ekin Kebab",
+    "city": "Dijon"
+  },
+  "goz.ekin@live.fr": {
+    "sent_at": "2026-03-15T17:02:48.952194+00:00",
+    "last_sent_at": "2026-03-15T17:02:48.952194+00:00",
+    "send_count": 1,
+    "resend_id": "64c93645-1350-46ec-8ce3-5877c37d8600",
+    "name": "Ekin drapeau",
+    "city": "Dijon"
+  },
+  "diran@hotmail.fr": {
+    "sent_at": "2026-03-15T17:02:46.672152+00:00",
+    "last_sent_at": "2026-03-15T17:02:46.672152+00:00",
+    "send_count": 1,
+    "resend_id": "3c2f4166-1373-4e4b-b536-786bc8d7173d",
+    "name": "Kébab de L'Université",
+    "city": "Dijon"
+  },
+  "ba.bicerarsen@gmail.com": {
+    "sent_at": "2026-03-15T17:02:43.956129+00:00",
+    "last_sent_at": "2026-03-15T17:02:43.956129+00:00",
+    "send_count": 1,
+    "resend_id": "cc4694ec-67bd-463d-b1bf-aafad3071dee",
+    "name": "Elmas Kebab",
+    "city": "Dijon"
+  },
+  "galipilbin@icloud.com": {
+    "sent_at": "2026-03-15T17:02:41.381423+00:00",
+    "last_sent_at": "2026-03-15T17:02:41.381423+00:00",
+    "send_count": 1,
+    "resend_id": "2b834288-e9c9-4a1c-b3a5-9883b8615590",
+    "name": "Eden Kebab",
+    "city": "Dijon"
+  },
+  "contact@plateauxandco.com": {
+    "sent_at": "2026-03-15T16:33:17.44418+00:00",
+    "last_sent_at": "2026-03-15T16:33:17.44418+00:00",
+    "send_count": 1,
+    "resend_id": "07ecb4b2-c775-4e42-9fc2-111852569996",
+    "name": "plateaux repas dijon and co",
+    "city": "Dijon"
+  },
+  "monasse.jerome64@gmail.com": {
+    "sent_at": "2026-03-15T16:33:15.519986+00:00",
+    "last_sent_at": "2026-03-15T16:33:15.519986+00:00",
+    "send_count": 1,
+    "resend_id": "66401088-ca48-4ad7-8171-40e1540f87ae",
+    "name": "Monasse Restauration rapide",
+    "city": "Dijon"
+  },
+  "contact.sastmb@gmail.com": {
+    "sent_at": "2026-03-15T16:33:13.582881+00:00",
+    "last_sent_at": "2026-03-15T16:33:13.582881+00:00",
+    "send_count": 1,
+    "resend_id": "4c17b81f-3597-4647-b0c6-30063f9e1e5d",
+    "name": "Restaurant 100Dô",
+    "city": "Dijon"
+  },
+  "tokadiane@gmail.com": {
+    "sent_at": "2026-03-15T16:33:11.692191+00:00",
+    "last_sent_at": "2026-03-15T16:33:11.692191+00:00",
+    "send_count": 1,
+    "resend_id": "c1c7bd26-5289-4912-ba79-1f3166209af0",
+    "name": "Tokadiane",
+    "city": "Dijon"
+  },
+  "moh_ak15@outlook.com": {
+    "sent_at": "2026-03-15T16:33:09.314617+00:00",
+    "last_sent_at": "2026-03-15T16:33:09.314617+00:00",
+    "send_count": 1,
+    "resend_id": "f1410f89-121d-4d28-84b7-df46cbf9bd88",
+    "name": "Royal Tacos",
+    "city": "Dijon"
+  },
+  "dinaibnzaiar@gmail.com": {
+    "sent_at": "2026-03-15T16:33:07.452531+00:00",
+    "last_sent_at": "2026-03-15T16:33:07.452531+00:00",
+    "send_count": 1,
+    "resend_id": "a7b7e4c0-9bd8-4654-8a77-f33b475f1af1",
+    "name": "Urban délices",
+    "city": "Dijon"
+  },
+  "hello@mustardhostel.com": {
+    "sent_at": "2026-03-15T16:33:05.549584+00:00",
+    "last_sent_at": "2026-03-15T16:33:05.549584+00:00",
+    "send_count": 1,
+    "resend_id": "77e2a68a-690d-4c03-b5c5-9d98c4a7ea05",
+    "name": "MUSTARD HOSTEL",
+    "city": "Dijon"
+  },
+  "davedo21@hotmail.fr": {
+    "sent_at": "2026-03-15T16:33:03.581308+00:00",
+    "last_sent_at": "2026-03-15T16:33:03.581308+00:00",
+    "send_count": 1,
+    "resend_id": "51225aaf-00bf-4eb2-b09b-06c9b0d95e05",
+    "name": "CHEZ MIMI / OH CASSE CROUTE",
+    "city": "Dijon"
+  },
+  "bonjour@dwc-web.fr": {
+    "sent_at": "2026-03-15T16:33:01.735372+00:00",
+    "last_sent_at": "2026-03-15T16:33:01.735372+00:00",
+    "send_count": 1,
+    "resend_id": "93d5ae19-4bee-4972-837d-3a3b9c5a2edf",
+    "name": "Le Smart",
+    "city": "Dijon"
+  },
+  "lafabrique21000@gmail.com": {
+    "sent_at": "2026-03-15T16:32:59.848574+00:00",
+    "last_sent_at": "2026-03-15T16:32:59.848574+00:00",
+    "send_count": 1,
+    "resend_id": "c7feb6c4-4271-4dc1-a62c-4d2efde09842",
+    "name": "La Casa Del Burger",
+    "city": "Dijon"
+  },
+  "communicationbchefdijon@gmail.com": {
+    "sent_at": "2026-03-15T16:32:57.824342+00:00",
+    "last_sent_at": "2026-03-15T16:32:57.824342+00:00",
+    "send_count": 1,
+    "resend_id": "e705c0c8-2617-4d5b-b2ca-7194aef94add",
+    "name": "BCHEF Burgers - Dijon CV Godrans",
+    "city": "Dijon"
+  },
+  "foodiestruck@gmail.com": {
+    "sent_at": "2026-03-15T16:32:55.900631+00:00",
+    "last_sent_at": "2026-03-15T16:32:55.900631+00:00",
+    "send_count": 1,
+    "resend_id": "7d935609-63ab-4e82-ae7d-d6e9a472452d",
+    "name": "Foodies Dijon Restaurant",
+    "city": "Dijon"
+  },
+  "brasserieleptitdij@gmail.com": {
+    "sent_at": "2026-03-15T16:32:54.027148+00:00",
+    "last_sent_at": "2026-03-15T16:32:54.027148+00:00",
+    "send_count": 1,
+    "resend_id": "859194ec-a3c6-4fdf-89f3-48b0910527c8",
+    "name": "LE P'TIT DIJ",
+    "city": "Dijon"
+  },
+  "latabledesducs@gmail.com": {
+    "sent_at": "2026-03-15T16:32:52.13546+00:00",
+    "last_sent_at": "2026-03-15T16:32:52.13546+00:00",
+    "send_count": 1,
+    "resend_id": "4e67e0dd-9e55-4336-93d1-3d48d4d36247",
+    "name": "La Table des Ducs - Camion Pizza",
+    "city": "Dijon"
+  },
+  "pizzadubourg21850@gmail.com": {
+    "sent_at": "2026-03-15T16:32:50.132363+00:00",
+    "last_sent_at": "2026-03-15T16:32:50.132363+00:00",
+    "send_count": 1,
+    "resend_id": "42d7081b-6fe4-4075-9905-2a1626bdc924",
+    "name": "Pizza du Bourg",
+    "city": "Dijon"
+  },
+  "les4saison21@outlook.fr": {
+    "sent_at": "2026-03-15T16:32:48.25829+00:00",
+    "last_sent_at": "2026-03-15T16:32:48.25829+00:00",
+    "send_count": 1,
+    "resend_id": "af90f13d-2d4d-41f8-863e-c8f85fabce11",
+    "name": "Les 4 Saisons",
+    "city": "Dijon"
+  },
+  "ham.tarek@hotmail.fr": {
+    "sent_at": "2026-03-15T16:32:46.405242+00:00",
+    "last_sent_at": "2026-03-15T16:32:46.405242+00:00",
+    "send_count": 1,
+    "resend_id": "4c9cd41e-4756-4ce9-a10b-1800d22f82c6",
+    "name": "Pizza Passion",
+    "city": "Dijon"
+  },
+  "amo@ilkiosko.fr": {
+    "sent_at": "2026-03-15T16:32:44.563714+00:00",
+    "last_sent_at": "2026-03-15T16:32:44.563714+00:00",
+    "send_count": 1,
+    "resend_id": "3e326646-9f99-4983-bfd7-317994d09cba",
+    "name": "Il kiosko",
+    "city": "Dijon"
   }
 }
