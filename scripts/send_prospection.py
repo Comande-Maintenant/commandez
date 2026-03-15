@@ -365,6 +365,107 @@ Vous recevez cet email parce que {name} est r\u00e9f\u00e9renc\u00e9 sur Google.
 Si ce n'est pas pertinent, ignorez ce message, vous ne recevrez rien d'autre."""
 
 
+# ─── Retarget email templates ─────────────────────────────────────────────────────
+
+
+RETARGET_VARIANTS = [
+    {
+        "subject": "Re: {name} - une question rapide",
+        "opener": "Je vous avais ecrit il y a quelques jours. Pas de souci si vous n'avez pas eu le temps de regarder, je sais ce que c'est le rush.",
+        "cta_text": "Voir ce que ca donne pour {name}",
+        "closer": "Si ca ne vous parle pas du tout, pas de probleme, vous ne recevrez plus rien.",
+    },
+    {
+        "subject": "{name} - 2 min pour gagner du temps ?",
+        "opener": "Je me permets de vous reecrire parce que plusieurs restos a {city} ont teste commandeici ces derniers jours.",
+        "cta_text": "Tester gratuitement",
+        "closer": "En tout cas, bon service et bon courage pour la suite.",
+    },
+    {
+        "subject": "Dernier message pour {name}",
+        "opener": "C'est mon dernier email, promis. Je voulais juste vous dire qu'on a encore des places pour l'essai gratuit de 4 semaines.",
+        "cta_text": "Essayer maintenant (gratuit)",
+        "closer": "Apres ca, je ne vous embete plus. Bonne continuation a toute l'equipe.",
+    },
+]
+
+
+def build_retarget_subject(name: str, send_count: int) -> str:
+    """Pick a subject line based on retarget round."""
+    idx = min(send_count - 1, len(RETARGET_VARIANTS) - 1)
+    variant = RETARGET_VARIANTS[idx]
+    return variant["subject"].format(name=name, city="votre ville")
+
+
+def build_retarget_html(name: str, city: str, send_count: int) -> str:
+    """Short, personal retarget email. Different from the initial long one."""
+    idx = min(send_count - 1, len(RETARGET_VARIANTS) - 1)
+    v = RETARGET_VARIANTS[idx]
+    opener = v["opener"].format(name=name, city=city)
+    cta_text = v["cta_text"].format(name=name)
+    closer = v["closer"].format(name=name)
+
+    return f"""<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<div style="max-width:560px;margin:0 auto;padding:32px 20px;">
+
+<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 16px 0;">
+Bonjour,
+</p>
+
+<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 16px 0;">
+{opener}
+</p>
+
+<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 20px 0;">
+Pour rappel, <strong>commandeici</strong> c'est simple : vos clients commandent en ligne, vous recevez en cuisine. Zero commission, zero engagement.
+</p>
+
+<p style="margin:0 0 24px 0;text-align:center;">
+<a href="https://app.commandeici.com/inscription" style="display:inline-block;padding:14px 28px;background:#10B981;color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;border-radius:10px;">
+{cta_text}
+</a>
+</p>
+
+<p style="font-size:15px;line-height:1.6;color:#6b7280;margin:0 0 0 0;">
+{closer}
+</p>
+
+<div style="border-top:1px solid #e5e7eb;padding-top:20px;margin-top:20px;">
+<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0;">
+Sarah<br>
+<span style="color:#6b7280;font-size:14px;">commandeici.com</span>
+</p>
+</div>
+
+</div>
+</body>
+</html>"""
+
+
+def build_retarget_text(name: str, city: str, send_count: int) -> str:
+    """Plain text retarget."""
+    idx = min(send_count - 1, len(RETARGET_VARIANTS) - 1)
+    v = RETARGET_VARIANTS[idx]
+    opener = v["opener"].format(name=name, city=city)
+    closer = v["closer"].format(name=name)
+
+    return f"""Bonjour,
+
+{opener}
+
+Pour rappel, commandeici c'est simple : vos clients commandent en ligne, vous recevez en cuisine. Zero commission, zero engagement.
+
+{v["cta_text"].format(name=name)} : https://app.commandeici.com/inscription
+
+{closer}
+
+Sarah
+commandeici.com"""
+
+
 # ─── Resend API ──────────────────────────────────────────────────────────────────
 
 
@@ -416,11 +517,21 @@ def log_to_supabase(resend_id: str, email: str, name: str, city: str):
 # ─── Tracking ────────────────────────────────────────────────────────────────────
 
 
+RETARGET_DELAY_DAYS = 15  # Days before retargeting
+
+
 def load_sent_log() -> dict:
-    """Load sent log. Format: {email: {sent_at, resend_id, name, city}}"""
+    """Load sent log. Format: {email: {sent_at, last_sent_at, send_count, resend_id, name, city}}"""
     if os.path.exists(SENT_LOG_PATH):
         with open(SENT_LOG_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+        # Migrate old format: add send_count and last_sent_at if missing
+        for email, info in data.items():
+            if "send_count" not in info:
+                info["send_count"] = 1
+            if "last_sent_at" not in info:
+                info["last_sent_at"] = info.get("sent_at", "")
+        return data
     return {}
 
 
@@ -531,34 +642,65 @@ def main():
             if email.startswith("contact@") and not current.startswith("contact@"):
                 best_per_resto[name] = {**r, "email": email}
 
-    # Filter unsent + clean
+    # Build two lists: unsent (priority) + retargetable (15+ days old)
     unsent = []
-    skipped_junk = 0
+    retargetable = []
     seen_emails = set()
+    now = datetime.now(timezone.utc)
+
     for r in best_per_resto.values():
         email = r["email"]
-        if email in sent_log or email in seen_emails:
+        if email in seen_emails:
             continue
         seen_emails.add(email)
-        unsent.append(r)
 
-    if skipped_junk:
-        print(f"Emails junk filtres : {skipped_junk}")
+        if email not in sent_log:
+            unsent.append({"restaurant": r, "is_retarget": False, "send_count": 0})
+        else:
+            entry = sent_log[email]
+            send_count = entry.get("send_count", 1)
+            # Max 3 retargets (initial + 3 relances = 4 total)
+            if send_count >= 4:
+                continue
+            last_sent = entry.get("last_sent_at", entry.get("sent_at", ""))
+            if not last_sent:
+                continue
+            try:
+                last_dt = datetime.fromisoformat(last_sent.replace("Z", "+00:00"))
+                days_since = (now - last_dt).days
+                if days_since >= RETARGET_DELAY_DAYS:
+                    retargetable.append({
+                        "restaurant": r,
+                        "is_retarget": True,
+                        "send_count": send_count,
+                        "days_since": days_since,
+                    })
+            except (ValueError, TypeError):
+                continue
 
-    print(f"Restants a envoyer : {len(unsent)}")
+    # Sort retargetable: oldest first
+    retargetable.sort(key=lambda x: x.get("days_since", 0), reverse=True)
 
-    if not unsent:
-        print("Rien a envoyer. Tous les emails ont deja ete envoyes.")
+    print(f"Nouveaux contacts     : {len(unsent)}")
+    print(f"Retargetables (15j+)  : {len(retargetable)}")
+
+    # Priority: unsent first, then retarget to fill the batch
+    combined = unsent + retargetable
+
+    if not combined:
+        print("Rien a envoyer. Tous les contacts sont a jour.")
         sys.exit(0)
 
     # Apply start-from offset
     if args.start_from > 0:
-        unsent = unsent[args.start_from:]
-        print(f"Apres offset (--start-from {args.start_from}) : {len(unsent)}")
+        combined = combined[args.start_from:]
+        print(f"Apres offset (--start-from {args.start_from}) : {len(combined)}")
 
     # Take batch
-    batch = unsent[:args.batch_size]
-    print(f"\nBatch de {len(batch)} emails a envoyer{'  [DRY RUN]' if args.dry_run else ''}")
+    batch = combined[:args.batch_size]
+    new_count = sum(1 for b in batch if not b["is_retarget"])
+    retarget_count = sum(1 for b in batch if b["is_retarget"])
+    print(f"\nBatch de {len(batch)} emails ({new_count} nouveaux + {retarget_count} relances){'  [DRY RUN]' if args.dry_run else ''}")
     print("=" * 60)
 
     sent_count = 0
@@ -569,16 +711,27 @@ def main():
     hour_utc = datetime.now(timezone.utc).hour
     slot = "matin" if hour_utc < 12 else "aprem"
 
-    for i, r in enumerate(batch):
+    for i, item in enumerate(batch):
+        r = item["restaurant"]
+        is_retarget = item["is_retarget"]
+        send_count = item["send_count"]
+
         email = r["email"].strip().lower()
         name = r["name"].strip()
         city = r["city"].strip()
 
-        subject = build_subject(name)
-        html = build_html(name, city)
-        text = build_text(name, city)
+        if is_retarget:
+            subject = build_retarget_subject(name, send_count)
+            html = build_retarget_html(name, city, send_count)
+            text = build_retarget_text(name, city, send_count)
+            tag = f"RELANCE {send_count}"
+        else:
+            subject = build_subject(name)
+            html = build_html(name, city)
+            text = build_text(name, city)
+            tag = "NOUVEAU"
 
-        print(f"  [{i+1}/{len(batch)}] {name} ({city}) -> {email}", end="", flush=True)
+        print(f"  [{i+1}/{len(batch)}] [{tag}] {name} ({city}) -> {email}", end="", flush=True)
 
         if args.dry_run:
             print("  [DRY RUN]")
@@ -588,8 +741,12 @@ def main():
         try:
             result = send_email(email, subject, html, text)
             resend_id = result.get("id", "")
+            now_iso = datetime.now(timezone.utc).isoformat()
+            prev = sent_log.get(email, {})
             sent_log[email] = {
-                "sent_at": datetime.now(timezone.utc).isoformat(),
+                "sent_at": prev.get("sent_at", now_iso),
+                "last_sent_at": now_iso,
+                "send_count": prev.get("send_count", 0) + 1,
                 "resend_id": resend_id,
                 "name": name,
                 "city": city,
@@ -611,8 +768,12 @@ def main():
                 try:
                     result = send_email(email, subject, html, text)
                     resend_id = result.get("id", "")
+                    now_iso = datetime.now(timezone.utc).isoformat()
+                    prev = sent_log.get(email, {})
                     sent_log[email] = {
-                        "sent_at": datetime.now(timezone.utc).isoformat(),
+                        "sent_at": prev.get("sent_at", now_iso),
+                        "last_sent_at": now_iso,
+                        "send_count": prev.get("send_count", 0) + 1,
                         "resend_id": resend_id,
                         "name": name,
                         "city": city,
@@ -664,17 +825,18 @@ def main():
     sheets_batch_summary()
 
     # Summary
-    remaining = len(unsent) - sent_count
+    remaining_new = max(len(unsent) - new_count, 0)
     print(f"\n{'=' * 60}")
     print(f"RESULTATS")
     print(f"{'=' * 60}")
-    print(f"Envoyes ce batch  : {sent_count}")
+    print(f"Envoyes ce batch  : {sent_count} ({new_count} nouveaux + {retarget_count} relances)")
     print(f"Erreurs           : {error_count}")
     print(f"Total envoyes     : {stats['total_sent']}")
-    print(f"Restants          : {remaining}")
-    if remaining > 0:
-        days_left = remaining // 75
-        print(f"Jours restants    : ~{days_left} jours (a 75/jour)")
+    print(f"Nouveaux restants : {remaining_new}")
+    print(f"Retargetables     : {len(retargetable)}")
+    if remaining_new > 0:
+        days_left = remaining_new // 90
+        print(f"Jours restants    : ~{days_left} jours (a 90/jour)")
 
 
 if __name__ == "__main__":
