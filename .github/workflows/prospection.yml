@@ -43,6 +43,12 @@ jobs:
           path: prospection/
           key: prospection-data
 
+      - name: Restore git-tracked files after cache
+        run: |
+          # The cache restore overwrites git-tracked files with potentially stale versions
+          # Re-checkout them so git stays in sync
+          git checkout -- prospection/sent_log.json prospection/.gitignore 2>/dev/null || true
+
       - name: Determine batch size
         id: batch
         run: |
@@ -82,9 +88,16 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [ -f prospection/sent_log.json ]; then
             git add prospection/sent_log.json
-            git diff --cached --quiet || git commit -m "chore: update sent_log after batch"
-            git pull --rebase origin main
-            git push origin main
+            git diff --cached --quiet && echo "No changes to commit" && exit 0
+            git commit -m "chore: update sent_log after batch"
+            # Retry push up to 3 times in case of concurrent updates
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push origin main && exit 0
+              echo "Push attempt $i failed, retrying..."
+              sleep 2
+            done
+            echo "ERROR: Failed to push after 3 attempts"
+            exit 1
           fi
 
       - name: Summary
