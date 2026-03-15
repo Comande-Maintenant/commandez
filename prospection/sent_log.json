@@ -448,5 +448,227 @@
     "resend_id": "15a06a5e-a9dc-45a0-9090-dc7f6dac949d",
     "name": "TIPIZ' Pizza.",
     "city": "Limoges"
+  },
+  "info@mima-lyon.fr": {
+    "sent_at": "2026-03-15T08:01:09.095429+00:00",
+    "resend_id": "0a95aed0-7d91-41db-a359-76dd30d6e296",
+    "name": "MIMA – Pizzeria & Cuisine Italienne",
+    "city": "Lyon"
+  },
+  "namylyon3@gmail.com": {
+    "sent_at": "2026-03-15T08:01:07.121724+00:00",
+    "resend_id": "2ca1b379-fc25-4803-b483-a85fa1a642de",
+    "name": "Pizzeria La Mama",
+    "city": "Lyon"
+  },
+  "contact@acadenice.fr": {
+    "sent_at": "2026-03-15T08:01:05.120376+00:00",
+    "resend_id": "1cbef867-3b26-4646-9780-dda3c5dcc099",
+    "name": "Pizzeria Bocca Di Rosa",
+    "city": "Lyon"
+  },
+  "contact@pizzeria-lafocaccia.fr": {
+    "sent_at": "2026-03-15T08:01:03.15585+00:00",
+    "resend_id": "7353a0de-b90d-49c6-af28-2dfaf1808b7c",
+    "name": "Pizzeria La Focaccia",
+    "city": "Lyon"
+  },
+  "contact@restaurant-casalula.com": {
+    "sent_at": "2026-03-15T08:01:01.214472+00:00",
+    "resend_id": "1744f4e4-7a01-4b91-8a5a-989bfd5a89bb",
+    "name": "CASA LULA - Restaurant Italien Lyon",
+    "city": "Lyon"
+  },
+  "contact@groupenobile.com": {
+    "sent_at": "2026-03-15T08:00:57.261689+00:00",
+    "resend_id": "f8dbcdeb-b2a9-4abd-9989-f72569422bff",
+    "name": "Casa Nobile",
+    "city": "Lyon"
+  },
+  "amigopizza69007@gmail.com": {
+    "sent_at": "2026-03-15T08:00:55.285639+00:00",
+    "resend_id": "288a8a8a-e0b8-4d8a-8304-4c0e597aafd0",
+    "name": "Amigo Food",
+    "city": "Lyon"
+  },
+  "fistonrestaurant@gmail.com": {
+    "sent_at": "2026-03-15T08:00:53.202853+00:00",
+    "resend_id": "c101e3d2-d88d-4641-bb12-47f1659c65d2",
+    "name": "Figlio by Fiston - Cuisine italienne & pinsa romana",
+    "city": "Lyon"
+  },
+  "alipod@free.fr": {
+    "sent_at": "2026-03-15T08:00:51.201067+00:00",
+    "resend_id": "6f9a9b77-31f6-431e-9e6f-e74df7d40e97",
+    "name": "L’ As de Pizz'",
+    "city": "Lyon"
+  },
+  "maria.restaurantlyon@gmail.com": {
+    "sent_at": "2026-03-15T08:00:49.250905+00:00",
+    "resend_id": "d03e9f62-416b-4017-af48-d8061dfd0c8b",
+    "name": "MARIA.",
+    "city": "Lyon"
+  },
+  "ilfico.restaurant@gmail.com": {
+    "sent_at": "2026-03-15T08:00:47.298046+00:00",
+    "resend_id": "ec62a8a3-cff5-4fbf-9ffb-0c47e1a08b81",
+    "name": "Il Fico",
+    "city": "Lyon"
+  },
+  "contactvolfoni@groupe-bertrand.com": {
+    "sent_at": "2026-03-15T08:00:45.174456+00:00",
+    "resend_id": "b3b16fdd-555a-4310-a239-3681cbada81d",
+    "name": "Volfoni Lyon",
+    "city": "Lyon"
+  },
+  "giogiopizzalyon@gmail.com": {
+    "sent_at": "2026-03-15T08:00:43.165886+00:00",
+    "resend_id": "70044975-7b47-4921-9c5d-41b2d1cf3de5",
+    "name": "Gio Gio Pizzeria Lyon 2",
+    "city": "Lyon"
+  },
+  "contact@jtpizza.com": {
+    "sent_at": "2026-03-15T08:00:41.182523+00:00",
+    "resend_id": "886a6991-d850-4c66-9bd9-1412ea06b03d",
+    "name": "Jordan Tomas Pizza - Lyon Gerland",
+    "city": "Lyon"
+  },
+  "contact@duomopizzeria.fr": {
+    "sent_at": "2026-03-15T08:00:39.206601+00:00",
+    "resend_id": "dd380b6f-bc38-452f-82a3-3cce4c6a4f65",
+    "name": "DUOMO - Pizzeria Napolitaine",
+    "city": "Lyon"
+  },
+  "info@smallstories.fr": {
+    "sent_at": "2026-03-15T08:00:37.235827+00:00",
+    "resend_id": "96c4c03d-4ece-4e52-b72c-e2098b8d0cb6",
+    "name": "Nano Vendôme - Lyon",
+    "city": "Lyon"
+  },
+  "atoto490@gmail.com": {
+    "sent_at": "2026-03-15T08:00:35.240834+00:00",
+    "resend_id": "8bec38c2-ae36-44f1-9d9f-c2c44c97367f",
+    "name": "Stile Italiano",
+    "city": "Lyon"
+  },
+  "contact@leclandesmamma.com": {
+    "sent_at": "2026-03-15T08:00:32.429513+00:00",
+    "resend_id": "b5c9af3a-37b5-431d-b408-b5faeeb1ffb4",
+    "name": "Gabriella - Le Clan des Mamma, Pizzas & Cocktails - Lyon",
+    "city": "Lyon"
+  },
+  "contact@restaurantfalcone.com": {
+    "sent_at": "2026-03-15T08:00:30.416119+00:00",
+    "resend_id": "e9350fbd-359f-481a-b720-6c67f84c5ff4",
+    "name": "Falcone",
+    "city": "Lyon"
+  },
+  "c.ciociola@antonioemarco.com": {
+    "sent_at": "2026-03-15T08:00:28.471065+00:00",
+    "resend_id": "09107617-8ad7-44e0-ba48-fea668bbbd62",
+    "name": "Festa Love da Antonio & Marco Morreale",
+    "city": "Lyon"
+  },
+  "famosa69004@gmail.com": {
+    "sent_at": "2026-03-15T08:00:24.776774+00:00",
+    "resend_id": "6f8c5071-d50b-40eb-bfcb-96f25476c819",
+    "name": "La Scala Siciliana",
+    "city": "Lyon"
+  },
+  "contact@bigmammagroup.com": {
+    "sent_at": "2026-03-15T08:00:22.85036+00:00",
+    "resend_id": "0c4a83b9-f7f0-4093-aa71-382d240e964a",
+    "name": "Carmelo",
+    "city": "Lyon"
+  },
+  "gbarusta@hotmail.fr": {
+    "sent_at": "2026-03-15T08:00:20.723789+00:00",
+    "resend_id": "bd59b8e9-e6a5-4ae6-bfec-e7bdc2f1a64f",
+    "name": "City Food Lyon3",
+    "city": "Lyon"
+  },
+  "temizer65@icloud.com": {
+    "sent_at": "2026-03-15T08:00:18.627052+00:00",
+    "resend_id": "f258be9f-9c02-496e-896d-c283be0fe267",
+    "name": "Kebab d'Or Le Marietton",
+    "city": "Lyon"
+  },
+  "contact@kefi.com": {
+    "sent_at": "2026-03-15T08:00:16.662778+00:00",
+    "resend_id": "0f6bc548-81e8-48c6-be0c-dd1ca289feea",
+    "name": "KEFI",
+    "city": "Lyon"
+  },
+  "haso.sagiroglu@free.fr": {
+    "sent_at": "2026-03-15T08:00:14.719532+00:00",
+    "resend_id": "fcc7a7cc-0b49-4fcb-b7c7-225dbce59c67",
+    "name": "Restaurant de l’Angle - Restaurant Turque Kebab - LYON",
+    "city": "Lyon"
+  },
+  "dagci421@gmail.com": {
+    "sent_at": "2026-03-15T08:00:10.847935+00:00",
+    "resend_id": "4be78078-d0cc-42de-913f-2a3177b5cbcd",
+    "name": "Le Digor 2",
+    "city": "Lyon"
+  },
+  "contact@ankdesignstudio.fr": {
+    "sent_at": "2026-03-15T08:00:07.546521+00:00",
+    "resend_id": "bdc0b969-392d-4f0f-8baf-3fffd6cafd2c",
+    "name": "Gustavo",
+    "city": "Lyon"
+  },
+  "info@mysite.com": {
+    "sent_at": "2026-03-15T08:00:05.295681+00:00",
+    "resend_id": "f1ded574-0b25-407e-a605-ef108831dc15",
+    "name": "L'AUTHENTIK",
+    "city": "Lyon"
+  },
+  "berliner.food69@gmail.com": {
+    "sent_at": "2026-03-15T08:00:02.400008+00:00",
+    "resend_id": "123cfaa0-fe59-47e1-92ef-4f2b8cbb1907",
+    "name": "BERLINER FOOD kebab",
+    "city": "Lyon"
+  },
+  "chef.berliner@gmail.com": {
+    "sent_at": "2026-03-15T08:00:00.011351+00:00",
+    "resend_id": "ef4fc399-a80c-4b8b-8dcf-2e5c4c6a1850",
+    "name": "CHËF - berliner kebap",
+    "city": "Lyon"
+  },
+  "bonappetit@fraukebab.com": {
+    "sent_at": "2026-03-15T07:59:57.673353+00:00",
+    "resend_id": "73c33e99-aae8-40b5-90f9-64caa33b5085",
+    "name": "Frau - Martinière",
+    "city": "Lyon"
+  },
+  "david.louf@live.fr": {
+    "sent_at": "2026-03-15T07:59:55.743898+00:00",
+    "resend_id": "69e6cd3b-ed85-4b25-8302-c8a9bc401662",
+    "name": "La Broche",
+    "city": "Lyon"
+  },
+  "contact@briquehouse.com": {
+    "sent_at": "2026-03-15T07:59:53.776382+00:00",
+    "resend_id": "9c8403bb-7942-4d51-a0d7-5c87269e61a9",
+    "name": "Brique Machine - Paris 2",
+    "city": "Paris"
+  },
+  "axgraphik@gmail.com": {
+    "sent_at": "2026-03-15T07:59:51.785311+00:00",
+    "resend_id": "6bb2f120-c191-4fc7-8f53-3af050b5bd67",
+    "name": "Krousty Sabaidi - Paris Châtelet",
+    "city": "Paris"
+  },
+  "frederic-molina@pilotact.com": {
+    "sent_at": "2026-03-15T07:59:49.501271+00:00",
+    "resend_id": "ba36d49b-bf0e-4e85-8863-1ae6a26f9259",
+    "name": "BIG SUR",
+    "city": "Paris"
+  },
+  "contact@thesmokedmeat.fr": {
+    "sent_at": "2026-03-15T07:59:46.944334+00:00",
+    "resend_id": "ac6e4fd8-7f3b-49bd-8d13-5b7f426f3be6",
+    "name": "THE SMOKED MEAT PARIS 11 - BASTILLE",
+    "city": "Paris"
   }
 }
