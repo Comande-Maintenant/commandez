@@ -31,6 +31,12 @@ var ENVOI_HEADERS = [
 ];
 var ENVOI_W = [145, 220, 130, 250, 130, 70, 70, 100, 220, 80];
 
+var RESTO_HEADERS = [
+  "Restaurant", "Ville", "Email", "Telephone", "Site web",
+  "Type", "Rating", "Avis", "Status"
+];
+var RESTO_W = [220, 130, 250, 140, 280, 130, 70, 70, 110];
+
 /* ═══════════════════════════════════════════════════════════
    GET — Ouvrir l'URL du webhook pour forcer le rebuild
    ═══════════════════════════════════════════════════════════ */
@@ -58,9 +64,10 @@ function doPost(e) {
     var action = data.action || "track_send";
     var result;
 
-    if (action === "track_send")        result = trackSend(data);
+    if (action === "track_send")          result = trackSend(data);
     else if (action === "batch_summary") result = batchSummary(data);
     else if (action === "sync_all")      result = syncAll(data);
+    else if (action === "sync_restaurants") result = syncRestaurants(data);
     else result = {status: "error", message: "Unknown action: " + action};
 
     lock.releaseLock();
@@ -159,6 +166,79 @@ function syncAll(data) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   SYNC RESTAURANTS — full CSV sync with status
+   ═══════════════════════════════════════════════════════════ */
+function syncRestaurants(data) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = getOrCreateSheet(ss, "Restaurants", RESTO_HEADERS);
+
+  // Clear existing data
+  var lr = sheet.getLastRow();
+  if (lr > 1) {
+    sheet.getRange(2, 1, lr - 1, sheet.getMaxColumns()).clearContent();
+  }
+
+  var restaurants = data.restaurants || [];
+  if (restaurants.length === 0) {
+    return {status: "ok", count: 0};
+  }
+
+  var out = [];
+  for (var i = 0; i < restaurants.length; i++) {
+    var r = restaurants[i];
+    out.push([
+      r.name || "",
+      r.city || "",
+      r.email || "",
+      r.phone || "",
+      r.website || "",
+      r.type || "",
+      r.rating || "",
+      r.reviews || "",
+      r.status || "En attente"
+    ]);
+  }
+
+  sheet.getRange(2, 1, out.length, RESTO_HEADERS.length).setValues(out);
+  formatRestaurants(sheet);
+  buildDashboard(ss);
+  SpreadsheetApp.flush();
+  return {status: "ok", count: out.length};
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FORMAT — RESTAURANTS
+   ═══════════════════════════════════════════════════════════ */
+function formatRestaurants(sheet) {
+  var nc = RESTO_HEADERS.length;
+  var lr = sheet.getLastRow();
+
+  sheet.getRange(1, 1, 1, nc).setValues([RESTO_HEADERS]);
+  styleHeader(sheet, nc);
+  for (var c = 0; c < RESTO_W.length; c++) sheet.setColumnWidth(c + 1, RESTO_W[c]);
+
+  if (lr <= 1) return;
+  var rc = lr - 1;
+
+  sheet.getRange(2, 1, rc, nc).setFontFamily(FONT_B).setFontSize(10).setVerticalAlignment("middle");
+
+  for (var r = 0; r < rc; r++) {
+    sheet.setRowHeight(r + 2, 28);
+    sheet.getRange(r + 2, 1, 1, nc).setBackground(r % 2 === 0 ? WHITE : ALT_ROW);
+  }
+
+  sheet.getRange(2, 7, rc, 2).setHorizontalAlignment("center");
+  sheet.getRange(2, 9, rc, 1).setHorizontalAlignment("center").setFontWeight("bold");
+
+  var sR = sheet.getRange(2, 9, rc, 1);
+  sheet.setConditionalFormatRules([
+    cfExact(sR, "Envoye", C_GREEN_BG, C_GREEN_FG),
+    cfExact(sR, "En attente", C_BLUE_BG, C_BLUE_FG),
+    cfExact(sR, "Filtre", C_YELLOW_BG, C_YELLOW_FG)
+  ]);
+}
+
+/* ═══════════════════════════════════════════════════════════
    FORMAT — ENVOIS
    ═══════════════════════════════════════════════════════════ */
 function formatEnvois(sheet) {
@@ -230,6 +310,7 @@ function respond(obj) {
    ═══════════════════════════════════════════════════════════ */
 function buildDashboard(ss) {
   var envoisSheet = ss.getSheetByName("Envois");
+  var restoSheet = ss.getSheetByName("Restaurants");
 
   var sheet = ss.getSheetByName("Dashboard");
   if (sheet) {
@@ -335,6 +416,32 @@ function buildDashboard(ss) {
   sheet.getRange(r, C + 1, 1, 3).merge()
     .setValue(makeBar(successRate, 25) + " " + successRate + "%")
     .setFontFamily("monospace").setFontSize(11).setFontColor(C_GREEN_FG);
+  r++;
+
+  // Total restaurants and remaining
+  var totalRestos = 0;
+  if (restoSheet && restoSheet.getLastRow() > 1) {
+    totalRestos = restoSheet.getLastRow() - 1;
+  }
+  var remaining = Math.max(totalRestos - totalSent, 0);
+
+  sheet.getRange(r, C).setValue("Total contacts").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue(totalRestos)
+    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(18).setFontColor(C_BLUE_FG);
+  var progPct = totalRestos > 0 ? Math.round(totalSent / totalRestos * 100) : 0;
+  sheet.getRange(r, C + 2, 1, 2).merge()
+    .setValue(makeBar(progPct, 25) + " " + progPct + "%")
+    .setFontFamily("monospace").setFontSize(10).setFontColor(C_GREEN_FG);
+  r++;
+
+  sheet.getRange(r, C).setValue("Restants").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue(remaining)
+    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(18).setFontColor(C_BLUE_FG);
+  if (remaining > 0) {
+    var daysLeft = Math.ceil(remaining / 90);
+    sheet.getRange(r, C + 2).setValue("~" + daysLeft + " jours restants")
+      .setFontFamily(FONT_B).setFontSize(10).setFontColor(C_MUTED);
+  }
   r++;
 
   sheet.getRange(r, C).setValue("Rythme").setFontFamily(FONT_B).setFontSize(11);
