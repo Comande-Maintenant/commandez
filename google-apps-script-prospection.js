@@ -431,23 +431,98 @@ function buildDashboard(ss) {
   }
   var remaining = Math.max(totalRestos - totalSent, 0);
 
-  sheet.getRange(r, C).setValue("Total contacts").setFontFamily(FONT_B).setFontSize(11);
-  sheet.getRange(r, C + 1).setValue(totalRestos)
-    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(18).setFontColor(C_BLUE_FG);
+  // Separator
+  r = addSeparator(sheet, r, C);
+
+  // ── PROGRESSION BASE ──
+  secTitle(sheet, r, C, "PROGRESSION BASE"); r++;
+
+  sheet.getRange(r, C).setValue("Contacts neufs").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue(totalSent + " / " + totalRestos)
+    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(18).setFontColor(C_GREEN_FG);
   var progPct = totalRestos > 0 ? Math.round(totalSent / totalRestos * 100) : 0;
   sheet.getRange(r, C + 2, 1, 2).merge()
     .setValue(makeBar(progPct, 25) + " " + progPct + "%")
     .setFontFamily("monospace").setFontSize(10).setFontColor(C_GREEN_FG);
+  sheet.setRowHeight(r, 38);
   r++;
 
-  sheet.getRange(r, C).setValue("Restants").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C).setValue("Contacts neufs restants").setFontFamily(FONT_B).setFontSize(11);
   sheet.getRange(r, C + 1).setValue(remaining)
     .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(18).setFontColor(C_BLUE_FG);
   if (remaining > 0) {
     var daysLeft = Math.ceil(remaining / 90);
-    sheet.getRange(r, C + 2).setValue("~" + daysLeft + " jours restants")
+    sheet.getRange(r, C + 2, 1, 2).merge()
+      .setValue("~" + daysLeft + " jours pour couvrir 100%")
       .setFontFamily(FONT_B).setFontSize(10).setFontColor(C_MUTED);
+  } else {
+    sheet.getRange(r, C + 2, 1, 2).merge()
+      .setValue("Base 100% couverte, retargeting actif")
+      .setFontFamily(FONT_B).setFontSize(10).setFontWeight("bold").setFontColor(C_GREEN_FG);
   }
+  r++;
+
+  // Separator
+  r = addSeparator(sheet, r, C);
+
+  // ── RETARGETING 12 MOIS ──
+  secTitle(sheet, r, C, "PROJECTION 12 MOIS"); r++;
+
+  // Calculs retargeting
+  // Passe 1 (neufs) : totalRestos emails, ~totalRestos/90 jours
+  // Passe 2-4 (relances) : 3 relances x totalRestos, espaces de 15j min
+  // Capacite annuelle : 90/jour x 365 = 32 850 emails
+  var capaciteAnnuelle = 90 * 365;
+  var emailsInitiaux = totalRestos;
+  var emailsRelances = totalRestos * 3;
+  var emailsTotal12m = emailsInitiaux + emailsRelances;
+  var touchesParContact = 4; // 1 initial + 3 relances
+
+  // Temps pour 1 passe complete : totalRestos / 90 jours
+  var joursParPasse = Math.ceil(totalRestos / 90);
+  // Cycle complet (1 initial + 3 relances, 15j entre chaque) :
+  // Passe 1 : joursParPasse, puis attente 15j, passe 2, etc.
+  var cycleTotalJours = joursParPasse + 3 * (15 + joursParPasse);
+  var cyclesParAn = Math.floor(365 / cycleTotalJours);
+  if (cyclesParAn < 1) cyclesParAn = 1;
+
+  sheet.getRange(r, C).setValue("Contacts dans la base").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue(totalRestos)
+    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(14).setFontColor(EMERALD);
+  r++;
+
+  sheet.getRange(r, C).setValue("Touches par contact").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue("4 (1 initial + 3 relances)")
+    .setFontFamily(FONT_B).setFontSize(11).setFontColor(C_BLUE_FG);
+  r++;
+
+  sheet.getRange(r, C).setValue("Delai entre relances").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue("15 jours minimum")
+    .setFontFamily(FONT_B).setFontSize(11).setFontColor(C_BLUE_FG);
+  r++;
+
+  sheet.getRange(r, C).setValue("Emails total / cycle").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue(emailsTotal12m.toLocaleString("fr-FR"))
+    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(14).setFontColor(EMERALD);
+  sheet.getRange(r, C + 2, 1, 2).merge()
+    .setValue(totalRestos.toLocaleString("fr-FR") + " x 4 touches")
+    .setFontFamily(FONT_B).setFontSize(10).setFontColor(C_MUTED);
+  r++;
+
+  sheet.getRange(r, C).setValue("Duree 1 cycle complet").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue("~" + cycleTotalJours + " jours")
+    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(14).setFontColor(C_BLUE_FG);
+  sheet.getRange(r, C + 2, 1, 2).merge()
+    .setValue(joursParPasse + "j/passe + 15j entre chaque")
+    .setFontFamily(FONT_B).setFontSize(10).setFontColor(C_MUTED);
+  r++;
+
+  sheet.getRange(r, C).setValue("Cycles possibles / an").setFontFamily(FONT_B).setFontSize(11);
+  sheet.getRange(r, C + 1).setValue(cyclesParAn)
+    .setFontFamily(FONT_H).setFontWeight("bold").setFontSize(14).setFontColor(EMERALD);
+  sheet.getRange(r, C + 2, 1, 2).merge()
+    .setValue("Capacite : " + capaciteAnnuelle.toLocaleString("fr-FR") + " emails/an")
+    .setFontFamily(FONT_B).setFontSize(10).setFontColor(C_MUTED);
   r++;
 
   sheet.getRange(r, C).setValue("Rythme").setFontFamily(FONT_B).setFontSize(11);
