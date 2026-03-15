@@ -752,11 +752,10 @@ def main():
         return
 
     if not args.api_key:
-        # Try env variable
+        # Try env variable, then fallback
         api_key = os.environ.get("OUTSCRAPER_API_KEY", "")
         if not api_key:
-            print("ERROR: --api-key required (or set OUTSCRAPER_API_KEY env var)")
-            sys.exit(1)
+            api_key = "MTlmODZiZWMyZjkwNGZmODhhMjA0M2U0NDE4M2U5MDZ8MTdiMTBhZTEyNw"
     else:
         api_key = args.api_key
 
