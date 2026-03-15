@@ -36,7 +36,11 @@ jobs:
         env:
           OUTSCRAPER_API_KEY: ${{ secrets.OUTSCRAPER_API_KEY }}
         run: |
-          ARGS="--dept ${{ inputs.departments }} --api-key $OUTSCRAPER_API_KEY"
+          if [ -z "$OUTSCRAPER_API_KEY" ]; then
+            echo "ERROR: OUTSCRAPER_API_KEY secret is not set"
+            exit 1
+          fi
+          ARGS="--dept ${{ inputs.departments }}"
           if [ "${{ inputs.free_tier }}" = "true" ]; then
             ARGS="$ARGS --free-tier"
           fi
