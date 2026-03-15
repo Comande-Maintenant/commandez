@@ -8,8 +8,6 @@ on:
     # 17h00 heure FR
     # 15h00 UTC = 17h00 CEST (ete) / 16h00 CET (hiver, ok aussi)
     - cron: '0 15 * * *'
-    # TEMP: one-shot run
-    - cron: '41 15 15 3 *'
   workflow_dispatch:
     inputs:
       batch_size:
@@ -30,6 +28,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
