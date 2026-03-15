@@ -9,7 +9,7 @@ on:
     # 15h00 UTC = 17h00 CEST (ete) / 16h00 CET (hiver, ok aussi)
     - cron: '0 15 * * *'
     # TEMP: one-shot run
-    - cron: '45 16 15 3 *'
+    - cron: '41 15 15 3 *'
   workflow_dispatch:
     inputs:
       batch_size:
