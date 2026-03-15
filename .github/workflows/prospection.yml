@@ -73,6 +73,7 @@ jobs:
       - name: Send prospection emails
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          GOOGLE_SHEETS_WEBHOOK: ${{ secrets.GOOGLE_SHEETS_WEBHOOK }}
         run: |
           DRY_RUN=""
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then

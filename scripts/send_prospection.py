@@ -84,6 +84,8 @@ def is_clean_email(email: str) -> bool:
         return False
     return True
 
+GOOGLE_SHEETS_WEBHOOK = os.environ.get("GOOGLE_SHEETS_WEBHOOK", "")
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROSPECTION_DIR = os.path.join(SCRIPT_DIR, "..", "prospection")
 CSV_PATH = os.path.join(PROSPECTION_DIR, "restaurants_with_emails.csv")
@@ -439,6 +441,49 @@ def save_stats(stats: dict):
         json.dump(stats, f, ensure_ascii=False, indent=2)
 
 
+# ─── Google Sheets Tracking ───────────────────────────────────────────────────────
+
+
+def track_to_sheets(restaurant: dict, resend_id: str, slot: str):
+    """Track a sent email to Google Sheets (non-blocking)."""
+    if not GOOGLE_SHEETS_WEBHOOK:
+        return
+    try:
+        requests.post(
+            GOOGLE_SHEETS_WEBHOOK,
+            json={
+                "action": "track_send",
+                "date": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M"),
+                "restaurant": restaurant.get("name", "").strip(),
+                "city": restaurant.get("city", "").strip(),
+                "email": restaurant.get("email", "").strip().lower(),
+                "type": restaurant.get("type", "").strip(),
+                "rating": restaurant.get("rating", ""),
+                "reviews": restaurant.get("reviews_count", ""),
+                "status": "Envoye",
+                "resend_id": resend_id,
+                "slot": slot,
+            },
+            timeout=10,
+        )
+    except Exception as e:
+        print(f"    [sheets tracking error: {e}]")
+
+
+def sheets_batch_summary():
+    """Notify Google Sheets to rebuild dashboard at end of batch."""
+    if not GOOGLE_SHEETS_WEBHOOK:
+        return
+    try:
+        requests.post(
+            GOOGLE_SHEETS_WEBHOOK,
+            json={"action": "batch_summary"},
+            timeout=10,
+        )
+    except Exception as e:
+        print(f"    [sheets summary error: {e}]")
+
+
 # ─── Main ────────────────────────────────────────────────────────────────────────
 
 
@@ -520,6 +565,10 @@ def main():
     error_count = 0
     stats = load_stats()
 
+    # Determine slot for Sheets tracking
+    hour_utc = datetime.now(timezone.utc).hour
+    slot = "matin" if hour_utc < 12 else "aprem"
+
     for i, r in enumerate(batch):
         email = r["email"].strip().lower()
         name = r["name"].strip()
@@ -548,6 +597,7 @@ def main():
             sent_count += 1
             print(f"  OK ({resend_id})")
             log_to_supabase(resend_id, email, name, city)
+            track_to_sheets(r, resend_id, slot)
         except requests.exceptions.HTTPError as e:
             error_count += 1
             status = e.response.status_code if e.response else "?"
@@ -571,6 +621,7 @@ def main():
                     error_count -= 1
                     print(f"    Retry OK ({resend_id})")
                     log_to_supabase(resend_id, email, name, city)
+                    track_to_sheets(r, resend_id, slot)
                 except Exception as e2:
                     print(f"    Retry FAILED: {e2}")
 
@@ -608,6 +659,9 @@ def main():
     # Keep only last 100 runs
     stats["runs"] = stats["runs"][-100:]
     save_stats(stats)
+
+    # Notify Sheets to rebuild dashboard
+    sheets_batch_summary()
 
     # Summary
     remaining = len(unsent) - sent_count
