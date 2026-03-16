@@ -301,19 +301,20 @@ def outscraper_search(query: str, api_key: str, limit: int = 100) -> list:
             time.sleep(60)
             resp = requests.get(OUTSCRAPER_API_URL, params=params, headers=headers, timeout=30)
 
-        if resp.status_code != 200:
+        if resp.status_code not in (200, 202):
             print(f"  [ERROR] API returned {resp.status_code}: {resp.text[:200]}")
             return []
 
         resp_data = resp.json()
         request_id = resp_data.get("id")
-        if not request_id:
+        results_location = resp_data.get("results_location")
+        if not request_id and not results_location:
             # Sync response (small queries sometimes return immediately)
             data = resp_data
         else:
             # Step 2: Poll for results
-            print(f" (async {request_id[:8]}...", end="", flush=True)
-            poll_url = f"https://api.app.outscraper.com/requests/{request_id}"
+            poll_url = results_location or f"https://api.app.outscraper.com/requests/{request_id}"
+            print(f" (polling...", end="", flush=True)
             for attempt in range(60):  # Max 5 min (60 x 5s)
                 time.sleep(5)
                 poll_resp = requests.get(poll_url, headers=headers, timeout=15)
