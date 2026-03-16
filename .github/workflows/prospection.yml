@@ -91,20 +91,22 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [ -f prospection/sent_log.json ]; then
+            # Save the updated files
+            cp prospection/sent_log.json /tmp/sent_log.json
+            cp prospection/send_stats.json /tmp/send_stats.json 2>/dev/null || true
+
+            # Get latest remote state
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Apply our changes on top
+            cp /tmp/sent_log.json prospection/sent_log.json
+            cp /tmp/send_stats.json prospection/send_stats.json 2>/dev/null || true
+
             git add prospection/sent_log.json prospection/send_stats.json
             git diff --cached --quiet && echo "No changes to commit" && exit 0
-            # Stash any other unstaged changes before rebase
-            git stash --include-untracked || true
             git commit -m "chore: update sent_log after batch"
-            # Retry push up to 3 times in case of concurrent updates
-            for i in 1 2 3; do
-              git pull --rebase origin main && git push origin main && { git stash pop 2>/dev/null || true; exit 0; }
-              echo "Push attempt $i failed, retrying..."
-              sleep 2
-            done
-            git stash pop 2>/dev/null || true
-            echo "ERROR: Failed to push after 3 attempts"
-            exit 1
+            git push origin main
           fi
 
       - name: Summary
