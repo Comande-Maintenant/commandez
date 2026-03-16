@@ -1030,5 +1030,365 @@
     "resend_id": "3e326646-9f99-4983-bfd7-317994d09cba",
     "name": "Il kiosko",
     "city": "Dijon"
+  },
+  "hello@yummyso.fr": {
+    "sent_at": "2026-03-16T08:38:09.306923+00:00",
+    "last_sent_at": "2026-03-16T08:38:09.306923+00:00",
+    "send_count": 1,
+    "resend_id": "c1045e35-1c23-4632-913c-0f2ce8e5695d",
+    "name": "YUMMYSO Snack & Lifestyle",
+    "city": "Paris"
+  },
+  "recrutement@homerfoodgroup.com": {
+    "sent_at": "2026-03-16T08:38:07.266079+00:00",
+    "last_sent_at": "2026-03-16T08:38:07.266079+00:00",
+    "send_count": 1,
+    "resend_id": "8b285645-c332-4e02-a1d3-700438a918de",
+    "name": "Homer Lobster",
+    "city": "Paris"
+  },
+  "contact@clarkhotdog.fr": {
+    "sent_at": "2026-03-16T08:38:05.241537+00:00",
+    "last_sent_at": "2026-03-16T08:38:05.241537+00:00",
+    "send_count": 1,
+    "resend_id": "b5cf94ff-a705-4777-a290-d5ee65a8e42c",
+    "name": "Clark Hot Dog",
+    "city": "Paris"
+  },
+  "snackrush15eme@gmail.com": {
+    "sent_at": "2026-03-16T08:38:03.191632+00:00",
+    "last_sent_at": "2026-03-16T08:38:03.191632+00:00",
+    "send_count": 1,
+    "resend_id": "84fbd6ef-0746-48da-9051-6f766f20cd66",
+    "name": "Snack&Rush",
+    "city": "Paris"
+  },
+  "shawrmalovers@gmail.com": {
+    "sent_at": "2026-03-16T08:38:01.149947+00:00",
+    "last_sent_at": "2026-03-16T08:38:01.149947+00:00",
+    "send_count": 1,
+    "resend_id": "5fcdb3f6-7ed3-48e3-959c-56be54146a80",
+    "name": "Shawarma Lovers",
+    "city": "Paris"
+  },
+  "contact@k-town.fr": {
+    "sent_at": "2026-03-16T08:37:59.139583+00:00",
+    "last_sent_at": "2026-03-16T08:37:59.139583+00:00",
+    "send_count": 1,
+    "resend_id": "b52a5066-3486-4b6b-a2a0-4b2a65a50b2d",
+    "name": "K-TOWN Street Food Vaugirard",
+    "city": "Paris"
+  },
+  "hello@meshuga.fr": {
+    "sent_at": "2026-03-16T08:37:57.106143+00:00",
+    "last_sent_at": "2026-03-16T08:37:57.106143+00:00",
+    "send_count": 1,
+    "resend_id": "3be6b88b-7753-4aa3-99d0-75d566abbb6e",
+    "name": "Meshuga",
+    "city": "Paris"
+  },
+  "contact@benti-paris.fr": {
+    "sent_at": "2026-03-16T08:37:55.062867+00:00",
+    "last_sent_at": "2026-03-16T08:37:55.062867+00:00",
+    "send_count": 1,
+    "resend_id": "dbf22272-575d-4ed8-9f12-7a13aa6f86fb",
+    "name": "BENTI - Restaurant / Street Food Tunisien Paris 11",
+    "city": "Paris"
+  },
+  "serviceclient@otacos.com": {
+    "sent_at": "2026-03-16T08:37:53.048856+00:00",
+    "last_sent_at": "2026-03-16T08:37:53.048856+00:00",
+    "send_count": 1,
+    "resend_id": "b03e233b-cfe7-4940-a5d2-b55c80c49098",
+    "name": "O’Tacos Paris Châtelet",
+    "city": "Paris"
+  },
+  "contact@la-brigade.fr": {
+    "sent_at": "2026-03-16T08:37:51.018033+00:00",
+    "last_sent_at": "2026-03-16T08:37:51.018033+00:00",
+    "send_count": 1,
+    "resend_id": "65ca2fa1-87a6-4b0b-a8c8-d7738737f0d9",
+    "name": "La Brigade - Opéra - Restaurant Paris centre",
+    "city": "Paris"
+  },
+  "mrwings.shop@gmail.com": {
+    "sent_at": "2026-03-16T08:37:48.992192+00:00",
+    "last_sent_at": "2026-03-16T08:37:48.992192+00:00",
+    "send_count": 1,
+    "resend_id": "cf7945da-59e7-4434-8dce-a97b7d274eb4",
+    "name": "Mr.Wings",
+    "city": "Paris"
+  },
+  "serviceclient@pizzacosy.fr": {
+    "sent_at": "2026-03-16T08:37:46.954707+00:00",
+    "last_sent_at": "2026-03-16T08:37:46.954707+00:00",
+    "send_count": 1,
+    "resend_id": "1d558740-de75-4722-8027-41d24dfe642f",
+    "name": "Pizza Cosy",
+    "city": "Paris"
+  },
+  "chezbartolo.resto@gmail.com": {
+    "sent_at": "2026-03-16T08:37:44.887448+00:00",
+    "last_sent_at": "2026-03-16T08:37:44.887448+00:00",
+    "send_count": 1,
+    "resend_id": "d039c27a-30af-4430-a4c1-fbfb4a5b86e8",
+    "name": "Restaurant Chez Bartolo",
+    "city": "Paris"
+  },
+  "semolaparis@gmail.com": {
+    "sent_at": "2026-03-16T08:37:42.857992+00:00",
+    "last_sent_at": "2026-03-16T08:37:42.857992+00:00",
+    "send_count": 1,
+    "resend_id": "a156077b-1a0b-49a4-8e99-4296695568e0",
+    "name": "Semola Pizzeria - Pizza à emporter Paris 20",
+    "city": "Paris"
+  },
+  "hany.makram.98@gmail.com": {
+    "sent_at": "2026-03-16T08:37:40.77433+00:00",
+    "last_sent_at": "2026-03-16T08:37:40.77433+00:00",
+    "send_count": 1,
+    "resend_id": "23791c98-e8c6-40fa-9dc5-91a08f968111",
+    "name": "PRIMAVERA - Pizzeria Paris 10",
+    "city": "Paris"
+  },
+  "contact@pizzanuit.fr": {
+    "sent_at": "2026-03-16T08:37:38.742586+00:00",
+    "last_sent_at": "2026-03-16T08:37:38.742586+00:00",
+    "send_count": 1,
+    "resend_id": "bf80ebfa-e8b5-4bc0-8397-3f7ef421ad38",
+    "name": "Pizza Nuit Paris livraisons",
+    "city": "Paris"
+  },
+  "contact@augusto-paris.com": {
+    "sent_at": "2026-03-16T08:37:36.708042+00:00",
+    "last_sent_at": "2026-03-16T08:37:36.708042+00:00",
+    "send_count": 1,
+    "resend_id": "614bdd4c-a9ba-474a-ba2e-de3c1242a6c4",
+    "name": "Augusto Pizzeria",
+    "city": "Paris"
+  },
+  "louielouieparis@gmail.com": {
+    "sent_at": "2026-03-16T08:37:34.592556+00:00",
+    "last_sent_at": "2026-03-16T08:37:34.592556+00:00",
+    "send_count": 1,
+    "resend_id": "862d8981-f664-40ef-b3f9-9ed13bcb7c8b",
+    "name": "Louie Louie",
+    "city": "Paris"
+  },
+  "contact@pizzou.fr": {
+    "sent_at": "2026-03-16T08:37:32.607307+00:00",
+    "last_sent_at": "2026-03-16T08:37:32.607307+00:00",
+    "send_count": 1,
+    "resend_id": "2f7e912b-a951-4e99-ab39-e84cfdc7f3a1",
+    "name": "Pizzou Pigalle",
+    "city": "Paris"
+  },
+  "papelini.saintdenis@gmail.com": {
+    "sent_at": "2026-03-16T08:37:30.564692+00:00",
+    "last_sent_at": "2026-03-16T08:37:30.564692+00:00",
+    "send_count": 1,
+    "resend_id": "940fb65c-be81-41eb-9b5e-e65396fda036",
+    "name": "Papelini",
+    "city": "Paris"
+  },
+  "ciao@agata-pizzeria.com": {
+    "sent_at": "2026-03-16T08:37:28.56391+00:00",
+    "last_sent_at": "2026-03-16T08:37:28.56391+00:00",
+    "send_count": 1,
+    "resend_id": "edd1cfc5-6321-489e-8873-deaa267d041f",
+    "name": "AGATA",
+    "city": "Paris"
+  },
+  "gabriel.porcher@gmail.com": {
+    "sent_at": "2026-03-16T08:37:26.541458+00:00",
+    "last_sent_at": "2026-03-16T08:37:26.541458+00:00",
+    "send_count": 1,
+    "resend_id": "62a670ef-089c-4dfd-8d10-0aa651d90c87",
+    "name": "Ti Amo",
+    "city": "Paris"
+  },
+  "relation-client@eataly.fr": {
+    "sent_at": "2026-03-16T08:37:24.518772+00:00",
+    "last_sent_at": "2026-03-16T08:37:24.518772+00:00",
+    "send_count": 1,
+    "resend_id": "d24580a2-18f4-4729-b082-d043dc6db57a",
+    "name": "Eataly",
+    "city": "Paris"
+  },
+  "mozzafiatoparis@gmail.com": {
+    "sent_at": "2026-03-16T08:37:22.488396+00:00",
+    "last_sent_at": "2026-03-16T08:37:22.488396+00:00",
+    "send_count": 1,
+    "resend_id": "ee53a495-6f64-4f6f-9789-836c000d064e",
+    "name": "Mozzafiato Paris – Pizzeria Artisanale 11e Arrondissement",
+    "city": "Paris"
+  },
+  "contact@dalmata.co": {
+    "sent_at": "2026-03-16T08:37:20.45997+00:00",
+    "last_sent_at": "2026-03-16T08:37:20.45997+00:00",
+    "send_count": 1,
+    "resend_id": "531ded22-f0a8-4532-8eb6-3d673462e8ad",
+    "name": "Dalmata Paris 2",
+    "city": "Paris"
+  },
+  "maine131info@gmail.com": {
+    "sent_at": "2026-03-16T08:37:18.420973+00:00",
+    "last_sent_at": "2026-03-16T08:37:18.420973+00:00",
+    "send_count": 1,
+    "resend_id": "7289afd4-d801-469d-b688-ffb9c606df3f",
+    "name": "Pizzamore Paris - Pizzeria Montparnasse",
+    "city": "Paris"
+  },
+  "lilla-lillo@live.fr": {
+    "sent_at": "2026-03-16T08:37:16.413014+00:00",
+    "last_sent_at": "2026-03-16T08:37:16.413014+00:00",
+    "send_count": 1,
+    "resend_id": "2bf7e5a5-9117-44a5-acd7-14956f5a8db2",
+    "name": "Pizzeria Iovine's",
+    "city": "Paris"
+  },
+  "cyril.pilikian@gmail.com": {
+    "sent_at": "2026-03-16T08:37:14.377703+00:00",
+    "last_sent_at": "2026-03-16T08:37:14.377703+00:00",
+    "send_count": 1,
+    "resend_id": "36d9557e-0237-40a2-b8ef-4ae4cb5c07ab",
+    "name": "Senza Nome",
+    "city": "Paris"
+  },
+  "contact@fimmina-pizzeria.fr": {
+    "sent_at": "2026-03-16T08:37:11.993099+00:00",
+    "last_sent_at": "2026-03-16T08:37:11.993099+00:00",
+    "send_count": 1,
+    "resend_id": "cae78af9-f4d1-4f5a-9370-9499c1fe16dd",
+    "name": "Fimmina",
+    "city": "Paris"
+  },
+  "arrivedercinfo@gmail.com": {
+    "sent_at": "2026-03-16T08:37:09.993661+00:00",
+    "last_sent_at": "2026-03-16T08:37:09.993661+00:00",
+    "send_count": 1,
+    "resend_id": "6c44459f-d9a4-4211-8396-acc3bff43203",
+    "name": "Arrivederci Pizzeria",
+    "city": "Paris"
+  },
+  "store.parigi@assetfoodholding.com": {
+    "sent_at": "2026-03-16T08:37:07.963148+00:00",
+    "last_sent_at": "2026-03-16T08:37:07.963148+00:00",
+    "send_count": 1,
+    "resend_id": "b1890f3a-5ebd-4a68-a0d2-d9905587b0d4",
+    "name": "L'Antica Pizzeria Da Michele",
+    "city": "Paris"
+  },
+  "pizzeria.popolare@bigmamma.com": {
+    "sent_at": "2026-03-16T08:37:05.899997+00:00",
+    "last_sent_at": "2026-03-16T08:37:05.899997+00:00",
+    "send_count": 1,
+    "resend_id": "ad32cee0-3e69-41d5-9c5a-94592ef50127",
+    "name": "Pizzeria Popolare",
+    "city": "Paris"
+  },
+  "kebaphausparis@gmail.com": {
+    "sent_at": "2026-03-16T08:37:03.877953+00:00",
+    "last_sent_at": "2026-03-16T08:37:03.877953+00:00",
+    "send_count": 1,
+    "resend_id": "49c5771d-6c15-42a5-aeb3-e97f2d2fc688",
+    "name": "Kebap Haus",
+    "city": "Paris"
+  },
+  "amerheshmat11@gmail.com": {
+    "sent_at": "2026-03-16T08:37:01.836054+00:00",
+    "last_sent_at": "2026-03-16T08:37:01.836054+00:00",
+    "send_count": 1,
+    "resend_id": "4a0fed25-6a7d-4d9d-a80f-5b4e2af3523a",
+    "name": "Restaurant Crêperie Chouchou",
+    "city": "Paris"
+  },
+  "contact@restaurantlemondial.fr": {
+    "sent_at": "2026-03-16T08:36:59.779547+00:00",
+    "last_sent_at": "2026-03-16T08:36:59.779547+00:00",
+    "send_count": 1,
+    "resend_id": "1ffc1f15-ad37-47e1-93ae-814598a61ba9",
+    "name": "Le Mondial - Meilleur kebab de Paris",
+    "city": "Paris"
+  },
+  "kebabminaparis@gmail.com": {
+    "sent_at": "2026-03-16T08:36:57.781758+00:00",
+    "last_sent_at": "2026-03-16T08:36:57.781758+00:00",
+    "send_count": 1,
+    "resend_id": "5f8f0216-6dec-4bb5-b615-26a47290be5c",
+    "name": "Kebab Mina - Kebab & Lebanese Fusion Food",
+    "city": "Paris"
+  },
+  "contact@kuisinistan.fr": {
+    "sent_at": "2026-03-16T08:36:55.783995+00:00",
+    "last_sent_at": "2026-03-16T08:36:55.783995+00:00",
+    "send_count": 1,
+    "resend_id": "25ef00b5-0271-4e68-a967-af2dcf8f97e3",
+    "name": "Kuisinistan - Restaurant Paris 2",
+    "city": "Paris"
+  },
+  "contact@claudine-slowdwich.com": {
+    "sent_at": "2026-03-16T08:36:53.755059+00:00",
+    "last_sent_at": "2026-03-16T08:36:53.755059+00:00",
+    "send_count": 1,
+    "resend_id": "5496f508-5c90-4c90-a651-c6a39cedf5dc",
+    "name": "Claudine — Le sandwich méditerranéen à cuisson lente",
+    "city": "Paris"
+  },
+  "hello@parsley.fr": {
+    "sent_at": "2026-03-16T08:36:51.704107+00:00",
+    "last_sent_at": "2026-03-16T08:36:51.704107+00:00",
+    "send_count": 1,
+    "resend_id": "857e6614-37a8-4b06-be1f-64624efea01f",
+    "name": "PARSLEY - KEBAB MAISON",
+    "city": "Paris"
+  },
+  "contact@ckebab.fr": {
+    "sent_at": "2026-03-16T08:36:49.375101+00:00",
+    "last_sent_at": "2026-03-16T08:36:49.375101+00:00",
+    "send_count": 1,
+    "resend_id": "012d1d9b-24e2-4631-9b1e-d80e8fbe94b6",
+    "name": "C KEBAB Paris",
+    "city": "Paris"
+  },
+  "superdonerparis@gmail.com": {
+    "sent_at": "2026-03-16T08:36:47.336175+00:00",
+    "last_sent_at": "2026-03-16T08:36:47.336175+00:00",
+    "send_count": 1,
+    "resend_id": "87012078-1887-4d67-b2c8-6ff6bdb35a3c",
+    "name": "SUPER - DÖNER & KEBAB",
+    "city": "Paris"
+  },
+  "contact@lamourdukebab.fr": {
+    "sent_at": "2026-03-16T08:36:44.974175+00:00",
+    "last_sent_at": "2026-03-16T08:36:44.974175+00:00",
+    "send_count": 1,
+    "resend_id": "d932bd41-3b07-4f1c-8235-3806dc9f3aa0",
+    "name": "L’Amour Du Kebab - Meilleur Kebab á Paris",
+    "city": "Paris"
+  },
+  "gemusekebap@gmail.com": {
+    "sent_at": "2026-03-16T08:36:42.747246+00:00",
+    "last_sent_at": "2026-03-16T08:36:42.747246+00:00",
+    "send_count": 1,
+    "resend_id": "b65301b1-4eec-412f-9d64-012c3898df5b",
+    "name": "GEMÜSE - Berliner Kebap",
+    "city": "Paris"
+  },
+  "doniberliner@gmail.com": {
+    "sent_at": "2026-03-16T08:36:40.324331+00:00",
+    "last_sent_at": "2026-03-16T08:36:40.324331+00:00",
+    "send_count": 1,
+    "resend_id": "13bc04a8-0300-454e-b340-321edc0d2845",
+    "name": "Döni Berliner Paris",
+    "city": "Paris"
+  },
+  "contact@lemartadijon.fr": {
+    "sent_at": "2026-03-16T08:36:37.751564+00:00",
+    "last_sent_at": "2026-03-16T08:36:37.751564+00:00",
+    "send_count": 1,
+    "resend_id": "7a83781e-8afc-4f59-94aa-3989e42c91c6",
+    "name": "Le Marta Dijon",
+    "city": "Dijon"
   }
 }
