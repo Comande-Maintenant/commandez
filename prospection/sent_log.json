@@ -1390,5 +1390,365 @@
     "resend_id": "7a83781e-8afc-4f59-94aa-3989e42c91c6",
     "name": "Le Marta Dijon",
     "city": "Dijon"
+  },
+  "lafelicita-sav@bigmamma.com": {
+    "sent_at": "2026-03-16T16:04:02.709936+00:00",
+    "last_sent_at": "2026-03-16T16:04:02.709936+00:00",
+    "send_count": 1,
+    "resend_id": "087cb102-659f-4818-be4d-83b40a1ec70d",
+    "name": "La Felicità",
+    "city": "Paris"
+  },
+  "snackhaussmann@gmail.com": {
+    "sent_at": "2026-03-16T16:04:04.967026+00:00",
+    "last_sent_at": "2026-03-16T16:04:04.967026+00:00",
+    "send_count": 1,
+    "resend_id": "6f91bccd-60fd-4e06-8ff4-efad9411dec8",
+    "name": "Snack Haussmann",
+    "city": "Paris"
+  },
+  "info@bullays-distribution.com": {
+    "sent_at": "2026-03-16T16:04:07.067832+00:00",
+    "last_sent_at": "2026-03-16T16:04:07.067832+00:00",
+    "send_count": 1,
+    "resend_id": "415a0f7e-0c7d-4178-8301-db0e08f8ce7f",
+    "name": "Nach! Paris 10",
+    "city": "Paris"
+  },
+  "george@maodumplingbar.com": {
+    "sent_at": "2026-03-16T16:04:09.175199+00:00",
+    "last_sent_at": "2026-03-16T16:04:09.175199+00:00",
+    "send_count": 1,
+    "resend_id": "4f0b4c93-ceae-4ffd-9817-602c7f8ea245",
+    "name": "MAO FRY",
+    "city": "Paris"
+  },
+  "candidature@theory-restaurant.com": {
+    "sent_at": "2026-03-16T16:04:11.33864+00:00",
+    "last_sent_at": "2026-03-16T16:04:11.33864+00:00",
+    "send_count": 1,
+    "resend_id": "240d7119-2f02-4e2a-aac2-3ae8f806848d",
+    "name": "Burger Theory - restaurant végétal",
+    "city": "Paris"
+  },
+  "contact.chamas@gmail.com": {
+    "sent_at": "2026-03-16T16:04:13.425914+00:00",
+    "last_sent_at": "2026-03-16T16:04:13.425914+00:00",
+    "send_count": 1,
+    "resend_id": "343f3478-0301-4838-b0eb-8dbcd611dddf",
+    "name": "Chamas Tacos Montmartre",
+    "city": "Paris"
+  },
+  "contact@tacomesa.fr": {
+    "sent_at": "2026-03-16T16:04:15.416334+00:00",
+    "last_sent_at": "2026-03-16T16:04:15.416334+00:00",
+    "send_count": 1,
+    "resend_id": "a5add6b6-55fb-4390-a3ea-cab1ed4c58b2",
+    "name": "Taco Mesa",
+    "city": "Paris"
+  },
+  "tacos.avenue@gmail.com": {
+    "sent_at": "2026-03-16T16:04:17.466309+00:00",
+    "last_sent_at": "2026-03-16T16:04:17.466309+00:00",
+    "send_count": 1,
+    "resend_id": "fbfa5d9c-635e-4473-894f-eeaec3921346",
+    "name": "Tacos Avenue - Paris 17",
+    "city": "Paris"
+  },
+  "jobs@quixotic-projects.com": {
+    "sent_at": "2026-03-16T16:04:21.44477+00:00",
+    "last_sent_at": "2026-03-16T16:04:21.44477+00:00",
+    "send_count": 1,
+    "resend_id": "5cccf895-a19d-4e92-931e-918b9eb5e5d5",
+    "name": "Candelaria",
+    "city": "Paris"
+  },
+  "normandy@machefert.com": {
+    "sent_at": "2026-03-16T16:04:19.566616+00:00",
+    "last_sent_at": "2026-03-16T16:04:19.566616+00:00",
+    "send_count": 1,
+    "resend_id": "a6464c59-502b-4576-8aa1-9519101dcef0",
+    "name": "El Vecino Taquería Saint-Honoré",
+    "city": "Paris"
+  },
+  "contact@casimirpizza.fr": {
+    "sent_at": "2026-03-16T16:04:33.817871+00:00",
+    "last_sent_at": "2026-03-16T16:04:33.817871+00:00",
+    "send_count": 1,
+    "resend_id": "9ff2564b-e197-4da6-8867-79b8184cf125",
+    "name": "Casimir Pizza Lyon Confluence",
+    "city": "Lyon"
+  },
+  "contact@lyon-eats.fr": {
+    "sent_at": "2026-03-16T16:04:41.694155+00:00",
+    "last_sent_at": "2026-03-16T16:04:41.694155+00:00",
+    "send_count": 1,
+    "resend_id": "264be2c1-5a20-49ef-9c81-26a8f2591e4a",
+    "name": "LYON EATS",
+    "city": "Lyon"
+  },
+  "deg519@yahoo.fr": {
+    "sent_at": "2026-03-16T16:05:00.929876+00:00",
+    "last_sent_at": "2026-03-16T16:05:00.929876+00:00",
+    "send_count": 1,
+    "resend_id": "cc32c375-1dc2-444c-a09f-7a6191f568bd",
+    "name": "Royal food halal",
+    "city": "Lyon"
+  },
+  "contact@mister-kebab13.fr": {
+    "sent_at": "2026-03-16T16:05:15.269935+00:00",
+    "last_sent_at": "2026-03-16T16:05:15.269935+00:00",
+    "send_count": 1,
+    "resend_id": "e0620f83-1461-4f17-81f8-e69717d317d4",
+    "name": "Mister Kebab",
+    "city": "Marseille"
+  },
+  "vigueur.%5cnsi.dali@hotmail.com": {
+    "sent_at": "2026-03-16T16:05:23.044161+00:00",
+    "last_sent_at": "2026-03-16T16:05:23.044161+00:00",
+    "send_count": 1,
+    "resend_id": "25635227-810f-4c6d-b658-ab542ea59179",
+    "name": "Tombiq Döner",
+    "city": "Marseille"
+  },
+  "bureau@cactusweb.fr": {
+    "sent_at": "2026-03-16T16:04:23.447314+00:00",
+    "last_sent_at": "2026-03-16T16:04:23.447314+00:00",
+    "send_count": 1,
+    "resend_id": "e1eb4c88-10f1-4909-a71f-be12d443b971",
+    "name": "Distrito Francés Marais",
+    "city": "Paris"
+  },
+  "commercial@maisons-de-lyon.com": {
+    "sent_at": "2026-03-16T16:04:37.572614+00:00",
+    "last_sent_at": "2026-03-16T16:04:37.572614+00:00",
+    "send_count": 1,
+    "resend_id": "a56e5210-e390-4905-8ef9-697e87cc674f",
+    "name": "Mamma Osteria",
+    "city": "Lyon"
+  },
+  "snackbrasil@hotmail.com": {
+    "sent_at": "2026-03-16T16:05:04.902893+00:00",
+    "last_sent_at": "2026-03-16T16:05:04.902893+00:00",
+    "send_count": 1,
+    "resend_id": "a6a67560-ea1b-43a6-b890-6fd2db1212aa",
+    "name": "Snack Brasil",
+    "city": "Lyon"
+  },
+  "contact@labrochecagkebab.com": {
+    "sent_at": "2026-03-16T16:05:13.375346+00:00",
+    "last_sent_at": "2026-03-16T16:05:13.375346+00:00",
+    "send_count": 1,
+    "resend_id": "6a99ffc6-a408-4d67-8743-6f792b96be1f",
+    "name": "la broche Cağ kebab",
+    "city": "Marseille"
+  },
+  "house.foodmarseille@gmail.com": {
+    "sent_at": "2026-03-16T16:05:21.083883+00:00",
+    "last_sent_at": "2026-03-16T16:05:21.083883+00:00",
+    "send_count": 1,
+    "resend_id": "241155c2-b00c-427a-9520-ebe780964e4d",
+    "name": "Ankara Grill",
+    "city": "Marseille"
+  },
+  "contact@lesterrassesduport.com": {
+    "sent_at": "2026-03-16T16:05:28.774083+00:00",
+    "last_sent_at": "2026-03-16T16:05:28.774083+00:00",
+    "send_count": 1,
+    "resend_id": "61ed3d3a-3147-4c82-b66b-89d821c2dff3",
+    "name": "Lunicco - Terrasse du Port (Cantine)",
+    "city": "Marseille"
+  },
+  "carlos@parismexico.fr": {
+    "sent_at": "2026-03-16T16:04:25.607463+00:00",
+    "last_sent_at": "2026-03-16T16:04:25.607463+00:00",
+    "send_count": 1,
+    "resend_id": "51026cad-32e7-4ddc-9fa8-1d9faa53bab1",
+    "name": "COMER parís.méxico",
+    "city": "Paris"
+  },
+  "contact@laffreuxjojo.com": {
+    "sent_at": "2026-03-16T16:04:31.700637+00:00",
+    "last_sent_at": "2026-03-16T16:04:31.700637+00:00",
+    "send_count": 1,
+    "resend_id": "27ac94ae-ae30-4ed4-9ca3-59265ebc7772",
+    "name": "L’affreux Jojo - Restaurant Italien Lyon",
+    "city": "Lyon"
+  },
+  "contact@royal-burger.fr": {
+    "sent_at": "2026-03-16T16:04:39.725873+00:00",
+    "last_sent_at": "2026-03-16T16:04:39.725873+00:00",
+    "send_count": 1,
+    "resend_id": "dac81736-c9d8-4a62-a736-ecc88aa81371",
+    "name": "Royal Burger",
+    "city": "Lyon"
+  },
+  "direction@chikinbang.com": {
+    "sent_at": "2026-03-16T16:04:45.462111+00:00",
+    "last_sent_at": "2026-03-16T16:04:45.462111+00:00",
+    "send_count": 1,
+    "resend_id": "2fc5f7c2-9c64-4a03-b123-911ff7412fce",
+    "name": "Chikin Bang - Korean Street Food - Cordeliers",
+    "city": "Lyon"
+  },
+  "alex@pereetfishrestaurant.com": {
+    "sent_at": "2026-03-16T16:04:55.13867+00:00",
+    "last_sent_at": "2026-03-16T16:04:55.13867+00:00",
+    "send_count": 1,
+    "resend_id": "5344ca8c-89db-41c2-a635-2bb7a80d5578",
+    "name": "Père & Fish - Lyon",
+    "city": "Lyon"
+  },
+  "reservations@tigermilkgroup.com": {
+    "sent_at": "2026-03-16T16:04:27.519534+00:00",
+    "last_sent_at": "2026-03-16T16:04:27.519534+00:00",
+    "send_count": 1,
+    "resend_id": "891ea7fc-aff3-4cd3-9f52-1ef53c5a5f94",
+    "name": "Tigermilk South-Pigalle - Paris 9",
+    "city": "Paris"
+  },
+  "contact@fastyshotdog.com": {
+    "sent_at": "2026-03-16T16:04:49.425114+00:00",
+    "last_sent_at": "2026-03-16T16:04:49.425114+00:00",
+    "send_count": 1,
+    "resend_id": "04899cc6-2d07-4976-a772-9d3a2ec39928",
+    "name": "Fasty's Food truck Hot-Dog & Burger Lyon",
+    "city": "Lyon"
+  },
+  "real.virtual.food@gmail.com": {
+    "sent_at": "2026-03-16T16:05:06.904322+00:00",
+    "last_sent_at": "2026-03-16T16:05:06.904322+00:00",
+    "send_count": 1,
+    "resend_id": "07b671f1-86f0-4f7d-86b3-a3abe600546e",
+    "name": "La Kazdalerie - Lyon",
+    "city": "Lyon"
+  },
+  "contact@chickensking.com": {
+    "sent_at": "2026-03-16T16:04:29.62899+00:00",
+    "last_sent_at": "2026-03-16T16:04:29.62899+00:00",
+    "send_count": 1,
+    "resend_id": "4c87feff-df10-41ea-af4c-c5a0a8ec9f1c",
+    "name": "Chicken’s King",
+    "city": "Paris"
+  },
+  "contact@burger-s.fr": {
+    "sent_at": "2026-03-16T16:04:43.549845+00:00",
+    "last_sent_at": "2026-03-16T16:04:43.549845+00:00",
+    "send_count": 1,
+    "resend_id": "e37c2365-7ddc-42a1-8364-83d895b4048b",
+    "name": "Burger's Lyon 8",
+    "city": "Lyon"
+  },
+  "contact@streetcornerlyon.fr": {
+    "sent_at": "2026-03-16T16:04:53.23014+00:00",
+    "last_sent_at": "2026-03-16T16:04:53.23014+00:00",
+    "send_count": 1,
+    "resend_id": "2b2e368c-36f2-4398-b02d-cf3518ceae37",
+    "name": "Street Corner - Food Truck Lyon",
+    "city": "Lyon"
+  },
+  "bacabamba@gmail.com": {
+    "sent_at": "2026-03-16T16:05:02.926171+00:00",
+    "last_sent_at": "2026-03-16T16:05:02.926171+00:00",
+    "send_count": 1,
+    "resend_id": "9d1843f5-5887-4d04-8897-3193343cbf39",
+    "name": "Le Baca Bamba",
+    "city": "Lyon"
+  },
+  "golddiner@free.fr": {
+    "sent_at": "2026-03-16T16:05:19.078021+00:00",
+    "last_sent_at": "2026-03-16T16:05:19.078021+00:00",
+    "send_count": 1,
+    "resend_id": "99df8f54-ee08-46a0-bde2-9941e6aa306b",
+    "name": "GOLD DINER",
+    "city": "Marseille"
+  },
+  "ciwan25@hotmail.fr": {
+    "sent_at": "2026-03-16T16:05:24.958002+00:00",
+    "last_sent_at": "2026-03-16T16:05:24.958002+00:00",
+    "send_count": 1,
+    "resend_id": "fcc1e128-c677-4d07-8b1e-e61b9a3494c0",
+    "name": "O'Sofram",
+    "city": "Marseille"
+  },
+  "contact@culinaries.fr": {
+    "sent_at": "2026-03-16T16:04:35.683897+00:00",
+    "last_sent_at": "2026-03-16T16:04:35.683897+00:00",
+    "send_count": 1,
+    "resend_id": "2b6d3d68-d0ac-4291-8619-200c893df87e",
+    "name": "Little YARD Lyon",
+    "city": "Lyon"
+  },
+  "contact@smokeandfries.fr": {
+    "sent_at": "2026-03-16T16:04:47.540223+00:00",
+    "last_sent_at": "2026-03-16T16:04:47.540223+00:00",
+    "send_count": 1,
+    "resend_id": "9548ebfc-6ea9-44f9-bf89-84af4fffdfd8",
+    "name": "Smoké and Fries",
+    "city": "Lyon"
+  },
+  "contact@biggroupe.com": {
+    "sent_at": "2026-03-16T16:04:51.326407+00:00",
+    "last_sent_at": "2026-03-16T16:04:51.326407+00:00",
+    "send_count": 1,
+    "resend_id": "46096681-52e8-4ffc-9f46-88c4de1252ef",
+    "name": "Big Fernand",
+    "city": "Lyon"
+  },
+  "communication@les-filous.fr": {
+    "sent_at": "2026-03-16T16:04:57.097299+00:00",
+    "last_sent_at": "2026-03-16T16:04:57.097299+00:00",
+    "send_count": 1,
+    "resend_id": "072a38db-e6e1-4218-86e7-73a8f0a644e2",
+    "name": "Les Filous Lyon - Street Food Grecque",
+    "city": "Lyon"
+  },
+  "contact@junkgroup.fr": {
+    "sent_at": "2026-03-16T16:05:08.839417+00:00",
+    "last_sent_at": "2026-03-16T16:05:08.839417+00:00",
+    "send_count": 1,
+    "resend_id": "4018a737-b8a8-43ca-80c1-dd3c1f4fa3ee",
+    "name": "JUNK LYON",
+    "city": "Lyon"
+  },
+  "shawarmax13@gmail.com": {
+    "sent_at": "2026-03-16T16:05:17.204095+00:00",
+    "last_sent_at": "2026-03-16T16:05:17.204095+00:00",
+    "send_count": 1,
+    "resend_id": "1e44e0ac-93ea-462d-86f0-8c20c85dff2c",
+    "name": "Shawarmax",
+    "city": "Marseille"
+  },
+  "contact@la-bella-pizza.fr": {
+    "sent_at": "2026-03-16T16:05:30.646711+00:00",
+    "last_sent_at": "2026-03-16T16:05:30.646711+00:00",
+    "send_count": 1,
+    "resend_id": "0bbbcd5b-f655-4699-a0c3-7226fb8c419f",
+    "name": "LA BELLA PIZZA",
+    "city": "Marseille"
+  },
+  "easylunch@outlook.fr": {
+    "sent_at": "2026-03-16T16:04:59.029765+00:00",
+    "last_sent_at": "2026-03-16T16:04:59.029765+00:00",
+    "send_count": 1,
+    "resend_id": "6cc4edd1-67ed-48cd-9dcd-dcb3643ea98e",
+    "name": "Easy Lunch Lyon",
+    "city": "Lyon"
+  },
+  "contact@woko.fr": {
+    "sent_at": "2026-03-16T16:05:11.0271+00:00",
+    "last_sent_at": "2026-03-16T16:05:11.0271+00:00",
+    "send_count": 1,
+    "resend_id": "595b5c15-9d09-4e22-80e4-c5a3eaadf683",
+    "name": "WOKO asian street food",
+    "city": "Lyon"
+  },
+  "contact@pizzeria-lejasmin.fr": {
+    "sent_at": "2026-03-16T16:05:26.839879+00:00",
+    "last_sent_at": "2026-03-16T16:05:26.839879+00:00",
+    "send_count": 1,
+    "resend_id": "da3cca2e-f651-413a-879b-6046eeb89a14",
+    "name": "Pizzeria & Snack Le Jasmin",
+    "city": "Marseille"
   }
 }
