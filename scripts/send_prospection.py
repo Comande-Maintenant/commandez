@@ -2,16 +2,12 @@
 """
 Send B2B prospection emails to restaurants for commandeici.
 
+4-touch campaign with personalization by restaurant type.
+Budget: 95 emails/day. Priority: hot > R3 > R2 > R1 > new.
+
 Usage:
     export RESEND_API_KEY="re_xxx"
-    python3 scripts/send_prospection.py --batch-size 38
-
-Features:
-    - Reads from prospection/restaurants_with_emails.csv
-    - Tracks sent emails in prospection/sent_log.json (no duplicates)
-    - Personalized email with restaurant name + city
-    - Resend API for delivery
-    - Dry-run mode for testing
+    python3 scripts/send_prospection.py --batch-size 95
 """
 
 import argparse
@@ -24,27 +20,24 @@ from datetime import datetime, timezone
 
 import requests
 
-# ─── Config ──────────────────────────────────────────────────────────────────────
+# --- Config -------------------------------------------------------------------
 
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 FROM_EMAIL = "Sarah de commandeici <sarah@commandeici.com>"
 REPLY_TO = "augustin.foucheres@gmail.com"
 
-# Priority cities: these contacts are sent first (in order)
 PRIORITY_CITIES = ["Dijon"]
 
 SUPABASE_URL = "https://rbqgsxhkccbhqdmdtxwr.supabase.co"
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjIxNTEwOCwiZXhwIjoyMDg3NzkxMTA4fQ.XICYwfF3oEYFG5M-32ltu-D8QI3NlSPwLxBcsl_64No")
 
-# Reject emails that are clearly not real contacts
 JUNK_PATTERNS = [
-    ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".js",  # file extensions
-    "@sentry", "@wixpress", "@cloudflare", "@jsdelivr", "@webflow",  # platform spam
-    "@2x", "@3x",  # image filenames
+    ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".js",
+    "@sentry", "@wixpress", "@cloudflare", "@jsdelivr", "@webflow",
+    "@2x", "@3x",
     "sentry.io", "sentry-next", "wixpress.com",
 ]
 
-# Domains that are platforms/agencies, not restaurant owners
 JUNK_DOMAINS = {
     "ionos.fr", "ionos.com", "webador.fr", "partoo.fr", "centralapp.com",
     "telerama.fr", "menuchic.com", "udevweb.co", "agilibri.fr",
@@ -54,7 +47,6 @@ JUNK_DOMAINS = {
     "monsite.com", "domaine.com", "domain.com",
 }
 
-# Placeholder/fake email patterns
 PLACEHOLDER_PATTERNS = [
     "exemple@", "example@", "test@", "utilisateur@", "monemail@",
     "nom@domain", "user@domain", "email@domain", "votre@", "your@",
@@ -71,21 +63,18 @@ def is_clean_email(email: str) -> bool:
         return False
     if any(p in e for p in PLACEHOLDER_PATTERNS):
         return False
-    # Must have valid format
     if "@" not in e:
         return False
     local, domain = e.rsplit("@", 1)
-    # Reject known platform/agency domains
     if domain in JUNK_DOMAINS:
         return False
-    # Must end with valid TLD
     tld = domain.split(".")[-1]
     if tld not in VALID_TLDS:
         return False
-    # Reject if local part looks like a filename
     if "." in local and local.rsplit(".", 1)[1] in {"png", "jpg", "svg", "gif", "webp", "css", "js"}:
         return False
     return True
+
 
 GOOGLE_SHEETS_WEBHOOK = os.environ.get("GOOGLE_SHEETS_WEBHOOK", "")
 
@@ -95,382 +84,159 @@ CSV_PATH = os.path.join(PROSPECTION_DIR, "restaurants_with_emails.csv")
 SENT_LOG_PATH = os.path.join(PROSPECTION_DIR, "sent_log.json")
 STATS_PATH = os.path.join(PROSPECTION_DIR, "send_stats.json")
 
-
-# ─── Email template ──────────────────────────────────────────────────────────────
-
-
-def build_subject(name: str) -> str:
-    """Personalized, curiosity-driven subject line."""
-    return f"Bon service \u00e0 l'\u00e9quipe de {name} \U0001F44A"
+RETARGET_DELAY_DAYS = 15
+MAX_TOUCHES = 4
 
 
-def build_html(name: str, city: str) -> str:
-    """Conversion-focused email. Long, visual, multiple CTAs."""
+# --- Restaurant type detection ------------------------------------------------
+
+ACCROCHES = {
+    "kebab": "Vos clients vous appellent ou passent par Uber Eats pour commander. Dans les deux cas, vous perdez du temps ou de l'argent.",
+    "pizzeria": "Entre le telephone qui sonne et les commissions Deliveroo, chaque commande vous coute plus qu'elle ne devrait.",
+    "burger": "Un burger a 12EUR sur Uber Eats, c'est 8EUR pour vous. Sur votre propre site de commande, c'est 12EUR.",
+    "snack": "Le rush du midi, 50 commandes par telephone, des erreurs, des oublis. Il y a plus simple.",
+    "tacos": "Vos clients veulent commander en ligne. Autant que ca passe par VOTRE site, pas par une plateforme qui prend 30%.",
+    "food_truck": "Vos clients ne savent pas toujours ou vous trouver. Avec une page de commande, ils commandent a l'avance et recuperent sans attendre.",
+    "restaurant": "Les plateformes prennent 25 a 30% sur chaque commande. C'est enorme quand on fait le calcul sur un mois.",
+    "default": "Les plateformes de livraison prennent jusqu'a 30% sur chaque commande. Il y a une alternative.",
+}
+
+
+def detect_type(lead: dict) -> str:
+    """Detect restaurant type from name or type field."""
+    name = (lead.get("name") or "").lower()
+    type_field = (lead.get("type") or "").lower()
+    for keyword in ["kebab", "pizzeria", "pizza", "burger", "snack", "tacos", "food truck", "food-truck"]:
+        if keyword in name or keyword in type_field:
+            return keyword.replace("pizza", "pizzeria").replace("food truck", "food_truck").replace("food-truck", "food_truck")
+    return "restaurant"
+
+
+def get_accroche(resto_type: str) -> str:
+    """Get the type-specific hook line."""
+    return ACCROCHES.get(resto_type, ACCROCHES["default"])
+
+
+# --- Email templates (4-touch campaign) ---------------------------------------
+
+def text_to_html(text: str, name: str) -> str:
+    """Convert plain text email to simple HTML paragraphs with unsubscribe footer."""
+    paragraphs = text.strip().split("\n\n")
+    html_parts = []
+    for p in paragraphs:
+        # Convert single newlines to <br>
+        p_html = p.strip().replace("\n", "<br>")
+        html_parts.append(f'<p style="font-size:15px;line-height:1.6;color:#1a1a1a;margin:0 0 14px 0;">{p_html}</p>')
+    body = "\n".join(html_parts)
+
     return f"""<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
 <div style="max-width:560px;margin:0 auto;padding:32px 20px;">
-
-<p style="font-size:17px;line-height:1.6;color:#1a1a1a;margin:0 0 16px 0;">
-Bon courage pour le rush de ce midi \U0001F525
-</p>
-
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 16px 0;">
-Je m'appelle Sarah et je vous \u00e9cris parce que j'ai vu <strong>{name}</strong> sur Google. {city}, c'est un coin que je connais bien.
-</p>
-
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 16px 0;">
-Il y a quelques mois, on \u00e9tait encore derri\u00e8re le comptoir avec notre \u00e9quipe. Les kebabs qui s'empilent, le t\u00e9l\u00e9phone qui sonne en plein rush, les commandes mal not\u00e9es, les clients qui attendent. On conna\u00eet tout \u00e7a par coeur.
-</p>
-
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 20px 0;">
-C'est pour \u00e7a qu'on a cr\u00e9\u00e9 <strong>commandeici</strong>.
-</p>
-
-<!-- CTA 1 -->
-<p style="margin:0 0 24px 0;text-align:center;">
-<a href="https://app.commandeici.com/inscription" style="display:inline-block;padding:16px 32px;background:#10B981;color:#ffffff;font-size:17px;font-weight:700;text-decoration:none;border-radius:10px;">
-Essayer gratuitement \u2192
-</a>
-</p>
-
-<!-- Stats block -->
-<div style="background:#f0fdf4;border-radius:12px;padding:24px;margin:0 0 24px 0;">
-<p style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 16px 0;text-align:center;">Ce que voient les restos qui l'utilisent :</p>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr>
-<td width="33%" align="center" style="padding:8px 4px;">
-<div style="font-size:32px;font-weight:800;color:#059669;">+30%</div>
-<div style="font-size:13px;color:#6b7280;margin-top:4px;">de commandes</div>
-</td>
-<td width="33%" align="center" style="padding:8px 4px;">
-<div style="font-size:32px;font-weight:800;color:#059669;">0\u20ac</div>
-<div style="font-size:13px;color:#6b7280;margin-top:4px;">de commission</div>
-</td>
-<td width="33%" align="center" style="padding:8px 4px;">
-<div style="font-size:32px;font-weight:800;color:#059669;">+30%</div>
-<div style="font-size:13px;color:#6b7280;margin-top:4px;">de CA</div>
-</td>
-</tr>
-</table>
+{body}
 </div>
-
-<!-- Pain points section -->
-<p style="font-size:18px;font-weight:700;color:#1a1a1a;margin:0 0 16px 0;">
-On sait ce que c'est, le quotidien d'un resto :
-</p>
-
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;">
-<tr>
-<td style="padding:10px 0;border-bottom:1px solid #f3f4f6;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr>
-<td width="36" valign="top" style="font-size:20px;">\u260E\uFE0F</td>
-<td style="font-size:15px;color:#1a1a1a;line-height:1.5;">
-<strong>Le t\u00e9l\u00e9phone qui sonne en plein service</strong><br>
-<span style="color:#6b7280;">Avec commandeici, les clients commandent en ligne. Vous ne d\u00e9crochez plus.</span>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-<tr>
-<td style="padding:10px 0;border-bottom:1px solid #f3f4f6;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr>
-<td width="36" valign="top" style="font-size:20px;">\u270D\uFE0F</td>
-<td style="font-size:15px;color:#1a1a1a;line-height:1.5;">
-<strong>Les erreurs de commande</strong><br>
-<span style="color:#6b7280;">Le client choisit lui-m\u00eame sur votre carte. Plus de malentendu, plus de litige.</span>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-<tr>
-<td style="padding:10px 0;border-bottom:1px solid #f3f4f6;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr>
-<td width="36" valign="top" style="font-size:20px;">\U0001F4B8</td>
-<td style="font-size:15px;color:#1a1a1a;line-height:1.5;">
-<strong>Les plateformes qui prennent 30%</strong><br>
-<span style="color:#6b7280;">Uber Eats, Deliveroo... Avec commandeici : z\u00e9ro commission. Vos marges restent vos marges.</span>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-<tr>
-<td style="padding:10px 0;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr>
-<td width="36" valign="top" style="font-size:20px;">\U0001F465</td>
-<td style="font-size:15px;color:#1a1a1a;line-height:1.5;">
-<strong>La queue au comptoir qui fait fuir</strong><br>
-<span style="color:#6b7280;">Vos clients commandent depuis leur table ou avant d'arriver. Moins d'attente, plus de clients servis.</span>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</table>
-
-<!-- CTA 2 -->
-<p style="margin:0 0 24px 0;text-align:center;">
-<a href="https://app.commandeici.com/inscription" style="display:inline-block;padding:16px 32px;background:#10B981;color:#ffffff;font-size:17px;font-weight:700;text-decoration:none;border-radius:10px;">
-Cr\u00e9er ma page en 5 min \u2192
-</a>
-</p>
-
-<!-- How it works -->
-<div style="background:#f9fafb;border-radius:12px;padding:24px;margin:0 0 24px 0;">
-<p style="font-size:16px;font-weight:700;color:#1a1a1a;margin:0 0 16px 0;">Comment \u00e7a marche :</p>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr>
-<td style="padding:6px 0;">
-<span style="display:inline-block;width:28px;height:28px;background:#10B981;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-weight:700;font-size:14px;margin-right:10px;">1</span>
-<span style="font-size:15px;color:#1a1a1a;">Vous cr\u00e9ez votre page (carte, prix, photos)</span>
-</td>
-</tr>
-<tr>
-<td style="padding:6px 0;">
-<span style="display:inline-block;width:28px;height:28px;background:#10B981;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-weight:700;font-size:14px;margin-right:10px;">2</span>
-<span style="font-size:15px;color:#1a1a1a;">Vos clients scannent le QR code ou vont sur votre lien</span>
-</td>
-</tr>
-<tr>
-<td style="padding:6px 0;">
-<span style="display:inline-block;width:28px;height:28px;background:#10B981;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-weight:700;font-size:14px;margin-right:10px;">3</span>
-<span style="font-size:15px;color:#1a1a1a;">Ils choisissent, personnalisent, commandent</span>
-</td>
-</tr>
-<tr>
-<td style="padding:6px 0;">
-<span style="display:inline-block;width:28px;height:28px;background:#10B981;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-weight:700;font-size:14px;margin-right:10px;">4</span>
-<span style="font-size:15px;color:#1a1a1a;">Vous recevez la commande en cuisine, c'est tout</span>
-</td>
-</tr>
-</table>
-</div>
-
-<!-- Comparison table -->
-<p style="font-size:16px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;">commandeici vs les plateformes :</p>
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
-<tr style="background:#f9fafb;">
-<td style="padding:10px 12px;font-size:14px;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;"></td>
-<td style="padding:10px 12px;font-size:14px;font-weight:700;color:#10B981;border-bottom:1px solid #e5e7eb;text-align:center;">commandeici</td>
-<td style="padding:10px 12px;font-size:14px;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;text-align:center;">Uber / Deliveroo</td>
-</tr>
-<tr>
-<td style="padding:10px 12px;font-size:14px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">Commission</td>
-<td style="padding:10px 12px;font-size:14px;color:#059669;font-weight:700;border-bottom:1px solid #f3f4f6;text-align:center;">0%</td>
-<td style="padding:10px 12px;font-size:14px;color:#dc2626;border-bottom:1px solid #f3f4f6;text-align:center;">25-30%</td>
-</tr>
-<tr>
-<td style="padding:10px 12px;font-size:14px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">Engagement</td>
-<td style="padding:10px 12px;font-size:14px;color:#059669;font-weight:700;border-bottom:1px solid #f3f4f6;text-align:center;">Aucun</td>
-<td style="padding:10px 12px;font-size:14px;color:#dc2626;border-bottom:1px solid #f3f4f6;text-align:center;">12 mois</td>
-</tr>
-<tr>
-<td style="padding:10px 12px;font-size:14px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">Donn\u00e9es clients</td>
-<td style="padding:10px 12px;font-size:14px;color:#059669;font-weight:700;border-bottom:1px solid #f3f4f6;text-align:center;">\u00c0 vous</td>
-<td style="padding:10px 12px;font-size:14px;color:#dc2626;border-bottom:1px solid #f3f4f6;text-align:center;">Gard\u00e9es</td>
-</tr>
-<tr>
-<td style="padding:10px 12px;font-size:14px;color:#1a1a1a;">Prix</td>
-<td style="padding:10px 12px;font-size:14px;color:#059669;font-weight:700;text-align:center;">19\u20ac/mois</td>
-<td style="padding:10px 12px;font-size:14px;color:#dc2626;text-align:center;">~500\u20ac/mois*</td>
-</tr>
-</table>
-<p style="font-size:12px;color:#9ca3af;margin:-16px 0 24px 0;">*estim\u00e9 pour un resto qui fait 1\u202f500\u20ac/mois sur ces plateformes</p>
-
-<!-- CTA 3 -->
-<div style="background:#f0fdf4;border-radius:12px;padding:24px;margin:0 0 24px 0;text-align:center;">
-<p style="font-size:16px;font-weight:700;color:#1a1a1a;margin:0 0 4px 0;">4 semaines gratuites. Pas de CB demand\u00e9e.</p>
-<p style="font-size:14px;color:#6b7280;margin:0 0 16px 0;">19\u20ac/mois apr\u00e8s, r\u00e9siliable en un clic.</p>
-<a href="https://app.commandeici.com/inscription" style="display:inline-block;padding:16px 32px;background:#10B981;color:#ffffff;font-size:17px;font-weight:700;text-decoration:none;border-radius:10px;">
-C'est parti \U0001F680
-</a>
-</div>
-
-<!-- Demo link -->
-<p style="font-size:15px;line-height:1.6;color:#1a1a1a;margin:0 0 24px 0;text-align:center;">
-\U0001F449 <a href="https://app.commandeici.com/demo" style="color:#10B981;text-decoration:underline;font-weight:600;">Voir la d\u00e9mo en vrai</a>
-</p>
-
-<!-- Signature -->
-<div style="border-top:1px solid #e5e7eb;padding-top:20px;margin-top:8px;">
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 0 0;">
-\u00c0 bient\u00f4t,<br>
-<strong>Sarah</strong><br>
-<span style="color:#6b7280;font-size:14px;">commandeici.com \u2022 par des restaurateurs, pour des restaurateurs</span>
-</p>
-</div>
-
-</div>
-
 <div style="max-width:560px;margin:0 auto;padding:16px 20px;border-top:1px solid #e5e7eb;">
 <p style="font-size:12px;color:#9ca3af;margin:0;line-height:1.5;">
-Vous recevez cet email parce que {name} est r\u00e9f\u00e9renc\u00e9 sur Google.
-Si ce n'est pas pertinent, ignorez ce message, vous ne recevrez rien d'autre.
+Vous recevez cet email parce que {name} est reference sur Google.
+Si ce n'est pas pertinent, ignorez ce message ou repondez "stop".
 </p>
-</div>
-
-</body>
-</html>"""
-
-
-def build_text(name: str, city: str) -> str:
-    """Plain text fallback."""
-    return f"""Bon courage pour le rush de ce midi !
-
-Je m'appelle Sarah et j'ai vu {name} sur Google. {city}, c'est un coin que je connais bien.
-
-Il y a quelques mois, on \u00e9tait encore derri\u00e8re le comptoir avec notre \u00e9quipe. Les kebabs qui s'empilent, le t\u00e9l\u00e9phone qui sonne, les commandes mal not\u00e9es. On conna\u00eet tout \u00e7a.
-
-C'est pour \u00e7a qu'on a cr\u00e9\u00e9 commandeici.
-
-Ce que voient les restos qui l'utilisent :
-- +30% de commandes
-- 0% de commission (c'est pas Uber Eats)
-- +30% de chiffre d'affaires
-
-On sait ce que c'est, le quotidien d'un resto :
-- Le t\u00e9l\u00e9phone qui sonne en plein service -> les clients commandent en ligne
-- Les erreurs de commande -> le client choisit lui-m\u00eame
-- Les plateformes qui prennent 30% -> z\u00e9ro commission chez nous
-- La queue au comptoir -> commande depuis la table ou avant d'arriver
-
-Comment \u00e7a marche :
-1. Vous cr\u00e9ez votre page (carte, prix, photos)
-2. Vos clients scannent le QR code
-3. Ils choisissent, commandent
-4. Vous recevez en cuisine, c'est tout
-
-commandeici vs Uber/Deliveroo :
-- Commission : 0% vs 25-30%
-- Engagement : aucun vs 12 mois
-- Donn\u00e9es clients : \u00e0 vous vs gard\u00e9es
-- Prix : 19\u20ac/mois vs ~500\u20ac/mois
-
-4 semaines gratuites. Pas de CB demand\u00e9e. 19\u20ac/mois apr\u00e8s.
-
-Essayer : https://app.commandeici.com/inscription
-Voir un vrai resto : https://app.commandeici.com/demo
-
-\u00c0 bient\u00f4t,
-Sarah
-commandeici.com \u2022 par des restaurateurs, pour des restaurateurs
-
----
-Vous recevez cet email parce que {name} est r\u00e9f\u00e9renc\u00e9 sur Google.
-Si ce n'est pas pertinent, ignorez ce message, vous ne recevrez rien d'autre."""
-
-
-# ─── Retarget email templates ─────────────────────────────────────────────────────
-
-
-RETARGET_VARIANTS = [
-    {
-        "subject": "Re: {name} - une question rapide",
-        "opener": "Je vous avais ecrit il y a quelques jours. Pas de souci si vous n'avez pas eu le temps de regarder, je sais ce que c'est le rush.",
-        "cta_text": "Voir ce que ca donne pour {name}",
-        "closer": "Si ca ne vous parle pas du tout, pas de probleme, vous ne recevrez plus rien.",
-    },
-    {
-        "subject": "{name} - 2 min pour gagner du temps ?",
-        "opener": "Je me permets de vous reecrire parce que plusieurs restos a {city} ont teste commandeici ces derniers jours.",
-        "cta_text": "Tester gratuitement",
-        "closer": "En tout cas, bon service et bon courage pour la suite.",
-    },
-    {
-        "subject": "Dernier message pour {name}",
-        "opener": "C'est mon dernier email, promis. Je voulais juste vous dire qu'on a encore des places pour l'essai gratuit de 4 semaines.",
-        "cta_text": "Essayer maintenant (gratuit)",
-        "closer": "Apres ca, je ne vous embete plus. Bonne continuation a toute l'equipe.",
-    },
-]
-
-
-def build_retarget_subject(name: str, send_count: int) -> str:
-    """Pick a subject line based on retarget round."""
-    idx = min(send_count - 1, len(RETARGET_VARIANTS) - 1)
-    variant = RETARGET_VARIANTS[idx]
-    return variant["subject"].format(name=name, city="votre ville")
-
-
-def build_retarget_html(name: str, city: str, send_count: int) -> str:
-    """Short, personal retarget email. Different from the initial long one."""
-    idx = min(send_count - 1, len(RETARGET_VARIANTS) - 1)
-    v = RETARGET_VARIANTS[idx]
-    opener = v["opener"].format(name=name, city=city)
-    cta_text = v["cta_text"].format(name=name)
-    closer = v["closer"].format(name=name)
-
-    return f"""<!DOCTYPE html>
-<html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-<div style="max-width:560px;margin:0 auto;padding:32px 20px;">
-
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 16px 0;">
-Bonjour,
-</p>
-
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 16px 0;">
-{opener}
-</p>
-
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0 0 20px 0;">
-Pour rappel, <strong>commandeici</strong> c'est simple : vos clients commandent en ligne, vous recevez en cuisine. Zero commission, zero engagement.
-</p>
-
-<p style="margin:0 0 24px 0;text-align:center;">
-<a href="https://app.commandeici.com/inscription" style="display:inline-block;padding:14px 28px;background:#10B981;color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;border-radius:10px;">
-{cta_text}
-</a>
-</p>
-
-<p style="font-size:15px;line-height:1.6;color:#6b7280;margin:0 0 0 0;">
-{closer}
-</p>
-
-<div style="border-top:1px solid #e5e7eb;padding-top:20px;margin-top:20px;">
-<p style="font-size:16px;line-height:1.6;color:#1a1a1a;margin:0;">
-Sarah<br>
-<span style="color:#6b7280;font-size:14px;">commandeici.com</span>
-</p>
-</div>
-
 </div>
 </body>
 </html>"""
 
 
-def build_retarget_text(name: str, city: str, send_count: int) -> str:
-    """Plain text retarget."""
-    idx = min(send_count - 1, len(RETARGET_VARIANTS) - 1)
-    v = RETARGET_VARIANTS[idx]
-    opener = v["opener"].format(name=name, city=city)
-    closer = v["closer"].format(name=name)
+def build_touch1(name: str, city: str, resto_type: str) -> dict:
+    """Touch 1: personal, type-specific accroche + product pitch + demo link."""
+    accroche = get_accroche(resto_type)
+    subject = f"{name} - une idee pour vos commandes"
+    text = f"""Bonjour,
 
-    return f"""Bonjour,
+Je m'appelle Sarah, je travaille chez commandeici.
 
-{opener}
+{accroche}
 
-Pour rappel, commandeici c'est simple : vos clients commandent en ligne, vous recevez en cuisine. Zero commission, zero engagement.
+On a cree un outil simple pour les restos comme {name} : vos clients commandent en ligne sur VOTRE page, vous recevez en cuisine. Pas de commission, pas d'engagement.
 
-{v["cta_text"].format(name=name)} : https://app.commandeici.com/inscription
+Vous pouvez voir a quoi ca ressemble ici : https://app.commandeici.com/demo
 
-{closer}
+19 euros/mois, 4 semaines d'essai gratuit, pas de CB demandee.
 
-Sarah
-commandeici.com"""
+Si ca vous parle, repondez juste "oui" a ce mail et je vous aide a configurer votre page.
+
+Sarah - CommandeIci"""
+
+    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
 
 
-# ─── Resend API ──────────────────────────────────────────────────────────────────
+def build_touch2(name: str, city: str, resto_type: str) -> dict:
+    """Touch 2 (+15 days): chiffres angle."""
+    subject = f"Re: {name} - un calcul rapide"
+    text = f"""Bonjour,
 
+Je vous avais ecrit il y a quelques jours. Pas de souci si vous n'avez pas eu le temps de regarder.
+
+Un truc qui fait reflechir : si vous faites 50 commandes par semaine sur une plateforme, a 25% de commission, ca fait environ 1000 euros par mois qui partent en commissions.
+
+Sur commandeici, c'est 19 euros/mois. Zero commission. Le reste, c'est pour vous.
+
+Concretement : vos clients commandent sur votre page, vous recevez la commande en cuisine. C'est tout.
+
+Si ca vous interesse pour {name}, repondez a ce mail, je vous montre en 2 minutes.
+
+Sarah - CommandeIci"""
+
+    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
+
+
+def build_touch3(name: str, city: str, resto_type: str) -> dict:
+    """Touch 3 (+30 days): social proof."""
+    subject = f"{name} - ce que disent les restaurateurs"
+    text = f"""Bonjour,
+
+Un retour qu'on a souvent des restaurateurs qui utilisent commandeici :
+
+"Avant, le telephone sonnait 40 fois par service. Maintenant les clients commandent en ligne, on recoit direct en cuisine. On a reduit les erreurs et on gagne du temps."
+
+"J'etais sur Uber Eats, je perdais 25% sur chaque commande. Avec commandeici c'est 19 euros/mois, point. En un mois j'ai economise plus de 800 euros."
+
+Si vous voulez tester pour {name}, c'est gratuit pendant 4 semaines : https://app.commandeici.com/inscription
+
+Sarah - CommandeIci"""
+
+    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
+
+
+def build_touch4(name: str, city: str, resto_type: str) -> dict:
+    """Touch 4 (+45 days): break-up email."""
+    subject = f"Dernier message pour {name}"
+    text = f"""Bonjour,
+
+C'est mon dernier mail, promis.
+
+Si la commande en ligne n'est pas un sujet pour {name} en ce moment, aucun souci. Je ne vous embeterai plus.
+
+Si un jour ca vous interesse : https://app.commandeici.com/inscription
+4 semaines gratuites, 19 euros/mois apres, resiliable en un clic.
+
+Bonne continuation a toute l'equipe.
+
+Sarah - CommandeIci"""
+
+    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
+
+
+TOUCH_BUILDERS = [build_touch1, build_touch2, build_touch3, build_touch4]
+
+
+def build_email(name: str, city: str, resto_type: str, send_count: int) -> dict:
+    """Build the right email for the touch number.
+    send_count=0 -> touch 1, send_count=1 -> touch 2, etc."""
+    idx = min(send_count, len(TOUCH_BUILDERS) - 1)
+    return TOUCH_BUILDERS[idx](name, city, resto_type)
+
+
+# --- Resend API ---------------------------------------------------------------
 
 def send_email(to: str, subject: str, html: str, text: str) -> dict:
     """Send one email via Resend API."""
@@ -494,7 +260,7 @@ def send_email(to: str, subject: str, html: str, text: str) -> dict:
     return resp.json()
 
 
-def log_to_supabase(resend_id: str, email: str, name: str, city: str):
+def log_to_supabase(resend_id: str, email: str, name: str, city: str, touch: int):
     """Log send to email_logs table for dashboard tracking (non-blocking)."""
     try:
         requests.post(
@@ -509,7 +275,7 @@ def log_to_supabase(resend_id: str, email: str, name: str, city: str):
                 "email_type": "prospection_send",
                 "recipient_email": email,
                 "resend_id": resend_id,
-                "metadata": {"restaurant_name": name, "city": city},
+                "metadata": {"restaurant_name": name, "city": city, "touch": touch},
             },
             timeout=5,
         )
@@ -517,11 +283,7 @@ def log_to_supabase(resend_id: str, email: str, name: str, city: str):
         print(f"    [supabase log error: {e}]")
 
 
-# ─── Tracking ────────────────────────────────────────────────────────────────────
-
-
-RETARGET_DELAY_DAYS = 15  # Days before retargeting
-
+# --- Tracking -----------------------------------------------------------------
 
 def load_sent_log() -> dict:
     """Load sent log. Format: {email: {sent_at, last_sent_at, send_count, resend_id, name, city}}"""
@@ -555,10 +317,9 @@ def save_stats(stats: dict):
         json.dump(stats, f, ensure_ascii=False, indent=2)
 
 
-# ─── Google Sheets Tracking ───────────────────────────────────────────────────────
+# --- Google Sheets Tracking ---------------------------------------------------
 
-
-def track_to_sheets(restaurant: dict, resend_id: str, slot: str):
+def track_to_sheets(restaurant: dict, resend_id: str, slot: str, touch: int):
     """Track a sent email to Google Sheets (non-blocking)."""
     if not GOOGLE_SHEETS_WEBHOOK:
         return
@@ -577,6 +338,7 @@ def track_to_sheets(restaurant: dict, resend_id: str, slot: str):
                 "status": "Envoye",
                 "resend_id": resend_id,
                 "slot": slot,
+                "touch": touch,
             },
             timeout=10,
         )
@@ -598,12 +360,11 @@ def sheets_batch_summary():
         print(f"    [sheets summary error: {e}]")
 
 
-# ─── Main ────────────────────────────────────────────────────────────────────────
-
+# --- Main ---------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description="Send prospection emails")
-    parser.add_argument("--batch-size", type=int, default=38, help="Number of emails to send (default: 38)")
+    parser.add_argument("--batch-size", type=int, default=95, help="Number of emails to send (default: 95)")
     parser.add_argument("--dry-run", action="store_true", help="Print what would be sent without sending")
     parser.add_argument("--start-from", type=int, default=0, help="Skip first N unsent emails")
     args = parser.parse_args()
@@ -640,16 +401,17 @@ def main():
         if name not in best_per_resto:
             best_per_resto[name] = {**r, "email": email}
         else:
-            # Prefer contact@domain or info@domain over random emails
             current = best_per_resto[name]["email"]
             if email.startswith("contact@") and not current.startswith("contact@"):
                 best_per_resto[name] = {**r, "email": email}
 
-    # Build two lists: unsent (priority) + retargetable (15+ days old)
-    unsent = []
-    retargetable = []
-    seen_emails = set()
+    # Build lists by touch level
     now = datetime.now(timezone.utc)
+    new_leads = []        # Never contacted (touch 0 -> send touch 1)
+    retarget_r1 = []      # send_count=1, 15+ days (touch 1 -> send touch 2)
+    retarget_r2 = []      # send_count=2, 15+ days (touch 2 -> send touch 3)
+    retarget_r3 = []      # send_count=3, 15+ days (touch 3 -> send touch 4)
+    seen_emails = set()
 
     for r in best_per_resto.values():
         email = r["email"]
@@ -658,12 +420,11 @@ def main():
         seen_emails.add(email)
 
         if email not in sent_log:
-            unsent.append({"restaurant": r, "is_retarget": False, "send_count": 0})
+            new_leads.append({"restaurant": r, "send_count": 0})
         else:
             entry = sent_log[email]
             send_count = entry.get("send_count", 1)
-            # Max 3 retargets (initial + 3 relances = 4 total)
-            if send_count >= 4:
+            if send_count >= MAX_TOUCHES:
                 continue
             last_sent = entry.get("last_sent_at", entry.get("sent_at", ""))
             if not last_sent:
@@ -671,20 +432,27 @@ def main():
             try:
                 last_dt = datetime.fromisoformat(last_sent.replace("Z", "+00:00"))
                 days_since = (now - last_dt).days
-                if days_since >= RETARGET_DELAY_DAYS:
-                    retargetable.append({
-                        "restaurant": r,
-                        "is_retarget": True,
-                        "send_count": send_count,
-                        "days_since": days_since,
-                    })
+                if days_since < RETARGET_DELAY_DAYS:
+                    continue
+                item = {
+                    "restaurant": r,
+                    "send_count": send_count,
+                    "days_since": days_since,
+                }
+                if send_count == 3:
+                    retarget_r3.append(item)
+                elif send_count == 2:
+                    retarget_r2.append(item)
+                else:
+                    retarget_r1.append(item)
             except (ValueError, TypeError):
                 continue
 
-    # Sort retargetable: oldest first
-    retargetable.sort(key=lambda x: x.get("days_since", 0), reverse=True)
+    # Sort retargetable: oldest first within each tier
+    for lst in [retarget_r1, retarget_r2, retarget_r3]:
+        lst.sort(key=lambda x: x.get("days_since", 0), reverse=True)
 
-    # Sort unsent: priority cities first
+    # Sort new leads: priority cities first
     def city_priority(item):
         city = item["restaurant"].get("city", "").strip()
         for i, pc in enumerate(PRIORITY_CITIES):
@@ -692,16 +460,41 @@ def main():
                 return i
         return len(PRIORITY_CITIES)
 
-    unsent.sort(key=city_priority)
+    new_leads.sort(key=city_priority)
 
-    priority_count = sum(1 for u in unsent if city_priority(u) < len(PRIORITY_CITIES))
-    print(f"Nouveaux contacts     : {len(unsent)} (dont {priority_count} prioritaires)")
-    print(f"Retargetables (15j+)  : {len(retargetable)}")
+    priority_count = sum(1 for u in new_leads if city_priority(u) < len(PRIORITY_CITIES))
+    print(f"Nouveaux contacts     : {len(new_leads)} (dont {priority_count} prioritaires)")
+    print(f"Retargetables R1 (T2) : {len(retarget_r1)}")
+    print(f"Retargetables R2 (T3) : {len(retarget_r2)}")
+    print(f"Retargetables R3 (T4) : {len(retarget_r3)}")
     if PRIORITY_CITIES:
         print(f"Villes prioritaires   : {', '.join(PRIORITY_CITIES)}")
 
-    # Priority: unsent first (priority cities at top), then retarget to fill the batch
-    combined = unsent + retargetable
+    # Priority scheduling: hot leads > R3 (10%) > R2 (25%) > R1 (35%) > new (rest)
+    batch_size = args.batch_size
+    combined = []
+
+    # R3 gets 10% of budget
+    r3_budget = min(int(batch_size * 0.10), len(retarget_r3))
+    combined.extend(retarget_r3[:r3_budget])
+
+    # R2 gets 25% of budget
+    r2_budget = min(int(batch_size * 0.25), len(retarget_r2))
+    combined.extend(retarget_r2[:r2_budget])
+
+    # R1 gets 35% of budget
+    r1_budget = min(int(batch_size * 0.35), len(retarget_r1))
+    combined.extend(retarget_r1[:r1_budget])
+
+    # New fills the rest
+    remaining = batch_size - len(combined)
+    combined.extend(new_leads[:max(remaining, 0)])
+
+    # If retargets didn't fill their quota, fill with more new leads
+    if len(combined) < batch_size:
+        already_emails = {item["restaurant"]["email"] for item in combined}
+        extra_new = [n for n in new_leads if n["restaurant"]["email"] not in already_emails]
+        combined.extend(extra_new[:batch_size - len(combined)])
 
     if not combined:
         print("Rien a envoyer. Tous les contacts sont a jour.")
@@ -713,9 +506,9 @@ def main():
         print(f"Apres offset (--start-from {args.start_from}) : {len(combined)}")
 
     # Take batch
-    batch = combined[:args.batch_size]
-    new_count = sum(1 for b in batch if not b["is_retarget"])
-    retarget_count = sum(1 for b in batch if b["is_retarget"])
+    batch = combined[:batch_size]
+    new_count = sum(1 for b in batch if b["send_count"] == 0)
+    retarget_count = sum(1 for b in batch if b["send_count"] > 0)
     print(f"\nBatch de {len(batch)} emails ({new_count} nouveaux + {retarget_count} relances){'  [DRY RUN]' if args.dry_run else ''}")
     print("=" * 60)
 
@@ -729,25 +522,24 @@ def main():
 
     for i, item in enumerate(batch):
         r = item["restaurant"]
-        is_retarget = item["is_retarget"]
         send_count = item["send_count"]
+        touch_num = send_count + 1  # touch 1-4
 
         email = r["email"].strip().lower()
         name = r["name"].strip()
         city = r["city"].strip()
+        resto_type = detect_type(r)
 
-        if is_retarget:
-            subject = build_retarget_subject(name, send_count)
-            html = build_retarget_html(name, city, send_count)
-            text = build_retarget_text(name, city, send_count)
-            tag = f"RELANCE {send_count}"
-        else:
-            subject = build_subject(name)
-            html = build_html(name, city)
-            text = build_text(name, city)
-            tag = "NOUVEAU"
+        email_data = build_email(name, city, resto_type, send_count)
+        subject = email_data["subject"]
+        html = email_data["html"]
+        text = email_data["text"]
 
-        print(f"  [{i+1}/{len(batch)}] [{tag}] {name} ({city}) -> {email}", end="", flush=True)
+        tag = f"TOUCH {touch_num}" if touch_num > 1 else "NOUVEAU"
+        type_tag = resto_type if resto_type != "restaurant" else ""
+        type_str = f" [{type_tag}]" if type_tag else ""
+
+        print(f"  [{i+1}/{len(batch)}] [{tag}]{type_str} {name} ({city}) -> {email}", end="", flush=True)
 
         if args.dry_run:
             print("  [DRY RUN]")
@@ -769,8 +561,8 @@ def main():
             }
             sent_count += 1
             print(f"  OK ({resend_id})")
-            log_to_supabase(resend_id, email, name, city)
-            track_to_sheets(r, resend_id, slot)
+            log_to_supabase(resend_id, email, name, city, touch_num)
+            track_to_sheets(r, resend_id, slot, touch_num)
         except requests.exceptions.HTTPError as e:
             error_count += 1
             status = e.response.status_code if e.response else "?"
@@ -797,12 +589,11 @@ def main():
                     sent_count += 1
                     error_count -= 1
                     print(f"    Retry OK ({resend_id})")
-                    log_to_supabase(resend_id, email, name, city)
-                    track_to_sheets(r, resend_id, slot)
+                    log_to_supabase(resend_id, email, name, city, touch_num)
+                    track_to_sheets(r, resend_id, slot, touch_num)
                 except Exception as e2:
                     print(f"    Retry FAILED: {e2}")
 
-            # If too many errors, stop
             if error_count >= 5:
                 print("\nTrop d'erreurs, arret du batch.")
                 break
@@ -813,7 +604,7 @@ def main():
                 print("\nTrop d'erreurs, arret du batch.")
                 break
 
-        # Small delay between sends (Resend rate limit: 10/s on free, 100/s on pro)
+        # Small delay between sends
         time.sleep(1.5)
 
         # Save every 10
@@ -833,15 +624,14 @@ def main():
     stats["total_sent"] += sent_count
     stats["total_errors"] += error_count
     stats["runs"].append(run_info)
-    # Keep only last 100 runs
     stats["runs"] = stats["runs"][-100:]
     save_stats(stats)
 
-    # Notify Sheets to rebuild dashboard
+    # Notify Sheets
     sheets_batch_summary()
 
     # Summary
-    remaining_new = max(len(unsent) - new_count, 0)
+    remaining_new = max(len(new_leads) - new_count, 0)
     print(f"\n{'=' * 60}")
     print(f"RESULTATS")
     print(f"{'=' * 60}")
@@ -849,10 +639,10 @@ def main():
     print(f"Erreurs           : {error_count}")
     print(f"Total envoyes     : {stats['total_sent']}")
     print(f"Nouveaux restants : {remaining_new}")
-    print(f"Retargetables     : {len(retargetable)}")
+    print(f"Retargetables     : R1={len(retarget_r1)} R2={len(retarget_r2)} R3={len(retarget_r3)}")
     if remaining_new > 0:
-        days_left = remaining_new // 90
-        print(f"Jours restants    : ~{days_left} jours (a 90/jour)")
+        days_left = remaining_new // 95
+        print(f"Jours restants    : ~{days_left} jours (a 95/jour)")
 
 
 if __name__ == "__main__":
