@@ -275,41 +275,64 @@ def build_leads_index(leads: dict) -> dict:
 
 def outscraper_search(query: str, api_key: str, limit: int = 100) -> list:
     """
-    Search Outscraper Google Maps API.
-    Returns a list of place results.
+    Search Outscraper Google Maps API in ASYNC mode.
+    Launches the request, then polls for results.
     """
-    params = {
-        "query": query,
-        "limit": limit,
-        "language": "fr",
-        "region": "FR",
-        "enrichments": "emails_and_contacts",
-        "async": False,
-    }
     headers = {"X-API-KEY": api_key}
 
     try:
+        # Step 1: Launch async request
+        params = {
+            "query": query,
+            "limit": limit,
+            "language": "fr",
+            "region": "FR",
+            "async": True,
+        }
         resp = requests.get(
             OUTSCRAPER_API_URL,
             params=params,
             headers=headers,
-            timeout=120,
+            timeout=30,
         )
+
         if resp.status_code == 429:
-            print("  [WARN] Rate limited, waiting 30s...")
-            time.sleep(30)
-            resp = requests.get(
-                OUTSCRAPER_API_URL,
-                params=params,
-                headers=headers,
-                timeout=120,
-            )
+            print("  [WARN] Rate limited, waiting 60s...")
+            time.sleep(60)
+            resp = requests.get(OUTSCRAPER_API_URL, params=params, headers=headers, timeout=30)
 
         if resp.status_code != 200:
             print(f"  [ERROR] API returned {resp.status_code}: {resp.text[:200]}")
             return []
 
-        data = resp.json()
+        resp_data = resp.json()
+        request_id = resp_data.get("id")
+        if not request_id:
+            # Sync response (small queries sometimes return immediately)
+            data = resp_data
+        else:
+            # Step 2: Poll for results
+            print(f" (async {request_id[:8]}...", end="", flush=True)
+            poll_url = f"https://api.app.outscraper.com/requests/{request_id}"
+            for attempt in range(60):  # Max 5 min (60 x 5s)
+                time.sleep(5)
+                poll_resp = requests.get(poll_url, headers=headers, timeout=15)
+                if poll_resp.status_code != 200:
+                    continue
+                poll_data = poll_resp.json()
+                status = poll_data.get("status")
+                if status == "Success":
+                    data = poll_data.get("data", [])
+                    print(f" done)", end="")
+                    break
+                elif status == "Error":
+                    print(f" error)", end="")
+                    return []
+            else:
+                print(f" timeout)", end="")
+                return []
+
+        data = data
 
         # Outscraper v3 returns nested list: [[results]]
         if isinstance(data, list) and len(data) > 0:
