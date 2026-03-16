@@ -275,13 +275,29 @@ def build_leads_index(leads: dict) -> dict:
 
 def outscraper_search(query: str, api_key: str, limit: int = 100) -> list:
     """
-    Search Outscraper Google Maps API in ASYNC mode.
-    Launches the request, then polls for results.
+    Search Outscraper Google Maps API using the official SDK.
+    Falls back to REST API if SDK not available.
     """
-    headers = {"X-API-KEY": api_key}
-
     try:
-        # Step 1: Launch async request
+        from outscraper import ApiClient
+        client = ApiClient(api_key=api_key)
+        results = client.google_maps_search(
+            query,
+            limit=limit,
+            language='fr',
+            region='FR',
+        )
+        # SDK returns [[results]] nested list
+        if results and isinstance(results, list) and len(results) > 0:
+            if isinstance(results[0], list):
+                data = results[0]
+            else:
+                data = results
+        else:
+            data = []
+    except ImportError:
+        # Fallback to REST API
+        headers = {"X-API-KEY": api_key}
         params = {
             "query": query,
             "limit": limit,
@@ -289,30 +305,16 @@ def outscraper_search(query: str, api_key: str, limit: int = 100) -> list:
             "region": "FR",
             "async": True,
         }
-        resp = requests.get(
-            OUTSCRAPER_API_URL,
-            params=params,
-            headers=headers,
-            timeout=30,
-        )
-
-        if resp.status_code == 429:
-            print("  [WARN] Rate limited, waiting 60s...")
-            time.sleep(60)
-            resp = requests.get(OUTSCRAPER_API_URL, params=params, headers=headers, timeout=30)
-
+        resp = requests.get(OUTSCRAPER_API_URL, params=params, headers=headers, timeout=30)
         if resp.status_code not in (200, 202):
             print(f"  [ERROR] API returned {resp.status_code}: {resp.text[:200]}")
             return []
-
         resp_data = resp.json()
         request_id = resp_data.get("id")
         results_location = resp_data.get("results_location")
         if not request_id and not results_location:
-            # Sync response (small queries sometimes return immediately)
             data = resp_data
         else:
-            # Step 2: Poll for results
             poll_url = results_location or f"https://api.app.outscraper.com/requests/{request_id}"
             print(f" (polling...", end="", flush=True)
             for attempt in range(60):  # Max 5 min (60 x 5s)
