@@ -11,6 +11,7 @@ Usage:
 """
 
 import argparse
+import base64
 import csv
 import json
 import os
@@ -119,7 +120,13 @@ def get_accroche(resto_type: str) -> str:
 
 # --- Email templates (4-touch campaign) ---------------------------------------
 
-def text_to_html(text: str, name: str) -> str:
+def _unsub_link(email: str) -> str:
+    """Build the unsubscribe URL for a given email."""
+    token = base64.urlsafe_b64encode(email.encode()).decode()
+    return f"{SUPABASE_URL}/functions/v1/prospection-unsubscribe?t={token}"
+
+
+def text_to_html(text: str, name: str, email: str = "") -> str:
     """Convert plain text email to simple HTML paragraphs with unsubscribe footer."""
     paragraphs = text.strip().split("\n\n")
     html_parts = []
@@ -128,6 +135,8 @@ def text_to_html(text: str, name: str) -> str:
         p_html = p.strip().replace("\n", "<br>")
         html_parts.append(f'<p style="font-size:15px;line-height:1.6;color:#1a1a1a;margin:0 0 14px 0;">{p_html}</p>')
     body = "\n".join(html_parts)
+
+    unsub = _unsub_link(email) if email else "#"
 
     return f"""<!DOCTYPE html>
 <html lang="fr">
@@ -139,14 +148,14 @@ def text_to_html(text: str, name: str) -> str:
 <div style="max-width:560px;margin:0 auto;padding:16px 20px;border-top:1px solid #e5e7eb;">
 <p style="font-size:12px;color:#9ca3af;margin:0;line-height:1.5;">
 Vous recevez cet email parce que {name} est reference sur Google.
-Si ce n'est pas pertinent, ignorez ce message ou repondez "stop".
+<a href="{unsub}" style="color:#9ca3af;">Se desabonner</a>
 </p>
 </div>
 </body>
 </html>"""
 
 
-def build_touch1(name: str, city: str, resto_type: str) -> dict:
+def build_touch1(name: str, city: str, resto_type: str, email: str = "") -> dict:
     """Touch 1: personal, type-specific accroche + product pitch + demo link."""
     accroche = get_accroche(resto_type)
     subject = f"{name} - une idee pour vos commandes"
@@ -166,10 +175,10 @@ Si ca vous parle, repondez juste "oui" a ce mail et je vous aide a configurer vo
 
 Sarah - CommandeIci"""
 
-    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
+    return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
 
-def build_touch2(name: str, city: str, resto_type: str) -> dict:
+def build_touch2(name: str, city: str, resto_type: str, email: str = "") -> dict:
     """Touch 2 (+15 days): chiffres angle."""
     subject = f"Re: {name} - un calcul rapide"
     text = f"""Bonjour,
@@ -186,10 +195,10 @@ Si ca vous interesse pour {name}, repondez a ce mail, je vous montre en 2 minute
 
 Sarah - CommandeIci"""
 
-    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
+    return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
 
-def build_touch3(name: str, city: str, resto_type: str) -> dict:
+def build_touch3(name: str, city: str, resto_type: str, email: str = "") -> dict:
     """Touch 3 (+30 days): social proof."""
     subject = f"{name} - ce que disent les restaurateurs"
     text = f"""Bonjour,
@@ -204,10 +213,10 @@ Si vous voulez tester pour {name}, c'est gratuit pendant 4 semaines : https://ap
 
 Sarah - CommandeIci"""
 
-    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
+    return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
 
-def build_touch4(name: str, city: str, resto_type: str) -> dict:
+def build_touch4(name: str, city: str, resto_type: str, email: str = "") -> dict:
     """Touch 4 (+45 days): break-up email."""
     subject = f"Dernier message pour {name}"
     text = f"""Bonjour,
@@ -223,17 +232,17 @@ Bonne continuation a toute l'equipe.
 
 Sarah - CommandeIci"""
 
-    return {"subject": subject, "text": text, "html": text_to_html(text, name)}
+    return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
 
 TOUCH_BUILDERS = [build_touch1, build_touch2, build_touch3, build_touch4]
 
 
-def build_email(name: str, city: str, resto_type: str, send_count: int) -> dict:
+def build_email(name: str, city: str, resto_type: str, send_count: int, email: str = "") -> dict:
     """Build the right email for the touch number.
     send_count=0 -> touch 1, send_count=1 -> touch 2, etc."""
     idx = min(send_count, len(TOUCH_BUILDERS) - 1)
-    return TOUCH_BUILDERS[idx](name, city, resto_type)
+    return TOUCH_BUILDERS[idx](name, city, resto_type, email)
 
 
 # --- Resend API ---------------------------------------------------------------
@@ -360,6 +369,28 @@ def sheets_batch_summary():
         print(f"    [sheets summary error: {e}]")
 
 
+# --- Unsubscribe blacklist ----------------------------------------------------
+
+def load_unsubscribed():
+    """Load unsubscribed emails from Supabase (one request)."""
+    if not SUPABASE_KEY:
+        return set()
+    try:
+        resp = requests.get(
+            f"{SUPABASE_URL}/rest/v1/prospection_unsubscribed?select=email",
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
+        return {row["email"].lower().strip() for row in resp.json()}
+    except Exception as e:
+        print(f"WARNING: Could not load unsubscribe list: {e}")
+        return set()
+
+
 # --- Main ---------------------------------------------------------------------
 
 def main():
@@ -391,11 +422,17 @@ def main():
     sent_log = load_sent_log()
     print(f"Deja envoyes : {len(sent_log)}")
 
+    # Load unsubscribe blacklist
+    unsubscribed = load_unsubscribed()
+    print(f"Desinscrits   : {len(unsubscribed)}")
+
     # Deduplicate: 1 email per restaurant (pick best: contact@ > first clean)
     best_per_resto = {}
     for r in restaurants:
         email = r.get("email", "").strip().lower()
         if not email or not is_clean_email(email):
+            continue
+        if email in unsubscribed:
             continue
         name = r.get("name", "").strip()
         if name not in best_per_resto:
@@ -530,7 +567,7 @@ def main():
         city = r["city"].strip()
         resto_type = detect_type(r)
 
-        email_data = build_email(name, city, resto_type, send_count)
+        email_data = build_email(name, city, resto_type, send_count, email)
         subject = email_data["subject"]
         html = email_data["html"]
         text = email_data["text"]
