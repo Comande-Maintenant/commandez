@@ -1998,5 +1998,29 @@
     "resend_id": "0ae100cc-edeb-4992-8a13-18bba98e2dd2",
     "name": "Tripletta Notre Dame du Mont",
     "city": "Marseille"
+  },
+  "romain.lahutte@hotmail.fr": {
+    "sent_at": "2026-03-17T14:22:25.446219+00:00",
+    "last_sent_at": "2026-03-17T14:22:25.446219+00:00",
+    "send_count": 1,
+    "resend_id": "90305ef5-efef-42cf-b8bb-f8ed17e4ec38",
+    "name": "La Romana Pizza",
+    "city": "Marseille"
+  },
+  "cantinettamarseille@gmail.com": {
+    "sent_at": "2026-03-17T14:22:37.299103+00:00",
+    "last_sent_at": "2026-03-17T14:22:37.299103+00:00",
+    "send_count": 1,
+    "resend_id": "a0a6665f-e32a-47f9-b578-de1faa1e4900",
+    "name": "La Cantinetta",
+    "city": "Marseille"
+  },
+  "ciaomarcellobyacdg@yahoo.com": {
+    "sent_at": "2026-03-17T14:22:48.956187+00:00",
+    "last_sent_at": "2026-03-17T14:22:48.956187+00:00",
+    "send_count": 1,
+    "resend_id": "40242ea6-326e-4b05-9f44-36cbeb628a95",
+    "name": "Ciao Marcello Pizzeria",
+    "city": "Marseille"
   }
 }
