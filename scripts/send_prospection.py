@@ -25,7 +25,7 @@ import requests
 
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 FROM_EMAIL = "Sarah de commandeici <sarah@commandeici.com>"
-REPLY_TO = "augustin.foucheres@gmail.com"
+REPLY_TO = "contact@commandeici.com"
 
 PRIORITY_CITIES = ["Dijon"]
 
