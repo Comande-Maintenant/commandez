@@ -103,7 +103,8 @@ jobs:
             cp /tmp/sent_log.json prospection/sent_log.json
             cp /tmp/send_stats.json prospection/send_stats.json 2>/dev/null || true
 
-            git add prospection/sent_log.json prospection/send_stats.json
+            git add -f prospection/sent_log.json
+            git add -f prospection/send_stats.json 2>/dev/null || true
             git diff --cached --quiet && echo "No changes to commit" && exit 0
             git commit -m "chore: update sent_log after batch"
             git push origin main
