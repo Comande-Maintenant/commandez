@@ -369,6 +369,22 @@ def sheets_batch_summary():
         print(f"    [sheets summary error: {e}]")
 
 
+def sync_unsubscribed_to_sheets(unsubscribed_set):
+    """Sync unsubscribed emails to Google Sheets 'Desinscrits' tab."""
+    if not GOOGLE_SHEETS_WEBHOOK or not unsubscribed_set:
+        return
+    try:
+        entries = [{"email": e, "date": "", "source": "supabase"} for e in unsubscribed_set]
+        requests.post(
+            GOOGLE_SHEETS_WEBHOOK,
+            json={"action": "sync_unsubscribed", "entries": entries},
+            timeout=15,
+        )
+        print(f"  [Sheets] {len(entries)} desinscrits synchronises")
+    except Exception as e:
+        print(f"    [sheets unsub sync error: {e}]")
+
+
 # --- Unsubscribe blacklist ----------------------------------------------------
 
 def load_unsubscribed():
@@ -666,6 +682,7 @@ def main():
 
     # Notify Sheets
     sheets_batch_summary()
+    sync_unsubscribed_to_sheets(unsubscribed)
 
     # Summary
     remaining_new = max(len(new_leads) - new_count, 0)

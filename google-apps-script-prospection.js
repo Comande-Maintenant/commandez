@@ -68,6 +68,7 @@ function doPost(e) {
     else if (action === "batch_summary") result = batchSummary(data);
     else if (action === "sync_all")      result = syncAll(data);
     else if (action === "sync_restaurants") result = syncRestaurants(data);
+    else if (action === "sync_unsubscribed") result = syncUnsubscribed(data);
     else result = {status: "error", message: "Unknown action: " + action};
 
     lock.releaseLock();
@@ -303,6 +304,58 @@ function cfExact(range, text, bg, fg) {
 function respond(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SYNC UNSUBSCRIBED — desinscrits depuis Supabase
+   ═══════════════════════════════════════════════════════════ */
+var UNSUB_HEADERS = ["Email", "Date desinscription", "Source"];
+var UNSUB_W = [300, 200, 120];
+
+function syncUnsubscribed(data) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = getOrCreateSheet(ss, "Desinscrits", UNSUB_HEADERS);
+
+  var lr = sheet.getLastRow();
+  var existing = {};
+  if (lr > 1) {
+    var emails = sheet.getRange(2, 1, lr - 1, 1).getValues().flat();
+    for (var i = 0; i < emails.length; i++) existing[emails[i]] = true;
+  }
+
+  var entries = data.entries || [];
+  var added = 0;
+  for (var i = 0; i < entries.length; i++) {
+    var e = entries[i];
+    if (existing[e.email]) continue;
+    sheet.appendRow([e.email || "", e.date || "", e.source || "link"]);
+    added++;
+  }
+
+  formatUnsubscribed(sheet);
+  buildDashboard(ss);
+  SpreadsheetApp.flush();
+  return {status: "ok", added: added, total: (lr - 1) + added};
+}
+
+function formatUnsubscribed(sheet) {
+  var nc = UNSUB_HEADERS.length;
+  var lr = sheet.getLastRow();
+  sheet.getRange(1, 1, 1, nc).setValues([UNSUB_HEADERS]);
+  var hdr = sheet.getRange(1, 1, 1, nc);
+  hdr.setFontFamily(FONT_H).setFontWeight("bold").setFontSize(10)
+    .setBackground("#DC2626").setFontColor(WHITE).setVerticalAlignment("middle");
+  sheet.setRowHeight(1, 38);
+  sheet.setFrozenRows(1);
+  for (var c = 0; c < UNSUB_W.length; c++) sheet.setColumnWidth(c + 1, UNSUB_W[c]);
+
+  if (lr <= 1) return;
+  var rc = lr - 1;
+  sheet.getRange(2, 1, rc, nc).setFontFamily(FONT_B).setFontSize(10).setVerticalAlignment("middle");
+  for (var r = 0; r < rc; r++) {
+    sheet.setRowHeight(r + 2, 28);
+    sheet.getRange(r + 2, 1, 1, nc).setBackground(r % 2 === 0 ? WHITE : "#FEF2F2");
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
