@@ -2022,5 +2022,381 @@
     "resend_id": "40242ea6-326e-4b05-9f44-36cbeb628a95",
     "name": "Ciao Marcello Pizzeria",
     "city": "Marseille"
+  },
+  "contact@pizzanostra13.fr": {
+    "sent_at": "2026-03-17T16:05:10.037266+00:00",
+    "last_sent_at": "2026-03-17T16:05:10.037266+00:00",
+    "send_count": 1,
+    "resend_id": "64a776be-c576-48cb-9dc8-40cea4096787",
+    "name": "Pizza Nostra",
+    "city": "Marseille"
+  },
+  "contact@pizzerialeaualabouche.fr": {
+    "sent_at": "2026-03-17T16:05:23.662318+00:00",
+    "last_sent_at": "2026-03-17T16:05:23.662318+00:00",
+    "send_count": 1,
+    "resend_id": "aab4754b-2b0d-476e-b7ee-7804edad252e",
+    "name": "L'Eau à la Bouche",
+    "city": "Marseille"
+  },
+  "mickael.prunier@yahoo.fr": {
+    "sent_at": "2026-03-17T16:05:35.754959+00:00",
+    "last_sent_at": "2026-03-17T16:05:35.754959+00:00",
+    "send_count": 1,
+    "resend_id": "3cc0ff5f-d563-4ffc-bbf3-a6a7328a31da",
+    "name": "La Bougnette",
+    "city": "Marseille"
+  },
+  "la-cantine-de-jeanine@orange.fr": {
+    "sent_at": "2026-03-17T16:05:48.136345+00:00",
+    "last_sent_at": "2026-03-17T16:05:48.136345+00:00",
+    "send_count": 1,
+    "resend_id": "d385af97-a00d-4a16-a281-59d7438364b5",
+    "name": "La cantine de Jeanine",
+    "city": "Marseille"
+  },
+  "resto.newcarmine@gmail.com": {
+    "sent_at": "2026-03-17T16:06:00.187975+00:00",
+    "last_sent_at": "2026-03-17T16:06:00.187975+00:00",
+    "send_count": 1,
+    "resend_id": "419c5b49-1130-4913-881c-8e7686193301",
+    "name": "NEW CARMINE",
+    "city": "Marseille"
+  },
+  "contact@pizzamarseille.fr": {
+    "sent_at": "2026-03-17T16:06:12.623152+00:00",
+    "last_sent_at": "2026-03-17T16:06:12.623152+00:00",
+    "send_count": 1,
+    "resend_id": "902232a5-576f-4795-834c-7b60e6646aa3",
+    "name": "Casa Pizza",
+    "city": "Marseille"
+  },
+  "frenchburger.ads@gmail.com": {
+    "sent_at": "2026-03-17T16:06:26.640930+00:00",
+    "last_sent_at": "2026-03-17T16:06:26.640930+00:00",
+    "send_count": 1,
+    "resend_id": "263c69aa-0c2e-4c15-bbda-2a1e472ca425",
+    "name": "French Burger - Marseille 14ème",
+    "city": "Marseille"
+  },
+  "chungchun.hr@gmail.com": {
+    "sent_at": "2026-03-17T16:06:38.971159+00:00",
+    "last_sent_at": "2026-03-17T16:06:38.971159+00:00",
+    "send_count": 1,
+    "resend_id": "7230ec51-7d4a-47a0-b452-0c41acc9e401",
+    "name": "Chungchun Ricedog Coréen Marseille Joliette",
+    "city": "Marseille"
+  },
+  "bonjour@laplacedescanailles.com": {
+    "sent_at": "2026-03-17T16:06:52.668245+00:00",
+    "last_sent_at": "2026-03-17T16:06:52.668245+00:00",
+    "send_count": 1,
+    "resend_id": "d588f088-d041-4dc2-a3a5-c506c41e914c",
+    "name": "La Place des Canailles",
+    "city": "Marseille"
+  },
+  "hello@howardburger.fr": {
+    "sent_at": "2026-03-17T16:07:04.684982+00:00",
+    "last_sent_at": "2026-03-17T16:07:04.684982+00:00",
+    "send_count": 1,
+    "resend_id": "2efe6e06-1b58-46fd-8697-5b978396a311",
+    "name": "Howard - Original Smash Burger",
+    "city": "Marseille"
+  },
+  "davidroca@live.fr": {
+    "sent_at": "2026-03-17T16:07:17.561960+00:00",
+    "last_sent_at": "2026-03-17T16:07:17.561960+00:00",
+    "send_count": 1,
+    "resend_id": "69ee14a0-64db-42ef-8018-c2f79a839b59",
+    "name": "Le Panier à Burgers & coffee",
+    "city": "Marseille"
+  },
+  "apresm13@gmail.com": {
+    "sent_at": "2026-03-17T16:07:28.358577+00:00",
+    "last_sent_at": "2026-03-17T16:07:28.358577+00:00",
+    "send_count": 1,
+    "resend_id": "cf2371ec-7c21-4358-b191-3966c076ed84",
+    "name": "L'Après M",
+    "city": "Marseille"
+  },
+  "mamanellymarseille@gmail.com": {
+    "sent_at": "2026-03-17T16:07:35.157428+00:00",
+    "last_sent_at": "2026-03-17T16:07:35.157428+00:00",
+    "send_count": 1,
+    "resend_id": "1bf5e644-14d5-4367-87eb-9ed687637780",
+    "name": "MAMA NELLY CORNER",
+    "city": "Marseille"
+  },
+  "contact@lescale-kebab-poitiers.fr": {
+    "sent_at": "2026-03-17T16:07:42.890247+00:00",
+    "last_sent_at": "2026-03-17T16:07:42.890247+00:00",
+    "send_count": 1,
+    "resend_id": "8ea9e4ff-c01a-42c4-bc3e-9fedb1a56895",
+    "name": "L'escale",
+    "city": "Poitiers"
+  },
+  "om0211@hotmail.fr": {
+    "sent_at": "2026-03-17T16:07:51.690819+00:00",
+    "last_sent_at": "2026-03-17T16:07:51.690819+00:00",
+    "send_count": 1,
+    "resend_id": "e1059ad8-c194-43ad-83f6-8ba13678f9b7",
+    "name": "Au petit plat halal",
+    "city": "Marseille"
+  },
+  "vigueur.%5cnayoub1313100@gmail.com": {
+    "sent_at": "2026-03-17T16:07:58.389965+00:00",
+    "last_sent_at": "2026-03-17T16:07:58.389965+00:00",
+    "send_count": 1,
+    "resend_id": "d05a1bb4-6ab8-4062-80ae-af5a1c1322eb",
+    "name": "Casa del taKos",
+    "city": "Marseille"
+  },
+  "contact@feria-latina.fr": {
+    "sent_at": "2026-03-17T16:08:05.881245+00:00",
+    "last_sent_at": "2026-03-17T16:08:05.881245+00:00",
+    "send_count": 1,
+    "resend_id": "559d80d2-fc1f-4add-a155-7c5a93b2edfd",
+    "name": "Feria Latina",
+    "city": "Marseille"
+  },
+  "contact@eatsalad.fr": {
+    "sent_at": "2026-03-17T16:08:17.896691+00:00",
+    "last_sent_at": "2026-03-17T16:08:17.896691+00:00",
+    "send_count": 1,
+    "resend_id": "76b93766-1275-4a9d-bb6c-d95b86fcc546",
+    "name": "Eat Salad - Restaurant Marseille Prado",
+    "city": "Marseille"
+  },
+  "painalail.contact@gmail.com": {
+    "sent_at": "2026-03-17T16:08:29.931883+00:00",
+    "last_sent_at": "2026-03-17T16:08:29.931883+00:00",
+    "send_count": 1,
+    "resend_id": "a600d5d5-983e-408a-b318-ab6f3724c9c8",
+    "name": "Pain à l'ail",
+    "city": "Marseille"
+  },
+  "contact@chezhabet.fr": {
+    "sent_at": "2026-03-17T16:08:41.943128+00:00",
+    "last_sent_at": "2026-03-17T16:08:41.943128+00:00",
+    "send_count": 1,
+    "resend_id": "36806db8-1b67-49ba-a347-4fa3fcbb9393",
+    "name": "CHEZ HABET | Snack",
+    "city": "Marseille"
+  },
+  "contact@lepanierdemarseille.com": {
+    "sent_at": "2026-03-17T16:08:54.341245+00:00",
+    "last_sent_at": "2026-03-17T16:08:54.341245+00:00",
+    "send_count": 1,
+    "resend_id": "805c6165-11e7-4d49-aaf3-27b8fd74349e",
+    "name": "Le Panier à Salade - Restaurant Healthy Marseille",
+    "city": "Marseille"
+  },
+  "contact@composeparis.fr": {
+    "sent_at": "2026-03-17T16:09:06.343038+00:00",
+    "last_sent_at": "2026-03-17T16:09:06.343038+00:00",
+    "send_count": 1,
+    "resend_id": "6cd09f48-b2fc-4181-bb6e-1075193da4c9",
+    "name": "Compose Marseille Joliette",
+    "city": "Marseille"
+  },
+  "conatct@leregal-dorient.fr": {
+    "sent_at": "2026-03-17T16:09:18.390461+00:00",
+    "last_sent_at": "2026-03-17T16:09:18.390461+00:00",
+    "send_count": 1,
+    "resend_id": "f452492e-417e-40df-9fad-856f0c2efc6f",
+    "name": "Le Regal d'Orient",
+    "city": "Toulouse"
+  },
+  "contact@delice-du-capitole.fr": {
+    "sent_at": "2026-03-17T16:09:28.778697+00:00",
+    "last_sent_at": "2026-03-17T16:09:28.778697+00:00",
+    "send_count": 1,
+    "resend_id": "4eba910e-4b2d-4b87-888f-d0c435d7147c",
+    "name": "Délice du Capitole",
+    "city": "Toulouse"
+  },
+  "responsable.ofoodcourt@gmail.com": {
+    "sent_at": "2026-03-17T16:09:37.122998+00:00",
+    "last_sent_at": "2026-03-17T16:09:37.122998+00:00",
+    "send_count": 1,
+    "resend_id": "8daccbe1-a1aa-49fc-8015-196437bb7ffc",
+    "name": "Best Of Toulouse",
+    "city": "Toulouse"
+  },
+  "aymen_toulouse@hotmail.fr": {
+    "sent_at": "2026-03-17T16:09:49.137036+00:00",
+    "last_sent_at": "2026-03-17T16:09:49.137036+00:00",
+    "send_count": 1,
+    "resend_id": "c55b5093-5f47-4a43-97dd-74b29df3b820",
+    "name": "Les Sables D'or",
+    "city": "Toulouse"
+  },
+  "contact@ovh.com": {
+    "sent_at": "2026-03-17T16:10:01.172747+00:00",
+    "last_sent_at": "2026-03-17T16:10:01.172747+00:00",
+    "send_count": 1,
+    "resend_id": "84c06b17-bc3a-437d-81c1-7d445df8e023",
+    "name": "Must Tacos",
+    "city": "Toulouse"
+  },
+  "contact@sorami-kebab.fr": {
+    "sent_at": "2026-03-17T16:10:13.312336+00:00",
+    "last_sent_at": "2026-03-17T16:10:13.312336+00:00",
+    "send_count": 1,
+    "resend_id": "55f4f127-ba56-4bee-8392-bbd6825b9e72",
+    "name": "Sorami Kebab",
+    "city": "Toulouse"
+  },
+  "contact@legrand-bleu.fr": {
+    "sent_at": "2026-03-17T16:10:25.318317+00:00",
+    "last_sent_at": "2026-03-17T16:10:25.318317+00:00",
+    "send_count": 1,
+    "resend_id": "7087f32b-f556-453e-b3db-98e7fd40a035",
+    "name": "Le Grand Bleu – Kebab, Tacos & Burgers à Toulouse",
+    "city": "Toulouse"
+  },
+  "contact@rdv-kebab.fr": {
+    "sent_at": "2026-03-17T16:10:37.313463+00:00",
+    "last_sent_at": "2026-03-17T16:10:37.313463+00:00",
+    "send_count": 1,
+    "resend_id": "ee82ce8c-f053-4e12-9495-4265900590e7",
+    "name": "LE RDV KEBAB - Tacos Burgers à Toulouse",
+    "city": "Toulouse"
+  },
+  "foodstar31@gmail.com": {
+    "sent_at": "2026-03-17T16:10:49.298612+00:00",
+    "last_sent_at": "2026-03-17T16:10:49.298612+00:00",
+    "send_count": 1,
+    "resend_id": "97a111a3-fcc2-4222-9a55-087d2b0529af",
+    "name": "Food Star",
+    "city": "Toulouse"
+  },
+  "makfoodtoulouse@gmail.com": {
+    "sent_at": "2026-03-17T16:10:57.168265+00:00",
+    "last_sent_at": "2026-03-17T16:10:57.168265+00:00",
+    "send_count": 1,
+    "resend_id": "53ef306e-8a5b-4274-891e-03ff311373a7",
+    "name": "Mak Food",
+    "city": "Toulouse"
+  },
+  "k.rim31@hotmail.fr": {
+    "sent_at": "2026-03-17T16:11:06.900388+00:00",
+    "last_sent_at": "2026-03-17T16:11:06.900388+00:00",
+    "send_count": 1,
+    "resend_id": "d56f60e6-2bbe-4018-b733-6db9077408a4",
+    "name": "Sunset Food",
+    "city": "Toulouse"
+  },
+  "cugnaux@antalyakebab-food.fr": {
+    "sent_at": "2026-03-17T16:11:15.966665+00:00",
+    "last_sent_at": "2026-03-17T16:11:15.966665+00:00",
+    "send_count": 1,
+    "resend_id": "4ff31630-8b5a-4dbb-aec7-782dd1bbcccd",
+    "name": "Antalya Kebab - Tacos Burger Cugnaux",
+    "city": "Toulouse"
+  },
+  "teddy8cianci@gmail.com": {
+    "sent_at": "2026-03-17T16:11:24.964317+00:00",
+    "last_sent_at": "2026-03-17T16:11:24.964317+00:00",
+    "send_count": 1,
+    "resend_id": "0e4cbd7d-ef4d-4d88-97e5-c8c92cb19c32",
+    "name": "ALBA",
+    "city": "Toulouse"
+  },
+  "contact@storydeveloppement.com": {
+    "sent_at": "2026-03-17T16:11:36.126701+00:00",
+    "last_sent_at": "2026-03-17T16:11:36.126701+00:00",
+    "send_count": 1,
+    "resend_id": "4636e142-8dca-45ad-bf6c-520febfb79bd",
+    "name": "Pizza Time® Toulouse",
+    "city": "Toulouse"
+  },
+  "contact@primafamily.fr": {
+    "sent_at": "2026-03-17T16:11:46.095019+00:00",
+    "last_sent_at": "2026-03-17T16:11:46.095019+00:00",
+    "send_count": 1,
+    "resend_id": "6406c530-6f42-4e0f-92b9-a5e98da026dd",
+    "name": "Prima Lova",
+    "city": "Toulouse"
+  },
+  "volfonibertrand@gmail.com": {
+    "sent_at": "2026-03-17T16:11:56.157673+00:00",
+    "last_sent_at": "2026-03-17T16:11:56.157673+00:00",
+    "send_count": 1,
+    "resend_id": "d10ef5a0-b5e7-41e6-8ede-959c44a004ab",
+    "name": "Volfoni Toulouse",
+    "city": "Toulouse"
+  },
+  "contact@pizza-luce.fr": {
+    "sent_at": "2026-03-17T16:12:04.757536+00:00",
+    "last_sent_at": "2026-03-17T16:12:04.757536+00:00",
+    "send_count": 1,
+    "resend_id": "5f38eede-0bdc-4d3f-b4b0-478717bd76ca",
+    "name": "Restaurant Pizza Luce",
+    "city": "Toulouse"
+  },
+  "saporidiitalia31@gmail.com": {
+    "sent_at": "2026-03-17T16:12:14.575725+00:00",
+    "last_sent_at": "2026-03-17T16:12:14.575725+00:00",
+    "send_count": 1,
+    "resend_id": "cd2a1ea4-7242-4b38-8075-e02eb380c205",
+    "name": "Sapori Di Italia",
+    "city": "Toulouse"
+  },
+  "contact@lapizzeria31.fr": {
+    "sent_at": "2026-03-17T16:12:24.782642+00:00",
+    "last_sent_at": "2026-03-17T16:12:24.782642+00:00",
+    "send_count": 1,
+    "resend_id": "8adc9b9e-6bc4-49a8-a6d8-c3bbf26de30c",
+    "name": "LA PIZZERIA",
+    "city": "Toulouse"
+  },
+  "opetitspatons@gmail.com": {
+    "sent_at": "2026-03-17T16:12:37.900526+00:00",
+    "last_sent_at": "2026-03-17T16:12:37.900526+00:00",
+    "send_count": 1,
+    "resend_id": "eb9de985-eeec-4e50-bda7-1827c1ae7913",
+    "name": "Ô Petits Pâtons Pizzeria",
+    "city": "Toulouse"
+  },
+  "contact@spritzza.fr": {
+    "sent_at": "2026-03-17T16:12:48.207395+00:00",
+    "last_sent_at": "2026-03-17T16:12:48.207395+00:00",
+    "send_count": 1,
+    "resend_id": "82e63aeb-b28e-43b7-bff2-70b92540481f",
+    "name": "Spritzza | Pizzeria & Spritz Bar |",
+    "city": "Toulouse"
+  },
+  "directioncircus@primafamily.fr": {
+    "sent_at": "2026-03-17T16:13:00.222389+00:00",
+    "last_sent_at": "2026-03-17T16:13:00.222389+00:00",
+    "send_count": 1,
+    "resend_id": "0ff71b6c-fe05-4730-a10f-37fc1f3e1afd",
+    "name": "Prima Circus",
+    "city": "Toulouse"
+  },
+  "contact@pizzadelormeau.com": {
+    "sent_at": "2026-03-17T16:13:12.244379+00:00",
+    "last_sent_at": "2026-03-17T16:13:12.244379+00:00",
+    "send_count": 1,
+    "resend_id": "cade044d-21f8-4dc1-b15d-26e20e35d4ba",
+    "name": "Pizza de l'Ormeau",
+    "city": "Toulouse"
+  },
+  "pizz.art@free.fr": {
+    "sent_at": "2026-03-17T16:13:24.268729+00:00",
+    "last_sent_at": "2026-03-17T16:13:24.268729+00:00",
+    "send_count": 1,
+    "resend_id": "f766e9c9-332e-4f58-a053-a08e5dbcf353",
+    "name": "Pizz'Artisanale",
+    "city": "Toulouse"
+  },
+  "contact@pizzeriabelini.fr": {
+    "sent_at": "2026-03-17T16:13:36.316471+00:00",
+    "last_sent_at": "2026-03-17T16:13:36.316471+00:00",
+    "send_count": 1,
+    "resend_id": "f6935c31-2441-4abd-bfa4-9a0d13ad82d3",
+    "name": "Bar Pizzeria Restaurant Brasserie Le Bellini",
+    "city": "Toulouse"
   }
 }
