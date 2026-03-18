@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import time
+import threading
 from datetime import datetime, timezone
 
 import requests
@@ -328,61 +329,50 @@ def save_stats(stats: dict):
 
 # --- Google Sheets Tracking ---------------------------------------------------
 
+def _fire_and_forget_post(url, payload):
+    """Send a POST request in a background thread. Never blocks the main loop."""
+    def _do():
+        try:
+            requests.post(url, json=payload, timeout=3)
+        except Exception:
+            pass  # silently ignore - Supabase email_logs is the source of truth
+    threading.Thread(target=_do, daemon=True).start()
+
+
 def track_to_sheets(restaurant: dict, resend_id: str, slot: str, touch: int):
-    """Track a sent email to Google Sheets (non-blocking)."""
+    """Track a sent email to Google Sheets (fire-and-forget, never blocks)."""
     if not GOOGLE_SHEETS_WEBHOOK:
         return
-    try:
-        requests.post(
-            GOOGLE_SHEETS_WEBHOOK,
-            json={
-                "action": "track_send",
-                "date": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M"),
-                "restaurant": restaurant.get("name", "").strip(),
-                "city": restaurant.get("city", "").strip(),
-                "email": restaurant.get("email", "").strip().lower(),
-                "type": restaurant.get("type", "").strip(),
-                "rating": restaurant.get("rating", ""),
-                "reviews": restaurant.get("reviews_count", ""),
-                "status": "Envoye",
-                "resend_id": resend_id,
-                "slot": slot,
-                "touch": touch,
-            },
-            timeout=10,
-        )
-    except Exception as e:
-        print(f"    [sheets tracking error: {e}]")
+    _fire_and_forget_post(GOOGLE_SHEETS_WEBHOOK, {
+        "action": "track_send",
+        "date": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M"),
+        "restaurant": restaurant.get("name", "").strip(),
+        "city": restaurant.get("city", "").strip(),
+        "email": restaurant.get("email", "").strip().lower(),
+        "type": restaurant.get("type", "").strip(),
+        "rating": restaurant.get("rating", ""),
+        "reviews": restaurant.get("reviews_count", ""),
+        "status": "Envoye",
+        "resend_id": resend_id,
+        "slot": slot,
+        "touch": touch,
+    })
 
 
 def sheets_batch_summary():
-    """Notify Google Sheets to rebuild dashboard at end of batch."""
+    """Notify Google Sheets to rebuild dashboard at end of batch (fire-and-forget)."""
     if not GOOGLE_SHEETS_WEBHOOK:
         return
-    try:
-        requests.post(
-            GOOGLE_SHEETS_WEBHOOK,
-            json={"action": "batch_summary"},
-            timeout=10,
-        )
-    except Exception as e:
-        print(f"    [sheets summary error: {e}]")
+    _fire_and_forget_post(GOOGLE_SHEETS_WEBHOOK, {"action": "batch_summary"})
 
 
 def sync_unsubscribed_to_sheets(unsubscribed_set):
-    """Sync unsubscribed emails to Google Sheets 'Desinscrits' tab."""
+    """Sync unsubscribed emails to Google Sheets (fire-and-forget)."""
     if not GOOGLE_SHEETS_WEBHOOK or not unsubscribed_set:
         return
-    try:
-        entries = [{"email": e, "date": "", "source": "supabase"} for e in unsubscribed_set]
-        requests.post(
-            GOOGLE_SHEETS_WEBHOOK,
-            json={"action": "sync_unsubscribed", "entries": entries},
-            timeout=15,
-        )
-        print(f"  [Sheets] {len(entries)} desinscrits synchronises")
-    except Exception as e:
-        print(f"    [sheets unsub sync error: {e}]")
+    entries = [{"email": e, "date": "", "source": "supabase"} for e in unsubscribed_set]
+    _fire_and_forget_post(GOOGLE_SHEETS_WEBHOOK, {"action": "sync_unsubscribed", "entries": entries})
+    print(f"  [Sheets] {len(entries)} desinscrits envoyes (async)")
 
 
 # --- Unsubscribe blacklist ----------------------------------------------------
