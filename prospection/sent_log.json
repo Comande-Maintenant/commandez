@@ -2782,5 +2782,381 @@
     "resend_id": "af283f49-44d9-4081-8b65-37c4b1f9ac15",
     "name": "Mama Restaurant Bordeaux",
     "city": "Bordeaux"
+  },
+  "rennes@mamashelter.com": {
+    "sent_at": "2026-03-18T16:07:04.709861+00:00",
+    "last_sent_at": "2026-03-18T16:07:04.709861+00:00",
+    "send_count": 1,
+    "resend_id": "3a31c7c5-fa90-42cd-a0bd-4ef78508b9b3",
+    "name": "Mama Restaurant Bordeaux",
+    "city": "Bordeaux"
+  },
+  "bonjour@pizzacapri.fr": {
+    "sent_at": "2026-03-18T16:07:07.007642+00:00",
+    "last_sent_at": "2026-03-18T16:07:07.007642+00:00",
+    "send_count": 1,
+    "resend_id": "5d91a52e-581a-4fb2-8b35-258179161c6b",
+    "name": "Pizza Capri",
+    "city": "Bordeaux"
+  },
+  "contact@augusto-pizza.fr": {
+    "sent_at": "2026-03-18T16:07:09.144974+00:00",
+    "last_sent_at": "2026-03-18T16:07:09.144974+00:00",
+    "send_count": 1,
+    "resend_id": "3072a1eb-1764-40a9-ba7a-aaa1fdf5858b",
+    "name": "AUGUSTO PIZZA",
+    "city": "Bordeaux"
+  },
+  "ritaladil380@gmail.com": {
+    "sent_at": "2026-03-18T16:07:11.299920+00:00",
+    "last_sent_at": "2026-03-18T16:07:11.299920+00:00",
+    "send_count": 1,
+    "resend_id": "d8aca04a-4aca-4045-b5be-ca8d124aa378",
+    "name": "La Roma Pizza - Bordeaux",
+    "city": "Bordeaux"
+  },
+  "contact@pizzadelpassato.fr": {
+    "sent_at": "2026-03-18T16:07:13.158022+00:00",
+    "last_sent_at": "2026-03-18T16:07:13.158022+00:00",
+    "send_count": 1,
+    "resend_id": "138f5d57-87b6-417e-8ba3-2667c8bd29e3",
+    "name": "Pizza del Passato Caudéran 7J/7",
+    "city": "Bordeaux"
+  },
+  "contact@di-lovali.fr": {
+    "sent_at": "2026-03-18T16:07:14.997852+00:00",
+    "last_sent_at": "2026-03-18T16:07:14.997852+00:00",
+    "send_count": 1,
+    "resend_id": "22df700b-7f9f-4f03-8166-4b9fbf7d8742",
+    "name": "Di Lovali",
+    "city": "Bordeaux"
+  },
+  "sellimi94@hotmail.fr": {
+    "sent_at": "2026-03-18T16:07:16.963379+00:00",
+    "last_sent_at": "2026-03-18T16:07:16.963379+00:00",
+    "send_count": 1,
+    "resend_id": "4ee02393-882d-446f-911b-4a30df1da952",
+    "name": "foodies pizza au feu de bois",
+    "city": "Bordeaux"
+  },
+  "pizzaenzo.bx@gmail.com": {
+    "sent_at": "2026-03-18T16:07:18.793380+00:00",
+    "last_sent_at": "2026-03-18T16:07:18.793380+00:00",
+    "send_count": 1,
+    "resend_id": "e5688aa3-864c-4a70-bf51-1c408f81ef13",
+    "name": "Pizza Enzo Bordeaux",
+    "city": "Bordeaux"
+  },
+  "contact@chicken-city.com": {
+    "sent_at": "2026-03-18T16:07:20.963343+00:00",
+    "last_sent_at": "2026-03-18T16:07:20.963343+00:00",
+    "send_count": 1,
+    "resend_id": "39b2f929-3cf4-4687-bffb-2540498f91e7",
+    "name": "Chicken City Bordeaux - Livraison de Nuit",
+    "city": "Bordeaux"
+  },
+  "contact@comsud.fr": {
+    "sent_at": "2026-03-18T16:07:23.071359+00:00",
+    "last_sent_at": "2026-03-18T16:07:23.071359+00:00",
+    "send_count": 1,
+    "resend_id": "cdefb871-bbe5-45ba-a6c2-40a10eff2b5a",
+    "name": "Lucie Ultra Frais - Tourny",
+    "city": "Bordeaux"
+  },
+  "lebunami@gmail.com": {
+    "sent_at": "2026-03-18T16:07:24.909770+00:00",
+    "last_sent_at": "2026-03-18T16:07:24.909770+00:00",
+    "send_count": 1,
+    "resend_id": "a7568196-516c-40c2-947a-0046b604bce6",
+    "name": "Bunami",
+    "city": "Bordeaux"
+  },
+  "contactchezhans@gmail.com": {
+    "sent_at": "2026-03-18T16:07:27.488373+00:00",
+    "last_sent_at": "2026-03-18T16:07:27.488373+00:00",
+    "send_count": 1,
+    "resend_id": "95c29e00-f836-4122-a403-33e49521f877",
+    "name": "Hans Snackbar",
+    "city": "Bordeaux"
+  },
+  "contact@smashsmash.com": {
+    "sent_at": "2026-03-18T16:07:29.583968+00:00",
+    "last_sent_at": "2026-03-18T16:07:29.583968+00:00",
+    "send_count": 1,
+    "resend_id": "024890bd-f305-43e5-86ff-71c99e6b6aa0",
+    "name": "Smash Smash Bordeaux (Sainte-Catherine)",
+    "city": "Bordeaux"
+  },
+  "contact@oakberrykorea.com": {
+    "sent_at": "2026-03-18T16:07:31.420693+00:00",
+    "last_sent_at": "2026-03-18T16:07:31.420693+00:00",
+    "send_count": 1,
+    "resend_id": "bcefd301-4729-4275-9aa8-6acc7ce5f39b",
+    "name": "OAKBERRY AÇAI | BORDEAUX",
+    "city": "Bordeaux"
+  },
+  "contact@jupjup.fr": {
+    "sent_at": "2026-03-18T16:07:33.296858+00:00",
+    "last_sent_at": "2026-03-18T16:07:33.296858+00:00",
+    "send_count": 1,
+    "resend_id": "41c2595a-c3e2-4ac6-8775-463406e1bd17",
+    "name": "Jup Jup",
+    "city": "Bordeaux"
+  },
+  "nicolas@canard-street.fr": {
+    "sent_at": "2026-03-18T16:07:35.269672+00:00",
+    "last_sent_at": "2026-03-18T16:07:35.269672+00:00",
+    "send_count": 1,
+    "resend_id": "2b635090-06dd-422e-ac95-b4334d1640dc",
+    "name": "Canard Street Bordeaux",
+    "city": "Bordeaux"
+  },
+  "contact@rimon-restaurant.fr": {
+    "sent_at": "2026-03-18T16:07:37.098318+00:00",
+    "last_sent_at": "2026-03-18T16:07:37.098318+00:00",
+    "send_count": 1,
+    "resend_id": "be56ec6a-d306-4f54-abcb-ed0d4e80d665",
+    "name": "Rimon",
+    "city": "Bordeaux"
+  },
+  "contact@nobinobi-restaurant.fr": {
+    "sent_at": "2026-03-18T16:07:38.918249+00:00",
+    "last_sent_at": "2026-03-18T16:07:38.918249+00:00",
+    "send_count": 1,
+    "resend_id": "9277bc3b-e748-4d39-ba5a-887692956231",
+    "name": "Nobi Nobi Bordeaux Victoire",
+    "city": "Bordeaux"
+  },
+  "hedi_15@live.fr": {
+    "sent_at": "2026-03-18T16:07:40.733097+00:00",
+    "last_sent_at": "2026-03-18T16:07:40.733097+00:00",
+    "send_count": 1,
+    "resend_id": "c0617cbd-2591-4d09-8c72-0e2465d7579e",
+    "name": "Tenka",
+    "city": "Bordeaux"
+  },
+  "bonjour@woofhotdog.com": {
+    "sent_at": "2026-03-18T16:07:43.483887+00:00",
+    "last_sent_at": "2026-03-18T16:07:43.483887+00:00",
+    "send_count": 1,
+    "resend_id": "35be24b3-1dc8-4c39-a6fc-59390ee5b958",
+    "name": "WOOF GAMBETTA",
+    "city": "Bordeaux"
+  },
+  "brunooliverconsultant@gmail.com": {
+    "sent_at": "2026-03-18T16:07:45.342077+00:00",
+    "last_sent_at": "2026-03-18T16:07:45.342077+00:00",
+    "send_count": 1,
+    "resend_id": "7173a54f-c427-4e53-a756-eb350f1da4fe",
+    "name": "Fabrique by Oliver",
+    "city": "Bordeaux"
+  },
+  "slbentreprise33@gmail.com": {
+    "sent_at": "2026-03-18T16:07:47.178575+00:00",
+    "last_sent_at": "2026-03-18T16:07:47.178575+00:00",
+    "send_count": 1,
+    "resend_id": "794082b6-c620-4ab4-9d1c-8ea5a4baa91d",
+    "name": "TACOS & CHILLS",
+    "city": "Bordeaux"
+  },
+  "john.doe@exemple.com": {
+    "sent_at": "2026-03-18T16:07:49.034547+00:00",
+    "last_sent_at": "2026-03-18T16:07:49.034547+00:00",
+    "send_count": 1,
+    "resend_id": "2bfccb8b-8510-4c78-a2ff-a4b2ed2668cf",
+    "name": "TLALI - Signature",
+    "city": "Bordeaux"
+  },
+  "lebiggy33@gmail.com": {
+    "sent_at": "2026-03-18T16:07:51.082040+00:00",
+    "last_sent_at": "2026-03-18T16:07:51.082040+00:00",
+    "send_count": 1,
+    "resend_id": "cf4b9b57-0e53-4a5f-b957-97002885152f",
+    "name": "Le Biggy 33",
+    "city": "Bordeaux"
+  },
+  "deliciasmexicanasfrance@gmail.com": {
+    "sent_at": "2026-03-18T16:07:52.914810+00:00",
+    "last_sent_at": "2026-03-18T16:07:52.914810+00:00",
+    "send_count": 1,
+    "resend_id": "509f1143-79eb-4765-afb5-69df002d5f6a",
+    "name": "DELICIAS MEXICANAS",
+    "city": "Bordeaux"
+  },
+  "contact@graphistebordeaux.com": {
+    "sent_at": "2026-03-18T16:07:54.764931+00:00",
+    "last_sent_at": "2026-03-18T16:07:54.764931+00:00",
+    "send_count": 1,
+    "resend_id": "0cb44343-b5a2-42d1-bc55-ff843c732f69",
+    "name": "BACK TO! Smashed Burgers",
+    "city": "Bordeaux"
+  },
+  "contact@bow-bordeaux.fr": {
+    "sent_at": "2026-03-18T16:07:56.635310+00:00",
+    "last_sent_at": "2026-03-18T16:07:56.635310+00:00",
+    "send_count": 1,
+    "resend_id": "8d461853-e058-4b36-9a14-5e025f5f012c",
+    "name": "Bow Bordeaux",
+    "city": "Bordeaux"
+  },
+  "contact@foodupconsulting.fr": {
+    "sent_at": "2026-03-18T16:07:58.494526+00:00",
+    "last_sent_at": "2026-03-18T16:07:58.494526+00:00",
+    "send_count": 1,
+    "resend_id": "6ea07cbe-a32f-4750-82cf-d12fab40842a",
+    "name": "Str’Eat Burger® Bordeaux Ginko",
+    "city": "Bordeaux"
+  },
+  "contact@columbuscafe.com": {
+    "sent_at": "2026-03-18T16:08:00.331949+00:00",
+    "last_sent_at": "2026-03-18T16:08:00.331949+00:00",
+    "send_count": 1,
+    "resend_id": "808b59c9-a004-41be-8076-c94b04a2f8ec",
+    "name": "Columbus Café & Co",
+    "city": "Bordeaux"
+  },
+  "info@zendoner.fr": {
+    "sent_at": "2026-03-18T16:08:02.158823+00:00",
+    "last_sent_at": "2026-03-18T16:08:02.158823+00:00",
+    "send_count": 1,
+    "resend_id": "8f275cda-14da-4bb2-aa2e-1e7a6782381f",
+    "name": "ZENDONER",
+    "city": "Nice"
+  },
+  "jean.dupont@restaurant.com": {
+    "sent_at": "2026-03-18T16:08:03.989164+00:00",
+    "last_sent_at": "2026-03-18T16:08:03.989164+00:00",
+    "send_count": 1,
+    "resend_id": "3e3c102b-cb26-4b49-9383-ee301d0e0112",
+    "name": "O'FOUR D'OR by night",
+    "city": "Nice"
+  },
+  "lesvikings06@gmail.com": {
+    "sent_at": "2026-03-18T16:08:05.994317+00:00",
+    "last_sent_at": "2026-03-18T16:08:05.994317+00:00",
+    "send_count": 1,
+    "resend_id": "6e9d7cbc-110a-41a7-8436-a8be80ce359c",
+    "name": "Les Vikings (Urban Food) - Fast Food & Livraison de Nuit",
+    "city": "Nice"
+  },
+  "tchesnack.pizzeria.nice@gmail.com": {
+    "sent_at": "2026-03-18T16:08:08.097354+00:00",
+    "last_sent_at": "2026-03-18T16:08:08.097354+00:00",
+    "send_count": 1,
+    "resend_id": "5f47fc7c-4b0b-49c4-80db-fd77a54fc977",
+    "name": "Tchesnack",
+    "city": "Nice"
+  },
+  "saksi06@hotmail.fr": {
+    "sent_at": "2026-03-18T16:08:09.965744+00:00",
+    "last_sent_at": "2026-03-18T16:08:09.965744+00:00",
+    "send_count": 1,
+    "resend_id": "78d9a731-7db1-4cfd-b2ee-fed4416b1463",
+    "name": "Mister Tacos nice",
+    "city": "Nice"
+  },
+  "omarnahass@hotmail.com": {
+    "sent_at": "2026-03-18T16:08:11.822663+00:00",
+    "last_sent_at": "2026-03-18T16:08:11.822663+00:00",
+    "send_count": 1,
+    "resend_id": "b158cad9-fb7f-4ae7-b36b-c773198fe8a4",
+    "name": "Resto-snack Classic Lib. Snack Libanais",
+    "city": "Nice"
+  },
+  "lebongoutnice@gmail.com": {
+    "sent_at": "2026-03-18T16:08:13.673764+00:00",
+    "last_sent_at": "2026-03-18T16:08:13.673764+00:00",
+    "send_count": 1,
+    "resend_id": "e0e8be93-6c97-49ff-91b5-c96a6ed11414",
+    "name": "Le Bon Goût",
+    "city": "Nice"
+  },
+  "o.f.c06nice@gmail.com": {
+    "sent_at": "2026-03-18T16:08:15.483718+00:00",
+    "last_sent_at": "2026-03-18T16:08:15.483718+00:00",
+    "send_count": 1,
+    "resend_id": "0117f435-b97c-4e8f-ad8c-58747d21f9d4",
+    "name": "Chef jado",
+    "city": "Nice"
+  },
+  "pitadine@wix.fr": {
+    "sent_at": "2026-03-18T16:08:17.321118+00:00",
+    "last_sent_at": "2026-03-18T16:08:17.321118+00:00",
+    "send_count": 1,
+    "resend_id": "0b559a7e-9ed7-4f63-bd6e-fa749dc7b55c",
+    "name": "Pitadine Nice",
+    "city": "Nice"
+  },
+  "info@shazi.fr": {
+    "sent_at": "2026-03-18T16:08:19.222822+00:00",
+    "last_sent_at": "2026-03-18T16:08:19.222822+00:00",
+    "send_count": 1,
+    "resend_id": "3ee58680-8548-4e3c-9652-b3e4969e0daa",
+    "name": "Shazi",
+    "city": "Nice"
+  },
+  "contact@mangemoinice.fr": {
+    "sent_at": "2026-03-18T16:08:21.031734+00:00",
+    "last_sent_at": "2026-03-18T16:08:21.031734+00:00",
+    "send_count": 1,
+    "resend_id": "912f56a0-1a47-47d3-a774-1d47eb5a2385",
+    "name": "MANGE MOI",
+    "city": "Nice"
+  },
+  "contact@pizza-cresci-nice.com": {
+    "sent_at": "2026-03-18T16:08:22.838957+00:00",
+    "last_sent_at": "2026-03-18T16:08:22.838957+00:00",
+    "send_count": 1,
+    "resend_id": "1ec178f3-dc34-4140-8654-e8b132b595a4",
+    "name": "La Pizza Cresci",
+    "city": "Nice"
+  },
+  "dafrancesconice@gmail.com": {
+    "sent_at": "2026-03-18T16:08:24.732119+00:00",
+    "last_sent_at": "2026-03-18T16:08:24.732119+00:00",
+    "send_count": 1,
+    "resend_id": "e49133b2-4d0a-4931-87cb-44beb266bc18",
+    "name": "Pizza da Francesco",
+    "city": "Nice"
+  },
+  "contact@domapizza.fr": {
+    "sent_at": "2026-03-18T16:08:26.561387+00:00",
+    "last_sent_at": "2026-03-18T16:08:26.561387+00:00",
+    "send_count": 1,
+    "resend_id": "a13485b8-ffd2-4bb8-9145-446dae2009c9",
+    "name": "Doma pizza",
+    "city": "Nice"
+  },
+  "reservation@casaleya.com": {
+    "sent_at": "2026-03-18T16:08:28.389640+00:00",
+    "last_sent_at": "2026-03-18T16:08:28.389640+00:00",
+    "send_count": 1,
+    "resend_id": "c331f20f-3180-40e8-a64f-4358c8e0dae9",
+    "name": "Casa Leya",
+    "city": "Nice"
+  },
+  "tartane06@gmail.com": {
+    "sent_at": "2026-03-18T16:08:30.275465+00:00",
+    "last_sent_at": "2026-03-18T16:08:30.275465+00:00",
+    "send_count": 1,
+    "resend_id": "9322709e-4b0c-4096-b1ab-e28cacf8e9ca",
+    "name": "LA TARTANE",
+    "city": "Nice"
+  },
+  "latrattoriadupalais@gmail.com": {
+    "sent_at": "2026-03-18T16:08:32.179293+00:00",
+    "last_sent_at": "2026-03-18T16:08:32.179293+00:00",
+    "send_count": 1,
+    "resend_id": "c66ead31-63f0-4e42-a5a6-167625df605d",
+    "name": "La Trattoria du Palais",
+    "city": "Nice"
+  },
+  "contact@sentimi.fr": {
+    "sent_at": "2026-03-18T16:08:34.054143+00:00",
+    "last_sent_at": "2026-03-18T16:08:34.054143+00:00",
+    "send_count": 1,
+    "resend_id": "5ec0a095-5732-4425-aec9-581d9924cfdc",
+    "name": "Sentimi",
+    "city": "Nice"
   }
 }
