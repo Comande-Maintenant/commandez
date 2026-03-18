@@ -2398,5 +2398,389 @@
     "resend_id": "f6935c31-2441-4abd-bfa4-9a0d13ad82d3",
     "name": "Bar Pizzeria Restaurant Brasserie Le Bellini",
     "city": "Toulouse"
+  },
+  "momspizzaguilhemery1@gmail.com": {
+    "sent_at": "2026-03-18T08:05:30.650990+00:00",
+    "last_sent_at": "2026-03-18T08:05:30.650990+00:00",
+    "send_count": 1,
+    "resend_id": "61d1464d-f531-42c3-9b75-c87508fc3b84",
+    "name": "Mom's Pizza Guilhemery",
+    "city": "Toulouse"
+  },
+  "fouchard31@orange.fr": {
+    "sent_at": "2026-03-18T08:05:39.349476+00:00",
+    "last_sent_at": "2026-03-18T08:05:39.349476+00:00",
+    "send_count": 1,
+    "resend_id": "e4cfe3f8-25f7-44e8-aa15-a1d9122e2dbf",
+    "name": "LA TOUR DE PIZZ",
+    "city": "Toulouse"
+  },
+  "contact@amone.fr": {
+    "sent_at": "2026-03-18T08:05:47.207322+00:00",
+    "last_sent_at": "2026-03-18T08:05:47.207322+00:00",
+    "send_count": 1,
+    "resend_id": "d10af5fc-a3a3-4919-92ca-778b0a049f67",
+    "name": "AMONE Toulouse",
+    "city": "Toulouse"
+  },
+  "contact@orto.fr": {
+    "sent_at": "2026-03-18T08:05:56.994648+00:00",
+    "last_sent_at": "2026-03-18T08:05:56.994648+00:00",
+    "send_count": 1,
+    "resend_id": "7b666a2b-498c-49fc-a17a-327efc728d44",
+    "name": "ORTO",
+    "city": "Toulouse"
+  },
+  "bimbiz.food@gmail.com": {
+    "sent_at": "2026-03-18T08:06:05.756520+00:00",
+    "last_sent_at": "2026-03-18T08:06:05.756520+00:00",
+    "send_count": 1,
+    "resend_id": "55e83084-4ede-4e66-ae37-8feccb5cdbf3",
+    "name": "Bimbiz Food",
+    "city": "Toulouse"
+  },
+  "contact@31avenue.com": {
+    "sent_at": "2026-03-18T08:06:13.638115+00:00",
+    "last_sent_at": "2026-03-18T08:06:13.638115+00:00",
+    "send_count": 1,
+    "resend_id": "64ee3b2b-0f08-44d4-9381-83a3746b410a",
+    "name": "Toulouse Burger",
+    "city": "Toulouse"
+  },
+  "gestion@newschooltacos.fr": {
+    "sent_at": "2026-03-18T08:06:22.543096+00:00",
+    "last_sent_at": "2026-03-18T08:06:22.543096+00:00",
+    "send_count": 1,
+    "resend_id": "d146678a-5938-4ce2-a8d1-3884deceb757",
+    "name": "New School Tacos - Capitole",
+    "city": "Toulouse"
+  },
+  "sgrecovr@gmail.com": {
+    "sent_at": "2026-03-18T08:06:29.250637+00:00",
+    "last_sent_at": "2026-03-18T08:06:29.250637+00:00",
+    "send_count": 1,
+    "resend_id": "43c96050-6e52-42eb-870a-92c776d18672",
+    "name": "La Petite Cantine Toulouse",
+    "city": "Toulouse"
+  },
+  "contact@namecheap.com": {
+    "sent_at": "2026-03-18T08:06:38.261312+00:00",
+    "last_sent_at": "2026-03-18T08:06:38.261312+00:00",
+    "send_count": 1,
+    "resend_id": "1d5cefda-c854-41db-96b2-1991beac2cd1",
+    "name": "Izhac Food",
+    "city": "Toulouse"
+  },
+  "contact@leroll.fr": {
+    "sent_at": "2026-03-18T08:06:46.345300+00:00",
+    "last_sent_at": "2026-03-18T08:06:46.345300+00:00",
+    "send_count": 1,
+    "resend_id": "d72785a0-b17b-4ebd-9199-2750309f8367",
+    "name": "🍞 Le Roll - Brioche garnie artisanale 🍞",
+    "city": "Toulouse"
+  },
+  "maxchicken.fr@gmail.com": {
+    "sent_at": "2026-03-18T08:06:54.630042+00:00",
+    "last_sent_at": "2026-03-18T08:06:54.630042+00:00",
+    "send_count": 1,
+    "resend_id": "e65b8ee0-30e6-4331-8243-be9ef721f43e",
+    "name": "Perfect fried chicken saint-michel",
+    "city": "Toulouse"
+  },
+  "lepatio175@gmail.com": {
+    "sent_at": "2026-03-18T08:07:03.311509+00:00",
+    "last_sent_at": "2026-03-18T08:07:03.311509+00:00",
+    "send_count": 1,
+    "resend_id": "2bf3c1b6-3d8a-42ca-8f2c-936fc0fb78d1",
+    "name": "Snack House",
+    "city": "Toulouse"
+  },
+  "baguetuptoulouse@gmail.com": {
+    "sent_at": "2026-03-18T08:07:10.433118+00:00",
+    "last_sent_at": "2026-03-18T08:07:10.433118+00:00",
+    "send_count": 1,
+    "resend_id": "5ae82f91-4e31-49cc-8d3f-58d8e07870da",
+    "name": "Baguet'Up",
+    "city": "Toulouse"
+  },
+  "admin@ffctoulouse.com": {
+    "sent_at": "2026-03-18T08:07:18.512892+00:00",
+    "last_sent_at": "2026-03-18T08:07:18.512892+00:00",
+    "send_count": 1,
+    "resend_id": "b5efe11b-1436-4acd-93c3-cc5c4964cced",
+    "name": "FFC CHICKEN",
+    "city": "Toulouse"
+  },
+  "sebdetaillant@gmail.com": {
+    "sent_at": "2026-03-18T08:07:26.563422+00:00",
+    "last_sent_at": "2026-03-18T08:07:26.563422+00:00",
+    "send_count": 1,
+    "resend_id": "71379c3e-6112-4616-96c3-13656684476c",
+    "name": "Le Détaillant - Sandwich de Qualité, Épicerie",
+    "city": "Toulouse"
+  },
+  "contact@pimpmyburger.fr": {
+    "sent_at": "2026-03-18T08:07:33.736316+00:00",
+    "last_sent_at": "2026-03-18T08:07:33.736316+00:00",
+    "send_count": 1,
+    "resend_id": "0ea94781-0976-4b02-b6a6-e9b993a32f4f",
+    "name": "Pimp My Burger",
+    "city": "Toulouse"
+  },
+  "chickengrilltacos@yahoo.com": {
+    "sent_at": "2026-03-18T08:07:43.302996+00:00",
+    "last_sent_at": "2026-03-18T08:07:43.302996+00:00",
+    "send_count": 1,
+    "resend_id": "5d529e3d-cb6d-413a-a572-6d2feca1f929",
+    "name": "Chicken Grill & Tacos Patte d'Oie",
+    "city": "Toulouse"
+  },
+  "elmexicano@gmail.com": {
+    "sent_at": "2026-03-18T08:07:55.172229+00:00",
+    "last_sent_at": "2026-03-18T08:07:55.172229+00:00",
+    "send_count": 1,
+    "resend_id": "515506b1-510e-4c84-aeba-0ca4cdb46c3a",
+    "name": "El Mexicano Toulouse",
+    "city": "Toulouse"
+  },
+  "vigueur.%5cnhoussem.benyacoub@gmail.com": {
+    "sent_at": "2026-03-18T08:08:07.084783+00:00",
+    "last_sent_at": "2026-03-18T08:08:07.084783+00:00",
+    "send_count": 1,
+    "resend_id": "cbcfe137-e6ff-4052-b77f-04b6701fe03b",
+    "name": "GOT FOOD TACOS",
+    "city": "Toulouse"
+  },
+  "contact@kalenya.com": {
+    "sent_at": "2026-03-18T08:08:18.962067+00:00",
+    "last_sent_at": "2026-03-18T08:08:18.962067+00:00",
+    "send_count": 1,
+    "resend_id": "962dbeeb-5c1d-432c-b14b-aa5f939fd763",
+    "name": "Wizz'up",
+    "city": "Toulouse"
+  },
+  "contact@grabuge-toulouse.com": {
+    "sent_at": "2026-03-18T08:08:30.853702+00:00",
+    "last_sent_at": "2026-03-18T08:08:30.853702+00:00",
+    "send_count": 1,
+    "resend_id": "b0139425-8aaf-4ff9-92b0-9955c45720f7",
+    "name": "Grabuge Toulouse",
+    "city": "Toulouse"
+  },
+  "bokaitaliankitchen@gmail.com": {
+    "sent_at": "2026-03-18T08:08:42.738617+00:00",
+    "last_sent_at": "2026-03-18T08:08:42.738617+00:00",
+    "send_count": 1,
+    "resend_id": "1415b373-e32b-45ad-84b5-9c5a4cb0199d",
+    "name": "Boka Italian Kitchen",
+    "city": "Toulouse"
+  },
+  "gustoart31@gmail.com": {
+    "sent_at": "2026-03-18T08:08:54.644738+00:00",
+    "last_sent_at": "2026-03-18T08:08:54.644738+00:00",
+    "send_count": 1,
+    "resend_id": "cf3d11fd-27d0-4e92-9dc0-42ce7f88bfdb",
+    "name": "Gusto’Art",
+    "city": "Toulouse"
+  },
+  "hope.rerestaurant31@gmail.com": {
+    "sent_at": "2026-03-18T08:09:05.016258+00:00",
+    "last_sent_at": "2026-03-18T08:09:05.016258+00:00",
+    "send_count": 1,
+    "resend_id": "a41c0b08-4883-453c-8b73-e71b0b14fb3e",
+    "name": "Hope! Restaurant Toulouse",
+    "city": "Toulouse"
+  },
+  "chris@colette-developpement.fr": {
+    "sent_at": "2026-03-18T08:09:11.341313+00:00",
+    "last_sent_at": "2026-03-18T08:09:11.341313+00:00",
+    "send_count": 1,
+    "resend_id": "2b3e3ccc-1417-4fa9-b6b2-c58e10bf4dbf",
+    "name": "Les Burgers de Colette - Toulouse",
+    "city": "Toulouse"
+  },
+  "contact@origine-bk.fr": {
+    "sent_at": "2026-03-18T08:09:18.695703+00:00",
+    "last_sent_at": "2026-03-18T08:09:18.695703+00:00",
+    "send_count": 1,
+    "resend_id": "fe51eedd-7f63-4d22-a40c-daed168acd47",
+    "name": "Origine BK - Berliner kebab",
+    "city": "Bordeaux"
+  },
+  "lessablesdor.shop@gmail.com": {
+    "sent_at": "2026-03-18T08:09:25.598139+00:00",
+    "last_sent_at": "2026-03-18T08:09:25.598139+00:00",
+    "send_count": 1,
+    "resend_id": "73105086-f8e2-464d-88ec-fcfc3e688e70",
+    "name": "Les Sables d'Or",
+    "city": "Bordeaux"
+  },
+  "contact@monsieurlkebabier.fr": {
+    "sent_at": "2026-03-18T08:09:33.254104+00:00",
+    "last_sent_at": "2026-03-18T08:09:33.254104+00:00",
+    "send_count": 1,
+    "resend_id": "a100bb0d-ac58-4b76-a023-3839922708d3",
+    "name": "MONSIEUR LE KEBABIER",
+    "city": "Bordeaux"
+  },
+  "contact@gluck.fr": {
+    "sent_at": "2026-03-18T08:09:40.020954+00:00",
+    "last_sent_at": "2026-03-18T08:09:40.020954+00:00",
+    "send_count": 1,
+    "resend_id": "8c205925-7f2d-4d2e-b3f8-6cf6e1ed2766",
+    "name": "Le Glück – Berliner Kebab Maison | Agneau, Poulet Halal & Falafels",
+    "city": "Bordeaux"
+  },
+  "mestaouiradhouane@gmail.com": {
+    "sent_at": "2026-03-18T08:09:48.459683+00:00",
+    "last_sent_at": "2026-03-18T08:09:48.459683+00:00",
+    "send_count": 1,
+    "resend_id": "c5d7038b-fb1f-4ed1-8a69-af84e167bff8",
+    "name": "My Tacos",
+    "city": "Bordeaux"
+  },
+  "younesdjebouai@hotmail.com": {
+    "sent_at": "2026-03-18T08:09:55.507678+00:00",
+    "last_sent_at": "2026-03-18T08:09:55.507678+00:00",
+    "send_count": 1,
+    "resend_id": "c62f5bae-fa2e-407f-bc40-b2dc0d981fa3",
+    "name": "Le Must",
+    "city": "Bordeaux"
+  },
+  "u003edpo@sumup.com": {
+    "sent_at": "2026-03-18T08:10:05.034241+00:00",
+    "last_sent_at": "2026-03-18T08:10:05.034241+00:00",
+    "send_count": 1,
+    "resend_id": "3153d13e-1d79-4a0c-b162-96f33562724b",
+    "name": "Kool fresh",
+    "city": "Bordeaux"
+  },
+  "contact@ankarakebab.fr": {
+    "sent_at": "2026-03-18T08:10:12.381500+00:00",
+    "last_sent_at": "2026-03-18T08:10:12.381500+00:00",
+    "send_count": 1,
+    "resend_id": "6925eab0-8b16-4fe9-9f70-6582429bf04d",
+    "name": "Ankara",
+    "city": "Bordeaux"
+  },
+  "samibenmahmoud@hotmail.fr": {
+    "sent_at": "2026-03-18T08:10:19.332387+00:00",
+    "last_sent_at": "2026-03-18T08:10:19.332387+00:00",
+    "send_count": 1,
+    "resend_id": "8f6e5da3-39d7-4fc6-95e6-fa8ea2a9b2f4",
+    "name": "KING TACOS",
+    "city": "Bordeaux"
+  },
+  "contact@bomedia.fr": {
+    "sent_at": "2026-03-18T08:10:26.806254+00:00",
+    "last_sent_at": "2026-03-18T08:10:26.806254+00:00",
+    "send_count": 1,
+    "resend_id": "1c07153e-585a-4321-b1bb-5dcf1a066b4a",
+    "name": "HESTÏA Bordeaux",
+    "city": "Bordeaux"
+  },
+  "kevin.meiar@groupemeiar.com": {
+    "sent_at": "2026-03-18T08:10:35.876228+00:00",
+    "last_sent_at": "2026-03-18T08:10:35.876228+00:00",
+    "send_count": 1,
+    "resend_id": "13bb0216-83fd-492a-b19f-7e7fb6d3d077",
+    "name": "Sumak",
+    "city": "Bordeaux"
+  },
+  "contact@cappadoce33.fr": {
+    "sent_at": "2026-03-18T08:10:43.677776+00:00",
+    "last_sent_at": "2026-03-18T08:10:43.677776+00:00",
+    "send_count": 1,
+    "resend_id": "dfce6aca-8b3a-4bfe-9054-0445557ea9ba",
+    "name": "Cappadoce",
+    "city": "Bordeaux"
+  },
+  "contact@cosytacos.fr": {
+    "sent_at": "2026-03-18T08:10:51.695189+00:00",
+    "last_sent_at": "2026-03-18T08:10:51.695189+00:00",
+    "send_count": 1,
+    "resend_id": "038dd282-837c-4d5a-b021-e641ca7cf75b",
+    "name": "Cosy Tacos Bastide",
+    "city": "Bordeaux"
+  },
+  "houfani.amor@hotmail.fr": {
+    "sent_at": "2026-03-18T08:11:01.428464+00:00",
+    "last_sent_at": "2026-03-18T08:11:01.428464+00:00",
+    "send_count": 1,
+    "resend_id": "5920476c-b2a3-46ce-8fff-72066de250fb",
+    "name": "La Baraka",
+    "city": "Bordeaux"
+  },
+  "ciao@papafamiglia.com": {
+    "sent_at": "2026-03-18T08:11:09.547441+00:00",
+    "last_sent_at": "2026-03-18T08:11:09.547441+00:00",
+    "send_count": 1,
+    "resend_id": "cc125a7a-cc17-466d-8cd6-420c60725e2a",
+    "name": "Papà Lello",
+    "city": "Bordeaux"
+  },
+  "contact@hrvprod.com": {
+    "sent_at": "2026-03-18T08:11:19.432130+00:00",
+    "last_sent_at": "2026-03-18T08:11:19.432130+00:00",
+    "send_count": 1,
+    "resend_id": "73f1582f-7925-4ff2-b77c-6bfce4113c92",
+    "name": "La Tradizione",
+    "city": "Bordeaux"
+  },
+  "contact@monzu.fr": {
+    "sent_at": "2026-03-18T08:11:26.607444+00:00",
+    "last_sent_at": "2026-03-18T08:11:26.607444+00:00",
+    "send_count": 1,
+    "resend_id": "42f15f22-f02d-4d76-ac72-041f2a35dd61",
+    "name": "Monzù Grands Hommes",
+    "city": "Bordeaux"
+  },
+  "contact@privateaser.com": {
+    "sent_at": "2026-03-18T08:11:33.153921+00:00",
+    "last_sent_at": "2026-03-18T08:11:33.153921+00:00",
+    "send_count": 1,
+    "resend_id": "350a706d-e551-4e37-9ad5-14607aa6a748",
+    "name": "San Pietro - Bordeaux",
+    "city": "Bordeaux"
+  },
+  "osteria@outlook.com": {
+    "sent_at": "2026-03-18T08:11:42.054603+00:00",
+    "last_sent_at": "2026-03-18T08:11:42.054603+00:00",
+    "send_count": 1,
+    "resend_id": "2eb6bc0d-63b6-4e19-b374-55661e1be8e9",
+    "name": "Osteria Da Luigi",
+    "city": "Bordeaux"
+  },
+  "info@boccaccia.fr": {
+    "sent_at": "2026-03-18T08:11:53.269793+00:00",
+    "last_sent_at": "2026-03-18T08:11:53.269793+00:00",
+    "send_count": 1,
+    "resend_id": "fe835c8e-2c5c-45fa-969a-ede4be605b9a",
+    "name": "BOCCACCIA",
+    "city": "Bordeaux"
+  },
+  "resa@faina.fr": {
+    "sent_at": "2026-03-18T08:12:01.740672+00:00",
+    "last_sent_at": "2026-03-18T08:12:01.740672+00:00",
+    "send_count": 1,
+    "resend_id": "c55b0fc4-510c-47fd-90fd-7ef6a06b5022",
+    "name": "FAINA",
+    "city": "Bordeaux"
+  },
+  "u003edpd@drinksandco.com": {
+    "sent_at": "2026-03-18T08:12:09.258949+00:00",
+    "last_sent_at": "2026-03-18T08:12:09.258949+00:00",
+    "send_count": 1,
+    "resend_id": "5537fcb7-edc8-45b9-beb8-4c7f29a470ab",
+    "name": "IT - Italian Trattoria - 40 quai Virginie Hériot, Bassins à flot, Bordeaux",
+    "city": "Bordeaux"
+  },
+  "contact@mamashelter.com": {
+    "sent_at": "2026-03-18T08:12:18.619754+00:00",
+    "last_sent_at": "2026-03-18T08:12:18.619754+00:00",
+    "send_count": 1,
+    "resend_id": "af283f49-44d9-4081-8b65-37c4b1f9ac15",
+    "name": "Mama Restaurant Bordeaux",
+    "city": "Bordeaux"
   }
 }
