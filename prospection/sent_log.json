@@ -3158,5 +3158,389 @@
     "resend_id": "5ec0a095-5732-4425-aec9-581d9924cfdc",
     "name": "Sentimi",
     "city": "Nice"
+  },
+  "lille@mamashelter.com": {
+    "sent_at": "2026-03-19T08:03:08.882476+00:00",
+    "last_sent_at": "2026-03-19T08:03:08.882476+00:00",
+    "send_count": 1,
+    "resend_id": "1a612f62-1537-49c9-94ae-87677ba94dc6",
+    "name": "Mama Restaurant Bordeaux",
+    "city": "Bordeaux"
+  },
+  "allo@lucie-ultrafrais.fr": {
+    "sent_at": "2026-03-19T08:03:11.440822+00:00",
+    "last_sent_at": "2026-03-19T08:03:11.440822+00:00",
+    "send_count": 1,
+    "resend_id": "41af64fc-3340-406e-ac49-92118149aa3f",
+    "name": "Lucie Ultra Frais - Tourny",
+    "city": "Bordeaux"
+  },
+  "lev.tuttifood@gmail.com": {
+    "sent_at": "2026-03-19T08:03:13.718655+00:00",
+    "last_sent_at": "2026-03-19T08:03:13.718655+00:00",
+    "send_count": 1,
+    "resend_id": "ab220157-4b77-4c61-80e5-03b2d6e0b23f",
+    "name": "TUTTI FOOD NICE",
+    "city": "Nice"
+  },
+  "contact@justcool.fr": {
+    "sent_at": "2026-03-19T08:03:16.022900+00:00",
+    "last_sent_at": "2026-03-19T08:03:16.022900+00:00",
+    "send_count": 1,
+    "resend_id": "ae6be3bf-5a91-44b4-ac11-3d2897906350",
+    "name": "Just cool",
+    "city": "Nice"
+  },
+  "lonclesam06@gmail.com": {
+    "sent_at": "2026-03-19T08:03:17.987134+00:00",
+    "last_sent_at": "2026-03-19T08:03:17.987134+00:00",
+    "send_count": 1,
+    "resend_id": "5fbf37cd-f776-4e40-9767-4b3f6e67c6d9",
+    "name": "L'ONCLE SAM CHAPATI",
+    "city": "Nice"
+  },
+  "marimorgan6@gmail.com": {
+    "sent_at": "2026-03-19T08:03:19.900041+00:00",
+    "last_sent_at": "2026-03-19T08:03:19.900041+00:00",
+    "send_count": 1,
+    "resend_id": "14163ee9-de3c-48f7-a1f0-b53fb59c4b02",
+    "name": "Snack Shop L'Arenas",
+    "city": "Nice"
+  },
+  "chezgilouetdan@gmail.com": {
+    "sent_at": "2026-03-19T08:03:22.148444+00:00",
+    "last_sent_at": "2026-03-19T08:03:22.148444+00:00",
+    "send_count": 1,
+    "resend_id": "74adad6b-1e2d-4f76-84bf-945f46ebd4e8",
+    "name": "Snack\" Les Aiglons \"",
+    "city": "Nice"
+  },
+  "contact@bigm-burger.fr": {
+    "sent_at": "2026-03-19T08:03:24.067521+00:00",
+    "last_sent_at": "2026-03-19T08:03:24.067521+00:00",
+    "send_count": 1,
+    "resend_id": "28b30b42-6147-4eb8-a460-c7c3b8b20d89",
+    "name": "Big M",
+    "city": "Nice"
+  },
+  "contact@capuanomarketing.com": {
+    "sent_at": "2026-03-19T08:03:26.303058+00:00",
+    "last_sent_at": "2026-03-19T08:03:26.303058+00:00",
+    "send_count": 1,
+    "resend_id": "778970e6-669a-4477-91b6-e49db896dc84",
+    "name": "D'AQUÌ",
+    "city": "Nice"
+  },
+  "contact@lokabarkitchen.com": {
+    "sent_at": "2026-03-19T08:03:28.572689+00:00",
+    "last_sent_at": "2026-03-19T08:03:28.572689+00:00",
+    "send_count": 1,
+    "resend_id": "017f12c8-4717-466d-a1b2-8bdb7382ba72",
+    "name": "Loka Bar Kitchen - Restaurant Nice",
+    "city": "Nice"
+  },
+  "contact@le-must.fr": {
+    "sent_at": "2026-03-19T08:03:30.482988+00:00",
+    "last_sent_at": "2026-03-19T08:03:30.482988+00:00",
+    "send_count": 1,
+    "resend_id": "3cfc27eb-f977-46dd-b9fa-ed68e8b8e276",
+    "name": "Le Must - Eat me",
+    "city": "Nice"
+  },
+  "contact@lacatrina.fr": {
+    "sent_at": "2026-03-19T08:03:32.425726+00:00",
+    "last_sent_at": "2026-03-19T08:03:32.425726+00:00",
+    "send_count": 1,
+    "resend_id": "e30ac409-a4a0-4976-b459-c124b4560238",
+    "name": "La catrina - restaurant mexicain festif à Nice",
+    "city": "Nice"
+  },
+  "contact@korners.fr": {
+    "sent_at": "2026-03-19T08:03:34.323910+00:00",
+    "last_sent_at": "2026-03-19T08:03:34.323910+00:00",
+    "send_count": 1,
+    "resend_id": "75294ede-18d0-4485-91b8-3f7821db5a25",
+    "name": "Korner's",
+    "city": "Nice"
+  },
+  "contact@pan-nice.fr": {
+    "sent_at": "2026-03-19T08:03:36.265094+00:00",
+    "last_sent_at": "2026-03-19T08:03:36.265094+00:00",
+    "send_count": 1,
+    "resend_id": "2ac0963e-7bf0-4950-919c-e65b9960f6a8",
+    "name": "Pan",
+    "city": "Nice"
+  },
+  "contact@nicetoile.com": {
+    "sent_at": "2026-03-19T08:03:38.229716+00:00",
+    "last_sent_at": "2026-03-19T08:03:38.229716+00:00",
+    "send_count": 1,
+    "resend_id": "69087eac-6e3c-43c9-99ac-cfc26e1d6075",
+    "name": "Centre Commercial NICETOILE",
+    "city": "Nice"
+  },
+  "alfred@alfredburger.com": {
+    "sent_at": "2026-03-19T08:03:40.171142+00:00",
+    "last_sent_at": "2026-03-19T08:03:40.171142+00:00",
+    "send_count": 1,
+    "resend_id": "41bcf0aa-7d98-4e7c-9063-52c3e0f31114",
+    "name": "Alfred Burger",
+    "city": "Nice"
+  },
+  "idriss.chaiere@gmail.com": {
+    "sent_at": "2026-03-19T08:03:42.107409+00:00",
+    "last_sent_at": "2026-03-19T08:03:42.107409+00:00",
+    "send_count": 1,
+    "resend_id": "78a530ac-23d9-4749-b148-59d8488b1d42",
+    "name": "Le berliner",
+    "city": "Nantes"
+  },
+  "nantesrestaurant@gmail.com": {
+    "sent_at": "2026-03-19T08:03:44.024579+00:00",
+    "last_sent_at": "2026-03-19T08:03:44.024579+00:00",
+    "send_count": 1,
+    "resend_id": "64a9bcf0-09b8-4029-b5a9-409346794588",
+    "name": "NSK RESTAURANT",
+    "city": "Nantes"
+  },
+  "kaaysun2@gmail.com": {
+    "sent_at": "2026-03-19T08:03:45.963534+00:00",
+    "last_sent_at": "2026-03-19T08:03:45.963534+00:00",
+    "send_count": 1,
+    "resend_id": "e13b5c08-7b39-4e05-9817-aa084f98dfd1",
+    "name": "LE MESOPOTAMIA",
+    "city": "Nantes"
+  },
+  "contact@bunch-france.fr": {
+    "sent_at": "2026-03-19T08:03:47.879050+00:00",
+    "last_sent_at": "2026-03-19T08:03:47.879050+00:00",
+    "send_count": 1,
+    "resend_id": "b2948851-61ea-4f7c-b64d-1daee0172888",
+    "name": "Bunch Nantes Centre ️- Sandwichs, Tacos & Burgers à Nantes",
+    "city": "Nantes"
+  },
+  "frhsahin@gmail.com": {
+    "sent_at": "2026-03-19T08:03:50.180085+00:00",
+    "last_sent_at": "2026-03-19T08:03:50.180085+00:00",
+    "send_count": 1,
+    "resend_id": "085f45aa-0141-4627-b1c5-853a2fa90423",
+    "name": "Alaturka",
+    "city": "Nantes"
+  },
+  "vigueur.%5cnumit44suna@gmail.com": {
+    "sent_at": "2026-03-19T08:03:52.095641+00:00",
+    "last_sent_at": "2026-03-19T08:03:52.095641+00:00",
+    "send_count": 1,
+    "resend_id": "4a6ff926-fd1f-403f-9a8e-6a8f2ada6290",
+    "name": "Emrah Kebab",
+    "city": "Nantes"
+  },
+  "onaancorner.contact@gmail.com": {
+    "sent_at": "2026-03-19T08:03:53.989779+00:00",
+    "last_sent_at": "2026-03-19T08:03:53.989779+00:00",
+    "send_count": 1,
+    "resend_id": "7e132d41-590a-420f-8d27-c2e86da0ed44",
+    "name": "Naan Corner",
+    "city": "Nantes"
+  },
+  "contact@lekebabiste.com": {
+    "sent_at": "2026-03-19T08:03:55.921255+00:00",
+    "last_sent_at": "2026-03-19T08:03:55.921255+00:00",
+    "send_count": 1,
+    "resend_id": "f8e1ade2-e6c3-4967-a7cb-faddc064f768",
+    "name": "LE KEBABISTE",
+    "city": "Nantes"
+  },
+  "kiosqueduboucher@gmail.com": {
+    "sent_at": "2026-03-19T08:03:57.831719+00:00",
+    "last_sent_at": "2026-03-19T08:03:57.831719+00:00",
+    "send_count": 1,
+    "resend_id": "55fa1ce4-bafc-4ab8-9469-e18c8a78e83b",
+    "name": "KdB - Le Kiosque du Boucher",
+    "city": "Nantes"
+  },
+  "ciao@famigliacaruso.fr": {
+    "sent_at": "2026-03-19T08:03:59.754035+00:00",
+    "last_sent_at": "2026-03-19T08:03:59.754035+00:00",
+    "send_count": 1,
+    "resend_id": "4d1959de-e6c6-464e-9bc9-41b0a562262f",
+    "name": "VINCENZO",
+    "city": "Nantes"
+  },
+  "ciao@bastapizza-nantes.com": {
+    "sent_at": "2026-03-19T08:04:01.689685+00:00",
+    "last_sent_at": "2026-03-19T08:04:01.689685+00:00",
+    "send_count": 1,
+    "resend_id": "954a7643-e7b3-49e4-a0aa-682d0b047606",
+    "name": "BASTA pizza bar Nantes",
+    "city": "Nantes"
+  },
+  "agape.pizzeria.nantes@gmail.com": {
+    "sent_at": "2026-03-19T08:04:03.621853+00:00",
+    "last_sent_at": "2026-03-19T08:04:03.621853+00:00",
+    "send_count": 1,
+    "resend_id": "49e448a1-84d9-4d6d-be5a-2a0f854bf1e4",
+    "name": "Pizzéria Agapè",
+    "city": "Nantes"
+  },
+  "hello@180g.fr": {
+    "sent_at": "2026-03-19T08:04:05.539666+00:00",
+    "last_sent_at": "2026-03-19T08:04:05.539666+00:00",
+    "send_count": 1,
+    "resend_id": "7f3496df-fc87-4443-9e7a-74adb3ea8fd3",
+    "name": "180g Pizza - Pizzeria Nantes",
+    "city": "Nantes"
+  },
+  "contact@lucciola-trattoria.com": {
+    "sent_at": "2026-03-19T08:04:07.440187+00:00",
+    "last_sent_at": "2026-03-19T08:04:07.440187+00:00",
+    "send_count": 1,
+    "resend_id": "87df5567-19fe-46ae-b06c-e2537a5c4d52",
+    "name": "Lucciola Trattoria",
+    "city": "Nantes"
+  },
+  "contact@lazzarone-pizzeria.fr": {
+    "sent_at": "2026-03-19T08:04:09.415755+00:00",
+    "last_sent_at": "2026-03-19T08:04:09.415755+00:00",
+    "send_count": 1,
+    "resend_id": "4e4dccc8-933e-41f7-8fa7-b59f9f1e26ed",
+    "name": "Pizzeria Lazzarone",
+    "city": "Nantes"
+  },
+  "coolmiers@gmail.com": {
+    "sent_at": "2026-03-19T08:04:11.326344+00:00",
+    "last_sent_at": "2026-03-19T08:04:11.326344+00:00",
+    "send_count": 1,
+    "resend_id": "7d8e0fc1-05df-4b4e-8939-f936e6c45778",
+    "name": "Popolo",
+    "city": "Nantes"
+  },
+  "bonjour@lieudit-nantes.com": {
+    "sent_at": "2026-03-19T08:04:13.240740+00:00",
+    "last_sent_at": "2026-03-19T08:04:13.240740+00:00",
+    "send_count": 1,
+    "resend_id": "819beb3f-b18e-4adc-818b-60ace805e235",
+    "name": "GASPARELLI",
+    "city": "Nantes"
+  },
+  "nota.bene44000@gmail.com": {
+    "sent_at": "2026-03-19T08:04:15.212621+00:00",
+    "last_sent_at": "2026-03-19T08:04:15.212621+00:00",
+    "send_count": 1,
+    "resend_id": "552c9fd7-5ec9-4d3e-a910-7ee2eb638a3d",
+    "name": "Nota Bene",
+    "city": "Nantes"
+  },
+  "pizzabueno44@gmail.com": {
+    "sent_at": "2026-03-19T08:04:17.130854+00:00",
+    "last_sent_at": "2026-03-19T08:04:17.130854+00:00",
+    "send_count": 1,
+    "resend_id": "b2453f79-3268-4888-8718-861e136874f2",
+    "name": "PIZZA BUENO ( Anciennement Pizza Bene )",
+    "city": "Nantes"
+  },
+  "amour.restaurantnantes@gmail.com": {
+    "sent_at": "2026-03-19T08:04:19.053272+00:00",
+    "last_sent_at": "2026-03-19T08:04:19.053272+00:00",
+    "send_count": 1,
+    "resend_id": "80c9ffca-1914-41ae-9a0b-601c9416e948",
+    "name": "Amour Nantes",
+    "city": "Nantes"
+  },
+  "contact@rosmarino-restaurant.fr": {
+    "sent_at": "2026-03-19T08:04:20.969153+00:00",
+    "last_sent_at": "2026-03-19T08:04:20.969153+00:00",
+    "send_count": 1,
+    "resend_id": "5c61d212-7dc8-4b63-a92a-ddc1730452ab",
+    "name": "Rosmarino",
+    "city": "Nantes"
+  },
+  "contact@foodcollect.fr": {
+    "sent_at": "2026-03-19T08:04:22.902615+00:00",
+    "last_sent_at": "2026-03-19T08:04:22.902615+00:00",
+    "send_count": 1,
+    "resend_id": "8e8a8910-650e-4f7e-ae6a-1ffb335177d9",
+    "name": "La Vespa des Carmes",
+    "city": "Nantes"
+  },
+  "restaurant.lamangouste@gmail.com": {
+    "sent_at": "2026-03-19T08:04:24.823532+00:00",
+    "last_sent_at": "2026-03-19T08:04:24.823532+00:00",
+    "send_count": 1,
+    "resend_id": "77cea9a5-7771-497c-b476-83cc2cd75489",
+    "name": "La Mangouste",
+    "city": "Nantes"
+  },
+  "contact@fraisdispo.fr": {
+    "sent_at": "2026-03-19T08:04:26.756969+00:00",
+    "last_sent_at": "2026-03-19T08:04:26.756969+00:00",
+    "send_count": 1,
+    "resend_id": "c6296da6-20b3-47a5-80de-cc2e651be40d",
+    "name": "Frais et Dispo - Pizza Nantes",
+    "city": "Nantes"
+  },
+  "contact@squadra-nantes.fr": {
+    "sent_at": "2026-03-19T08:04:28.697114+00:00",
+    "last_sent_at": "2026-03-19T08:04:28.697114+00:00",
+    "send_count": 1,
+    "resend_id": "43b86c1d-ab46-4524-bf72-0218c41ef251",
+    "name": "Squadra Pizzeria",
+    "city": "Nantes"
+  },
+  "boncoeurpizza@gmail.com": {
+    "sent_at": "2026-03-19T08:04:30.622771+00:00",
+    "last_sent_at": "2026-03-19T08:04:30.622771+00:00",
+    "send_count": 1,
+    "resend_id": "d286b352-866d-4d5d-bd9f-aa58e9c93321",
+    "name": "Boncœur Pizza",
+    "city": "Nantes"
+  },
+  "nomadfood44@gmail.com": {
+    "sent_at": "2026-03-19T08:04:32.548578+00:00",
+    "last_sent_at": "2026-03-19T08:04:32.548578+00:00",
+    "send_count": 1,
+    "resend_id": "9a9a5dff-db5f-4455-9a65-e514659d2f6c",
+    "name": "Nomad food",
+    "city": "Nantes"
+  },
+  "welcome@roadside.fr": {
+    "sent_at": "2026-03-19T08:04:34.484247+00:00",
+    "last_sent_at": "2026-03-19T08:04:34.484247+00:00",
+    "send_count": 1,
+    "resend_id": "ec31f204-efc4-4cbd-8600-e742ef74a90c",
+    "name": "Roadside | Burger Restaurant Nantes",
+    "city": "Nantes"
+  },
+  "u002f@cupandgo.fr": {
+    "sent_at": "2026-03-19T08:04:36.388782+00:00",
+    "last_sent_at": "2026-03-19T08:04:36.388782+00:00",
+    "send_count": 1,
+    "resend_id": "2cf086f4-2c8c-44b4-93d4-872a42390e5d",
+    "name": "CUP AND GO NANTES CUP&GO Bar à Dessert Nantes Coffee Shop Nantes Cake Salon de Thé Nantes FOOD COURT NANTES MELTINGFOOD",
+    "city": "Nantes"
+  },
+  "restaurant@ohmyfish.fr": {
+    "sent_at": "2026-03-19T08:04:38.307255+00:00",
+    "last_sent_at": "2026-03-19T08:04:38.307255+00:00",
+    "send_count": 1,
+    "resend_id": "0266ce5c-f8d4-4a3b-b768-d925ef11a0c0",
+    "name": "OHMYFISH restaurant",
+    "city": "Nantes"
+  },
+  "info@le137.com": {
+    "sent_at": "2026-03-19T08:04:40.421408+00:00",
+    "last_sent_at": "2026-03-19T08:04:40.421408+00:00",
+    "send_count": 1,
+    "resend_id": "04f77918-a346-4153-8362-c2271b2bacee",
+    "name": "Le 137",
+    "city": "Nantes"
+  },
+  "augoutdelarue@gmail.com": {
+    "sent_at": "2026-03-19T08:04:42.358230+00:00",
+    "last_sent_at": "2026-03-19T08:04:42.358230+00:00",
+    "send_count": 1,
+    "resend_id": "29b77f0e-45c7-4db2-bd1a-418a2ad98c36",
+    "name": "Au Gout De La Rue - Food Truck sur Nantes",
+    "city": "Nantes"
   }
 }
