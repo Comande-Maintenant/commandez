@@ -3542,5 +3542,381 @@
     "resend_id": "29b77f0e-45c7-4db2-bd1a-418a2ad98c36",
     "name": "Au Gout De La Rue - Food Truck sur Nantes",
     "city": "Nantes"
+  },
+  "resa1@mamashelter.com": {
+    "sent_at": "2026-03-19T15:53:37.150413+00:00",
+    "last_sent_at": "2026-03-19T15:53:37.150413+00:00",
+    "send_count": 1,
+    "resend_id": "5ab6d05a-6129-47e3-a12a-cf0d3288ab17",
+    "name": "Mama Restaurant Bordeaux",
+    "city": "Bordeaux"
+  },
+  "reservationschacha@gmail.com": {
+    "sent_at": "2026-03-19T15:53:39.293997+00:00",
+    "last_sent_at": "2026-03-19T15:53:39.293997+00:00",
+    "send_count": 1,
+    "resend_id": "ac602774-dd72-4ff5-8bcc-204b53aa3321",
+    "name": "CHACHA",
+    "city": "Nantes"
+  },
+  "bonjour@ezope.fr": {
+    "sent_at": "2026-03-19T15:53:41.523044+00:00",
+    "last_sent_at": "2026-03-19T15:53:41.523044+00:00",
+    "send_count": 1,
+    "resend_id": "7b66eede-d6fe-4419-9974-194483be686e",
+    "name": "EZOPE - Focaccia, Streetfood italienne faite-maison, Salades...",
+    "city": "Nantes"
+  },
+  "contact@at-distribution.fr": {
+    "sent_at": "2026-03-19T15:53:43.579032+00:00",
+    "last_sent_at": "2026-03-19T15:53:43.579032+00:00",
+    "send_count": 1,
+    "resend_id": "e6b1f4fe-59a4-4f0b-aa08-b41a579ec219",
+    "name": "Allo Apero Nantes - Livraison Alcool sur Nantes et Environs",
+    "city": "Nantes"
+  },
+  "contact@refpro.fr": {
+    "sent_at": "2026-03-19T15:53:45.638735+00:00",
+    "last_sent_at": "2026-03-19T15:53:45.638735+00:00",
+    "send_count": 1,
+    "resend_id": "c0f2df3c-0e07-4105-a3b7-16721e7be783",
+    "name": "CHEZ FRED",
+    "city": "Nantes"
+  },
+  "contact@shandao.fr": {
+    "sent_at": "2026-03-19T15:53:47.634680+00:00",
+    "last_sent_at": "2026-03-19T15:53:47.634680+00:00",
+    "send_count": 1,
+    "resend_id": "32c67f9a-f867-4a81-adc2-7010af593258",
+    "name": "SHAN DAO",
+    "city": "Nantes"
+  },
+  "lagenova44@gmail.com": {
+    "sent_at": "2026-03-19T15:53:49.632967+00:00",
+    "last_sent_at": "2026-03-19T15:53:49.632967+00:00",
+    "send_count": 1,
+    "resend_id": "ac6e52f2-54e9-42d1-9857-adc747e44d51",
+    "name": "La Genova",
+    "city": "Nantes"
+  },
+  "bonjour@picotafood.com": {
+    "sent_at": "2026-03-19T15:53:51.478202+00:00",
+    "last_sent_at": "2026-03-19T15:53:51.478202+00:00",
+    "send_count": 1,
+    "resend_id": "65b3b3cc-f59b-464c-b9ab-e5b6ba8af38d",
+    "name": "PICÒTA",
+    "city": "Nantes"
+  },
+  "contact@kebsbaba.fr": {
+    "sent_at": "2026-03-19T15:53:53.534968+00:00",
+    "last_sent_at": "2026-03-19T15:53:53.534968+00:00",
+    "send_count": 1,
+    "resend_id": "974ff00c-63f6-4515-8e4b-6d9c20d7a4de",
+    "name": "Kebs Baba",
+    "city": "Strasbourg"
+  },
+  "totoroutard67@gmail.com": {
+    "sent_at": "2026-03-19T15:53:55.469748+00:00",
+    "last_sent_at": "2026-03-19T15:53:55.469748+00:00",
+    "send_count": 1,
+    "resend_id": "427f1c62-1bcb-48e8-baf4-401e5d1353ab",
+    "name": "Chez Toto",
+    "city": "Strasbourg"
+  },
+  "sibelcicek2@hotmail.com": {
+    "sent_at": "2026-03-19T15:53:57.507089+00:00",
+    "last_sent_at": "2026-03-19T15:53:57.507089+00:00",
+    "send_count": 1,
+    "resend_id": "d0c1653c-7814-4cf9-9ff9-3417445e19b1",
+    "name": "Anatolian Garden",
+    "city": "Strasbourg"
+  },
+  "avesta0001@gmail.com": {
+    "sent_at": "2026-03-19T15:53:59.519826+00:00",
+    "last_sent_at": "2026-03-19T15:53:59.519826+00:00",
+    "send_count": 1,
+    "resend_id": "039a8d8d-24df-480c-98f4-e062da8de73e",
+    "name": "Avesta 1",
+    "city": "Strasbourg"
+  },
+  "contact@ozefood.fr": {
+    "sent_at": "2026-03-19T15:54:01.344896+00:00",
+    "last_sent_at": "2026-03-19T15:54:01.344896+00:00",
+    "send_count": 1,
+    "resend_id": "8bdae908-63f4-4e6a-b54c-196d4896daab",
+    "name": "OZE Food",
+    "city": "Strasbourg"
+  },
+  "contact@vegeman.fr": {
+    "sent_at": "2026-03-19T15:54:03.183094+00:00",
+    "last_sent_at": "2026-03-19T15:54:03.183094+00:00",
+    "send_count": 1,
+    "resend_id": "f28498bf-c742-4bb0-835e-81c99669db19",
+    "name": "Végéman",
+    "city": "Strasbourg"
+  },
+  "info@restomado.com": {
+    "sent_at": "2026-03-19T15:54:05.044946+00:00",
+    "last_sent_at": "2026-03-19T15:54:05.044946+00:00",
+    "send_count": 1,
+    "resend_id": "f170f8ea-6ea6-4d6c-bf82-da4dff0761f3",
+    "name": "Mado Strasbourg",
+    "city": "Strasbourg"
+  },
+  "alib46@outlook.fr": {
+    "sent_at": "2026-03-19T15:54:06.882087+00:00",
+    "last_sent_at": "2026-03-19T15:54:06.882087+00:00",
+    "send_count": 1,
+    "resend_id": "29718af5-e25b-43e7-b266-44ee89ebc366",
+    "name": "Restaurant Pizza Kebab Ariane",
+    "city": "Strasbourg"
+  },
+  "pizza.22mai@outlook.com": {
+    "sent_at": "2026-03-19T15:54:08.915263+00:00",
+    "last_sent_at": "2026-03-19T15:54:08.915263+00:00",
+    "send_count": 1,
+    "resend_id": "5a1b36eb-eccb-466e-acd7-c638f0016772",
+    "name": "22 Mai Pizza e Basta",
+    "city": "Strasbourg"
+  },
+  "casafuscopizzeria@gmail.com": {
+    "sent_at": "2026-03-19T15:54:10.771843+00:00",
+    "last_sent_at": "2026-03-19T15:54:10.771843+00:00",
+    "send_count": 1,
+    "resend_id": "a7ec9210-0007-4646-90ab-eba18337049f",
+    "name": "Casa Fusco Pizzeria",
+    "city": "Strasbourg"
+  },
+  "support@readymag.com": {
+    "sent_at": "2026-03-19T15:54:12.596217+00:00",
+    "last_sent_at": "2026-03-19T15:54:12.596217+00:00",
+    "send_count": 1,
+    "resend_id": "5583be49-fcb4-445e-87a0-88615385e902",
+    "name": "Rimini",
+    "city": "Strasbourg"
+  },
+  "insieme67000@gmail.com": {
+    "sent_at": "2026-03-19T15:54:14.606501+00:00",
+    "last_sent_at": "2026-03-19T15:54:14.606501+00:00",
+    "send_count": 1,
+    "resend_id": "5d63af15-8993-43a8-8fa9-8952067184b2",
+    "name": "Pizzeria Insieme",
+    "city": "Strasbourg"
+  },
+  "contact@ilfelice.com": {
+    "sent_at": "2026-03-19T15:54:16.480831+00:00",
+    "last_sent_at": "2026-03-19T15:54:16.480831+00:00",
+    "send_count": 1,
+    "resend_id": "e73e5b6f-c50d-4578-a872-3f96c45dadde",
+    "name": "Il Felice",
+    "city": "Strasbourg"
+  },
+  "info@zurigo.fr": {
+    "sent_at": "2026-03-19T15:54:18.288507+00:00",
+    "last_sent_at": "2026-03-19T15:54:18.288507+00:00",
+    "send_count": 1,
+    "resend_id": "d66ef0b1-6a9e-4e8c-8728-b70c73b49204",
+    "name": "Zurigo I Trattoria Italienne en plein coeur de STRASBOURG",
+    "city": "Strasbourg"
+  },
+  "info@casadue.fr": {
+    "sent_at": "2026-03-19T15:54:20.130877+00:00",
+    "last_sent_at": "2026-03-19T15:54:20.130877+00:00",
+    "send_count": 1,
+    "resend_id": "f7e85719-f55d-4cc5-b75e-3ee2dd3f0189",
+    "name": "CasaDue",
+    "city": "Strasbourg"
+  },
+  "reservation@popetlino.fr": {
+    "sent_at": "2026-03-19T15:54:21.994273+00:00",
+    "last_sent_at": "2026-03-19T15:54:21.994273+00:00",
+    "send_count": 1,
+    "resend_id": "3991e6f6-2e7a-4c24-936f-9b0d71a38142",
+    "name": "POP&LINO",
+    "city": "Strasbourg"
+  },
+  "papalisarestaurant@gmail.com": {
+    "sent_at": "2026-03-19T15:54:23.869905+00:00",
+    "last_sent_at": "2026-03-19T15:54:23.869905+00:00",
+    "send_count": 1,
+    "resend_id": "b2311ca4-4652-49bb-8826-2405a4ada786",
+    "name": "Papa Lisa",
+    "city": "Strasbourg"
+  },
+  "squarekleber@gmail.com": {
+    "sent_at": "2026-03-19T15:54:25.808480+00:00",
+    "last_sent_at": "2026-03-19T15:54:25.808480+00:00",
+    "send_count": 1,
+    "resend_id": "a89580e3-9dd7-463c-bcdc-a1389f801656",
+    "name": "Square Delicatessen",
+    "city": "Strasbourg"
+  },
+  "sascarval@icloud.com": {
+    "sent_at": "2026-03-19T15:54:27.634763+00:00",
+    "last_sent_at": "2026-03-19T15:54:27.634763+00:00",
+    "send_count": 1,
+    "resend_id": "a38a1ddf-da0f-46a3-b035-c84f0cec7f9e",
+    "name": "Les Pizzas de la Marne Bièrothèque",
+    "city": "Strasbourg"
+  },
+  "contact@aedaen-place.com": {
+    "sent_at": "2026-03-19T15:54:29.675712+00:00",
+    "last_sent_at": "2026-03-19T15:54:29.675712+00:00",
+    "send_count": 1,
+    "resend_id": "b920aac7-977f-4268-9bb4-af963a750160",
+    "name": "AEDAEN PLACE",
+    "city": "Strasbourg"
+  },
+  "info@pizzeria-la-piazza.fr": {
+    "sent_at": "2026-03-19T15:54:31.520187+00:00",
+    "last_sent_at": "2026-03-19T15:54:31.520187+00:00",
+    "send_count": 1,
+    "resend_id": "9b584c9b-28b7-4be4-bb30-8f048f1d3f1b",
+    "name": "La Piazza",
+    "city": "Strasbourg"
+  },
+  "contact@lapizzadenico.com": {
+    "sent_at": "2026-03-19T15:54:33.449096+00:00",
+    "last_sent_at": "2026-03-19T15:54:33.449096+00:00",
+    "send_count": 1,
+    "resend_id": "072719e1-7cab-4012-9852-4fe7e6d8d168",
+    "name": "La Pizza de Nico Strasbourg Homme de Fer",
+    "city": "Strasbourg"
+  },
+  "ciao@cuccicucci.fr": {
+    "sent_at": "2026-03-19T15:54:35.274493+00:00",
+    "last_sent_at": "2026-03-19T15:54:35.274493+00:00",
+    "send_count": 1,
+    "resend_id": "8bf73cea-5ea9-43fb-b967-322966f143ea",
+    "name": "Cucci",
+    "city": "Strasbourg"
+  },
+  "contact@francesca.com": {
+    "sent_at": "2026-03-19T15:54:37.126271+00:00",
+    "last_sent_at": "2026-03-19T15:54:37.126271+00:00",
+    "send_count": 1,
+    "resend_id": "802f151f-b143-4091-89d6-d1c1e90ffa65",
+    "name": "Restaurant Francesca Strasbourg Marseillaise",
+    "city": "Strasbourg"
+  },
+  "barlebarbu@orange.fr": {
+    "sent_at": "2026-03-19T15:54:39.396685+00:00",
+    "last_sent_at": "2026-03-19T15:54:39.396685+00:00",
+    "send_count": 1,
+    "resend_id": "2dd6f2ae-df8f-477c-9fb9-db41c58dcb6a",
+    "name": "BARBU'TO",
+    "city": "Strasbourg"
+  },
+  "pizzeriasarda1983@gmail.com": {
+    "sent_at": "2026-03-19T15:54:41.316075+00:00",
+    "last_sent_at": "2026-03-19T15:54:41.316075+00:00",
+    "send_count": 1,
+    "resend_id": "14d530c5-186d-483e-b72b-8757f0f29128",
+    "name": "Pizzéria Sarda",
+    "city": "Strasbourg"
+  },
+  "tavola.litaliano@gmail.com": {
+    "sent_at": "2026-03-19T15:54:43.173998+00:00",
+    "last_sent_at": "2026-03-19T15:54:43.173998+00:00",
+    "send_count": 1,
+    "resend_id": "84c9737d-65e8-4689-a5b3-5ac8192c6a51",
+    "name": "L’ITALIANO",
+    "city": "Strasbourg"
+  },
+  "contact@starling-burgers.com": {
+    "sent_at": "2026-03-19T15:54:45.026333+00:00",
+    "last_sent_at": "2026-03-19T15:54:45.026333+00:00",
+    "send_count": 1,
+    "resend_id": "a2dc446b-7e19-4efb-961f-5c963431fcdd",
+    "name": "Starling Burgers",
+    "city": "Strasbourg"
+  },
+  "service-conso@o-tacos.fr": {
+    "sent_at": "2026-03-19T15:54:46.897971+00:00",
+    "last_sent_at": "2026-03-19T15:54:46.897971+00:00",
+    "send_count": 1,
+    "resend_id": "f1b7df23-95ca-4861-b0b9-90c88c2d6b09",
+    "name": "O’Tacos Strasbourg Place Kléber",
+    "city": "Strasbourg"
+  },
+  "v.antoine@wooz-up.com": {
+    "sent_at": "2026-03-19T15:54:48.748844+00:00",
+    "last_sent_at": "2026-03-19T15:54:48.748844+00:00",
+    "send_count": 1,
+    "resend_id": "aaf94422-cae0-42dd-be16-26954a2a4ea2",
+    "name": "La Petite Pause • Strasbourg Centre",
+    "city": "Strasbourg"
+  },
+  "keisatelier.restaurantcoreen@gmail.com": {
+    "sent_at": "2026-03-19T15:54:50.750930+00:00",
+    "last_sent_at": "2026-03-19T15:54:50.750930+00:00",
+    "send_count": 1,
+    "resend_id": "a56660dc-546f-4ceb-9d62-1e2263e1aec8",
+    "name": "Namsan Maru (korean street food)",
+    "city": "Strasbourg"
+  },
+  "flowfoodfamily@icloud.com": {
+    "sent_at": "2026-03-19T15:54:53.908853+00:00",
+    "last_sent_at": "2026-03-19T15:54:53.908853+00:00",
+    "send_count": 1,
+    "resend_id": "6bb6df2e-ef45-4a2b-828b-bb525eef7327",
+    "name": "Flow Food Family - Café restaurant à Strasbourg",
+    "city": "Strasbourg"
+  },
+  "contact@tilt-snack.fr": {
+    "sent_at": "2026-03-19T15:54:55.740637+00:00",
+    "last_sent_at": "2026-03-19T15:54:55.740637+00:00",
+    "send_count": 1,
+    "resend_id": "2913a4fd-a866-400d-8786-8675b2e110c8",
+    "name": "Tilt",
+    "city": "Strasbourg"
+  },
+  "555@koathai.fr": {
+    "sent_at": "2026-03-19T15:54:57.549463+00:00",
+    "last_sent_at": "2026-03-19T15:54:57.549463+00:00",
+    "send_count": 1,
+    "resend_id": "a5b31212-68cb-468f-81e2-4421c1b21de0",
+    "name": "Koa Thaï - Street Food Canteen",
+    "city": "Strasbourg"
+  },
+  "mikawis@live.fr": {
+    "sent_at": "2026-03-19T15:54:59.360780+00:00",
+    "last_sent_at": "2026-03-19T15:54:59.360780+00:00",
+    "send_count": 1,
+    "resend_id": "b02d3e79-1f82-425f-85a2-057dc8adad09",
+    "name": "Break'n'good",
+    "city": "Strasbourg"
+  },
+  "laregalade67@gmail.com": {
+    "sent_at": "2026-03-19T15:55:01.380465+00:00",
+    "last_sent_at": "2026-03-19T15:55:01.380465+00:00",
+    "send_count": 1,
+    "resend_id": "951897ad-5604-4598-86dd-d6b655480332",
+    "name": "La Régalade",
+    "city": "Strasbourg"
+  },
+  "tftm67@outlook.com": {
+    "sent_at": "2026-03-19T15:55:03.306244+00:00",
+    "last_sent_at": "2026-03-19T15:55:03.306244+00:00",
+    "send_count": 1,
+    "resend_id": "f56cf74a-656f-4a91-9b23-2221fd409cd5",
+    "name": "TFTM ( T’AS FAIM TU MANGES )",
+    "city": "Strasbourg"
+  },
+  "contact@laknackerie.com": {
+    "sent_at": "2026-03-19T15:55:05.221421+00:00",
+    "last_sent_at": "2026-03-19T15:55:05.221421+00:00",
+    "send_count": 1,
+    "resend_id": "c02d76a4-488c-4459-8a5e-f7adaa181796",
+    "name": "La Knackerie",
+    "city": "Strasbourg"
+  },
+  "contact@bangburgers.com": {
+    "sent_at": "2026-03-19T15:55:07.264927+00:00",
+    "last_sent_at": "2026-03-19T15:55:07.264927+00:00",
+    "send_count": 1,
+    "resend_id": "9bbc6226-f070-43d7-9d7f-aed4149dec6a",
+    "name": "Bang Burgers",
+    "city": "Strasbourg"
   }
 }
