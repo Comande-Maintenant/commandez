@@ -3918,5 +3918,389 @@
     "resend_id": "9bbc6226-f070-43d7-9d7f-aed4149dec6a",
     "name": "Bang Burgers",
     "city": "Strasbourg"
+  },
+  "hello@fr.tortilla.co": {
+    "sent_at": "2026-03-20T08:01:32.495331+00:00",
+    "last_sent_at": "2026-03-20T08:01:32.495331+00:00",
+    "send_count": 1,
+    "resend_id": "bf9a1fea-3f67-4dac-aec2-bb1c6ced42d6",
+    "name": "Tortilla Real California Burritos & Tacos - Strasbourg",
+    "city": "Strasbourg"
+  },
+  "contact@interstratos.com": {
+    "sent_at": "2026-03-20T08:01:34.705891+00:00",
+    "last_sent_at": "2026-03-20T08:01:34.705891+00:00",
+    "send_count": 1,
+    "resend_id": "721e3bc5-4f83-43cd-b38e-d2c75df3d30c",
+    "name": "Ö CLASSIC",
+    "city": "Strasbourg"
+  },
+  "nc@nc.fr": {
+    "sent_at": "2026-03-20T08:01:36.740148+00:00",
+    "last_sent_at": "2026-03-20T08:01:36.740148+00:00",
+    "send_count": 1,
+    "resend_id": "4af2a824-d601-4fa7-80ca-381ad0a5a232",
+    "name": "Le Gourmet Voyageur",
+    "city": "Strasbourg"
+  },
+  "dhryou67@gmail.com": {
+    "sent_at": "2026-03-20T08:01:38.788941+00:00",
+    "last_sent_at": "2026-03-20T08:01:38.788941+00:00",
+    "send_count": 1,
+    "resend_id": "f680292d-1d02-40cb-89b3-79bb3f20b768",
+    "name": "S Plats Esplanade",
+    "city": "Strasbourg"
+  },
+  "besame.mucho1fr@gmail.com": {
+    "sent_at": "2026-03-20T08:01:40.754098+00:00",
+    "last_sent_at": "2026-03-20T08:01:40.754098+00:00",
+    "send_count": 1,
+    "resend_id": "d0b0989e-58e6-409b-959d-b7c2dd939dae",
+    "name": "Bésame Mucho",
+    "city": "Strasbourg"
+  },
+  "labouture@purcoop.org": {
+    "sent_at": "2026-03-20T08:01:42.551807+00:00",
+    "last_sent_at": "2026-03-20T08:01:42.551807+00:00",
+    "send_count": 1,
+    "resend_id": "cf7683e5-7e4c-4672-abcd-5365f45e1676",
+    "name": "La Bouture - Café Restaurant Bar Végétalien Strasbourg",
+    "city": "Strasbourg"
+  },
+  "contact@oma-augusta.com": {
+    "sent_at": "2026-03-20T08:01:44.570035+00:00",
+    "last_sent_at": "2026-03-20T08:01:44.570035+00:00",
+    "send_count": 1,
+    "resend_id": "df45637f-7e61-47a8-9980-91b2fe6290de",
+    "name": "OMA AUGUSTA",
+    "city": "Strasbourg"
+  },
+  "contact@vegan-union.com": {
+    "sent_at": "2026-03-20T08:01:46.395064+00:00",
+    "last_sent_at": "2026-03-20T08:01:46.395064+00:00",
+    "send_count": 1,
+    "resend_id": "9aed9790-b017-4323-8f19-516589553c80",
+    "name": "Vélicious Burger Strasbourg",
+    "city": "Strasbourg"
+  },
+  "empire.steak.building.strasbourg@gmail.com": {
+    "sent_at": "2026-03-20T08:01:48.202071+00:00",
+    "last_sent_at": "2026-03-20T08:01:48.202071+00:00",
+    "send_count": 1,
+    "resend_id": "3f82bce0-c058-4c8c-ba6b-a98bcba35154",
+    "name": "Empire Steak Building",
+    "city": "Strasbourg"
+  },
+  "allonems@hotmail.com": {
+    "sent_at": "2026-03-20T08:01:50.214627+00:00",
+    "last_sent_at": "2026-03-20T08:01:50.214627+00:00",
+    "send_count": 1,
+    "resend_id": "16576dbf-d66c-4179-bc22-64baebf9c595",
+    "name": "Allo Nems Strasbourg",
+    "city": "Strasbourg"
+  },
+  "gujjar.pro34@gmail.com": {
+    "sent_at": "2026-03-20T08:01:52.322365+00:00",
+    "last_sent_at": "2026-03-20T08:01:52.322365+00:00",
+    "send_count": 1,
+    "resend_id": "d48ecb4b-b93f-404a-a498-984d3b525087",
+    "name": "Naan House",
+    "city": "Montpellier"
+  },
+  "leraffinekebap@gmail.com": {
+    "sent_at": "2026-03-20T08:01:54.155344+00:00",
+    "last_sent_at": "2026-03-20T08:01:54.155344+00:00",
+    "send_count": 1,
+    "resend_id": "e8d3903b-0dd4-42f2-91d9-2bb6f7dfff35",
+    "name": "Le Raffiné",
+    "city": "Montpellier"
+  },
+  "contact@berlinpinpin.fr": {
+    "sent_at": "2026-03-20T08:01:55.961341+00:00",
+    "last_sent_at": "2026-03-20T08:01:55.961341+00:00",
+    "send_count": 1,
+    "resend_id": "fb99601a-7a43-4b2a-9c38-0f02d237853c",
+    "name": "BERLINPINPIN Kebab Doner Montpellier",
+    "city": "Montpellier"
+  },
+  "grillhousemontpellier@gmail.com": {
+    "sent_at": "2026-03-20T08:01:57.772691+00:00",
+    "last_sent_at": "2026-03-20T08:01:57.772691+00:00",
+    "send_count": 1,
+    "resend_id": "5ab1cb05-593f-4bda-8170-ccf4a6dec84a",
+    "name": "GRILL HOUSE préfecture",
+    "city": "Montpellier"
+  },
+  "welovemontpellier.shop@gmail.com": {
+    "sent_at": "2026-03-20T08:01:59.726641+00:00",
+    "last_sent_at": "2026-03-20T08:01:59.726641+00:00",
+    "send_count": 1,
+    "resend_id": "d9639a71-4cae-4665-b01d-2614ac8c4b15",
+    "name": "We Love Montpellier",
+    "city": "Montpellier"
+  },
+  "mehany.amro@gmail.com": {
+    "sent_at": "2026-03-20T08:02:01.716419+00:00",
+    "last_sent_at": "2026-03-20T08:02:01.716419+00:00",
+    "send_count": 1,
+    "resend_id": "a846420a-2c6a-4217-88ed-c4301b15e41b",
+    "name": "Utzel Kebab Berliner",
+    "city": "Montpellier"
+  },
+  "contact@rosedesable.com": {
+    "sent_at": "2026-03-20T08:02:03.510663+00:00",
+    "last_sent_at": "2026-03-20T08:02:03.510663+00:00",
+    "send_count": 1,
+    "resend_id": "882c8926-ae5c-43bb-a6e3-cb66b2176b2f",
+    "name": "La Rose des Sables",
+    "city": "Montpellier"
+  },
+  "raw34080@gmail.com": {
+    "sent_at": "2026-03-20T08:02:05.505967+00:00",
+    "last_sent_at": "2026-03-20T08:02:05.505967+00:00",
+    "send_count": 1,
+    "resend_id": "a37e4153-6d82-44be-b65d-29ca916ee2ef",
+    "name": "BREAK FOOD",
+    "city": "Montpellier"
+  },
+  "crocvitemontpellier@gmail.com": {
+    "sent_at": "2026-03-20T08:02:07.501565+00:00",
+    "last_sent_at": "2026-03-20T08:02:07.501565+00:00",
+    "send_count": 1,
+    "resend_id": "fa2ffa1e-f61f-4c1e-a78c-b884e204ca4b",
+    "name": "Croc Vite",
+    "city": "Montpellier"
+  },
+  "kuistomontpellier@gmail.com": {
+    "sent_at": "2026-03-20T08:02:09.296884+00:00",
+    "last_sent_at": "2026-03-20T08:02:09.296884+00:00",
+    "send_count": 1,
+    "resend_id": "bf1b97f5-542d-43cd-a5a4-438e163d1299",
+    "name": "Kuisto Montpellier",
+    "city": "Montpellier"
+  },
+  "planetkebab34@gmail.com": {
+    "sent_at": "2026-03-20T08:02:11.134867+00:00",
+    "last_sent_at": "2026-03-20T08:02:11.134867+00:00",
+    "send_count": 1,
+    "resend_id": "411c327e-8664-47da-92b5-bdbbe9af1665",
+    "name": "Planet' Kebab",
+    "city": "Montpellier"
+  },
+  "vigueur.%5cnkhalidoo.34@hotmail.fr": {
+    "sent_at": "2026-03-20T08:02:13.125720+00:00",
+    "last_sent_at": "2026-03-20T08:02:13.125720+00:00",
+    "send_count": 1,
+    "resend_id": "a51d6128-bc58-44fc-ae06-de32d142c835",
+    "name": "Pizz’burg Avenue",
+    "city": "Montpellier"
+  },
+  "contact@bestgrill34.fr": {
+    "sent_at": "2026-03-20T08:02:14.981976+00:00",
+    "last_sent_at": "2026-03-20T08:02:14.981976+00:00",
+    "send_count": 1,
+    "resend_id": "14adc4f3-39dd-4222-b558-b6c1a08832ff",
+    "name": "Best Grill - Tacos, Burgers & Grillades à Montpellier",
+    "city": "Montpellier"
+  },
+  "contact@le-must-ovalie.fr": {
+    "sent_at": "2026-03-20T08:02:16.803065+00:00",
+    "last_sent_at": "2026-03-20T08:02:16.803065+00:00",
+    "send_count": 1,
+    "resend_id": "32a699c7-714a-4b5e-acfe-ca64b8f98072",
+    "name": "Le Must OVALIE - Kebab Tacos Burger Montpellier",
+    "city": "Montpellier"
+  },
+  "ludovic.darmon@gmail.com": {
+    "sent_at": "2026-03-20T08:02:18.623220+00:00",
+    "last_sent_at": "2026-03-20T08:02:18.623220+00:00",
+    "send_count": 1,
+    "resend_id": "3babf554-0692-4b4f-b0f7-f449b4edf612",
+    "name": "Restaurant Il Bar A Pizze - Montpellier",
+    "city": "Montpellier"
+  },
+  "pizza@laburrata.fr": {
+    "sent_at": "2026-03-20T08:02:20.581348+00:00",
+    "last_sent_at": "2026-03-20T08:02:20.581348+00:00",
+    "send_count": 1,
+    "resend_id": "33f072b5-9d80-4443-bd6f-39be0a7070c3",
+    "name": "La Burrata - Pizzeria",
+    "city": "Montpellier"
+  },
+  "contact@groupe-tandem.fr": {
+    "sent_at": "2026-03-20T08:02:22.597824+00:00",
+    "last_sent_at": "2026-03-20T08:02:22.597824+00:00",
+    "send_count": 1,
+    "resend_id": "da5b895a-9c6c-4d57-8861-ac1a57b464fc",
+    "name": "La Mamma St Roch - Restaurant Italien Montpellier",
+    "city": "Montpellier"
+  },
+  "pizzasicilia@outlook.fr": {
+    "sent_at": "2026-03-20T08:02:24.405455+00:00",
+    "last_sent_at": "2026-03-20T08:02:24.405455+00:00",
+    "send_count": 1,
+    "resend_id": "64b73f6f-f283-43ec-bade-5741496b1488",
+    "name": "Pizzeria Sicilia - Montpellier",
+    "city": "Montpellier"
+  },
+  "nico.pro1034@gmail.com": {
+    "sent_at": "2026-03-20T08:02:26.179711+00:00",
+    "last_sent_at": "2026-03-20T08:02:26.179711+00:00",
+    "send_count": 1,
+    "resend_id": "8f5e09a1-91fc-4b13-8424-f5c8f11f2b87",
+    "name": "ANGELO PIZZERIA",
+    "city": "Montpellier"
+  },
+  "volfoni.antigone@nirr.fr": {
+    "sent_at": "2026-03-20T08:02:27.983330+00:00",
+    "last_sent_at": "2026-03-20T08:02:27.983330+00:00",
+    "send_count": 1,
+    "resend_id": "15cc2bff-ee5b-46d0-b6bc-748499f0002f",
+    "name": "Volfoni Restaurant Italien Montpellier",
+    "city": "Montpellier"
+  },
+  "contact@atavola.com": {
+    "sent_at": "2026-03-20T08:02:29.802948+00:00",
+    "last_sent_at": "2026-03-20T08:02:29.802948+00:00",
+    "send_count": 1,
+    "resend_id": "a391ba7a-5d6b-4f37-8015-13f017018fac",
+    "name": "A TAVOLA Pizzeria",
+    "city": "Montpellier"
+  },
+  "contact@pizzapapa.fr": {
+    "sent_at": "2026-03-20T08:02:31.603962+00:00",
+    "last_sent_at": "2026-03-20T08:02:31.603962+00:00",
+    "send_count": 1,
+    "resend_id": "55f5269c-f0dd-4de7-ae38-b8cc05790dff",
+    "name": "Restaurant Italien, Pizzeria - Pizza Papa - Comédie",
+    "city": "Montpellier"
+  },
+  "contact30@lalocandafamily.com": {
+    "sent_at": "2026-03-20T08:02:33.730449+00:00",
+    "last_sent_at": "2026-03-20T08:02:33.730449+00:00",
+    "send_count": 1,
+    "resend_id": "52a15cc7-96fe-4f8a-84a1-d5667b16aa17",
+    "name": "La Locanda 34",
+    "city": "Montpellier"
+  },
+  "commande.julescesar@gmail.com": {
+    "sent_at": "2026-03-20T08:02:35.543317+00:00",
+    "last_sent_at": "2026-03-20T08:02:35.543317+00:00",
+    "send_count": 1,
+    "resend_id": "87368171-2756-4d55-b9dc-7812a0cfc561",
+    "name": "Pizza Jules César | Livraison Pizza Montpellier",
+    "city": "Montpellier"
+  },
+  "contact@allpizzabuffet.fr": {
+    "sent_at": "2026-03-20T08:02:37.369558+00:00",
+    "last_sent_at": "2026-03-20T08:02:37.369558+00:00",
+    "send_count": 1,
+    "resend_id": "4bddef03-6fd3-4bad-a627-22756ab3b7d9",
+    "name": "ALL PIZZA & PASTA BUFFET - Montpellier",
+    "city": "Montpellier"
+  },
+  "contact@caravaggio.fr": {
+    "sent_at": "2026-03-20T08:02:39.192960+00:00",
+    "last_sent_at": "2026-03-20T08:02:39.192960+00:00",
+    "send_count": 1,
+    "resend_id": "d8130ef1-b3a7-4fb7-94a0-814d740301ff",
+    "name": "Caravaggio",
+    "city": "Montpellier"
+  },
+  "contact@nopo.fr": {
+    "sent_at": "2026-03-20T08:02:41.242980+00:00",
+    "last_sent_at": "2026-03-20T08:02:41.242980+00:00",
+    "send_count": 1,
+    "resend_id": "6f684c56-3cc3-482b-987a-a56dcdb452f4",
+    "name": "B9 - Montpellier",
+    "city": "Montpellier"
+  },
+  "contact@enjoytacos.com": {
+    "sent_at": "2026-03-20T08:02:43.044296+00:00",
+    "last_sent_at": "2026-03-20T08:02:43.044296+00:00",
+    "send_count": 1,
+    "resend_id": "122b8981-edda-4bdf-b6ac-54b7bc1dd413",
+    "name": "Enjoy Tacos® - Montpellier Université",
+    "city": "Montpellier"
+  },
+  "contact@goodvibes-burger-montpellier.fr": {
+    "sent_at": "2026-03-20T08:02:44.862853+00:00",
+    "last_sent_at": "2026-03-20T08:02:44.862853+00:00",
+    "send_count": 1,
+    "resend_id": "fef0c566-c6fc-4ca0-8aaf-68d62fc8d8c6",
+    "name": "Good Vibes Food : burgers, paninis, salades & bowls",
+    "city": "Montpellier"
+  },
+  "smokygrillburger.shop@gmail.com": {
+    "sent_at": "2026-03-20T08:02:46.656061+00:00",
+    "last_sent_at": "2026-03-20T08:02:46.656061+00:00",
+    "send_count": 1,
+    "resend_id": "9eb0b06a-328e-464d-ab26-24c8eee8db43",
+    "name": "SMOKY GRILL BURGER",
+    "city": "Montpellier"
+  },
+  "localoria.com@gmail.com": {
+    "sent_at": "2026-03-20T08:02:48.441989+00:00",
+    "last_sent_at": "2026-03-20T08:02:48.441989+00:00",
+    "send_count": 1,
+    "resend_id": "11dc0d8d-6fde-4e2a-abc3-e083574999da",
+    "name": "Full Tacos",
+    "city": "Montpellier"
+  },
+  "contact@crustfrance.com": {
+    "sent_at": "2026-03-20T08:02:50.242768+00:00",
+    "last_sent_at": "2026-03-20T08:02:50.242768+00:00",
+    "send_count": 1,
+    "resend_id": "e8860b21-0ee1-4969-8ee7-041784540525",
+    "name": "CRUST Montpellier ALL FOOD",
+    "city": "Montpellier"
+  },
+  "stanleychickencorner@gmail.com": {
+    "sent_at": "2026-03-20T08:02:52.026217+00:00",
+    "last_sent_at": "2026-03-20T08:02:52.026217+00:00",
+    "send_count": 1,
+    "resend_id": "25014de4-04f4-4e1a-b8a8-012e69ef804b",
+    "name": "Stanley's Chicken Corner",
+    "city": "Montpellier"
+  },
+  "contact@texmex34.fr": {
+    "sent_at": "2026-03-20T08:02:57.071887+00:00",
+    "last_sent_at": "2026-03-20T08:02:57.071887+00:00",
+    "send_count": 1,
+    "resend_id": "e4292c23-0d4d-4277-b9f9-beaa8ac01f2a",
+    "name": "TEX MEX",
+    "city": "Montpellier"
+  },
+  "gnl.moutarde@gmail.com": {
+    "sent_at": "2026-03-20T08:02:58.922493+00:00",
+    "last_sent_at": "2026-03-20T08:02:58.922493+00:00",
+    "send_count": 1,
+    "resend_id": "36dc98b7-3d07-4261-a9fe-4099b8f6335f",
+    "name": "General Moutarde Traiteur / Food Truck herault et gard événementiel / anniversaire / mariage Montpellier/ Brunch",
+    "city": "Montpellier"
+  },
+  "contact@pizzalif.com": {
+    "sent_at": "2026-03-20T08:03:00.744412+00:00",
+    "last_sent_at": "2026-03-20T08:03:00.744412+00:00",
+    "send_count": 1,
+    "resend_id": "c4c58151-f839-4a48-9e9d-e4e46804e37b",
+    "name": "Pizzalif Montpellier",
+    "city": "Montpellier"
+  },
+  "gaudinners@gmail.com": {
+    "sent_at": "2026-03-20T08:03:02.548711+00:00",
+    "last_sent_at": "2026-03-20T08:03:02.548711+00:00",
+    "send_count": 1,
+    "resend_id": "9dab0c03-a71b-4962-913a-da407ddb3128",
+    "name": "Croq'cœur Montpellier",
+    "city": "Montpellier"
+  },
+  "contact@matt-burger.fr": {
+    "sent_at": "2026-03-20T08:03:04.361905+00:00",
+    "last_sent_at": "2026-03-20T08:03:04.361905+00:00",
+    "send_count": 1,
+    "resend_id": "1ec925ca-1c8e-4254-aa22-923c517bb4ec",
+    "name": "Matt Burger",
+    "city": "Montpellier"
   }
 }
