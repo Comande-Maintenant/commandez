@@ -4302,5 +4302,381 @@
     "resend_id": "1ec925ca-1c8e-4254-aa22-923c517bb4ec",
     "name": "Matt Burger",
     "city": "Montpellier"
+  },
+  "hello@purcoop.org": {
+    "sent_at": "2026-03-20T15:40:38.366702+00:00",
+    "last_sent_at": "2026-03-20T15:40:38.366702+00:00",
+    "send_count": 1,
+    "resend_id": "9d2b8865-0c0e-4315-bf44-5cecc400af1f",
+    "name": "La Bouture - Café Restaurant Bar Végétalien Strasbourg",
+    "city": "Strasbourg"
+  },
+  "celma.mallaury@hotmail.fr": {
+    "sent_at": "2026-03-20T15:40:40.789134+00:00",
+    "last_sent_at": "2026-03-20T15:40:40.789134+00:00",
+    "send_count": 1,
+    "resend_id": "acb7f147-49f7-4d69-acf2-b02a2f5aad18",
+    "name": "Green Lab",
+    "city": "Montpellier"
+  },
+  "bonjour@la-quincaillerie.fr": {
+    "sent_at": "2026-03-20T15:40:43.073498+00:00",
+    "last_sent_at": "2026-03-20T15:40:43.073498+00:00",
+    "send_count": 1,
+    "resend_id": "b1ce05af-c745-41f4-bee0-ffd9e2514eb2",
+    "name": "GUR Kebab - Lille Gare",
+    "city": "Lille"
+  },
+  "contact@lebraise.fr": {
+    "sent_at": "2026-03-20T15:40:45.084058+00:00",
+    "last_sent_at": "2026-03-20T15:40:45.084058+00:00",
+    "send_count": 1,
+    "resend_id": "b55cb9fb-c121-47b9-8252-783e58d736ae",
+    "name": "LE BRAISÉ - Burger Gourmet Lille",
+    "city": "Lille"
+  },
+  "vigueur.%5cnbrahimjerbi89@gmail.com": {
+    "sent_at": "2026-03-20T15:40:47.156543+00:00",
+    "last_sent_at": "2026-03-20T15:40:47.156543+00:00",
+    "send_count": 1,
+    "resend_id": "278d9043-a967-4db7-8e57-9053797b1d29",
+    "name": "Pimentos kebab",
+    "city": "Lille"
+  },
+  "pittafives@gmail.com": {
+    "sent_at": "2026-03-20T15:40:49.151177+00:00",
+    "last_sent_at": "2026-03-20T15:40:49.151177+00:00",
+    "send_count": 1,
+    "resend_id": "8ef62d2b-f7a7-406e-8ea9-2bc7c2116be0",
+    "name": "Pitta Fives",
+    "city": "Lille"
+  },
+  "bym2022@outlook.fr": {
+    "sent_at": "2026-03-20T15:40:51.234294+00:00",
+    "last_sent_at": "2026-03-20T15:40:51.234294+00:00",
+    "send_count": 1,
+    "resend_id": "b1d4f76b-93ee-4b17-a53d-486ef256e4b6",
+    "name": "The Best",
+    "city": "Lille"
+  },
+  "k.saim@le-special.com": {
+    "sent_at": "2026-03-20T15:40:53.317815+00:00",
+    "last_sent_at": "2026-03-20T15:40:53.317815+00:00",
+    "send_count": 1,
+    "resend_id": "88115d1e-fc0e-4b74-ae33-9297ed41789b",
+    "name": "LE SPECIAL restaurant",
+    "city": "Lille"
+  },
+  "oussha.lesgourmandises@gmail.com": {
+    "sent_at": "2026-03-20T15:40:55.262258+00:00",
+    "last_sent_at": "2026-03-20T15:40:55.262258+00:00",
+    "send_count": 1,
+    "resend_id": "545cc9bc-f23d-4c40-a9b5-f5e4c5e26ac9",
+    "name": "Resto Alpha",
+    "city": "Lille"
+  },
+  "info@pacha-saint-andre.fr": {
+    "sent_at": "2026-03-20T15:40:57.201869+00:00",
+    "last_sent_at": "2026-03-20T15:40:57.201869+00:00",
+    "send_count": 1,
+    "resend_id": "8d4e973c-7abd-4968-b03a-3e5f8c5f89ea",
+    "name": "Kebab Le Pacha",
+    "city": "Lille"
+  },
+  "contact@squadraclub.fr": {
+    "sent_at": "2026-03-20T15:40:59.151610+00:00",
+    "last_sent_at": "2026-03-20T15:40:59.151610+00:00",
+    "send_count": 1,
+    "resend_id": "d80be2c8-3104-456b-a753-c8ce2bf83b56",
+    "name": "SQUADRA CLUB",
+    "city": "Lille"
+  },
+  "mammacucina@mail.com": {
+    "sent_at": "2026-03-20T15:41:01.154966+00:00",
+    "last_sent_at": "2026-03-20T15:41:01.154966+00:00",
+    "send_count": 1,
+    "resend_id": "8342e1b6-e342-406d-bd6b-0a7da829f5a5",
+    "name": "Mamma Cucina Lille🍕",
+    "city": "Lille"
+  },
+  "il@piccolino.fr": {
+    "sent_at": "2026-03-20T15:41:03.091041+00:00",
+    "last_sent_at": "2026-03-20T15:41:03.091041+00:00",
+    "send_count": 1,
+    "resend_id": "97edf903-c46d-4982-8f9c-1a63a681a579",
+    "name": "Pizzeria Il Piccolino",
+    "city": "Lille"
+  },
+  "contact@la-bottega.com": {
+    "sent_at": "2026-03-20T15:41:05.298013+00:00",
+    "last_sent_at": "2026-03-20T15:41:05.298013+00:00",
+    "send_count": 1,
+    "resend_id": "ec9ba483-4fd3-41cd-8da2-4859e93f4fdd",
+    "name": "La Bottega Pizzeria",
+    "city": "Lille"
+  },
+  "contact@restobellini.fr": {
+    "sent_at": "2026-03-20T15:41:07.250010+00:00",
+    "last_sent_at": "2026-03-20T15:41:07.250010+00:00",
+    "send_count": 1,
+    "resend_id": "cfe698c3-ce96-4f2b-a213-158473b5f5ad",
+    "name": "Bellini",
+    "city": "Lille"
+  },
+  "contact@poppiespizza.fr": {
+    "sent_at": "2026-03-20T15:41:09.157900+00:00",
+    "last_sent_at": "2026-03-20T15:41:09.157900+00:00",
+    "send_count": 1,
+    "resend_id": "9ccb18bd-055f-4466-a5d4-cde3e4177060",
+    "name": "Poppie's Pizza Lille",
+    "city": "Lille"
+  },
+  "contact@palaisbienetre.fr": {
+    "sent_at": "2026-03-20T15:41:11.120520+00:00",
+    "last_sent_at": "2026-03-20T15:41:11.120520+00:00",
+    "send_count": 1,
+    "resend_id": "f720389a-50ba-4008-828b-4672c640d40c",
+    "name": "LE GOURMAND LILLE",
+    "city": "Lille"
+  },
+  "pizzafornello@msn.com": {
+    "sent_at": "2026-03-20T15:41:13.047989+00:00",
+    "last_sent_at": "2026-03-20T15:41:13.047989+00:00",
+    "send_count": 1,
+    "resend_id": "c364ece0-8161-4750-9cf2-1547e8f04758",
+    "name": "Al Fornello",
+    "city": "Lille"
+  },
+  "claudionigro@free.fr": {
+    "sent_at": "2026-03-20T15:41:15.115187+00:00",
+    "last_sent_at": "2026-03-20T15:41:15.115187+00:00",
+    "send_count": 1,
+    "resend_id": "a11f125c-9430-4a98-97c1-3d233ed834fe",
+    "name": "Viva Italian Pizza",
+    "city": "Lille"
+  },
+  "contact@pierrehenripoiret.com": {
+    "sent_at": "2026-03-20T15:41:17.056154+00:00",
+    "last_sent_at": "2026-03-20T15:41:17.056154+00:00",
+    "send_count": 1,
+    "resend_id": "683735c6-8352-41e6-8b7a-85c79ae95c35",
+    "name": "Pizza Armand",
+    "city": "Lille"
+  },
+  "love@bigmamma.com": {
+    "sent_at": "2026-03-20T15:41:20.544421+00:00",
+    "last_sent_at": "2026-03-20T15:41:20.544421+00:00",
+    "send_count": 1,
+    "resend_id": "5bfaa3dd-8ab4-4b39-821d-5277464c7f74",
+    "name": "Napoli gang",
+    "city": "Lille"
+  },
+  "vigueur.%5cnsalim.rezig@dualpub.fr": {
+    "sent_at": "2026-03-20T15:41:22.552488+00:00",
+    "last_sent_at": "2026-03-20T15:41:22.552488+00:00",
+    "send_count": 1,
+    "resend_id": "40c4d7c5-f193-401e-9c3f-a1134f17b556",
+    "name": "So Drive Burger Lille",
+    "city": "Lille"
+  },
+  "raptorlille@gmail.com": {
+    "sent_at": "2026-03-20T15:41:24.501217+00:00",
+    "last_sent_at": "2026-03-20T15:41:24.501217+00:00",
+    "send_count": 1,
+    "resend_id": "c569dd63-e504-46f0-9bd3-08ac24ed48e3",
+    "name": "Raptor Shack",
+    "city": "Lille"
+  },
+  "daniel@digitaldg.fr": {
+    "sent_at": "2026-03-20T15:41:26.448622+00:00",
+    "last_sent_at": "2026-03-20T15:41:26.448622+00:00",
+    "send_count": 1,
+    "resend_id": "28fbbdac-7568-4151-bcff-05016691b217",
+    "name": "CHICKEN STREET NAAN AND FRIED CHICKEN LILLE",
+    "city": "Lille"
+  },
+  "contact@les3brasseurs.com": {
+    "sent_at": "2026-03-20T15:41:28.408834+00:00",
+    "last_sent_at": "2026-03-20T15:41:28.408834+00:00",
+    "send_count": 1,
+    "resend_id": "aceb113c-56ab-4aa3-9686-9f961e05add7",
+    "name": "3 Brasseurs Lille",
+    "city": "Lille"
+  },
+  "contact@hollyfood.fr": {
+    "sent_at": "2026-03-20T15:41:30.329703+00:00",
+    "last_sent_at": "2026-03-20T15:41:30.329703+00:00",
+    "send_count": 1,
+    "resend_id": "3a99b39f-7560-46ae-a1e4-2e76d1c24011",
+    "name": "Hollyfood",
+    "city": "Lille"
+  },
+  "contact@friteriedeslilas.com": {
+    "sent_at": "2026-03-20T15:41:32.360796+00:00",
+    "last_sent_at": "2026-03-20T15:41:32.360796+00:00",
+    "send_count": 1,
+    "resend_id": "434b2102-7a57-4393-beb2-81506aa5eab8",
+    "name": "Friterie des Lilas",
+    "city": "Lille"
+  },
+  "contact@lunicco.fr": {
+    "sent_at": "2026-03-20T15:41:34.285826+00:00",
+    "last_sent_at": "2026-03-20T15:41:34.285826+00:00",
+    "send_count": 1,
+    "resend_id": "63a77f84-1ebf-45a9-8bde-fd3afb343d3c",
+    "name": "Lunicco - Euralille",
+    "city": "Lille"
+  },
+  "contact@master-poulet.fr": {
+    "sent_at": "2026-03-20T15:41:36.221093+00:00",
+    "last_sent_at": "2026-03-20T15:41:36.221093+00:00",
+    "send_count": 1,
+    "resend_id": "59cb2a4b-290d-4643-aacd-78dae8994de2",
+    "name": "MASTER POULET - Lille",
+    "city": "Lille"
+  },
+  "contact@jaldijaldi.fr": {
+    "sent_at": "2026-03-20T15:41:38.180642+00:00",
+    "last_sent_at": "2026-03-20T15:41:38.180642+00:00",
+    "send_count": 1,
+    "resend_id": "b1246436-1980-417e-b22e-32b911767760",
+    "name": "Jaldi Jaldi",
+    "city": "Lille"
+  },
+  "sarayexpresslille@gmail.com": {
+    "sent_at": "2026-03-20T15:41:40.302509+00:00",
+    "last_sent_at": "2026-03-20T15:41:40.302509+00:00",
+    "send_count": 1,
+    "resend_id": "9603ab2d-bf43-4899-a497-51b95adcb69e",
+    "name": "Saray Express Lille",
+    "city": "Lille"
+  },
+  "los3compadres@gmx.fr": {
+    "sent_at": "2026-03-20T15:41:42.430230+00:00",
+    "last_sent_at": "2026-03-20T15:41:42.430230+00:00",
+    "send_count": 1,
+    "resend_id": "a14f54f3-231e-4cfe-b12b-e6ef700e48ac",
+    "name": "Los 3 compadres",
+    "city": "Lille"
+  },
+  "restaurantaralille@gmail.com": {
+    "sent_at": "2026-03-20T15:41:44.565982+00:00",
+    "last_sent_at": "2026-03-20T15:41:44.565982+00:00",
+    "send_count": 1,
+    "resend_id": "b37293ea-8604-4d84-979c-ee21fdbc2ba5",
+    "name": "WE ARE ARA",
+    "city": "Lille"
+  },
+  "contact@kaprispepper.fr": {
+    "sent_at": "2026-03-20T15:41:46.625038+00:00",
+    "last_sent_at": "2026-03-20T15:41:46.625038+00:00",
+    "send_count": 1,
+    "resend_id": "9338bf89-3662-44f8-a0bc-3928bcd431ee",
+    "name": "Kapris Pepper - Restaurant Burger Lille Vieux Lille",
+    "city": "Lille"
+  },
+  "aix@lf.fr": {
+    "sent_at": "2026-03-20T15:41:48.599992+00:00",
+    "last_sent_at": "2026-03-20T15:41:48.599992+00:00",
+    "send_count": 1,
+    "resend_id": "531e4b7e-24dc-4680-815c-6b509e535330",
+    "name": "La Famille, Finest Lunch - Lille Europe",
+    "city": "Lille"
+  },
+  "comptitepoutine@gmail.com": {
+    "sent_at": "2026-03-20T15:41:50.526832+00:00",
+    "last_sent_at": "2026-03-20T15:41:50.526832+00:00",
+    "send_count": 1,
+    "resend_id": "de1f5900-2f9e-467e-8ddf-5571f4d6ce13",
+    "name": "P'tite Poutine",
+    "city": "Lille"
+  },
+  "contact@leclubcafe.com": {
+    "sent_at": "2026-03-20T15:41:52.468091+00:00",
+    "last_sent_at": "2026-03-20T15:41:52.468091+00:00",
+    "send_count": 1,
+    "resend_id": "5837db6c-3f91-4404-ae82-4b1035b6e19f",
+    "name": "Le Club Café Gare Lille Flandres",
+    "city": "Lille"
+  },
+  "made.in.myam@gmail.com": {
+    "sent_at": "2026-03-20T15:41:54.364992+00:00",
+    "last_sent_at": "2026-03-20T15:41:54.364992+00:00",
+    "send_count": 1,
+    "resend_id": "212125cf-eec9-416e-a313-9fa3be3374b1",
+    "name": "Myäm | Cantine & Traiteur Vietnamien | Lille Europe",
+    "city": "Lille"
+  },
+  "ladinettelille@gmail.com": {
+    "sent_at": "2026-03-20T15:41:56.302009+00:00",
+    "last_sent_at": "2026-03-20T15:41:56.302009+00:00",
+    "send_count": 1,
+    "resend_id": "4dead4f8-4c8f-44bd-8c12-8984b543be5e",
+    "name": "La Dinette",
+    "city": "Lille"
+  },
+  "housegrillmalo@gmail.com": {
+    "sent_at": "2026-03-20T15:41:58.252764+00:00",
+    "last_sent_at": "2026-03-20T15:41:58.252764+00:00",
+    "send_count": 1,
+    "resend_id": "decbf68c-02bf-4e23-b2fc-0a0c81c59436",
+    "name": "HOUSE GRILL",
+    "city": "Rennes"
+  },
+  "info@pointkchezabe.com": {
+    "sent_at": "2026-03-20T15:42:00.269770+00:00",
+    "last_sent_at": "2026-03-20T15:42:00.269770+00:00",
+    "send_count": 1,
+    "resend_id": "a3a7b945-0534-466d-b697-5e048f1e3d13",
+    "name": "PointK Chez abe",
+    "city": "Rennes"
+  },
+  "bonapp@zelalkebab.fr": {
+    "sent_at": "2026-03-20T15:42:02.202765+00:00",
+    "last_sent_at": "2026-03-20T15:42:02.202765+00:00",
+    "send_count": 1,
+    "resend_id": "fbdf1cf6-b872-436b-988d-3a92cecfb46f",
+    "name": "Zelal Kebab Rennes",
+    "city": "Rennes"
+  },
+  "fissapizza.rennes@gmail.com": {
+    "sent_at": "2026-03-20T15:42:04.183515+00:00",
+    "last_sent_at": "2026-03-20T15:42:04.183515+00:00",
+    "send_count": 1,
+    "resend_id": "c31f4661-822a-4bd9-9f44-c133318a642f",
+    "name": "Fissa Pizza",
+    "city": "Rennes"
+  },
+  "m.cherih@live.fr": {
+    "sent_at": "2026-03-20T15:42:06.199351+00:00",
+    "last_sent_at": "2026-03-20T15:42:06.199351+00:00",
+    "send_count": 1,
+    "resend_id": "e01d0c62-ab1c-47ab-b9f4-949d4bfdc5fc",
+    "name": "O'Bread",
+    "city": "Rennes"
+  },
+  "contact@poutinebros.com": {
+    "sent_at": "2026-03-20T15:42:08.113085+00:00",
+    "last_sent_at": "2026-03-20T15:42:08.113085+00:00",
+    "send_count": 1,
+    "resend_id": "90e49ecb-bb70-4727-9534-2bb7f62aced4",
+    "name": "POUTINEBROS",
+    "city": "Rennes"
+  },
+  "magma.rennes@gmail.com": {
+    "sent_at": "2026-03-20T15:42:10.116591+00:00",
+    "last_sent_at": "2026-03-20T15:42:10.116591+00:00",
+    "send_count": 1,
+    "resend_id": "ac5c0534-b34e-471c-ab00-c83b4ac0dbf1",
+    "name": "Magma",
+    "city": "Rennes"
+  },
+  "afghanfood35@gmail.com": {
+    "sent_at": "2026-03-20T15:42:12.056352+00:00",
+    "last_sent_at": "2026-03-20T15:42:12.056352+00:00",
+    "send_count": 1,
+    "resend_id": "1caea706-235c-49c1-b508-6ba6655dcdd2",
+    "name": "Afghan Food",
+    "city": "Rennes"
   }
 }
