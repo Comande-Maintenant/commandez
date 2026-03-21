@@ -4678,5 +4678,389 @@
     "resend_id": "1caea706-235c-49c1-b508-6ba6655dcdd2",
     "name": "Afghan Food",
     "city": "Rennes"
+  },
+  "motayarennes@gmail.com": {
+    "sent_at": "2026-03-21T07:53:27.329494+00:00",
+    "last_sent_at": "2026-03-21T07:53:27.329494+00:00",
+    "send_count": 1,
+    "resend_id": "c557acc0-ac67-4228-acfe-1ff46dbd6811",
+    "name": "Saka kebab",
+    "city": "Rennes"
+  },
+  "cessou.74@hotmail.fr": {
+    "sent_at": "2026-03-21T07:53:29.744707+00:00",
+    "last_sent_at": "2026-03-21T07:53:29.744707+00:00",
+    "send_count": 1,
+    "resend_id": "37342639-2aac-443b-84a0-cba63321ecf5",
+    "name": "LA Baraka",
+    "city": "Rennes"
+  },
+  "contact@planetfoodlivraison.fr": {
+    "sent_at": "2026-03-21T07:53:31.721328+00:00",
+    "last_sent_at": "2026-03-21T07:53:31.721328+00:00",
+    "send_count": 1,
+    "resend_id": "0cdcd78d-c74c-4e64-9543-5fd9b657d725",
+    "name": "Planet Food",
+    "city": "Rennes"
+  },
+  "j_momo@hotmail.fr": {
+    "sent_at": "2026-03-21T07:53:33.977557+00:00",
+    "last_sent_at": "2026-03-21T07:53:33.977557+00:00",
+    "send_count": 1,
+    "resend_id": "ce9e765d-3b78-4118-9331-433796c1d1b9",
+    "name": "Mail Burger",
+    "city": "Rennes"
+  },
+  "monopizzarennes@gmail.com": {
+    "sent_at": "2026-03-21T07:53:36.227747+00:00",
+    "last_sent_at": "2026-03-21T07:53:36.227747+00:00",
+    "send_count": 1,
+    "resend_id": "ee9f3dd5-2220-4609-8c23-da279111008b",
+    "name": "Mono - Restaurant - Pizza Napolitaine",
+    "city": "Rennes"
+  },
+  "loro.di.napoli35@gmail.com": {
+    "sent_at": "2026-03-21T07:53:38.171359+00:00",
+    "last_sent_at": "2026-03-21T07:53:38.171359+00:00",
+    "send_count": 1,
+    "resend_id": "393551b5-ae3e-49b9-a9f4-9b09a22d0e10",
+    "name": "L'oro di Napoli",
+    "city": "Rennes"
+  },
+  "contact@afuoconero.fr": {
+    "sent_at": "2026-03-21T07:53:40.133623+00:00",
+    "last_sent_at": "2026-03-21T07:53:40.133623+00:00",
+    "send_count": 1,
+    "resend_id": "1e10c556-fd69-41af-9f05-d858bce392e8",
+    "name": "A Fuoco Nero",
+    "city": "Rennes"
+  },
+  "bureau.angello@gmail.com": {
+    "sent_at": "2026-03-21T07:53:42.395190+00:00",
+    "last_sent_at": "2026-03-21T07:53:42.395190+00:00",
+    "send_count": 1,
+    "resend_id": "d1ad87e8-57e1-4b00-9f4a-94e2e1ea4a85",
+    "name": "Angello",
+    "city": "Rennes"
+  },
+  "viaromarennes@gmail.com": {
+    "sent_at": "2026-03-21T07:53:44.280020+00:00",
+    "last_sent_at": "2026-03-21T07:53:44.280020+00:00",
+    "send_count": 1,
+    "resend_id": "d0fdf81e-4698-41c7-bb4c-3c5d101c7cec",
+    "name": "La Via Roma",
+    "city": "Rennes"
+  },
+  "rennes@brook.fr": {
+    "sent_at": "2026-03-21T07:53:46.200310+00:00",
+    "last_sent_at": "2026-03-21T07:53:46.200310+00:00",
+    "send_count": 1,
+    "resend_id": "a6d114e3-224e-4f11-a777-e7921b758481",
+    "name": "BROOK | Slice pizza",
+    "city": "Rennes"
+  },
+  "prestopizzarennes@gmail.com": {
+    "sent_at": "2026-03-21T07:53:48.142547+00:00",
+    "last_sent_at": "2026-03-21T07:53:48.142547+00:00",
+    "send_count": 1,
+    "resend_id": "bdfc94fc-5fd3-41e7-b211-898a67050ad2",
+    "name": "Presto Pizza Napolitaine",
+    "city": "Rennes"
+  },
+  "triskelegastronomie@gmail.com": {
+    "sent_at": "2026-03-21T07:53:50.032530+00:00",
+    "last_sent_at": "2026-03-21T07:53:50.032530+00:00",
+    "send_count": 1,
+    "resend_id": "189f590e-e40c-4794-88bb-291f05cef9da",
+    "name": "Triskele| gastronomie italienne |",
+    "city": "Rennes"
+  },
+  "serviceclient@amourdepizza.com": {
+    "sent_at": "2026-03-21T07:53:51.957369+00:00",
+    "last_sent_at": "2026-03-21T07:53:51.957369+00:00",
+    "send_count": 1,
+    "resend_id": "6426915d-4cd5-46ba-8298-0a97bf8b1b05",
+    "name": "Amour de pizza Rennes La Binquenais",
+    "city": "Rennes"
+  },
+  "communication.coppa@gmail.com": {
+    "sent_at": "2026-03-21T07:53:54.223575+00:00",
+    "last_sent_at": "2026-03-21T07:53:54.223575+00:00",
+    "send_count": 1,
+    "resend_id": "20c9402e-cbef-42f7-b66e-72a7b84a2efa",
+    "name": "COPPA | Saint-Melaine",
+    "city": "Rennes"
+  },
+  "contact@dolcepizza-rennes.fr": {
+    "sent_at": "2026-03-21T07:53:56.151202+00:00",
+    "last_sent_at": "2026-03-21T07:53:56.151202+00:00",
+    "send_count": 1,
+    "resend_id": "4ce50461-808c-4780-8c56-9dfa5b56fd08",
+    "name": "DOLCE PIZZA",
+    "city": "Rennes"
+  },
+  "iquattrocantirennes@gmail.com": {
+    "sent_at": "2026-03-21T07:53:58.037529+00:00",
+    "last_sent_at": "2026-03-21T07:53:58.037529+00:00",
+    "send_count": 1,
+    "resend_id": "c06f33ee-cead-4c19-a139-a2289c5cfd92",
+    "name": "I Quattro-Canti Rennes",
+    "city": "Rennes"
+  },
+  "contact@mipa-store.fr": {
+    "sent_at": "2026-03-21T07:53:59.926175+00:00",
+    "last_sent_at": "2026-03-21T07:53:59.926175+00:00",
+    "send_count": 1,
+    "resend_id": "4d7258ca-e9a3-4f10-bef8-82f66e761049",
+    "name": "Mipa-Miblù VOLNEY",
+    "city": "Rennes"
+  },
+  "contact@uliva.fr": {
+    "sent_at": "2026-03-21T07:54:01.863071+00:00",
+    "last_sent_at": "2026-03-21T07:54:01.863071+00:00",
+    "send_count": 1,
+    "resend_id": "32a25e16-d845-47b7-b081-22beb27ddfcb",
+    "name": "Uliva",
+    "city": "Rennes"
+  },
+  "contact@restaurantluca.com": {
+    "sent_at": "2026-03-21T07:54:03.759508+00:00",
+    "last_sent_at": "2026-03-21T07:54:03.759508+00:00",
+    "send_count": 1,
+    "resend_id": "190202b2-11e5-43ef-9c8e-4f2df8dad902",
+    "name": "Restaurant LUCA",
+    "city": "Rennes"
+  },
+  "aucomptoir2@gmail.com": {
+    "sent_at": "2026-03-21T07:54:05.678322+00:00",
+    "last_sent_at": "2026-03-21T07:54:05.678322+00:00",
+    "send_count": 1,
+    "resend_id": "9757fd39-d49b-4a8c-81fb-c9db7e565a60",
+    "name": "Au Comptoir Venitien",
+    "city": "Rennes"
+  },
+  "contact@polpapizza.fr": {
+    "sent_at": "2026-03-21T07:54:07.582807+00:00",
+    "last_sent_at": "2026-03-21T07:54:07.582807+00:00",
+    "send_count": 1,
+    "resend_id": "183cf660-72d6-4f91-aafc-5e138f4f7258",
+    "name": "Polpa",
+    "city": "Rennes"
+  },
+  "contact@restaurantlavilla.fr": {
+    "sent_at": "2026-03-21T07:54:09.532813+00:00",
+    "last_sent_at": "2026-03-21T07:54:09.532813+00:00",
+    "send_count": 1,
+    "resend_id": "8af17c06-349e-4497-a527-be81dfe1496a",
+    "name": "La Villa",
+    "city": "Mulhouse"
+  },
+  "contact@vinoegustogruppo.fr": {
+    "sent_at": "2026-03-21T07:54:11.751049+00:00",
+    "last_sent_at": "2026-03-21T07:54:11.751049+00:00",
+    "send_count": 1,
+    "resend_id": "61536581-1e85-4ff0-b625-385844e108bd",
+    "name": "Vino E Gusto Gruppo",
+    "city": "Rennes"
+  },
+  "contact@au-comptoir-ditalie.fr": {
+    "sent_at": "2026-03-21T07:54:13.691478+00:00",
+    "last_sent_at": "2026-03-21T07:54:13.691478+00:00",
+    "send_count": 1,
+    "resend_id": "9edc8e53-34cb-42a2-b0b3-83a3c4a9a686",
+    "name": "Au Comptoir d'Italie",
+    "city": "Rennes"
+  },
+  "lecamloic@neuf.fr": {
+    "sent_at": "2026-03-21T07:54:15.621665+00:00",
+    "last_sent_at": "2026-03-21T07:54:15.621665+00:00",
+    "send_count": 1,
+    "resend_id": "e84f7f50-9991-4a17-983a-8262b3c40c34",
+    "name": "Brasserie Pizzeria Marius",
+    "city": "Rennes"
+  },
+  "email@exemple.fr": {
+    "sent_at": "2026-03-21T07:54:17.524185+00:00",
+    "last_sent_at": "2026-03-21T07:54:17.524185+00:00",
+    "send_count": 1,
+    "resend_id": "0ad672cc-dd28-4ce4-86f5-576d494ee4d4",
+    "name": "Bánh Bánh",
+    "city": "Rennes"
+  },
+  "contact@burgouzz.fr": {
+    "sent_at": "2026-03-21T07:54:19.483998+00:00",
+    "last_sent_at": "2026-03-21T07:54:19.483998+00:00",
+    "send_count": 1,
+    "resend_id": "7d78ce60-c39c-4343-a6da-7ee28bf85b0e",
+    "name": "Burgouzz Rennes",
+    "city": "Rennes"
+  },
+  "franchise@restaurant-made.fr": {
+    "sent_at": "2026-03-21T07:54:21.397989+00:00",
+    "last_sent_at": "2026-03-21T07:54:21.397989+00:00",
+    "send_count": 1,
+    "resend_id": "c66ff631-2c5d-4bff-b8c8-7e685e6e87ff",
+    "name": "Made Burger Rennes",
+    "city": "Rennes"
+  },
+  "contact@banco-rennes.com": {
+    "sent_at": "2026-03-21T07:54:23.276871+00:00",
+    "last_sent_at": "2026-03-21T07:54:23.276871+00:00",
+    "send_count": 1,
+    "resend_id": "4182db2b-30e1-4fe7-872e-0264f38ccef0",
+    "name": "Banco",
+    "city": "Rennes"
+  },
+  "contact@crepes-house.fr": {
+    "sent_at": "2026-03-21T07:54:25.175922+00:00",
+    "last_sent_at": "2026-03-21T07:54:25.175922+00:00",
+    "send_count": 1,
+    "resend_id": "905920f4-ef66-4603-b914-ad4b385ac071",
+    "name": "Crêpe House",
+    "city": "Rennes"
+  },
+  "tandooriexpress35@gmail.com": {
+    "sent_at": "2026-03-21T07:54:27.091284+00:00",
+    "last_sent_at": "2026-03-21T07:54:27.091284+00:00",
+    "send_count": 1,
+    "resend_id": "6df94486-738d-4289-9381-3bccf5383db7",
+    "name": "Tandoori express",
+    "city": "Rennes"
+  },
+  "phillysstmichel@gmail.com": {
+    "sent_at": "2026-03-21T07:54:29.053306+00:00",
+    "last_sent_at": "2026-03-21T07:54:29.053306+00:00",
+    "send_count": 1,
+    "resend_id": "92a3bc1c-858c-456d-8abe-e568e4ee0d70",
+    "name": "Philly's",
+    "city": "Rennes"
+  },
+  "contact@popotes.fr": {
+    "sent_at": "2026-03-21T07:54:30.930815+00:00",
+    "last_sent_at": "2026-03-21T07:54:30.930815+00:00",
+    "send_count": 1,
+    "resend_id": "e91e84de-8653-46a7-84a6-023f8d317bf9",
+    "name": "Popotes - Isly - Rennes",
+    "city": "Rennes"
+  },
+  "surpriseparty@lesfilsamaman.com": {
+    "sent_at": "2026-03-21T07:54:32.841542+00:00",
+    "last_sent_at": "2026-03-21T07:54:32.841542+00:00",
+    "send_count": 1,
+    "resend_id": "5352683e-d26e-4494-8683-9b0353b66eaf",
+    "name": "Les Fils à Maman Rennes",
+    "city": "Rennes"
+  },
+  "contact@naani-food.com": {
+    "sent_at": "2026-03-21T07:54:34.767224+00:00",
+    "last_sent_at": "2026-03-21T07:54:34.767224+00:00",
+    "send_count": 1,
+    "resend_id": "c40ed345-2524-435a-be3d-b1a6ed8ca2aa",
+    "name": "Naani",
+    "city": "Rennes"
+  },
+  "dom-fred@potofeu.fr": {
+    "sent_at": "2026-03-21T07:54:36.692777+00:00",
+    "last_sent_at": "2026-03-21T07:54:36.692777+00:00",
+    "send_count": 1,
+    "resend_id": "8c24021b-dfdf-4cbb-ad3f-b3262a334e54",
+    "name": "Les Pot O Feu - Restaurant Traiteur",
+    "city": "Rennes"
+  },
+  "emiliceelik@outlook.fr": {
+    "sent_at": "2026-03-21T07:54:38.613047+00:00",
+    "last_sent_at": "2026-03-21T07:54:38.613047+00:00",
+    "send_count": 1,
+    "resend_id": "78b9ad8d-213e-4f12-8341-d179ed1cdf3c",
+    "name": "À Table!",
+    "city": "Reims"
+  },
+  "khanmostafa77@hotmail.com": {
+    "sent_at": "2026-03-21T07:54:40.539679+00:00",
+    "last_sent_at": "2026-03-21T07:54:40.539679+00:00",
+    "send_count": 1,
+    "resend_id": "100bea41-3970-4ebf-88e0-fc9f6359e0e3",
+    "name": "RAHAMAN'S FOOD",
+    "city": "Reims"
+  },
+  "anquetil.christophe@wanadoo.fr": {
+    "sent_at": "2026-03-21T07:54:42.464440+00:00",
+    "last_sent_at": "2026-03-21T07:54:42.464440+00:00",
+    "send_count": 1,
+    "resend_id": "f7994a55-52fb-4f91-8489-13260592f0d8",
+    "name": "Zwiebel",
+    "city": "Reims"
+  },
+  "contact@koboon-resto.fr": {
+    "sent_at": "2026-03-21T07:54:44.388149+00:00",
+    "last_sent_at": "2026-03-21T07:54:44.388149+00:00",
+    "send_count": 1,
+    "resend_id": "4c9116e0-a0b5-4e1d-b96e-ad7e53b3d183",
+    "name": "Koboon (Reims)",
+    "city": "Reims"
+  },
+  "contact@delices-de-chooupette.fr": {
+    "sent_at": "2026-03-21T07:54:46.329098+00:00",
+    "last_sent_at": "2026-03-21T07:54:46.329098+00:00",
+    "send_count": 1,
+    "resend_id": "f329e8e9-e3c7-4829-a5c7-2782a99cf88f",
+    "name": "Les Délices de ChOoupette",
+    "city": "Reims"
+  },
+  "jagori.reims@gmail.com": {
+    "sent_at": "2026-03-21T07:54:48.221407+00:00",
+    "last_sent_at": "2026-03-21T07:54:48.221407+00:00",
+    "send_count": 1,
+    "resend_id": "bc40d1c9-cb59-49bd-ba09-7086103b594a",
+    "name": "Jet Kebab",
+    "city": "Reims"
+  },
+  "crocmeal@yahoo.com": {
+    "sent_at": "2026-03-21T07:54:50.123578+00:00",
+    "last_sent_at": "2026-03-21T07:54:50.123578+00:00",
+    "send_count": 1,
+    "resend_id": "ff713119-eb6d-4995-97eb-c3a135a6895e",
+    "name": "Crocmeal-KEBAB REIMS",
+    "city": "Reims"
+  },
+  "contact@totech.fr": {
+    "sent_at": "2026-03-21T07:54:52.027721+00:00",
+    "last_sent_at": "2026-03-21T07:54:52.027721+00:00",
+    "send_count": 1,
+    "resend_id": "ea484a17-c4f8-4cc9-bda5-c8903d35db9b",
+    "name": "Pizza Reims",
+    "city": "Reims"
+  },
+  "contact@latrattoriareims.fr": {
+    "sent_at": "2026-03-21T07:54:53.927593+00:00",
+    "last_sent_at": "2026-03-21T07:54:53.927593+00:00",
+    "send_count": 1,
+    "resend_id": "7a1bf751-ab09-4006-bee3-cd28418036c7",
+    "name": "LA TRATTORIA",
+    "city": "Reims"
+  },
+  "contact@latelierev.com": {
+    "sent_at": "2026-03-21T07:54:55.843020+00:00",
+    "last_sent_at": "2026-03-21T07:54:55.843020+00:00",
+    "send_count": 1,
+    "resend_id": "a75c540d-6bb8-495f-a899-03dae3540542",
+    "name": "L'Atelier Entrecôte et Volaille - Reims",
+    "city": "Reims"
+  },
+  "randayassine@hotmail.com": {
+    "sent_at": "2026-03-21T07:54:57.730128+00:00",
+    "last_sent_at": "2026-03-21T07:54:57.730128+00:00",
+    "send_count": 1,
+    "resend_id": "569fed65-3770-4458-a98a-e3709898ef30",
+    "name": "Ô DÉLICES DU LIBAN REIMS",
+    "city": "Reims"
+  },
+  "lepiazza@sfr.fr": {
+    "sent_at": "2026-03-21T07:54:59.653597+00:00",
+    "last_sent_at": "2026-03-21T07:54:59.653597+00:00",
+    "send_count": 1,
+    "resend_id": "58ee7d68-d32d-4123-bcd6-192c82e25505",
+    "name": "Le piazza",
+    "city": "Reims"
   }
 }
