@@ -5062,5 +5062,381 @@
     "resend_id": "58ee7d68-d32d-4123-bcd6-192c82e25505",
     "name": "Le piazza",
     "city": "Reims"
+  },
+  "auculdepoule@orange.fr": {
+    "sent_at": "2026-03-21T15:23:59.101269+00:00",
+    "last_sent_at": "2026-03-21T15:23:59.101269+00:00",
+    "send_count": 1,
+    "resend_id": "f4a490b4-307a-4c33-b4c1-dc10909cbe13",
+    "name": "Au Cul de Poule Restaurant Reims - Bistronomie Reims",
+    "city": "Reims"
+  },
+  "contact@pizza-mama-reims.fr": {
+    "sent_at": "2026-03-21T15:24:01.128702+00:00",
+    "last_sent_at": "2026-03-21T15:24:01.128702+00:00",
+    "send_count": 1,
+    "resend_id": "03be71e9-a70b-4732-a307-9219827e92a4",
+    "name": "Pizza la Mama",
+    "city": "Reims"
+  },
+  "reims@lexperience-rd.com": {
+    "sent_at": "2026-03-21T15:24:03.422416+00:00",
+    "last_sent_at": "2026-03-21T15:24:03.422416+00:00",
+    "send_count": 1,
+    "resend_id": "16ef1768-07b1-4c73-9e46-4a5c074a45be",
+    "name": "Restaurant Lexperience Reims",
+    "city": "Reims"
+  },
+  "contact@cocoricow.com": {
+    "sent_at": "2026-03-21T15:24:05.670274+00:00",
+    "last_sent_at": "2026-03-21T15:24:05.670274+00:00",
+    "send_count": 1,
+    "resend_id": "8317913c-e932-4573-aac4-f1fd5342f0e2",
+    "name": "Cocoricow restaurant",
+    "city": "Reims"
+  },
+  "mohamedfassi@gmail.com": {
+    "sent_at": "2026-03-21T15:24:07.574221+00:00",
+    "last_sent_at": "2026-03-21T15:24:07.574221+00:00",
+    "send_count": 1,
+    "resend_id": "4d9371bb-d972-4862-8b9e-0c8a5e1657a4",
+    "name": "Gosto pizza",
+    "city": "Reims"
+  },
+  "linstant1959@gmail.com": {
+    "sent_at": "2026-03-21T15:24:09.882303+00:00",
+    "last_sent_at": "2026-03-21T15:24:09.882303+00:00",
+    "send_count": 1,
+    "resend_id": "96a1fee3-ed0f-47c5-ad4a-828ed3e3c07a",
+    "name": "FoodTruck L'instant",
+    "city": "Reims"
+  },
+  "contact@ati4group.com": {
+    "sent_at": "2026-03-21T15:24:11.774567+00:00",
+    "last_sent_at": "2026-03-21T15:24:11.774567+00:00",
+    "send_count": 1,
+    "resend_id": "fccb674d-88a6-4c8a-b566-149b34b98bc5",
+    "name": "231 East Street",
+    "city": "Reims"
+  },
+  "contact@wafflefactory.com": {
+    "sent_at": "2026-03-21T15:24:13.701203+00:00",
+    "last_sent_at": "2026-03-21T15:24:13.701203+00:00",
+    "send_count": 1,
+    "resend_id": "5a8f9a12-7c52-4799-b5f5-9dfd61177031",
+    "name": "Waffle Factory",
+    "city": "Reims"
+  },
+  "reservation@nobigroupe.com": {
+    "sent_at": "2026-03-21T15:24:15.628565+00:00",
+    "last_sent_at": "2026-03-21T15:24:15.628565+00:00",
+    "send_count": 1,
+    "resend_id": "aabfde9e-5a75-4221-9020-2046cd1de1d2",
+    "name": "Sacrés P'tits Coches",
+    "city": "Reims"
+  },
+  "oanh@agencematch.fr": {
+    "sent_at": "2026-03-21T15:24:17.841755+00:00",
+    "last_sent_at": "2026-03-21T15:24:17.841755+00:00",
+    "send_count": 1,
+    "resend_id": "11f0da51-d8ab-4f93-8f9f-73b8ddcaf072",
+    "name": "Café Feuillette",
+    "city": "Reims"
+  },
+  "pal.pak@hotmail.com": {
+    "sent_at": "2026-03-21T15:24:19.788177+00:00",
+    "last_sent_at": "2026-03-21T15:24:19.788177+00:00",
+    "send_count": 1,
+    "resend_id": "0daca34a-e160-48dc-a848-73933a1f3668",
+    "name": "Le Roi de la Frite",
+    "city": "Le Havre"
+  },
+  "marmaralehavre1@gmail.com": {
+    "sent_at": "2026-03-21T15:24:21.731883+00:00",
+    "last_sent_at": "2026-03-21T15:24:21.731883+00:00",
+    "send_count": 1,
+    "resend_id": "22cff4f9-9270-4a21-861d-1964b1225821",
+    "name": "MARMARA",
+    "city": "Le Havre"
+  },
+  "alanya.lh76@gmail.com": {
+    "sent_at": "2026-03-21T15:24:23.656783+00:00",
+    "last_sent_at": "2026-03-21T15:24:23.656783+00:00",
+    "send_count": 1,
+    "resend_id": "f330e43d-ea3d-4eaf-82ad-beb4aabb1bf2",
+    "name": "Mac fast food",
+    "city": "Le Havre"
+  },
+  "odbs.mehmet@icloud.com": {
+    "sent_at": "2026-03-21T15:24:25.579622+00:00",
+    "last_sent_at": "2026-03-21T15:24:25.579622+00:00",
+    "send_count": 1,
+    "resend_id": "3bda6b1e-30c9-4b19-b423-ef92564108a9",
+    "name": "L'oda",
+    "city": "Le Havre"
+  },
+  "contact@hubdev.fr": {
+    "sent_at": "2026-03-21T15:24:27.498641+00:00",
+    "last_sent_at": "2026-03-21T15:24:27.498641+00:00",
+    "send_count": 1,
+    "resend_id": "653ffe03-ce78-4880-86db-b769f30bde1d",
+    "name": "Namasty India",
+    "city": "Le Havre"
+  },
+  "ahmed.asseif@gmail.com": {
+    "sent_at": "2026-03-21T15:24:29.394731+00:00",
+    "last_sent_at": "2026-03-21T15:24:29.394731+00:00",
+    "send_count": 1,
+    "resend_id": "23292cb6-6475-466d-a4b8-430157a76787",
+    "name": "Le Tacous",
+    "city": "Le Havre"
+  },
+  "info@don-gusto.fr": {
+    "sent_at": "2026-03-21T15:24:31.319326+00:00",
+    "last_sent_at": "2026-03-21T15:24:31.319326+00:00",
+    "send_count": 1,
+    "resend_id": "19f5576d-4629-4e80-ba83-ec057907ceec",
+    "name": "DON GUSTO",
+    "city": "Le Havre"
+  },
+  "macicialh@gmail.com": {
+    "sent_at": "2026-03-21T15:24:33.252743+00:00",
+    "last_sent_at": "2026-03-21T15:24:33.252743+00:00",
+    "send_count": 1,
+    "resend_id": "6717d29a-8411-44c7-abf9-39ea2db6bd37",
+    "name": "MACICIA - Epicerie Traiteur Italien & Pizzeria Napolitaine",
+    "city": "Le Havre"
+  },
+  "contact@danonnina.fr": {
+    "sent_at": "2026-03-21T15:24:35.180947+00:00",
+    "last_sent_at": "2026-03-21T15:24:35.180947+00:00",
+    "send_count": 1,
+    "resend_id": "6e8c4730-486b-4516-8828-e925bbdcb88f",
+    "name": "Da Nonnina - Pizzeria de la plage",
+    "city": "Le Havre"
+  },
+  "compliance@hostinger.com": {
+    "sent_at": "2026-03-21T15:24:37.104318+00:00",
+    "last_sent_at": "2026-03-21T15:24:37.104318+00:00",
+    "send_count": 1,
+    "resend_id": "fa25d04c-7e6f-4986-a2ab-897115b53da9",
+    "name": "CÔME",
+    "city": "Le Havre"
+  },
+  "contact@ollca.com": {
+    "sent_at": "2026-03-21T15:24:39.020347+00:00",
+    "last_sent_at": "2026-03-21T15:24:39.020347+00:00",
+    "send_count": 1,
+    "resend_id": "2e19f01f-c79e-41bc-b382-f0a3f4033606",
+    "name": "Aux Gourmets d'Italie - Le Havre",
+    "city": "Le Havre"
+  },
+  "le.sorrento.2@gmail.com": {
+    "sent_at": "2026-03-21T15:24:40.923310+00:00",
+    "last_sent_at": "2026-03-21T15:24:40.923310+00:00",
+    "send_count": 1,
+    "resend_id": "43a40a79-a051-4147-9d64-c05ae893033f",
+    "name": "Le Sorrento",
+    "city": "Le Havre"
+  },
+  "sebastien.plate@palaisdesregates.com": {
+    "sent_at": "2026-03-21T15:24:42.872239+00:00",
+    "last_sent_at": "2026-03-21T15:24:42.872239+00:00",
+    "send_count": 1,
+    "resend_id": "6bc27d8d-2957-4dc5-88e7-758f50bfd8cc",
+    "name": "La Bise Le Havre",
+    "city": "Le Havre"
+  },
+  "contact@la-grande-ecole.fr": {
+    "sent_at": "2026-03-21T15:24:44.795679+00:00",
+    "last_sent_at": "2026-03-21T15:24:44.795679+00:00",
+    "send_count": 1,
+    "resend_id": "b4d7396e-4a99-4042-915b-5b2e69e8c8e1",
+    "name": "La Grande Ecole",
+    "city": "Le Havre"
+  },
+  "freak.lehavre@gmail.com": {
+    "sent_at": "2026-03-21T15:24:46.740291+00:00",
+    "last_sent_at": "2026-03-21T15:24:46.740291+00:00",
+    "send_count": 1,
+    "resend_id": "449fe984-8e03-4035-adbc-450aeff86726",
+    "name": "Freak LH",
+    "city": "Le Havre"
+  },
+  "peperoniandcolh@gmail.com": {
+    "sent_at": "2026-03-21T15:24:48.708469+00:00",
+    "last_sent_at": "2026-03-21T15:24:48.708469+00:00",
+    "send_count": 1,
+    "resend_id": "568e5de4-5df2-496c-be4a-e32a5fac5fb4",
+    "name": "PIZZA PEPERONI & CO",
+    "city": "Le Havre"
+  },
+  "contact@sdelice.fr": {
+    "sent_at": "2026-03-21T15:24:50.630121+00:00",
+    "last_sent_at": "2026-03-21T15:24:50.630121+00:00",
+    "send_count": 1,
+    "resend_id": "4457b4bc-fa9d-408b-8fc7-f281daa20fd9",
+    "name": "Restaurant S Delice | Le Petit Resto & Food Truck Le Havre",
+    "city": "Le Havre"
+  },
+  "bestchickenroz@gmail.com": {
+    "sent_at": "2026-03-21T15:24:52.537361+00:00",
+    "last_sent_at": "2026-03-21T15:24:52.537361+00:00",
+    "send_count": 1,
+    "resend_id": "d28bf279-5afc-4f56-a4cf-8aaef7b582da",
+    "name": "Best chicken ROZ",
+    "city": "Le Havre"
+  },
+  "lamarrage.pro@gmail.com": {
+    "sent_at": "2026-03-21T15:24:54.460552+00:00",
+    "last_sent_at": "2026-03-21T15:24:54.460552+00:00",
+    "send_count": 1,
+    "resend_id": "90a6e8d1-f6b8-48ae-98f8-03207277f4bb",
+    "name": "Brasserie L'Amarrage",
+    "city": "Le Havre"
+  },
+  "ledenvercoffee@gmail.com": {
+    "sent_at": "2026-03-21T15:24:56.409488+00:00",
+    "last_sent_at": "2026-03-21T15:24:56.409488+00:00",
+    "send_count": 1,
+    "resend_id": "bcefc96d-5fc9-45ed-9edd-437d4e1d7b07",
+    "name": "Le Denver",
+    "city": "Le Havre"
+  },
+  "le.whynotlh@gmail.com": {
+    "sent_at": "2026-03-21T15:24:58.691738+00:00",
+    "last_sent_at": "2026-03-21T15:24:58.691738+00:00",
+    "send_count": 1,
+    "resend_id": "0442d314-1229-4c7a-8a24-8088c8ed57d2",
+    "name": "Why Not LH",
+    "city": "Le Havre"
+  },
+  "pokeshop.paris12@gmail.com": {
+    "sent_at": "2026-03-21T15:25:00.635322+00:00",
+    "last_sent_at": "2026-03-21T15:25:00.635322+00:00",
+    "send_count": 1,
+    "resend_id": "9c3f4147-5b3d-42b1-8748-5f97d2b41f2f",
+    "name": "Pokeshop Le Havre",
+    "city": "Le Havre"
+  },
+  "contact@arison.fr": {
+    "sent_at": "2026-03-21T15:25:02.742911+00:00",
+    "last_sent_at": "2026-03-21T15:25:02.742911+00:00",
+    "send_count": 1,
+    "resend_id": "0d724ec1-4969-459e-bfa5-c1fcf3e5e710",
+    "name": "BIG MOH'S",
+    "city": "Le Havre"
+  },
+  "contact@cafe-sirius.fr": {
+    "sent_at": "2026-03-21T15:25:04.693960+00:00",
+    "last_sent_at": "2026-03-21T15:25:04.693960+00:00",
+    "send_count": 1,
+    "resend_id": "0d8c5bce-2e46-4439-95f7-5abc449d6cc8",
+    "name": "Le Café du Sirius",
+    "city": "Le Havre"
+  },
+  "contact@lamiecaline.com": {
+    "sent_at": "2026-03-21T15:25:06.630911+00:00",
+    "last_sent_at": "2026-03-21T15:25:06.630911+00:00",
+    "send_count": 1,
+    "resend_id": "3de36133-f316-4b4e-a24b-b363126e9f7e",
+    "name": "La Mie Câline",
+    "city": "Le Havre"
+  },
+  "optitpoelon@gmail.com": {
+    "sent_at": "2026-03-21T15:25:08.581253+00:00",
+    "last_sent_at": "2026-03-21T15:25:08.581253+00:00",
+    "send_count": 1,
+    "resend_id": "76d23458-e5e8-461a-b62d-12db2969e2f5",
+    "name": "O p'tit Poêlon",
+    "city": "Le Havre"
+  },
+  "ma.dame.lehavre@gmail.com": {
+    "sent_at": "2026-03-21T15:25:10.499036+00:00",
+    "last_sent_at": "2026-03-21T15:25:10.499036+00:00",
+    "send_count": 1,
+    "resend_id": "cc3ca4df-c1a2-4473-8658-d727d03ff4fe",
+    "name": "MA DAME",
+    "city": "Le Havre"
+  },
+  "contact@ovillage-brunch.com": {
+    "sent_at": "2026-03-21T15:25:12.395689+00:00",
+    "last_sent_at": "2026-03-21T15:25:12.395689+00:00",
+    "send_count": 1,
+    "resend_id": "373a24b5-6db6-4107-9b3c-d600b7fe4427",
+    "name": "O'Village",
+    "city": "Le Havre"
+  },
+  "contact@babayoshi.fr": {
+    "sent_at": "2026-03-21T15:25:14.304179+00:00",
+    "last_sent_at": "2026-03-21T15:25:14.304179+00:00",
+    "send_count": 1,
+    "resend_id": "0f8b6967-cad6-470f-b66b-8931e74a42ef",
+    "name": "Babayoshi - Le Havre",
+    "city": "Le Havre"
+  },
+  "hamitgungor42@gmail.com": {
+    "sent_at": "2026-03-21T15:25:16.246211+00:00",
+    "last_sent_at": "2026-03-21T15:25:16.246211+00:00",
+    "send_count": 1,
+    "resend_id": "64827820-1526-4e0c-b5b2-5d7bf0563d8a",
+    "name": "KEBAB STORE (1er BERLINER de la Loire) Kebab fait maison",
+    "city": "Saint-Etienne"
+  },
+  "night-food-42@hotmail.com": {
+    "sent_at": "2026-03-21T15:25:18.203419+00:00",
+    "last_sent_at": "2026-03-21T15:25:18.203419+00:00",
+    "send_count": 1,
+    "resend_id": "1eb66de8-5bef-4310-a4c3-ddf196fa78a9",
+    "name": "Night Pizz",
+    "city": "Saint-Etienne"
+  },
+  "bowlsandburgers42@gmail.com": {
+    "sent_at": "2026-03-21T15:25:20.136752+00:00",
+    "last_sent_at": "2026-03-21T15:25:20.136752+00:00",
+    "send_count": 1,
+    "resend_id": "26806ea8-ee9d-47e0-821e-32872eb36631",
+    "name": "ZE BERLINER KEBAB",
+    "city": "Saint-Etienne"
+  },
+  "contact@campustacos.fr": {
+    "sent_at": "2026-03-21T15:25:22.059359+00:00",
+    "last_sent_at": "2026-03-21T15:25:22.059359+00:00",
+    "send_count": 1,
+    "resend_id": "6e7c6431-d2b5-4d0b-9e34-69caa8a96ed8",
+    "name": "Le Campus Tacos",
+    "city": "Saint-Etienne"
+  },
+  "enis.yildirim99@gmail.com": {
+    "sent_at": "2026-03-21T15:25:23.992583+00:00",
+    "last_sent_at": "2026-03-21T15:25:23.992583+00:00",
+    "send_count": 1,
+    "resend_id": "6f713f4c-b92b-490d-bbeb-9879be779428",
+    "name": "Anatolie",
+    "city": "Saint-Etienne"
+  },
+  "fabiennavarro83@gmail.com": {
+    "sent_at": "2026-03-21T15:25:25.970379+00:00",
+    "last_sent_at": "2026-03-21T15:25:25.970379+00:00",
+    "send_count": 1,
+    "resend_id": "d0762877-2748-4ccb-94f4-6f70e75999be",
+    "name": "Snack Paradiso Carnot",
+    "city": "Saint-Etienne"
+  },
+  "mididiss@yahoo.fr": {
+    "sent_at": "2026-03-21T15:25:27.926871+00:00",
+    "last_sent_at": "2026-03-21T15:25:27.926871+00:00",
+    "send_count": 1,
+    "resend_id": "e35f5cb2-0f59-49f2-8f3b-87e832ce8bc1",
+    "name": "Mididiss",
+    "city": "Saint-Etienne"
+  },
+  "mustafaguncikti34@gmail.com": {
+    "sent_at": "2026-03-21T15:25:29.873971+00:00",
+    "last_sent_at": "2026-03-21T15:25:29.873971+00:00",
+    "send_count": 1,
+    "resend_id": "16167849-ff9d-448c-904d-50c7fbd5a8cf",
+    "name": "Kebab Bodrum Saint-Étienne",
+    "city": "Saint-Etienne"
   }
 }
