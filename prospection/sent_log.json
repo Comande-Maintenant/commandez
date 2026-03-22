@@ -5438,5 +5438,389 @@
     "resend_id": "16167849-ff9d-448c-904d-50c7fbd5a8cf",
     "name": "Kebab Bodrum Saint-Étienne",
     "city": "Saint-Etienne"
+  },
+  "pizzeria500degres@gmail.fr": {
+    "sent_at": "2026-03-22T07:56:44.435334+00:00",
+    "last_sent_at": "2026-03-22T07:56:44.435334+00:00",
+    "send_count": 1,
+    "resend_id": "23802715-714f-47c3-b036-07ed019e1281",
+    "name": "Pizzeria 500",
+    "city": "Saint-Etienne"
+  },
+  "contact@lesanremo1-pizzeria.fr": {
+    "sent_at": "2026-03-22T07:56:46.904727+00:00",
+    "last_sent_at": "2026-03-22T07:56:46.904727+00:00",
+    "send_count": 1,
+    "resend_id": "778de232-7f9b-439b-8467-bf126ed5377d",
+    "name": "Pizzeria San Remo - Chez Nico",
+    "city": "Saint-Etienne"
+  },
+  "jeanjaures@divoglia.com": {
+    "sent_at": "2026-03-22T07:56:49.417536+00:00",
+    "last_sent_at": "2026-03-22T07:56:49.417536+00:00",
+    "send_count": 1,
+    "resend_id": "31e91601-f532-4a76-a83e-a65043d1dada",
+    "name": "Di Voglia JEAN-JAURÈS - Brasserie Italienne & Pizzéria Napolitaine",
+    "city": "Saint-Etienne"
+  },
+  "ogramste@gmail.com": {
+    "sent_at": "2026-03-22T07:56:51.547952+00:00",
+    "last_sent_at": "2026-03-22T07:56:51.547952+00:00",
+    "send_count": 1,
+    "resend_id": "8c8172d9-dc4b-4547-be1d-51f8138ac468",
+    "name": "Pizzeria Boulangerie Pâtisserie O'gram",
+    "city": "Saint-Etienne"
+  },
+  "pizzeriacefalu42000@yahoo.fr": {
+    "sent_at": "2026-03-22T07:56:53.500816+00:00",
+    "last_sent_at": "2026-03-22T07:56:53.500816+00:00",
+    "send_count": 1,
+    "resend_id": "b36d4cda-36d7-47e3-954e-15d811530aa3",
+    "name": "Pizzeria Cefalù",
+    "city": "Saint-Etienne"
+  },
+  "restaurant.nota.bene.42@gmail.com": {
+    "sent_at": "2026-03-22T07:56:55.424803+00:00",
+    "last_sent_at": "2026-03-22T07:56:55.424803+00:00",
+    "send_count": 1,
+    "resend_id": "b3fd23b1-fc43-41e5-811f-e340b6e098bd",
+    "name": "NOTA BENE, Place Jean Jaurès, Saint Etienne",
+    "city": "Saint-Etienne"
+  },
+  "sisterpizz@orange.fr": {
+    "sent_at": "2026-03-22T07:56:57.362953+00:00",
+    "last_sent_at": "2026-03-22T07:56:57.362953+00:00",
+    "send_count": 1,
+    "resend_id": "762dea4d-46b0-4b29-9004-1542212cd11e",
+    "name": "Sister Pizz'",
+    "city": "Saint-Etienne"
+  },
+  "eric.petrotto@lafabuleusecantine.fr": {
+    "sent_at": "2026-03-22T07:56:59.261787+00:00",
+    "last_sent_at": "2026-03-22T07:56:59.261787+00:00",
+    "send_count": 1,
+    "resend_id": "1a4faae2-2824-4c76-86b0-14c1ff3050a4",
+    "name": "La Fabuleuse Cantine - Restaurant - Traiteur - Évènements",
+    "city": "Saint-Etienne"
+  },
+  "corne.daurochs@bbox.fr": {
+    "sent_at": "2026-03-22T07:57:01.421567+00:00",
+    "last_sent_at": "2026-03-22T07:57:01.421567+00:00",
+    "send_count": 1,
+    "resend_id": "b2eaa43a-2b94-411a-acfa-d28b651b2bf4",
+    "name": "Corne d'Aurochs",
+    "city": "Saint-Etienne"
+  },
+  "elincaresto@gmail.com": {
+    "sent_at": "2026-03-22T07:57:03.498419+00:00",
+    "last_sent_at": "2026-03-22T07:57:03.498419+00:00",
+    "send_count": 1,
+    "resend_id": "b1d8038f-1781-48e6-8c1b-7bb55e1e76b4",
+    "name": "El Inca",
+    "city": "Saint-Etienne"
+  },
+  "aupetitencas42@gmail.com": {
+    "sent_at": "2026-03-22T07:57:05.771612+00:00",
+    "last_sent_at": "2026-03-22T07:57:05.771612+00:00",
+    "send_count": 1,
+    "resend_id": "18020c49-48a4-4ec2-b53f-fe7ee67f8808",
+    "name": "Au Petit Encas",
+    "city": "Saint-Etienne"
+  },
+  "yamskitchen@email.com": {
+    "sent_at": "2026-03-22T07:57:07.664930+00:00",
+    "last_sent_at": "2026-03-22T07:57:07.664930+00:00",
+    "send_count": 1,
+    "resend_id": "96ab61c8-bb14-4638-bccc-1ef79e5638b1",
+    "name": "Yam's kitchen",
+    "city": "Saint-Etienne"
+  },
+  "chickenchika.ste@gmail.com": {
+    "sent_at": "2026-03-22T07:57:09.530136+00:00",
+    "last_sent_at": "2026-03-22T07:57:09.530136+00:00",
+    "send_count": 1,
+    "resend_id": "97ce42d6-28d8-4328-8da0-f7f0545ca3fd",
+    "name": "L'oasis Chicken Chika",
+    "city": "Saint-Etienne"
+  },
+  "contact@leparadiso42.fr": {
+    "sent_at": "2026-03-22T07:57:11.397380+00:00",
+    "last_sent_at": "2026-03-22T07:57:11.397380+00:00",
+    "send_count": 1,
+    "resend_id": "4d5c1a5a-597a-4750-8560-b7185965fee6",
+    "name": "Le paradiso new génération",
+    "city": "Saint-Etienne"
+  },
+  "regalfrenchy42@gmail.com": {
+    "sent_at": "2026-03-22T07:57:13.475157+00:00",
+    "last_sent_at": "2026-03-22T07:57:13.475157+00:00",
+    "send_count": 1,
+    "resend_id": "b960302e-4dba-4a3b-ad78-d98e5b59289d",
+    "name": "Naandoss",
+    "city": "Saint-Etienne"
+  },
+  "dawdzai88@yahoo.com": {
+    "sent_at": "2026-03-22T07:57:15.354259+00:00",
+    "last_sent_at": "2026-03-22T07:57:15.354259+00:00",
+    "send_count": 1,
+    "resend_id": "2e24e16d-1d7f-4dd9-8890-965af658cc5a",
+    "name": "Super Food Station",
+    "city": "Saint-Etienne"
+  },
+  "tabillondidier@gmail.com": {
+    "sent_at": "2026-03-22T07:57:17.226702+00:00",
+    "last_sent_at": "2026-03-22T07:57:17.226702+00:00",
+    "send_count": 1,
+    "resend_id": "54215090-6436-4a8b-bc79-69612418baa2",
+    "name": "Gonzague Burgers Saint-Etienne - Maison Gourmande",
+    "city": "Saint-Etienne"
+  },
+  "contact@gandot.fr": {
+    "sent_at": "2026-03-22T07:57:19.193517+00:00",
+    "last_sent_at": "2026-03-22T07:57:19.193517+00:00",
+    "send_count": 1,
+    "resend_id": "73591cf0-e0ce-425f-bd6f-e0844444c47f",
+    "name": "Gandot",
+    "city": "Saint-Etienne"
+  },
+  "lekosbor42@outlook.fr": {
+    "sent_at": "2026-03-22T07:57:21.192537+00:00",
+    "last_sent_at": "2026-03-22T07:57:21.192537+00:00",
+    "send_count": 1,
+    "resend_id": "2b9e3144-c25a-4656-b783-3995e2baca31",
+    "name": "Le Kosbor",
+    "city": "Saint-Etienne"
+  },
+  "fransef@gmail.com": {
+    "sent_at": "2026-03-22T07:57:23.118806+00:00",
+    "last_sent_at": "2026-03-22T07:57:23.118806+00:00",
+    "send_count": 1,
+    "resend_id": "82217cd1-c4bc-494f-b739-794b85883807",
+    "name": "Grill Kebab Turc",
+    "city": "Toulon"
+  },
+  "contact@falafelsfactory.fr": {
+    "sent_at": "2026-03-22T07:57:25.021807+00:00",
+    "last_sent_at": "2026-03-22T07:57:25.021807+00:00",
+    "send_count": 1,
+    "resend_id": "78c2334d-8b8c-445c-b988-6a71c7d39fa9",
+    "name": "Falafels factory",
+    "city": "Toulon"
+  },
+  "belisirmasnacks@gmail.com": {
+    "sent_at": "2026-03-22T07:57:26.908569+00:00",
+    "last_sent_at": "2026-03-22T07:57:26.908569+00:00",
+    "send_count": 1,
+    "resend_id": "29e61290-9376-4879-9a91-86f014cc83d6",
+    "name": "Belisirma Kebab Toulon",
+    "city": "Toulon"
+  },
+  "vigueur.%5cnothmane.znaidi+1@hotmail.fr": {
+    "sent_at": "2026-03-22T07:57:28.761283+00:00",
+    "last_sent_at": "2026-03-22T07:57:28.761283+00:00",
+    "send_count": 1,
+    "resend_id": "0a636c76-4294-42f5-933c-1908b59482cd",
+    "name": "L'Original",
+    "city": "Toulon"
+  },
+  "moussaidkhaliss@icloud.com": {
+    "sent_at": "2026-03-22T07:57:30.961769+00:00",
+    "last_sent_at": "2026-03-22T07:57:30.961769+00:00",
+    "send_count": 1,
+    "resend_id": "f13f04e5-a42f-42a8-9927-7aa3c7335787",
+    "name": "O’NAANGRILL",
+    "city": "Toulon"
+  },
+  "vigueur.%5cnkinzaamour@gmail.com": {
+    "sent_at": "2026-03-22T07:57:32.910984+00:00",
+    "last_sent_at": "2026-03-22T07:57:32.910984+00:00",
+    "send_count": 1,
+    "resend_id": "7b25dc62-7e3a-4bb3-a571-3590a922fdd7",
+    "name": "Crazy Pizza & Burger",
+    "city": "Toulon"
+  },
+  "vigueur.%5cnatici.yasin01@gmail.com": {
+    "sent_at": "2026-03-22T07:57:34.801462+00:00",
+    "last_sent_at": "2026-03-22T07:57:34.801462+00:00",
+    "send_count": 1,
+    "resend_id": "86601327-f001-4adc-b459-011c05a11a0b",
+    "name": "Le Bosphore",
+    "city": "Toulon"
+  },
+  "contact@pizzalabottega.fr": {
+    "sent_at": "2026-03-22T07:57:36.696572+00:00",
+    "last_sent_at": "2026-03-22T07:57:36.696572+00:00",
+    "send_count": 1,
+    "resend_id": "830eb34a-0143-466a-a1d7-dceee798b473",
+    "name": "La Bottega",
+    "city": "Toulon"
+  },
+  "ciao@frittanostra.com": {
+    "sent_at": "2026-03-22T07:57:38.577889+00:00",
+    "last_sent_at": "2026-03-22T07:57:38.577889+00:00",
+    "send_count": 1,
+    "resend_id": "be9f871e-781f-4892-b3ca-0a9351dd550f",
+    "name": "Fritta Nostra",
+    "city": "Toulon"
+  },
+  "contact@gaetano-pizza.com": {
+    "sent_at": "2026-03-22T07:57:40.437882+00:00",
+    "last_sent_at": "2026-03-22T07:57:40.437882+00:00",
+    "send_count": 1,
+    "resend_id": "485f918d-41d9-468d-9b1b-473d1a60d09e",
+    "name": "Gaetano Centre",
+    "city": "Toulon"
+  },
+  "vigueur.%5cnmickanais0203@gmail.com": {
+    "sent_at": "2026-03-22T07:57:42.367494+00:00",
+    "last_sent_at": "2026-03-22T07:57:42.367494+00:00",
+    "send_count": 1,
+    "resend_id": "8562612a-dce0-401f-9476-999f5f8d3ea4",
+    "name": "Aspetta Pizza",
+    "city": "Toulon"
+  },
+  "pizzaguillon@gmail.com": {
+    "sent_at": "2026-03-22T07:57:44.223558+00:00",
+    "last_sent_at": "2026-03-22T07:57:44.223558+00:00",
+    "send_count": 1,
+    "resend_id": "6a8ad658-f078-4f5e-bc13-b55f28b01e20",
+    "name": "Pizz'Aguillon",
+    "city": "Toulon"
+  },
+  "contact@pizza-milano.fr": {
+    "sent_at": "2026-03-22T07:57:46.387038+00:00",
+    "last_sent_at": "2026-03-22T07:57:46.387038+00:00",
+    "send_count": 1,
+    "resend_id": "a66a60c0-0a3f-46bc-8d6d-66ff417321ce",
+    "name": "Pizzeria Milano Toulon - Mourillon",
+    "city": "Toulon"
+  },
+  "pizzabruno83@gmail.com": {
+    "sent_at": "2026-03-22T07:57:48.247213+00:00",
+    "last_sent_at": "2026-03-22T07:57:48.247213+00:00",
+    "send_count": 1,
+    "resend_id": "51ee2678-293b-40e0-ab7a-93e9887fb996",
+    "name": "Pizza Bruno",
+    "city": "Toulon"
+  },
+  "christophe.allagnon@sfr.fr": {
+    "sent_at": "2026-03-22T07:57:50.225284+00:00",
+    "last_sent_at": "2026-03-22T07:57:50.225284+00:00",
+    "send_count": 1,
+    "resend_id": "21d08896-09bd-49f9-a74e-c8e7cb146b72",
+    "name": "Restaurant Pizzeria La Belle Vie , Mourillon",
+    "city": "Toulon"
+  },
+  "contact@local.fr": {
+    "sent_at": "2026-03-22T07:57:52.120133+00:00",
+    "last_sent_at": "2026-03-22T07:57:52.120133+00:00",
+    "send_count": 1,
+    "resend_id": "7ff4448b-852d-435d-8164-37a8812d8882",
+    "name": "Pizzeria Marina",
+    "city": "Toulon"
+  },
+  "pizzaddict83@hotmail.com": {
+    "sent_at": "2026-03-22T07:57:54.104398+00:00",
+    "last_sent_at": "2026-03-22T07:57:54.104398+00:00",
+    "send_count": 1,
+    "resend_id": "6d3c4010-bda2-42d1-a5e4-78cbb7cfb1ef",
+    "name": "pizzaddict",
+    "city": "Toulon"
+  },
+  "lapadellatoulon@gmail.com": {
+    "sent_at": "2026-03-22T07:57:55.969986+00:00",
+    "last_sent_at": "2026-03-22T07:57:55.969986+00:00",
+    "send_count": 1,
+    "resend_id": "16513581-405d-4ee8-8659-b2484818f48d",
+    "name": "La Padella",
+    "city": "Toulon"
+  },
+  "sylvainc83@hotmail.fr": {
+    "sent_at": "2026-03-22T07:57:57.839505+00:00",
+    "last_sent_at": "2026-03-22T07:57:57.839505+00:00",
+    "send_count": 1,
+    "resend_id": "aeb111d9-d0b8-4977-956d-a63afbc610c2",
+    "name": "Au Pizz'Aiolo Chez Damien ...pizza artisanale",
+    "city": "Toulon"
+  },
+  "lauthentiquetoulon@gmail.com": {
+    "sent_at": "2026-03-22T07:57:59.739913+00:00",
+    "last_sent_at": "2026-03-22T07:57:59.739913+00:00",
+    "send_count": 1,
+    "resend_id": "d86c0190-b6bb-4659-b7b8-fc63a7002e5a",
+    "name": "L’Authentique",
+    "city": "Toulon"
+  },
+  "hantz.prontopizza@gmail.com": {
+    "sent_at": "2026-03-22T07:58:01.723023+00:00",
+    "last_sent_at": "2026-03-22T07:58:01.723023+00:00",
+    "send_count": 1,
+    "resend_id": "5cb0c937-afd4-475d-91f0-423865b9af3a",
+    "name": "Pronto Pizza",
+    "city": "Toulon"
+  },
+  "yokikou@live.fr": {
+    "sent_at": "2026-03-22T07:58:03.616155+00:00",
+    "last_sent_at": "2026-03-22T07:58:03.616155+00:00",
+    "send_count": 1,
+    "resend_id": "7697063e-3118-4419-8eb8-957fa68f9905",
+    "name": "Allo Pizza Del Sol",
+    "city": "Toulon"
+  },
+  "contact@puntopizza.fr": {
+    "sent_at": "2026-03-22T07:58:05.523314+00:00",
+    "last_sent_at": "2026-03-22T07:58:05.523314+00:00",
+    "send_count": 1,
+    "resend_id": "bb2a6519-2066-4fa1-951d-2319090389ca",
+    "name": "PUNTO PIZZA TOULON",
+    "city": "Toulon"
+  },
+  "contact@chickensoul.fr": {
+    "sent_at": "2026-03-22T07:58:07.391393+00:00",
+    "last_sent_at": "2026-03-22T07:58:07.391393+00:00",
+    "send_count": 1,
+    "resend_id": "3d3d8295-324b-41a9-878b-30c0e0113c4f",
+    "name": "CHICKEN SOUL (St Jean - Brunet)",
+    "city": "Toulon"
+  },
+  "ks_marketingdigital@klepierre.com": {
+    "sent_at": "2026-03-22T07:58:09.323116+00:00",
+    "last_sent_at": "2026-03-22T07:58:09.323116+00:00",
+    "send_count": 1,
+    "resend_id": "8efbf38f-4cf9-49fc-afe7-a62d0f1adf45",
+    "name": "Centre commercial Mayol",
+    "city": "Toulon"
+  },
+  "nath83210@gmail.com": {
+    "sent_at": "2026-03-22T07:58:11.249987+00:00",
+    "last_sent_at": "2026-03-22T07:58:11.249987+00:00",
+    "send_count": 1,
+    "resend_id": "f37a0ea9-c96b-44c4-b376-c1b9ae5afbd2",
+    "name": "LE LIBERTY",
+    "city": "Toulon"
+  },
+  "sousou83310@gmail.com": {
+    "sent_at": "2026-03-22T07:58:13.159350+00:00",
+    "last_sent_at": "2026-03-22T07:58:13.159350+00:00",
+    "send_count": 1,
+    "resend_id": "ef5b8437-8ea8-4357-a643-93b3e47acc2e",
+    "name": "Délice",
+    "city": "Toulon"
+  },
+  "bagel.coffee.83@outlook.com": {
+    "sent_at": "2026-03-22T07:58:15.041689+00:00",
+    "last_sent_at": "2026-03-22T07:58:15.041689+00:00",
+    "send_count": 1,
+    "resend_id": "2daafdfd-5ba3-4a41-be64-680cf3587cd5",
+    "name": "bagel & coffee",
+    "city": "Toulon"
+  },
+  "createursdesaveurs83@gmail.com": {
+    "sent_at": "2026-03-22T07:58:16.907709+00:00",
+    "last_sent_at": "2026-03-22T07:58:16.907709+00:00",
+    "send_count": 1,
+    "resend_id": "bfb3acc5-33ca-422d-9289-636dd93172a8",
+    "name": "Créateur de saveurs",
+    "city": "Toulon"
   }
 }
