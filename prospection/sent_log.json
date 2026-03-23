@@ -6198,5 +6198,389 @@
     "resend_id": "28615db3-a119-4054-a6e9-632ed3a223ef",
     "name": "BON APP",
     "city": "Angers"
+  },
+  "alexandra.hiron@hotmail.fr": {
+    "sent_at": "2026-03-23T08:30:39.348391+00:00",
+    "last_sent_at": "2026-03-23T08:30:39.348391+00:00",
+    "send_count": 1,
+    "resend_id": "adab2224-6bc6-4da1-a91d-d17d70b66651",
+    "name": "L INSTANT FOCH",
+    "city": "Angers"
+  },
+  "contact@lecamiondacote.com": {
+    "sent_at": "2026-03-23T08:30:41.690503+00:00",
+    "last_sent_at": "2026-03-23T08:30:41.690503+00:00",
+    "send_count": 1,
+    "resend_id": "05532ddc-7273-4f0e-a10d-4c37dfb86310",
+    "name": "Le camion d'à côté",
+    "city": "Angers"
+  },
+  "saveurrotie@gmail.com": {
+    "sent_at": "2026-03-23T08:30:43.875511+00:00",
+    "last_sent_at": "2026-03-23T08:30:43.875511+00:00",
+    "send_count": 1,
+    "resend_id": "a24f15a4-f68c-4848-a692-4873aead6116",
+    "name": "L'Oriflamme",
+    "city": "Angers"
+  },
+  "halima_feriel@live.fr": {
+    "sent_at": "2026-03-23T08:30:45.838621+00:00",
+    "last_sent_at": "2026-03-23T08:30:45.838621+00:00",
+    "send_count": 1,
+    "resend_id": "d13a4075-d5d7-4406-9081-bf7f1dc049e2",
+    "name": "Le Barth 49",
+    "city": "Angers"
+  },
+  "mksangers@gmail.com": {
+    "sent_at": "2026-03-23T08:30:47.728639+00:00",
+    "last_sent_at": "2026-03-23T08:30:47.728639+00:00",
+    "send_count": 1,
+    "resend_id": "1297c6d2-6631-408b-a1b1-889f7848e8f5",
+    "name": "MK'S",
+    "city": "Angers"
+  },
+  "becfaim.contact49@gmail.com": {
+    "sent_at": "2026-03-23T08:30:49.632686+00:00",
+    "last_sent_at": "2026-03-23T08:30:49.632686+00:00",
+    "send_count": 1,
+    "resend_id": "d50a7211-13c3-4288-9c5e-717fc340c3bb",
+    "name": "AS YOU LIKE",
+    "city": "Angers"
+  },
+  "onsizayen@gmail.com": {
+    "sent_at": "2026-03-23T08:30:51.756077+00:00",
+    "last_sent_at": "2026-03-23T08:30:51.756077+00:00",
+    "send_count": 1,
+    "resend_id": "97498d6f-8ef1-4f00-ab7a-f434190e75cb",
+    "name": "Mangez moi Le Fred's",
+    "city": "Angers"
+  },
+  "contact@numero-dix.com": {
+    "sent_at": "2026-03-23T08:30:53.650851+00:00",
+    "last_sent_at": "2026-03-23T08:30:53.650851+00:00",
+    "send_count": 1,
+    "resend_id": "f0bb551e-596d-42a8-a82e-377f9f021555",
+    "name": "Numéro 10",
+    "city": "Angers"
+  },
+  "info@loveebasta.com": {
+    "sent_at": "2026-03-23T08:30:55.550927+00:00",
+    "last_sent_at": "2026-03-23T08:30:55.550927+00:00",
+    "send_count": 1,
+    "resend_id": "ea2feea5-9585-43bc-855c-4b98ec3f860e",
+    "name": "Love e Basta - Pizzeria - Angers",
+    "city": "Angers"
+  },
+  "leaualabouche49@gmail.com": {
+    "sent_at": "2026-03-23T08:30:57.541675+00:00",
+    "last_sent_at": "2026-03-23T08:30:57.541675+00:00",
+    "send_count": 1,
+    "resend_id": "f9109ca0-42ea-46c7-89ff-cde02f4e1633",
+    "name": "L'Eau A La Bouche",
+    "city": "Angers"
+  },
+  "contact@signorizza.fr": {
+    "sent_at": "2026-03-23T08:30:59.475745+00:00",
+    "last_sent_at": "2026-03-23T08:30:59.475745+00:00",
+    "send_count": 1,
+    "resend_id": "d00cbbf7-73e8-4489-9a13-70a7a5b76dca",
+    "name": "Signorizza Pizzeria Restaurant Angers Orgemont",
+    "city": "Angers"
+  },
+  "posto.angers@gmail.com": {
+    "sent_at": "2026-03-23T08:31:01.387533+00:00",
+    "last_sent_at": "2026-03-23T08:31:01.387533+00:00",
+    "send_count": 1,
+    "resend_id": "c7f9f1f5-2063-4e4e-b17a-67d5d6289f74",
+    "name": "Posto Ristorante",
+    "city": "Angers"
+  },
+  "contact@pizzaduroy.fr": {
+    "sent_at": "2026-03-23T08:31:03.278815+00:00",
+    "last_sent_at": "2026-03-23T08:31:03.278815+00:00",
+    "send_count": 1,
+    "resend_id": "ee27def8-b226-4de5-8a32-b55412e23cac",
+    "name": "Pizza du Roy",
+    "city": "Angers"
+  },
+  "coliseepizzeria@gmail.com": {
+    "sent_at": "2026-03-23T08:31:05.183135+00:00",
+    "last_sent_at": "2026-03-23T08:31:05.183135+00:00",
+    "send_count": 1,
+    "resend_id": "c1ccfeb0-ba3c-4f4d-bcba-e3250813b825",
+    "name": "Le Colisée",
+    "city": "Angers"
+  },
+  "contact@pizza-tempo.com": {
+    "sent_at": "2026-03-23T08:31:07.069553+00:00",
+    "last_sent_at": "2026-03-23T08:31:07.069553+00:00",
+    "send_count": 1,
+    "resend_id": "fef9cfb6-1763-4f77-a3a3-c9a42de05580",
+    "name": "Distributeur Pizza Tempo Box Lac de Maine",
+    "city": "Angers"
+  },
+  "leraboliot49@gmail.com": {
+    "sent_at": "2026-03-23T08:31:08.987252+00:00",
+    "last_sent_at": "2026-03-23T08:31:08.987252+00:00",
+    "send_count": 1,
+    "resend_id": "b4221e69-e2b0-4118-954d-45e4c50aa6fc",
+    "name": "Le Raboliot",
+    "city": "Angers"
+  },
+  "salle@groupe3h.com": {
+    "sent_at": "2026-03-23T08:31:10.976162+00:00",
+    "last_sent_at": "2026-03-23T08:31:10.976162+00:00",
+    "send_count": 1,
+    "resend_id": "8888940a-ac92-4f0a-87a2-89728f9aab92",
+    "name": "Mamie Fada",
+    "city": "Angers"
+  },
+  "restaurantrougecerise@gmail.com": {
+    "sent_at": "2026-03-23T08:31:13.070882+00:00",
+    "last_sent_at": "2026-03-23T08:31:13.070882+00:00",
+    "send_count": 1,
+    "resend_id": "cc49b19d-8cc1-4457-b32c-19235d91d20e",
+    "name": "ROUGE CERISE RESTAURANT & PIZZERIA",
+    "city": "Angers"
+  },
+  "espacebeaussier@gmail.com": {
+    "sent_at": "2026-03-23T08:31:14.966763+00:00",
+    "last_sent_at": "2026-03-23T08:31:14.966763+00:00",
+    "send_count": 1,
+    "resend_id": "b3e26349-c1c9-4790-9e07-e535fc03c5bd",
+    "name": "L'Espace Beaussier",
+    "city": "Angers"
+  },
+  "pizza.angela49@gmail.com": {
+    "sent_at": "2026-03-23T08:31:16.863520+00:00",
+    "last_sent_at": "2026-03-23T08:31:16.863520+00:00",
+    "send_count": 1,
+    "resend_id": "e76a4e27-23f5-4f36-8ac0-8751b70e8758",
+    "name": "PIZZA ANGELA",
+    "city": "Angers"
+  },
+  "contact@lamaisonangers.com": {
+    "sent_at": "2026-03-23T08:31:19.065187+00:00",
+    "last_sent_at": "2026-03-23T08:31:19.065187+00:00",
+    "send_count": 1,
+    "resend_id": "22c8abb3-535e-438a-9b3f-a4d923f09d74",
+    "name": "La Maison",
+    "city": "Angers"
+  },
+  "burgersandfriends@gmail.com": {
+    "sent_at": "2026-03-23T08:31:20.994962+00:00",
+    "last_sent_at": "2026-03-23T08:31:20.994962+00:00",
+    "send_count": 1,
+    "resend_id": "1bf92dca-bdf7-460b-a072-01f87564b4a0",
+    "name": "burgers&friends",
+    "city": "Angers"
+  },
+  "communication@lesburgersdepapa.fr": {
+    "sent_at": "2026-03-23T08:31:22.903628+00:00",
+    "last_sent_at": "2026-03-23T08:31:22.903628+00:00",
+    "send_count": 1,
+    "resend_id": "a360dbf7-6d35-4c06-a05e-4cecd7f912e4",
+    "name": "Les Burgers de Papa",
+    "city": "Angers"
+  },
+  "contact@thaibreak.fr": {
+    "sent_at": "2026-03-23T08:31:24.805377+00:00",
+    "last_sent_at": "2026-03-23T08:31:24.805377+00:00",
+    "send_count": 1,
+    "resend_id": "bc96ee54-80f5-45bf-8137-d96678cadea5",
+    "name": "Thaï Break - Angers",
+    "city": "Angers"
+  },
+  "contact@tommys.fr": {
+    "sent_at": "2026-03-23T08:31:26.731240+00:00",
+    "last_sent_at": "2026-03-23T08:31:26.731240+00:00",
+    "send_count": 1,
+    "resend_id": "50c92d56-af8a-4a0e-9c09-b7d6f79c2df4",
+    "name": "TOMMY'S Diner",
+    "city": "Angers"
+  },
+  "nightbox.angers@gmail.com": {
+    "sent_at": "2026-03-23T08:31:28.675317+00:00",
+    "last_sent_at": "2026-03-23T08:31:28.675317+00:00",
+    "send_count": 1,
+    "resend_id": "411c942d-b72e-469d-ae18-d4cce00c94a9",
+    "name": "NightBox - Livraison d'Alcool et Flashs - Commande par Téléphone / Épicerie de Nuit",
+    "city": "Angers"
+  },
+  "kjebahi@hotmail.com": {
+    "sent_at": "2026-03-23T08:31:30.558858+00:00",
+    "last_sent_at": "2026-03-23T08:31:30.558858+00:00",
+    "send_count": 1,
+    "resend_id": "cf804cd0-5837-40d3-bcc3-4a917a7b5ecc",
+    "name": "Yezza Sandwich",
+    "city": "Angers"
+  },
+  "lelezardvertangers@sfr.fr": {
+    "sent_at": "2026-03-23T08:31:32.712832+00:00",
+    "last_sent_at": "2026-03-23T08:31:32.712832+00:00",
+    "send_count": 1,
+    "resend_id": "7a8e6144-9b92-40e3-ba09-19659b66dec6",
+    "name": "Le Lézard Vert",
+    "city": "Angers"
+  },
+  "badem.tartare@gmail.com": {
+    "sent_at": "2026-03-23T08:31:34.594602+00:00",
+    "last_sent_at": "2026-03-23T08:31:34.594602+00:00",
+    "send_count": 1,
+    "resend_id": "b269f8e6-ba35-4abf-9d0e-7213e57c9461",
+    "name": "BADEM concept tartare",
+    "city": "Angers"
+  },
+  "g.swynghedauw@groupe-delineo.fr": {
+    "sent_at": "2026-03-23T08:31:36.514621+00:00",
+    "last_sent_at": "2026-03-23T08:31:36.514621+00:00",
+    "send_count": 1,
+    "resend_id": "a7913060-c47a-4414-9941-23b148f6ed54",
+    "name": "La Croissanterie",
+    "city": "Angers"
+  },
+  "guilmotpolizzi@hotmail.fr": {
+    "sent_at": "2026-03-23T08:31:38.549859+00:00",
+    "last_sent_at": "2026-03-23T08:31:38.549859+00:00",
+    "send_count": 1,
+    "resend_id": "21419c95-2fa4-42f2-96d0-952ccef299cb",
+    "name": "LE FAT' BAZZ",
+    "city": "Angers"
+  },
+  "leclosduroi.angers@gmail.com": {
+    "sent_at": "2026-03-23T08:31:40.576754+00:00",
+    "last_sent_at": "2026-03-23T08:31:40.576754+00:00",
+    "send_count": 1,
+    "resend_id": "3ed6f85b-1d4f-4609-958a-e109413f4253",
+    "name": "Le Clos du Roi - Restaurant du Château d'Angers",
+    "city": "Angers"
+  },
+  "maisonpaganelli@gmail.com": {
+    "sent_at": "2026-03-23T08:31:42.613253+00:00",
+    "last_sent_at": "2026-03-23T08:31:42.613253+00:00",
+    "send_count": 1,
+    "resend_id": "914f63a6-1e1d-4213-8e35-17e37007d689",
+    "name": "Maison Paganelli Angers",
+    "city": "Angers"
+  },
+  "carre.gourmand.49@gmail.com": {
+    "sent_at": "2026-03-23T08:31:44.522730+00:00",
+    "last_sent_at": "2026-03-23T08:31:44.522730+00:00",
+    "send_count": 1,
+    "resend_id": "8411ad52-07cb-4802-9123-a9e5a4a426cf",
+    "name": "Carré Gourmand",
+    "city": "Angers"
+  },
+  "contact@commeungrd.fr": {
+    "sent_at": "2026-03-23T08:31:46.471289+00:00",
+    "last_sent_at": "2026-03-23T08:31:46.471289+00:00",
+    "send_count": 1,
+    "resend_id": "07de906a-333e-4849-9e39-2fc27250810c",
+    "name": "OBG nimes",
+    "city": "Nimes"
+  },
+  "mrservice35@gmail.com": {
+    "sent_at": "2026-03-23T08:31:48.371795+00:00",
+    "last_sent_at": "2026-03-23T08:31:48.371795+00:00",
+    "send_count": 1,
+    "resend_id": "25bbb42a-4a1c-48c1-b9f1-298c64ad29ce",
+    "name": "M’Délice",
+    "city": "Nimes"
+  },
+  "contact@le-prestige.fr": {
+    "sent_at": "2026-03-23T08:31:50.242089+00:00",
+    "last_sent_at": "2026-03-23T08:31:50.242089+00:00",
+    "send_count": 1,
+    "resend_id": "e4bdb89e-3e97-46e4-967c-967f42218701",
+    "name": "le prestige tacos gratiné burger Poutine",
+    "city": "Nimes"
+  },
+  "lolivenoire30@gmail.com": {
+    "sent_at": "2026-03-23T08:31:52.262152+00:00",
+    "last_sent_at": "2026-03-23T08:31:52.262152+00:00",
+    "send_count": 1,
+    "resend_id": "819e836a-2a1f-4608-b695-5a794aa4b542",
+    "name": "L'Olive Noire",
+    "city": "Nimes"
+  },
+  "support@spread-communication.com": {
+    "sent_at": "2026-03-23T08:31:54.187043+00:00",
+    "last_sent_at": "2026-03-23T08:31:54.187043+00:00",
+    "send_count": 1,
+    "resend_id": "75def659-b8e5-4a28-9f52-d368a74c5f2b",
+    "name": "IL PADRINO DELLA PIZZA",
+    "city": "Nimes"
+  },
+  "contact@italia-mia.fr": {
+    "sent_at": "2026-03-23T08:31:56.139255+00:00",
+    "last_sent_at": "2026-03-23T08:31:56.139255+00:00",
+    "send_count": 1,
+    "resend_id": "3588fe4d-3a23-46bd-874b-4e59b3424a8d",
+    "name": "Italia mia",
+    "city": "Nimes"
+  },
+  "contact@aucomptoirapizza.com": {
+    "sent_at": "2026-03-23T08:31:58.059214+00:00",
+    "last_sent_at": "2026-03-23T08:31:58.059214+00:00",
+    "send_count": 1,
+    "resend_id": "2efc78f5-9a57-4304-98f5-daefc28e80ce",
+    "name": "Au comptoir à pizza",
+    "city": "Nimes"
+  },
+  "contact@piazzadipasta.fr": {
+    "sent_at": "2026-03-23T08:32:00.003929+00:00",
+    "last_sent_at": "2026-03-23T08:32:00.003929+00:00",
+    "send_count": 1,
+    "resend_id": "14a7895f-e88f-4c14-9bca-283d7d9cb0da",
+    "name": "Piazza Di Pasta Nimes",
+    "city": "Nimes"
+  },
+  "felicita.nimes@gmail.com": {
+    "sent_at": "2026-03-23T08:32:01.892019+00:00",
+    "last_sent_at": "2026-03-23T08:32:01.892019+00:00",
+    "send_count": 1,
+    "resend_id": "87509717-5d62-428c-8148-8a06dbc0ccdd",
+    "name": "FELICITA",
+    "city": "Nimes"
+  },
+  "alexdb@live.fr": {
+    "sent_at": "2026-03-23T08:32:03.786999+00:00",
+    "last_sent_at": "2026-03-23T08:32:03.786999+00:00",
+    "send_count": 1,
+    "resend_id": "db6d5b36-d684-4de7-8fa8-5d59156d0cdb",
+    "name": "Pizzeria & Rôtisserie au feu de bois \"Ô FAIT MAISON\" à Nîmes",
+    "city": "Nimes"
+  },
+  "contact@restaurant-menna.fr": {
+    "sent_at": "2026-03-23T08:32:05.715825+00:00",
+    "last_sent_at": "2026-03-23T08:32:05.715825+00:00",
+    "send_count": 1,
+    "resend_id": "c12e4834-0668-45a8-bfff-740bebcadb00",
+    "name": "MENNA - Restaurant Nîmes",
+    "city": "Nimes"
+  },
+  "restaurant.mesopotanimes@gmail.com": {
+    "sent_at": "2026-03-23T08:32:07.667733+00:00",
+    "last_sent_at": "2026-03-23T08:32:07.667733+00:00",
+    "send_count": 1,
+    "resend_id": "29aba895-919e-46e3-973d-da2e64687551",
+    "name": "Restaurant Mésopota'Nîmes",
+    "city": "Nimes"
+  },
+  "valeriemauron30@gmail.com": {
+    "sent_at": "2026-03-23T08:32:09.556093+00:00",
+    "last_sent_at": "2026-03-23T08:32:09.556093+00:00",
+    "send_count": 1,
+    "resend_id": "4130ea25-8306-4aab-a2cb-d2ce7e9ce828",
+    "name": "LA TERRASSE",
+    "city": "Nimes"
+  },
+  "authentiquemignon@gmail.com": {
+    "sent_at": "2026-03-23T08:32:11.502630+00:00",
+    "last_sent_at": "2026-03-23T08:32:11.502630+00:00",
+    "send_count": 1,
+    "resend_id": "dc8c7ab4-ef74-4431-9e9e-cdbba18e0708",
+    "name": "AUTHENTIQUE MIGNON",
+    "city": "Nimes"
   }
 }
