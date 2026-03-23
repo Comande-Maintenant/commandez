@@ -6582,5 +6582,373 @@
     "resend_id": "dc8c7ab4-ef74-4431-9e9e-cdbba18e0708",
     "name": "AUTHENTIQUE MIGNON",
     "city": "Nimes"
+  },
+  "jetlag.30@hotmail.com": {
+    "sent_at": "2026-03-23T15:58:33.576223+00:00",
+    "last_sent_at": "2026-03-23T15:58:33.576223+00:00",
+    "send_count": 1,
+    "resend_id": "116117ee-1ff2-4bb8-9d33-f4a2efe6dae1",
+    "name": "Pizzbun's",
+    "city": "Nimes"
+  },
+  "nts.naans.tacos@gmail.com": {
+    "sent_at": "2026-03-23T15:58:36.131523+00:00",
+    "last_sent_at": "2026-03-23T15:58:36.131523+00:00",
+    "send_count": 1,
+    "resend_id": "85036f15-15ae-4100-a459-dc7370c99ab9",
+    "name": "Nts naans&tacos",
+    "city": "Nimes"
+  },
+  "said.terrabi@hotmail.com": {
+    "sent_at": "2026-03-23T15:58:38.589896+00:00",
+    "last_sent_at": "2026-03-23T15:58:38.589896+00:00",
+    "send_count": 1,
+    "resend_id": "901f0d0e-51dc-4531-85a1-d1b1495bb172",
+    "name": "Tacos19 Nîmes",
+    "city": "Nimes"
+  },
+  "grilladetacos30@gmail.com": {
+    "sent_at": "2026-03-23T15:58:40.983933+00:00",
+    "last_sent_at": "2026-03-23T15:58:40.983933+00:00",
+    "send_count": 1,
+    "resend_id": "418d475a-2b0b-4017-bc7a-54573d654843",
+    "name": "TACOS GAMBETTA",
+    "city": "Nimes"
+  },
+  "chef_cooking@outlook.fr": {
+    "sent_at": "2026-03-23T15:58:43.044386+00:00",
+    "last_sent_at": "2026-03-23T15:58:43.044386+00:00",
+    "send_count": 1,
+    "resend_id": "928044c5-40dd-4c94-9ff2-eb8f12634d03",
+    "name": "Le Comptoir restaurant nimes/ épicerie fine/ traiteur",
+    "city": "Nimes"
+  },
+  "nimes@empanadasclub.com": {
+    "sent_at": "2026-03-23T15:58:44.996964+00:00",
+    "last_sent_at": "2026-03-23T15:58:44.996964+00:00",
+    "send_count": 1,
+    "resend_id": "92db0131-4e1b-4cfd-9664-a427db9b23b5",
+    "name": "Empanadas Club",
+    "city": "Nimes"
+  },
+  "guillaume@temponimes.com": {
+    "sent_at": "2026-03-23T15:58:46.946339+00:00",
+    "last_sent_at": "2026-03-23T15:58:46.946339+00:00",
+    "send_count": 1,
+    "resend_id": "4d5f478c-2210-4aa4-8857-4b7027b4fcbd",
+    "name": "TEMPO NIMES",
+    "city": "Nimes"
+  },
+  "hitana_abid@hotmail.fr": {
+    "sent_at": "2026-03-23T15:58:50.900698+00:00",
+    "last_sent_at": "2026-03-23T15:58:50.900698+00:00",
+    "send_count": 1,
+    "resend_id": "c09e147e-0636-4080-959d-1a4c72719d03",
+    "name": "Snack Time",
+    "city": "Clermont-Ferrand"
+  },
+  "serviceclient@restomania.fr": {
+    "sent_at": "2026-03-23T15:58:52.857941+00:00",
+    "last_sent_at": "2026-03-23T15:58:52.857941+00:00",
+    "send_count": 1,
+    "resend_id": "48d389e5-c44a-4bf3-97e3-9b53c321ad5a",
+    "name": "Royal Kebab",
+    "city": "Clermont-Ferrand"
+  },
+  "service@linkeo.com": {
+    "sent_at": "2026-03-23T15:58:54.885800+00:00",
+    "last_sent_at": "2026-03-23T15:58:54.885800+00:00",
+    "send_count": 1,
+    "resend_id": "7b87ae89-6ae8-412b-8aa3-5e2f9eafed1e",
+    "name": "Star Food",
+    "city": "Clermont-Ferrand"
+  },
+  "sahin.harun@icloud.com": {
+    "sent_at": "2026-03-23T15:58:56.894467+00:00",
+    "last_sent_at": "2026-03-23T15:58:56.894467+00:00",
+    "send_count": 1,
+    "resend_id": "023f976e-dabb-4762-ac58-29240c932b33",
+    "name": "Fournil de Mirabeau",
+    "city": "Clermont-Ferrand"
+  },
+  "42street63@gmail.com": {
+    "sent_at": "2026-03-23T15:58:58.861954+00:00",
+    "last_sent_at": "2026-03-23T15:58:58.861954+00:00",
+    "send_count": 1,
+    "resend_id": "8b4a75b7-0be6-4cbd-b5e4-6e0745ee4c74",
+    "name": "Restaurant 42 street",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@lephillys.fr": {
+    "sent_at": "2026-03-23T15:59:00.845387+00:00",
+    "last_sent_at": "2026-03-23T15:59:00.845387+00:00",
+    "send_count": 1,
+    "resend_id": "7fa95fdd-916d-4aeb-82c9-b546a5650e9f",
+    "name": "Le Philly's Clermont-Ferrand",
+    "city": "Clermont-Ferrand"
+  },
+  "hbek786@gmail.com": {
+    "sent_at": "2026-03-23T15:59:02.799249+00:00",
+    "last_sent_at": "2026-03-23T15:59:02.799249+00:00",
+    "send_count": 1,
+    "resend_id": "3009e0cd-b349-457b-b9a8-42a5b9a86b3f",
+    "name": "WATAN GRILL RESTAURANT",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@damaskino.fr": {
+    "sent_at": "2026-03-23T15:59:04.723830+00:00",
+    "last_sent_at": "2026-03-23T15:59:04.723830+00:00",
+    "send_count": 1,
+    "resend_id": "8d8c41ef-42bc-404f-ad9c-1aaa7accb9e4",
+    "name": "DAMASKINO",
+    "city": "Clermont-Ferrand"
+  },
+  "lokantadnz@gmail.com": {
+    "sent_at": "2026-03-23T15:59:06.692301+00:00",
+    "last_sent_at": "2026-03-23T15:59:06.692301+00:00",
+    "send_count": 1,
+    "resend_id": "aad2434d-bb4d-4aed-befc-c5b77d74d19e",
+    "name": "Lokanta Kebab Royat",
+    "city": "Clermont-Ferrand"
+  },
+  "yassineghoun2013@gmail.com": {
+    "sent_at": "2026-03-23T15:59:08.658665+00:00",
+    "last_sent_at": "2026-03-23T15:59:08.658665+00:00",
+    "send_count": 1,
+    "resend_id": "be389978-2158-49ff-9365-d6f04b5b59db",
+    "name": "Station Delille",
+    "city": "Clermont-Ferrand"
+  },
+  "elferch@hotmail.fr": {
+    "sent_at": "2026-03-23T15:59:10.654723+00:00",
+    "last_sent_at": "2026-03-23T15:59:10.654723+00:00",
+    "send_count": 1,
+    "resend_id": "d0338812-40a9-4816-a686-b862229fb51a",
+    "name": "Le Casse Croute",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@kebab-newfunk.fr": {
+    "sent_at": "2026-03-23T15:59:12.624768+00:00",
+    "last_sent_at": "2026-03-23T15:59:12.624768+00:00",
+    "send_count": 1,
+    "resend_id": "26e72188-1fa1-4cf3-899c-30c5b75dca50",
+    "name": "Le New Funk",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@dadinopizze.fr": {
+    "sent_at": "2026-03-23T15:59:14.572356+00:00",
+    "last_sent_at": "2026-03-23T15:59:14.572356+00:00",
+    "send_count": 1,
+    "resend_id": "c3a28aaa-5cc8-4576-b807-0d77bb9c5209",
+    "name": "Dadino Pizze",
+    "city": "Clermont-Ferrand"
+  },
+  "pizzaladonnamaria@gmail.com": {
+    "sent_at": "2026-03-23T15:59:16.585805+00:00",
+    "last_sent_at": "2026-03-23T15:59:16.585805+00:00",
+    "send_count": 1,
+    "resend_id": "715c4c2e-2c45-44e3-a26c-9ba53e3229ab",
+    "name": "La Donna Maria",
+    "city": "Clermont-Ferrand"
+  },
+  "pizzeria.napolipizza.clermontfd@gmail.com": {
+    "sent_at": "2026-03-23T15:59:18.554648+00:00",
+    "last_sent_at": "2026-03-23T15:59:18.554648+00:00",
+    "send_count": 1,
+    "resend_id": "68a564f3-7b24-400d-aefc-90af9582e11a",
+    "name": "Napoli Pizza Champion de France",
+    "city": "Clermont-Ferrand"
+  },
+  "chezlimonetto@gmail.com": {
+    "sent_at": "2026-03-23T15:59:20.494393+00:00",
+    "last_sent_at": "2026-03-23T15:59:20.494393+00:00",
+    "send_count": 1,
+    "resend_id": "15dca6c0-de20-4ee1-b649-9d742b1932eb",
+    "name": "limonetto",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@lamamaclermont.com": {
+    "sent_at": "2026-03-23T15:59:22.448202+00:00",
+    "last_sent_at": "2026-03-23T15:59:22.448202+00:00",
+    "send_count": 1,
+    "resend_id": "57967295-e96a-418e-b0ad-af5c1ba49b2b",
+    "name": "La Mama",
+    "city": "Clermont-Ferrand"
+  },
+  "dgbati@outlook.com": {
+    "sent_at": "2026-03-23T15:59:24.417403+00:00",
+    "last_sent_at": "2026-03-23T15:59:24.417403+00:00",
+    "send_count": 1,
+    "resend_id": "90c40952-ff30-4fb9-9c34-6bf9c7d8c81f",
+    "name": "Pizz'gan Clermont Ferrand",
+    "city": "Clermont-Ferrand"
+  },
+  "lardetlamaniere@gmail.com": {
+    "sent_at": "2026-03-23T15:59:26.369262+00:00",
+    "last_sent_at": "2026-03-23T15:59:26.369262+00:00",
+    "send_count": 1,
+    "resend_id": "b0182287-bd54-469b-89ba-0e36a150a329",
+    "name": "Larderia",
+    "city": "Clermont-Ferrand"
+  },
+  "pizza.maestro@yahoo.com": {
+    "sent_at": "2026-03-23T15:59:28.337123+00:00",
+    "last_sent_at": "2026-03-23T15:59:28.337123+00:00",
+    "send_count": 1,
+    "resend_id": "31bfe99d-9d25-45f2-a7f7-d6a1ed49efed",
+    "name": "Pizza Maestro",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@589bay.com": {
+    "sent_at": "2026-03-23T15:59:30.323249+00:00",
+    "last_sent_at": "2026-03-23T15:59:30.323249+00:00",
+    "send_count": 1,
+    "resend_id": "c2b0d91c-1d26-4ca8-bac1-f97ee1966f59",
+    "name": "La Bambochella",
+    "city": "Clermont-Ferrand"
+  },
+  "servicetraiteurlapergola@gmail.com": {
+    "sent_at": "2026-03-23T15:59:32.259537+00:00",
+    "last_sent_at": "2026-03-23T15:59:32.259537+00:00",
+    "send_count": 1,
+    "resend_id": "ff3861ea-e34a-4c1d-b78b-111977c0c85a",
+    "name": "LA PERGOLA",
+    "city": "Clermont-Ferrand"
+  },
+  "fonlupt@icloud.com": {
+    "sent_at": "2026-03-23T15:59:34.334298+00:00",
+    "last_sent_at": "2026-03-23T15:59:34.334298+00:00",
+    "send_count": 1,
+    "resend_id": "84ccb6b5-7cbd-41a2-9059-d3ee6e98d61f",
+    "name": "Pasta Nina",
+    "city": "Clermont-Ferrand"
+  },
+  "sabrinalyon@hotmail.com": {
+    "sent_at": "2026-03-23T15:59:36.292495+00:00",
+    "last_sent_at": "2026-03-23T15:59:36.292495+00:00",
+    "send_count": 1,
+    "resend_id": "4585085d-44ee-4b7c-9a95-bd250098a038",
+    "name": "L’Osteria Bar",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@cafe-charbon.fr": {
+    "sent_at": "2026-03-23T15:59:38.253761+00:00",
+    "last_sent_at": "2026-03-23T15:59:38.253761+00:00",
+    "send_count": 1,
+    "resend_id": "83931cbe-b0f4-4cfd-a4e8-9311af23ae0c",
+    "name": "Café Charbon",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@ldqm-clermont.fr": {
+    "sent_at": "2026-03-23T15:59:40.600536+00:00",
+    "last_sent_at": "2026-03-23T15:59:40.600536+00:00",
+    "send_count": 1,
+    "resend_id": "ce2a4193-1bf4-4995-a7d0-b7df1aebefc9",
+    "name": "Les Domaines Qui Montent - Clermont-Ferrand Centre",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@leqgsmash.fr": {
+    "sent_at": "2026-03-23T15:59:42.581980+00:00",
+    "last_sent_at": "2026-03-23T15:59:42.581980+00:00",
+    "send_count": 1,
+    "resend_id": "4adf3c39-b10f-48bc-aeaa-7a2c3aa27f41",
+    "name": "Le QG Smash & Naan Clermont-Ferrand",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@sodietburger.fr": {
+    "sent_at": "2026-03-23T15:59:44.552476+00:00",
+    "last_sent_at": "2026-03-23T15:59:44.552476+00:00",
+    "send_count": 1,
+    "resend_id": "e46cd26c-cf09-4286-8937-a402ecaf729c",
+    "name": "So Diet Burger",
+    "city": "Clermont-Ferrand"
+  },
+  "kmburger.contact@gmail.com": {
+    "sent_at": "2026-03-23T15:59:46.508914+00:00",
+    "last_sent_at": "2026-03-23T15:59:46.508914+00:00",
+    "send_count": 1,
+    "resend_id": "040a76c2-4191-4ab0-a7f5-890f7536881f",
+    "name": "KM Burger Clermont-Ferrand",
+    "city": "Clermont-Ferrand"
+  },
+  "bougnatburger@hotmail.fr": {
+    "sent_at": "2026-03-23T15:59:48.465379+00:00",
+    "last_sent_at": "2026-03-23T15:59:48.465379+00:00",
+    "send_count": 1,
+    "resend_id": "c764017b-684b-46f1-88ed-22b88507b654",
+    "name": "Bougnat Burger Clermont Ferrand",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@lafabriqueduhotdog.com": {
+    "sent_at": "2026-03-23T15:59:52.678097+00:00",
+    "last_sent_at": "2026-03-23T15:59:52.678097+00:00",
+    "send_count": 1,
+    "resend_id": "69b38eae-d882-499f-95eb-35fc22fe4226",
+    "name": "La Fabrique du Hot Dog - Clermont-Fd",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@youmi-restaurant.fr": {
+    "sent_at": "2026-03-23T15:59:54.660127+00:00",
+    "last_sent_at": "2026-03-23T15:59:54.660127+00:00",
+    "send_count": 1,
+    "resend_id": "41d789d7-d9ae-45d5-851a-2739c0c6fd45",
+    "name": "Y'oumi! Le fast & good oriental",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@moonbo.fr": {
+    "sent_at": "2026-03-23T15:59:56.636061+00:00",
+    "last_sent_at": "2026-03-23T15:59:56.636061+00:00",
+    "send_count": 1,
+    "resend_id": "651c177b-5427-4bd4-b23b-9e078f6122c6",
+    "name": "Moonbo Clermont | Donuts, Coffee & Bubble Tea",
+    "city": "Clermont-Ferrand"
+  },
+  "contact@carmela-clermont.fr": {
+    "sent_at": "2026-03-23T15:59:58.580099+00:00",
+    "last_sent_at": "2026-03-23T15:59:58.580099+00:00",
+    "send_count": 1,
+    "resend_id": "fe61d4ce-5461-4bb6-aa06-fc6e6625cd05",
+    "name": "Carmela bar mexicain",
+    "city": "Clermont-Ferrand"
+  },
+  "contact.sambuca@gmail.com": {
+    "sent_at": "2026-03-23T16:00:00.517247+00:00",
+    "last_sent_at": "2026-03-23T16:00:00.517247+00:00",
+    "send_count": 1,
+    "resend_id": "5cdcb5a0-9c5b-46ac-9d5b-942ffacaf990",
+    "name": "Sambuca",
+    "city": "Clermont-Ferrand"
+  },
+  "placejoys.com@gmail.com": {
+    "sent_at": "2026-03-23T16:00:02.499870+00:00",
+    "last_sent_at": "2026-03-23T16:00:02.499870+00:00",
+    "send_count": 1,
+    "resend_id": "36fab245-5ced-4d5a-a445-af2a21052a20",
+    "name": "Pita Burger",
+    "city": "Le Mans"
+  },
+  "inanc6172@hotmail.com": {
+    "sent_at": "2026-03-23T16:00:04.472632+00:00",
+    "last_sent_at": "2026-03-23T16:00:04.472632+00:00",
+    "send_count": 1,
+    "resend_id": "ee457e01-1dba-4699-8073-62a85adfb55b",
+    "name": "La Maison Du Kebab",
+    "city": "Le Mans"
+  },
+  "loriginalk72@gmail.com": {
+    "sent_at": "2026-03-23T16:00:06.947346+00:00",
+    "last_sent_at": "2026-03-23T16:00:06.947346+00:00",
+    "send_count": 1,
+    "resend_id": "3045c123-b379-4fa9-826a-8f3fd9ad785d",
+    "name": "L'Original K",
+    "city": "Le Mans"
+  },
+  "ahmed72000@hotmail.fr": {
+    "sent_at": "2026-03-23T16:00:08.948307+00:00",
+    "last_sent_at": "2026-03-23T16:00:08.948307+00:00",
+    "send_count": 1,
+    "resend_id": "0e7899fb-0a61-4f84-ba23-2effdd807a71",
+    "name": "Le Manesman",
+    "city": "Le Mans"
   }
 }
