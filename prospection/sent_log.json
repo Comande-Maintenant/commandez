@@ -7326,5 +7326,373 @@
     "resend_id": "f1669c41-afef-4174-ba6c-4f2d2e9127fd",
     "name": "Betty's Resto by House Cookies",
     "city": "Aix-en-Provence"
+  },
+  "miam@brunchaila.fr": {
+    "sent_at": "2026-03-24T16:05:47.413610+00:00",
+    "last_sent_at": "2026-03-24T16:05:47.413610+00:00",
+    "send_count": 1,
+    "resend_id": "5ff5cc97-37f1-41f5-9621-09161d462fd1",
+    "name": "Brunchaila Aix",
+    "city": "Aix-en-Provence"
+  },
+  "esen_mus@hotmail.fr": {
+    "sent_at": "2026-03-24T16:05:49.614572+00:00",
+    "last_sent_at": "2026-03-24T16:05:49.614572+00:00",
+    "send_count": 1,
+    "resend_id": "85e5c6f1-95c9-42be-88c9-70733c609a4a",
+    "name": "Restaurant Istanbul",
+    "city": "Brest"
+  },
+  "nasarimujeebullah@gmail.com": {
+    "sent_at": "2026-03-24T16:05:51.752313+00:00",
+    "last_sent_at": "2026-03-24T16:05:51.752313+00:00",
+    "send_count": 1,
+    "resend_id": "3652956d-3f79-4a09-9e72-fd3c91dc35e4",
+    "name": "Kabul food",
+    "city": "Brest"
+  },
+  "contact@bestofgrill.fr": {
+    "sent_at": "2026-03-24T16:05:54.059361+00:00",
+    "last_sent_at": "2026-03-24T16:05:54.059361+00:00",
+    "send_count": 1,
+    "resend_id": "761ef561-01c4-4693-9adc-1f3153edac9f",
+    "name": "BEST’ OF GRILL | KEBAB - TACOS - CHICKEN - BURGER - PANINI",
+    "city": "Brest"
+  },
+  "lescalebrest29200@gmail.com": {
+    "sent_at": "2026-03-24T16:05:55.996044+00:00",
+    "last_sent_at": "2026-03-24T16:05:55.996044+00:00",
+    "send_count": 1,
+    "resend_id": "2fb5162e-4fb0-4679-abf2-a9070b68fe62",
+    "name": "L'Escale",
+    "city": "Brest"
+  },
+  "vigueur.%5cnlecreneau29200@gmail.com": {
+    "sent_at": "2026-03-24T16:05:57.891619+00:00",
+    "last_sent_at": "2026-03-24T16:05:57.891619+00:00",
+    "send_count": 1,
+    "resend_id": "b59add6a-6c9b-4d81-aeed-a3940b13988c",
+    "name": "Grillade 29",
+    "city": "Brest"
+  },
+  "vigueur.%5cnbarankopar@gmail.com": {
+    "sent_at": "2026-03-24T16:05:59.725708+00:00",
+    "last_sent_at": "2026-03-24T16:05:59.725708+00:00",
+    "send_count": 1,
+    "resend_id": "1f3fac13-a2a4-4ecd-abcf-8a25365a3b4e",
+    "name": "O'delices Brest",
+    "city": "Brest"
+  },
+  "mac29.brest@gmail.com": {
+    "sent_at": "2026-03-24T16:06:01.824181+00:00",
+    "last_sent_at": "2026-03-24T16:06:01.824181+00:00",
+    "send_count": 1,
+    "resend_id": "dcae93ba-5e0a-4d47-b026-9b2d71973ac4",
+    "name": "MAC29",
+    "city": "Brest"
+  },
+  "biorekbrestois@gmail.com": {
+    "sent_at": "2026-03-24T16:06:04.010131+00:00",
+    "last_sent_at": "2026-03-24T16:06:04.010131+00:00",
+    "send_count": 1,
+    "resend_id": "d6189441-2152-431a-b58e-4b5e2bc2af2d",
+    "name": "BIOREK",
+    "city": "Brest"
+  },
+  "mistral29200@hotmail.com": {
+    "sent_at": "2026-03-24T16:06:06.230577+00:00",
+    "last_sent_at": "2026-03-24T16:06:06.230577+00:00",
+    "send_count": 1,
+    "resend_id": "83ce0008-553f-43bc-b1cf-9afa3046f572",
+    "name": "Le Mistral",
+    "city": "Brest"
+  },
+  "info@aufalafelduliban.com": {
+    "sent_at": "2026-03-24T16:06:08.051698+00:00",
+    "last_sent_at": "2026-03-24T16:06:08.051698+00:00",
+    "send_count": 1,
+    "resend_id": "78c4a908-f46f-4b95-bded-07b3b103da2f",
+    "name": "Au Falafel du Liban",
+    "city": "Brest"
+  },
+  "contact@infomaniak.ch": {
+    "sent_at": "2026-03-24T16:06:10.106933+00:00",
+    "last_sent_at": "2026-03-24T16:06:10.106933+00:00",
+    "send_count": 1,
+    "resend_id": "a4669376-2c5b-4822-b1d9-041afbcd46c8",
+    "name": "IZEE Kergaradec",
+    "city": "Brest"
+  },
+  "contact@il-castello.fr": {
+    "sent_at": "2026-03-24T16:06:12.126080+00:00",
+    "last_sent_at": "2026-03-24T16:06:12.126080+00:00",
+    "send_count": 1,
+    "resend_id": "074a8770-6467-42e4-91b0-a4a2767e2b47",
+    "name": "IL CASTELLO",
+    "city": "Brest"
+  },
+  "mlegall@tygusto.com": {
+    "sent_at": "2026-03-24T16:06:14.513888+00:00",
+    "last_sent_at": "2026-03-24T16:06:14.513888+00:00",
+    "send_count": 1,
+    "resend_id": "2a7ed59d-effb-41be-aec8-36606237e2e6",
+    "name": "Ty Gusto",
+    "city": "Brest"
+  },
+  "contact@laromeantiquebrest.fr": {
+    "sent_at": "2026-03-24T16:06:16.369734+00:00",
+    "last_sent_at": "2026-03-24T16:06:16.369734+00:00",
+    "send_count": 1,
+    "resend_id": "4b07d092-9dd7-4dac-a745-29c480755026",
+    "name": "L'arôme antique",
+    "city": "Brest"
+  },
+  "thibaultgautier@mailo.com": {
+    "sent_at": "2026-03-24T16:06:18.219914+00:00",
+    "last_sent_at": "2026-03-24T16:06:18.219914+00:00",
+    "send_count": 1,
+    "resend_id": "3312fdd1-51c4-4454-bb37-582a6a83703f",
+    "name": "La Sirène Smackee",
+    "city": "Brest"
+  },
+  "contact@mamamia29.fr": {
+    "sent_at": "2026-03-24T16:06:20.259229+00:00",
+    "last_sent_at": "2026-03-24T16:06:20.259229+00:00",
+    "send_count": 1,
+    "resend_id": "b171a06c-f5f8-4cb3-90a6-d4a1f33bb1b6",
+    "name": "Mamamia Pizza Brest",
+    "city": "Brest"
+  },
+  "info@cafe.com": {
+    "sent_at": "2026-03-24T16:06:22.217580+00:00",
+    "last_sent_at": "2026-03-24T16:06:22.217580+00:00",
+    "send_count": 1,
+    "resend_id": "7ccccd57-8fed-4255-b381-f1ac71900430",
+    "name": "Pizza et Tradition - Brest",
+    "city": "Brest"
+  },
+  "contact@lascalarouen.fr": {
+    "sent_at": "2026-03-24T16:06:24.061647+00:00",
+    "last_sent_at": "2026-03-24T16:06:24.061647+00:00",
+    "send_count": 1,
+    "resend_id": "04ea3c9a-f1af-410b-a99d-476b41e43bf7",
+    "name": "La Scala",
+    "city": "Rouen"
+  },
+  "jereserve.fabrik1801@gmail.com": {
+    "sent_at": "2026-03-24T16:06:25.993880+00:00",
+    "last_sent_at": "2026-03-24T16:06:25.993880+00:00",
+    "send_count": 1,
+    "resend_id": "91cb7975-d3d0-4ef6-b58d-ea31a05deacb",
+    "name": "La Fabrik 1801",
+    "city": "Brest"
+  },
+  "contact@labelleepoquebrest.com": {
+    "sent_at": "2026-03-24T16:06:27.843600+00:00",
+    "last_sent_at": "2026-03-24T16:06:27.843600+00:00",
+    "send_count": 1,
+    "resend_id": "58bcfaff-8c67-4f06-8b76-041a072aa4c4",
+    "name": "La Belle Epoque",
+    "city": "Brest"
+  },
+  "contact@laraskette.com": {
+    "sent_at": "2026-03-24T16:06:29.717670+00:00",
+    "last_sent_at": "2026-03-24T16:06:29.717670+00:00",
+    "send_count": 1,
+    "resend_id": "db891467-fa65-440c-b6da-6c7b3614fedb",
+    "name": "La Raskette | Café-concert & Bar de nuit à Brest",
+    "city": "Brest"
+  },
+  "gilles.remorkeur@gmail.com": {
+    "sent_at": "2026-03-24T16:06:31.612162+00:00",
+    "last_sent_at": "2026-03-24T16:06:31.612162+00:00",
+    "send_count": 1,
+    "resend_id": "26632536-53c5-4d42-8c8a-23b3708f146c",
+    "name": "Le RemorKeur",
+    "city": "Brest"
+  },
+  "contact@what-brest.com": {
+    "sent_at": "2026-03-24T16:06:33.676369+00:00",
+    "last_sent_at": "2026-03-24T16:06:33.676369+00:00",
+    "send_count": 1,
+    "resend_id": "6107e6ab-b0e9-43a9-9be4-e2ef67a4d1f4",
+    "name": "What",
+    "city": "Brest"
+  },
+  "latelier.gourmand@live.fr": {
+    "sent_at": "2026-03-24T16:06:35.475230+00:00",
+    "last_sent_at": "2026-03-24T16:06:35.475230+00:00",
+    "send_count": 1,
+    "resend_id": "1be7ecbe-4aa1-4c57-871b-b85180ba8610",
+    "name": "L'Atelier Gourmand",
+    "city": "Brest"
+  },
+  "aymerictictic@gmail.com": {
+    "sent_at": "2026-03-24T16:06:37.528237+00:00",
+    "last_sent_at": "2026-03-24T16:06:37.528237+00:00",
+    "send_count": 1,
+    "resend_id": "8c801e99-afbf-42c8-90a5-7aa7fbdfbed2",
+    "name": "TicTic",
+    "city": "Brest"
+  },
+  "leplanb.brest@gmail.com": {
+    "sent_at": "2026-03-24T16:06:39.403636+00:00",
+    "last_sent_at": "2026-03-24T16:06:39.403636+00:00",
+    "send_count": 1,
+    "resend_id": "1a3ace01-b6a8-4218-8122-f5967b315796",
+    "name": "Plan B",
+    "city": "Brest"
+  },
+  "contact@wafflegarden.fr": {
+    "sent_at": "2026-03-24T16:06:41.312894+00:00",
+    "last_sent_at": "2026-03-24T16:06:41.312894+00:00",
+    "send_count": 1,
+    "resend_id": "b82ad8ab-3e5a-4949-b62c-566189aa9b03",
+    "name": "Waffle Garden",
+    "city": "Brest"
+  },
+  "sasbreizhboisson@gmail.com": {
+    "sent_at": "2026-03-24T16:06:43.315270+00:00",
+    "last_sent_at": "2026-03-24T16:06:43.315270+00:00",
+    "send_count": 1,
+    "resend_id": "d38f8fc7-6201-4be4-beba-2a9ebfdc0478",
+    "name": "Apero Turbo Brest",
+    "city": "Brest"
+  },
+  "pierre.calves29@gmail.com": {
+    "sent_at": "2026-03-24T16:06:45.139692+00:00",
+    "last_sent_at": "2026-03-24T16:06:45.139692+00:00",
+    "send_count": 1,
+    "resend_id": "18718d84-0647-4852-b0d0-5ec8eac38dcf",
+    "name": "Homard & Co",
+    "city": "Brest"
+  },
+  "communication@painpante.fr": {
+    "sent_at": "2026-03-24T16:06:47.174403+00:00",
+    "last_sent_at": "2026-03-24T16:06:47.174403+00:00",
+    "send_count": 1,
+    "resend_id": "a69f5348-d215-41ed-b75d-96a40679a809",
+    "name": "Painpante Boulangerie Café",
+    "city": "Brest"
+  },
+  "nectarin.brest@gmail.com": {
+    "sent_at": "2026-03-24T16:06:49.028005+00:00",
+    "last_sent_at": "2026-03-24T16:06:49.028005+00:00",
+    "send_count": 1,
+    "resend_id": "a17aae94-3de6-45fa-ae0b-36a2d82fb2a3",
+    "name": "Nectar'In",
+    "city": "Brest"
+  },
+  "lachtarkamel.ex@gmail.com": {
+    "sent_at": "2026-03-24T16:06:50.886324+00:00",
+    "last_sent_at": "2026-03-24T16:06:50.886324+00:00",
+    "send_count": 1,
+    "resend_id": "d67ec85a-3164-44b5-8858-530d3b234897",
+    "name": "Express Kebab",
+    "city": "Tours"
+  },
+  "edconcept24@gmail.com": {
+    "sent_at": "2026-03-24T16:06:52.870230+00:00",
+    "last_sent_at": "2026-03-24T16:06:52.870230+00:00",
+    "send_count": 1,
+    "resend_id": "dacdf42c-2666-4333-957d-ea691032cfa9",
+    "name": "Brasserie Constantinople",
+    "city": "Tours"
+  },
+  "restaurant.lefelicia@gmail.com": {
+    "sent_at": "2026-03-24T16:06:54.919020+00:00",
+    "last_sent_at": "2026-03-24T16:06:54.919020+00:00",
+    "send_count": 1,
+    "resend_id": "ddaa0c4c-799a-41d2-999f-7d1b0072faa0",
+    "name": "Félicia - Kebap",
+    "city": "Tours"
+  },
+  "elghaz37300@gmail.com": {
+    "sent_at": "2026-03-24T16:06:56.777801+00:00",
+    "last_sent_at": "2026-03-24T16:06:56.777801+00:00",
+    "send_count": 1,
+    "resend_id": "7c7dd9d5-536e-44a0-8a0e-a4c4c5a6e51b",
+    "name": "Gourmet Grill",
+    "city": "Tours"
+  },
+  "kurt37@hotmail.fr": {
+    "sent_at": "2026-03-24T16:06:58.685224+00:00",
+    "last_sent_at": "2026-03-24T16:06:58.685224+00:00",
+    "send_count": 1,
+    "resend_id": "1602250a-6fa0-409c-b148-4fb90293d80f",
+    "name": "Mac Kebab",
+    "city": "Tours"
+  },
+  "nadia-fou@hotmail.fr": {
+    "sent_at": "2026-03-24T16:07:00.545120+00:00",
+    "last_sent_at": "2026-03-24T16:07:00.545120+00:00",
+    "send_count": 1,
+    "resend_id": "f1adc1a8-64d4-45db-877d-683869088ff1",
+    "name": "Le Casse-Croûte",
+    "city": "Tours"
+  },
+  "zein.jaber01@gmail.com": {
+    "sent_at": "2026-03-24T16:07:02.382357+00:00",
+    "last_sent_at": "2026-03-24T16:07:02.382357+00:00",
+    "send_count": 1,
+    "resend_id": "36546baa-1973-499a-b37f-cb377087434b",
+    "name": "Pizza di Napoli",
+    "city": "Tours"
+  },
+  "pizzeriavicente37@gmail.com": {
+    "sent_at": "2026-03-24T16:07:04.225725+00:00",
+    "last_sent_at": "2026-03-24T16:07:04.225725+00:00",
+    "send_count": 1,
+    "resend_id": "70cd333f-ddc2-4f64-ada4-822e280399ad",
+    "name": "Pizzeria Vicente",
+    "city": "Tours"
+  },
+  "ilnapoli37@orange.fr": {
+    "sent_at": "2026-03-24T16:07:06.266667+00:00",
+    "last_sent_at": "2026-03-24T16:07:06.266667+00:00",
+    "send_count": 1,
+    "resend_id": "01e239c3-afa8-4b9a-a1c8-e852395208cf",
+    "name": "IL Napoli",
+    "city": "Tours"
+  },
+  "contact@misesurorbite.fr": {
+    "sent_at": "2026-03-24T16:07:08.115985+00:00",
+    "last_sent_at": "2026-03-24T16:07:08.115985+00:00",
+    "send_count": 1,
+    "resend_id": "438f0bfb-f099-4441-ad11-8246fb91c454",
+    "name": "La Scaleta Restaurant Pizzeria",
+    "city": "Tours"
+  },
+  "assafali4937@gmail.com": {
+    "sent_at": "2026-03-24T16:07:09.962853+00:00",
+    "last_sent_at": "2026-03-24T16:07:09.962853+00:00",
+    "send_count": 1,
+    "resend_id": "c4f3b6e2-c5f1-44e9-8784-4d0b3240917d",
+    "name": "La Tosca",
+    "city": "Tours"
+  },
+  "web@studio-komodo.fr": {
+    "sent_at": "2026-03-24T16:07:11.796739+00:00",
+    "last_sent_at": "2026-03-24T16:07:11.796739+00:00",
+    "send_count": 1,
+    "resend_id": "d5170596-b3ab-4c51-81a4-a625a4212b5a",
+    "name": "Le Poggio",
+    "city": "Tours"
+  },
+  "contact@bistropizzachoiseul.fr": {
+    "sent_at": "2026-03-24T16:07:13.855116+00:00",
+    "last_sent_at": "2026-03-24T16:07:13.855116+00:00",
+    "send_count": 1,
+    "resend_id": "9ce0d4b8-adc1-4ee9-8dd8-549c1bf404a7",
+    "name": "Bistro Choiseul",
+    "city": "Tours"
+  },
+  "benspizza@gmail.com": {
+    "sent_at": "2026-03-24T16:07:15.765238+00:00",
+    "last_sent_at": "2026-03-24T16:07:15.765238+00:00",
+    "send_count": 1,
+    "resend_id": "10266277-9c50-402d-9346-a624a2de2176",
+    "name": "Ben's Pizza",
+    "city": "Tours"
   }
 }
