@@ -7694,5 +7694,381 @@
     "resend_id": "10266277-9c50-402d-9346-a624a2de2176",
     "name": "Ben's Pizza",
     "city": "Tours"
+  },
+  "gwendal.babinot@gmail.com": {
+    "sent_at": "2026-03-25T08:06:40.423208+00:00",
+    "last_sent_at": "2026-03-25T08:06:40.423208+00:00",
+    "send_count": 1,
+    "resend_id": "c69daaa6-10be-4845-9108-bad291a79d89",
+    "name": "Feria Latina",
+    "city": "Marseille"
+  },
+  "pizzadeluxechambray@yahoo.com": {
+    "sent_at": "2026-03-25T08:06:44.442482+00:00",
+    "last_sent_at": "2026-03-25T08:06:44.442482+00:00",
+    "send_count": 1,
+    "resend_id": "82daa22a-9522-4f9c-b2ac-61747a85bb4a",
+    "name": "Pizza de Luxe",
+    "city": "Tours"
+  },
+  "mourad.cheikh@sfr.fr": {
+    "sent_at": "2026-03-25T08:06:46.789790+00:00",
+    "last_sent_at": "2026-03-25T08:06:46.789790+00:00",
+    "send_count": 1,
+    "resend_id": "95c56978-9632-4982-9e72-8ab08c23666a",
+    "name": "Milano Pizza",
+    "city": "Tours"
+  },
+  "lasiesta.royan@gmail.com": {
+    "sent_at": "2026-03-25T08:06:48.933554+00:00",
+    "last_sent_at": "2026-03-25T08:06:48.933554+00:00",
+    "send_count": 1,
+    "resend_id": "e8a2726f-7e35-4e73-92e6-0747fb7d24ba",
+    "name": "Le Buré",
+    "city": "Tours"
+  },
+  "infos@bnr-france.com": {
+    "sent_at": "2026-03-25T08:06:50.797474+00:00",
+    "last_sent_at": "2026-03-25T08:06:50.797474+00:00",
+    "send_count": 1,
+    "resend_id": "b6a84d9b-186f-4724-b135-465224d40d0d",
+    "name": "Kabuli",
+    "city": "Tours"
+  },
+  "ecrire@leonard-de-vinci.info": {
+    "sent_at": "2026-03-25T08:06:52.611073+00:00",
+    "last_sent_at": "2026-03-25T08:06:52.611073+00:00",
+    "send_count": 1,
+    "resend_id": "16cca3e0-94a2-40e3-989a-cf5526df4c29",
+    "name": "Léonard de Vinci",
+    "city": "Tours"
+  },
+  "alain.moon@wanadoo.fr": {
+    "sent_at": "2026-03-25T08:06:54.704779+00:00",
+    "last_sent_at": "2026-03-25T08:06:54.704779+00:00",
+    "send_count": 1,
+    "resend_id": "1a1941f5-0af5-4f8b-9462-47bbf232ab05",
+    "name": "L'ile aux Pizzas",
+    "city": "Tours"
+  },
+  "lamaisondeshalles.tours@gmail.com": {
+    "sent_at": "2026-03-25T08:06:56.526946+00:00",
+    "last_sent_at": "2026-03-25T08:06:56.526946+00:00",
+    "send_count": 1,
+    "resend_id": "fd1dcaa6-5e86-4d6e-905a-5c11465b7da2",
+    "name": "La Maison des Halles",
+    "city": "Tours"
+  },
+  "buretpizz@orange.fr": {
+    "sent_at": "2026-03-25T08:06:58.357047+00:00",
+    "last_sent_at": "2026-03-25T08:06:58.357047+00:00",
+    "send_count": 1,
+    "resend_id": "afe76dc7-d54a-4a70-be90-08584135515b",
+    "name": "PIZZ & BURG",
+    "city": "Tours"
+  },
+  "fbncie@icloud.com": {
+    "sent_at": "2026-03-25T08:07:00.228182+00:00",
+    "last_sent_at": "2026-03-25T08:07:00.228182+00:00",
+    "send_count": 1,
+    "resend_id": "3184c12e-2074-46df-9a47-1ccc37e94aa4",
+    "name": "Le Frenchy Resto - Restaurant & Burgers maison",
+    "city": "Tours"
+  },
+  "contact@florian-garnier.fr": {
+    "sent_at": "2026-03-25T08:07:02.191670+00:00",
+    "last_sent_at": "2026-03-25T08:07:02.191670+00:00",
+    "send_count": 1,
+    "resend_id": "b179839e-cc6b-4a11-a87c-2fdbb3e7c39c",
+    "name": "Balzac Burger",
+    "city": "Tours"
+  },
+  "contact@sesame-restaurant.fr": {
+    "sent_at": "2026-03-25T08:07:04.016729+00:00",
+    "last_sent_at": "2026-03-25T08:07:04.016729+00:00",
+    "send_count": 1,
+    "resend_id": "591f9408-b7ea-45c8-a308-2c690322940f",
+    "name": "SESAME",
+    "city": "Tours"
+  },
+  "3757@les3brasseurs.com": {
+    "sent_at": "2026-03-25T08:07:06.021443+00:00",
+    "last_sent_at": "2026-03-25T08:07:06.021443+00:00",
+    "send_count": 1,
+    "resend_id": "df1fc38d-99ad-4c9d-af38-386f42384ffb",
+    "name": "3 Brasseurs Tours",
+    "city": "Tours"
+  },
+  "contact@pb-groupe.com": {
+    "sent_at": "2026-03-25T08:07:07.816562+00:00",
+    "last_sent_at": "2026-03-25T08:07:07.816562+00:00",
+    "send_count": 1,
+    "resend_id": "7271e509-b4f0-4375-b708-59664264f25e",
+    "name": "PB Poulet Braisé Tours",
+    "city": "Tours"
+  },
+  "contact@tadimgrill.fr": {
+    "sent_at": "2026-03-25T08:07:09.676673+00:00",
+    "last_sent_at": "2026-03-25T08:07:09.676673+00:00",
+    "send_count": 1,
+    "resend_id": "9adeee8e-1d6b-418c-9c6c-b75823853c5d",
+    "name": "Tadim Grill",
+    "city": "Amiens"
+  },
+  "bedrouni.abdellah1173@gmail.com": {
+    "sent_at": "2026-03-25T08:07:11.481835+00:00",
+    "last_sent_at": "2026-03-25T08:07:11.481835+00:00",
+    "send_count": 1,
+    "resend_id": "d31433d5-4814-409a-a3fe-8ba5df82144f",
+    "name": "Kebab City",
+    "city": "Amiens"
+  },
+  "fikri80090@gmail.com": {
+    "sent_at": "2026-03-25T08:07:13.290946+00:00",
+    "last_sent_at": "2026-03-25T08:07:13.290946+00:00",
+    "send_count": 1,
+    "resend_id": "677849c6-b516-4e22-9a6a-76b516688110",
+    "name": "Le kiosque kebab",
+    "city": "Amiens"
+  },
+  "kazi.ashik80@yahoo.com": {
+    "sent_at": "2026-03-25T08:07:15.117774+00:00",
+    "last_sent_at": "2026-03-25T08:07:15.117774+00:00",
+    "send_count": 1,
+    "resend_id": "e7b6a0f7-b828-4b82-b9da-36ac546100dc",
+    "name": "Les étoiles",
+    "city": "Amiens"
+  },
+  "pashasnack075@gmail.com": {
+    "sent_at": "2026-03-25T08:07:16.966084+00:00",
+    "last_sent_at": "2026-03-25T08:07:16.966084+00:00",
+    "send_count": 1,
+    "resend_id": "843927ce-c298-4bf8-be26-b7b4f5fc7311",
+    "name": "Pasha snack 80",
+    "city": "Amiens"
+  },
+  "ranebizybouly@yahoo.fr": {
+    "sent_at": "2026-03-25T08:07:18.773083+00:00",
+    "last_sent_at": "2026-03-25T08:07:18.773083+00:00",
+    "send_count": 1,
+    "resend_id": "c13d2609-2dce-4d10-86aa-6ab8c9234fed",
+    "name": "La Diva",
+    "city": "Amiens"
+  },
+  "eurlsandwicherie@yahoo.fr": {
+    "sent_at": "2026-03-25T08:07:20.642925+00:00",
+    "last_sent_at": "2026-03-25T08:07:20.642925+00:00",
+    "send_count": 1,
+    "resend_id": "3f5410fa-a4c5-4db7-a114-7ef4c3a310cc",
+    "name": "SANDWICHERIE DES DELICES",
+    "city": "Amiens"
+  },
+  "zeklopeur@hotmail.com": {
+    "sent_at": "2026-03-25T08:07:22.448915+00:00",
+    "last_sent_at": "2026-03-25T08:07:22.448915+00:00",
+    "send_count": 1,
+    "resend_id": "dbeb7790-2af1-442d-bafb-a43b303e736f",
+    "name": "Happy Times",
+    "city": "Amiens"
+  },
+  "contact@ledenburger.fr": {
+    "sent_at": "2026-03-25T08:07:24.289698+00:00",
+    "last_sent_at": "2026-03-25T08:07:24.289698+00:00",
+    "send_count": 1,
+    "resend_id": "ca12a638-33af-4777-a50e-a0f28d77f68f",
+    "name": "L'Eden Burger",
+    "city": "Amiens"
+  },
+  "dolcevita.amiens@gmail.com": {
+    "sent_at": "2026-03-25T08:07:26.076793+00:00",
+    "last_sent_at": "2026-03-25T08:07:26.076793+00:00",
+    "send_count": 1,
+    "resend_id": "aaaa2b74-f4f3-4a95-8fae-b01c4bab64da",
+    "name": "La Dolce Vita",
+    "city": "Amiens"
+  },
+  "contact@lamammamia.fr": {
+    "sent_at": "2026-03-25T08:07:27.919193+00:00",
+    "last_sent_at": "2026-03-25T08:07:27.919193+00:00",
+    "send_count": 1,
+    "resend_id": "d72ee6e2-8cab-41ba-9981-216f87363bef",
+    "name": "La Mamma Mia Trattoria-Pizzeria",
+    "city": "Amiens"
+  },
+  "clients@lusitalia.fr": {
+    "sent_at": "2026-03-25T08:07:29.769183+00:00",
+    "last_sent_at": "2026-03-25T08:07:29.769183+00:00",
+    "send_count": 1,
+    "resend_id": "81b379a0-6b44-46de-8975-050fda51d5a1",
+    "name": "Lusitalia Amiens (Centre Ville)",
+    "city": "Amiens"
+  },
+  "596benoit@gmail.com": {
+    "sent_at": "2026-03-25T08:07:31.567686+00:00",
+    "last_sent_at": "2026-03-25T08:07:31.567686+00:00",
+    "send_count": 1,
+    "resend_id": "979a5f9d-63f3-4a40-ae21-4a5e7abd4b15",
+    "name": "Pizza Régal (CENTRE VILLE)",
+    "city": "Amiens"
+  },
+  "contact@konamono-nantes.com": {
+    "sent_at": "2026-03-25T08:07:33.402303+00:00",
+    "last_sent_at": "2026-03-25T08:07:33.402303+00:00",
+    "send_count": 1,
+    "resend_id": "b76e7194-b25b-4b5b-9bde-850fe249f3db",
+    "name": "Béné Pizza",
+    "city": "Amiens"
+  },
+  "reservationmomento@gmail.com": {
+    "sent_at": "2026-03-25T08:07:35.248749+00:00",
+    "last_sent_at": "2026-03-25T08:07:35.248749+00:00",
+    "send_count": 1,
+    "resend_id": "72fd30fa-ca9b-4cb5-891d-0c4c587e7056",
+    "name": "Moment'o",
+    "city": "Amiens"
+  },
+  "contact@beefast.fr": {
+    "sent_at": "2026-03-25T08:07:37.117132+00:00",
+    "last_sent_at": "2026-03-25T08:07:37.117132+00:00",
+    "send_count": 1,
+    "resend_id": "f0b373c7-072a-4d6b-81b4-914275e27572",
+    "name": "Charlot Pizza, Bistro , Pâtisserie, Miel",
+    "city": "Amiens"
+  },
+  "contact@viapizza.fr": {
+    "sent_at": "2026-03-25T08:07:38.924217+00:00",
+    "last_sent_at": "2026-03-25T08:07:38.924217+00:00",
+    "send_count": 1,
+    "resend_id": "8b9b7d43-5843-473f-8144-0f0b4b856f20",
+    "name": "Via pizza",
+    "city": "Amiens"
+  },
+  "contact@mosaique-pizza.fr": {
+    "sent_at": "2026-03-25T08:07:41.101983+00:00",
+    "last_sent_at": "2026-03-25T08:07:41.101983+00:00",
+    "send_count": 1,
+    "resend_id": "7d07ab2a-b88c-439c-a45b-4e98229d1152",
+    "name": "Mosaïque Pizza Ouest",
+    "city": "Amiens"
+  },
+  "kittyqueenamiens@gmail.com": {
+    "sent_at": "2026-03-25T08:07:42.913183+00:00",
+    "last_sent_at": "2026-03-25T08:07:42.913183+00:00",
+    "send_count": 1,
+    "resend_id": "7294c7f7-7cb4-4d12-a43e-badeda80d5d3",
+    "name": "Kitty Queen",
+    "city": "Amiens"
+  },
+  "crazypizzatime80000@gmail.com": {
+    "sent_at": "2026-03-25T08:07:44.838720+00:00",
+    "last_sent_at": "2026-03-25T08:07:44.838720+00:00",
+    "send_count": 1,
+    "resend_id": "5f43cd7d-8ba6-4759-9103-96c1822f977a",
+    "name": "Crazy Pizza Time",
+    "city": "Amiens"
+  },
+  "contact@lecomptoirdumalt.fr": {
+    "sent_at": "2026-03-25T08:07:46.656590+00:00",
+    "last_sent_at": "2026-03-25T08:07:46.656590+00:00",
+    "send_count": 1,
+    "resend_id": "9d594965-d813-4b40-ae9a-4098a7fba4d7",
+    "name": "Le Comptoir du Malt - Amiens Sud",
+    "city": "Amiens"
+  },
+  "contact@lepicerie-italienne.com": {
+    "sent_at": "2026-03-25T08:07:48.681830+00:00",
+    "last_sent_at": "2026-03-25T08:07:48.681830+00:00",
+    "send_count": 1,
+    "resend_id": "83950060-62b7-45e6-983a-026eb719af2b",
+    "name": "L'Epicerie Italienne",
+    "city": "Amiens"
+  },
+  "ra.brik@laposte.net": {
+    "sent_at": "2026-03-25T08:07:50.596918+00:00",
+    "last_sent_at": "2026-03-25T08:07:50.596918+00:00",
+    "send_count": 1,
+    "resend_id": "a5a79e3e-264d-48df-884b-e61ac35cefee",
+    "name": "Allo Pizza",
+    "city": "Amiens"
+  },
+  "muhammadashfaq@outlook.fr": {
+    "sent_at": "2026-03-25T08:07:52.383748+00:00",
+    "last_sent_at": "2026-03-25T08:07:52.383748+00:00",
+    "send_count": 1,
+    "resend_id": "e97aef98-4e71-425b-898d-2d09330946d9",
+    "name": "Rajasthan",
+    "city": "Amiens"
+  },
+  "pastadinonna974@gmail.com": {
+    "sent_at": "2026-03-25T08:07:54.221803+00:00",
+    "last_sent_at": "2026-03-25T08:07:54.221803+00:00",
+    "send_count": 1,
+    "resend_id": "4383854c-32f8-4ae4-b4d9-91c6214983b3",
+    "name": "Chez julien",
+    "city": "Amiens"
+  },
+  "restaurant@rozana.fr": {
+    "sent_at": "2026-03-25T08:07:56.072529+00:00",
+    "last_sent_at": "2026-03-25T08:07:56.072529+00:00",
+    "send_count": 1,
+    "resend_id": "70335816-ceb8-4a32-8d92-dc7c6694bbe1",
+    "name": "Rozana Restaurant",
+    "city": "Amiens"
+  },
+  "contact@larotisserie-camon.fr": {
+    "sent_at": "2026-03-25T08:07:57.889171+00:00",
+    "last_sent_at": "2026-03-25T08:07:57.889171+00:00",
+    "send_count": 1,
+    "resend_id": "c8e225ae-ee09-4a4d-ae5d-ca6a11ef202f",
+    "name": "Restaurant La Rôtisserie Camon (Amiens)",
+    "city": "Amiens"
+  },
+  "steakeasy@gmail.com": {
+    "sent_at": "2026-03-25T08:07:59.692583+00:00",
+    "last_sent_at": "2026-03-25T08:07:59.692583+00:00",
+    "send_count": 1,
+    "resend_id": "2f595b2e-75d4-4779-b78d-ccf209016c1d",
+    "name": "Steak Easy",
+    "city": "Amiens"
+  },
+  "pom-frites@orange.fr": {
+    "sent_at": "2026-03-25T08:08:01.536114+00:00",
+    "last_sent_at": "2026-03-25T08:08:01.536114+00:00",
+    "send_count": 1,
+    "resend_id": "bd636590-981b-45c6-90b1-8e7b4081c75d",
+    "name": "Pom Frites",
+    "city": "Amiens"
+  },
+  "lacabaneapoutines@hotmail.com": {
+    "sent_at": "2026-03-25T08:08:03.365782+00:00",
+    "last_sent_at": "2026-03-25T08:08:03.365782+00:00",
+    "send_count": 1,
+    "resend_id": "352e0236-e98a-4ded-b9a0-31c5d37f5f28",
+    "name": "La Cabane à Poutines",
+    "city": "Amiens"
+  },
+  "contact@wiotte.fr": {
+    "sent_at": "2026-03-25T08:08:05.232833+00:00",
+    "last_sent_at": "2026-03-25T08:08:05.232833+00:00",
+    "send_count": 1,
+    "resend_id": "9eb9a62e-69db-47a0-b0f5-11c4f730af14",
+    "name": "WIOTTE - Bar à viande des Halles",
+    "city": "Amiens"
+  },
+  "edito.amiens@gmail.com": {
+    "sent_at": "2026-03-25T08:08:07.104429+00:00",
+    "last_sent_at": "2026-03-25T08:08:07.104429+00:00",
+    "send_count": 1,
+    "resend_id": "f2583d46-ae25-40a5-9123-bfa3c38a36a1",
+    "name": "L'Edito Amiens",
+    "city": "Amiens"
+  },
+  "wangsongdi88@gmail.com": {
+    "sent_at": "2026-03-25T08:08:08.923725+00:00",
+    "last_sent_at": "2026-03-25T08:08:08.923725+00:00",
+    "send_count": 1,
+    "resend_id": "6a6e55c4-18d1-4bb7-8106-525f296f7ab6",
+    "name": "Okaeri",
+    "city": "Amiens"
   }
 }
