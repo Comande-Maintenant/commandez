@@ -8070,5 +8070,373 @@
     "resend_id": "6a6e55c4-18d1-4bb7-8106-525f296f7ab6",
     "name": "Okaeri",
     "city": "Amiens"
+  },
+  "nicolas.frites@outlook.com": {
+    "sent_at": "2026-03-25T16:08:50.162513+00:00",
+    "last_sent_at": "2026-03-25T16:08:50.162513+00:00",
+    "send_count": 1,
+    "resend_id": "ce9285cb-a7f6-44c8-9623-4d42415d7cad",
+    "name": "Friterie NICOLAS",
+    "city": "Amiens"
+  },
+  "bahribrahim2002@gmail.com": {
+    "sent_at": "2026-03-25T16:08:52.223034+00:00",
+    "last_sent_at": "2026-03-25T16:08:52.223034+00:00",
+    "send_count": 1,
+    "resend_id": "ed7a3a08-f7bc-427a-aa49-5a7731914d41",
+    "name": "Sibell Steak House - Restaurant Amiens",
+    "city": "Amiens"
+  },
+  "bakahfoods@gmail.com": {
+    "sent_at": "2026-03-25T16:08:54.282907+00:00",
+    "last_sent_at": "2026-03-25T16:08:54.282907+00:00",
+    "send_count": 1,
+    "resend_id": "55fa86ca-2011-4120-b250-4080cb08a7cd",
+    "name": "BAKAH",
+    "city": "Limoges"
+  },
+  "contact@larosedessables.fr": {
+    "sent_at": "2026-03-25T16:08:56.297217+00:00",
+    "last_sent_at": "2026-03-25T16:08:56.297217+00:00",
+    "send_count": 1,
+    "resend_id": "0d3b17ed-6802-4bbb-8e25-faec206ab2a8",
+    "name": "La Rose Des Sables Limoges",
+    "city": "Limoges"
+  },
+  "yesilkayamorgane@gmail.com": {
+    "sent_at": "2026-03-25T16:08:58.382561+00:00",
+    "last_sent_at": "2026-03-25T16:08:58.382561+00:00",
+    "send_count": 1,
+    "resend_id": "195b0056-da6f-4032-8b03-a87b097b7f02",
+    "name": "Auberge du Kebab",
+    "city": "Limoges"
+  },
+  "aliharrabi07@gmail.com": {
+    "sent_at": "2026-03-25T16:09:00.282839+00:00",
+    "last_sent_at": "2026-03-25T16:09:00.282839+00:00",
+    "send_count": 1,
+    "resend_id": "42df7db6-2c77-4b2a-b8ff-a99353c3111b",
+    "name": "Le Carnot",
+    "city": "Limoges"
+  },
+  "contact@crocrorico.fr": {
+    "sent_at": "2026-03-25T16:09:02.289797+00:00",
+    "last_sent_at": "2026-03-25T16:09:02.289797+00:00",
+    "send_count": 1,
+    "resend_id": "7700e260-7be3-4f47-999e-036d5c3bdcfa",
+    "name": "The Food World Limoges",
+    "city": "Limoges"
+  },
+  "mohammad87280@icloud.com": {
+    "sent_at": "2026-03-25T16:09:04.325984+00:00",
+    "last_sent_at": "2026-03-25T16:09:04.325984+00:00",
+    "send_count": 1,
+    "resend_id": "955d46a8-597e-48f8-9456-17633ae98058",
+    "name": "SHALIL KEBAB",
+    "city": "Limoges"
+  },
+  "goodiz8700@gmail.com": {
+    "sent_at": "2026-03-25T16:09:06.384400+00:00",
+    "last_sent_at": "2026-03-25T16:09:06.384400+00:00",
+    "send_count": 1,
+    "resend_id": "b764a8cf-7607-4ea3-a89e-fe7df522cc36",
+    "name": "Goodiz",
+    "city": "Limoges"
+  },
+  "syrina.resto@gmail.com": {
+    "sent_at": "2026-03-25T16:09:08.366914+00:00",
+    "last_sent_at": "2026-03-25T16:09:08.366914+00:00",
+    "send_count": 1,
+    "resend_id": "1bd0c694-3cb8-45bf-951c-411a2f428641",
+    "name": "SYRINA",
+    "city": "Limoges"
+  },
+  "streetfood87000@gmail.com": {
+    "sent_at": "2026-03-25T16:09:10.369762+00:00",
+    "last_sent_at": "2026-03-25T16:09:10.369762+00:00",
+    "send_count": 1,
+    "resend_id": "e2f6a20d-105c-4b8e-b03c-414c79500183",
+    "name": "Bigfood burger & chicken",
+    "city": "Limoges"
+  },
+  "pizzapezzo87@gmail.com": {
+    "sent_at": "2026-03-25T16:09:12.338915+00:00",
+    "last_sent_at": "2026-03-25T16:09:12.338915+00:00",
+    "send_count": 1,
+    "resend_id": "cf682b4c-5436-4d4c-932a-a891fbaa2fb7",
+    "name": "Pizza Pezzo",
+    "city": "Limoges"
+  },
+  "henri.ajuste@sfr.fr": {
+    "sent_at": "2026-03-25T16:09:14.139258+00:00",
+    "last_sent_at": "2026-03-25T16:09:14.139258+00:00",
+    "send_count": 1,
+    "resend_id": "e023125e-5f87-4856-a41f-7840fee781a1",
+    "name": "L'Assiette à Pizz'",
+    "city": "Limoges"
+  },
+  "contact@inova-web.fr": {
+    "sent_at": "2026-03-25T16:09:16.254872+00:00",
+    "last_sent_at": "2026-03-25T16:09:16.254872+00:00",
+    "send_count": 1,
+    "resend_id": "acfd85ea-6cfd-445a-bf65-b9523cccc0f0",
+    "name": "LOU PIZZA",
+    "city": "Limoges"
+  },
+  "contact@lacasa-brasserie.com": {
+    "sent_at": "2026-03-25T16:09:18.073289+00:00",
+    "last_sent_at": "2026-03-25T16:09:18.073289+00:00",
+    "send_count": 1,
+    "resend_id": "a29391d9-63f1-40ef-8c11-c0759f8e40b3",
+    "name": "Brasserie La Casa",
+    "city": "Limoges"
+  },
+  "latoscana87@gmail.com": {
+    "sent_at": "2026-03-25T16:09:19.896422+00:00",
+    "last_sent_at": "2026-03-25T16:09:19.896422+00:00",
+    "send_count": 1,
+    "resend_id": "f5f26de7-a5c7-454e-b07d-c349f04884d1",
+    "name": "La Toscana",
+    "city": "Limoges"
+  },
+  "pizzacarmes87@gmail.com": {
+    "sent_at": "2026-03-25T16:09:21.861878+00:00",
+    "last_sent_at": "2026-03-25T16:09:21.861878+00:00",
+    "send_count": 1,
+    "resend_id": "dab1059c-b5b0-4d14-b13e-3d8badf5f425",
+    "name": "Pizza Carmes",
+    "city": "Limoges"
+  },
+  "juliespizza87@gmail.com": {
+    "sent_at": "2026-03-25T16:09:23.664135+00:00",
+    "last_sent_at": "2026-03-25T16:09:23.664135+00:00",
+    "send_count": 1,
+    "resend_id": "4aa84a90-e9b3-4f13-a468-d40273e15b78",
+    "name": "LA RIVIERA",
+    "city": "Limoges"
+  },
+  "alegria.mercado87@gmail.com": {
+    "sent_at": "2026-03-25T16:09:25.527554+00:00",
+    "last_sent_at": "2026-03-25T16:09:25.527554+00:00",
+    "send_count": 1,
+    "resend_id": "42ba7c3f-021e-49ef-8804-65aa4c98b239",
+    "name": "ALEGRIA BAR BRASSERIE PIZZERIA",
+    "city": "Limoges"
+  },
+  "restaurant.traiteur@lepontsaintetienne.fr": {
+    "sent_at": "2026-03-25T16:09:27.384898+00:00",
+    "last_sent_at": "2026-03-25T16:09:27.384898+00:00",
+    "send_count": 1,
+    "resend_id": "c747c93b-af4c-4b95-a33b-f6db9b2e059b",
+    "name": "Le Pont Saint Etienne",
+    "city": "Limoges"
+  },
+  "thaifoodlimoges@gmail.com": {
+    "sent_at": "2026-03-25T16:09:29.207238+00:00",
+    "last_sent_at": "2026-03-25T16:09:29.207238+00:00",
+    "send_count": 1,
+    "resend_id": "63473b5e-ea4c-49bc-ab53-8b6dee50ccf2",
+    "name": "Thai food Limoges",
+    "city": "Limoges"
+  },
+  "contact@monsieurlebaron87.fr": {
+    "sent_at": "2026-03-25T16:09:31.118037+00:00",
+    "last_sent_at": "2026-03-25T16:09:31.118037+00:00",
+    "send_count": 1,
+    "resend_id": "4243b52b-04e8-4b9d-a79e-67722c8e6ad9",
+    "name": "Brasserie - Burger Monsieur Le Baron",
+    "city": "Limoges"
+  },
+  "lisand@orange.fr": {
+    "sent_at": "2026-03-25T16:09:32.977956+00:00",
+    "last_sent_at": "2026-03-25T16:09:32.977956+00:00",
+    "send_count": 1,
+    "resend_id": "5b56c4d1-f396-41e7-b4af-f7000d2f19ba",
+    "name": "Li's Sandwich",
+    "city": "Limoges"
+  },
+  "s.faye87@laposte.net": {
+    "sent_at": "2026-03-25T16:09:34.968936+00:00",
+    "last_sent_at": "2026-03-25T16:09:34.968936+00:00",
+    "send_count": 1,
+    "resend_id": "eb431f3a-34a8-4b71-b026-153ed9c64ac3",
+    "name": "FIEST'APERO",
+    "city": "Limoges"
+  },
+  "websideconseil@gmail.com": {
+    "sent_at": "2026-03-25T16:09:36.809328+00:00",
+    "last_sent_at": "2026-03-25T16:09:36.809328+00:00",
+    "send_count": 1,
+    "resend_id": "be4e63a1-5058-439c-b53e-059182dfb7a5",
+    "name": "Le Maharaja",
+    "city": "Limoges"
+  },
+  "versuslimoges@gmail.com": {
+    "sent_at": "2026-03-25T16:09:38.604120+00:00",
+    "last_sent_at": "2026-03-25T16:09:38.604120+00:00",
+    "send_count": 1,
+    "resend_id": "9796dc1c-cb0d-4c7e-8686-c466acf68145",
+    "name": "VerSus",
+    "city": "Limoges"
+  },
+  "contact@omistral.fr": {
+    "sent_at": "2026-03-25T16:09:40.429623+00:00",
+    "last_sent_at": "2026-03-25T16:09:40.429623+00:00",
+    "send_count": 1,
+    "resend_id": "1412fe6a-668f-43ad-ba35-8c40f5fd0538",
+    "name": "O'MISTRAL",
+    "city": "Perpignan"
+  },
+  "nejkebab3@gmail.com": {
+    "sent_at": "2026-03-25T16:09:42.282104+00:00",
+    "last_sent_at": "2026-03-25T16:09:42.282104+00:00",
+    "send_count": 1,
+    "resend_id": "1adfb0cb-f238-4ca2-9703-53c33d3e8ee7",
+    "name": "NEJ KEBAB",
+    "city": "Perpignan"
+  },
+  "s_erkan1985@hotmail.com": {
+    "sent_at": "2026-03-25T16:09:44.318684+00:00",
+    "last_sent_at": "2026-03-25T16:09:44.318684+00:00",
+    "send_count": 1,
+    "resend_id": "5268aec4-004e-42f6-b8ff-fae475b53ac1",
+    "name": "GALATA KEBAB",
+    "city": "Perpignan"
+  },
+  "yeganeh.07cm@gmail.com": {
+    "sent_at": "2026-03-25T16:09:46.169431+00:00",
+    "last_sent_at": "2026-03-25T16:09:46.169431+00:00",
+    "send_count": 1,
+    "resend_id": "6f4c99c4-927c-4289-9725-5b59d253b2f5",
+    "name": "Eating Food",
+    "city": "Perpignan"
+  },
+  "cheesenaanbd@gmail.com": {
+    "sent_at": "2026-03-25T16:09:48.196567+00:00",
+    "last_sent_at": "2026-03-25T16:09:48.196567+00:00",
+    "send_count": 1,
+    "resend_id": "87a29cbc-3535-45f8-bfd5-b82c0f673dc1",
+    "name": "CHEESE NAAN",
+    "city": "Perpignan"
+  },
+  "votre.email@exemple.com": {
+    "sent_at": "2026-03-25T16:09:50.081484+00:00",
+    "last_sent_at": "2026-03-25T16:09:50.081484+00:00",
+    "send_count": 1,
+    "resend_id": "bb2f4198-12bc-41a6-ba4a-2c7546abe53c",
+    "name": "Eray Kebab",
+    "city": "Perpignan"
+  },
+  "sarl.lafont@wanadoo.fr": {
+    "sent_at": "2026-03-25T16:09:51.918943+00:00",
+    "last_sent_at": "2026-03-25T16:09:51.918943+00:00",
+    "send_count": 1,
+    "resend_id": "2c3368d0-9922-4cc7-b29e-c78298498dcb",
+    "name": "Snack Maison Lafont",
+    "city": "Perpignan"
+  },
+  "baig.mubashar66@gmail.com": {
+    "sent_at": "2026-03-25T16:09:53.877725+00:00",
+    "last_sent_at": "2026-03-25T16:09:53.877725+00:00",
+    "send_count": 1,
+    "resend_id": "68f5e80a-4762-4dbf-a8cc-823c168ce027",
+    "name": "Indian naan chez Baber",
+    "city": "Perpignan"
+  },
+  "alibertmagali@orange.fr": {
+    "sent_at": "2026-03-25T16:09:55.774918+00:00",
+    "last_sent_at": "2026-03-25T16:09:55.774918+00:00",
+    "send_count": 1,
+    "resend_id": "198e5e56-b002-436f-9749-e6d105f4f403",
+    "name": "Côté Pizza by spaghetteri aldo",
+    "city": "Perpignan"
+  },
+  "lepatiodelaloge66@gmail.com": {
+    "sent_at": "2026-03-25T16:09:57.631772+00:00",
+    "last_sent_at": "2026-03-25T16:09:57.631772+00:00",
+    "send_count": 1,
+    "resend_id": "4bb0ce66-5555-4e5b-8d88-db7f978ed090",
+    "name": "Le Patio de la Loge",
+    "city": "Perpignan"
+  },
+  "pizzahouse66000@gmail.com": {
+    "sent_at": "2026-03-25T16:09:59.523770+00:00",
+    "last_sent_at": "2026-03-25T16:09:59.523770+00:00",
+    "send_count": 1,
+    "resend_id": "edd06e4b-f6f5-4fae-9d3a-6603356099c3",
+    "name": "Pizza House Perpignan",
+    "city": "Perpignan"
+  },
+  "restaurant.baston@gmail.com": {
+    "sent_at": "2026-03-25T16:10:01.330225+00:00",
+    "last_sent_at": "2026-03-25T16:10:01.330225+00:00",
+    "send_count": 1,
+    "resend_id": "22a01f80-49c3-4b5e-a409-19808c4e61be",
+    "name": "BASTON table & cave",
+    "city": "Perpignan"
+  },
+  "contact@gopizza66.fr": {
+    "sent_at": "2026-03-25T16:10:03.198840+00:00",
+    "last_sent_at": "2026-03-25T16:10:03.198840+00:00",
+    "send_count": 1,
+    "resend_id": "08ec053e-2591-44c2-8f75-3fce074cacc7",
+    "name": "GoPizza",
+    "city": "Perpignan"
+  },
+  "direction@lapizzadenface.com": {
+    "sent_at": "2026-03-25T16:10:05.042283+00:00",
+    "last_sent_at": "2026-03-25T16:10:05.042283+00:00",
+    "send_count": 1,
+    "resend_id": "3264f728-9017-4227-8678-afc1eeb062bb",
+    "name": "La Pizza d'en Face - Restaurant Italien - Pizzeria à Perpignan",
+    "city": "Perpignan"
+  },
+  "salman.assad3@gmail.com": {
+    "sent_at": "2026-03-25T16:10:06.853536+00:00",
+    "last_sent_at": "2026-03-25T16:10:06.853536+00:00",
+    "send_count": 1,
+    "resend_id": "f725c5f7-e275-4959-8141-e36c8ccfba25",
+    "name": "PIZZA NAPOLI FOOD TRUCK",
+    "city": "Perpignan"
+  },
+  "lofficina66@gmail.com": {
+    "sent_at": "2026-03-25T16:10:08.849299+00:00",
+    "last_sent_at": "2026-03-25T16:10:08.849299+00:00",
+    "send_count": 1,
+    "resend_id": "40d68d56-47cf-4a89-8ed5-097075af4949",
+    "name": "L’OFFICINA PERPIGNAN",
+    "city": "Perpignan"
+  },
+  "casaaldo66@gmail.com": {
+    "sent_at": "2026-03-25T16:10:10.666041+00:00",
+    "last_sent_at": "2026-03-25T16:10:10.666041+00:00",
+    "send_count": 1,
+    "resend_id": "b624d647-e840-4340-97fd-c4ef8c57acb9",
+    "name": "CASA ALDO",
+    "city": "Perpignan"
+  },
+  "pizzaaldo@gmail.com": {
+    "sent_at": "2026-03-25T16:10:12.541788+00:00",
+    "last_sent_at": "2026-03-25T16:10:12.541788+00:00",
+    "send_count": 1,
+    "resend_id": "56857dd4-ccbe-4aa3-9b65-5f09cb016694",
+    "name": "Pizza Aldo Perpignan",
+    "city": "Perpignan"
+  },
+  "guillaumecanicio@sfr.fr": {
+    "sent_at": "2026-03-25T16:10:14.337017+00:00",
+    "last_sent_at": "2026-03-25T16:10:14.337017+00:00",
+    "send_count": 1,
+    "resend_id": "6d6e8243-7c38-471d-add6-b58947362fb2",
+    "name": "Pappaiolo",
+    "city": "Perpignan"
+  },
+  "lorso@free.fr": {
+    "sent_at": "2026-03-25T16:10:16.232236+00:00",
+    "last_sent_at": "2026-03-25T16:10:16.232236+00:00",
+    "send_count": 1,
+    "resend_id": "db52fc67-f5cf-43fc-9d47-14fcd3574200",
+    "name": "La Pizza Di Gastonello",
+    "city": "Perpignan"
   }
 }
