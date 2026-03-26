@@ -8814,5 +8814,373 @@
     "resend_id": "11300c79-8820-4acb-a067-906ba11bca5b",
     "name": "Korner",
     "city": "Besancon"
+  },
+  "baran@outlook.fr": {
+    "sent_at": "2026-03-26T16:10:33.120342+00:00",
+    "last_sent_at": "2026-03-26T16:10:33.120342+00:00",
+    "send_count": 1,
+    "resend_id": "9e932601-f344-462b-8863-a0ccdf5dc4e0",
+    "name": "Serato",
+    "city": "Besancon"
+  },
+  "info@le106.com": {
+    "sent_at": "2026-03-26T16:10:35.627632+00:00",
+    "last_sent_at": "2026-03-26T16:10:35.627632+00:00",
+    "send_count": 1,
+    "resend_id": "3f8e128a-7cfe-4715-866a-49d0904ab659",
+    "name": "LE CENT SIX",
+    "city": "Besancon"
+  },
+  "saidbougueroua@hotmail.com": {
+    "sent_at": "2026-03-26T16:10:37.987429+00:00",
+    "last_sent_at": "2026-03-26T16:10:37.987429+00:00",
+    "send_count": 1,
+    "resend_id": "21d3b182-a6d5-4905-8493-1ef45b32804c",
+    "name": "O'Miami PIZZA 1 acheter =1 offert jusqu'à minuit",
+    "city": "Besancon"
+  },
+  "chikenhouse25@outlook.fr": {
+    "sent_at": "2026-03-26T16:10:40.299662+00:00",
+    "last_sent_at": "2026-03-26T16:10:40.299662+00:00",
+    "send_count": 1,
+    "resend_id": "120cdf57-2377-43bd-8b76-2f6b14e5b005",
+    "name": "La rôtisserie Bersot",
+    "city": "Besancon"
+  },
+  "latelier.de.francisco@gmail.com": {
+    "sent_at": "2026-03-26T16:10:42.563491+00:00",
+    "last_sent_at": "2026-03-26T16:10:42.563491+00:00",
+    "send_count": 1,
+    "resend_id": "8ead1721-fb51-4ef7-956f-0b2c830958ab",
+    "name": "L'Atelier de Francisco - Restaurant italien - Besançon",
+    "city": "Besancon"
+  },
+  "lantractresto25@gmail.com": {
+    "sent_at": "2026-03-26T16:10:45.097185+00:00",
+    "last_sent_at": "2026-03-26T16:10:45.097185+00:00",
+    "send_count": 1,
+    "resend_id": "18dafc16-5104-48d4-8870-00962756a0a3",
+    "name": "L'Antr'Act - Pizzeria Besançon",
+    "city": "Besancon"
+  },
+  "contact@novettino.com": {
+    "sent_at": "2026-03-26T16:10:47.403154+00:00",
+    "last_sent_at": "2026-03-26T16:10:47.403154+00:00",
+    "send_count": 1,
+    "resend_id": "f081543b-8e25-453e-afcb-729d29622a31",
+    "name": "Focaccia NOVETTINO - Besançon",
+    "city": "Besancon"
+  },
+  "bellagio.buffet.italian@gmail.com": {
+    "sent_at": "2026-03-26T16:10:49.327108+00:00",
+    "last_sent_at": "2026-03-26T16:10:49.327108+00:00",
+    "send_count": 1,
+    "resend_id": "3a70cd60-3595-47d0-8dcc-e3e239e899b4",
+    "name": "Bellagio",
+    "city": "Besancon"
+  },
+  "info@tanacalda.fr": {
+    "sent_at": "2026-03-26T16:10:51.604633+00:00",
+    "last_sent_at": "2026-03-26T16:10:51.604633+00:00",
+    "send_count": 1,
+    "resend_id": "914fb872-c721-4eee-b6ea-20d7be166697",
+    "name": "Tana Calda \"pizzeria\" - Châtillon le Duc",
+    "city": "Besancon"
+  },
+  "contact@novarestaurantbesancon.com": {
+    "sent_at": "2026-03-26T16:10:53.566951+00:00",
+    "last_sent_at": "2026-03-26T16:10:53.566951+00:00",
+    "send_count": 1,
+    "resend_id": "cb8cf26a-5923-44c1-ba6f-2e8bcc836528",
+    "name": "Pizza Nova Valentin - Pizzeria châtillon le duc - Besançon",
+    "city": "Besancon"
+  },
+  "pizzamontrapon25@gmail.com": {
+    "sent_at": "2026-03-26T16:10:55.800284+00:00",
+    "last_sent_at": "2026-03-26T16:10:55.800284+00:00",
+    "send_count": 1,
+    "resend_id": "e73be6ac-afd7-4815-8615-ff49c543c37d",
+    "name": "Pizza Montrapon - Besançon - 25000",
+    "city": "Besancon"
+  },
+  "contact@milipizz.fr": {
+    "sent_at": "2026-03-26T16:10:57.719092+00:00",
+    "last_sent_at": "2026-03-26T16:10:57.719092+00:00",
+    "send_count": 1,
+    "resend_id": "dbccbb38-ef83-4bba-9bdb-613d38c8c288",
+    "name": "MiliPizz'",
+    "city": "Besancon"
+  },
+  "pizz-avenue25@orange.fr": {
+    "sent_at": "2026-03-26T16:10:59.623158+00:00",
+    "last_sent_at": "2026-03-26T16:10:59.623158+00:00",
+    "send_count": 1,
+    "resend_id": "4a98ca6d-2826-4829-93d4-3bf4a05ca5af",
+    "name": "Pizz'Avenue",
+    "city": "Besancon"
+  },
+  "pizzadelos@gmail.com": {
+    "sent_at": "2026-03-26T16:11:01.540836+00:00",
+    "last_sent_at": "2026-03-26T16:11:01.540836+00:00",
+    "send_count": 1,
+    "resend_id": "fb8ec1e2-9d67-4214-ad52-dfaa632769cc",
+    "name": "PIZZA DELOS Pizzeria certifiée Bio Besançon",
+    "city": "Besancon"
+  },
+  "prezio33@gmail.com": {
+    "sent_at": "2026-03-26T16:11:03.495842+00:00",
+    "last_sent_at": "2026-03-26T16:11:03.495842+00:00",
+    "send_count": 1,
+    "resend_id": "85db35c0-2211-4881-98e3-db85a5270c21",
+    "name": "Chez Diego",
+    "city": "Besancon"
+  },
+  "contact@accentcom.fr": {
+    "sent_at": "2026-03-26T16:11:05.487461+00:00",
+    "last_sent_at": "2026-03-26T16:11:05.487461+00:00",
+    "send_count": 1,
+    "resend_id": "5e272e53-8613-4998-976f-c3227a3c444c",
+    "name": "Pizza'Mania",
+    "city": "Besancon"
+  },
+  "restaurantlalchimie25@gmail.com": {
+    "sent_at": "2026-03-26T16:11:07.435931+00:00",
+    "last_sent_at": "2026-03-26T16:11:07.435931+00:00",
+    "send_count": 1,
+    "resend_id": "0ddd540e-1232-4c12-afd6-d095aa45121b",
+    "name": "L'Alchimie",
+    "city": "Besancon"
+  },
+  "laumasrestaurant@hotmail.com": {
+    "sent_at": "2026-03-26T16:11:09.688354+00:00",
+    "last_sent_at": "2026-03-26T16:11:09.688354+00:00",
+    "send_count": 1,
+    "resend_id": "efb6999d-45c7-48cf-8ed2-cbb8bd8a647c",
+    "name": "LauMas",
+    "city": "Besancon"
+  },
+  "info@api-and-you.com": {
+    "sent_at": "2026-03-26T16:11:11.640344+00:00",
+    "last_sent_at": "2026-03-26T16:11:11.640344+00:00",
+    "send_count": 1,
+    "resend_id": "bcc18106-f9f1-4b77-9b09-afd3299c007b",
+    "name": "Le 1802",
+    "city": "Besancon"
+  },
+  "krims2288@gmail.com": {
+    "sent_at": "2026-03-26T16:11:13.589096+00:00",
+    "last_sent_at": "2026-03-26T16:11:13.589096+00:00",
+    "send_count": 1,
+    "resend_id": "0718a77b-76f6-4de2-a352-a8be832e453e",
+    "name": "O Suprême Burger",
+    "city": "Besancon"
+  },
+  "contact@bigban.fr": {
+    "sent_at": "2026-03-26T16:11:15.491906+00:00",
+    "last_sent_at": "2026-03-26T16:11:15.491906+00:00",
+    "send_count": 1,
+    "resend_id": "9458e3c2-a5b0-4d28-9a34-54857ba5a7b9",
+    "name": "Big Ban",
+    "city": "Besancon"
+  },
+  "contact@jurasmokehouse.fr": {
+    "sent_at": "2026-03-26T16:11:17.414803+00:00",
+    "last_sent_at": "2026-03-26T16:11:17.414803+00:00",
+    "send_count": 1,
+    "resend_id": "fc73276c-583d-42cd-94d4-c43f2cf01ab7",
+    "name": "Jura Smokehouse",
+    "city": "Besancon"
+  },
+  "saintpauloise@hotmail.fr": {
+    "sent_at": "2026-03-26T16:11:19.398326+00:00",
+    "last_sent_at": "2026-03-26T16:11:19.398326+00:00",
+    "send_count": 1,
+    "resend_id": "d44cc1bb-50e8-4456-a23c-67cb8a522cb7",
+    "name": "ROTISSERIE JESS",
+    "city": "Besancon"
+  },
+  "vigueur.%5cnmylitle.epicerie@gmail.com": {
+    "sent_at": "2026-03-26T16:11:21.348748+00:00",
+    "last_sent_at": "2026-03-26T16:11:21.348748+00:00",
+    "send_count": 1,
+    "resend_id": "090ac8be-3ad3-44f1-ba9b-89fc78d1b7ff",
+    "name": "My litle épicerie -Snacking -traiteur",
+    "city": "Besancon"
+  },
+  "salam@mon-resto-halal.com": {
+    "sent_at": "2026-03-26T16:11:23.253723+00:00",
+    "last_sent_at": "2026-03-26T16:11:23.253723+00:00",
+    "send_count": 1,
+    "resend_id": "1ad16f2b-4531-4941-b70e-76f4ff951dca",
+    "name": "New Antalya",
+    "city": "Orleans"
+  },
+  "raadoine@gmail.com": {
+    "sent_at": "2026-03-26T16:11:25.194900+00:00",
+    "last_sent_at": "2026-03-26T16:11:25.194900+00:00",
+    "send_count": 1,
+    "resend_id": "4e5196cc-fe73-48e3-961e-8fd8dc1638b0",
+    "name": "Grec Gourmand",
+    "city": "Orleans"
+  },
+  "burgerstation45@gmail.com": {
+    "sent_at": "2026-03-26T16:11:27.130999+00:00",
+    "last_sent_at": "2026-03-26T16:11:27.130999+00:00",
+    "send_count": 1,
+    "resend_id": "19686a30-ef41-48c0-a688-24896c708272",
+    "name": "Burger Station Orléans",
+    "city": "Orleans"
+  },
+  "chou09@msn.com": {
+    "sent_at": "2026-03-26T16:11:29.046003+00:00",
+    "last_sent_at": "2026-03-26T16:11:29.046003+00:00",
+    "send_count": 1,
+    "resend_id": "4ca5c12c-4424-4122-9dec-1547c2963d18",
+    "name": "O' Burger",
+    "city": "Orleans"
+  },
+  "restaurant-mangal45@hotmail.com": {
+    "sent_at": "2026-03-26T16:11:30.985293+00:00",
+    "last_sent_at": "2026-03-26T16:11:30.985293+00:00",
+    "send_count": 1,
+    "resend_id": "4d92bf23-c22b-4a98-8f98-80783016d246",
+    "name": "LE MANGAL",
+    "city": "Orleans"
+  },
+  "ssafini@hotmail.fr": {
+    "sent_at": "2026-03-26T16:11:33.421016+00:00",
+    "last_sent_at": "2026-03-26T16:11:33.421016+00:00",
+    "send_count": 1,
+    "resend_id": "a60ce99c-7ed0-4f6f-9957-110a48f63176",
+    "name": "Best Of Burger",
+    "city": "Orleans"
+  },
+  "crockebab@yahoo.fr": {
+    "sent_at": "2026-03-26T16:11:35.369236+00:00",
+    "last_sent_at": "2026-03-26T16:11:35.369236+00:00",
+    "send_count": 1,
+    "resend_id": "6730b939-f92e-4dc4-9755-92177431439f",
+    "name": "Crock express",
+    "city": "Orleans"
+  },
+  "kelly.doucet0@gmail.com": {
+    "sent_at": "2026-03-26T16:11:37.315059+00:00",
+    "last_sent_at": "2026-03-26T16:11:37.315059+00:00",
+    "send_count": 1,
+    "resend_id": "2ea01104-690a-4226-8d43-744c025e4ecf",
+    "name": "Kali",
+    "city": "Orleans"
+  },
+  "contact@sahtayn.fr": {
+    "sent_at": "2026-03-26T16:11:39.310158+00:00",
+    "last_sent_at": "2026-03-26T16:11:39.310158+00:00",
+    "send_count": 1,
+    "resend_id": "d1f6b6c6-4c11-4d84-9db4-15c84cabf266",
+    "name": "Sahtayn Mets Libanais",
+    "city": "Orleans"
+  },
+  "chicken.flavor.kff@gmail.com": {
+    "sent_at": "2026-03-26T16:11:41.360453+00:00",
+    "last_sent_at": "2026-03-26T16:11:41.360453+00:00",
+    "send_count": 1,
+    "resend_id": "700e071e-4011-46d0-89a1-4b32b1150c6d",
+    "name": "Chicken Flavor",
+    "city": "Orleans"
+  },
+  "contact@com-maker.fr": {
+    "sent_at": "2026-03-26T16:11:43.395375+00:00",
+    "last_sent_at": "2026-03-26T16:11:43.395375+00:00",
+    "send_count": 1,
+    "resend_id": "0a92a09c-df13-4880-9f42-1c5b867556f3",
+    "name": "Donna Mia",
+    "city": "Orleans"
+  },
+  "contact@restaurant-viaggio.fr": {
+    "sent_at": "2026-03-26T16:11:45.343441+00:00",
+    "last_sent_at": "2026-03-26T16:11:45.343441+00:00",
+    "send_count": 1,
+    "resend_id": "31ce9d95-5540-45df-90d3-bbfc7653f8e9",
+    "name": "Viaggio Ristorante",
+    "city": "Orleans"
+  },
+  "mozami45000@gmail.com": {
+    "sent_at": "2026-03-26T16:11:47.333407+00:00",
+    "last_sent_at": "2026-03-26T16:11:47.333407+00:00",
+    "send_count": 1,
+    "resend_id": "582ac878-b2f7-4466-8ed3-4fba22242371",
+    "name": "L'Artistic",
+    "city": "Orleans"
+  },
+  "jerome.garridopro@gmail.com": {
+    "sent_at": "2026-03-26T16:11:49.249395+00:00",
+    "last_sent_at": "2026-03-26T16:11:49.249395+00:00",
+    "send_count": 1,
+    "resend_id": "9ee32519-b091-4783-91b8-575340a65f55",
+    "name": "Gioia",
+    "city": "Orleans"
+  },
+  "contact@pizzanap.fr": {
+    "sent_at": "2026-03-26T16:11:51.206295+00:00",
+    "last_sent_at": "2026-03-26T16:11:51.206295+00:00",
+    "send_count": 1,
+    "resend_id": "da5b7d63-3489-4830-82a0-d8c71eedae99",
+    "name": "Pizza Nap",
+    "city": "Orleans"
+  },
+  "info@lafrench-pizza.com": {
+    "sent_at": "2026-03-26T16:11:53.160758+00:00",
+    "last_sent_at": "2026-03-26T16:11:53.160758+00:00",
+    "send_count": 1,
+    "resend_id": "e1f0685c-b3a5-439d-b4fd-5d701b1e241c",
+    "name": "LA FRENCH PIZZA",
+    "city": "Orleans"
+  },
+  "hassen.naceff@gmail.com": {
+    "sent_at": "2026-03-26T16:11:55.146116+00:00",
+    "last_sent_at": "2026-03-26T16:11:55.146116+00:00",
+    "send_count": 1,
+    "resend_id": "d9f5aeb6-2b10-4310-9afc-be7ac28ca44d",
+    "name": "PIZZERIA FRATELLI",
+    "city": "Orleans"
+  },
+  "khalid.elhammouti@yahoo.fr": {
+    "sent_at": "2026-03-26T16:11:57.092186+00:00",
+    "last_sent_at": "2026-03-26T16:11:57.092186+00:00",
+    "send_count": 1,
+    "resend_id": "925a5e83-ee8f-4143-bb36-01958f2c0a8e",
+    "name": "Pizz' Burg Orléans",
+    "city": "Orleans"
+  },
+  "kp.resto@outlook.fr": {
+    "sent_at": "2026-03-26T16:11:59.015362+00:00",
+    "last_sent_at": "2026-03-26T16:11:59.015362+00:00",
+    "send_count": 1,
+    "resend_id": "588136fa-6e31-47c2-a8bf-1e2e76c047f2",
+    "name": "KP Restaurant",
+    "city": "Orleans"
+  },
+  "cotesud.loire@bbox.fr": {
+    "sent_at": "2026-03-26T16:12:00.963930+00:00",
+    "last_sent_at": "2026-03-26T16:12:00.963930+00:00",
+    "send_count": 1,
+    "resend_id": "5231bd3b-e2ce-4d8a-bb7c-dc74a342bcbd",
+    "name": "Côté Sud Loire",
+    "city": "Orleans"
+  },
+  "catalunapizz@gmail.com": {
+    "sent_at": "2026-03-26T16:12:02.871283+00:00",
+    "last_sent_at": "2026-03-26T16:12:02.871283+00:00",
+    "send_count": 1,
+    "resend_id": "ffab007a-9fe5-491e-8395-4f55459668e4",
+    "name": "Cataluña Pizz - Food Truck",
+    "city": "Orleans"
+  },
+  "pizzaroyal.ab@gmail.com": {
+    "sent_at": "2026-03-26T16:12:05.121269+00:00",
+    "last_sent_at": "2026-03-26T16:12:05.121269+00:00",
+    "send_count": 1,
+    "resend_id": "dfa8e89c-01d7-4d6f-9252-1b4ea6d7fd07",
+    "name": "Pizza Royal",
+    "city": "Orleans"
   }
 }
