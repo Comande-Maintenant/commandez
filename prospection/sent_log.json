@@ -8438,5 +8438,381 @@
     "resend_id": "db52fc67-f5cf-43fc-9d47-14fcd3574200",
     "name": "La Pizza Di Gastonello",
     "city": "Perpignan"
+  },
+  "g.lucaparra@gmail.com": {
+    "sent_at": "2026-03-26T08:11:21.445328+00:00",
+    "last_sent_at": "2026-03-26T08:11:21.445328+00:00",
+    "send_count": 1,
+    "resend_id": "48473d51-38c5-458c-b731-a88dd16caa1b",
+    "name": "BELLA CIAO",
+    "city": "Perpignan"
+  },
+  "da_nando@aol.fr": {
+    "sent_at": "2026-03-26T08:11:23.393616+00:00",
+    "last_sent_at": "2026-03-26T08:11:23.393616+00:00",
+    "send_count": 1,
+    "resend_id": "1808b4cd-cbc7-49ed-8dc6-b07f2bc2b9fb",
+    "name": "Restaurant pizzeria salon de thé da Nando",
+    "city": "Perpignan"
+  },
+  "contact@hyp3.fr": {
+    "sent_at": "2026-03-26T08:11:25.430433+00:00",
+    "last_sent_at": "2026-03-26T08:11:25.430433+00:00",
+    "send_count": 1,
+    "resend_id": "2e630fe8-783e-43a4-b65c-09425433f68c",
+    "name": "Restaurant Nikkei by Ruben Gomez",
+    "city": "Perpignan"
+  },
+  "pizz.et.pizza@gmail.com": {
+    "sent_at": "2026-03-26T08:11:27.418596+00:00",
+    "last_sent_at": "2026-03-26T08:11:27.418596+00:00",
+    "send_count": 1,
+    "resend_id": "2543ae26-7d34-490a-93bd-16994588da4a",
+    "name": "Pizz & Pizza - Pizza artisanale au feu de bois",
+    "city": "Perpignan"
+  },
+  "lassamorosso@gmail.com": {
+    "sent_at": "2026-03-26T08:11:29.196618+00:00",
+    "last_sent_at": "2026-03-26T08:11:29.196618+00:00",
+    "send_count": 1,
+    "resend_id": "e0e3f6ef-155b-4dbe-9865-a9cf1ec6a535",
+    "name": "Food truck camion Pizzas LASSAMOROSSO",
+    "city": "Perpignan"
+  },
+  "contact@aldo-perpignan.fr": {
+    "sent_at": "2026-03-26T08:11:31.175834+00:00",
+    "last_sent_at": "2026-03-26T08:11:31.175834+00:00",
+    "send_count": 1,
+    "resend_id": "a7479f60-ae76-47c7-836c-440e7fcdc5d7",
+    "name": "Spaghetteri'aldo",
+    "city": "Perpignan"
+  },
+  "pizzasdumonde66@gmail.com": {
+    "sent_at": "2026-03-26T08:11:33.173006+00:00",
+    "last_sent_at": "2026-03-26T08:11:33.173006+00:00",
+    "send_count": 1,
+    "resend_id": "f73c711b-690b-4d02-aa3a-ea8b158a34a9",
+    "name": "Pizza Du Monde - Livraison et Emporté",
+    "city": "Perpignan"
+  },
+  "name@mail.com": {
+    "sent_at": "2026-03-26T08:11:35.203426+00:00",
+    "last_sent_at": "2026-03-26T08:11:35.203426+00:00",
+    "send_count": 1,
+    "resend_id": "f8efdd4a-4599-4f42-abf5-eb804e1f9a9f",
+    "name": "Gust'I Pizza",
+    "city": "Perpignan"
+  },
+  "casa.tacos.66@gmail.com": {
+    "sent_at": "2026-03-26T08:11:37.005637+00:00",
+    "last_sent_at": "2026-03-26T08:11:37.005637+00:00",
+    "send_count": 1,
+    "resend_id": "f3acee8d-0d5c-42d4-ae85-225302e5d306",
+    "name": "Casa tacos",
+    "city": "Perpignan"
+  },
+  "somag.houari@gmail.com": {
+    "sent_at": "2026-03-26T08:11:38.779817+00:00",
+    "last_sent_at": "2026-03-26T08:11:38.779817+00:00",
+    "send_count": 1,
+    "resend_id": "51e2f8eb-89af-4c4e-9b72-da57186f138b",
+    "name": "ROTISSERIE COCOU MAMIE",
+    "city": "Perpignan"
+  },
+  "kifftonbbq@gmail.com": {
+    "sent_at": "2026-03-26T08:11:40.748378+00:00",
+    "last_sent_at": "2026-03-26T08:11:40.748378+00:00",
+    "send_count": 1,
+    "resend_id": "5cde9a92-57f2-45ce-b489-df2b42e05442",
+    "name": "KIFFTON BBQ",
+    "city": "Perpignan"
+  },
+  "cafe@hiboubistrogrec.com": {
+    "sent_at": "2026-03-26T08:11:42.545799+00:00",
+    "last_sent_at": "2026-03-26T08:11:42.545799+00:00",
+    "send_count": 1,
+    "resend_id": "f5f42717-6ab8-4812-97a7-f96ce262da87",
+    "name": "Hibou bistro grec",
+    "city": "Perpignan"
+  },
+  "lexsisalanyakebab.shop@gmail.com": {
+    "sent_at": "2026-03-26T08:11:44.351578+00:00",
+    "last_sent_at": "2026-03-26T08:11:44.351578+00:00",
+    "send_count": 1,
+    "resend_id": "5152da67-17b3-4178-8d94-94c56b1a0970",
+    "name": "Lexsis Alanya Kebab",
+    "city": "Metz"
+  },
+  "ahmedelices@gmail.com": {
+    "sent_at": "2026-03-26T08:11:46.166408+00:00",
+    "last_sent_at": "2026-03-26T08:11:46.166408+00:00",
+    "send_count": 1,
+    "resend_id": "83530250-adf5-4e72-84a0-bd2a23593a45",
+    "name": "AHMEDELICES",
+    "city": "Metz"
+  },
+  "hello@tizitogo.com": {
+    "sent_at": "2026-03-26T08:11:48.208208+00:00",
+    "last_sent_at": "2026-03-26T08:11:48.208208+00:00",
+    "send_count": 1,
+    "resend_id": "b61cba3e-893c-4dd4-b199-66af4a521361",
+    "name": "TIZI Greek Street Food Metz",
+    "city": "Metz"
+  },
+  "sme.kocabey@gmail.com": {
+    "sent_at": "2026-03-26T08:11:49.983132+00:00",
+    "last_sent_at": "2026-03-26T08:11:49.983132+00:00",
+    "send_count": 1,
+    "resend_id": "ed85dbba-9c66-4780-9bd9-a16bf348c128",
+    "name": "Le Palais du Kebab Metz",
+    "city": "Metz"
+  },
+  "contact@summumexpress.com": {
+    "sent_at": "2026-03-26T08:11:51.760971+00:00",
+    "last_sent_at": "2026-03-26T08:11:51.760971+00:00",
+    "send_count": 1,
+    "resend_id": "a591cda2-bfa0-435c-86d5-38014399e514",
+    "name": "Summum Express",
+    "city": "Metz"
+  },
+  "contact@lemagnifiquesnack.com": {
+    "sent_at": "2026-03-26T08:11:53.551133+00:00",
+    "last_sent_at": "2026-03-26T08:11:53.551133+00:00",
+    "send_count": 1,
+    "resend_id": "4a0cb4ea-9293-45d7-abd8-28138f6dcef0",
+    "name": "Le Magnifique Snack",
+    "city": "Metz"
+  },
+  "vigueur.%5cnchaha123@hotmail.it": {
+    "sent_at": "2026-03-26T08:11:55.334749+00:00",
+    "last_sent_at": "2026-03-26T08:11:55.334749+00:00",
+    "send_count": 1,
+    "resend_id": "14e24bea-23a7-4cad-875d-a5cd30f92b2d",
+    "name": "Pizza Palma",
+    "city": "Metz"
+  },
+  "gran-gusto@hotmail.com": {
+    "sent_at": "2026-03-26T08:11:57.287560+00:00",
+    "last_sent_at": "2026-03-26T08:11:57.287560+00:00",
+    "send_count": 1,
+    "resend_id": "aaf1c9c9-625b-45c4-8cee-f8ec3e54ae58",
+    "name": "Gran Gusto",
+    "city": "Metz"
+  },
+  "lucas.preziosa@laposte.net": {
+    "sent_at": "2026-03-26T08:11:59.274455+00:00",
+    "last_sent_at": "2026-03-26T08:11:59.274455+00:00",
+    "send_count": 1,
+    "resend_id": "ce7c1012-be2b-44b6-bc9b-d8cc57c0f072",
+    "name": "Villa Preziosa",
+    "city": "Metz"
+  },
+  "damimmo.metz@gmail.com": {
+    "sent_at": "2026-03-26T08:12:01.049068+00:00",
+    "last_sent_at": "2026-03-26T08:12:01.049068+00:00",
+    "send_count": 1,
+    "resend_id": "21a65aaf-1c0f-431d-879f-214095d08e48",
+    "name": "Da Mimmo Pizzeria Metz",
+    "city": "Metz"
+  },
+  "lacasadijo@yahoo.fr": {
+    "sent_at": "2026-03-26T08:12:03.198371+00:00",
+    "last_sent_at": "2026-03-26T08:12:03.198371+00:00",
+    "send_count": 1,
+    "resend_id": "b9d470bb-483f-4ca0-a0e1-6409d6aecd18",
+    "name": "La Casa Di Jo",
+    "city": "Metz"
+  },
+  "you.dev.contact@gmail.com": {
+    "sent_at": "2026-03-26T08:12:04.961021+00:00",
+    "last_sent_at": "2026-03-26T08:12:04.961021+00:00",
+    "send_count": 1,
+    "resend_id": "80a2048d-349a-440f-b826-175cb2aca39f",
+    "name": "La Storia",
+    "city": "Metz"
+  },
+  "info.trattoria.arditi@gmail.com": {
+    "sent_at": "2026-03-26T08:12:06.751573+00:00",
+    "last_sent_at": "2026-03-26T08:12:06.751573+00:00",
+    "send_count": 1,
+    "resend_id": "92004f5b-7a77-423f-b903-ad750fada29b",
+    "name": "TRATTORIA ARDITI",
+    "city": "Metz"
+  },
+  "contact@santamaria57.fr": {
+    "sent_at": "2026-03-26T08:12:08.517343+00:00",
+    "last_sent_at": "2026-03-26T08:12:08.517343+00:00",
+    "send_count": 1,
+    "resend_id": "afc3644e-f774-4c38-88b7-4070dbf4135a",
+    "name": "Santa Maria",
+    "city": "Metz"
+  },
+  "contact@pizzavia.fr": {
+    "sent_at": "2026-03-26T08:12:10.279270+00:00",
+    "last_sent_at": "2026-03-26T08:12:10.279270+00:00",
+    "send_count": 1,
+    "resend_id": "0226bba6-1223-495c-b82e-c7f677e6611e",
+    "name": "Via Pizza Metz",
+    "city": "Metz"
+  },
+  "contact@pizzaroot.sayanfood.fr": {
+    "sent_at": "2026-03-26T08:12:12.082717+00:00",
+    "last_sent_at": "2026-03-26T08:12:12.082717+00:00",
+    "send_count": 1,
+    "resend_id": "18f3bc9c-a373-48d3-91fd-3d22c548d105",
+    "name": "Pizzaroot",
+    "city": "Metz"
+  },
+  "contact@lesrelaisdalsace.com": {
+    "sent_at": "2026-03-26T08:12:13.857791+00:00",
+    "last_sent_at": "2026-03-26T08:12:13.857791+00:00",
+    "send_count": 1,
+    "resend_id": "57d6a727-a80d-44b0-8336-28c51ec39c73",
+    "name": "𝐋𝐚 𝐓𝐚𝐯𝐞𝐫𝐧𝐞 𝑇𝑎𝑏𝑙𝑒 𝑑𝑒 𝐶𝑎𝑟𝑎𝑐𝑡è𝑟𝑒 𝐌𝐞𝐭𝐳 ☨",
+    "city": "Metz"
+  },
+  "restaurantlitaliano57@gmail.com": {
+    "sent_at": "2026-03-26T08:12:15.844071+00:00",
+    "last_sent_at": "2026-03-26T08:12:15.844071+00:00",
+    "send_count": 1,
+    "resend_id": "9d26f6a3-d43c-4ad8-891f-1425f438662b",
+    "name": "Restaurant l'Italiano",
+    "city": "Metz"
+  },
+  "viscontimetz@gmail.com": {
+    "sent_at": "2026-03-26T08:12:17.891682+00:00",
+    "last_sent_at": "2026-03-26T08:12:17.891682+00:00",
+    "send_count": 1,
+    "resend_id": "27101b0f-b2ae-422a-87aa-3b2aa7c14e68",
+    "name": "Le Visconti",
+    "city": "Metz"
+  },
+  "stephanieschreck@yahoo.fr": {
+    "sent_at": "2026-03-26T08:12:19.946524+00:00",
+    "last_sent_at": "2026-03-26T08:12:19.946524+00:00",
+    "send_count": 1,
+    "resend_id": "60b8e22d-9312-46a0-a668-c8c0fa6c5b00",
+    "name": "CHEZ PAVA",
+    "city": "Metz"
+  },
+  "restaurantcesarmetz@gmail.com": {
+    "sent_at": "2026-03-26T08:12:21.722773+00:00",
+    "last_sent_at": "2026-03-26T08:12:21.722773+00:00",
+    "send_count": 1,
+    "resend_id": "3b5be3bf-8e60-47fc-8767-c330212b180a",
+    "name": "Restaurant César",
+    "city": "Metz"
+  },
+  "contact@serialburger.fr": {
+    "sent_at": "2026-03-26T08:12:23.515811+00:00",
+    "last_sent_at": "2026-03-26T08:12:23.515811+00:00",
+    "send_count": 1,
+    "resend_id": "5fd2c9e9-73a5-472c-8466-074f7fc27c59",
+    "name": "Serial Food Truck",
+    "city": "Metz"
+  },
+  "contact@muse-metz.fr": {
+    "sent_at": "2026-03-26T08:12:25.304166+00:00",
+    "last_sent_at": "2026-03-26T08:12:25.304166+00:00",
+    "send_count": 1,
+    "resend_id": "67f615a1-2a7c-4c98-96c7-4e7b1f418ec3",
+    "name": "Muse",
+    "city": "Metz"
+  },
+  "hello@rockandrollbakery.com": {
+    "sent_at": "2026-03-26T08:12:27.280968+00:00",
+    "last_sent_at": "2026-03-26T08:12:27.280968+00:00",
+    "send_count": 1,
+    "resend_id": "207b5284-a872-4b36-98f2-25d7edd99787",
+    "name": "Rock & Roll Bakery",
+    "city": "Metz"
+  },
+  "yamifood57@gmail.com": {
+    "sent_at": "2026-03-26T08:12:29.362213+00:00",
+    "last_sent_at": "2026-03-26T08:12:29.362213+00:00",
+    "send_count": 1,
+    "resend_id": "674657b3-4ab0-4e66-9c09-75d13279a765",
+    "name": "Yami Food",
+    "city": "Metz"
+  },
+  "recrutement.pasta.time@gmail.com": {
+    "sent_at": "2026-03-26T08:12:31.170995+00:00",
+    "last_sent_at": "2026-03-26T08:12:31.170995+00:00",
+    "send_count": 1,
+    "resend_id": "9fbef238-6360-4782-ac2b-143761f207ce",
+    "name": "Pasta Mano",
+    "city": "Metz"
+  },
+  "crepeaddict.metz@gmail.com": {
+    "sent_at": "2026-03-26T08:12:32.936685+00:00",
+    "last_sent_at": "2026-03-26T08:12:32.936685+00:00",
+    "send_count": 1,
+    "resend_id": "3fb78257-8a44-4af6-ae2b-7d4d3bd78a26",
+    "name": "Crêpe Addict",
+    "city": "Metz"
+  },
+  "boogieburgermetz@gmail.com": {
+    "sent_at": "2026-03-26T08:12:34.717208+00:00",
+    "last_sent_at": "2026-03-26T08:12:34.717208+00:00",
+    "send_count": 1,
+    "resend_id": "06dbe25f-d58c-44b9-9a1d-e80adca2e673",
+    "name": "Boogie Burger",
+    "city": "Metz"
+  },
+  "benetdami@gmail.com": {
+    "sent_at": "2026-03-26T08:12:36.562113+00:00",
+    "last_sent_at": "2026-03-26T08:12:36.562113+00:00",
+    "send_count": 1,
+    "resend_id": "b08bcb7c-e7a4-4b01-800c-0661e3326801",
+    "name": "BEN & DAMI",
+    "city": "Metz"
+  },
+  "mechkeneprofessionnel@gmail.com": {
+    "sent_at": "2026-03-26T08:12:38.322437+00:00",
+    "last_sent_at": "2026-03-26T08:12:38.322437+00:00",
+    "send_count": 1,
+    "resend_id": "ebc78851-ba5b-40fc-9607-d1812317ff4b",
+    "name": "LITTLE SHAKE",
+    "city": "Metz"
+  },
+  "contact@sandwichssteinhoff.fr": {
+    "sent_at": "2026-03-26T08:12:40.148893+00:00",
+    "last_sent_at": "2026-03-26T08:12:40.148893+00:00",
+    "send_count": 1,
+    "resend_id": "4d85c969-4cfe-4179-9cfb-0418cccde0e6",
+    "name": "Sandwichs Steinhoff",
+    "city": "Metz"
+  },
+  "hicham.ouhmidi@hotmail.fr": {
+    "sent_at": "2026-03-26T08:12:41.962505+00:00",
+    "last_sent_at": "2026-03-26T08:12:41.962505+00:00",
+    "send_count": 1,
+    "resend_id": "bd7e335e-2da2-4df9-bdd0-63df7a2aadfa",
+    "name": "Tacos Mania",
+    "city": "Metz"
+  },
+  "ulfetkamili@gmail.com": {
+    "sent_at": "2026-03-26T08:12:43.916928+00:00",
+    "last_sent_at": "2026-03-26T08:12:43.916928+00:00",
+    "send_count": 1,
+    "resend_id": "e8e6a369-3656-4ccd-9caa-e7a50bec7ab5",
+    "name": "Tandoori-kebab",
+    "city": "Metz"
+  },
+  "lesbroches.gestion@gmail.com": {
+    "sent_at": "2026-03-26T08:12:45.695761+00:00",
+    "last_sent_at": "2026-03-26T08:12:45.695761+00:00",
+    "send_count": 1,
+    "resend_id": "76f161e4-469f-460a-a272-9099da6c3b0d",
+    "name": "Les broches Besançon",
+    "city": "Besancon"
+  },
+  "kornerbesancon@gmail.com": {
+    "sent_at": "2026-03-26T08:12:47.499147+00:00",
+    "last_sent_at": "2026-03-26T08:12:47.499147+00:00",
+    "send_count": 1,
+    "resend_id": "11300c79-8820-4acb-a067-906ba11bca5b",
+    "name": "Korner",
+    "city": "Besancon"
   }
 }
