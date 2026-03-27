@@ -9182,5 +9182,381 @@
     "resend_id": "dfa8e89c-01d7-4d6f-9252-1b4ea6d7fd07",
     "name": "Pizza Royal",
     "city": "Orleans"
+  },
+  "chezmathilde.foodtruck@gmail.com": {
+    "sent_at": "2026-03-27T08:08:47.405968+00:00",
+    "last_sent_at": "2026-03-27T08:08:47.405968+00:00",
+    "send_count": 1,
+    "resend_id": "2864dffc-bb53-4004-a225-fe08722292fb",
+    "name": "Chez Mathilde - Foodtruck",
+    "city": "Orleans"
+  },
+  "kimiko.orleans@gmail.com": {
+    "sent_at": "2026-03-27T08:08:49.681264+00:00",
+    "last_sent_at": "2026-03-27T08:08:49.681264+00:00",
+    "send_count": 1,
+    "resend_id": "6b52dd3f-723a-4244-bcc6-9d11912a641e",
+    "name": "Kimiko",
+    "city": "Orleans"
+  },
+  "dusmohammed@yahoo.com": {
+    "sent_at": "2026-03-27T08:08:52.117537+00:00",
+    "last_sent_at": "2026-03-27T08:08:52.117537+00:00",
+    "send_count": 1,
+    "resend_id": "39117b85-9a71-491d-b952-b9fe54feb4ec",
+    "name": "ONLY TACOS",
+    "city": "Orleans"
+  },
+  "monopticienloa@gmail.com": {
+    "sent_at": "2026-03-27T08:08:54.138524+00:00",
+    "last_sent_at": "2026-03-27T08:08:54.138524+00:00",
+    "send_count": 1,
+    "resend_id": "118b1d2b-dde8-47fa-92e9-92908f8ee7ce",
+    "name": "SNACKREOLE",
+    "city": "Orleans"
+  },
+  "brams45000@hotmail.fr": {
+    "sent_at": "2026-03-27T08:08:56.050549+00:00",
+    "last_sent_at": "2026-03-27T08:08:56.050549+00:00",
+    "send_count": 1,
+    "resend_id": "b3e78579-f59b-4b51-87a2-a2ecef84027f",
+    "name": "Chicken house",
+    "city": "Orleans"
+  },
+  "contact@kokoko.fr": {
+    "sent_at": "2026-03-27T08:08:57.977992+00:00",
+    "last_sent_at": "2026-03-27T08:08:57.977992+00:00",
+    "send_count": 1,
+    "resend_id": "10695a29-b255-44e8-b7de-ed9756a895d0",
+    "name": "Kokoko rôtisserie Orléans",
+    "city": "Orleans"
+  },
+  "medghoul.myriam@gmail.com": {
+    "sent_at": "2026-03-27T08:08:59.861077+00:00",
+    "last_sent_at": "2026-03-27T08:08:59.861077+00:00",
+    "send_count": 1,
+    "resend_id": "aa8e14c7-e731-437c-8060-28b84168a622",
+    "name": "München Kebab",
+    "city": "Rouen"
+  },
+  "ashad_1234@hotmail.com": {
+    "sent_at": "2026-03-27T08:09:01.932914+00:00",
+    "last_sent_at": "2026-03-27T08:09:01.932914+00:00",
+    "send_count": 1,
+    "resend_id": "841b5fb7-d9cf-4080-a08a-a08e41dee75c",
+    "name": "Kebab La Fontaine",
+    "city": "Rouen"
+  },
+  "infosofra@gmail.com": {
+    "sent_at": "2026-03-27T08:09:03.923896+00:00",
+    "last_sent_at": "2026-03-27T08:09:03.923896+00:00",
+    "send_count": 1,
+    "resend_id": "0210ae9d-968f-4925-83e1-cab60656300d",
+    "name": "Sofra Rouen",
+    "city": "Rouen"
+  },
+  "lorientexpress76100@gmail.com": {
+    "sent_at": "2026-03-27T08:09:05.828796+00:00",
+    "last_sent_at": "2026-03-27T08:09:05.828796+00:00",
+    "send_count": 1,
+    "resend_id": "17893349-ab73-4582-a9ab-466b54f98d02",
+    "name": "L'Orient Express",
+    "city": "Rouen"
+  },
+  "anis76@live.fr": {
+    "sent_at": "2026-03-27T08:09:07.748720+00:00",
+    "last_sent_at": "2026-03-27T08:09:07.748720+00:00",
+    "send_count": 1,
+    "resend_id": "5ac5d1c4-213f-41e4-b467-0460db667935",
+    "name": "Etoile du sud",
+    "city": "Rouen"
+  },
+  "pitamadre.rouen@gmail.com": {
+    "sent_at": "2026-03-27T08:09:09.667646+00:00",
+    "last_sent_at": "2026-03-27T08:09:09.667646+00:00",
+    "send_count": 1,
+    "resend_id": "4ca5458f-ffce-4830-b333-d513c0cd6243",
+    "name": "Pita Madre",
+    "city": "Rouen"
+  },
+  "kh.restauration@gmail.com": {
+    "sent_at": "2026-03-27T08:09:11.545561+00:00",
+    "last_sent_at": "2026-03-27T08:09:11.545561+00:00",
+    "send_count": 1,
+    "resend_id": "afbd4b11-27f2-44e3-bf80-1d08cec69ee0",
+    "name": "Le Soleil du Maghreb",
+    "city": "Rouen"
+  },
+  "hocine761@hotmail.fr": {
+    "sent_at": "2026-03-27T08:09:13.456006+00:00",
+    "last_sent_at": "2026-03-27T08:09:13.456006+00:00",
+    "send_count": 1,
+    "resend_id": "0d899bfe-bbb4-45d1-848e-d644bbd34387",
+    "name": "le dwich( jts food)",
+    "city": "Rouen"
+  },
+  "lesdelicesdhalfeti@gmail.com": {
+    "sent_at": "2026-03-27T08:09:15.543636+00:00",
+    "last_sent_at": "2026-03-27T08:09:15.543636+00:00",
+    "send_count": 1,
+    "resend_id": "08ca8f88-6d47-4883-b85d-f0ad3020368b",
+    "name": "Les délices d ‘Halfeti",
+    "city": "Rouen"
+  },
+  "safirrouen@gmail.com": {
+    "sent_at": "2026-03-27T08:09:17.439098+00:00",
+    "last_sent_at": "2026-03-27T08:09:17.439098+00:00",
+    "send_count": 1,
+    "resend_id": "c559f6af-1fc0-4f45-b00c-4e2394988587",
+    "name": "Le Safir Kebab",
+    "city": "Rouen"
+  },
+  "yassin27100@icloud.com": {
+    "sent_at": "2026-03-27T08:09:19.343437+00:00",
+    "last_sent_at": "2026-03-27T08:09:19.343437+00:00",
+    "send_count": 1,
+    "resend_id": "4afa2046-25b4-405e-89ee-94d051cf0d7a",
+    "name": "Burger Ch'waya | Burger Rouen",
+    "city": "Rouen"
+  },
+  "cselimd-61@live.fr": {
+    "sent_at": "2026-03-27T08:09:21.197053+00:00",
+    "last_sent_at": "2026-03-27T08:09:21.197053+00:00",
+    "send_count": 1,
+    "resend_id": "3758ee8f-a516-4783-a2d2-607c7a4be5dd",
+    "name": "Ottoman Palace",
+    "city": "Rouen"
+  },
+  "contact@bisourouen.fr": {
+    "sent_at": "2026-03-27T08:09:23.088549+00:00",
+    "last_sent_at": "2026-03-27T08:09:23.088549+00:00",
+    "send_count": 1,
+    "resend_id": "cc26183a-ee30-4baf-8058-15fb868baba5",
+    "name": "Bisou",
+    "city": "Rouen"
+  },
+  "contact@foreachcode.com": {
+    "sent_at": "2026-03-27T08:09:25.003191+00:00",
+    "last_sent_at": "2026-03-27T08:09:25.003191+00:00",
+    "send_count": 1,
+    "resend_id": "e1614912-9b2f-4747-8bcd-fa882369d4ac",
+    "name": "Koala Pizza Rouen",
+    "city": "Rouen"
+  },
+  "amici.restaurantpizzeria@gmail.com": {
+    "sent_at": "2026-03-27T08:09:27.040352+00:00",
+    "last_sent_at": "2026-03-27T08:09:27.040352+00:00",
+    "send_count": 1,
+    "resend_id": "e76c5c28-60a4-45a2-9dbf-41ea324cd224",
+    "name": "Restaurant Pizzeria Amici",
+    "city": "Rouen"
+  },
+  "contact@drugstorerouen.fr": {
+    "sent_at": "2026-03-27T08:09:29.197133+00:00",
+    "last_sent_at": "2026-03-27T08:09:29.197133+00:00",
+    "send_count": 1,
+    "resend_id": "bf00efab-be21-4b8b-93e0-4a6723d83961",
+    "name": "Pizzeria du Drugstore",
+    "city": "Rouen"
+  },
+  "tepouchet@gmail.com": {
+    "sent_at": "2026-03-27T08:09:31.120780+00:00",
+    "last_sent_at": "2026-03-27T08:09:31.120780+00:00",
+    "send_count": 1,
+    "resend_id": "2ae63c10-b318-4c3f-a549-bf3ddaca143f",
+    "name": "Le Stromboli",
+    "city": "Rouen"
+  },
+  "adelslm@hotmail.fr": {
+    "sent_at": "2026-03-27T08:09:33.035007+00:00",
+    "last_sent_at": "2026-03-27T08:09:33.035007+00:00",
+    "send_count": 1,
+    "resend_id": "42b1915c-e15d-456d-99f8-1235bb006a18",
+    "name": "AD PIZZA ROUEN ( halal )",
+    "city": "Rouen"
+  },
+  "labiciclettapizza@gmail.com": {
+    "sent_at": "2026-03-27T08:09:34.937966+00:00",
+    "last_sent_at": "2026-03-27T08:09:34.937966+00:00",
+    "send_count": 1,
+    "resend_id": "7d5224f7-6d0f-43a5-9e13-57b51435e5a4",
+    "name": "La bicicletta pizza",
+    "city": "Rouen"
+  },
+  "hb919-fb@accor.com": {
+    "sent_at": "2026-03-27T08:09:36.924096+00:00",
+    "last_sent_at": "2026-03-27T08:09:36.924096+00:00",
+    "send_count": 1,
+    "resend_id": "664920c3-1b3b-4f11-aa5d-a77647481403",
+    "name": "Quindici Trattoria Rouen",
+    "city": "Rouen"
+  },
+  "lapastatinto@gmail.com": {
+    "sent_at": "2026-03-27T08:09:38.800108+00:00",
+    "last_sent_at": "2026-03-27T08:09:38.800108+00:00",
+    "send_count": 1,
+    "resend_id": "0b2708a1-4987-4aaf-b493-b429edb7f91a",
+    "name": "La Pasta Tinto",
+    "city": "Rouen"
+  },
+  "crepy@lecomptoir-italien.fr": {
+    "sent_at": "2026-03-27T08:09:40.743890+00:00",
+    "last_sent_at": "2026-03-27T08:09:40.743890+00:00",
+    "send_count": 1,
+    "resend_id": "3a891d97-4eb7-4e0b-a4bd-6631d046b868",
+    "name": "Le Comptoir Italien - Rouen",
+    "city": "Rouen"
+  },
+  "pizzapagani@gmail.com": {
+    "sent_at": "2026-03-27T08:09:42.639045+00:00",
+    "last_sent_at": "2026-03-27T08:09:42.639045+00:00",
+    "send_count": 1,
+    "resend_id": "42ce42e5-a8e3-4b6c-b864-dac86ec3f9ae",
+    "name": "Pagani",
+    "city": "Rouen"
+  },
+  "corinnefrappier0@gmail.com": {
+    "sent_at": "2026-03-27T08:09:44.542707+00:00",
+    "last_sent_at": "2026-03-27T08:09:44.542707+00:00",
+    "send_count": 1,
+    "resend_id": "a0914dba-e297-453f-a5ee-a2b2b3b0a9c4",
+    "name": "Tommasino",
+    "city": "Rouen"
+  },
+  "les.doges@orange.fr": {
+    "sent_at": "2026-03-27T08:09:46.573462+00:00",
+    "last_sent_at": "2026-03-27T08:09:46.573462+00:00",
+    "send_count": 1,
+    "resend_id": "74ede843-11d8-41a5-b431-408b32089434",
+    "name": "LES DOGES",
+    "city": "Rouen"
+  },
+  "contact@lapizzeta76.fr": {
+    "sent_at": "2026-03-27T08:09:48.460580+00:00",
+    "last_sent_at": "2026-03-27T08:09:48.460580+00:00",
+    "send_count": 1,
+    "resend_id": "02f83736-a02e-4b32-92fe-46fbbdb92a80",
+    "name": "La Pizzeta Bois guillaume",
+    "city": "Rouen"
+  },
+  "lepartagepizza1105@gmail.com": {
+    "sent_at": "2026-03-27T08:09:50.417915+00:00",
+    "last_sent_at": "2026-03-27T08:09:50.417915+00:00",
+    "send_count": 1,
+    "resend_id": "317ad0d1-c1bf-458b-b4b0-853bfc49cbfb",
+    "name": "Le Partage",
+    "city": "Rouen"
+  },
+  "streatburger76@gmail.com": {
+    "sent_at": "2026-03-27T08:09:52.313588+00:00",
+    "last_sent_at": "2026-03-27T08:09:52.313588+00:00",
+    "send_count": 1,
+    "resend_id": "27cdab6d-9c61-43d2-ac7f-7ed31b815414",
+    "name": "Str’eat burger",
+    "city": "Rouen"
+  },
+  "contact@restaurantmonamour.fr": {
+    "sent_at": "2026-03-27T08:09:54.250811+00:00",
+    "last_sent_at": "2026-03-27T08:09:54.250811+00:00",
+    "send_count": 1,
+    "resend_id": "d0b65e0f-2d87-49e2-af6e-ecbee379a94b",
+    "name": "Mon Amour",
+    "city": "Rouen"
+  },
+  "contact@mie-a-mie.fr": {
+    "sent_at": "2026-03-27T08:09:56.162706+00:00",
+    "last_sent_at": "2026-03-27T08:09:56.162706+00:00",
+    "send_count": 1,
+    "resend_id": "3d12a9a5-e590-45d1-bdc8-ed2bebea6435",
+    "name": "Mie à Mie",
+    "city": "Rouen"
+  },
+  "vigueur.%5cnloubna.harizi.fin@gmail.com": {
+    "sent_at": "2026-03-27T08:09:58.059445+00:00",
+    "last_sent_at": "2026-03-27T08:09:58.059445+00:00",
+    "send_count": 1,
+    "resend_id": "2d1dd7b1-c338-4524-96a4-237a5df9f8c2",
+    "name": "TEXAS HOT DOG Rouen",
+    "city": "Rouen"
+  },
+  "contact@gladalle76.fr": {
+    "sent_at": "2026-03-27T08:09:59.931429+00:00",
+    "last_sent_at": "2026-03-27T08:09:59.931429+00:00",
+    "send_count": 1,
+    "resend_id": "9ccb3e8c-828c-4ae2-961e-463823c8c141",
+    "name": "G LA DALLE - Rouen Rive Droite",
+    "city": "Rouen"
+  },
+  "service.client.mozzaandco@gmail.com": {
+    "sent_at": "2026-03-27T08:10:01.857673+00:00",
+    "last_sent_at": "2026-03-27T08:10:01.857673+00:00",
+    "send_count": 1,
+    "resend_id": "f7a319a7-c2a1-4f0a-9c8e-f85beea26308",
+    "name": "Mozza & Co",
+    "city": "Rouen"
+  },
+  "hoguera.rouen@gmail.com": {
+    "sent_at": "2026-03-27T08:10:03.780696+00:00",
+    "last_sent_at": "2026-03-27T08:10:03.780696+00:00",
+    "send_count": 1,
+    "resend_id": "f427cf40-1709-434d-88fb-6cf3e46c7095",
+    "name": "Hoguera",
+    "city": "Rouen"
+  },
+  "amirab.immo@gmail.com": {
+    "sent_at": "2026-03-27T08:10:05.716411+00:00",
+    "last_sent_at": "2026-03-27T08:10:05.716411+00:00",
+    "send_count": 1,
+    "resend_id": "d0277a67-9c89-4a6d-826b-f6102b38942e",
+    "name": "Café crème - Restaurant Brunch",
+    "city": "Rouen"
+  },
+  "hellofuzaorouen@gmail.com": {
+    "sent_at": "2026-03-27T08:10:07.620796+00:00",
+    "last_sent_at": "2026-03-27T08:10:07.620796+00:00",
+    "send_count": 1,
+    "resend_id": "341072f3-a442-43ab-9070-9acbb7f5b029",
+    "name": "Moka by Café Crème - Coffee Shop & Brunch",
+    "city": "Rouen"
+  },
+  "vigueur.%5cnsmuktharudeen@gmail.com": {
+    "sent_at": "2026-03-27T08:10:09.841589+00:00",
+    "last_sent_at": "2026-03-27T08:10:09.841589+00:00",
+    "send_count": 1,
+    "resend_id": "abf1c253-073d-495b-ba20-0687e796ed5e",
+    "name": "FRENCH CHICKEN HOME",
+    "city": "Rouen"
+  },
+  "said.cheddadi@hotmail.com": {
+    "sent_at": "2026-03-27T08:10:11.779322+00:00",
+    "last_sent_at": "2026-03-27T08:10:11.779322+00:00",
+    "send_count": 1,
+    "resend_id": "a7accc8b-3033-4dcc-b197-eda7369283ae",
+    "name": "Tacos World Mulhouse",
+    "city": "Mulhouse"
+  },
+  "umar9989@icloud.com": {
+    "sent_at": "2026-03-27T08:10:13.697303+00:00",
+    "last_sent_at": "2026-03-27T08:10:13.697303+00:00",
+    "send_count": 1,
+    "resend_id": "2632bf03-c65f-483e-948c-11d26c4f68f3",
+    "name": "Indian Grill House",
+    "city": "Mulhouse"
+  },
+  "denizkebap2mulhouse.shop@gmail.com": {
+    "sent_at": "2026-03-27T08:10:15.607793+00:00",
+    "last_sent_at": "2026-03-27T08:10:15.607793+00:00",
+    "send_count": 1,
+    "resend_id": "61fbcbe9-710f-4b18-b0d0-4630a2a0f09d",
+    "name": "Deniz Kebap 2 Mulhouse",
+    "city": "Mulhouse"
+  },
+  "mehmet_kilcik@icloud.com": {
+    "sent_at": "2026-03-27T08:10:17.512853+00:00",
+    "last_sent_at": "2026-03-27T08:10:17.512853+00:00",
+    "send_count": 1,
+    "resend_id": "656d9f2e-053c-4f44-91bd-90610c4115f7",
+    "name": "Restaurant Olympia Mulhouse",
+    "city": "Mulhouse"
   }
 }
