@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import {
-  buildCheckoutUrl,
-  PLAN_PRICES,
-} from "@/services/shopify-checkout";
+const PLAN_PRICES = {
+  monthly: 29.99,
+  annual: 239.88,
+} as const;
 
 interface PromoResult {
   valid: boolean;
@@ -103,26 +103,29 @@ const ChoisirPlanPage = () => {
     setRedirecting(true);
 
     try {
-      // Upsert subscription as pending_payment
-      await supabase.from("subscriptions").upsert(
-        {
-          restaurant_id: restaurantId,
-          status: "pending_payment",
+      // Call Stripe checkout edge function
+      const { data, error } = await supabase.functions.invoke("stripe-checkout", {
+        body: {
           plan,
-          promo_code_used: promoResult?.valid ? promoCode.trim().toUpperCase() : null,
+          restaurant_id: restaurantId,
+          restaurant_slug: restaurantSlug,
+          email,
+          promo_code: promoResult?.valid ? promoCode.trim().toUpperCase() : undefined,
         },
-        { onConflict: "restaurant_id" }
-      );
-
-      const url = buildCheckoutUrl({
-        plan,
-        restaurantId,
-        restaurantSlug,
-        email,
-        promoCode: promoResult?.valid ? promoCode.trim().toUpperCase() : undefined,
       });
 
-      window.location.href = url;
+      if (error || data?.error) {
+        toast.error(data?.error || t("plan.redirect_error"));
+        setRedirecting(false);
+        return;
+      }
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error(t("plan.redirect_error"));
+        setRedirecting(false);
+      }
     } catch (err: any) {
       toast.error(err.message || t("plan.redirect_error"));
       setRedirecting(false);

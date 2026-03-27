@@ -3,7 +3,6 @@ import { Check, Copy, ChevronDown, ChevronUp, Loader2, Lock, CalendarOff, Refres
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
-import { buildCheckoutUrl } from '@/services/shopify-checkout';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -101,19 +100,32 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
     }
   };
 
-  const handleActivate = () => {
+  const handleActivate = async () => {
     try {
       const checkoutPlan = plan === 'none' ? 'monthly' : plan;
-      const url = buildCheckoutUrl({
-        plan: checkoutPlan as 'monthly' | 'annual',
-        restaurantId,
-        restaurantSlug: slug,
-        email,
-        promoCode: promoResult?.valid ? promoCode.trim().toUpperCase() : undefined,
+
+      const { data, error } = await supabase.functions.invoke('stripe-checkout', {
+        body: {
+          plan: checkoutPlan,
+          restaurant_id: restaurantId,
+          restaurant_slug: slug,
+          email,
+          promo_code: promoResult?.valid ? promoCode.trim().toUpperCase() : undefined,
+        },
       });
-      // Open checkout in new tab, start polling in current tab
-      window.open(url, '_blank');
-      setPhase('waiting');
+
+      if (error || data?.error) {
+        toast.error(data?.error || t('subscription.redirect_error'));
+        return;
+      }
+
+      if (data?.url) {
+        // Open checkout in new tab, start polling in current tab
+        window.open(data.url, '_blank');
+        setPhase('waiting');
+      } else {
+        toast.error(t('subscription.redirect_error'));
+      }
     } catch {
       toast.error(t('subscription.redirect_error'));
     }

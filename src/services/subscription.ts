@@ -30,7 +30,7 @@ export function getPricingPlans(t: (key: string, params?: Record<string, string 
   ];
 }
 
-// No longer used directly - checkout goes through Shopify
+// No longer used directly - checkout goes through Stripe edge function
 export async function createCheckoutSession(_plan: SubscriptionPlan): Promise<string> {
   return 'success';
 }

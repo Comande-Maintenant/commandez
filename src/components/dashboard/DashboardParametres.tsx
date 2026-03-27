@@ -22,7 +22,7 @@ import { updateRestaurant } from "@/lib/api";
 import { ReferralSection } from "./referral/ReferralSection";
 import type { DbRestaurant, DbSubscription } from "@/types/database";
 import { Link } from "react-router-dom";
-import { PLAN_PRICES } from "@/services/shopify-checkout";
+const PLAN_PRICES = { monthly: 29.99, annual: 239.88 } as const;
 import { ScheduleEditor, type ScheduleDay } from "./ScheduleEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -543,10 +543,10 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
 
             <div className="flex gap-2 pt-2">
               <Button variant="outline" size="sm" className="flex-1 gap-1.5" asChild>
-                <a href="https://idwzsh-11.myshopify.com/account" target="_blank" rel="noopener noreferrer">
+                <Link to="/choisir-plan">
                   <ExternalLink className="h-3.5 w-3.5" />
                   {t('dashboard.settings.manage')}
-                </a>
+                </Link>
               </Button>
               <Button variant="outline" size="sm" className="flex-1" asChild>
                 <Link to="/choisir-plan">{t('dashboard.settings.change_plan')}</Link>

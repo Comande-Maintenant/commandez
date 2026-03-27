@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer, DbOwner, DbSubscription, DbPromoCode } from "@/types/database";
-import { PLAN_PRICES } from "@/services/shopify-checkout";
+const PLAN_PRICES = { monthly: 29.99, annual: 239.88 } as const;
 
 // ── Demo mode RPCs ──
 

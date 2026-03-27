@@ -193,16 +193,12 @@ function PastDueScreen() {
             {t('subscription.gate.payment_desc')}
           </p>
           <Button asChild className="w-full">
-            <a
-              href={`https://idwzsh-11.myshopify.com/account`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link to="/choisir-plan">
               {t('subscription.gate.manage_payment')}
-            </a>
+            </Link>
           </Button>
           <p className="text-xs text-muted-foreground mt-3">
-            {t('subscription.gate.redirect_note')}
+            support@commandeici.com
           </p>
         </div>
       </div>
