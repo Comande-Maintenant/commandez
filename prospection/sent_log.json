@@ -10302,5 +10302,373 @@
     "resend_id": "52ed92a2-e446-42ef-ac10-dbd70e24b486",
     "name": "Steak Away",
     "city": "Nancy"
+  },
+  "theburgerfactorynancy@gmail.com": {
+    "sent_at": "2026-03-28T15:28:44.822568+00:00",
+    "last_sent_at": "2026-03-28T15:28:44.822568+00:00",
+    "send_count": 1,
+    "resend_id": "f03d3db0-776a-4d2d-bdfc-03499917759e",
+    "name": "The Burger Factory - Nancy Vandoeuvre",
+    "city": "Nancy"
+  },
+  "contact@pommedepain.fr": {
+    "sent_at": "2026-03-28T15:28:47.162970+00:00",
+    "last_sent_at": "2026-03-28T15:28:47.162970+00:00",
+    "send_count": 1,
+    "resend_id": "fe921d44-e5c5-4fe5-ab84-01e83e1e15bc",
+    "name": "Pomme de Pain - Nancy Saint-Jean",
+    "city": "Nancy"
+  },
+  "contact@freshtime54.fr": {
+    "sent_at": "2026-03-28T15:28:49.384404+00:00",
+    "last_sent_at": "2026-03-28T15:28:49.384404+00:00",
+    "send_count": 1,
+    "resend_id": "c30e0770-59fc-4f44-b9b6-d535d1467d84",
+    "name": "Fresh Time",
+    "city": "Nancy"
+  },
+  "contact@26corner.fr": {
+    "sent_at": "2026-03-28T15:28:51.311722+00:00",
+    "last_sent_at": "2026-03-28T15:28:51.311722+00:00",
+    "send_count": 1,
+    "resend_id": "6becfa29-158b-4ba0-bc06-42c89b8614e8",
+    "name": "26 CORNER",
+    "city": "Nancy"
+  },
+  "contact@magarchetti.fr": {
+    "sent_at": "2026-03-28T15:28:53.205648+00:00",
+    "last_sent_at": "2026-03-28T15:28:53.205648+00:00",
+    "send_count": 1,
+    "resend_id": "9e28247c-6cfe-4491-b936-c85434517f5f",
+    "name": "Le Made in France",
+    "city": "Nancy"
+  },
+  "crooc.roock@gmail.com": {
+    "sent_at": "2026-03-28T15:28:55.439890+00:00",
+    "last_sent_at": "2026-03-28T15:28:55.439890+00:00",
+    "send_count": 1,
+    "resend_id": "56dfc116-715f-46cd-be47-7169334af453",
+    "name": "CROC & ROCK - Restaurant Bistronomique",
+    "city": "Nancy"
+  },
+  "restaurant.kounagi@gmail.com": {
+    "sent_at": "2026-03-28T15:28:57.347050+00:00",
+    "last_sent_at": "2026-03-28T15:28:57.347050+00:00",
+    "send_count": 1,
+    "resend_id": "bad0fd50-7b20-4255-81c5-8cc7ef4dad49",
+    "name": "Kounagi Nancy",
+    "city": "Nancy"
+  },
+  "contact@frenchcoffeeshop.co": {
+    "sent_at": "2026-03-28T15:28:59.281243+00:00",
+    "last_sent_at": "2026-03-28T15:28:59.281243+00:00",
+    "send_count": 1,
+    "resend_id": "d85d12f6-fb96-4c70-aae5-7b6c0a1b3aa5",
+    "name": "French Coffee Shop",
+    "city": "Nancy"
+  },
+  "events@toke.eu": {
+    "sent_at": "2026-03-28T15:29:01.190903+00:00",
+    "last_sent_at": "2026-03-28T15:29:01.190903+00:00",
+    "send_count": 1,
+    "resend_id": "7dd0814f-f209-4d2d-b8af-75ed38b0b76e",
+    "name": "Toké - Nancy",
+    "city": "Nancy"
+  },
+  "lecarredeliege@aol.fr": {
+    "sent_at": "2026-03-28T15:29:03.120240+00:00",
+    "last_sent_at": "2026-03-28T15:29:03.120240+00:00",
+    "send_count": 1,
+    "resend_id": "c18b38fc-bd81-43f3-9b71-ffe2f23ff9b4",
+    "name": "Le Carré de Liège",
+    "city": "Nancy"
+  },
+  "contact@niffo.fr": {
+    "sent_at": "2026-03-28T15:29:05.044227+00:00",
+    "last_sent_at": "2026-03-28T15:29:05.044227+00:00",
+    "send_count": 1,
+    "resend_id": "a4fa78f4-f63c-43d5-b020-92ebffe59fa3",
+    "name": "Nabab grill",
+    "city": "Avignon"
+  },
+  "contact@fwencheese.fr": {
+    "sent_at": "2026-03-28T15:29:07.279274+00:00",
+    "last_sent_at": "2026-03-28T15:29:07.279274+00:00",
+    "send_count": 1,
+    "resend_id": "4d0aa162-b9a5-4b0e-b618-5840757c6801",
+    "name": "Fwencheese avignon",
+    "city": "Avignon"
+  },
+  "contact@chickenfrys.fr": {
+    "sent_at": "2026-03-28T15:29:09.191638+00:00",
+    "last_sent_at": "2026-03-28T15:29:09.191638+00:00",
+    "send_count": 1,
+    "resend_id": "154c047e-2aed-4af8-96b3-9a11e1843127",
+    "name": "CHICKEN FRY’S AVIGNON",
+    "city": "Avignon"
+  },
+  "lamernoirebusiness@gmail.com": {
+    "sent_at": "2026-03-28T15:29:11.090931+00:00",
+    "last_sent_at": "2026-03-28T15:29:11.090931+00:00",
+    "send_count": 1,
+    "resend_id": "5d045e14-c7da-46d5-9ec5-7eea2d7afbe1",
+    "name": "La Mer Noire",
+    "city": "Avignon"
+  },
+  "nc@gmail.com": {
+    "sent_at": "2026-03-28T15:29:12.995887+00:00",
+    "last_sent_at": "2026-03-28T15:29:12.995887+00:00",
+    "send_count": 1,
+    "resend_id": "e7aefa21-3bb4-4551-bf8a-223c9ade53c9",
+    "name": "Le Babylone",
+    "city": "Avignon"
+  },
+  "sliceavignonpizza@gmail.com": {
+    "sent_at": "2026-03-28T15:29:14.903227+00:00",
+    "last_sent_at": "2026-03-28T15:29:14.903227+00:00",
+    "send_count": 1,
+    "resend_id": "4ae820f4-a780-401b-a520-ec7c6dbe6083",
+    "name": "Slice Pizza - Carnot",
+    "city": "Avignon"
+  },
+  "pizzadelnonno2022@gmail.com": {
+    "sent_at": "2026-03-28T15:29:16.839197+00:00",
+    "last_sent_at": "2026-03-28T15:29:16.839197+00:00",
+    "send_count": 1,
+    "resend_id": "fe8c9897-2f3e-4076-a954-0a543b2ea022",
+    "name": "Pizza Del Nonno",
+    "city": "Avignon"
+  },
+  "contact@easynetworking.fr": {
+    "sent_at": "2026-03-28T15:29:18.729670+00:00",
+    "last_sent_at": "2026-03-28T15:29:18.729670+00:00",
+    "send_count": 1,
+    "resend_id": "d2440e46-4aa2-48ca-adec-2f96a82c3ba9",
+    "name": "Ma belle cuisine",
+    "city": "Avignon"
+  },
+  "mokhtari.khalid@laposte.net": {
+    "sent_at": "2026-03-28T15:29:20.628540+00:00",
+    "last_sent_at": "2026-03-28T15:29:20.628540+00:00",
+    "send_count": 1,
+    "resend_id": "7a9ae2ea-d22f-44c3-b1e1-3c05bd056b21",
+    "name": "PIZZERIA SAINT RUF",
+    "city": "Avignon"
+  },
+  "vezzoavignon@gmail.com": {
+    "sent_at": "2026-03-28T15:29:22.529928+00:00",
+    "last_sent_at": "2026-03-28T15:29:22.529928+00:00",
+    "send_count": 1,
+    "resend_id": "435fa53b-06b4-472f-b3dc-8588a0dda76e",
+    "name": "Vezzo Pizza",
+    "city": "Avignon"
+  },
+  "gestion@chezsergio.com": {
+    "sent_at": "2026-03-28T15:29:24.452745+00:00",
+    "last_sent_at": "2026-03-28T15:29:24.452745+00:00",
+    "send_count": 1,
+    "resend_id": "c65c4ee3-85d9-49bf-9e87-066b7f9e5324",
+    "name": "Chez Sergio",
+    "city": "Avignon"
+  },
+  "pizzerialemoulin@orange.fr": {
+    "sent_at": "2026-03-28T15:29:26.348701+00:00",
+    "last_sent_at": "2026-03-28T15:29:26.348701+00:00",
+    "send_count": 1,
+    "resend_id": "bf60af5a-a5cb-4b08-9b97-4e9f26bf717b",
+    "name": "Pizzeria le moulin",
+    "city": "Avignon"
+  },
+  "pizza.nabil@orange.fr": {
+    "sent_at": "2026-03-28T15:29:28.239867+00:00",
+    "last_sent_at": "2026-03-28T15:29:28.239867+00:00",
+    "send_count": 1,
+    "resend_id": "e47a1aca-d35b-47fb-b690-2551531a1f53",
+    "name": "Pizzeria Chez Nabil",
+    "city": "Avignon"
+  },
+  "contact@lepetitnapolitain84.com": {
+    "sent_at": "2026-03-28T15:29:30.166803+00:00",
+    "last_sent_at": "2026-03-28T15:29:30.166803+00:00",
+    "send_count": 1,
+    "resend_id": "a90852c4-be46-496d-a0b3-5b76a24c9b99",
+    "name": "Le Petit Napolitain – Pizzeria & Livraison",
+    "city": "Avignon"
+  },
+  "ibiaba@hotmail.com": {
+    "sent_at": "2026-03-28T15:29:32.423571+00:00",
+    "last_sent_at": "2026-03-28T15:29:32.423571+00:00",
+    "send_count": 1,
+    "resend_id": "f9075443-b2a3-4a8f-8090-cdc2d2af71dc",
+    "name": "Eclair Pizza",
+    "city": "Avignon"
+  },
+  "lebercail84@gmail.com": {
+    "sent_at": "2026-03-28T15:29:34.314665+00:00",
+    "last_sent_at": "2026-03-28T15:29:34.314665+00:00",
+    "send_count": 1,
+    "resend_id": "bd3db675-488f-4db1-a74d-860c2efb3d47",
+    "name": "Le Bercail Avignon",
+    "city": "Avignon"
+  },
+  "guyon2605@gmail.com": {
+    "sent_at": "2026-03-28T15:29:36.233563+00:00",
+    "last_sent_at": "2026-03-28T15:29:36.233563+00:00",
+    "send_count": 1,
+    "resend_id": "29eb8909-41cf-4f05-ab7a-7f1f38b8134f",
+    "name": "Cardella Pizzeria",
+    "city": "Avignon"
+  },
+  "lucy.hendriks@caramail.fr": {
+    "sent_at": "2026-03-28T15:29:38.157518+00:00",
+    "last_sent_at": "2026-03-28T15:29:38.157518+00:00",
+    "send_count": 1,
+    "resend_id": "28c91800-ee1b-439a-8c39-6b850dc4749a",
+    "name": "Mamma Corsica Restaurant",
+    "city": "Avignon"
+  },
+  "commande@vivotto.com": {
+    "sent_at": "2026-03-28T15:29:40.381515+00:00",
+    "last_sent_at": "2026-03-28T15:29:40.381515+00:00",
+    "send_count": 1,
+    "resend_id": "383d5251-2291-4480-b8df-a9d92dab7464",
+    "name": "Vivotto Avignon",
+    "city": "Avignon"
+  },
+  "adil.sriej.13@gmail.com": {
+    "sent_at": "2026-03-28T15:29:42.373637+00:00",
+    "last_sent_at": "2026-03-28T15:29:42.373637+00:00",
+    "send_count": 1,
+    "resend_id": "2cb56174-2fe7-497d-9760-7043ebb1374f",
+    "name": "Pizza Le Pont",
+    "city": "Avignon"
+  },
+  "labaraka.avignon@gmail.com": {
+    "sent_at": "2026-03-28T15:29:44.331014+00:00",
+    "last_sent_at": "2026-03-28T15:29:44.331014+00:00",
+    "send_count": 1,
+    "resend_id": "9f8cac76-45e4-4739-a718-214ef620718b",
+    "name": "La baraka pizzas Feu De Bois Avignon",
+    "city": "Avignon"
+  },
+  "info@italielabas.fr": {
+    "sent_at": "2026-03-28T15:29:46.222684+00:00",
+    "last_sent_at": "2026-03-28T15:29:46.222684+00:00",
+    "send_count": 1,
+    "resend_id": "ce8377e4-1951-4065-a50f-ce7a3f107233",
+    "name": "Italie là-bas",
+    "city": "Avignon"
+  },
+  "info@eeetwell.fr": {
+    "sent_at": "2026-03-28T15:29:48.133575+00:00",
+    "last_sent_at": "2026-03-28T15:29:48.133575+00:00",
+    "send_count": 1,
+    "resend_id": "33aa5bf1-4162-4b7b-b900-0066c6da4a84",
+    "name": "eeetwell",
+    "city": "Avignon"
+  },
+  "contact@ocargofoodcourt.com": {
+    "sent_at": "2026-03-28T15:29:50.153948+00:00",
+    "last_sent_at": "2026-03-28T15:29:50.153948+00:00",
+    "send_count": 1,
+    "resend_id": "877b0793-94d5-418d-8680-ade9440b5e86",
+    "name": "ÔCargo Food Court Avignon",
+    "city": "Avignon"
+  },
+  "contact@zenorder.fr": {
+    "sent_at": "2026-03-28T15:29:52.369405+00:00",
+    "last_sent_at": "2026-03-28T15:29:52.369405+00:00",
+    "send_count": 1,
+    "resend_id": "e89a754f-5609-492e-a4c7-c2dc5ada836f",
+    "name": "World Tacos",
+    "city": "Avignon"
+  },
+  "theo@agencelachamade.com": {
+    "sent_at": "2026-03-28T15:29:54.259697+00:00",
+    "last_sent_at": "2026-03-28T15:29:54.259697+00:00",
+    "send_count": 1,
+    "resend_id": "c1fac232-36a5-49d9-a07d-d9eec2b6f746",
+    "name": "What's your nem",
+    "city": "Avignon"
+  },
+  "youbucks84@gmail.com": {
+    "sent_at": "2026-03-28T15:29:56.175807+00:00",
+    "last_sent_at": "2026-03-28T15:29:56.175807+00:00",
+    "send_count": 1,
+    "resend_id": "4415031f-fcb0-495f-b85f-da5f7931516d",
+    "name": "LE BUCK'S",
+    "city": "Avignon"
+  },
+  "olibanaisvernet@gmail.com": {
+    "sent_at": "2026-03-28T15:29:58.073517+00:00",
+    "last_sent_at": "2026-03-28T15:29:58.073517+00:00",
+    "send_count": 1,
+    "resend_id": "ba66307d-d89a-4879-91e6-2d3e69096828",
+    "name": "Ô’libanais Vernet",
+    "city": "Avignon"
+  },
+  "le16thiers@hotmail.com": {
+    "sent_at": "2026-03-28T15:29:59.961685+00:00",
+    "last_sent_at": "2026-03-28T15:29:59.961685+00:00",
+    "send_count": 1,
+    "resend_id": "d119ed02-2889-45ff-bd1b-3d5f3662ee35",
+    "name": "Le 16 Thiers",
+    "city": "Avignon"
+  },
+  "mohamed.rachdane86@gmail.com": {
+    "sent_at": "2026-03-28T15:30:01.887460+00:00",
+    "last_sent_at": "2026-03-28T15:30:01.887460+00:00",
+    "send_count": 1,
+    "resend_id": "915dd948-ae26-4de4-b16d-f39330974ecb",
+    "name": "O'KEBAB",
+    "city": "Poitiers"
+  },
+  "homeburger86000@gmail.com": {
+    "sent_at": "2026-03-28T15:30:03.786589+00:00",
+    "last_sent_at": "2026-03-28T15:30:03.786589+00:00",
+    "send_count": 1,
+    "resend_id": "ab75503b-95fc-4e12-b15d-ecc3e44113c5",
+    "name": "HOME BURGER 86",
+    "city": "Poitiers"
+  },
+  "pacmiam@icloud.com": {
+    "sent_at": "2026-03-28T15:30:05.710798+00:00",
+    "last_sent_at": "2026-03-28T15:30:05.710798+00:00",
+    "send_count": 1,
+    "resend_id": "ba857070-0bba-497c-9ceb-4bc794894dd4",
+    "name": "Pac-Miam",
+    "city": "Poitiers"
+  },
+  "sadimanl@yahoo.fr": {
+    "sent_at": "2026-03-28T15:30:07.951184+00:00",
+    "last_sent_at": "2026-03-28T15:30:07.951184+00:00",
+    "send_count": 1,
+    "resend_id": "b838dd47-5e15-45a5-a664-e0d9f4393911",
+    "name": "Le Sultan",
+    "city": "Poitiers"
+  },
+  "lecappoitiers@gmail.com": {
+    "sent_at": "2026-03-28T15:30:09.867215+00:00",
+    "last_sent_at": "2026-03-28T15:30:09.867215+00:00",
+    "send_count": 1,
+    "resend_id": "c4d414aa-ea20-4a08-b709-27fbcd9fdd76",
+    "name": "Le CAP Ristobar",
+    "city": "Poitiers"
+  },
+  "contact@gmail.com": {
+    "sent_at": "2026-03-28T15:30:12.099387+00:00",
+    "last_sent_at": "2026-03-28T15:30:12.099387+00:00",
+    "send_count": 1,
+    "resend_id": "b8bbc670-c68c-4b54-b0e5-c10888791da8",
+    "name": "Palermo",
+    "city": "Poitiers"
+  },
+  "pizzart86@gmail.com": {
+    "sent_at": "2026-03-28T15:30:14.018788+00:00",
+    "last_sent_at": "2026-03-28T15:30:14.018788+00:00",
+    "send_count": 1,
+    "resend_id": "b2bd5d58-8848-4d78-8d87-e6920fc3839d",
+    "name": "Pizz’Art 86",
+    "city": "Poitiers"
   }
 }
