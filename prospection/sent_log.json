@@ -9926,5 +9926,381 @@
     "resend_id": "232084fa-36fc-4d44-ba5c-780376332a2f",
     "name": "Bruno Ristorante",
     "city": "Caen"
+  },
+  "letoilecaen@gmail.com": {
+    "sent_at": "2026-03-28T08:01:30.525579+00:00",
+    "last_sent_at": "2026-03-28T08:01:30.525579+00:00",
+    "send_count": 1,
+    "resend_id": "f918db73-3f6a-492a-99f5-bb1c1c7f72d8",
+    "name": "L’Étoile Caen",
+    "city": "Caen"
+  },
+  "soueihe@gmail.com": {
+    "sent_at": "2026-03-28T08:01:32.608705+00:00",
+    "last_sent_at": "2026-03-28T08:01:32.608705+00:00",
+    "send_count": 1,
+    "resend_id": "f497d68f-9c29-48a8-aadc-a018c36df0c9",
+    "name": "Pizza News 14",
+    "city": "Caen"
+  },
+  "mrschweig@gmail.com": {
+    "sent_at": "2026-03-28T08:01:34.914655+00:00",
+    "last_sent_at": "2026-03-28T08:01:34.914655+00:00",
+    "send_count": 1,
+    "resend_id": "d508b29f-bd1b-4f43-a965-e30d6ccda439",
+    "name": "Pizza Bus",
+    "city": "Caen"
+  },
+  "lespapilles.caen@gmail.com": {
+    "sent_at": "2026-03-28T08:01:36.901843+00:00",
+    "last_sent_at": "2026-03-28T08:01:36.901843+00:00",
+    "send_count": 1,
+    "resend_id": "1f6d3584-7321-4f00-996b-70ec5d9a321e",
+    "name": "Les Papilles",
+    "city": "Caen"
+  },
+  "hello@thepeoplehostel.com": {
+    "sent_at": "2026-03-28T08:01:39.155616+00:00",
+    "last_sent_at": "2026-03-28T08:01:39.155616+00:00",
+    "send_count": 1,
+    "resend_id": "e109c1a2-a4d3-48aa-ade7-d3223120f64a",
+    "name": "The People Bar Caen",
+    "city": "Caen"
+  },
+  "oglobe.restaurant@orange.fr": {
+    "sent_at": "2026-03-28T08:01:41.136887+00:00",
+    "last_sent_at": "2026-03-28T08:01:41.136887+00:00",
+    "send_count": 1,
+    "resend_id": "81584ddb-b19e-4175-be08-4c91cdd8e002",
+    "name": "BOUILLON Caponière",
+    "city": "Caen"
+  },
+  "llacuenta14123@gmail.com": {
+    "sent_at": "2026-03-28T08:01:43.309814+00:00",
+    "last_sent_at": "2026-03-28T08:01:43.309814+00:00",
+    "send_count": 1,
+    "resend_id": "4efde9ed-c7a8-4223-b8ba-6da17e20dd5c",
+    "name": "LA CUENTA",
+    "city": "Caen"
+  },
+  "lagalettoirecontact@gmail.com": {
+    "sent_at": "2026-03-28T08:01:45.331812+00:00",
+    "last_sent_at": "2026-03-28T08:01:45.331812+00:00",
+    "send_count": 1,
+    "resend_id": "74e3759a-2724-47f5-87f4-d3880c3f7dda",
+    "name": "La Galettoire",
+    "city": "Caen"
+  },
+  "contact@capture-communication.fr": {
+    "sent_at": "2026-03-28T08:01:47.283870+00:00",
+    "last_sent_at": "2026-03-28T08:01:47.283870+00:00",
+    "send_count": 1,
+    "resend_id": "d0ce7b4c-650e-492d-990b-5fb9de12b3d6",
+    "name": "Une Cuillère Carrée",
+    "city": "Caen"
+  },
+  "aaranrestaurant14000@gmail.com": {
+    "sent_at": "2026-03-28T08:01:49.251603+00:00",
+    "last_sent_at": "2026-03-28T08:01:49.251603+00:00",
+    "send_count": 1,
+    "resend_id": "5bb7240d-a50f-42fe-85be-cadb408c644b",
+    "name": "AARAN RESTAURANT",
+    "city": "Caen"
+  },
+  "contact@burgerstreetcaen.fr": {
+    "sent_at": "2026-03-28T08:01:51.512371+00:00",
+    "last_sent_at": "2026-03-28T08:01:51.512371+00:00",
+    "send_count": 1,
+    "resend_id": "965458c3-ef5e-445d-b3fe-e016f0b48b9c",
+    "name": "Burger Street",
+    "city": "Caen"
+  },
+  "contact@lesburgersdelea.fr": {
+    "sent_at": "2026-03-28T08:01:53.446634+00:00",
+    "last_sent_at": "2026-03-28T08:01:53.446634+00:00",
+    "send_count": 1,
+    "resend_id": "f7ee6cd2-09d1-405d-b14c-847ad02bea8b",
+    "name": "Les Burgers de Léa",
+    "city": "Caen"
+  },
+  "contact@cucinavitanova.com": {
+    "sent_at": "2026-03-28T08:01:55.400865+00:00",
+    "last_sent_at": "2026-03-28T08:01:55.400865+00:00",
+    "send_count": 1,
+    "resend_id": "ea0a0be9-6120-451a-bec5-5a39cb7215f8",
+    "name": "Vita Nova",
+    "city": "Caen"
+  },
+  "contact@ximiti.eu": {
+    "sent_at": "2026-03-28T08:01:57.330550+00:00",
+    "last_sent_at": "2026-03-28T08:01:57.330550+00:00",
+    "send_count": 1,
+    "resend_id": "f8563176-a8c1-4a2c-b72d-7441b791c860",
+    "name": "Ximiti Caen Normandie",
+    "city": "Caen"
+  },
+  "contact@deli-caen.com": {
+    "sent_at": "2026-03-28T08:01:59.263161+00:00",
+    "last_sent_at": "2026-03-28T08:01:59.263161+00:00",
+    "send_count": 1,
+    "resend_id": "2239baaa-fd7d-4944-9fa5-cd433218fc64",
+    "name": "Cheffe Fanny Vince",
+    "city": "Caen"
+  },
+  "mola.taqueria@gmail.com": {
+    "sent_at": "2026-03-28T08:02:01.219068+00:00",
+    "last_sent_at": "2026-03-28T08:02:01.219068+00:00",
+    "send_count": 1,
+    "resend_id": "7d3b6980-ab2e-4b9d-a75e-5e1152d86643",
+    "name": "Mola Taquería",
+    "city": "Caen"
+  },
+  "moments.caen@gmail.com": {
+    "sent_at": "2026-03-28T08:02:03.194016+00:00",
+    "last_sent_at": "2026-03-28T08:02:03.194016+00:00",
+    "send_count": 1,
+    "resend_id": "f9954d78-e489-4044-a289-fa1b7cc1e702",
+    "name": "Moments Restaurant & Bar à manger",
+    "city": "Caen"
+  },
+  "goudfoud54@gmail.com": {
+    "sent_at": "2026-03-28T08:02:05.146578+00:00",
+    "last_sent_at": "2026-03-28T08:02:05.146578+00:00",
+    "send_count": 1,
+    "resend_id": "3392f78b-9fb0-421c-b03d-89f1300d9dd9",
+    "name": "RAYA - Street Food Nancy Gd Coeur",
+    "city": "Nancy"
+  },
+  "le.festin5400@gmail.com": {
+    "sent_at": "2026-03-28T08:02:07.067201+00:00",
+    "last_sent_at": "2026-03-28T08:02:07.067201+00:00",
+    "send_count": 1,
+    "resend_id": "b8aeb297-2e90-4cbd-ad26-3d24251f3edf",
+    "name": "Le Festin",
+    "city": "Nancy"
+  },
+  "contact@authentikkebab.fr": {
+    "sent_at": "2026-03-28T08:02:09.005397+00:00",
+    "last_sent_at": "2026-03-28T08:02:09.005397+00:00",
+    "send_count": 1,
+    "resend_id": "f49ba517-eca3-4041-bee3-49f8ecbfc339",
+    "name": "Authentik kebab",
+    "city": "Nancy"
+  },
+  "contact@nancyte.fr": {
+    "sent_at": "2026-03-28T08:02:10.952681+00:00",
+    "last_sent_at": "2026-03-28T08:02:10.952681+00:00",
+    "send_count": 1,
+    "resend_id": "d213ab66-2d0a-4863-9866-6997a07fcdf7",
+    "name": "Le Blouge NANCY",
+    "city": "Nancy"
+  },
+  "toparslan.r@hotmail.com": {
+    "sent_at": "2026-03-28T08:02:12.922371+00:00",
+    "last_sent_at": "2026-03-28T08:02:12.922371+00:00",
+    "send_count": 1,
+    "resend_id": "6966a792-c3de-4b3d-80fc-b70e63238be9",
+    "name": "My Tacos & Kebab Tomblaine",
+    "city": "Nancy"
+  },
+  "webmaster@agence-wilkom.fr": {
+    "sent_at": "2026-03-28T08:02:14.854487+00:00",
+    "last_sent_at": "2026-03-28T08:02:14.854487+00:00",
+    "send_count": 1,
+    "resend_id": "7565804b-0830-4e78-97d7-177e35b62c3d",
+    "name": "La Côte de Bœuf - halal restaurant",
+    "city": "Nancy"
+  },
+  "contact.lemarrakech.nancy@gmail.com": {
+    "sent_at": "2026-03-28T08:02:16.823313+00:00",
+    "last_sent_at": "2026-03-28T08:02:16.823313+00:00",
+    "send_count": 1,
+    "resend_id": "6386333c-e04f-439c-801e-716cda17085a",
+    "name": "Restaurant Le Marrakech",
+    "city": "Nancy"
+  },
+  "admin@milopizza.fr": {
+    "sent_at": "2026-03-28T08:02:18.764154+00:00",
+    "last_sent_at": "2026-03-28T08:02:18.764154+00:00",
+    "send_count": 1,
+    "resend_id": "3bb32c37-4d03-4840-ac9c-f8c74e402947",
+    "name": "Milo Pizzas",
+    "city": "Nancy"
+  },
+  "gestionfrench.trattoria@gmail.com": {
+    "sent_at": "2026-03-28T08:02:20.990282+00:00",
+    "last_sent_at": "2026-03-28T08:02:20.990282+00:00",
+    "send_count": 1,
+    "resend_id": "c2d260bb-b6c6-4bfb-b0fa-ce398db54869",
+    "name": "FRENCH Trattoria . Restaurant Pizzeria",
+    "city": "Nancy"
+  },
+  "info@gritrover.com": {
+    "sent_at": "2026-03-28T08:02:22.957031+00:00",
+    "last_sent_at": "2026-03-28T08:02:22.957031+00:00",
+    "send_count": 1,
+    "resend_id": "6f8b9521-7b6d-434b-9ac9-95707ce832aa",
+    "name": "Pizzeria La Craffe",
+    "city": "Nancy"
+  },
+  "nancy@nonnofamiglia.fr": {
+    "sent_at": "2026-03-28T08:02:24.978065+00:00",
+    "last_sent_at": "2026-03-28T08:02:24.978065+00:00",
+    "send_count": 1,
+    "resend_id": "512039c4-e135-4b3c-936b-4687c1781006",
+    "name": "NONNA Trattoria Napolitana",
+    "city": "Nancy"
+  },
+  "contact@dolcepizzanancy.fr": {
+    "sent_at": "2026-03-28T08:02:26.927617+00:00",
+    "last_sent_at": "2026-03-28T08:02:26.927617+00:00",
+    "send_count": 1,
+    "resend_id": "d6dead54-b469-4c4c-b229-a358a774dd90",
+    "name": "Dolce Pizza",
+    "city": "Nancy"
+  },
+  "lionel.nancy@gmail.com": {
+    "sent_at": "2026-03-28T08:02:28.956283+00:00",
+    "last_sent_at": "2026-03-28T08:02:28.956283+00:00",
+    "send_count": 1,
+    "resend_id": "c89b17b6-556b-409e-9314-c8816a0f7eef",
+    "name": "La Pizza de Nico Nancy",
+    "city": "Nancy"
+  },
+  "lpdcn54@gmail.com": {
+    "sent_at": "2026-03-28T08:02:31.000254+00:00",
+    "last_sent_at": "2026-03-28T08:02:31.000254+00:00",
+    "send_count": 1,
+    "resend_id": "92abf6a9-efd4-4c1e-befa-374e79e47c40",
+    "name": "Brasserie Stanislas",
+    "city": "Nancy"
+  },
+  "allegria.streefood@gmail.com": {
+    "sent_at": "2026-03-28T08:02:33.023885+00:00",
+    "last_sent_at": "2026-03-28T08:02:33.023885+00:00",
+    "send_count": 1,
+    "resend_id": "03aa6f22-3427-4e0f-b1e4-fc607ca40370",
+    "name": "Allegria",
+    "city": "Nancy"
+  },
+  "alconcept@outlook.fr": {
+    "sent_at": "2026-03-28T08:02:35.098942+00:00",
+    "last_sent_at": "2026-03-28T08:02:35.098942+00:00",
+    "send_count": 1,
+    "resend_id": "25a4eece-e6c0-4a0c-9a2b-7ce2f19e6007",
+    "name": "Mamma Mia",
+    "city": "Nancy"
+  },
+  "lavantpremierenancy@gmail.com": {
+    "sent_at": "2026-03-28T08:02:37.136718+00:00",
+    "last_sent_at": "2026-03-28T08:02:37.136718+00:00",
+    "send_count": 1,
+    "resend_id": "6428c962-b705-41cf-8556-3da6866f8bce",
+    "name": "L'Avant Première | Restaurant | Nancy",
+    "city": "Nancy"
+  },
+  "contact.retrogusto@gmail.com": {
+    "sent_at": "2026-03-28T08:02:39.095599+00:00",
+    "last_sent_at": "2026-03-28T08:02:39.095599+00:00",
+    "send_count": 1,
+    "resend_id": "6e7fe0aa-bbea-422a-b82a-e2e5b2151f17",
+    "name": "Retrogusto",
+    "city": "Nancy"
+  },
+  "croqpizza54000@gmail.com": {
+    "sent_at": "2026-03-28T08:02:41.057089+00:00",
+    "last_sent_at": "2026-03-28T08:02:41.057089+00:00",
+    "send_count": 1,
+    "resend_id": "e116bbf7-9432-47ad-a516-f49208c71ee3",
+    "name": "CROQ PIZZA",
+    "city": "Nancy"
+  },
+  "pizzasolemio54@gmail.com": {
+    "sent_at": "2026-03-28T08:02:43.055723+00:00",
+    "last_sent_at": "2026-03-28T08:02:43.055723+00:00",
+    "send_count": 1,
+    "resend_id": "d9c0d97b-8d6b-4ba7-b890-8e4acfb897b2",
+    "name": "Pizzeria Sole Mio",
+    "city": "Nancy"
+  },
+  "jonathanaalif@gmail.com": {
+    "sent_at": "2026-03-28T08:02:45.016458+00:00",
+    "last_sent_at": "2026-03-28T08:02:45.016458+00:00",
+    "send_count": 1,
+    "resend_id": "d64624ed-e0a4-46a2-8430-b4c243965a28",
+    "name": "TANTI GUSTI 2",
+    "city": "Nancy"
+  },
+  "admin@pizza-fresca.com": {
+    "sent_at": "2026-03-28T08:02:46.983792+00:00",
+    "last_sent_at": "2026-03-28T08:02:46.983792+00:00",
+    "send_count": 1,
+    "resend_id": "456b6067-70e6-446b-9dc2-f957db3c8d03",
+    "name": "Pizza Fresca",
+    "city": "Nancy"
+  },
+  "contact@devignymediation.fr": {
+    "sent_at": "2026-03-28T08:02:48.965564+00:00",
+    "last_sent_at": "2026-03-28T08:02:48.965564+00:00",
+    "send_count": 1,
+    "resend_id": "8a493f2e-6025-48e1-8df4-53ff40182a3e",
+    "name": "Pizza California Nancy - Livraison de pizzas, tacos, burgers et sandwichs",
+    "city": "Nancy"
+  },
+  "agence.novakom@gmail.com": {
+    "sent_at": "2026-03-28T08:02:50.911385+00:00",
+    "last_sent_at": "2026-03-28T08:02:50.911385+00:00",
+    "send_count": 1,
+    "resend_id": "dc0550b3-7d55-4fa4-aac8-d216e058c734",
+    "name": "Vache Burger",
+    "city": "Nancy"
+  },
+  "contact@izakayanancy.com": {
+    "sent_at": "2026-03-28T08:02:52.874438+00:00",
+    "last_sent_at": "2026-03-28T08:02:52.874438+00:00",
+    "send_count": 1,
+    "resend_id": "d01a8300-e8e5-4c37-bc96-6a0fe0be5c0e",
+    "name": "IZAKAYA",
+    "city": "Nancy"
+  },
+  "direction@les4saisonsdistribution.com": {
+    "sent_at": "2026-03-28T08:02:54.816785+00:00",
+    "last_sent_at": "2026-03-28T08:02:54.816785+00:00",
+    "send_count": 1,
+    "resend_id": "473e1191-27ff-4ddb-85f2-9099c32dd459",
+    "name": "Les 4 Saisons Distribution - Nancy",
+    "city": "Nancy"
+  },
+  "foodies.nancy@gmail.com": {
+    "sent_at": "2026-03-28T08:02:56.843306+00:00",
+    "last_sent_at": "2026-03-28T08:02:56.843306+00:00",
+    "send_count": 1,
+    "resend_id": "1a0e5b76-8a94-4c77-afae-2c63abd8dc7c",
+    "name": "foodies burger",
+    "city": "Nancy"
+  },
+  "sales@liberis.com": {
+    "sent_at": "2026-03-28T08:02:58.773529+00:00",
+    "last_sent_at": "2026-03-28T08:02:58.773529+00:00",
+    "send_count": 1,
+    "resend_id": "42cdacac-59c2-4085-8bce-c2e6d82951ee",
+    "name": "TOP FOOD",
+    "city": "Nancy"
+  },
+  "benjamin@b2j-restaurants.com": {
+    "sent_at": "2026-03-28T08:03:00.739757+00:00",
+    "last_sent_at": "2026-03-28T08:03:00.739757+00:00",
+    "send_count": 1,
+    "resend_id": "03a48458-8a24-4839-ade8-8aaa00b23fb9",
+    "name": "Voyou",
+    "city": "Nancy"
+  },
+  "contact@takeaway-nancy.fr": {
+    "sent_at": "2026-03-28T08:03:02.673499+00:00",
+    "last_sent_at": "2026-03-28T08:03:02.673499+00:00",
+    "send_count": 1,
+    "resend_id": "52ed92a2-e446-42ef-ac10-dbd70e24b486",
+    "name": "Steak Away",
+    "city": "Nancy"
   }
 }
