@@ -10670,5 +10670,381 @@
     "resend_id": "b2bd5d58-8848-4d78-8d87-e6920fc3839d",
     "name": "Pizz’Art 86",
     "city": "Poitiers"
+  },
+  "support@phpnet.org": {
+    "sent_at": "2026-03-29T08:02:31.091026+00:00",
+    "last_sent_at": "2026-03-29T08:02:31.091026+00:00",
+    "send_count": 1,
+    "resend_id": "c8eb0fef-0bc4-48d2-953a-29a253967a63",
+    "name": "Le Made in France",
+    "city": "Nancy"
+  },
+  "info@loliveto-poitiers.fr": {
+    "sent_at": "2026-03-29T08:02:33.512480+00:00",
+    "last_sent_at": "2026-03-29T08:02:33.512480+00:00",
+    "send_count": 1,
+    "resend_id": "913a8283-a2b3-4105-893c-d1aeeb36411e",
+    "name": "L'Oliveto",
+    "city": "Poitiers"
+  },
+  "contact@balsamico-poitiers.fr": {
+    "sent_at": "2026-03-29T08:02:35.843490+00:00",
+    "last_sent_at": "2026-03-29T08:02:35.843490+00:00",
+    "send_count": 1,
+    "resend_id": "4a071da6-eff1-4132-a4de-c4c0c1231d05",
+    "name": "Balsamico",
+    "city": "Poitiers"
+  },
+  "casahuet86@gmail.com": {
+    "sent_at": "2026-03-29T08:02:38.140791+00:00",
+    "last_sent_at": "2026-03-29T08:02:38.140791+00:00",
+    "send_count": 1,
+    "resend_id": "881ead2a-9f70-4cf9-8fff-3628f06a4b5a",
+    "name": "CASA Huet",
+    "city": "Poitiers"
+  },
+  "lelevant23@gmail.com": {
+    "sent_at": "2026-03-29T08:02:40.192383+00:00",
+    "last_sent_at": "2026-03-29T08:02:40.192383+00:00",
+    "send_count": 1,
+    "resend_id": "9511dca9-35b4-46d7-a677-603321011d25",
+    "name": "Restaurant Le Levant",
+    "city": "Poitiers"
+  },
+  "contact@ohlebistro.fr": {
+    "sent_at": "2026-03-29T08:02:42.122581+00:00",
+    "last_sent_at": "2026-03-29T08:02:42.122581+00:00",
+    "send_count": 1,
+    "resend_id": "34acbe52-4e16-4519-8b65-18e7fe202c04",
+    "name": "Oh le Bistro",
+    "city": "Poitiers"
+  },
+  "lescale86@gmail.com": {
+    "sent_at": "2026-03-29T08:02:44.065769+00:00",
+    "last_sent_at": "2026-03-29T08:02:44.065769+00:00",
+    "send_count": 1,
+    "resend_id": "73506bcb-7c6a-4077-84ca-147da95b6056",
+    "name": "Brasserie de L'escale",
+    "city": "Poitiers"
+  },
+  "le-lonjoie1@orange.fr": {
+    "sent_at": "2026-03-29T08:02:46.032754+00:00",
+    "last_sent_at": "2026-03-29T08:02:46.032754+00:00",
+    "send_count": 1,
+    "resend_id": "a13093f9-7960-4da5-b385-cf1ea2f5cd2b",
+    "name": "Le Lonjoie",
+    "city": "Poitiers"
+  },
+  "yoxave@gmail.com": {
+    "sent_at": "2026-03-29T08:02:47.964717+00:00",
+    "last_sent_at": "2026-03-29T08:02:47.964717+00:00",
+    "send_count": 1,
+    "resend_id": "f3c72a07-ce4e-4ada-a0ff-0d0ad62fe6a0",
+    "name": "Le 16 Carnot",
+    "city": "Poitiers"
+  },
+  "lejules@futur-hotels.com": {
+    "sent_at": "2026-03-29T08:02:49.910481+00:00",
+    "last_sent_at": "2026-03-29T08:02:49.910481+00:00",
+    "send_count": 1,
+    "resend_id": "ba6d2ffe-21a6-490a-a2b6-a1473f13dd36",
+    "name": "Le Jules",
+    "city": "Poitiers"
+  },
+  "restaurant@lesarchives.fr": {
+    "sent_at": "2026-03-29T08:02:51.858356+00:00",
+    "last_sent_at": "2026-03-29T08:02:51.858356+00:00",
+    "send_count": 1,
+    "resend_id": "af66cff7-9727-490e-bb65-d90190a7f424",
+    "name": "Les Archives",
+    "city": "Poitiers"
+  },
+  "rooftoppoitiers@gmail.com": {
+    "sent_at": "2026-03-29T08:02:53.798304+00:00",
+    "last_sent_at": "2026-03-29T08:02:53.798304+00:00",
+    "send_count": 1,
+    "resend_id": "f3b088fd-2305-45f4-9fd0-fadd720cdcf4",
+    "name": "Le Rooftop",
+    "city": "Poitiers"
+  },
+  "contact@eo-com.com": {
+    "sent_at": "2026-03-29T08:02:55.826199+00:00",
+    "last_sent_at": "2026-03-29T08:02:55.826199+00:00",
+    "send_count": 1,
+    "resend_id": "54691688-85ae-49ee-888f-13896175ac99",
+    "name": "Oh Libanais",
+    "city": "Poitiers"
+  },
+  "contact@fb-food.fr": {
+    "sent_at": "2026-03-29T08:02:58.003159+00:00",
+    "last_sent_at": "2026-03-29T08:02:58.003159+00:00",
+    "send_count": 1,
+    "resend_id": "c5292092-b922-434e-a06c-d9dd54a5989b",
+    "name": "FB Food",
+    "city": "Poitiers"
+  },
+  "bistrodesfeuillants86@orange.fr": {
+    "sent_at": "2026-03-29T08:02:59.918088+00:00",
+    "last_sent_at": "2026-03-29T08:02:59.918088+00:00",
+    "send_count": 1,
+    "resend_id": "963b48dc-3fd0-49d1-bd74-81f0906347e1",
+    "name": "Bistrô des Feuillants",
+    "city": "Poitiers"
+  },
+  "vietdaily2023@gmail.com": {
+    "sent_at": "2026-03-29T08:03:01.830565+00:00",
+    "last_sent_at": "2026-03-29T08:03:01.830565+00:00",
+    "send_count": 1,
+    "resend_id": "972f9be6-4955-4219-ab3e-e46252adc073",
+    "name": "RESTAURANT Viet-Café POITIERS",
+    "city": "Poitiers"
+  },
+  "contact@mybeers.fr": {
+    "sent_at": "2026-03-29T08:03:03.773846+00:00",
+    "last_sent_at": "2026-03-29T08:03:03.773846+00:00",
+    "send_count": 1,
+    "resend_id": "0fafb066-215d-495d-a290-332c88e44395",
+    "name": "My Beers Poitiers",
+    "city": "Poitiers"
+  },
+  "contact@nage-libre.org": {
+    "sent_at": "2026-03-29T08:03:05.715836+00:00",
+    "last_sent_at": "2026-03-29T08:03:05.715836+00:00",
+    "send_count": 1,
+    "resend_id": "851dfb11-f8ee-4836-b2b6-4484e01e6770",
+    "name": "Restaurant du Confort Moderne",
+    "city": "Poitiers"
+  },
+  "savelsabir123@gmail.com": {
+    "sent_at": "2026-03-29T08:03:07.644352+00:00",
+    "last_sent_at": "2026-03-29T08:03:07.644352+00:00",
+    "send_count": 1,
+    "resend_id": "18ba0d66-218d-4dc5-98fd-284c8c404472",
+    "name": "Kebab Istanbul",
+    "city": "La Rochelle"
+  },
+  "cedresouheil2020@gmail.com": {
+    "sent_at": "2026-03-29T08:03:09.591565+00:00",
+    "last_sent_at": "2026-03-29T08:03:09.591565+00:00",
+    "send_count": 1,
+    "resend_id": "3ad5575d-0858-4438-bd5b-cd332992c774",
+    "name": "Maxi Kebab",
+    "city": "La Rochelle"
+  },
+  "contact@taktak-streetfood.com": {
+    "sent_at": "2026-03-29T08:03:11.511801+00:00",
+    "last_sent_at": "2026-03-29T08:03:11.511801+00:00",
+    "send_count": 1,
+    "resend_id": "db01293c-8192-4d04-b4a7-fccbb823e148",
+    "name": "Tak-Tak Street Food",
+    "city": "La Rochelle"
+  },
+  "belaibah@gmail.com": {
+    "sent_at": "2026-03-29T08:03:13.468523+00:00",
+    "last_sent_at": "2026-03-29T08:03:13.468523+00:00",
+    "send_count": 1,
+    "resend_id": "da9b71cf-ad49-4f90-b1c6-f28f77c96a32",
+    "name": "Le Touareg La Rochelle",
+    "city": "La Rochelle"
+  },
+  "nicolas.quichaud@gmail.com": {
+    "sent_at": "2026-03-29T08:03:15.395619+00:00",
+    "last_sent_at": "2026-03-29T08:03:15.395619+00:00",
+    "send_count": 1,
+    "resend_id": "abf41f09-c7ae-42ef-9e0c-3c02c39708c5",
+    "name": "le Fratel'",
+    "city": "La Rochelle"
+  },
+  "bellaorigine@orange.fr": {
+    "sent_at": "2026-03-29T08:03:17.350780+00:00",
+    "last_sent_at": "2026-03-29T08:03:17.350780+00:00",
+    "send_count": 1,
+    "resend_id": "d892e443-5363-49d7-b954-cda722bf812c",
+    "name": "Restaurant italien La Bella Donna La Rochelle",
+    "city": "La Rochelle"
+  },
+  "pizzaebasta17@gmail.com": {
+    "sent_at": "2026-03-29T08:03:19.342853+00:00",
+    "last_sent_at": "2026-03-29T08:03:19.342853+00:00",
+    "send_count": 1,
+    "resend_id": "01a5d212-5184-4361-b7aa-0f7e7d0d844f",
+    "name": "PIZZA E BASTA La Rochelle",
+    "city": "La Rochelle"
+  },
+  "andrea.khamvene@outlook.fr": {
+    "sent_at": "2026-03-29T08:03:21.278092+00:00",
+    "last_sent_at": "2026-03-29T08:03:21.278092+00:00",
+    "send_count": 1,
+    "resend_id": "0a70e9e8-936e-4e3a-af45-66ad8eb1e609",
+    "name": "Amore by Iséo",
+    "city": "La Rochelle"
+  },
+  "info@labonnepatelarochelle.fr": {
+    "sent_at": "2026-03-29T08:03:23.348288+00:00",
+    "last_sent_at": "2026-03-29T08:03:23.348288+00:00",
+    "send_count": 1,
+    "resend_id": "d24e1def-a4f4-43a8-b27a-05d29b10e1a3",
+    "name": "Pizzeria La Bonne Pâte",
+    "city": "La Rochelle"
+  },
+  "kpizzfrance@gmail.com": {
+    "sent_at": "2026-03-29T08:03:25.356040+00:00",
+    "last_sent_at": "2026-03-29T08:03:25.356040+00:00",
+    "send_count": 1,
+    "resend_id": "509622c0-4b48-4f8d-926d-c0f8a9a8e912",
+    "name": "KPIZZ La Rochelle Minimes",
+    "city": "La Rochelle"
+  },
+  "mickael.martin93@sfr.fr": {
+    "sent_at": "2026-03-29T08:03:27.274509+00:00",
+    "last_sent_at": "2026-03-29T08:03:27.274509+00:00",
+    "send_count": 1,
+    "resend_id": "7108b2ba-0c45-46eb-a42a-3d4c04baa606",
+    "name": "Port Neuf Pizzas",
+    "city": "La Rochelle"
+  },
+  "contact@aperta-larochelle.fr": {
+    "sent_at": "2026-03-29T08:03:29.315282+00:00",
+    "last_sent_at": "2026-03-29T08:03:29.315282+00:00",
+    "send_count": 1,
+    "resend_id": "db96fade-e200-4253-9ea6-15c794f01dee",
+    "name": "Aperta",
+    "city": "La Rochelle"
+  },
+  "seven-pizz@orange.fr": {
+    "sent_at": "2026-03-29T08:03:31.518241+00:00",
+    "last_sent_at": "2026-03-29T08:03:31.518241+00:00",
+    "send_count": 1,
+    "resend_id": "b592901b-af9e-4a37-b690-cf6cd544b0f9",
+    "name": "Seven Pizz",
+    "city": "La Rochelle"
+  },
+  "leloftguimalis@gmail.com": {
+    "sent_at": "2026-03-29T08:03:33.430504+00:00",
+    "last_sent_at": "2026-03-29T08:03:33.430504+00:00",
+    "send_count": 1,
+    "resend_id": "4c970a98-a7f1-45e7-b92e-c75fb2921e7d",
+    "name": "LE LOFT",
+    "city": "La Rochelle"
+  },
+  "pizza-giovanni@orange.fr": {
+    "sent_at": "2026-03-29T08:03:35.450445+00:00",
+    "last_sent_at": "2026-03-29T08:03:35.450445+00:00",
+    "send_count": 1,
+    "resend_id": "1c80f990-2077-4f9e-a9db-a6c71d63d42d",
+    "name": "pizza giovanni",
+    "city": "La Rochelle"
+  },
+  "lesgrandesfolies@outloof.fr": {
+    "sent_at": "2026-03-29T08:03:37.422794+00:00",
+    "last_sent_at": "2026-03-29T08:03:37.422794+00:00",
+    "send_count": 1,
+    "resend_id": "4c177ab1-9271-4836-8cb1-6db42e7c32e3",
+    "name": "Les grandes folies",
+    "city": "La Rochelle"
+  },
+  "lespatesvolantes@gmail.com": {
+    "sent_at": "2026-03-29T08:03:39.476819+00:00",
+    "last_sent_at": "2026-03-29T08:03:39.476819+00:00",
+    "send_count": 1,
+    "resend_id": "68a4b10b-3bde-4684-b155-3eecd2f5884a",
+    "name": "Les Pâtes Volantes",
+    "city": "La Rochelle"
+  },
+  "admin@lecomptoirdewalter.fr": {
+    "sent_at": "2026-03-29T08:03:41.450577+00:00",
+    "last_sent_at": "2026-03-29T08:03:41.450577+00:00",
+    "send_count": 1,
+    "resend_id": "40d3fc36-30b9-4440-aced-fcc4c529f59a",
+    "name": "Le Comptoir de Walter . Retaurant de produits sains a la Rochelle",
+    "city": "La Rochelle"
+  },
+  "contact@casapapilles.com": {
+    "sent_at": "2026-03-29T08:03:43.367475+00:00",
+    "last_sent_at": "2026-03-29T08:03:43.367475+00:00",
+    "send_count": 1,
+    "resend_id": "ef6bf9d5-c867-40a5-b176-0a88c0d7eff4",
+    "name": "CASA PAPILLES",
+    "city": "La Rochelle"
+  },
+  "chougarelarochelle@gmail.com": {
+    "sent_at": "2026-03-29T08:03:45.339680+00:00",
+    "last_sent_at": "2026-03-29T08:03:45.339680+00:00",
+    "send_count": 1,
+    "resend_id": "30b9b556-7325-4562-9f2b-cde94679ca1b",
+    "name": "Le Chougare",
+    "city": "La Rochelle"
+  },
+  "thefamouspub@gmail.com": {
+    "sent_at": "2026-03-29T08:03:47.287409+00:00",
+    "last_sent_at": "2026-03-29T08:03:47.287409+00:00",
+    "send_count": 1,
+    "resend_id": "801066cc-095a-4b05-b0f5-5d81ff840af1",
+    "name": "The Famous Pub",
+    "city": "La Rochelle"
+  },
+  "lafleurdesel.larochelle@hotmail.fr": {
+    "sent_at": "2026-03-29T08:03:49.243404+00:00",
+    "last_sent_at": "2026-03-29T08:03:49.243404+00:00",
+    "send_count": 1,
+    "resend_id": "95fce362-4028-48d9-9c90-e8841b0850b0",
+    "name": "La Fleur de Sel",
+    "city": "La Rochelle"
+  },
+  "s.haddouchy@yahoo.com": {
+    "sent_at": "2026-03-29T08:03:51.212442+00:00",
+    "last_sent_at": "2026-03-29T08:03:51.212442+00:00",
+    "send_count": 1,
+    "resend_id": "f115322b-d636-4be8-b597-6a4b81229ed0",
+    "name": "Restauration Taymat",
+    "city": "Pau"
+  },
+  "paris567@live.fr": {
+    "sent_at": "2026-03-29T08:03:53.404955+00:00",
+    "last_sent_at": "2026-03-29T08:03:53.404955+00:00",
+    "send_count": 1,
+    "resend_id": "6fecb449-12ca-45de-84df-9b4034cddbcc",
+    "name": "French Chicken",
+    "city": "Pau"
+  },
+  "lapiazza64@gmail.com": {
+    "sent_at": "2026-03-29T08:03:55.323461+00:00",
+    "last_sent_at": "2026-03-29T08:03:55.323461+00:00",
+    "send_count": 1,
+    "resend_id": "6194926c-3d38-418a-b14c-2386aac2c46d",
+    "name": "La PIAZZA pau",
+    "city": "Pau"
+  },
+  "contact@lepadelle.fr": {
+    "sent_at": "2026-03-29T08:03:57.232843+00:00",
+    "last_sent_at": "2026-03-29T08:03:57.232843+00:00",
+    "send_count": 1,
+    "resend_id": "0303ef6b-791e-4c40-9cb7-6b67c8359d5d",
+    "name": "Le Padelle",
+    "city": "Pau"
+  },
+  "contact@lupo-pizza.fr": {
+    "sent_at": "2026-03-29T08:03:59.163536+00:00",
+    "last_sent_at": "2026-03-29T08:03:59.163536+00:00",
+    "send_count": 1,
+    "resend_id": "55c8845b-5265-45f4-a651-110ae0d6f3d2",
+    "name": "Lupo pizza & streetfood Pau centre",
+    "city": "Pau"
+  },
+  "contact@mammouth-pizza.fr": {
+    "sent_at": "2026-03-29T08:04:01.098975+00:00",
+    "last_sent_at": "2026-03-29T08:04:01.098975+00:00",
+    "send_count": 1,
+    "resend_id": "7c56bbb3-28d3-430b-b020-ec1f343bf602",
+    "name": "MAMMOUTH PIZZA",
+    "city": "Pau"
+  },
+  "contact@pizzalolo-pau.fr": {
+    "sent_at": "2026-03-29T08:04:03.018860+00:00",
+    "last_sent_at": "2026-03-29T08:04:03.018860+00:00",
+    "send_count": 1,
+    "resend_id": "03be42d0-1e6c-4bfd-93ce-cce300100fdc",
+    "name": "Pizza'lolo Pau",
+    "city": "Pau"
   }
 }
