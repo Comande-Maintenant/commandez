@@ -37,3 +37,16 @@ export async function searchNearby(lat: number, lng: number): Promise<GooglePlac
   const data = await invokeGooglePlaces({ action: 'nearby', lat, lng });
   return data?.results ?? [];
 }
+
+export interface GooglePlacePhoto {
+  url: string;
+  urlHigh: string;
+  attribution: string;
+  width: number;
+  height: number;
+}
+
+export async function getPlacePhotos(placeId: string): Promise<GooglePlacePhoto[]> {
+  const data = await invokeGooglePlaces({ action: 'photos', placeId });
+  return data?.photos ?? [];
+}

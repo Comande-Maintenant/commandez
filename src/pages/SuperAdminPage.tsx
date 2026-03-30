@@ -16,7 +16,7 @@ import {
   type DemoStatsData, type AllReferralsData, type ProspectRow,
 } from "@/lib/api";
 import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
-import { searchPlaces, getPlaceDetails } from "@/services/google-places";
+import { searchPlaces, getPlaceDetails, getPlacePhotos, type GooglePlacePhoto } from "@/services/google-places";
 import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
 import { detectBusinessType, BUSINESS_TYPES, getBusinessEmoji } from "@/utils/detect-business-type";
@@ -158,7 +158,8 @@ const SuperAdminPage = () => {
   const [prospectColor, setProspectColor] = useState("#10B981");
   const [creatingProspect, setCreatingProspect] = useState(false);
   const [editingProspect, setEditingProspect] = useState<DbRestaurant | null>(null);
-  // editingMenuItems removed - DashboardMaCarte loads its own items
+  const [googlePhotos, setGooglePhotos] = useState<GooglePlacePhoto[]>([]);
+  const [loadingPhotos, setLoadingPhotos] = useState(false);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   // Conversion
@@ -1105,11 +1106,46 @@ const SuperAdminPage = () => {
         {tab === "prospects" && editingProspect && (
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm" onClick={() => { setEditingProspect(null); loadData(); }} className="rounded-xl">
+              <Button variant="ghost" size="sm" onClick={() => { setEditingProspect(null); setGooglePhotos([]); loadData(); }} className="rounded-xl">
                 <ArrowLeft className="h-4 w-4 mr-1" /> Retour
               </Button>
               <h2 className="text-lg font-semibold">{getBusinessEmoji(editingProspect.business_type ?? "restaurant")} {editingProspect.name} - Catalogue</h2>
+              {editingProspect.google_place_id && (
+                <Button variant="outline" size="sm" className="rounded-xl ml-auto" disabled={loadingPhotos} onClick={async () => {
+                  setLoadingPhotos(true);
+                  try {
+                    const photos = await getPlacePhotos(editingProspect.google_place_id!);
+                    setGooglePhotos(photos);
+                  } catch (e: any) {
+                    alert("Erreur photos : " + (e.message ?? e));
+                  }
+                  setLoadingPhotos(false);
+                }}>
+                  {loadingPhotos ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
+                  Photos Google ({googlePhotos.length || "charger"})
+                </Button>
+              )}
             </div>
+
+            {/* Google Photos gallery */}
+            {googlePhotos.length > 0 && (
+              <Card className="rounded-2xl">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold">Photos Google ({googlePhotos.length}) - clic droit pour enregistrer</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                    {googlePhotos.map((photo, i) => (
+                      <a key={i} href={photo.urlHigh} target="_blank" rel="noopener noreferrer" className="block aspect-square rounded-lg overflow-hidden border border-border hover:ring-2 hover:ring-[hsl(var(--primary))] transition-all">
+                        <img src={photo.url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                      </a>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-2">Cliquez pour ouvrir en grand. Utilisez ces photos pour remplir le catalogue.</p>
+                </CardContent>
+              </Card>
+            )}
+
             <DashboardMaCarte
               restaurant={editingProspect}
               isDemo={false}

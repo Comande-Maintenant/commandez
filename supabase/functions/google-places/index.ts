@@ -34,6 +34,26 @@ serve(async (req) => {
       });
     }
 
+    if (action === "photos") {
+      // Return photo URLs for a place (up to maxPhotos)
+      const maxPhotos = 15;
+      const fields = "photos";
+      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&key=${GOOGLE_PLACES_API_KEY}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const photos = (data.result?.photos ?? []).slice(0, maxPhotos);
+      const photoUrls = photos.map((p: any) => ({
+        url: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${p.photo_reference}&key=${GOOGLE_PLACES_API_KEY}`,
+        urlHigh: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photo_reference=${p.photo_reference}&key=${GOOGLE_PLACES_API_KEY}`,
+        attribution: p.html_attributions?.[0] ?? "",
+        width: p.width,
+        height: p.height,
+      }));
+      return new Response(JSON.stringify({ photos: photoUrls }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (action === "nearby") {
       const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1000&type=restaurant&key=${GOOGLE_PLACES_API_KEY}`;
       const res = await fetch(url);
