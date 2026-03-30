@@ -1128,9 +1128,19 @@ const SuperAdminPage = () => {
                       body: JSON.stringify({ action: "details", placeId: editingProspect.google_place_id }),
                     });
                     const data = await res.json();
+                    console.log("[photos] Response status:", res.status, "keys:", Object.keys(data), "result keys:", data?.result ? Object.keys(data.result) : "no result");
                     const photoUrls = data?.result?.photo_urls ?? [];
-                    setGooglePhotos(photoUrls);
-                    if (photoUrls.length === 0) alert("Aucune photo trouvee sur la fiche Google");
+                    const photoRefs = data?.result?.photos ?? [];
+                    console.log("[photos] photo_urls:", photoUrls.length, "photo refs:", photoRefs.length);
+                    if (photoUrls.length > 0) {
+                      setGooglePhotos(photoUrls);
+                    } else if (photoRefs.length > 0) {
+                      // Fallback: the edge function returned photos but not photo_urls
+                      // This means the deployed version might be stale
+                      alert(`${photoRefs.length} photos trouvees mais URLs non generees. Redeploy necessaire.`);
+                    } else {
+                      alert("Aucune photo trouvee sur la fiche Google");
+                    }
                   } catch (e: any) {
                     console.error("Photos error:", e);
                     alert("Erreur photos : " + (e.message ?? e));
