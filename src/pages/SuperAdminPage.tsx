@@ -901,8 +901,8 @@ const SuperAdminPage = () => {
                         </p>
                       </div>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
-                        <a href={`https://app.commandeici.com/${r.slug}`} target="_blank" rel="noopener noreferrer">
-                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0"><Eye className="h-3.5 w-3.5" /></Button>
+                        <a href={`https://app.commandeici.com/${r.slug}`} target="_blank" rel="noopener noreferrer nofollow">
+                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title={`Apercu : /${r.slug}`}><Eye className="h-3.5 w-3.5" /></Button>
                         </a>
                         <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={async () => {
                           const { data } = await supabase.from("restaurants").select("*").eq("id", r.id).single();
@@ -912,11 +912,17 @@ const SuperAdminPage = () => {
                         }}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
-                        {r.account_status === "prospect" && (
-                          <Button size="sm" className="rounded-lg h-8 text-xs" onClick={() => { setConvertingProspect(r); setConvertEmail(""); }}>
-                            Convertir
-                          </Button>
-                        )}
+                        <Button size="sm" variant="outline" className="rounded-lg h-8 text-xs" onClick={() => {
+                          if (r.account_status === "prospect") {
+                            // For now just open the edit menu
+                            (async () => {
+                              const { data } = await supabase.from("restaurants").select("*").eq("id", r.id).single();
+                              if (data) setEditingProspect(data as unknown as DbRestaurant);
+                            })();
+                          }
+                        }}>
+                          Continuer
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -1007,7 +1013,7 @@ const SuperAdminPage = () => {
                       <div>
                         <label className="text-sm font-medium text-foreground">Slug (URL)</label>
                         <Input value={prospectSlug} onChange={(e) => setProspectSlug(e.target.value)} className="mt-1 rounded-xl" />
-                        <p className="text-xs text-muted-foreground mt-1">app.commandeici.com/{prospectSlug}</p>
+                        <p className="text-xs text-muted-foreground mt-1">commandeici.com/{prospectSlug}</p>
                       </div>
 
                       {/* Color */}
@@ -1062,7 +1068,7 @@ const SuperAdminPage = () => {
                   <h3 className="text-lg font-semibold">Convertir en compte actif</h3>
                   <div className="space-y-1">
                     <p className="text-sm"><span className="font-medium">{convertingProspect.name}</span></p>
-                    <p className="text-xs text-muted-foreground">app.commandeici.com/{convertingProspect.slug}</p>
+                    <p className="text-xs text-muted-foreground">commandeici.com/{convertingProspect.slug}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium">Email du commercant *</label>
