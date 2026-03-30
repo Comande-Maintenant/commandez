@@ -22,6 +22,9 @@ import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
 import { detectBusinessType, BUSINESS_TYPES, getBusinessEmoji } from "@/utils/detect-business-type";
 import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
+import { MenuReviewEditor } from "@/components/onboarding/MenuReviewEditor";
+import { insertMenuItem, updateRestaurantCategories, fetchAllMenuItems as fetchAllItems } from "@/lib/api";
+import type { AnalyzedCategory } from "@/types/onboarding";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -161,6 +164,10 @@ const SuperAdminPage = () => {
   const [editingProspect, setEditingProspect] = useState<DbRestaurant | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+  const [selectedUploadIndexes, setSelectedUploadIndexes] = useState<Set<number>>(new Set());
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzedCategories, setAnalyzedCategories] = useState<AnalyzedCategory[] | null>(null);
+  const [savingMenu, setSavingMenu] = useState(false);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   // Conversion
@@ -1154,15 +1161,63 @@ const SuperAdminPage = () => {
                   <div className="flex-1">
                     {uploadedPhotos.length > 0 ? (
                       <div>
-                        <p className="text-sm font-medium text-foreground mb-2">{uploadedPhotos.length} photo{uploadedPhotos.length > 1 ? "s" : ""} recue{uploadedPhotos.length > 1 ? "s" : ""}</p>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                          {uploadedPhotos.map((url, i) => (
-                            <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block aspect-square rounded-lg overflow-hidden border border-border hover:ring-2 hover:ring-[hsl(var(--primary))] transition-all">
-                              <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                            </a>
-                          ))}
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm font-medium text-foreground">{uploadedPhotos.length} photo{uploadedPhotos.length > 1 ? "s" : ""} recue{uploadedPhotos.length > 1 ? "s" : ""}</p>
+                          {selectedUploadIndexes.size > 0 && !analyzing && (
+                            <Button size="sm" className="rounded-xl text-xs" onClick={async () => {
+                              setAnalyzing(true);
+                              setAnalyzedCategories(null);
+                              try {
+                                const urls = Array.from(selectedUploadIndexes).map((i) => uploadedPhotos[i]);
+                                const { data, error } = await supabase.functions.invoke("analyze-menu", {
+                                  body: { imageUrls: urls },
+                                });
+                                if (error) throw error;
+                                setAnalyzedCategories(data?.categories ?? []);
+                              } catch (e: any) {
+                                alert("Erreur analyse : " + (e.message ?? e));
+                              }
+                              setAnalyzing(false);
+                            }}>
+                              Analyser la selection ({selectedUploadIndexes.size})
+                            </Button>
+                          )}
                         </div>
-                        <p className="text-[11px] text-muted-foreground mt-2">Cliquez pour ouvrir en grand. Utilisez le bouton camera ci-dessous pour importer dans le catalogue.</p>
+                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                          {uploadedPhotos.map((url, i) => {
+                            const selected = selectedUploadIndexes.has(i);
+                            return (
+                              <button
+                                key={i}
+                                onClick={() => {
+                                  setSelectedUploadIndexes((prev) => {
+                                    const next = new Set(prev);
+                                    if (next.has(i)) next.delete(i);
+                                    else next.add(i);
+                                    return next;
+                                  });
+                                }}
+                                className={`relative block aspect-square rounded-lg overflow-hidden border-2 transition-all ${selected ? "border-[hsl(var(--primary))] ring-2 ring-[hsl(var(--primary))]" : "border-border hover:border-muted-foreground"}`}
+                              >
+                                <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                                {selected && (
+                                  <div className="absolute top-1 right-1 h-5 w-5 rounded-full bg-[hsl(var(--primary))] flex items-center justify-center">
+                                    <span className="text-white text-xs font-bold">{Array.from(selectedUploadIndexes).sort((a, b) => a - b).indexOf(i) + 1}</span>
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {analyzing && (
+                          <div className="flex items-center gap-2 mt-3 py-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-[hsl(var(--primary))]" />
+                            <p className="text-sm text-muted-foreground">Analyse en cours (Claude IA)...</p>
+                          </div>
+                        )}
+                        {!analyzing && selectedUploadIndexes.size === 0 && (
+                          <p className="text-[11px] text-muted-foreground mt-2">Selectionnez les photos de carte/menu a analyser</p>
+                        )}
                       </div>
                     ) : qrCodeDataUrl ? (
                       <div className="flex items-center justify-center h-full text-center py-8">
@@ -1176,6 +1231,70 @@ const SuperAdminPage = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Menu review after analysis */}
+            {analyzedCategories && analyzedCategories.length > 0 && (
+              <Card className="rounded-2xl">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base font-semibold">Resultat de l'analyse - Verifiez et ajustez</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <MenuReviewEditor
+                    menu={analyzedCategories}
+                    onConfirm={async (cats) => {
+                      setSavingMenu(true);
+                      try {
+                        const existing = await fetchAllItems(editingProspect.id);
+                        const existingKeys = new Set(existing.map((i) => `${i.name.toLowerCase().trim()}::${i.category.toLowerCase().trim()}`));
+                        const existingCats = new Set((editingProspect.categories ?? []).map((c: string) => c.toLowerCase().trim()));
+                        const newCats: string[] = [];
+                        let added = 0;
+                        let maxSort = existing.reduce((m, i) => Math.max(m, i.sort_order ?? 0), 0);
+
+                        for (const cat of cats) {
+                          const catName = cat.name.trim();
+                          if (!catName) continue;
+                          if (!existingCats.has(catName.toLowerCase())) {
+                            newCats.push(catName);
+                            existingCats.add(catName.toLowerCase());
+                          }
+                          for (const item of cat.items) {
+                            const key = `${item.name.toLowerCase().trim()}::${catName.toLowerCase()}`;
+                            if (existingKeys.has(key)) continue;
+                            const supps = (item.supplements ?? []).map((s, si) => ({ id: `s-${Date.now()}-${si}`, name: s.name, price: s.price }));
+                            await insertMenuItem({
+                              restaurant_id: editingProspect.id,
+                              name: item.name.trim(),
+                              description: item.description || "",
+                              price: item.price,
+                              category: catName,
+                              enabled: true,
+                              popular: false,
+                              sort_order: ++maxSort,
+                              supplements: supps.length > 0 ? supps : undefined,
+                            });
+                            added++;
+                          }
+                        }
+                        if (newCats.length > 0) {
+                          await updateRestaurantCategories(editingProspect.id, [...(editingProspect.categories ?? []), ...newCats]);
+                          // Refresh the prospect data
+                          const { data } = await supabase.from("restaurants").select("*").eq("id", editingProspect.id).single();
+                          if (data) setEditingProspect(data as unknown as DbRestaurant);
+                        }
+                        setAnalyzedCategories(null);
+                        setSelectedUploadIndexes(new Set());
+                        alert(`${added} produit${added > 1 ? "s" : ""} ajoute${added > 1 ? "s" : ""} au catalogue`);
+                      } catch (e: any) {
+                        alert("Erreur sauvegarde : " + (e.message ?? e));
+                      }
+                      setSavingMenu(false);
+                    }}
+                    onBack={() => setAnalyzedCategories(null)}
+                  />
+                </CardContent>
+              </Card>
+            )}
 
             <DashboardMaCarte
               restaurant={editingProspect}
