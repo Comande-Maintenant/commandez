@@ -1212,7 +1212,7 @@ const SuperAdminPage = () => {
                         {analyzing && (
                           <div className="flex items-center gap-2 mt-3 py-2">
                             <Loader2 className="h-4 w-4 animate-spin text-[hsl(var(--primary))]" />
-                            <p className="text-sm text-muted-foreground">Analyse en cours (Claude IA)...</p>
+                            <p className="text-sm text-muted-foreground">Nous sommes en train de lire votre carte, comprendre vos produits et vos prix. Ca prend quelques secondes...</p>
                           </div>
                         )}
                         {!analyzing && selectedUploadIndexes.size === 0 && (
