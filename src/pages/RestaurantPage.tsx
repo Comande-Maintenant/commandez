@@ -276,10 +276,13 @@ const RestaurantPage = () => {
         }
         const items = await fetchMenuItems(r.id);
         setMenuItems(items);
-        // SEO: demo pages get generic title, real restaurants get their name
+        // SEO: demo/prospect pages get noindex, real restaurants get their name
         if ((r as any).is_demo) {
           document.title = "Demonstration - Application de commande en ligne pour restaurants | commandeici";
           setDemoMeta(true);
+        } else if ((r as any).account_status === "prospect") {
+          document.title = `${r.name} - ${r.city || ""}`;
+          setDemoMeta(true); // noindex for prospects
         } else {
           document.title = `${r.name} - ${r.city || ""}`;
           setDemoMeta(false);
@@ -1194,6 +1197,19 @@ const RestaurantPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Prospect footer banner (discrete, not the demo MODE DEMO banner) */}
+      {restaurant && (restaurant as any).account_status === "prospect" && !isKiosk && (
+        <div className="border-t border-border/50 py-4 px-4 text-center" style={{ background: "hsl(var(--secondary))" }}>
+          <p className="text-xs text-muted-foreground">
+            Propulse par{" "}
+            <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:underline">
+              CommandeIci
+            </a>
+          </p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">Commande en ligne sans commission pour les commerces locaux</p>
+        </div>
+      )}
 
       {/* Cart sheet (hidden trigger, opened programmatically) */}
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} menuItems={menuItems} onScrollToCategory={scrollToCategory} />

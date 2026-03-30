@@ -83,6 +83,8 @@ export interface DbRestaurant {
   trial_end_date: string | null;
   subscription_status: string | null;
   is_demo?: boolean;
+  business_type?: string;
+  account_status?: string;
 }
 
 export interface DbMenuItem {
@@ -129,6 +131,7 @@ export interface DbOrder {
   estimated_ready_at: string | null;
   created_at: string;
   updated_at: string;
+  is_test?: boolean;
 }
 
 export interface DbCustomer {

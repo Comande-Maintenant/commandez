@@ -110,6 +110,7 @@ export async function createOrder(order: {
   pickup_time?: string | null;
   payment_method?: string;
   estimated_ready_at?: string;
+  is_test?: boolean;
 }): Promise<DbOrder> {
   // Server-side price validation (skip for demo orders)
   if (order.source !== "demo") {
@@ -954,4 +955,99 @@ export async function fetchAllReferrals(): Promise<AllReferralsData> {
   }));
 
   return { activeCodes, referrals };
+}
+
+// ── Prospects ──
+
+export interface ProspectRow {
+  id: string;
+  name: string;
+  slug: string;
+  city: string | null;
+  business_type: string;
+  account_status: string;
+  created_at: string;
+  image: string | null;
+  menuItemCount: number;
+}
+
+export async function fetchAllProspects(): Promise<ProspectRow[]> {
+  const { data: restaurants, error } = await supabase
+    .from("restaurants")
+    .select("id, name, slug, city, business_type, account_status, created_at, image, is_demo")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  const all = (restaurants ?? []) as unknown as (ProspectRow & { is_demo: boolean })[];
+  const filtered = all.filter((r) => !r.is_demo);
+
+  // Get menu item counts per restaurant
+  const { data: counts } = await supabase
+    .from("menu_items")
+    .select("restaurant_id");
+  const countMap = new Map<string, number>();
+  for (const c of (counts ?? []) as unknown as { restaurant_id: string }[]) {
+    countMap.set(c.restaurant_id, (countMap.get(c.restaurant_id) ?? 0) + 1);
+  }
+
+  return filtered.map((r) => ({
+    id: r.id,
+    name: r.name,
+    slug: r.slug,
+    city: r.city,
+    business_type: r.business_type ?? "restaurant",
+    account_status: r.account_status ?? "active",
+    created_at: r.created_at,
+    image: r.image,
+    menuItemCount: countMap.get(r.id) ?? 0,
+  }));
+}
+
+export interface CreateProspectData {
+  name: string;
+  slug: string;
+  address?: string;
+  city?: string;
+  restaurant_phone?: string;
+  google_place_id?: string;
+  rating?: number;
+  website?: string;
+  hours?: string;
+  image?: string;
+  business_type: string;
+  primary_color?: string;
+  owner_id: string;
+  schedule?: any;
+}
+
+export async function createProspect(data: CreateProspectData): Promise<DbRestaurant> {
+  const { data: result, error } = await supabase
+    .from("restaurants")
+    .insert({
+      name: data.name,
+      slug: data.slug,
+      address: data.address ?? null,
+      city: data.city ?? null,
+      restaurant_phone: data.restaurant_phone ?? null,
+      google_place_id: data.google_place_id ?? null,
+      rating: data.rating ?? null,
+      website: data.website ?? null,
+      hours: data.hours ?? null,
+      image: data.image ?? null,
+      business_type: data.business_type,
+      primary_color: data.primary_color ?? "#10B981",
+      owner_id: data.owner_id,
+      schedule: data.schedule ?? null,
+      account_status: "prospect",
+      subscription_status: "none",
+      is_open: true,
+      is_accepting_orders: true,
+      estimated_time: "15-25 min",
+      minimum_order: 0,
+      categories: [],
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return result as unknown as DbRestaurant;
 }

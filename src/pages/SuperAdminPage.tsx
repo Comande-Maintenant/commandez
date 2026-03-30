@@ -4,17 +4,23 @@ import {
   ArrowLeft, Shield, Loader2, Store, Users, Euro, TrendingUp, TrendingDown,
   AlertTriangle, Clock, Trash2, CreditCard, UserX, Search, Mail, Send,
   RefreshCw, Ticket, Gift, ShoppingBag, ChevronDown, ChevronUp,
-  BarChart3, ArrowRight, ExternalLink,
+  BarChart3, ArrowRight, ExternalLink, Plus, Eye, Pencil, UserPlus,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   fetchOwner, fetchOrders, fetchCustomers,
   fetchSuperAdminKPIs, fetchAcquisitionFunnel, fetchProspectList,
   fetchDemoStats, fetchAllPromoCodes, fetchAllReferrals,
+  fetchAllProspects, createProspect,
   type SuperAdminKPIs, type AcquisitionFunnelData, type ProspectItem,
-  type DemoStatsData, type AllReferralsData,
+  type DemoStatsData, type AllReferralsData, type ProspectRow,
 } from "@/lib/api";
-import type { DbOrder, DbCustomer, DbPromoCode } from "@/types/database";
+import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
+import { searchPlaces, getPlaceDetails } from "@/services/google-places";
+import type { GooglePlaceResult } from "@/types/onboarding";
+import { generateSlug } from "@/services/onboarding";
+import { detectBusinessType, BUSINESS_TYPES, getBusinessEmoji } from "@/utils/detect-business-type";
+import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +32,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 
 const TABS = [
   { key: "overview", label: "Vue d'ensemble", icon: BarChart3 },
+  { key: "prospects", label: "Prospects", icon: UserPlus },
   { key: "restaurants", label: "Restaurants", icon: Store },
   { key: "revenue", label: "Revenue", icon: Euro },
   { key: "emails", label: "Emails", icon: Mail },
@@ -139,6 +146,26 @@ const SuperAdminPage = () => {
   const [demoStats, setDemoStats] = useState<DemoStatsData | null>(null);
   const [demoOpen, setDemoOpen] = useState(false);
 
+  // Prospects
+  const [prospectRows, setProspectRows] = useState<ProspectRow[]>([]);
+  const [prospectSearch, setProspectSearch] = useState("");
+  const [showCreateProspect, setShowCreateProspect] = useState(false);
+  const [placeQuery, setPlaceQuery] = useState("");
+  const [placeResults, setPlaceResults] = useState<GooglePlaceResult[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<GooglePlaceResult | null>(null);
+  const [prospectBusinessType, setProspectBusinessType] = useState("restaurant");
+  const [prospectSlug, setProspectSlug] = useState("");
+  const [prospectColor, setProspectColor] = useState("#10B981");
+  const [creatingProspect, setCreatingProspect] = useState(false);
+  const [editingProspect, setEditingProspect] = useState<DbRestaurant | null>(null);
+  // editingMenuItems removed - DashboardMaCarte loads its own items
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
+
+  // Conversion
+  const [convertingProspect, setConvertingProspect] = useState<ProspectRow | null>(null);
+  const [convertEmail, setConvertEmail] = useState("");
+  const [converting, setConverting] = useState(false);
+
   // Restaurant detail
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null);
   const [detailOrders, setDetailOrders] = useState<DbOrder[]>([]);
@@ -151,6 +178,7 @@ const SuperAdminPage = () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) { setLoading(false); return; }
+        setAuthUserId(user.id);
         const owner = await fetchOwner(user.id);
         if (owner?.role === "super_admin") setAuthorized(true);
       } catch {}
@@ -162,7 +190,7 @@ const SuperAdminPage = () => {
   const loadData = useCallback(async () => {
     setRefreshing(true);
     try {
-      const [k, f, p, demo, promos, refs, emailRes, unsubRes] = await Promise.all([
+      const [k, f, p, demo, promos, refs, emailRes, unsubRes, prospectData] = await Promise.all([
         fetchSuperAdminKPIs(),
         fetchAcquisitionFunnel(),
         fetchProspectList(),
@@ -171,12 +199,14 @@ const SuperAdminPage = () => {
         fetchAllReferrals(),
         supabase.from("email_logs").select("id, email_type, recipient_email, sent_at").order("sent_at", { ascending: false }).limit(200),
         supabase.from("user_email_preferences").select("id", { count: "exact" }).not("unsubscribed_at", "is", null),
+        fetchAllProspects(),
       ]);
       setKpis(k);
       setFunnel(f);
       setProspects(p);
       setDemoStats(demo);
       setPromoCodes(promos);
+      setProspectRows(prospectData);
       setReferralsData(refs);
       setEmailLogs((emailRes.data ?? []) as unknown as EmailLog[]);
       setUnsubCount(unsubRes.count ?? 0);
@@ -829,6 +859,256 @@ const SuperAdminPage = () => {
               </Card>
             </div>
           </>
+        )}
+
+        {/* ════════ TAB: PROSPECTS ════════ */}
+        {tab === "prospects" && !editingProspect && (
+          <>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-foreground">Prospects</h2>
+              <Button size="sm" className="rounded-xl" onClick={() => { setShowCreateProspect(true); setSelectedPlace(null); setPlaceQuery(""); setPlaceResults([]); setProspectSlug(""); }}>
+                <Plus className="h-4 w-4 mr-1" /> Nouveau
+              </Button>
+            </div>
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Rechercher..." value={prospectSearch} onChange={(e) => setProspectSearch(e.target.value)} className="pl-10 rounded-xl" />
+            </div>
+
+            {/* Prospect list */}
+            <div className="space-y-2">
+              {prospectRows
+                .filter((r) => {
+                  if (!prospectSearch.trim()) return true;
+                  const q = prospectSearch.toLowerCase();
+                  return r.name.toLowerCase().includes(q) || r.city?.toLowerCase().includes(q);
+                })
+                .map((r) => (
+                  <Card key={r.id} className="rounded-2xl">
+                    <CardContent className="p-4 flex items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">{getBusinessEmoji(r.business_type)}</span>
+                          <p className="text-sm font-semibold text-foreground truncate">{r.name}</p>
+                          <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-medium ${r.account_status === "prospect" ? "bg-purple-100 text-purple-800" : "bg-emerald-100 text-emerald-800"}`}>
+                            {r.account_status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {r.city ?? "Ville non renseignee"} · {r.menuItemCount} produit{r.menuItemCount !== 1 ? "s" : ""} · {new Date(r.created_at).toLocaleDateString("fr-FR")}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        <a href={`https://app.commandeici.com/${r.slug}`} target="_blank" rel="noopener noreferrer">
+                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0"><Eye className="h-3.5 w-3.5" /></Button>
+                        </a>
+                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={async () => {
+                          const { data } = await supabase.from("restaurants").select("*").eq("id", r.id).single();
+                          if (data) {
+                            setEditingProspect(data as unknown as DbRestaurant);
+                          }
+                        }}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        {r.account_status === "prospect" && (
+                          <Button size="sm" className="rounded-lg h-8 text-xs" onClick={() => { setConvertingProspect(r); setConvertEmail(""); }}>
+                            Convertir
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              {prospectRows.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-8">Aucun prospect. Cliquez sur "+ Nouveau" pour commencer.</p>
+              )}
+            </div>
+
+            {/* Create prospect dialog */}
+            {showCreateProspect && (
+              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setShowCreateProspect(false); }}>
+                <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
+                  <h3 className="text-lg font-semibold">Creer un prospect</h3>
+
+                  {/* Google Places search */}
+                  <div>
+                    <label className="text-sm font-medium text-foreground">Rechercher un commerce</label>
+                    <div className="flex gap-2 mt-1">
+                      <Input value={placeQuery} onChange={(e) => setPlaceQuery(e.target.value)} placeholder="Boulangerie Martin Strasbourg..." className="rounded-xl"
+                        onKeyDown={(e) => { if (e.key === "Enter") searchPlaces(placeQuery).then(setPlaceResults).catch(() => {}); }}
+                      />
+                      <Button size="sm" className="rounded-xl" onClick={() => searchPlaces(placeQuery).then(setPlaceResults).catch(() => {})}>
+                        <Search className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Results */}
+                  {placeResults.length > 0 && !selectedPlace && (
+                    <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                      {placeResults.map((p) => (
+                        <button key={p.place_id} className="w-full text-left p-3 rounded-xl hover:bg-secondary transition-colors border border-border"
+                          onClick={async () => {
+                            const details = await getPlaceDetails(p.place_id);
+                            const merged = { ...p, ...details };
+                            setSelectedPlace(merged);
+                            const detected = detectBusinessType(merged.types ?? []);
+                            setProspectBusinessType(detected);
+                            const slug = await generateSlug(merged.name);
+                            setProspectSlug(slug);
+                          }}
+                        >
+                          <p className="text-sm font-medium">{p.name}</p>
+                          <p className="text-xs text-muted-foreground">{p.formatted_address ?? p.vicinity}</p>
+                          {p.rating && <p className="text-xs text-muted-foreground">⭐ {p.rating}</p>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Selected place details */}
+                  {selectedPlace && (
+                    <div className="space-y-4">
+                      <Card className="rounded-xl bg-secondary/30">
+                        <CardContent className="p-4 space-y-1">
+                          <p className="text-sm font-semibold">{selectedPlace.name}</p>
+                          <p className="text-xs text-muted-foreground">{selectedPlace.formatted_address}</p>
+                          {selectedPlace.formatted_phone_number && <p className="text-xs text-muted-foreground">Tel: {selectedPlace.formatted_phone_number}</p>}
+                          {selectedPlace.rating && <p className="text-xs text-muted-foreground">⭐ {selectedPlace.rating}</p>}
+                          {selectedPlace.opening_hours?.weekday_text && (
+                            <div className="mt-2">
+                              <p className="text-xs font-medium text-muted-foreground">Horaires :</p>
+                              {selectedPlace.opening_hours.weekday_text.map((line: string, i: number) => (
+                                <p key={i} className="text-xs text-muted-foreground">{line}</p>
+                              ))}
+                            </div>
+                          )}
+                          <button className="text-xs text-blue-600 underline mt-2" onClick={() => { setSelectedPlace(null); setPlaceResults([]); }}>
+                            Changer de commerce
+                          </button>
+                        </CardContent>
+                      </Card>
+
+                      {/* Business type */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground">Type de commerce</label>
+                        <select value={prospectBusinessType} onChange={(e) => setProspectBusinessType(e.target.value)}
+                          className="mt-1 w-full rounded-xl border border-border px-3 py-2 text-sm bg-background">
+                          {BUSINESS_TYPES.map((bt) => (
+                            <option key={bt.value} value={bt.value}>{bt.emoji} {bt.label}</option>
+                          ))}
+                        </select>
+                        <p className="text-xs text-muted-foreground mt-1">Detecte automatiquement, modifiable</p>
+                      </div>
+
+                      {/* Slug */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground">Slug (URL)</label>
+                        <Input value={prospectSlug} onChange={(e) => setProspectSlug(e.target.value)} className="mt-1 rounded-xl" />
+                        <p className="text-xs text-muted-foreground mt-1">app.commandeici.com/{prospectSlug}</p>
+                      </div>
+
+                      {/* Color */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground">Couleur principale</label>
+                        <input type="color" value={prospectColor} onChange={(e) => setProspectColor(e.target.value)} className="mt-1 h-10 w-20 rounded-lg border border-border cursor-pointer" />
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex justify-end gap-2 pt-2">
+                        <Button variant="outline" onClick={() => setShowCreateProspect(false)} className="rounded-xl">Annuler</Button>
+                        <Button disabled={creatingProspect || !prospectSlug} className="rounded-xl" onClick={async () => {
+                          if (!authUserId || !selectedPlace) return;
+                          setCreatingProspect(true);
+                          try {
+                            const city = selectedPlace.formatted_address?.split(",").slice(-2, -1)[0]?.trim() ?? "";
+                            await createProspect({
+                              name: selectedPlace.name,
+                              slug: prospectSlug,
+                              address: selectedPlace.formatted_address ?? "",
+                              city,
+                              restaurant_phone: selectedPlace.formatted_phone_number ?? "",
+                              google_place_id: selectedPlace.place_id,
+                              rating: selectedPlace.rating ?? undefined,
+                              website: selectedPlace.website ?? "",
+                              hours: selectedPlace.opening_hours?.weekday_text?.join("\n") ?? "",
+                              business_type: prospectBusinessType,
+                              primary_color: prospectColor,
+                              owner_id: authUserId,
+                            });
+                            setShowCreateProspect(false);
+                            loadData();
+                          } catch (e: any) {
+                            alert("Erreur : " + (e.message ?? e));
+                          }
+                          setCreatingProspect(false);
+                        }}>
+                          {creatingProspect ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
+                          Creer le prospect
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Convert dialog */}
+            {convertingProspect && (
+              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setConvertingProspect(null); }}>
+                <div className="bg-background rounded-2xl max-w-md w-full p-6 space-y-4">
+                  <h3 className="text-lg font-semibold">Convertir en compte actif</h3>
+                  <div className="space-y-1">
+                    <p className="text-sm"><span className="font-medium">{convertingProspect.name}</span></p>
+                    <p className="text-xs text-muted-foreground">app.commandeici.com/{convertingProspect.slug}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Email du commercant *</label>
+                    <Input value={convertEmail} onChange={(e) => setConvertEmail(e.target.value)} placeholder="email@commerce.fr" className="mt-1 rounded-xl" />
+                    <p className="text-xs text-muted-foreground mt-1">Un email d'invitation sera envoye</p>
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button variant="outline" onClick={() => setConvertingProspect(null)} className="rounded-xl">Annuler</Button>
+                    <Button disabled={converting || !convertEmail.includes("@")} className="rounded-xl" onClick={async () => {
+                      setConverting(true);
+                      try {
+                        const { error } = await supabase.functions.invoke("convert-prospect", {
+                          body: { restaurantId: convertingProspect.id, email: convertEmail },
+                        });
+                        if (error) throw error;
+                        setConvertingProspect(null);
+                        loadData();
+                      } catch (e: any) {
+                        alert("Erreur : " + (e.message ?? e));
+                      }
+                      setConverting(false);
+                    }}>
+                      {converting ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <UserPlus className="h-4 w-4 mr-1" />}
+                      Convertir et inviter
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Editing prospect menu */}
+        {tab === "prospects" && editingProspect && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="sm" onClick={() => { setEditingProspect(null); loadData(); }} className="rounded-xl">
+                <ArrowLeft className="h-4 w-4 mr-1" /> Retour
+              </Button>
+              <h2 className="text-lg font-semibold">{getBusinessEmoji(editingProspect.business_type ?? "restaurant")} {editingProspect.name} - Catalogue</h2>
+            </div>
+            <DashboardMaCarte
+              restaurant={editingProspect}
+              isDemo={false}
+            />
+          </div>
         )}
 
         {/* ════════ TAB: OUTILS ════════ */}

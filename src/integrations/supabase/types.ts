@@ -190,6 +190,7 @@ export type Database = {
           subtotal: number
           total: number
           updated_at: string
+          is_test: boolean | null
         }
         Insert: {
           created_at?: string
@@ -211,6 +212,7 @@ export type Database = {
           subtotal: number
           total: number
           updated_at?: string
+          is_test?: boolean | null
         }
         Update: {
           created_at?: string
@@ -232,6 +234,7 @@ export type Database = {
           subtotal?: number
           total?: number
           updated_at?: string
+          is_test?: boolean | null
         }
         Relationships: [
           {
@@ -328,6 +331,8 @@ export type Database = {
           scheduled_deletion_at: string | null
           deactivation_visit_count: number | null
           is_demo: boolean | null
+          business_type: string | null
+          account_status: string | null
         }
         Insert: {
           address?: string | null
@@ -378,6 +383,8 @@ export type Database = {
           scheduled_deletion_at?: string | null
           deactivation_visit_count?: number | null
           is_demo?: boolean | null
+          business_type?: string | null
+          account_status?: string | null
         }
         Update: {
           address?: string | null
@@ -428,6 +435,8 @@ export type Database = {
           scheduled_deletion_at?: string | null
           deactivation_visit_count?: number | null
           is_demo?: boolean | null
+          business_type?: string | null
+          account_status?: string | null
         }
         Relationships: []
       }

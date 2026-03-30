@@ -25,6 +25,7 @@ const OrderPage = () => {
   const [pickupTime, setPickupTime] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [restaurantPhone, setRestaurantPhone] = useState<string | null>(null);
+  const [isProspect, setIsProspect] = useState(false);
   const [estimatedMinutes, setEstimatedMinutes] = useState(15);
   const [banned, setBanned] = useState(false);
   const [isDemo, setIsDemo] = useState(() => {
@@ -66,6 +67,7 @@ const OrderPage = () => {
     fetchRestaurantById(restaurantId).then((r) => {
       if (!r) return;
       if (r.restaurant_phone) setRestaurantPhone(r.restaurant_phone);
+      if ((r as any).account_status === "prospect") setIsProspect(true);
       if (r.prep_time_config) {
         const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
         const est = Math.min(
@@ -184,6 +186,10 @@ const OrderPage = () => {
       // Attach customer_user_id if logged in
       if (isLoggedIn && user) {
         (orderPayload as any).customer_user_id = user.id;
+      }
+      // Flag test orders for prospect accounts
+      if (isProspect) {
+        (orderPayload as any).is_test = true;
       }
       const order = await createOrder(orderPayload);
       localStorage.setItem("active-order", JSON.stringify({
