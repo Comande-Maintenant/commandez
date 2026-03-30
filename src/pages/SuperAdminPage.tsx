@@ -17,6 +17,7 @@ import {
 } from "@/lib/api";
 import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
 import { searchPlaces, getPlaceDetails } from "@/services/google-places";
+import QRCode from "qrcode";
 import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
 import { detectBusinessType, BUSINESS_TYPES, getBusinessEmoji } from "@/utils/detect-business-type";
@@ -158,9 +159,8 @@ const SuperAdminPage = () => {
   const [prospectColor, setProspectColor] = useState("#10B981");
   const [creatingProspect, setCreatingProspect] = useState(false);
   const [editingProspect, setEditingProspect] = useState<DbRestaurant | null>(null);
-  const [googlePhotos, setGooglePhotos] = useState<{ url: string; urlHigh: string }[]>([]);
-  const [loadingPhotos, setLoadingPhotos] = useState(false);
-  const [selectedPhotoIndexes, setSelectedPhotoIndexes] = useState<Set<number>>(new Set());
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   // Conversion
@@ -1107,100 +1107,75 @@ const SuperAdminPage = () => {
         {tab === "prospects" && editingProspect && (
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm" onClick={() => { setEditingProspect(null); setGooglePhotos([]); loadData(); }} className="rounded-xl">
+              <Button variant="ghost" size="sm" onClick={() => { setEditingProspect(null); setQrCodeDataUrl(null); setUploadedPhotos([]); loadData(); }} className="rounded-xl">
                 <ArrowLeft className="h-4 w-4 mr-1" /> Retour
               </Button>
               <h2 className="text-lg font-semibold">{getBusinessEmoji(editingProspect.business_type ?? "restaurant")} {editingProspect.name} - Catalogue</h2>
-              {editingProspect.google_place_id && (
-                <Button variant="outline" size="sm" className="rounded-xl ml-auto" disabled={loadingPhotos} onClick={async () => {
-                  setLoadingPhotos(true);
-                  try {
-                    // Direct fetch to bypass supabase.functions.invoke error handling
-                    const { data: { session } } = await supabase.auth.getSession();
-                    const token = session?.access_token;
-                    const res = await fetch(`https://rbqgsxhkccbhqdmdtxwr.supabase.co/functions/v1/google-places`, {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token || ""}`,
-                        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY",
-                      },
-                      body: JSON.stringify({ action: "details", placeId: editingProspect.google_place_id }),
-                    });
-                    const data = await res.json();
-                    console.log("[photos] Response status:", res.status, "keys:", Object.keys(data), "result keys:", data?.result ? Object.keys(data.result) : "no result");
-                    const photoUrls = data?.result?.photo_urls ?? [];
-                    const photoRefs = data?.result?.photos ?? [];
-                    console.log("[photos] photo_urls:", photoUrls.length, "photo refs:", photoRefs.length);
-                    if (photoUrls.length > 0) {
-                      setGooglePhotos(photoUrls);
-                    } else if (photoRefs.length > 0) {
-                      // Fallback: the edge function returned photos but not photo_urls
-                      // This means the deployed version might be stale
-                      alert(`${photoRefs.length} photos trouvees mais URLs non generees. Redeploy necessaire.`);
-                    } else {
-                      alert("Aucune photo trouvee sur la fiche Google");
-                    }
-                  } catch (e: any) {
-                    console.error("Photos error:", e);
-                    alert("Erreur photos : " + (e.message ?? e));
-                  }
-                  setLoadingPhotos(false);
-                }}>
-                  {loadingPhotos ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
-                  Photos Google ({googlePhotos.length || "charger"})
-                </Button>
-              )}
             </div>
 
-            {/* Google Photos gallery */}
-            {googlePhotos.length > 0 && (
-              <Card className="rounded-2xl">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-semibold">Photos Google ({googlePhotos.length})</CardTitle>
-                    {selectedPhotoIndexes.size > 0 && (
-                      <Button size="sm" className="rounded-xl text-xs" onClick={() => {
-                        const urls = Array.from(selectedPhotoIndexes).map((i) => googlePhotos[i].urlHigh);
-                        // Open selected photos in new tabs for manual download/use
-                        urls.forEach((u) => window.open(u, "_blank"));
+            {/* QR Code + Uploaded photos */}
+            <Card className="rounded-2xl">
+              <CardContent className="p-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* QR Code */}
+                  <div className="flex flex-col items-center gap-2 sm:w-48 flex-shrink-0">
+                    {!qrCodeDataUrl ? (
+                      <Button variant="outline" className="rounded-xl w-full" onClick={async () => {
+                        const key = editingProspect.id.slice(0, 8).split("").reverse().join("");
+                        const url = `https://app.commandeici.com/upload/${editingProspect.id}?key=${key}`;
+                        const dataUrl = await QRCode.toDataURL(url, { width: 256, margin: 1 });
+                        setQrCodeDataUrl(dataUrl);
+                        // Also load existing uploads
+                        const { data } = await supabase.storage.from("prospect-uploads").list(editingProspect.id, { limit: 50 });
+                        if (data) {
+                          setUploadedPhotos(data.map((f) => `https://rbqgsxhkccbhqdmdtxwr.supabase.co/storage/v1/object/public/prospect-uploads/${editingProspect.id}/${f.name}`));
+                        }
                       }}>
-                        Ouvrir la selection ({selectedPhotoIndexes.size})
+                        Generer QR Code
                       </Button>
+                    ) : (
+                      <>
+                        <img src={qrCodeDataUrl} alt="QR Code" className="w-40 h-40 rounded-lg border border-border" />
+                        <p className="text-[11px] text-muted-foreground text-center">Scannez pour envoyer des photos depuis le telephone</p>
+                        <Button variant="ghost" size="sm" className="text-xs" onClick={async () => {
+                          // Refresh uploaded photos
+                          const { data } = await supabase.storage.from("prospect-uploads").list(editingProspect.id, { limit: 50 });
+                          if (data) {
+                            setUploadedPhotos(data.map((f) => `https://rbqgsxhkccbhqdmdtxwr.supabase.co/storage/v1/object/public/prospect-uploads/${editingProspect.id}/${f.name}`));
+                          }
+                        }}>
+                          <RefreshCw className="h-3 w-3 mr-1" /> Actualiser les photos
+                        </Button>
+                      </>
                     )}
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                    {googlePhotos.map((photo, i) => {
-                      const selected = selectedPhotoIndexes.has(i);
-                      return (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            setSelectedPhotoIndexes((prev) => {
-                              const next = new Set(prev);
-                              if (next.has(i)) next.delete(i);
-                              else next.add(i);
-                              return next;
-                            });
-                          }}
-                          className={`relative block aspect-square rounded-lg overflow-hidden border-2 transition-all ${selected ? "border-[hsl(var(--primary))] ring-2 ring-[hsl(var(--primary))]" : "border-border hover:border-muted-foreground"}`}
-                        >
-                          <img src={photo.url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                          {selected && (
-                            <div className="absolute top-1 right-1 h-5 w-5 rounded-full bg-[hsl(var(--primary))] flex items-center justify-center">
-                              <span className="text-white text-xs font-bold">{Array.from(selectedPhotoIndexes).indexOf(i) + 1}</span>
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
+
+                  {/* Uploaded photos grid */}
+                  <div className="flex-1">
+                    {uploadedPhotos.length > 0 ? (
+                      <div>
+                        <p className="text-sm font-medium text-foreground mb-2">{uploadedPhotos.length} photo{uploadedPhotos.length > 1 ? "s" : ""} recue{uploadedPhotos.length > 1 ? "s" : ""}</p>
+                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                          {uploadedPhotos.map((url, i) => (
+                            <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block aspect-square rounded-lg overflow-hidden border border-border hover:ring-2 hover:ring-[hsl(var(--primary))] transition-all">
+                              <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                            </a>
+                          ))}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-2">Cliquez pour ouvrir en grand. Utilisez le bouton camera ci-dessous pour importer dans le catalogue.</p>
+                      </div>
+                    ) : qrCodeDataUrl ? (
+                      <div className="flex items-center justify-center h-full text-center py-8">
+                        <div>
+                          <p className="text-sm text-muted-foreground">En attente de photos...</p>
+                          <p className="text-xs text-muted-foreground mt-1">Scannez le QR code avec votre telephone</p>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-2">Selectionne les photos de cartes/menus, puis clique "Ouvrir la selection" pour les telecharger et les importer via le bouton camera ci-dessous.</p>
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              </CardContent>
+            </Card>
 
             <DashboardMaCarte
               restaurant={editingProspect}

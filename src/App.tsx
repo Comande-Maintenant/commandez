@@ -28,6 +28,7 @@ const ChoisirPlanPage = lazy(() => import("./pages/ChoisirPlanPage"));
 const AbonnementConfirmePage = lazy(() => import("./pages/AbonnementConfirmePage"));
 const SuperAdminPage = lazy(() => import("./pages/SuperAdminPage"));
 const CustomerProfilePage = lazy(() => import("./pages/CustomerProfilePage"));
+const PhotoUploadPage = lazy(() => import("./pages/PhotoUploadPage"));
 
 function PageLoader() {
   return (
@@ -79,6 +80,7 @@ const App = () => (
               <Route path="/choisir-plan" element={<ChoisirPlanPage />} />
               <Route path="/abonnement-confirme" element={<AbonnementConfirmePage />} />
               <Route path="/super-admin" element={<SuperAdminPage />} />
+              <Route path="/upload/:restaurantId" element={<PhotoUploadPage />} />
               <Route path="/profil" element={<CustomerProfilePage />} />
               <Route path="/signup" element={<Navigate to="/inscription" replace />} />
               <Route path="/demo" element={<RestaurantPage />} />
