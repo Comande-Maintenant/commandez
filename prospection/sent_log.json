@@ -641,131 +641,131 @@
   },
   "contact@groupenobile.com": {
     "sent_at": "2026-03-15T08:00:57.261689+00:00",
-    "resend_id": "f8dbcdeb-b2a9-4abd-9989-f72569422bff",
+    "last_sent_at": "2026-03-30T16:04:59.398648+00:00",
+    "send_count": 2,
+    "resend_id": "0430b7e9-4351-4150-93c8-b69b80095396",
     "name": "Casa Nobile",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:57.261689+00:00"
+    "city": "Lyon"
   },
   "amigopizza69007@gmail.com": {
     "sent_at": "2026-03-15T08:00:55.285639+00:00",
-    "resend_id": "288a8a8a-e0b8-4d8a-8304-4c0e597aafd0",
+    "last_sent_at": "2026-03-30T16:04:57.432829+00:00",
+    "send_count": 2,
+    "resend_id": "9428b724-997f-45a3-9f4c-8e3b62629ffb",
     "name": "Amigo Food",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:55.285639+00:00"
+    "city": "Lyon"
   },
   "fistonrestaurant@gmail.com": {
     "sent_at": "2026-03-15T08:00:53.202853+00:00",
-    "resend_id": "c101e3d2-d88d-4641-bb12-47f1659c65d2",
+    "last_sent_at": "2026-03-30T16:04:55.390583+00:00",
+    "send_count": 2,
+    "resend_id": "04acf38b-44b1-4c63-b58a-f8dbd77f415d",
     "name": "Figlio by Fiston - Cuisine italienne & pinsa romana",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:53.202853+00:00"
+    "city": "Lyon"
   },
   "alipod@free.fr": {
     "sent_at": "2026-03-15T08:00:51.201067+00:00",
-    "resend_id": "6f9a9b77-31f6-431e-9e6f-e74df7d40e97",
+    "last_sent_at": "2026-03-30T16:04:53.427721+00:00",
+    "send_count": 2,
+    "resend_id": "808596ea-747b-4f68-a5cc-69f578fb70c0",
     "name": "L’ As de Pizz'",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:51.201067+00:00"
+    "city": "Lyon"
   },
   "maria.restaurantlyon@gmail.com": {
     "sent_at": "2026-03-15T08:00:49.250905+00:00",
-    "resend_id": "d03e9f62-416b-4017-af48-d8061dfd0c8b",
+    "last_sent_at": "2026-03-30T16:04:51.456140+00:00",
+    "send_count": 2,
+    "resend_id": "434aed25-753d-41fd-8d9c-d1009fccc4b5",
     "name": "MARIA.",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:49.250905+00:00"
+    "city": "Lyon"
   },
   "ilfico.restaurant@gmail.com": {
     "sent_at": "2026-03-15T08:00:47.298046+00:00",
-    "resend_id": "ec62a8a3-cff5-4fbf-9ffb-0c47e1a08b81",
+    "last_sent_at": "2026-03-30T16:04:49.519854+00:00",
+    "send_count": 2,
+    "resend_id": "49164013-0d4c-4da7-bdb8-f64959a1eb68",
     "name": "Il Fico",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:47.298046+00:00"
+    "city": "Lyon"
   },
   "contactvolfoni@groupe-bertrand.com": {
     "sent_at": "2026-03-15T08:00:45.174456+00:00",
-    "resend_id": "b3b16fdd-555a-4310-a239-3681cbada81d",
+    "last_sent_at": "2026-03-30T16:04:47.536078+00:00",
+    "send_count": 2,
+    "resend_id": "026c7828-8af1-42df-b68a-d919d2a2fa93",
     "name": "Volfoni Lyon",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:45.174456+00:00"
+    "city": "Lyon"
   },
   "giogiopizzalyon@gmail.com": {
     "sent_at": "2026-03-15T08:00:43.165886+00:00",
-    "resend_id": "70044975-7b47-4921-9c5d-41b2d1cf3de5",
+    "last_sent_at": "2026-03-30T16:04:45.474343+00:00",
+    "send_count": 2,
+    "resend_id": "408849b3-b312-4fc3-a9fc-2c3703b6f6be",
     "name": "Gio Gio Pizzeria Lyon 2",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:43.165886+00:00"
+    "city": "Lyon"
   },
   "contact@jtpizza.com": {
     "sent_at": "2026-03-15T08:00:41.182523+00:00",
-    "resend_id": "886a6991-d850-4c66-9bd9-1412ea06b03d",
+    "last_sent_at": "2026-03-30T16:04:43.471905+00:00",
+    "send_count": 2,
+    "resend_id": "82e5f63b-0d9c-47f0-ad63-7608b6edd4b6",
     "name": "Jordan Tomas Pizza - Lyon Gerland",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:41.182523+00:00"
+    "city": "Lyon"
   },
   "contact@duomopizzeria.fr": {
     "sent_at": "2026-03-15T08:00:39.206601+00:00",
-    "resend_id": "dd380b6f-bc38-452f-82a3-3cce4c6a4f65",
+    "last_sent_at": "2026-03-30T16:04:41.491468+00:00",
+    "send_count": 2,
+    "resend_id": "a34c2cd4-358f-4b40-a45a-3fa57b3ff09f",
     "name": "DUOMO - Pizzeria Napolitaine",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:39.206601+00:00"
+    "city": "Lyon"
   },
   "info@smallstories.fr": {
     "sent_at": "2026-03-15T08:00:37.235827+00:00",
-    "resend_id": "96c4c03d-4ece-4e52-b72c-e2098b8d0cb6",
+    "last_sent_at": "2026-03-30T16:04:39.215760+00:00",
+    "send_count": 2,
+    "resend_id": "ed3dc63f-4500-4d7e-8f6d-1917483c727a",
     "name": "Nano Vendôme - Lyon",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:37.235827+00:00"
+    "city": "Lyon"
   },
   "atoto490@gmail.com": {
     "sent_at": "2026-03-15T08:00:35.240834+00:00",
-    "resend_id": "8bec38c2-ae36-44f1-9d9f-c2c44c97367f",
+    "last_sent_at": "2026-03-30T16:04:37.204550+00:00",
+    "send_count": 2,
+    "resend_id": "fb8fbf75-69ea-4f03-b945-57a8b793f71b",
     "name": "Stile Italiano",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:35.240834+00:00"
+    "city": "Lyon"
   },
   "contact@leclandesmamma.com": {
     "sent_at": "2026-03-15T08:00:32.429513+00:00",
-    "resend_id": "b5c9af3a-37b5-431d-b408-b5faeeb1ffb4",
+    "last_sent_at": "2026-03-30T16:04:34.855980+00:00",
+    "send_count": 2,
+    "resend_id": "4a2e929b-df1e-476f-b3ec-28334cf1e721",
     "name": "Gabriella - Le Clan des Mamma, Pizzas & Cocktails - Lyon",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:32.429513+00:00"
+    "city": "Lyon"
   },
   "contact@restaurantfalcone.com": {
     "sent_at": "2026-03-15T08:00:30.416119+00:00",
-    "resend_id": "e9350fbd-359f-481a-b720-6c67f84c5ff4",
+    "last_sent_at": "2026-03-30T16:04:32.882448+00:00",
+    "send_count": 2,
+    "resend_id": "89c4e1b2-ee45-4f55-9990-3e8c7f259e62",
     "name": "Falcone",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:30.416119+00:00"
+    "city": "Lyon"
   },
   "c.ciociola@antonioemarco.com": {
     "sent_at": "2026-03-15T08:00:28.471065+00:00",
-    "resend_id": "09107617-8ad7-44e0-ba48-fea668bbbd62",
+    "last_sent_at": "2026-03-30T16:04:30.895568+00:00",
+    "send_count": 2,
+    "resend_id": "0b4949d9-7f76-4331-bdb1-ecbc7e3ca499",
     "name": "Festa Love da Antonio & Marco Morreale",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:28.471065+00:00"
+    "city": "Lyon"
   },
   "famosa69004@gmail.com": {
     "sent_at": "2026-03-15T08:00:24.776774+00:00",
-    "resend_id": "6f8c5071-d50b-40eb-bfcb-96f25476c819",
+    "last_sent_at": "2026-03-30T16:04:28.512568+00:00",
+    "send_count": 2,
+    "resend_id": "4693ad72-116b-4a38-bff0-1158f547275d",
     "name": "La Scala Siciliana",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:24.776774+00:00"
+    "city": "Lyon"
   },
   "contact@bigmammagroup.com": {
     "sent_at": "2026-03-15T08:00:22.85036+00:00",
