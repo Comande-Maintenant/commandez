@@ -16,7 +16,7 @@ import {
   type DemoStatsData, type AllReferralsData, type ProspectRow,
 } from "@/lib/api";
 import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
-import { searchPlaces, getPlaceDetails, getPlacePhotos, type GooglePlacePhoto } from "@/services/google-places";
+import { searchPlaces, getPlaceDetails } from "@/services/google-places";
 import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
 import { detectBusinessType, BUSINESS_TYPES, getBusinessEmoji } from "@/utils/detect-business-type";
@@ -158,7 +158,7 @@ const SuperAdminPage = () => {
   const [prospectColor, setProspectColor] = useState("#10B981");
   const [creatingProspect, setCreatingProspect] = useState(false);
   const [editingProspect, setEditingProspect] = useState<DbRestaurant | null>(null);
-  const [googlePhotos, setGooglePhotos] = useState<GooglePlacePhoto[]>([]);
+  const [googlePhotos, setGooglePhotos] = useState<{ url: string; urlHigh: string }[]>([]);
   const [loadingPhotos, setLoadingPhotos] = useState(false);
   const [selectedPhotoIndexes, setSelectedPhotoIndexes] = useState<Set<number>>(new Set());
   const [authUserId, setAuthUserId] = useState<string | null>(null);
@@ -1115,9 +1115,10 @@ const SuperAdminPage = () => {
                 <Button variant="outline" size="sm" className="rounded-xl ml-auto" disabled={loadingPhotos} onClick={async () => {
                   setLoadingPhotos(true);
                   try {
-                    const photos = await getPlacePhotos(editingProspect.google_place_id!);
-                    setGooglePhotos(photos);
-                    if (photos.length === 0) alert("Aucune photo trouvee sur la fiche Google");
+                    const details = await getPlaceDetails(editingProspect.google_place_id!);
+                    const photoUrls = (details as any)?.photo_urls ?? [];
+                    setGooglePhotos(photoUrls);
+                    if (photoUrls.length === 0) alert("Aucune photo trouvee sur la fiche Google");
                   } catch (e: any) {
                     console.error("Photos error:", e);
                     alert("Erreur photos : " + (e.message ?? e));
