@@ -4,7 +4,7 @@ import {
   ArrowLeft, Shield, Loader2, Store, Users, Euro, TrendingUp, TrendingDown,
   AlertTriangle, Clock, Trash2, CreditCard, UserX, Search, Mail, Send,
   RefreshCw, Ticket, Gift, ShoppingBag, ChevronDown, ChevronUp,
-  BarChart3, ArrowRight, ExternalLink, Plus, Eye, Pencil, UserPlus,
+  BarChart3, ArrowRight, ExternalLink, Plus, Eye, Pencil, UserPlus, Check,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -168,6 +168,7 @@ const SuperAdminPage = () => {
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzedCategories, setAnalyzedCategories] = useState<AnalyzedCategory[] | null>(null);
   const [savingMenu, setSavingMenu] = useState(false);
+  const [successPopup, setSuccessPopup] = useState<{ count: number } | null>(null);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   // Conversion
@@ -1284,7 +1285,7 @@ const SuperAdminPage = () => {
                         }
                         setAnalyzedCategories(null);
                         setSelectedUploadIndexes(new Set());
-                        alert(`${added} produit${added > 1 ? "s" : ""} ajoute${added > 1 ? "s" : ""} au catalogue`);
+                        setSuccessPopup({ count: added });
                       } catch (e: any) {
                         alert("Erreur sauvegarde : " + (e.message ?? e));
                       }
@@ -1437,6 +1438,24 @@ const SuperAdminPage = () => {
           </>
         )}
       </main>
+
+      {/* Success popup */}
+      {successPopup && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSuccessPopup(null)}>
+          <div className="bg-background rounded-2xl max-w-sm w-full p-8 text-center space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div className="h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto">
+              <Check className="h-8 w-8 text-emerald-600" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground">
+              {successPopup.count} produit{successPopup.count > 1 ? "s" : ""} ajoute{successPopup.count > 1 ? "s" : ""}
+            </h3>
+            <p className="text-sm text-muted-foreground">Le catalogue a ete mis a jour avec succes. Vous pouvez maintenant ajuster les details dans la carte ci-dessous.</p>
+            <Button className="rounded-xl w-full" onClick={() => setSuccessPopup(null)}>
+              Parfait, continuer
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
