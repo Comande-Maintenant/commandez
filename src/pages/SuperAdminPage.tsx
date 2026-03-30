@@ -1115,8 +1115,20 @@ const SuperAdminPage = () => {
                 <Button variant="outline" size="sm" className="rounded-xl ml-auto" disabled={loadingPhotos} onClick={async () => {
                   setLoadingPhotos(true);
                   try {
-                    const details = await getPlaceDetails(editingProspect.google_place_id!);
-                    const photoUrls = (details as any)?.photo_urls ?? [];
+                    // Direct fetch to bypass supabase.functions.invoke error handling
+                    const { data: { session } } = await supabase.auth.getSession();
+                    const token = session?.access_token;
+                    const res = await fetch(`https://rbqgsxhkccbhqdmdtxwr.supabase.co/functions/v1/google-places`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token || ""}`,
+                        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY",
+                      },
+                      body: JSON.stringify({ action: "details", placeId: editingProspect.google_place_id }),
+                    });
+                    const data = await res.json();
+                    const photoUrls = data?.result?.photo_urls ?? [];
                     setGooglePhotos(photoUrls);
                     if (photoUrls.length === 0) alert("Aucune photo trouvee sur la fiche Google");
                   } catch (e: any) {
