@@ -4,7 +4,7 @@ import {
   ArrowLeft, Shield, Loader2, Store, Users, Euro, TrendingUp, TrendingDown,
   AlertTriangle, Clock, Trash2, CreditCard, UserX, Search, Mail, Send,
   RefreshCw, Ticket, Gift, ShoppingBag, ChevronDown, ChevronUp,
-  BarChart3, ArrowRight, ExternalLink, Plus, Eye, Pencil, UserPlus, Check,
+  BarChart3, ArrowRight, ExternalLink, Plus, Eye, Pencil, UserPlus, Check, ArrowDown, RotateCw,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -153,6 +153,7 @@ const SuperAdminPage = () => {
   // Prospects
   const [prospectRows, setProspectRows] = useState<ProspectRow[]>([]);
   const [prospectSearch, setProspectSearch] = useState("");
+  const [prospectFilter, setProspectFilter] = useState("all");
   const [showCreateProspect, setShowCreateProspect] = useState(false);
   const [placeQuery, setPlaceQuery] = useState("");
   const [placeResults, setPlaceResults] = useState<GooglePlaceResult[]>([]);
@@ -956,10 +957,22 @@ const SuperAdminPage = () => {
               <Input placeholder="Rechercher..." value={prospectSearch} onChange={(e) => setProspectSearch(e.target.value)} className="pl-10 rounded-xl" />
             </div>
 
+            {/* Status filter */}
+            <div className="flex gap-2 flex-wrap">
+              {["all", "prospect", "active", "archived"].map((s) => (
+                <button key={s} onClick={() => setProspectFilter(s)}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${prospectFilter === s ? "bg-foreground text-background" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
+                  {s === "all" ? "Tous" : s === "prospect" ? "Prospects" : s === "active" ? "Actifs" : "Archives"}
+                  {" "}({prospectRows.filter((r) => s === "all" || r.account_status === s).length})
+                </button>
+              ))}
+            </div>
+
             {/* Prospect list */}
             <div className="space-y-2">
               {prospectRows
                 .filter((r) => {
+                  if (prospectFilter !== "all" && r.account_status !== prospectFilter) return false;
                   if (!prospectSearch.trim()) return true;
                   const q = prospectSearch.toLowerCase();
                   return r.name.toLowerCase().includes(q) || r.city?.toLowerCase().includes(q);
@@ -971,8 +984,12 @@ const SuperAdminPage = () => {
                         <div className="flex items-center gap-2">
                           <span className="text-lg">{getBusinessEmoji(r.business_type)}</span>
                           <p className="text-sm font-semibold text-foreground truncate">{r.name}</p>
-                          <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-medium ${r.account_status === "prospect" ? "bg-purple-100 text-purple-800" : "bg-emerald-100 text-emerald-800"}`}>
-                            {r.account_status}
+                          <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-medium ${
+                            r.account_status === "prospect" ? "bg-purple-100 text-purple-800" :
+                            r.account_status === "archived" ? "bg-gray-100 text-gray-500" :
+                            "bg-emerald-100 text-emerald-800"
+                          }`}>
+                            {r.account_status === "prospect" ? "Prospect" : r.account_status === "active" ? "Actif" : r.account_status === "archived" ? "Archive" : r.account_status}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5">
@@ -981,26 +998,40 @@ const SuperAdminPage = () => {
                       </div>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         <a href={`https://app.commandeici.com/${r.slug}`} target="_blank" rel="noopener noreferrer nofollow">
-                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title={`Apercu : /${r.slug}`}><Eye className="h-3.5 w-3.5" /></Button>
+                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Voir la page"><Eye className="h-3.5 w-3.5" /></Button>
                         </a>
-                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={async () => {
+                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Editer le catalogue" onClick={async () => {
                           const { data } = await supabase.from("restaurants").select("*").eq("id", r.id).single();
-                          if (data) {
-                            setEditingProspect(data as unknown as DbRestaurant);
-                          }
+                          if (data) setEditingProspect(data as unknown as DbRestaurant);
                         }}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
-                        <Button size="sm" variant="outline" className="rounded-lg h-8 text-xs" onClick={() => {
-                          if (r.account_status === "prospect") {
-                            // For now just open the edit menu
-                            (async () => {
-                              const { data } = await supabase.from("restaurants").select("*").eq("id", r.id).single();
-                              if (data) setEditingProspect(data as unknown as DbRestaurant);
-                            })();
-                          }
+                        {r.account_status !== "archived" && (
+                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Archiver" onClick={async () => {
+                            if (!confirm(`Archiver "${r.name}" ? La page ne sera plus accessible.`)) return;
+                            await supabase.from("restaurants").update({ account_status: "archived", deactivated_at: new Date().toISOString() }).eq("id", r.id);
+                            loadData();
+                          }}>
+                            <ArrowDown className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                        {r.account_status === "archived" && (
+                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Reactiver" onClick={async () => {
+                            await supabase.from("restaurants").update({ account_status: "prospect", deactivated_at: null }).eq("id", r.id);
+                            loadData();
+                          }}>
+                            <RotateCw className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0 text-destructive hover:text-destructive" title="Supprimer" onClick={async () => {
+                          if (!confirm(`Supprimer definitivement "${r.name}" et tous ses produits ?`)) return;
+                          if (!confirm("Cette action est irreversible. Confirmer ?")) return;
+                          await supabase.from("menu_items").delete().eq("restaurant_id", r.id);
+                          await supabase.from("orders").delete().eq("restaurant_id", r.id);
+                          await supabase.from("restaurants").delete().eq("id", r.id);
+                          loadData();
                         }}>
-                          Continuer
+                          <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </CardContent>
