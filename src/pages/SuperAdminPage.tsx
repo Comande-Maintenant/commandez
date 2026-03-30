@@ -334,84 +334,42 @@ const SuperAdminPage = () => {
     const input = (rawInput || placeQuery).trim();
     if (!input) return;
 
-    // Detect Google URLs (maps, share, search, business)
-    const isGoogleUrl = input.includes("google.com/maps") || input.includes("goo.gl/maps") || input.includes("maps.app.goo.gl") || input.includes("search?q=") || input.includes("share.google") || input.includes("g.co/") || input.includes("google.com/search");
+    // Try to extract a search term from any URL
+    let searchTerm = input;
 
-    if (isGoogleUrl) {
-      let resolvedUrl = input;
-
-      // For short URLs (share.google, goo.gl, g.co), resolve redirect via edge function
-      if (input.includes("share.google") || (input.includes("goo.gl") && !input.includes("maps.app.goo.gl")) || input.includes("g.co/")) {
-        try {
-          const token = (await supabase.auth.getSession()).data.session?.access_token || "";
-          const res = await fetch("https://rbqgsxhkccbhqdmdtxwr.supabase.co/functions/v1/google-places", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-              "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY",
-            },
-            body: JSON.stringify({ action: "resolve_url", url: input }),
-          });
-          const data = await res.json();
-          if (data?.resolved_url) resolvedUrl = data.resolved_url;
-        } catch {}
-      }
-
-      let searchName = "";
-
-      const placeMatch = resolvedUrl.match(/\/place\/([^/@]+)/);
-      const searchMatch = resolvedUrl.match(/\/search\/([^/@]+)/);
-      const qMatch = resolvedUrl.match(/[?&]q=([^&]+)/);
+    if (input.startsWith("http")) {
+      // Extract from Google Maps/Search URL patterns
+      const placeMatch = input.match(/\/place\/([^/@]+)/);
+      const qMatch = input.match(/[?&]q=([^&]+)/);
+      const searchMatch = input.match(/\/search\/([^/@]+)/);
 
       if (placeMatch) {
-        searchName = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
-      } else if (searchMatch) {
-        searchName = decodeURIComponent(searchMatch[1].replace(/\+/g, " "));
+        searchTerm = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
       } else if (qMatch) {
-        searchName = decodeURIComponent(qMatch[1].replace(/\+/g, " "));
-      }
-
-      // Also try to extract place_id from data= parameter (format: !1sChIJ...)
-      const pidMatch = resolvedUrl.match(/!1s(0x[a-fA-F0-9]+:[a-fA-F0-9x]+|ChIJ[A-Za-z0-9_-]+)/);
-      if (pidMatch) {
-        // Direct place_id found - fetch details directly
-        try {
-          const details = await getPlaceDetails(pidMatch[1]);
-          if (details) {
-            setSelectedPlace(details);
-            const detected = detectBusinessType(details.types ?? []);
-            setProspectBusinessType(detected);
-            const slug = await generateSlug(details.name);
-            setProspectSlug(slug);
-            setPlaceResults([]);
-            return;
-          }
-        } catch {}
-      }
-
-      if (searchName) {
-        setPlaceQuery(searchName);
-        const results = await searchPlaces(searchName);
-        setPlaceResults(results);
-        // If only 1 result, auto-select it
-        if (results.length === 1) {
-          const details = await getPlaceDetails(results[0].place_id);
-          const merged = { ...results[0], ...details };
-          setSelectedPlace(merged);
-          const detected = detectBusinessType(merged.types ?? []);
-          setProspectBusinessType(detected);
-          const slug = await generateSlug(merged.name);
-          setProspectSlug(slug);
-          setPlaceResults([]);
-        }
+        searchTerm = decodeURIComponent(qMatch[1].replace(/\+/g, " "));
+      } else if (searchMatch) {
+        searchTerm = decodeURIComponent(searchMatch[1].replace(/\+/g, " "));
+      } else {
+        // Short URL (share.google, goo.gl) - can't resolve from browser
+        // Ask user to paste the business name instead
+        alert("Ce type de lien ne peut pas etre lu directement. Tapez le nom du commerce a la place, ou collez un lien google.com/maps/place/...");
         return;
       }
     }
 
-    // Normal text search
-    const results = await searchPlaces(input);
+    setPlaceQuery(searchTerm);
+    const results = await searchPlaces(searchTerm);
     setPlaceResults(results);
+
+    // Auto-select if only 1 result
+    if (results.length === 1) {
+      const details = await getPlaceDetails(results[0].place_id);
+      const merged = { ...results[0], ...details };
+      setSelectedPlace(merged);
+      setProspectBusinessType(detectBusinessType(merged.types ?? []));
+      setProspectSlug(await generateSlug(merged.name));
+      setPlaceResults([]);
+    }
   };
 
   // ── Computed ──
@@ -1071,13 +1029,8 @@ const SuperAdminPage = () => {
                     <div className="flex gap-2 mt-1">
                       <Input value={placeQuery} onChange={(e) => setPlaceQuery(e.target.value)} placeholder="Nom du commerce ou lien Google Maps..." className="rounded-xl"
                         onKeyDown={(e) => { if (e.key === "Enter") handleProspectSearch(); }}
-                        onPaste={(e) => {
-                          setTimeout(() => {
-                            const val = (e.target as HTMLInputElement).value;
-                            if (val.includes("google") || val.includes("goo.gl") || val.includes("maps.app") || val.includes("share.google") || val.includes("g.co")) {
-                              handleProspectSearch(val);
-                            }
-                          }, 100);
+                        onPaste={() => {
+                          setTimeout(() => handleProspectSearch(), 150);
                         }}
                       />
                       <Button size="sm" className="rounded-xl" onClick={() => handleProspectSearch()}>
