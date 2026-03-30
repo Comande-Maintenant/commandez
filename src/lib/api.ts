@@ -1051,3 +1051,70 @@ export async function createProspect(data: CreateProspectData): Promise<DbRestau
   if (error) throw error;
   return result as unknown as DbRestaurant;
 }
+
+// ── Stock Photos Auto-Match ──
+
+interface StockPhoto {
+  id: string;
+  keywords: string[];
+  image_url: string;
+}
+
+export async function fetchStockPhotos(): Promise<StockPhoto[]> {
+  const { data, error } = await supabase
+    .from("stock_photos")
+    .select("id, keywords, image_url")
+    .not("image_url", "is", null);
+  if (error) throw error;
+  return (data ?? []) as unknown as StockPhoto[];
+}
+
+export function matchStockPhoto(itemName: string, itemCategory: string, stockPhotos: StockPhoto[]): StockPhoto | null {
+  const nameLower = itemName.toLowerCase().trim();
+  const catLower = (itemCategory || "").toLowerCase().trim();
+
+  let bestMatch: StockPhoto | null = null;
+  let bestScore = 0;
+
+  for (const photo of stockPhotos) {
+    let score = 0;
+    const keywords = photo.keywords.map((k) => k.toLowerCase());
+
+    for (const kw of keywords) {
+      if (nameLower.includes(kw) && kw.length >= 3) score += 3;
+      if (catLower.includes(kw) && kw.length >= 3) score += 1;
+    }
+
+    // Penalize if the photo category doesn't fit (e.g. tacos photo for a drink)
+    const photoId = photo.id;
+    if (photoId.startsWith("tacos") && !nameLower.includes("tacos")) score = Math.min(score, 2);
+    if (photoId.startsWith("pizza") && !nameLower.includes("pizza")) score = Math.min(score, 2);
+
+    if (score > bestScore && score >= 4) {
+      bestScore = score;
+      bestMatch = photo;
+    }
+  }
+  return bestMatch;
+}
+
+export async function autoAssignStockPhotos(restaurantId: string): Promise<number> {
+  const [stockPhotos, menuItems] = await Promise.all([
+    fetchStockPhotos(),
+    fetchAllMenuItems(restaurantId),
+  ]);
+
+  let assigned = 0;
+  for (const item of menuItems) {
+    if (item.image) continue; // Skip items that already have images
+    const match = matchStockPhoto(item.name, item.category, stockPhotos);
+    if (match) {
+      await supabase
+        .from("menu_items")
+        .update({ image: match.image_url })
+        .eq("id", item.id);
+      assigned++;
+    }
+  }
+  return assigned;
+}

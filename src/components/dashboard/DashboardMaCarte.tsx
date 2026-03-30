@@ -500,6 +500,20 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
         <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setShowImport(true)}>
           <Camera className="h-4 w-4" />{t('dashboard.menu.import')}
         </Button>
+        {items.some((i) => !i.image) && (
+          <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={async () => {
+            const { autoAssignStockPhotos } = await import("@/lib/api");
+            const count = await autoAssignStockPhotos(restaurant.id);
+            if (count > 0) {
+              loadItems();
+              alert(`${count} photo${count > 1 ? "s" : ""} ajoutee${count > 1 ? "s" : ""} automatiquement`);
+            } else {
+              alert("Aucune photo stock disponible pour vos produits");
+            }
+          }}>
+            <ImageIcon className="h-4 w-4" />Photos auto
+          </Button>
+        )}
       </div>
 
       {/* Photo tips */}
@@ -507,7 +521,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
         <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 space-y-1">
           <p className="text-sm font-medium text-amber-900">Astuce photos</p>
           <p className="text-xs text-amber-800">
-            Les photos sont prises une seule fois et donnent envie de commander. Prenez de belles photos bien eclairees de vos produits.
+            Cliquez "Photos auto" pour ajouter des photos de notre bibliotheque. Vous pouvez aussi prendre vos propres photos : elles seront uniques et donneront encore plus envie.
             Pas de photographe ? Contactez-nous, on peut vous aider.
           </p>
           <p className="text-xs text-amber-700 italic">
