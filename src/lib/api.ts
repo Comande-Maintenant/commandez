@@ -742,6 +742,7 @@ export interface SuperAdminKPIs {
   activeSubscribers: number;
   monthlySubscribers: number;
   annualSubscribers: number;
+  trialingCount: number;
   mrr: number;
   arr: number;
 }
@@ -749,23 +750,32 @@ export interface SuperAdminKPIs {
 export async function fetchSuperAdminKPIs(): Promise<SuperAdminKPIs> {
   const [restaurantsRes, subscriptionsRes] = await Promise.all([
     supabase.from("restaurants").select("id", { count: "exact", head: true }).eq("is_demo", false),
-    supabase.from("subscriptions").select("status, plan"),
+    supabase.from("subscriptions").select("status, plan, created_at"),
   ]);
 
   const realRestaurants = restaurantsRes.count ?? 0;
-  const subs = (subscriptionsRes.data ?? []) as unknown as Pick<DbSubscription, "status" | "plan">[];
+  const subs = (subscriptionsRes.data ?? []) as unknown as { status: string; plan: string; created_at: string }[];
   const activeSubs = subs.filter((s) => s.status === "active");
-  const monthlySubs = activeSubs.filter((s) => s.plan === "monthly").length;
-  const annualSubs = activeSubs.filter((s) => s.plan === "annual").length;
+  const trialingCount = subs.filter((s) => s.status === "trialing" || s.status === "trial").length;
+  const monthlySubs = activeSubs.filter((s) => s.plan === "monthly");
+  const annualSubs = activeSubs.filter((s) => s.plan === "annual");
 
-  const mrr = monthlySubs * PLAN_PRICES.monthly + annualSubs * (PLAN_PRICES.annual / 12);
+  const now = Date.now();
+  const threeMonthsMs = 90 * 24 * 60 * 60 * 1000;
+  let mrr = 0;
+  for (const s of monthlySubs) {
+    const age = now - new Date(s.created_at).getTime();
+    mrr += age < threeMonthsMs ? 1 : PLAN_PRICES.monthly;
+  }
+  mrr += annualSubs.length * (PLAN_PRICES.annual / 12);
   const arr = mrr * 12;
 
   return {
     realRestaurants,
     activeSubscribers: activeSubs.length,
-    monthlySubscribers: monthlySubs,
-    annualSubscribers: annualSubs,
+    monthlySubscribers: monthlySubs.length,
+    annualSubscribers: annualSubs.length,
+    trialingCount,
     mrr,
     arr,
   };
@@ -784,32 +794,20 @@ export interface AcquisitionFunnelData {
 export async function fetchAcquisitionFunnel(): Promise<AcquisitionFunnelData> {
   const [ownersRes, restaurantsRes, subscriptionsRes] = await Promise.all([
     supabase.from("owners").select("id, role"),
-    supabase.from("restaurants").select("id, is_demo, subscription_status, trial_end_date"),
-    supabase.from("subscriptions").select("status, trial_end"),
+    supabase.from("restaurants").select("id, is_demo"),
+    supabase.from("subscriptions").select("status"),
   ]);
 
   const owners = (ownersRes.data ?? []) as unknown as { id: string; role: string }[];
   const accounts = owners.filter((o) => o.role !== "super_admin").length;
 
-  const restaurants = (restaurantsRes.data ?? []) as unknown as Pick<DbRestaurant, "id" | "is_demo" | "subscription_status" | "trial_end_date">[];
-  const realRestaurants = restaurants.filter((r) => !r.is_demo);
-  const withRestaurant = realRestaurants.length;
+  const restaurants = (restaurantsRes.data ?? []) as unknown as { id: string; is_demo: boolean }[];
+  const withRestaurant = restaurants.filter((r) => !r.is_demo).length;
 
-  const subs = (subscriptionsRes.data ?? []) as unknown as Pick<DbSubscription, "status" | "trial_end">[];
-  const now = new Date();
-
-  // In trial: subscription status = trial, or restaurant subscription_status = trial/pending_payment with future trial_end
-  const inTrialSubs = subs.filter((s) => s.status === "trial").length;
-  const inTrialLegacy = realRestaurants.filter(
-    (r) =>
-      (r.subscription_status === "trial" || r.subscription_status === "pending_payment") &&
-      r.trial_end_date &&
-      new Date(r.trial_end_date) > now
-  ).length;
-  const inTrial = Math.max(inTrialSubs, inTrialLegacy);
-
+  const subs = (subscriptionsRes.data ?? []) as unknown as { status: string }[];
+  const inTrial = subs.filter((s) => s.status === "trialing" || s.status === "trial").length;
   const paying = subs.filter((s) => s.status === "active").length;
-  const churned = subs.filter((s) => s.status === "cancelled" || s.status === "expired").length;
+  const churned = subs.filter((s) => s.status === "cancelled" || s.status === "canceled" || s.status === "expired").length;
 
   return { accounts, withRestaurant, inTrial, paying, churned };
 }
@@ -827,18 +825,21 @@ export interface ProspectItem {
   subscriptionStatus: string | null;
   trialEndDate: string | null;
   plan: string | null;
+  stripeSubscriptionId: string | null;
+  currentPeriodEnd: string | null;
+  subCreatedAt: string | null;
 }
 
 export async function fetchProspectList(): Promise<ProspectItem[]> {
   const [ownersRes, restaurantsRes, subscriptionsRes] = await Promise.all([
     supabase.from("owners").select("id, email, phone, role, created_at").order("created_at", { ascending: false }),
-    supabase.from("restaurants").select("id, name, slug, owner_id, is_demo, subscription_status, trial_end_date"),
-    supabase.from("subscriptions").select("restaurant_id, status, plan"),
+    supabase.from("restaurants").select("id, name, slug, owner_id, is_demo, trial_end_date"),
+    supabase.from("subscriptions").select("restaurant_id, status, plan, stripe_subscription_id, current_period_end, created_at"),
   ]);
 
   const owners = (ownersRes.data ?? []) as unknown as (DbOwner & { created_at: string })[];
   const restaurants = (restaurantsRes.data ?? []) as unknown as (DbRestaurant & { owner_id: string })[];
-  const subs = (subscriptionsRes.data ?? []) as unknown as Pick<DbSubscription, "restaurant_id" | "status" | "plan">[];
+  const subs = (subscriptionsRes.data ?? []) as unknown as { restaurant_id: string; status: string; plan: string; stripe_subscription_id: string | null; current_period_end: string | null; created_at: string }[];
 
   const realRestaurants = restaurants.filter((r) => !r.is_demo);
   const subsByRestaurant = new Map(subs.map((s) => [s.restaurant_id, s]));
@@ -856,9 +857,12 @@ export async function fetchProspectList(): Promise<ProspectItem[]> {
         restaurantSlug: resto?.slug ?? null,
         restaurantId: resto?.id ?? null,
         createdAt: owner.created_at,
-        subscriptionStatus: sub?.status ?? resto?.subscription_status ?? null,
+        subscriptionStatus: sub?.status ?? null,
         trialEndDate: resto?.trial_end_date ?? null,
         plan: sub?.plan ?? null,
+        stripeSubscriptionId: sub?.stripe_subscription_id ?? null,
+        currentPeriodEnd: sub?.current_period_end ?? null,
+        subCreatedAt: sub?.created_at ?? null,
       };
     });
 }
