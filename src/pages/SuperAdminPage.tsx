@@ -175,6 +175,7 @@ const SuperAdminPage = () => {
   // Conversion
   const [convertingProspect, setConvertingProspect] = useState<ProspectRow | null>(null);
   const [convertEmail, setConvertEmail] = useState("");
+  const [convertName, setConvertName] = useState("");
   const [converting, setConverting] = useState(false);
 
   // Restaurant detail
@@ -1183,35 +1184,60 @@ const SuperAdminPage = () => {
             {/* Convert dialog */}
             {convertingProspect && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setConvertingProspect(null); }}>
-                <div className="bg-background rounded-2xl max-w-md w-full p-6 space-y-4">
-                  <h3 className="text-lg font-semibold">Convertir en compte actif</h3>
-                  <div className="space-y-1">
-                    <p className="text-sm"><span className="font-medium">{convertingProspect.name}</span></p>
-                    <p className="text-xs text-muted-foreground">commandeici.com/{convertingProspect.slug}</p>
+                <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-5">
+                  <h3 className="text-lg font-semibold">Transferer le compte</h3>
+
+                  <div className="rounded-xl bg-secondary/50 p-3 space-y-1">
+                    <p className="text-sm font-medium">{convertingProspect.name}</p>
+                    <p className="text-xs text-muted-foreground">{convertingProspect.city} - {convertingProspect.menuItemCount} produit{convertingProspect.menuItemCount !== 1 ? "s" : ""}</p>
                   </div>
+
                   <div>
                     <label className="text-sm font-medium">Email du commercant *</label>
                     <Input value={convertEmail} onChange={(e) => setConvertEmail(e.target.value)} placeholder="email@commerce.fr" className="mt-1 rounded-xl" />
-                    <p className="text-xs text-muted-foreground mt-1">Un email d'invitation sera envoye</p>
                   </div>
+
+                  <div>
+                    <label className="text-sm font-medium">Prenom du commercant</label>
+                    <Input value={convertName} onChange={(e) => setConvertName(e.target.value)} placeholder="Mohamed, Julie..." className="mt-1 rounded-xl" />
+                  </div>
+
+                  <div className="rounded-xl bg-blue-50 border border-blue-200 p-3 space-y-2">
+                    <p className="text-sm font-medium text-blue-900">L'email contiendra :</p>
+                    <ul className="text-xs text-blue-800 space-y-1 list-disc pl-4">
+                      <li>Lien pour activer son compte et definir son mot de passe</li>
+                      <li>Lien vers sa page de commande a verifier</li>
+                      <li>Lien vers son tableau de bord (cuisine, caisse, commandes)</li>
+                      <li>Conseils de mise en place : 3 ecrans minimum (cuisine, caisse, prise de commande)</li>
+                      <li>Periode d'essai de 4 semaines incluse</li>
+                    </ul>
+                  </div>
+
                   <div className="flex justify-end gap-2 pt-2">
                     <Button variant="outline" onClick={() => setConvertingProspect(null)} className="rounded-xl">Annuler</Button>
                     <Button disabled={converting || !convertEmail.includes("@")} className="rounded-xl" onClick={async () => {
                       setConverting(true);
                       try {
                         const { error } = await supabase.functions.invoke("convert-prospect", {
-                          body: { restaurantId: convertingProspect.id, email: convertEmail },
+                          body: {
+                            restaurantId: convertingProspect.id,
+                            email: convertEmail,
+                            ownerName: convertName || undefined,
+                          },
                         });
                         if (error) throw error;
                         setConvertingProspect(null);
+                        setConvertEmail("");
+                        setConvertName("");
+                        setSuccessPopup({ count: -1 }); // special flag for convert success
                         loadData();
                       } catch (e: any) {
                         alert("Erreur : " + (e.message ?? e));
                       }
                       setConverting(false);
                     }}>
-                      {converting ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <UserPlus className="h-4 w-4 mr-1" />}
-                      Convertir et inviter
+                      {converting ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
+                      Envoyer l'invitation
                     </Button>
                   </div>
                 </div>
@@ -1556,11 +1582,15 @@ const SuperAdminPage = () => {
               <Check className="h-8 w-8 text-emerald-600" />
             </div>
             <h3 className="text-xl font-bold text-foreground">
-              {successPopup.count} produit{successPopup.count > 1 ? "s" : ""} ajoute{successPopup.count > 1 ? "s" : ""}
+              {successPopup.count === -1 ? "Invitation envoyee" : `${successPopup.count} produit${successPopup.count > 1 ? "s" : ""} ajoute${successPopup.count > 1 ? "s" : ""}`}
             </h3>
-            <p className="text-sm text-muted-foreground">Le catalogue a ete mis a jour avec succes. Vous pouvez maintenant ajuster les details dans la carte ci-dessous.</p>
+            <p className="text-sm text-muted-foreground">
+              {successPopup.count === -1
+                ? "Le commercant va recevoir un email avec son lien d'activation, sa page de commande et les conseils de mise en place."
+                : "Le catalogue a ete mis a jour avec succes. Vous pouvez maintenant ajuster les details dans la carte ci-dessous."}
+            </p>
             <Button className="rounded-xl w-full" onClick={() => setSuccessPopup(null)}>
-              Parfait, continuer
+              {successPopup.count === -1 ? "Compris" : "Parfait, continuer"}
             </Button>
           </div>
         </div>
