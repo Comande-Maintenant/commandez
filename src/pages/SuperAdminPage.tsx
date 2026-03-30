@@ -340,15 +340,15 @@ const SuperAdminPage = () => {
     if (isGoogleUrl) {
       let resolvedUrl = input;
 
-      // For short URLs (share.google, goo.gl, g.co), resolve the redirect server-side
-      if (input.includes("share.google") || input.includes("goo.gl") || input.includes("g.co/")) {
+      // For short URLs (share.google, goo.gl, g.co), resolve redirect via edge function
+      if (input.includes("share.google") || (input.includes("goo.gl") && !input.includes("maps.app.goo.gl")) || input.includes("g.co/")) {
         try {
-          // Use a CORS proxy or the edge function to follow redirects
-          const res = await fetch(`https://rbqgsxhkccbhqdmdtxwr.supabase.co/functions/v1/google-places`, {
+          const token = (await supabase.auth.getSession()).data.session?.access_token || "";
+          const res = await fetch("https://rbqgsxhkccbhqdmdtxwr.supabase.co/functions/v1/google-places", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${(await supabase.auth.getSession()).data.session?.access_token || ""}`,
+              "Authorization": `Bearer ${token}`,
               "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY",
             },
             body: JSON.stringify({ action: "resolve_url", url: input }),
