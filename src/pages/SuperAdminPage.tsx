@@ -327,6 +327,75 @@ const SuperAdminPage = () => {
     setDetailLoading(false);
   };
 
+  // ── Prospect search (name or Google URL) ──
+  const handleProspectSearch = async (rawInput?: string) => {
+    const input = (rawInput || placeQuery).trim();
+    if (!input) return;
+
+    // Detect Google URLs and extract place name or place_id
+    const isGoogleUrl = input.includes("google.com/maps") || input.includes("goo.gl/maps") || input.includes("maps.app.goo.gl") || input.includes("search?q=");
+
+    if (isGoogleUrl) {
+      // Try to extract place name from URL patterns:
+      // google.com/maps/place/Nom+Du+Commerce/...
+      // google.com/maps/search/Nom+Du+Commerce/...
+      // google.com/search?q=Nom+Du+Commerce
+      let searchName = "";
+
+      const placeMatch = input.match(/\/place\/([^/@]+)/);
+      const searchMatch = input.match(/\/search\/([^/@]+)/);
+      const qMatch = input.match(/[?&]q=([^&]+)/);
+
+      if (placeMatch) {
+        searchName = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
+      } else if (searchMatch) {
+        searchName = decodeURIComponent(searchMatch[1].replace(/\+/g, " "));
+      } else if (qMatch) {
+        searchName = decodeURIComponent(qMatch[1].replace(/\+/g, " "));
+      }
+
+      // Also try to extract place_id from data= parameter (format: !1sChIJ...)
+      const pidMatch = input.match(/!1s(0x[a-fA-F0-9]+:[a-fA-F0-9x]+|ChIJ[A-Za-z0-9_-]+)/);
+      if (pidMatch) {
+        // Direct place_id found - fetch details directly
+        try {
+          const details = await getPlaceDetails(pidMatch[1]);
+          if (details) {
+            setSelectedPlace(details);
+            const detected = detectBusinessType(details.types ?? []);
+            setProspectBusinessType(detected);
+            const slug = await generateSlug(details.name);
+            setProspectSlug(slug);
+            setPlaceResults([]);
+            return;
+          }
+        } catch {}
+      }
+
+      if (searchName) {
+        setPlaceQuery(searchName);
+        const results = await searchPlaces(searchName);
+        setPlaceResults(results);
+        // If only 1 result, auto-select it
+        if (results.length === 1) {
+          const details = await getPlaceDetails(results[0].place_id);
+          const merged = { ...results[0], ...details };
+          setSelectedPlace(merged);
+          const detected = detectBusinessType(merged.types ?? []);
+          setProspectBusinessType(detected);
+          const slug = await generateSlug(merged.name);
+          setProspectSlug(slug);
+          setPlaceResults([]);
+        }
+        return;
+      }
+    }
+
+    // Normal text search
+    const results = await searchPlaces(input);
+    setPlaceResults(results);
+  };
+
   // ── Computed ──
   const filteredProspects = useMemo(() => {
     if (!search.trim()) return prospects;
@@ -948,17 +1017,26 @@ const SuperAdminPage = () => {
                 <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
                   <h3 className="text-lg font-semibold">Creer un prospect</h3>
 
-                  {/* Google Places search */}
+                  {/* Google Places search or URL paste */}
                   <div>
-                    <label className="text-sm font-medium text-foreground">Rechercher un commerce</label>
+                    <label className="text-sm font-medium text-foreground">Rechercher un commerce ou coller un lien Google Maps</label>
                     <div className="flex gap-2 mt-1">
-                      <Input value={placeQuery} onChange={(e) => setPlaceQuery(e.target.value)} placeholder="Boulangerie Martin Strasbourg..." className="rounded-xl"
-                        onKeyDown={(e) => { if (e.key === "Enter") searchPlaces(placeQuery).then(setPlaceResults).catch(() => {}); }}
+                      <Input value={placeQuery} onChange={(e) => setPlaceQuery(e.target.value)} placeholder="Nom du commerce ou lien Google Maps..." className="rounded-xl"
+                        onKeyDown={(e) => { if (e.key === "Enter") handleProspectSearch(); }}
+                        onPaste={(e) => {
+                          setTimeout(() => {
+                            const val = (e.target as HTMLInputElement).value;
+                            if (val.includes("google.com") || val.includes("goo.gl") || val.includes("maps.app")) {
+                              handleProspectSearch(val);
+                            }
+                          }, 100);
+                        }}
                       />
-                      <Button size="sm" className="rounded-xl" onClick={() => searchPlaces(placeQuery).then(setPlaceResults).catch(() => {})}>
+                      <Button size="sm" className="rounded-xl" onClick={() => handleProspectSearch()}>
                         <Search className="h-4 w-4" />
                       </Button>
                     </div>
+                    <p className="text-xs text-muted-foreground mt-1">Collez le lien de la fiche Google ou tapez le nom du commerce</p>
                   </div>
 
                   {/* Results */}
