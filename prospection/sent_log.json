@@ -769,131 +769,131 @@
   },
   "contact@bigmammagroup.com": {
     "sent_at": "2026-03-15T08:00:22.85036+00:00",
-    "resend_id": "0c4a83b9-f7f0-4093-aa71-382d240e964a",
+    "last_sent_at": "2026-03-30T08:56:13.246322+00:00",
+    "send_count": 2,
+    "resend_id": "5967ccc3-3bf5-4145-b0d2-aac44e5f80a4",
     "name": "Carmelo",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:22.85036+00:00"
+    "city": "Lyon"
   },
   "gbarusta@hotmail.fr": {
     "sent_at": "2026-03-15T08:00:20.723789+00:00",
-    "resend_id": "bd59b8e9-e6a5-4ae6-bfec-e7bdc2f1a64f",
+    "last_sent_at": "2026-03-30T08:56:11.441020+00:00",
+    "send_count": 2,
+    "resend_id": "84a7c918-9ddb-4e3b-a6e0-4d0970c5a966",
     "name": "City Food Lyon3",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:20.723789+00:00"
+    "city": "Lyon"
   },
   "temizer65@icloud.com": {
     "sent_at": "2026-03-15T08:00:18.627052+00:00",
-    "resend_id": "f258be9f-9c02-496e-896d-c283be0fe267",
+    "last_sent_at": "2026-03-30T08:56:09.621813+00:00",
+    "send_count": 2,
+    "resend_id": "2f34b8ca-26a2-4cfd-909a-c78187b0f1ab",
     "name": "Kebab d'Or Le Marietton",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:18.627052+00:00"
+    "city": "Lyon"
   },
   "contact@kefi.com": {
     "sent_at": "2026-03-15T08:00:16.662778+00:00",
-    "resend_id": "0f6bc548-81e8-48c6-be0c-dd1ca289feea",
+    "last_sent_at": "2026-03-30T08:56:07.587196+00:00",
+    "send_count": 2,
+    "resend_id": "5076770f-c7a2-4e96-a97b-19992af13613",
     "name": "KEFI",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:16.662778+00:00"
+    "city": "Lyon"
   },
   "haso.sagiroglu@free.fr": {
     "sent_at": "2026-03-15T08:00:14.719532+00:00",
-    "resend_id": "fcc7a7cc-0b49-4fcb-b7c7-225dbce59c67",
+    "last_sent_at": "2026-03-30T08:56:05.779681+00:00",
+    "send_count": 2,
+    "resend_id": "5fce0616-48e8-4a9d-b9ef-ed0b24cb8752",
     "name": "Restaurant de l’Angle - Restaurant Turque Kebab - LYON",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:14.719532+00:00"
+    "city": "Lyon"
   },
   "dagci421@gmail.com": {
     "sent_at": "2026-03-15T08:00:10.847935+00:00",
-    "resend_id": "4be78078-d0cc-42de-913f-2a3177b5cbcd",
+    "last_sent_at": "2026-03-30T08:56:03.882209+00:00",
+    "send_count": 2,
+    "resend_id": "cb07d7fb-3d63-426e-90e0-63f1fe86daf9",
     "name": "Le Digor 2",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:10.847935+00:00"
+    "city": "Lyon"
   },
   "contact@ankdesignstudio.fr": {
     "sent_at": "2026-03-15T08:00:07.546521+00:00",
-    "resend_id": "bdc0b969-392d-4f0f-8baf-3fffd6cafd2c",
+    "last_sent_at": "2026-03-30T08:56:02.076090+00:00",
+    "send_count": 2,
+    "resend_id": "e4617335-1d30-4cb0-9182-f75d1b39db20",
     "name": "Gustavo",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:07.546521+00:00"
+    "city": "Lyon"
   },
   "info@mysite.com": {
     "sent_at": "2026-03-15T08:00:05.295681+00:00",
-    "resend_id": "f1ded574-0b25-407e-a605-ef108831dc15",
+    "last_sent_at": "2026-03-30T08:56:00.209528+00:00",
+    "send_count": 2,
+    "resend_id": "17962b9e-5ba2-40b0-b70d-df114edc461c",
     "name": "L'AUTHENTIK",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:05.295681+00:00"
+    "city": "Lyon"
   },
   "berliner.food69@gmail.com": {
     "sent_at": "2026-03-15T08:00:02.400008+00:00",
-    "resend_id": "123cfaa0-fe59-47e1-92ef-4f2b8cbb1907",
+    "last_sent_at": "2026-03-30T08:55:58.406710+00:00",
+    "send_count": 2,
+    "resend_id": "9b03ff65-7e38-4c7d-ac2c-541140fcf1ae",
     "name": "BERLINER FOOD kebab",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:02.400008+00:00"
+    "city": "Lyon"
   },
   "chef.berliner@gmail.com": {
     "sent_at": "2026-03-15T08:00:00.011351+00:00",
-    "resend_id": "ef4fc399-a80c-4b8b-8dcf-2e5c4c6a1850",
+    "last_sent_at": "2026-03-30T08:55:56.515236+00:00",
+    "send_count": 2,
+    "resend_id": "4ef91306-e1e6-48c1-9d57-e0cf6036c790",
     "name": "CHËF - berliner kebap",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:00:00.011351+00:00"
+    "city": "Lyon"
   },
   "bonappetit@fraukebab.com": {
     "sent_at": "2026-03-15T07:59:57.673353+00:00",
-    "resend_id": "73c33e99-aae8-40b5-90f9-64caa33b5085",
+    "last_sent_at": "2026-03-30T08:55:54.704392+00:00",
+    "send_count": 2,
+    "resend_id": "5e4e64bb-8ab6-4667-9b8b-dd48310e27db",
     "name": "Frau - Martinière",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T07:59:57.673353+00:00"
+    "city": "Lyon"
   },
   "david.louf@live.fr": {
     "sent_at": "2026-03-15T07:59:55.743898+00:00",
-    "resend_id": "69e6cd3b-ed85-4b25-8302-c8a9bc401662",
+    "last_sent_at": "2026-03-30T08:55:52.880033+00:00",
+    "send_count": 2,
+    "resend_id": "9023a995-ca97-4b1b-8df4-ae93a00ee61e",
     "name": "La Broche",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T07:59:55.743898+00:00"
+    "city": "Lyon"
   },
   "contact@briquehouse.com": {
     "sent_at": "2026-03-15T07:59:53.776382+00:00",
-    "resend_id": "9c8403bb-7942-4d51-a0d7-5c87269e61a9",
+    "last_sent_at": "2026-03-30T08:55:50.857640+00:00",
+    "send_count": 2,
+    "resend_id": "e76f02d4-3d25-47f2-8694-5eb5d550695d",
     "name": "Brique Machine - Paris 2",
-    "city": "Paris",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T07:59:53.776382+00:00"
+    "city": "Paris"
   },
   "axgraphik@gmail.com": {
     "sent_at": "2026-03-15T07:59:51.785311+00:00",
-    "resend_id": "6bb2f120-c191-4fc7-8f53-3af050b5bd67",
+    "last_sent_at": "2026-03-30T08:55:48.930661+00:00",
+    "send_count": 2,
+    "resend_id": "aff200e6-bb98-4b14-aa32-e5f455f8ef29",
     "name": "Krousty Sabaidi - Paris Châtelet",
-    "city": "Paris",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T07:59:51.785311+00:00"
+    "city": "Paris"
   },
   "frederic-molina@pilotact.com": {
     "sent_at": "2026-03-15T07:59:49.501271+00:00",
-    "resend_id": "ba36d49b-bf0e-4e85-8863-1ae6a26f9259",
+    "last_sent_at": "2026-03-30T08:55:46.988508+00:00",
+    "send_count": 2,
+    "resend_id": "cf540535-77b5-4136-a5aa-f4a427817592",
     "name": "BIG SUR",
-    "city": "Paris",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T07:59:49.501271+00:00"
+    "city": "Paris"
   },
   "contact@thesmokedmeat.fr": {
     "sent_at": "2026-03-15T07:59:46.944334+00:00",
-    "resend_id": "ac6e4fd8-7f3b-49bd-8d13-5b7f426f3be6",
+    "last_sent_at": "2026-03-30T08:55:44.715812+00:00",
+    "send_count": 2,
+    "resend_id": "d023121b-e6b7-43c7-8150-0d62cdef6265",
     "name": "THE SMOKED MEAT PARIS 11 - BASTILLE",
-    "city": "Paris",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T07:59:46.944334+00:00"
+    "city": "Paris"
   },
   "planetpizz021@gmail.com": {
     "sent_at": "2026-03-15T17:03:43.312132+00:00",
@@ -11413,6 +11413,126 @@
     "send_count": 1,
     "resend_id": "b1baf4e9-4026-497b-8519-b9f0024804f5",
     "name": "Marcellina foodtruck",
+    "city": "Valence"
+  },
+  "melanie.a26@outlook.fr": {
+    "sent_at": "2026-03-30T08:56:16.956980+00:00",
+    "last_sent_at": "2026-03-30T08:56:16.956980+00:00",
+    "send_count": 1,
+    "resend_id": "c769db4e-6a9b-49b4-a9ec-4426bbe03c03",
+    "name": "M&A PIZZA",
+    "city": "Valence"
+  },
+  "gigi.valence.2022@gmail.com": {
+    "sent_at": "2026-03-30T08:56:18.763366+00:00",
+    "last_sent_at": "2026-03-30T08:56:18.763366+00:00",
+    "send_count": 1,
+    "resend_id": "4ec49913-bace-43f4-85fa-bbf4cee48998",
+    "name": "GIGI",
+    "city": "Valence"
+  },
+  "contact@cheznoubarvalence.fr": {
+    "sent_at": "2026-03-30T08:56:20.610021+00:00",
+    "last_sent_at": "2026-03-30T08:56:20.610021+00:00",
+    "send_count": 1,
+    "resend_id": "687e0d61-f920-4189-bfed-fd22fe2ed9b7",
+    "name": "Resto-Pizzas Le Rapido",
+    "city": "Valence"
+  },
+  "webmaster.smlv@free.fr": {
+    "sent_at": "2026-03-30T08:56:22.436517+00:00",
+    "last_sent_at": "2026-03-30T08:56:22.436517+00:00",
+    "send_count": 1,
+    "resend_id": "58485b9e-9151-459e-800d-41126d6140fc",
+    "name": "TOP PIZZA",
+    "city": "Valence"
+  },
+  "sanraffaelo07500@gmail.com": {
+    "sent_at": "2026-03-30T08:56:24.238596+00:00",
+    "last_sent_at": "2026-03-30T08:56:24.238596+00:00",
+    "send_count": 1,
+    "resend_id": "c4df74a9-ba3e-422b-b913-d40add61394b",
+    "name": "San Raffaelo",
+    "city": "Valence"
+  },
+  "info@lapizza.es": {
+    "sent_at": "2026-03-30T08:56:26.036318+00:00",
+    "last_sent_at": "2026-03-30T08:56:26.036318+00:00",
+    "send_count": 1,
+    "resend_id": "f898c774-497a-49cc-8fe0-bd950aeb91de",
+    "name": "La Pizza",
+    "city": "Valence"
+  },
+  "direction@5et5restaurant.fr": {
+    "sent_at": "2026-03-30T08:56:27.864322+00:00",
+    "last_sent_at": "2026-03-30T08:56:27.864322+00:00",
+    "send_count": 1,
+    "resend_id": "c8ce14e6-a75f-413e-9fa5-cbe0370d0f98",
+    "name": "Espace 5&5",
+    "city": "Valence"
+  },
+  "contact@louvre-valence.com": {
+    "sent_at": "2026-03-30T08:56:29.667372+00:00",
+    "last_sent_at": "2026-03-30T08:56:29.667372+00:00",
+    "send_count": 1,
+    "resend_id": "d113aa82-8119-48b5-b7bf-d69d564c3a92",
+    "name": "LOUVRE run by Saison",
+    "city": "Valence"
+  },
+  "contact@devor.me": {
+    "sent_at": "2026-03-30T08:56:31.507772+00:00",
+    "last_sent_at": "2026-03-30T08:56:31.507772+00:00",
+    "send_count": 1,
+    "resend_id": "ba146d80-ded6-4deb-bb37-03cdaa6b77f5",
+    "name": "DĒVOR - Valence (Saint Burger - Fat Fat - Squeeze - Green & Wild - Fire Chicken)",
+    "city": "Valence"
+  },
+  "contact@gaufresbelgaqueen.com": {
+    "sent_at": "2026-03-30T08:56:33.324371+00:00",
+    "last_sent_at": "2026-03-30T08:56:33.324371+00:00",
+    "send_count": 1,
+    "resend_id": "164ce38e-c4d5-40a9-8eed-c3f8ad0715f2",
+    "name": "Belga Queen Valence",
+    "city": "Valence"
+  },
+  "contact@simplebo.fr": {
+    "sent_at": "2026-03-30T08:56:35.379854+00:00",
+    "last_sent_at": "2026-03-30T08:56:35.379854+00:00",
+    "send_count": 1,
+    "resend_id": "384fc5bc-4a9d-4947-90bb-f5d5b2fef2d0",
+    "name": "Food Truck Atelier Cosi",
+    "city": "Valence"
+  },
+  "boss@pouleto.fr": {
+    "sent_at": "2026-03-30T08:56:37.457233+00:00",
+    "last_sent_at": "2026-03-30T08:56:37.457233+00:00",
+    "send_count": 1,
+    "resend_id": "45912a2a-c7ce-475e-8af4-91a32c2fa1e0",
+    "name": "Pouleto",
+    "city": "Valence"
+  },
+  "jazilat80@gmail.com": {
+    "sent_at": "2026-03-30T08:56:39.313884+00:00",
+    "last_sent_at": "2026-03-30T08:56:39.313884+00:00",
+    "send_count": 1,
+    "resend_id": "6e463682-a9a0-49b6-8f95-b2d275f5e940",
+    "name": "Jazz Fajitas",
+    "city": "Valence"
+  },
+  "cedetjus@gmail.com": {
+    "sent_at": "2026-03-30T08:56:41.208306+00:00",
+    "last_sent_at": "2026-03-30T08:56:41.208306+00:00",
+    "send_count": 1,
+    "resend_id": "ace40c05-f71a-46f3-9f28-81caaeb13c88",
+    "name": "Ced et jus",
+    "city": "Valence"
+  },
+  "contact@welko.fr": {
+    "sent_at": "2026-03-30T08:56:43.020507+00:00",
+    "last_sent_at": "2026-03-30T08:56:43.020507+00:00",
+    "send_count": 1,
+    "resend_id": "ee7fb0c8-1dee-4a7e-a421-3c15bf7a670b",
+    "name": "My Little Warung Valence",
     "city": "Valence"
   }
 }
