@@ -13,7 +13,22 @@ serve(async (req) => {
   }
 
   try {
-    const { action, query, placeId, lat, lng } = await req.json();
+    const { action, query, placeId, lat, lng, url: inputUrl } = await req.json();
+
+    if (action === "resolve_url") {
+      // Follow redirects on short Google URLs (share.google, goo.gl, etc.)
+      try {
+        const res = await fetch(inputUrl, { redirect: "follow" });
+        const finalUrl = res.url;
+        return new Response(JSON.stringify({ resolved_url: finalUrl }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      } catch (e: any) {
+        return new Response(JSON.stringify({ resolved_url: inputUrl, error: e.message }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
 
     if (action === "search") {
       const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&type=restaurant&key=${GOOGLE_PLACES_API_KEY}`;

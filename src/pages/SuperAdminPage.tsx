@@ -334,19 +334,35 @@ const SuperAdminPage = () => {
     const input = (rawInput || placeQuery).trim();
     if (!input) return;
 
-    // Detect Google URLs and extract place name or place_id
-    const isGoogleUrl = input.includes("google.com/maps") || input.includes("goo.gl/maps") || input.includes("maps.app.goo.gl") || input.includes("search?q=");
+    // Detect Google URLs (maps, share, search, business)
+    const isGoogleUrl = input.includes("google.com/maps") || input.includes("goo.gl/maps") || input.includes("maps.app.goo.gl") || input.includes("search?q=") || input.includes("share.google") || input.includes("g.co/") || input.includes("google.com/search");
 
     if (isGoogleUrl) {
-      // Try to extract place name from URL patterns:
-      // google.com/maps/place/Nom+Du+Commerce/...
-      // google.com/maps/search/Nom+Du+Commerce/...
-      // google.com/search?q=Nom+Du+Commerce
+      let resolvedUrl = input;
+
+      // For short URLs (share.google, goo.gl, g.co), resolve the redirect server-side
+      if (input.includes("share.google") || input.includes("goo.gl") || input.includes("g.co/")) {
+        try {
+          // Use a CORS proxy or the edge function to follow redirects
+          const res = await fetch(`https://rbqgsxhkccbhqdmdtxwr.supabase.co/functions/v1/google-places`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${(await supabase.auth.getSession()).data.session?.access_token || ""}`,
+              "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY",
+            },
+            body: JSON.stringify({ action: "resolve_url", url: input }),
+          });
+          const data = await res.json();
+          if (data?.resolved_url) resolvedUrl = data.resolved_url;
+        } catch {}
+      }
+
       let searchName = "";
 
-      const placeMatch = input.match(/\/place\/([^/@]+)/);
-      const searchMatch = input.match(/\/search\/([^/@]+)/);
-      const qMatch = input.match(/[?&]q=([^&]+)/);
+      const placeMatch = resolvedUrl.match(/\/place\/([^/@]+)/);
+      const searchMatch = resolvedUrl.match(/\/search\/([^/@]+)/);
+      const qMatch = resolvedUrl.match(/[?&]q=([^&]+)/);
 
       if (placeMatch) {
         searchName = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
@@ -357,7 +373,7 @@ const SuperAdminPage = () => {
       }
 
       // Also try to extract place_id from data= parameter (format: !1sChIJ...)
-      const pidMatch = input.match(/!1s(0x[a-fA-F0-9]+:[a-fA-F0-9x]+|ChIJ[A-Za-z0-9_-]+)/);
+      const pidMatch = resolvedUrl.match(/!1s(0x[a-fA-F0-9]+:[a-fA-F0-9x]+|ChIJ[A-Za-z0-9_-]+)/);
       if (pidMatch) {
         // Direct place_id found - fetch details directly
         try {
@@ -1058,7 +1074,7 @@ const SuperAdminPage = () => {
                         onPaste={(e) => {
                           setTimeout(() => {
                             const val = (e.target as HTMLInputElement).value;
-                            if (val.includes("google.com") || val.includes("goo.gl") || val.includes("maps.app")) {
+                            if (val.includes("google") || val.includes("goo.gl") || val.includes("maps.app") || val.includes("share.google") || val.includes("g.co")) {
                               handleProspectSearch(val);
                             }
                           }, 100);
