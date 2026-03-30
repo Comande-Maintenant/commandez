@@ -29,6 +29,15 @@ serve(async (req) => {
       const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&key=${GOOGLE_PLACES_API_KEY}`;
       const res = await fetch(url);
       const data = await res.json();
+      // Enrich photos with full URLs (key is server-side only)
+      if (data.result?.photos) {
+        data.result.photo_urls = data.result.photos.slice(0, 15).map((p: any) => ({
+          url: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${p.photo_reference}&key=${GOOGLE_PLACES_API_KEY}`,
+          urlHigh: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photo_reference=${p.photo_reference}&key=${GOOGLE_PLACES_API_KEY}`,
+          width: p.width,
+          height: p.height,
+        }));
+      }
       return new Response(JSON.stringify({ result: data.result ?? null }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

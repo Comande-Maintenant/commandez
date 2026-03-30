@@ -47,6 +47,14 @@ export interface GooglePlacePhoto {
 }
 
 export async function getPlacePhotos(placeId: string): Promise<GooglePlacePhoto[]> {
-  const data = await invokeGooglePlaces({ action: 'photos', placeId });
-  return data?.photos ?? [];
+  // Use details action which now returns photo_urls with full URLs (key injected server-side)
+  const details = await invokeGooglePlaces({ action: 'details', placeId });
+  const photoUrls = details?.result?.photo_urls ?? [];
+  return photoUrls.map((p: any) => ({
+    url: p.url,
+    urlHigh: p.urlHigh,
+    attribution: "",
+    width: p.width ?? 800,
+    height: p.height ?? 600,
+  }));
 }

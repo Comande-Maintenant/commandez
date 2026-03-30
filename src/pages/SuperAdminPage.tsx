@@ -160,6 +160,7 @@ const SuperAdminPage = () => {
   const [editingProspect, setEditingProspect] = useState<DbRestaurant | null>(null);
   const [googlePhotos, setGooglePhotos] = useState<GooglePlacePhoto[]>([]);
   const [loadingPhotos, setLoadingPhotos] = useState(false);
+  const [selectedPhotoIndexes, setSelectedPhotoIndexes] = useState<Set<number>>(new Set());
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   // Conversion
@@ -1116,7 +1117,9 @@ const SuperAdminPage = () => {
                   try {
                     const photos = await getPlacePhotos(editingProspect.google_place_id!);
                     setGooglePhotos(photos);
+                    if (photos.length === 0) alert("Aucune photo trouvee sur la fiche Google");
                   } catch (e: any) {
+                    console.error("Photos error:", e);
                     alert("Erreur photos : " + (e.message ?? e));
                   }
                   setLoadingPhotos(false);
@@ -1131,17 +1134,47 @@ const SuperAdminPage = () => {
             {googlePhotos.length > 0 && (
               <Card className="rounded-2xl">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold">Photos Google ({googlePhotos.length}) - clic droit pour enregistrer</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-semibold">Photos Google ({googlePhotos.length})</CardTitle>
+                    {selectedPhotoIndexes.size > 0 && (
+                      <Button size="sm" className="rounded-xl text-xs" onClick={() => {
+                        const urls = Array.from(selectedPhotoIndexes).map((i) => googlePhotos[i].urlHigh);
+                        // Open selected photos in new tabs for manual download/use
+                        urls.forEach((u) => window.open(u, "_blank"));
+                      }}>
+                        Ouvrir la selection ({selectedPhotoIndexes.size})
+                      </Button>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                    {googlePhotos.map((photo, i) => (
-                      <a key={i} href={photo.urlHigh} target="_blank" rel="noopener noreferrer" className="block aspect-square rounded-lg overflow-hidden border border-border hover:ring-2 hover:ring-[hsl(var(--primary))] transition-all">
-                        <img src={photo.url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                      </a>
-                    ))}
+                    {googlePhotos.map((photo, i) => {
+                      const selected = selectedPhotoIndexes.has(i);
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            setSelectedPhotoIndexes((prev) => {
+                              const next = new Set(prev);
+                              if (next.has(i)) next.delete(i);
+                              else next.add(i);
+                              return next;
+                            });
+                          }}
+                          className={`relative block aspect-square rounded-lg overflow-hidden border-2 transition-all ${selected ? "border-[hsl(var(--primary))] ring-2 ring-[hsl(var(--primary))]" : "border-border hover:border-muted-foreground"}`}
+                        >
+                          <img src={photo.url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                          {selected && (
+                            <div className="absolute top-1 right-1 h-5 w-5 rounded-full bg-[hsl(var(--primary))] flex items-center justify-center">
+                              <span className="text-white text-xs font-bold">{Array.from(selectedPhotoIndexes).indexOf(i) + 1}</span>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-2">Cliquez pour ouvrir en grand. Utilisez ces photos pour remplir le catalogue.</p>
+                  <p className="text-[11px] text-muted-foreground mt-2">Selectionne les photos de cartes/menus, puis clique "Ouvrir la selection" pour les telecharger et les importer via le bouton camera ci-dessous.</p>
                 </CardContent>
               </Card>
             )}
