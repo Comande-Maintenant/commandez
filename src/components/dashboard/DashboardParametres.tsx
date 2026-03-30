@@ -74,6 +74,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
   const [prepTime, setPrepTime] = useState(restaurant.prep_time_config ?? { default_minutes: 20, per_item_minutes: 3, max_minutes: 90 });
   const [dineInCapacity, setDineInCapacity] = useState(String(restaurant.dine_in_capacity ?? ""));
   const [phoneNumber, setPhoneNumber] = useState(restaurant.restaurant_phone || "");
+  const [showMenuPhotos, setShowMenuPhotos] = useState((restaurant as any).show_menu_photos !== false);
   const [schedule, setSchedule] = useState<ScheduleDay[]>([]);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
 
@@ -135,6 +136,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
         prep_time_config: prepTime,
         restaurant_phone: phoneNumber,
         dine_in_capacity: dineInCapacity ? parseInt(dineInCapacity) || null : null,
+        show_menu_photos: showMenuPhotos,
       } as any);
 
       // Save schedule as JSON (supports multi-slots per day)
@@ -478,6 +480,20 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
           <div>
             <label className="text-sm text-muted-foreground">{t('dashboard.settings.phone')}</label>
             <Input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="mt-1" />
+          </div>
+
+          {/* Photos toggle */}
+          <div className="flex items-center justify-between py-2">
+            <div>
+              <p className="text-sm font-medium text-foreground">Photos des produits</p>
+              <p className="text-xs text-muted-foreground">Afficher les photos sur votre page de commande</p>
+            </div>
+            <button
+              onClick={() => setShowMenuPhotos(!showMenuPhotos)}
+              className={`relative w-11 h-6 rounded-full transition-colors ${showMenuPhotos ? "bg-[hsl(var(--primary))]" : "bg-muted"}`}
+            >
+              <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${showMenuPhotos ? "translate-x-5" : ""}`} />
+            </button>
           </div>
 
           <Button variant="outline" className="w-full rounded-xl gap-2" onClick={handleLogout}>

@@ -1067,6 +1067,7 @@ const RestaurantPage = () => {
                             customizationData={customizationData}
                             menuItems={menuItems}
                             outOfStockIngredients={restaurant.out_of_stock_ingredients ?? []}
+                            showPhotos={(restaurant as any).show_menu_photos !== false}
                           />
                         ))}
                       </motion.div>

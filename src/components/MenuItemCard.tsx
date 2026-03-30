@@ -20,11 +20,12 @@ interface Props {
   customizationData?: UniversalCustomizationData | null;
   menuItems?: DbMenuItem[];
   outOfStockIngredients?: string[];
+  showPhotos?: boolean;
 }
 
 const CUSTOMIZABLE_TYPES = ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement", "sandwich", "galette", "tacos", "assiette", "hamburger"];
 
-export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems, outOfStockIngredients }: Props) => {
+export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems, outOfStockIngredients, showPhotos = true }: Props) => {
   const [open, setOpen] = useState(false);
   const { t, tMenu } = useLanguage();
   const translated = tMenu(item);
@@ -83,7 +84,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
             )}
           </div>
 
-          {item.image ? (
+          {item.image && showPhotos ? (
             <div className="relative w-20 h-20 sm:w-[100px] sm:h-[100px] rounded-xl overflow-hidden flex-shrink-0">
               <img src={item.image} alt={translated.name} className="w-full h-full object-cover" loading="lazy" />
               <motion.div
