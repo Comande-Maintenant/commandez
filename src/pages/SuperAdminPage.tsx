@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowLeft, Shield, Loader2, Store, Users, Euro, TrendingUp, TrendingDown,
+  ArrowLeft, Shield, Loader2, Store, Users, Euro, TrendingUp, TrendingDown, MapPin,
   AlertTriangle, Clock, Trash2, CreditCard, UserX, Search, Mail, Send,
   RefreshCw, Ticket, Gift, ShoppingBag, ChevronDown, ChevronUp,
   BarChart3, ArrowRight, ExternalLink, Plus, Eye, Pencil, UserPlus, Check, ArrowDown, RotateCw,
@@ -18,6 +18,8 @@ import {
 import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
 import { getPlaceDetails } from "@/services/google-places";
 import { GooglePlaceSearch } from "@/components/onboarding/GooglePlaceSearch";
+import { NearbyPlaces } from "@/components/onboarding/NearbyPlaces";
+import { ManualRestaurantForm } from "@/components/onboarding/ManualRestaurantForm";
 import QRCode from "qrcode";
 import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
@@ -156,6 +158,7 @@ const SuperAdminPage = () => {
   const [prospectSearch, setProspectSearch] = useState("");
   const [prospectFilter, setProspectFilter] = useState("all");
   const [showCreateProspect, setShowCreateProspect] = useState(false);
+  const [prospectSearchMode, setProspectSearchMode] = useState<"search" | "nearby" | "manual">("search");
   const [selectedPlace, setSelectedPlace] = useState<GooglePlaceResult | null>(null);
   const [prospectBusinessType, setProspectBusinessType] = useState("restaurant");
   const [prospectSlug, setProspectSlug] = useState("");
@@ -979,31 +982,65 @@ const SuperAdminPage = () => {
                 <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
                   <h3 className="text-lg font-semibold">Creer un prospect</h3>
 
-                  {/* Google Places search */}
-                  <div>
-                    <label className="text-sm font-medium text-foreground">Rechercher un commerce</label>
-                    <div className="mt-1">
-                      <GooglePlaceSearch onSelect={async (place) => {
-                        const details = await getPlaceDetails(place.place_id);
-                        const merged = { ...place, ...details };
-                        setSelectedPlace(merged);
-                        const detected = detectBusinessType(merged.types ?? []);
-                        setProspectBusinessType(detected);
-                        const slug = await generateSlug(merged.name);
-                        setProspectSlug(slug);
-                      }} />
-                    </div>
-                  </div>
+                  {!selectedPlace ? (
+                    <>
+                      {/* Search mode tabs - same as inscription */}
+                      <div className="flex gap-2">
+                        <Button variant={prospectSearchMode === "search" ? "default" : "outline"} size="sm" onClick={() => setProspectSearchMode("search")}>
+                          <Search className="h-4 w-4 mr-1" /> Recherche
+                        </Button>
+                        <Button variant={prospectSearchMode === "nearby" ? "default" : "outline"} size="sm" onClick={() => setProspectSearchMode("nearby")}>
+                          <MapPin className="h-4 w-4 mr-1" /> A proximite
+                        </Button>
+                        <Button variant={prospectSearchMode === "manual" ? "default" : "outline"} size="sm" onClick={() => setProspectSearchMode("manual")}>
+                          Manuel
+                        </Button>
+                      </div>
 
-                  {/* Selected place details */}
-                  {selectedPlace && (
+                      {prospectSearchMode === "search" && (
+                        <GooglePlaceSearch onSelect={async (place) => {
+                          const details = await getPlaceDetails(place.place_id);
+                          const merged = { ...place, ...details };
+                          setSelectedPlace(merged);
+                          setProspectBusinessType(detectBusinessType(merged.types ?? []));
+                          setProspectSlug(await generateSlug(merged.name));
+                        }} />
+                      )}
+                      {prospectSearchMode === "nearby" && (
+                        <NearbyPlaces onSelect={async (place) => {
+                          const details = await getPlaceDetails(place.place_id);
+                          const merged = { ...place, ...details };
+                          setSelectedPlace(merged);
+                          setProspectBusinessType(detectBusinessType(merged.types ?? []));
+                          setProspectSlug(await generateSlug(merged.name));
+                        }} />
+                      )}
+                      {prospectSearchMode === "manual" && (
+                        <ManualRestaurantForm onSubmit={async (data) => {
+                          const slug = await generateSlug(data.name);
+                          setProspectSlug(slug);
+                          setProspectBusinessType("restaurant");
+                          setSelectedPlace({
+                            place_id: "",
+                            name: data.name,
+                            formatted_address: `${data.address}, ${data.city}`,
+                            formatted_phone_number: data.phone ?? "",
+                            types: [],
+                          } as GooglePlaceResult);
+                        }} />
+                      )}
+
+                      <Button variant="outline" onClick={() => setShowCreateProspect(false)} className="w-full rounded-xl">Annuler</Button>
+                    </>
+                  ) : (
                     <div className="space-y-4">
+                      {/* Selected place details */}
                       <Card className="rounded-xl bg-secondary/30">
                         <CardContent className="p-4 space-y-1">
                           <p className="text-sm font-semibold">{selectedPlace.name}</p>
                           <p className="text-xs text-muted-foreground">{selectedPlace.formatted_address}</p>
                           {selectedPlace.formatted_phone_number && <p className="text-xs text-muted-foreground">Tel: {selectedPlace.formatted_phone_number}</p>}
-                          {selectedPlace.rating && <p className="text-xs text-muted-foreground">⭐ {selectedPlace.rating}</p>}
+                          {selectedPlace.rating && <p className="text-xs text-muted-foreground">Note: {selectedPlace.rating}</p>}
                           {selectedPlace.opening_hours?.weekday_text && (
                             <div className="mt-2">
                               <p className="text-xs font-medium text-muted-foreground">Horaires :</p>
@@ -1027,7 +1064,6 @@ const SuperAdminPage = () => {
                             <option key={bt.value} value={bt.value}>{bt.emoji} {bt.label}</option>
                           ))}
                         </select>
-                        <p className="text-xs text-muted-foreground mt-1">Detecte automatiquement, modifiable</p>
                       </div>
 
                       {/* Slug */}
@@ -1059,13 +1095,14 @@ const SuperAdminPage = () => {
                               restaurant_phone: selectedPlace.formatted_phone_number ?? "",
                               google_place_id: selectedPlace.place_id,
                               rating: selectedPlace.rating ?? undefined,
-                              website: selectedPlace.website ?? "",
+                              website: (selectedPlace as any).website ?? "",
                               hours: selectedPlace.opening_hours?.weekday_text?.join("\n") ?? "",
                               business_type: prospectBusinessType,
                               primary_color: prospectColor,
                               owner_id: authUserId,
                             });
                             setShowCreateProspect(false);
+                            setSelectedPlace(null);
                             loadData();
                           } catch (e: any) {
                             alert("Erreur : " + (e.message ?? e));
