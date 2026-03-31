@@ -41,27 +41,27 @@
   },
   "ari6712@gmail.com": {
     "sent_at": "2026-03-14T16:14:23.341739+00:00",
-    "resend_id": "8e2b62ae-2912-4373-aa71-118f293c9d00",
+    "last_sent_at": "2026-03-31T16:04:14.857490+00:00",
+    "send_count": 2,
+    "resend_id": "1b6cdd2d-04bd-4086-a2ff-ab8bbc5c7f15",
     "name": "One Street",
-    "city": "Strasbourg",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:23.341739+00:00"
+    "city": "Strasbourg"
   },
   "welcome@backbay.fr": {
     "sent_at": "2026-03-14T16:14:25.209555+00:00",
-    "resend_id": "1b90a8a2-19b9-4139-adae-1f1252690b6b",
+    "last_sent_at": "2026-03-31T16:04:08.996868+00:00",
+    "send_count": 2,
+    "resend_id": "7cfc4a38-f993-4185-b93f-cc3c92152fa8",
     "name": "Back Bay",
-    "city": "Nantes",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:25.209555+00:00"
+    "city": "Nantes"
   },
   "contact@laroulettepizzas.fr": {
     "sent_at": "2026-03-14T16:14:27.064212+00:00",
-    "resend_id": "de788d4c-82b8-4a13-b5a2-e45b8552cb26",
+    "last_sent_at": "2026-03-31T16:04:28.026278+00:00",
+    "send_count": 2,
+    "resend_id": "5b0a277f-defd-4407-93af-ad8499181715",
     "name": "La Roulette, bar à pizzas",
-    "city": "Rennes",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:27.064212+00:00"
+    "city": "Rennes"
   },
   "alexandrafarocha90@gmail.com": {
     "sent_at": "2026-03-14T16:14:28.861665+00:00",
@@ -81,19 +81,19 @@
   },
   "rachid.naqiri@gmail.com": {
     "sent_at": "2026-03-14T16:14:32.587653+00:00",
-    "resend_id": "e34e9dce-0e5a-4bf7-9e31-fa40313fda50",
+    "last_sent_at": "2026-03-31T16:04:22.300493+00:00",
+    "send_count": 2,
+    "resend_id": "b87091e3-2a57-4060-b2c0-a1c527e480a2",
     "name": "Food factory",
-    "city": "Lille",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:32.587653+00:00"
+    "city": "Lille"
   },
   "guindani.najib@gmail.com": {
     "sent_at": "2026-03-14T16:14:34.397218+00:00",
-    "resend_id": "eb1219ba-109c-4f29-ad78-70860af4538b",
+    "last_sent_at": "2026-03-31T16:04:20.419248+00:00",
+    "send_count": 2,
+    "resend_id": "1f510dae-c214-419c-aa41-976f66faf340",
     "name": "Pizzeria-Dei-Guindani",
-    "city": "Montpellier",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:34.397218+00:00"
+    "city": "Montpellier"
   },
   "elpalazzo76@gmail.com": {
     "sent_at": "2026-03-14T16:14:36.195682+00:00",
@@ -129,11 +129,11 @@
   },
   "service.communication@g-ladalle.com": {
     "sent_at": "2026-03-14T16:14:43.449340+00:00",
-    "resend_id": "6da89921-fe14-47a7-ad1a-0d4d9e436982",
-    "name": "G LA DALLE - TOULON",
-    "city": "Toulon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:43.449340+00:00"
+    "last_sent_at": "2026-03-31T16:04:04.806155+00:00",
+    "send_count": 2,
+    "resend_id": "ebbe1a21-f161-461e-8ccd-42517696e7f0",
+    "name": "G LA DALLE - Nice",
+    "city": "Nice"
   },
   "contact@etre-visible.local.fr": {
     "sent_at": "2026-03-14T16:14:45.235302+00:00",
@@ -185,11 +185,11 @@
   },
   "contact@liziweb.com": {
     "sent_at": "2026-03-14T16:14:56.419358+00:00",
-    "resend_id": "880f5cd7-7073-413d-ae9c-160d7d506472",
+    "last_sent_at": "2026-03-31T16:04:31.913573+00:00",
+    "send_count": 2,
+    "resend_id": "d9fe8999-653b-40a9-87dd-40fddb3ad5ca",
     "name": "La Sardaigne",
-    "city": "Le Havre",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:56.419358+00:00"
+    "city": "Le Havre"
   },
   "loc66.fr@gmail.com": {
     "sent_at": "2026-03-14T16:14:58.355548+00:00",
@@ -225,11 +225,11 @@
   },
   "contact@la-casa-aprile.fr": {
     "sent_at": "2026-03-14T16:15:05.984010+00:00",
-    "resend_id": "47434c45-cb78-441c-9225-ac30224559da",
+    "last_sent_at": "2026-03-31T16:04:29.872272+00:00",
+    "send_count": 2,
+    "resend_id": "3b1149c4-1b95-47ba-af22-b236d280da22",
     "name": "La Casa Aprile",
-    "city": "Reims",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:05.984010+00:00"
+    "city": "Reims"
   },
   "tastytreatorleans@gmail.com": {
     "sent_at": "2026-03-14T16:15:07.818568+00:00",
@@ -249,11 +249,11 @@
   },
   "contact@grilladeettacos.fr": {
     "sent_at": "2026-03-14T16:15:11.490607+00:00",
-    "resend_id": "70036a49-14a7-4e30-a2e8-50a6bb9e20d4",
-    "name": "Grillade & Tacos Avignon",
-    "city": "Avignon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:11.490607+00:00"
+    "last_sent_at": "2026-03-31T16:04:16.701023+00:00",
+    "send_count": 2,
+    "resend_id": "6b14b804-e67a-452a-8349-7cbaf7407768",
+    "name": "Grillade & Tacos Montpellier",
+    "city": "Montpellier"
   },
   "boutique@timebreakpoitiers.fr": {
     "sent_at": "2026-03-14T16:15:13.307347+00:00",
@@ -361,27 +361,27 @@
   },
   "lepicobello@hotmail.fr": {
     "sent_at": "2026-03-14T16:15:36.933633+00:00",
-    "resend_id": "bd239329-e767-4544-94ce-a26dc9119e3d",
+    "last_sent_at": "2026-03-31T16:04:12.996966+00:00",
+    "send_count": 2,
+    "resend_id": "5ada6cd2-f92c-44dc-a87a-9cb6dca688ab",
     "name": "Picobello",
-    "city": "Strasbourg",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:36.933633+00:00"
+    "city": "Strasbourg"
   },
   "contact.milopizzeria@gmail.com": {
     "sent_at": "2026-03-14T16:15:38.714009+00:00",
-    "resend_id": "cb113a16-b4df-4209-99ae-cb4d32b2b90f",
+    "last_sent_at": "2026-03-31T16:04:06.950588+00:00",
+    "send_count": 2,
+    "resend_id": "19e96d83-028b-43e0-b487-de5f0a148167",
     "name": "Milo handmade pizzas",
-    "city": "Nantes",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:38.714009+00:00"
+    "city": "Nantes"
   },
   "web@giraudi.com": {
     "sent_at": "2026-03-14T16:15:40.534181+00:00",
-    "resend_id": "4d963d06-b8f9-4d4a-b876-cc6ae3b59d60",
+    "last_sent_at": "2026-03-31T16:04:26.145582+00:00",
+    "send_count": 2,
+    "resend_id": "b9ba50d9-8443-48cd-acb1-53e7a5cfa448",
     "name": "Villa Tredici",
-    "city": "Rennes",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:40.534181+00:00"
+    "city": "Rennes"
   },
   "bekir@live.fr": {
     "sent_at": "2026-03-14T16:15:42.313270+00:00",
@@ -401,19 +401,19 @@
   },
   "contact@ilristorante.fr": {
     "sent_at": "2026-03-14T16:15:45.906738+00:00",
-    "resend_id": "dbd84e3a-cd70-4280-9237-f4cfca0869a2",
+    "last_sent_at": "2026-03-31T16:04:24.180307+00:00",
+    "send_count": 2,
+    "resend_id": "93aefbdc-96f6-491c-83dc-0e2561c0a5aa",
     "name": "IL RISTORANTE - Le restaurant Italien de Lille",
-    "city": "Lille",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:45.906738+00:00"
+    "city": "Lille"
   },
   "contact@aufedebois.fr": {
     "sent_at": "2026-03-14T16:15:47.756507+00:00",
-    "resend_id": "0278ee8f-72fa-4264-b833-24bf844b9ec6",
+    "last_sent_at": "2026-03-31T16:04:18.546367+00:00",
+    "send_count": 2,
+    "resend_id": "1691c648-a289-493f-a316-6096c4058ddb",
     "name": "Pizza Vera Napoli pizzeria feu de bois montpellier",
-    "city": "Montpellier",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:47.756507+00:00"
+    "city": "Montpellier"
   },
   "contact@losteriador.fr": {
     "sent_at": "2026-03-14T16:15:49.548520+00:00",
@@ -497,11 +497,11 @@
   },
   "christophe.paillette@hotmail.fr": {
     "sent_at": "2026-03-14T16:16:07.815965+00:00",
-    "resend_id": "c908af81-9f46-45ef-9460-71a3cdd4e099",
+    "last_sent_at": "2026-03-31T16:04:33.769360+00:00",
+    "send_count": 2,
+    "resend_id": "0b16063e-24a4-4e0a-9abe-c8422f7c6e05",
     "name": "La prise en passant",
-    "city": "Le Havre",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:07.815965+00:00"
+    "city": "Le Havre"
   },
   "omegaburgerperpignan@gmail.com": {
     "sent_at": "2026-03-14T16:16:09.602539+00:00",
@@ -537,11 +537,11 @@
   },
   "sav@fivepizzaoriginal.fr": {
     "sent_at": "2026-03-14T16:16:16.800606+00:00",
-    "resend_id": "336f9c8c-f178-427e-866c-4e8f27d7fc72",
-    "name": "Five Pizza Original Reims",
-    "city": "Reims",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:16.800606+00:00"
+    "last_sent_at": "2026-03-31T16:04:10.894147+00:00",
+    "send_count": 2,
+    "resend_id": "b60ddd96-26a1-454e-b6e9-92bb476f671f",
+    "name": "Five Pizza Original - Strasbourg",
+    "city": "Strasbourg"
   },
   "canotto45100@gmail.com": {
     "sent_at": "2026-03-14T16:16:18.621780+00:00",
@@ -11534,5 +11534,13 @@
     "resend_id": "ee7fb0c8-1dee-4a7e-a421-3c15bf7a670b",
     "name": "My Little Warung Valence",
     "city": "Valence"
+  },
+  "contact@bigsmash.fr": {
+    "sent_at": "2026-03-31T16:04:35.603007+00:00",
+    "last_sent_at": "2026-03-31T16:04:35.603007+00:00",
+    "send_count": 1,
+    "resend_id": "358ab77e-54b1-4191-bdf1-e4a9acdb4181",
+    "name": "Big Smash Toulouse - Matabiau",
+    "city": "Toulouse"
   }
 }
