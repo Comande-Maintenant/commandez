@@ -174,6 +174,12 @@ const SuperAdminPage = () => {
   const [successPopup, setSuccessPopup] = useState<{ count: number } | null>(null);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
+  // Recap email
+  const [recapProspect, setRecapProspect] = useState<ProspectRow | null>(null);
+  const [recapEmail, setRecapEmail] = useState("");
+  const [recapName, setRecapName] = useState("");
+  const [sendingRecap, setSendingRecap] = useState(false);
+
   // Conversion
   const [convertingProspect, setConvertingProspect] = useState<ProspectRow | null>(null);
   const [convertEmail, setConvertEmail] = useState("");
@@ -934,6 +940,14 @@ const SuperAdminPage = () => {
                         <a href={`https://app.commandeici.com/${r.slug}`} target="_blank" rel="noopener noreferrer nofollow">
                           <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Voir la page"><Eye className="h-3.5 w-3.5" /></Button>
                         </a>
+                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Envoyer recap par email" onClick={() => { setRecapProspect(r); setRecapEmail(""); setRecapName(""); }}>
+                          <Mail className="h-3.5 w-3.5" />
+                        </Button>
+                        {r.account_status === "prospect" && (
+                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700" title="Convertir en client" onClick={() => { setConvertingProspect(r); setConvertEmail(""); setConvertName(""); }}>
+                            <UserPlus className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                         <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Editer le catalogue" onClick={async () => {
                           const { data } = await supabase.from("restaurants").select("*").eq("id", r.id).single();
                           if (data) setEditingProspect(data as unknown as DbRestaurant);
@@ -1119,6 +1133,69 @@ const SuperAdminPage = () => {
               </div>
             )}
 
+            {/* Recap email dialog */}
+            {recapProspect && (
+              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setRecapProspect(null); }}>
+                <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-5">
+                  <h3 className="text-lg font-semibold">Envoyer un recap</h3>
+
+                  <div className="rounded-xl bg-secondary/50 p-3 space-y-1">
+                    <p className="text-sm font-medium">{recapProspect.name}</p>
+                    <p className="text-xs text-muted-foreground">{recapProspect.city ?? "Ville"} - {recapProspect.menuItemCount} produit{recapProspect.menuItemCount !== 1 ? "s" : ""}</p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium">Email du commercant *</label>
+                    <Input value={recapEmail} onChange={(e) => setRecapEmail(e.target.value)} placeholder="email@commerce.fr" className="mt-1 rounded-xl" />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium">Prenom du commercant</label>
+                    <Input value={recapName} onChange={(e) => setRecapName(e.target.value)} placeholder="Mohamed, Julie..." className="mt-1 rounded-xl" />
+                  </div>
+
+                  <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 space-y-2">
+                    <p className="text-sm font-medium text-amber-900">Email informatif uniquement</p>
+                    <ul className="text-xs text-amber-800 space-y-1 list-disc pl-4">
+                      <li>Lien vers sa page de commande</li>
+                      <li>Recap de ce qui a ete fait (produits, horaires)</li>
+                      <li>Prochaines etapes s'il veut activer</li>
+                      <li><strong>Aucun compte cree, le prospect reste prospect</strong></li>
+                    </ul>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button variant="outline" onClick={() => setRecapProspect(null)} className="rounded-xl">Annuler</Button>
+                    <Button disabled={sendingRecap || !recapEmail.includes("@")} className="rounded-xl" onClick={async () => {
+                      setSendingRecap(true);
+                      try {
+                        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/convert-prospect`, {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            restaurantId: recapProspect.id,
+                            email: recapEmail,
+                            ownerName: recapName || undefined,
+                            action: "recap",
+                          }),
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error ?? "Erreur");
+                        setRecapProspect(null);
+                        setSuccessPopup({ count: -2 });
+                      } catch (e: any) {
+                        alert("Erreur : " + (e.message ?? e));
+                      }
+                      setSendingRecap(false);
+                    }}>
+                      {sendingRecap ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Mail className="h-4 w-4 mr-1" />}
+                      Envoyer le recap
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Convert dialog */}
             {convertingProspect && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setConvertingProspect(null); }}>
@@ -1156,18 +1233,22 @@ const SuperAdminPage = () => {
                     <Button disabled={converting || !convertEmail.includes("@")} className="rounded-xl" onClick={async () => {
                       setConverting(true);
                       try {
-                        const { error } = await supabase.functions.invoke("convert-prospect", {
-                          body: {
+                        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/convert-prospect`, {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
                             restaurantId: convertingProspect.id,
                             email: convertEmail,
                             ownerName: convertName || undefined,
-                          },
+                            action: "convert",
+                          }),
                         });
-                        if (error) throw error;
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error ?? "Erreur");
                         setConvertingProspect(null);
                         setConvertEmail("");
                         setConvertName("");
-                        setSuccessPopup({ count: -1 }); // special flag for convert success
+                        setSuccessPopup({ count: -1 });
                         loadData();
                       } catch (e: any) {
                         alert("Erreur : " + (e.message ?? e));
@@ -1520,15 +1601,17 @@ const SuperAdminPage = () => {
               <Check className="h-8 w-8 text-emerald-600" />
             </div>
             <h3 className="text-xl font-bold text-foreground">
-              {successPopup.count === -1 ? "Invitation envoyee" : `${successPopup.count} produit${successPopup.count > 1 ? "s" : ""} ajoute${successPopup.count > 1 ? "s" : ""}`}
+              {successPopup.count === -2 ? "Recap envoye" : successPopup.count === -1 ? "Invitation envoyee" : `${successPopup.count} produit${successPopup.count > 1 ? "s" : ""} ajoute${successPopup.count > 1 ? "s" : ""}`}
             </h3>
             <p className="text-sm text-muted-foreground">
-              {successPopup.count === -1
+              {successPopup.count === -2
+                ? "Le commercant va recevoir un email avec le lien vers sa page et un recap de ce qui a ete prepare."
+                : successPopup.count === -1
                 ? "Le commercant va recevoir un email avec son lien d'activation, sa page de commande et les conseils de mise en place."
                 : "Le catalogue a ete mis a jour avec succes. Vous pouvez maintenant ajuster les details dans la carte ci-dessous."}
             </p>
             <Button className="rounded-xl w-full" onClick={() => setSuccessPopup(null)}>
-              {successPopup.count === -1 ? "Compris" : "Parfait, continuer"}
+              {successPopup.count < 0 ? "Compris" : "Parfait, continuer"}
             </Button>
           </div>
         </div>
