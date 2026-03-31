@@ -16,7 +16,7 @@ import {
   type DemoStatsData, type AllReferralsData, type ProspectRow,
 } from "@/lib/api";
 import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
-import { searchPlaces, getPlaceDetails } from "@/services/google-places";
+import { searchPlaces, getPlaceDetails, resolveShortUrl } from "@/services/google-places";
 import QRCode from "qrcode";
 import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
@@ -350,10 +350,26 @@ const SuperAdminPage = () => {
       } else if (searchMatch) {
         searchTerm = decodeURIComponent(searchMatch[1].replace(/\+/g, " "));
       } else {
-        // Short URL (share.google, goo.gl) - can't resolve from browser
-        // Ask user to paste the business name instead
-        alert("Ce type de lien ne peut pas etre lu directement. Tapez le nom du commerce a la place, ou collez un lien google.com/maps/place/...");
-        return;
+        // Short URL (share.google, goo.gl) - resolve server-side
+        try {
+          const resolved = await resolveShortUrl(input);
+          const rPlace = resolved.match(/\/place\/([^/@]+)/);
+          const rQ = resolved.match(/[?&]q=([^&]+)/);
+          const rSearch = resolved.match(/\/search\/([^/@]+)/);
+          if (rPlace) {
+            searchTerm = decodeURIComponent(rPlace[1].replace(/\+/g, " "));
+          } else if (rQ) {
+            searchTerm = decodeURIComponent(rQ[1].replace(/\+/g, " "));
+          } else if (rSearch) {
+            searchTerm = decodeURIComponent(rSearch[1].replace(/\+/g, " "));
+          } else {
+            alert("Impossible de lire ce lien. Tapez le nom du commerce a la place.");
+            return;
+          }
+        } catch (e) {
+          alert("Erreur lors de la resolution du lien. Tapez le nom du commerce a la place.");
+          return;
+        }
       }
     }
 
