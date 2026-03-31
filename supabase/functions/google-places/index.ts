@@ -16,15 +16,29 @@ serve(async (req) => {
     const { action, query, placeId, lat, lng, url: inputUrl } = await req.json();
 
     if (action === "resolve_url") {
-      // Follow redirects on short Google URLs (share.google, goo.gl, etc.)
+      // share.google links use a JS challenge, but the fallback HTML contains
+      // a /search?q=Business+Name link we can extract the name from
       try {
-        const res = await fetch(inputUrl, { redirect: "follow" });
-        const finalUrl = res.url;
-        return new Response(JSON.stringify({ resolved_url: finalUrl }), {
+        const res = await fetch(inputUrl, {
+          redirect: "follow",
+          headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36" },
+        });
+        const html = await res.text();
+        // Extract business name from fallback link: /search?q=Le+M%C3%A9sopotamie&...
+        const searchMatch = html.match(/\/search\?q=([^&"]+)/);
+        if (searchMatch) {
+          const businessName = decodeURIComponent(searchMatch[1].replace(/\+/g, " "));
+          return new Response(JSON.stringify({ business_name: businessName }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        // Fallback: return the final URL
+        return new Response(JSON.stringify({ resolved_url: res.url }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       } catch (e: any) {
-        return new Response(JSON.stringify({ resolved_url: inputUrl, error: e.message }), {
+        return new Response(JSON.stringify({ error: e.message }), {
+          status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

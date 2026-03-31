@@ -352,16 +352,20 @@ const SuperAdminPage = () => {
       } else {
         // Short URL (share.google, goo.gl) - resolve server-side
         try {
-          const resolved = await resolveShortUrl(input);
-          const rPlace = resolved.match(/\/place\/([^/@]+)/);
-          const rQ = resolved.match(/[?&]q=([^&]+)/);
-          const rSearch = resolved.match(/\/search\/([^/@]+)/);
-          if (rPlace) {
-            searchTerm = decodeURIComponent(rPlace[1].replace(/\+/g, " "));
-          } else if (rQ) {
-            searchTerm = decodeURIComponent(rQ[1].replace(/\+/g, " "));
-          } else if (rSearch) {
-            searchTerm = decodeURIComponent(rSearch[1].replace(/\+/g, " "));
+          const { businessName, resolvedUrl } = await resolveShortUrl(input);
+          if (businessName) {
+            searchTerm = businessName;
+          } else if (resolvedUrl) {
+            const rPlace = resolvedUrl.match(/\/place\/([^/@]+)/);
+            const rQ = resolvedUrl.match(/[?&]q=([^&]+)/);
+            if (rPlace) {
+              searchTerm = decodeURIComponent(rPlace[1].replace(/\+/g, " "));
+            } else if (rQ) {
+              searchTerm = decodeURIComponent(rQ[1].replace(/\+/g, " "));
+            } else {
+              alert("Impossible de lire ce lien. Tapez le nom du commerce a la place.");
+              return;
+            }
           } else {
             alert("Impossible de lire ce lien. Tapez le nom du commerce a la place.");
             return;
