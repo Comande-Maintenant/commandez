@@ -25,19 +25,19 @@
   },
   "greenadine21@gmail.com": {
     "sent_at": "2026-03-14T16:14:19.682564+00:00",
-    "resend_id": "fd2911d7-ac88-44fa-9936-f76cc5770d98",
+    "last_sent_at": "2026-03-31T08:37:38.849704+00:00",
+    "send_count": 2,
+    "resend_id": "0faae6fd-2d31-4d0f-b2d9-90eb3db55773",
     "name": "GREENADINE pizzeria cauderan",
-    "city": "Bordeaux",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:19.682564+00:00"
+    "city": "Bordeaux"
   },
   "jean.dupont@mail.fr": {
     "sent_at": "2026-03-14T16:14:21.530807+00:00",
-    "resend_id": "b8d65d25-6746-4fe6-b5b4-7b1c896cf91d",
+    "last_sent_at": "2026-03-31T08:37:34.878484+00:00",
+    "send_count": 2,
+    "resend_id": "26bf8780-5c83-4b56-8c10-46a9327f782a",
     "name": "Prima Bonheur",
-    "city": "Toulouse",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:21.530807+00:00"
+    "city": "Toulouse"
   },
   "ari6712@gmail.com": {
     "sent_at": "2026-03-14T16:14:23.341739+00:00",
@@ -137,19 +137,19 @@
   },
   "contact@etre-visible.local.fr": {
     "sent_at": "2026-03-14T16:14:45.235302+00:00",
-    "resend_id": "4800fc7c-1c89-4ae5-9d61-97f2ac879a0a",
-    "name": "TOUT VA BENE",
-    "city": "Clermont-Ferrand",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:45.235302+00:00"
+    "last_sent_at": "2026-03-31T08:37:30.997540+00:00",
+    "send_count": 2,
+    "resend_id": "6014acb0-9d09-43a3-859c-0a05460e6ae2",
+    "name": "CHEZ ALEX",
+    "city": "Marseille"
   },
   "info@sale-e-pepe.fr": {
     "sent_at": "2026-03-14T16:14:47.268294+00:00",
-    "resend_id": "5d572ff4-73dd-4ae1-81e3-6fcc3cf2a705",
+    "last_sent_at": "2026-03-31T08:37:46.992303+00:00",
+    "send_count": 2,
+    "resend_id": "33cb9a84-e282-486d-90db-b56c5fde7008",
     "name": "La pizza sale e pepe",
-    "city": "Nice",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:47.268294+00:00"
+    "city": "Nice"
   },
   "mourad.yourari@gmail.com": {
     "sent_at": "2026-03-14T16:14:49.109975+00:00",
@@ -281,11 +281,11 @@
   },
   "contact@agence-elypse.com": {
     "sent_at": "2026-03-14T16:15:18.769394+00:00",
-    "resend_id": "bdc66bb5-685d-42a9-8507-9453ae42f8d9",
-    "name": "Big Smash Nîmes",
-    "city": "Nimes",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:18.769394+00:00"
+    "last_sent_at": "2026-03-31T08:37:32.935791+00:00",
+    "send_count": 2,
+    "resend_id": "52c43317-5f96-4fdc-ab62-c34a69ae7ef0",
+    "name": "Big Smash Toulouse - Matabiau",
+    "city": "Toulouse"
   },
   "labonnepate30@gmail.com": {
     "sent_at": "2026-03-14T16:15:20.572842+00:00",
@@ -329,11 +329,11 @@
   },
   "okjapizza@gmail.com": {
     "sent_at": "2026-03-14T16:15:29.675039+00:00",
-    "resend_id": "59dfd91e-66f7-4a8b-9688-8e0c6fc86a30",
+    "last_sent_at": "2026-03-31T08:37:17.913805+00:00",
+    "send_count": 2,
+    "resend_id": "6f112592-8966-4f4f-9ba9-d8c2a4511e88",
     "name": "OKJA - Pizzeria & Cocktails à Lyon 7",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:29.675039+00:00"
+    "city": "Lyon"
   },
   "contact@assiette-tunisienne.fr": {
     "sent_at": "2026-03-14T16:15:31.491348+00:00",
@@ -345,19 +345,19 @@
   },
   "contact@pausk.com": {
     "sent_at": "2026-03-14T16:15:33.333368+00:00",
-    "resend_id": "c9385c7a-74ac-4397-918c-a1ffe00b6b6b",
+    "last_sent_at": "2026-03-31T08:37:40.776026+00:00",
+    "send_count": 2,
+    "resend_id": "5b19f7c7-7ee8-4eec-85a4-4ef32b0237a9",
     "name": "paus'k",
-    "city": "Bordeaux",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:33.333368+00:00"
+    "city": "Bordeaux"
   },
   "contact@pizzicotto-chicken.fr": {
     "sent_at": "2026-03-14T16:15:35.127021+00:00",
-    "resend_id": "096bc0d0-9a7e-46e0-9c3f-a3cdff84f062",
+    "last_sent_at": "2026-03-31T08:37:36.899123+00:00",
+    "send_count": 2,
+    "resend_id": "19e81b3a-e0b3-4e1f-80c4-ad349471c03e",
     "name": "Pizzicotto & Chicken - Pizza Toulouse",
-    "city": "Toulouse",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:35.127021+00:00"
+    "city": "Toulouse"
   },
   "lepicobello@hotmail.fr": {
     "sent_at": "2026-03-14T16:15:36.933633+00:00",
@@ -425,19 +425,19 @@
   },
   "hello@mapszi.com": {
     "sent_at": "2026-03-14T16:15:51.360885+00:00",
-    "resend_id": "5b539bf1-0d98-48fc-bd83-3704af01bc66",
-    "name": "Uno Pizza",
-    "city": "Amiens",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:51.360885+00:00"
+    "last_sent_at": "2026-03-31T08:37:42.703513+00:00",
+    "send_count": 2,
+    "resend_id": "21f4eda8-564d-4c7f-95fa-b382d59478db",
+    "name": "Snack St Maurice",
+    "city": "Nice"
   },
   "support@ovhcloud.com": {
     "sent_at": "2026-03-14T16:15:53.210742+00:00",
-    "resend_id": "191e3a17-1df9-4af7-898b-023b4aa6163b",
-    "name": "Le San Marco – Pizzeria et restaurant italien - Les Ponts-de-Cé",
-    "city": "Angers",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:53.210742+00:00"
+    "last_sent_at": "2026-03-31T08:37:44.990273+00:00",
+    "send_count": 2,
+    "resend_id": "c7a70e7f-fd03-4803-8bb6-a2550a6cb99c",
+    "name": "Mamma Pizza Nice",
+    "city": "Nice"
   },
   "acadiane.caen@orange.fr": {
     "sent_at": "2026-03-14T16:15:55.020562+00:00",
@@ -465,11 +465,11 @@
   },
   "contact@dipiu.fr": {
     "sent_at": "2026-03-14T16:16:00.545194+00:00",
-    "resend_id": "002ba516-5048-40c0-a03b-d7255c16ef72",
-    "name": "La Villa d'Este - Restaurant italien Nice",
-    "city": "Nice",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:00.545194+00:00"
+    "last_sent_at": "2026-03-31T08:37:48.924871+00:00",
+    "send_count": 2,
+    "resend_id": "f32ea2dd-1403-484d-b8cf-c27374f94715",
+    "name": "Di Più - Restaurant italien Nice",
+    "city": "Nice"
   },
   "dhaoui_younes@hotmail.fr": {
     "sent_at": "2026-03-14T16:16:02.373085+00:00",
@@ -601,43 +601,43 @@
   },
   "info@mima-lyon.fr": {
     "sent_at": "2026-03-15T08:01:09.095429+00:00",
-    "resend_id": "0a95aed0-7d91-41db-a359-76dd30d6e296",
+    "last_sent_at": "2026-03-31T08:37:29.045071+00:00",
+    "send_count": 2,
+    "resend_id": "f0bd7925-aa1d-4fcd-84f5-037bb3d8d8ca",
     "name": "MIMA – Pizzeria & Cuisine Italienne",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:01:09.095429+00:00"
+    "city": "Lyon"
   },
   "namylyon3@gmail.com": {
     "sent_at": "2026-03-15T08:01:07.121724+00:00",
-    "resend_id": "2ca1b379-fc25-4803-b483-a85fa1a642de",
+    "last_sent_at": "2026-03-31T08:37:27.112374+00:00",
+    "send_count": 2,
+    "resend_id": "96e51a3e-3221-4547-991a-736d324a2405",
     "name": "Pizzeria La Mama",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:01:07.121724+00:00"
+    "city": "Lyon"
   },
   "contact@acadenice.fr": {
     "sent_at": "2026-03-15T08:01:05.120376+00:00",
-    "resend_id": "1cbef867-3b26-4646-9780-dda3c5dcc099",
+    "last_sent_at": "2026-03-31T08:37:24.751605+00:00",
+    "send_count": 2,
+    "resend_id": "d419de78-dba4-4cba-8c3b-c52d4ada218b",
     "name": "Pizzeria Bocca Di Rosa",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:01:05.120376+00:00"
+    "city": "Lyon"
   },
   "contact@pizzeria-lafocaccia.fr": {
     "sent_at": "2026-03-15T08:01:03.15585+00:00",
-    "resend_id": "7353a0de-b90d-49c6-af28-2dfaf1808b7c",
+    "last_sent_at": "2026-03-31T08:37:22.790515+00:00",
+    "send_count": 2,
+    "resend_id": "1f5bd155-3f67-4bd8-863c-2617f9d74fb9",
     "name": "Pizzeria La Focaccia",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:01:03.15585+00:00"
+    "city": "Lyon"
   },
   "contact@restaurant-casalula.com": {
     "sent_at": "2026-03-15T08:01:01.214472+00:00",
-    "resend_id": "1744f4e4-7a01-4b91-8a5a-989bfd5a89bb",
+    "last_sent_at": "2026-03-31T08:37:20.409473+00:00",
+    "send_count": 2,
+    "resend_id": "ceec81e9-2853-447c-9a2f-2d573c6b1172",
     "name": "CASA LULA - Restaurant Italien Lyon",
-    "city": "Lyon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-15T08:01:01.214472+00:00"
+    "city": "Lyon"
   },
   "contact@groupenobile.com": {
     "sent_at": "2026-03-15T08:00:57.261689+00:00",
