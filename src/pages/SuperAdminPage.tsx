@@ -16,7 +16,8 @@ import {
   type DemoStatsData, type AllReferralsData, type ProspectRow,
 } from "@/lib/api";
 import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
-import { searchPlaces, getPlaceDetails, resolveShortUrl } from "@/services/google-places";
+import { getPlaceDetails } from "@/services/google-places";
+import { GooglePlaceSearch } from "@/components/onboarding/GooglePlaceSearch";
 import QRCode from "qrcode";
 import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
@@ -155,8 +156,6 @@ const SuperAdminPage = () => {
   const [prospectSearch, setProspectSearch] = useState("");
   const [prospectFilter, setProspectFilter] = useState("all");
   const [showCreateProspect, setShowCreateProspect] = useState(false);
-  const [placeQuery, setPlaceQuery] = useState("");
-  const [placeResults, setPlaceResults] = useState<GooglePlaceResult[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<GooglePlaceResult | null>(null);
   const [prospectBusinessType, setProspectBusinessType] = useState("restaurant");
   const [prospectSlug, setProspectSlug] = useState("");
@@ -327,69 +326,6 @@ const SuperAdminPage = () => {
       setDetailCustomers(c);
     } catch {}
     setDetailLoading(false);
-  };
-
-  // ── Prospect search (name or Google URL) ──
-  const handleProspectSearch = async (rawInput?: string) => {
-    const input = (rawInput || placeQuery).trim();
-    if (!input) return;
-
-    // Try to extract a search term from any URL
-    let searchTerm = input;
-
-    if (input.startsWith("http")) {
-      // Extract from Google Maps/Search URL patterns
-      const placeMatch = input.match(/\/place\/([^/@]+)/);
-      const qMatch = input.match(/[?&]q=([^&]+)/);
-      const searchMatch = input.match(/\/search\/([^/@]+)/);
-
-      if (placeMatch) {
-        searchTerm = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
-      } else if (qMatch) {
-        searchTerm = decodeURIComponent(qMatch[1].replace(/\+/g, " "));
-      } else if (searchMatch) {
-        searchTerm = decodeURIComponent(searchMatch[1].replace(/\+/g, " "));
-      } else {
-        // Short URL (share.google, goo.gl) - resolve server-side
-        try {
-          const { businessName, resolvedUrl } = await resolveShortUrl(input);
-          if (businessName) {
-            searchTerm = businessName;
-          } else if (resolvedUrl) {
-            const rPlace = resolvedUrl.match(/\/place\/([^/@]+)/);
-            const rQ = resolvedUrl.match(/[?&]q=([^&]+)/);
-            if (rPlace) {
-              searchTerm = decodeURIComponent(rPlace[1].replace(/\+/g, " "));
-            } else if (rQ) {
-              searchTerm = decodeURIComponent(rQ[1].replace(/\+/g, " "));
-            } else {
-              alert("Impossible de lire ce lien. Tapez le nom du commerce a la place.");
-              return;
-            }
-          } else {
-            alert("Impossible de lire ce lien. Tapez le nom du commerce a la place.");
-            return;
-          }
-        } catch (e) {
-          alert("Erreur lors de la resolution du lien. Tapez le nom du commerce a la place.");
-          return;
-        }
-      }
-    }
-
-    setPlaceQuery(searchTerm);
-    const results = await searchPlaces(searchTerm);
-    setPlaceResults(results);
-
-    // Auto-select if only 1 result
-    if (results.length === 1) {
-      const details = await getPlaceDetails(results[0].place_id);
-      const merged = { ...results[0], ...details };
-      setSelectedPlace(merged);
-      setProspectBusinessType(detectBusinessType(merged.types ?? []));
-      setProspectSlug(await generateSlug(merged.name));
-      setPlaceResults([]);
-    }
   };
 
   // ── Computed ──
@@ -1043,45 +979,21 @@ const SuperAdminPage = () => {
                 <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
                   <h3 className="text-lg font-semibold">Creer un prospect</h3>
 
-                  {/* Google Places search or URL paste */}
+                  {/* Google Places search */}
                   <div>
-                    <label className="text-sm font-medium text-foreground">Rechercher un commerce ou coller un lien Google Maps</label>
-                    <div className="flex gap-2 mt-1">
-                      <Input value={placeQuery} onChange={(e) => setPlaceQuery(e.target.value)} placeholder="Nom du commerce ou lien Google Maps..." className="rounded-xl"
-                        onKeyDown={(e) => { if (e.key === "Enter") handleProspectSearch(); }}
-                        onPaste={() => {
-                          setTimeout(() => handleProspectSearch(), 150);
-                        }}
-                      />
-                      <Button size="sm" className="rounded-xl" onClick={() => handleProspectSearch()}>
-                        <Search className="h-4 w-4" />
-                      </Button>
+                    <label className="text-sm font-medium text-foreground">Rechercher un commerce</label>
+                    <div className="mt-1">
+                      <GooglePlaceSearch onSelect={async (place) => {
+                        const details = await getPlaceDetails(place.place_id);
+                        const merged = { ...place, ...details };
+                        setSelectedPlace(merged);
+                        const detected = detectBusinessType(merged.types ?? []);
+                        setProspectBusinessType(detected);
+                        const slug = await generateSlug(merged.name);
+                        setProspectSlug(slug);
+                      }} />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">Collez le lien de la fiche Google ou tapez le nom du commerce</p>
                   </div>
-
-                  {/* Results */}
-                  {placeResults.length > 0 && !selectedPlace && (
-                    <div className="space-y-1.5 max-h-48 overflow-y-auto">
-                      {placeResults.map((p) => (
-                        <button key={p.place_id} className="w-full text-left p-3 rounded-xl hover:bg-secondary transition-colors border border-border"
-                          onClick={async () => {
-                            const details = await getPlaceDetails(p.place_id);
-                            const merged = { ...p, ...details };
-                            setSelectedPlace(merged);
-                            const detected = detectBusinessType(merged.types ?? []);
-                            setProspectBusinessType(detected);
-                            const slug = await generateSlug(merged.name);
-                            setProspectSlug(slug);
-                          }}
-                        >
-                          <p className="text-sm font-medium">{p.name}</p>
-                          <p className="text-xs text-muted-foreground">{p.formatted_address ?? p.vicinity}</p>
-                          {p.rating && <p className="text-xs text-muted-foreground">⭐ {p.rating}</p>}
-                        </button>
-                      ))}
-                    </div>
-                  )}
 
                   {/* Selected place details */}
                   {selectedPlace && (
@@ -1100,7 +1012,7 @@ const SuperAdminPage = () => {
                               ))}
                             </div>
                           )}
-                          <button className="text-xs text-blue-600 underline mt-2" onClick={() => { setSelectedPlace(null); setPlaceResults([]); }}>
+                          <button className="text-xs text-blue-600 underline mt-2" onClick={() => setSelectedPlace(null)}>
                             Changer de commerce
                           </button>
                         </CardContent>
