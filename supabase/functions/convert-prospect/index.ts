@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
           from: "CommandeIci <noreply@commandeici.com>",
           to: email,
           reply_to: "contact@commandeici.com",
-          subject: `${restaurant.name} : votre page de commande est prete`,
+          subject: `${restaurant.name} : ta page de commande est prête`,
           html: `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;color:#111827;line-height:1.6;">
 
@@ -78,7 +78,7 @@ Deno.serve(async (req: Request) => {
   <div style="padding:32px 16px;">
     <p style="font-size:16px;">${greeting}</p>
 
-    <p>On a prepare ta page de commande en ligne pour <strong>${restaurant.name}</strong>. Tout est en place.</p>
+    <p>On a préparé ta page de commande en ligne pour <strong>${restaurant.name}</strong>. Tout est en place.</p>
 
     <div style="background:#F0FDF4;border:1px solid #D1FAE5;border-radius:12px;padding:20px;margin:24px 0;">
       <p style="font-weight:600;margin:0 0 8px;">Ta page de commande :</p>
@@ -88,23 +88,23 @@ Deno.serve(async (req: Request) => {
 
     <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Ce qu'on a fait pour toi :</h3>
     <ul style="padding-left:20px;font-size:14px;color:#374151;">
-      <li style="margin-bottom:6px;"><strong>${menuCount ?? 0} produits</strong> ajoutes a ta carte</li>
-      <li style="margin-bottom:6px;"><strong>Horaires</strong> configures automatiquement</li>
-      <li style="margin-bottom:6px;"><strong>Page personnalisee</strong> avec les infos de ton commerce</li>
+      <li style="margin-bottom:6px;"><strong>${menuCount ?? 0} produits</strong> ajoutés à ta carte</li>
+      <li style="margin-bottom:6px;"><strong>Horaires</strong> configurés automatiquement</li>
+      <li style="margin-bottom:6px;"><strong>Page personnalisée</strong> avec les infos de ton commerce</li>
     </ul>
 
-    <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Les prochaines etapes :</h3>
+    <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Les prochaines étapes :</h3>
     <ul style="padding-left:20px;font-size:14px;color:#374151;">
-      <li style="margin-bottom:6px;">Regarde ta page et verifie que tout est bon</li>
-      <li style="margin-bottom:6px;">Si tu veux activer le systeme de commande, reponds a cet email</li>
+      <li style="margin-bottom:6px;">Regarde ta page et vérifie que tout est bon</li>
+      <li style="margin-bottom:6px;">Si tu veux activer le système de commande, réponds à cet email</li>
       <li style="margin-bottom:6px;">On active ton compte, tu testes gratuitement pendant 4 semaines</li>
     </ul>
 
     <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:16px;margin:24px 0;">
-      <p style="font-size:14px;color:#374151;margin:0;"><strong>Pas de compte a creer, pas de carte bancaire.</strong> On a tout fait pour toi. Reponds juste a cet email si tu veux lancer.</p>
+      <p style="font-size:14px;color:#374151;margin:0;"><strong>Pas de compte à créer, pas de carte bancaire.</strong> On a tout fait pour toi. Réponds juste à cet email si tu veux lancer.</p>
     </div>
 
-    <p style="font-size:14px;">A bientot,<br><strong>L'equipe CommandeIci</strong></p>
+    <p style="font-size:14px;">À bientôt,<br><strong>L'équipe CommandeIci</strong></p>
   </div>
 
   <div style="border-top:1px solid #E5E7EB;padding:16px;text-align:center;font-size:12px;color:#9CA3AF;">
@@ -186,7 +186,7 @@ Deno.serve(async (req: Request) => {
           from: "CommandeIci <noreply@commandeici.com>",
           to: email,
           reply_to: "contact@commandeici.com",
-          subject: `${restaurant.name} : ton compte est active`,
+          subject: `${restaurant.name} : ton compte est activé`,
           html: `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;color:#111827;line-height:1.6;">
 
@@ -197,7 +197,7 @@ Deno.serve(async (req: Request) => {
   <div style="padding:32px 16px;">
     <p style="font-size:16px;">${greeting}</p>
 
-    <p>Ton compte pour <strong>${restaurant.name}</strong> est maintenant actif. Le systeme de commande en ligne est pret a fonctionner.</p>
+    <p>Ton compte pour <strong>${restaurant.name}</strong> est maintenant actif. Le système de commande en ligne est prêt à fonctionner.</p>
 
     <div style="background:#F0FDF4;border:1px solid #D1FAE5;border-radius:12px;padding:20px;margin:24px 0;">
       <p style="font-weight:600;margin:0 0 8px;">Ta page de commande :</p>
@@ -206,24 +206,24 @@ Deno.serve(async (req: Request) => {
     </div>
 
     <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:20px;margin:24px 0;">
-      <p style="font-weight:600;margin:0 0 8px;">Accede a ton espace :</p>
-      <a href="${inviteLink}" style="display:inline-block;background:#10B981;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">Definir mon mot de passe</a>
-      <p style="font-size:13px;color:#6B7280;margin:8px 0 0;">Clique pour creer ton mot de passe et acceder a ton tableau de bord.</p>
+      <p style="font-weight:600;margin:0 0 8px;">Accède à ton espace :</p>
+      <a href="${inviteLink}" style="display:inline-block;background:#10B981;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">Définir mon mot de passe</a>
+      <p style="font-size:13px;color:#6B7280;margin:8px 0 0;">Clique pour créer ton mot de passe et accéder à ton tableau de bord.</p>
     </div>
 
     <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Ce que tu peux faire depuis ton espace :</h3>
     <ul style="padding-left:20px;font-size:14px;color:#374151;">
       <li style="margin-bottom:6px;"><strong>Modifier ta carte</strong> : ajouter, supprimer ou modifier tes produits</li>
-      <li style="margin-bottom:6px;"><strong>Gerer les commandes</strong> : voir les commandes en temps reel</li>
+      <li style="margin-bottom:6px;"><strong>Gérer les commandes</strong> : voir les commandes en temps réel</li>
       <li style="margin-bottom:6px;"><strong>Ajuster tes horaires</strong> : ouvrir/fermer quand tu veux</li>
       <li style="margin-bottom:6px;"><strong>Imprimer tes QR codes</strong> : pour afficher dans ton commerce</li>
     </ul>
 
-    <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Mise en place recommandee :</h3>
+    <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Mise en place recommandée :</h3>
     <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;">
       <tr style="border-bottom:1px solid #E5E7EB;">
         <td style="padding:8px;font-weight:600;">1. Cuisine</td>
-        <td style="padding:8px;color:#6B7280;">Pour voir les nouvelles commandes et les preparer</td>
+        <td style="padding:8px;color:#6B7280;">Pour voir les nouvelles commandes et les préparer</td>
       </tr>
       <tr style="border-bottom:1px solid #E5E7EB;">
         <td style="padding:8px;font-weight:600;">2. Caisse</td>
@@ -231,17 +231,17 @@ Deno.serve(async (req: Request) => {
       </tr>
       <tr>
         <td style="padding:8px;font-weight:600;">3. Comptoir</td>
-        <td style="padding:8px;color:#6B7280;">Une tablette cote client avec ton QR code</td>
+        <td style="padding:8px;color:#6B7280;">Une tablette côté client avec ton QR code</td>
       </tr>
     </table>
 
     <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:12px;padding:16px;margin:24px 0;">
-      <p style="font-size:14px;color:#92400E;margin:0;"><strong>Essai gratuit 4 semaines</strong> - Aucun engagement, aucun prelevement pendant l'essai.</p>
+      <p style="font-size:14px;color:#92400E;margin:0;"><strong>Essai gratuit 4 semaines</strong> - Aucun engagement, aucun prélèvement pendant l'essai.</p>
     </div>
 
-    <p style="font-size:14px;">Une question ? Reponds directement a cet email.</p>
+    <p style="font-size:14px;">Une question ? Réponds directement à cet email.</p>
 
-    <p style="font-size:14px;margin-top:24px;">A bientot,<br><strong>L'equipe CommandeIci</strong></p>
+    <p style="font-size:14px;margin-top:24px;">À bientôt,<br><strong>L'équipe CommandeIci</strong></p>
   </div>
 
   <div style="border-top:1px solid #E5E7EB;padding:16px;text-align:center;font-size:12px;color:#9CA3AF;">
