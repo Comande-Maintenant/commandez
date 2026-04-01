@@ -448,6 +448,7 @@ const RestaurantPage = () => {
   }, []);
 
   const isDemo = !!(restaurant as any)?.is_demo;
+  const isProspect = (restaurant as any)?.account_status === "prospect";
   const primary = useMemo(() => softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color]);
   const bg = UNIVERSAL_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
@@ -514,8 +515,8 @@ const RestaurantPage = () => {
     );
   }
 
-  // Subscription pending_payment - page not yet activated (skip for demo)
-  if (restaurant.subscription_status === "pending_payment" && !isDemo) {
+  // Subscription pending_payment - page not yet activated (skip for demo/prospect)
+  if (restaurant.subscription_status === "pending_payment" && !isDemo && !isProspect) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-sm mx-auto px-4">
@@ -532,9 +533,9 @@ const RestaurantPage = () => {
     );
   }
 
-  // Subscription expired/cancelled/past_due - public page unavailable (skip for demo)
+  // Subscription expired/cancelled/past_due - public page unavailable (skip for demo/prospect)
   if (
-    !isDemo && (
+    !isDemo && !isProspect && (
       restaurant.subscription_status === "expired" ||
       restaurant.subscription_status === "cancelled" ||
       restaurant.subscription_status === "past_due"
