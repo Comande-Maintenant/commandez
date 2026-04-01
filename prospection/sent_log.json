@@ -97,19 +97,19 @@
   },
   "elpalazzo76@gmail.com": {
     "sent_at": "2026-03-14T16:14:36.195682+00:00",
-    "resend_id": "b045e687-72a5-4141-8c81-867978912132",
+    "last_sent_at": "2026-04-01T16:05:36.967892+00:00",
+    "send_count": 2,
+    "resend_id": "47fb6983-e26a-48d9-ae1c-621295f6d628",
     "name": "EL PALAZZO",
-    "city": "Rouen",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:36.195682+00:00"
+    "city": "Rouen"
   },
   "contact@ladresse-amiens.fr": {
     "sent_at": "2026-03-14T16:14:38.027723+00:00",
-    "resend_id": "6d07c69a-fcb7-4723-9067-ec9b522eee40",
+    "last_sent_at": "2026-04-01T16:05:14.770167+00:00",
+    "send_count": 2,
+    "resend_id": "a294c2d3-7f44-40d4-983d-76199f806e6e",
     "name": "L'adresse",
-    "city": "Amiens",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:38.027723+00:00"
+    "city": "Amiens"
   },
   "sav@la-galerie.com": {
     "sent_at": "2026-03-14T16:14:39.825702+00:00",
@@ -121,11 +121,11 @@
   },
   "lenagehanne@hotmail.fr": {
     "sent_at": "2026-03-14T16:14:41.641996+00:00",
-    "resend_id": "aa1bfa78-9c8f-49c6-8dec-3fb1ca240750",
+    "last_sent_at": "2026-04-01T16:05:42.707531+00:00",
+    "send_count": 2,
+    "resend_id": "c7f966ee-0dc0-4834-a992-78ea75e5966c",
     "name": "L'Ardoise",
-    "city": "Caen",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:41.641996+00:00"
+    "city": "Caen"
   },
   "service.communication@g-ladalle.com": {
     "sent_at": "2026-03-14T16:14:43.449340+00:00",
@@ -169,11 +169,11 @@
   },
   "firdeus06@live.fr": {
     "sent_at": "2026-03-14T16:14:52.776749+00:00",
-    "resend_id": "2af8df53-836d-4576-b5cc-c03eae62a4a4",
+    "last_sent_at": "2026-04-01T16:05:38.878250+00:00",
+    "send_count": 2,
+    "resend_id": "787dd4ab-a7b3-47cc-99d5-76b89ef5a2aa",
     "name": "Kervan Saray",
-    "city": "Mulhouse",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:52.776749+00:00"
+    "city": "Mulhouse"
   },
   "antonino.donato@gmail.com": {
     "sent_at": "2026-03-14T16:14:54.617368+00:00",
@@ -193,11 +193,11 @@
   },
   "loc66.fr@gmail.com": {
     "sent_at": "2026-03-14T16:14:58.355548+00:00",
-    "resend_id": "2a3da0a3-607e-43e2-bb82-f036bf0a8189",
+    "last_sent_at": "2026-04-01T16:05:21.004547+00:00",
+    "send_count": 2,
+    "resend_id": "1030db64-9a69-494b-b688-06fb25816a9b",
     "name": "VENTRAYOU PIZZA PERPIGNAN",
-    "city": "Perpignan",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:58.355548+00:00"
+    "city": "Perpignan"
   },
   "contact@pizza-corleone.fr": {
     "sent_at": "2026-03-14T16:15:00.156847+00:00",
@@ -217,11 +217,11 @@
   },
   "pascal.dicandia@icloud.com": {
     "sent_at": "2026-03-14T16:15:04.139100+00:00",
-    "resend_id": "6466e4d0-bedb-4679-b82c-0fba347aab62",
+    "last_sent_at": "2026-04-01T16:05:24.889637+00:00",
+    "send_count": 2,
+    "resend_id": "72c1df5d-8805-43cb-871b-4a3ed034d23b",
     "name": "Angel's Food",
-    "city": "Metz",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:04.139100+00:00"
+    "city": "Metz"
   },
   "contact@la-casa-aprile.fr": {
     "sent_at": "2026-03-14T16:15:05.984010+00:00",
@@ -233,11 +233,11 @@
   },
   "tastytreatorleans@gmail.com": {
     "sent_at": "2026-03-14T16:15:07.818568+00:00",
-    "resend_id": "5437342f-b830-4a93-95a3-f0562b749bf4",
+    "last_sent_at": "2026-04-01T16:05:31.054588+00:00",
+    "send_count": 2,
+    "resend_id": "8e9280f1-fb57-422f-883f-9103833a1475",
     "name": "TastyTreat Orleans",
-    "city": "Orleans",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:07.818568+00:00"
+    "city": "Orleans"
   },
   "salsoul_rabah@yahoo.fr": {
     "sent_at": "2026-03-14T16:15:09.698722+00:00",
@@ -289,11 +289,11 @@
   },
   "labonnepate30@gmail.com": {
     "sent_at": "2026-03-14T16:15:20.572842+00:00",
-    "resend_id": "8f62aaa5-77da-4b8a-a340-77ace01e298b",
+    "last_sent_at": "2026-04-01T16:05:19.044792+00:00",
+    "send_count": 2,
+    "resend_id": "f0bcac01-d5a8-4dd1-bb1c-5a8b9c46c17c",
     "name": "Francky La Bonne Pâte - Couzeix",
-    "city": "Limoges",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:20.572842+00:00"
+    "city": "Limoges"
   },
   "baoquin.ponouilles@gmail.com": {
     "sent_at": "2026-03-14T16:15:22.367855+00:00",
@@ -305,11 +305,11 @@
   },
   "fanny.dubouclez@gmail.com": {
     "sent_at": "2026-03-14T16:15:24.195964+00:00",
-    "resend_id": "04bcfe3d-7ccb-4d4c-9daf-932600722281",
+    "last_sent_at": "2026-04-01T16:05:29.102809+00:00",
+    "send_count": 2,
+    "resend_id": "2676cb33-d3c7-461e-954e-03d35d32e901",
     "name": "L’Escapade",
-    "city": "Besancon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:24.195964+00:00"
+    "city": "Besancon"
   },
   "contact@steaknshake-calais-coquelles.fr": {
     "sent_at": "2026-03-14T16:15:25.998844+00:00",
@@ -417,11 +417,11 @@
   },
   "contact@losteriador.fr": {
     "sent_at": "2026-03-14T16:15:49.548520+00:00",
-    "resend_id": "06d22b1d-5223-4b7a-bece-adcac3856657",
+    "last_sent_at": "2026-04-01T16:05:35.061553+00:00",
+    "send_count": 2,
+    "resend_id": "9ce34ef2-3ec9-44a9-8b5d-49333a6cc821",
     "name": "Bouillon Italia Osteria d’Or",
-    "city": "Rouen",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:49.548520+00:00"
+    "city": "Rouen"
   },
   "hello@mapszi.com": {
     "sent_at": "2026-03-14T16:15:51.360885+00:00",
@@ -441,11 +441,11 @@
   },
   "acadiane.caen@orange.fr": {
     "sent_at": "2026-03-14T16:15:55.020562+00:00",
-    "resend_id": "a7b00dbc-a8a5-43e9-9cc9-011a58bc9a46",
+    "last_sent_at": "2026-04-01T16:05:40.797480+00:00",
+    "send_count": 2,
+    "resend_id": "852ea212-9f30-432e-9343-75f0f0f0c962",
     "name": "La Table de l'Acadiane",
-    "city": "Caen",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:55.020562+00:00"
+    "city": "Caen"
   },
   "contact@pizza-al-calzone.com": {
     "sent_at": "2026-03-14T16:15:56.854566+00:00",
@@ -505,11 +505,11 @@
   },
   "omegaburgerperpignan@gmail.com": {
     "sent_at": "2026-03-14T16:16:09.602539+00:00",
-    "resend_id": "4ec2a3d1-aa9c-4d3e-89d5-e27728f7a04f",
+    "last_sent_at": "2026-04-01T16:05:22.924848+00:00",
+    "send_count": 2,
+    "resend_id": "f91c0b79-f08d-4516-a196-2b57e3dbd47b",
     "name": "Oméga Burger",
-    "city": "Perpignan",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:09.602539+00:00"
+    "city": "Perpignan"
   },
   "contact@joyfoods.fr": {
     "sent_at": "2026-03-14T16:16:11.406646+00:00",
@@ -529,11 +529,11 @@
   },
   "contact@croque-studio.com": {
     "sent_at": "2026-03-14T16:16:14.992558+00:00",
-    "resend_id": "f1ed2641-75cb-429b-a889-60a3d45a4907",
-    "name": "Queen Mamma - Waves",
-    "city": "Metz",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:14.992558+00:00"
+    "last_sent_at": "2026-04-01T16:05:27.114950+00:00",
+    "send_count": 2,
+    "resend_id": "eea3796f-ae41-4a8e-b981-c9bdecbfe97b",
+    "name": "Queen Mamma - Mercy/Peltre",
+    "city": "Metz"
   },
   "sav@fivepizzaoriginal.fr": {
     "sent_at": "2026-03-14T16:16:16.800606+00:00",
@@ -545,19 +545,19 @@
   },
   "canotto45100@gmail.com": {
     "sent_at": "2026-03-14T16:16:18.621780+00:00",
-    "resend_id": "9f27afab-7fa5-40d6-b245-6c6ea2f3ae46",
+    "last_sent_at": "2026-04-01T16:05:32.991811+00:00",
+    "send_count": 2,
+    "resend_id": "0a0f0aff-a316-44ed-96dd-1465c827c6e1",
     "name": "Canotto",
-    "city": "Orleans",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:18.621780+00:00"
+    "city": "Orleans"
   },
   "chezpiatours@gmail.com": {
     "sent_at": "2026-03-14T16:16:20.421939+00:00",
-    "resend_id": "54d3baa7-ac8d-46d9-a8c9-b0cd174e8038",
+    "last_sent_at": "2026-04-01T16:05:12.528819+00:00",
+    "send_count": 2,
+    "resend_id": "93f8ac63-8324-40a0-894e-db0277b93af5",
     "name": "Casa Pia",
-    "city": "Tours",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:20.421939+00:00"
+    "city": "Tours"
   },
   "contact@fiplink.com": {
     "sent_at": "2026-03-14T16:16:22.216392+00:00",
@@ -593,11 +593,11 @@
   },
   "contact@tipiz-pizza.fr": {
     "sent_at": "2026-03-14T16:16:29.496871+00:00",
-    "resend_id": "15a06a5e-a9dc-45a0-9090-dc7f6dac949d",
+    "last_sent_at": "2026-04-01T16:05:17.064377+00:00",
+    "send_count": 2,
+    "resend_id": "6b980f5c-47fc-45e8-82b2-0642c4824e0d",
     "name": "TIPIZ' Pizza.",
-    "city": "Limoges",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:29.496871+00:00"
+    "city": "Limoges"
   },
   "info@mima-lyon.fr": {
     "sent_at": "2026-03-15T08:01:09.095429+00:00",
