@@ -65,11 +65,11 @@
   },
   "alexandrafarocha90@gmail.com": {
     "sent_at": "2026-03-14T16:14:28.861665+00:00",
-    "resend_id": "57ada871-7015-45ca-b337-d5f419725698",
+    "last_sent_at": "2026-04-01T08:46:01.174913+00:00",
+    "send_count": 2,
+    "resend_id": "dcf669ba-4fec-4a89-bd6a-af3ac3d3c70a",
     "name": "Le Palazzio",
-    "city": "Dijon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:28.861665+00:00"
+    "city": "Dijon"
   },
   "ragazza.restaurant@hotmail.com": {
     "sent_at": "2026-03-14T16:14:30.788567+00:00",
@@ -113,11 +113,11 @@
   },
   "sav@la-galerie.com": {
     "sent_at": "2026-03-14T16:14:39.825702+00:00",
-    "resend_id": "8e3ea070-100b-4ddc-9967-c8a5295ace56",
+    "last_sent_at": "2026-04-01T08:46:03.464653+00:00",
+    "send_count": 2,
+    "resend_id": "e92bd03b-e13c-4a31-af9e-884b94501657",
     "name": "Pizza Tempo Espace Anjou",
-    "city": "Angers",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:39.825702+00:00"
+    "city": "Angers"
   },
   "lenagehanne@hotmail.fr": {
     "sent_at": "2026-03-14T16:14:41.641996+00:00",
@@ -153,19 +153,19 @@
   },
   "mourad.yourari@gmail.com": {
     "sent_at": "2026-03-14T16:14:49.109975+00:00",
-    "resend_id": "d2400ef3-e763-4c89-9981-37a2bfcc75ce",
+    "last_sent_at": "2026-04-01T08:46:17.546557+00:00",
+    "send_count": 2,
+    "resend_id": "3c81bcba-1677-41de-9a73-ce3fb192f403",
     "name": "Team Food Chicken",
-    "city": "Brest",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:49.109975+00:00"
+    "city": "Brest"
   },
   "contact@come-prima.it": {
     "sent_at": "2026-03-14T16:14:50.972189+00:00",
-    "resend_id": "8afdd7bf-ab8c-4fbc-9569-566562174e91",
+    "last_sent_at": "2026-04-01T08:45:57.308911+00:00",
+    "send_count": 2,
+    "resend_id": "456c1cf4-c7dc-4d13-bde2-ea1840823fb5",
     "name": "Pizzeria Come Prima",
-    "city": "Grenoble",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:50.972189+00:00"
+    "city": "Grenoble"
   },
   "firdeus06@live.fr": {
     "sent_at": "2026-03-14T16:14:52.776749+00:00",
@@ -177,11 +177,11 @@
   },
   "antonino.donato@gmail.com": {
     "sent_at": "2026-03-14T16:14:54.617368+00:00",
-    "resend_id": "6b2046a9-0c14-4688-9748-5dd8a24f4151",
-    "name": "Via Veneto",
-    "city": "Aix-en-Provence",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:54.617368+00:00"
+    "last_sent_at": "2026-04-01T08:46:11.567856+00:00",
+    "send_count": 2,
+    "resend_id": "5ea94598-f2bc-468f-8f4c-61bc56778200",
+    "name": "Chez Nino",
+    "city": "Aix-en-Provence"
   },
   "contact@liziweb.com": {
     "sent_at": "2026-03-14T16:14:56.419358+00:00",
@@ -209,11 +209,11 @@
   },
   "contact@bosphorus.fr": {
     "sent_at": "2026-03-14T16:15:02.299055+00:00",
-    "resend_id": "da4cd594-e20c-4eae-b273-f32bc62eb5dc",
+    "last_sent_at": "2026-04-01T08:45:48.297867+00:00",
+    "send_count": 2,
+    "resend_id": "c0a6f0f7-2d62-4e88-911e-21a8fabd3837",
     "name": "Bosphorus Taste of Turkey",
-    "city": "Saint-Etienne",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:02.299055+00:00"
+    "city": "Saint-Etienne"
   },
   "pascal.dicandia@icloud.com": {
     "sent_at": "2026-03-14T16:15:04.139100+00:00",
@@ -241,11 +241,11 @@
   },
   "salsoul_rabah@yahoo.fr": {
     "sent_at": "2026-03-14T16:15:09.698722+00:00",
-    "resend_id": "5445c063-1ea9-4100-a596-e6042f99f350",
+    "last_sent_at": "2026-04-01T08:46:19.500594+00:00",
+    "send_count": 2,
+    "resend_id": "b4d1f02f-4c01-452a-b127-51cc65ac5e02",
     "name": "O'DWICH SNACK",
-    "city": "Tours",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:09.698722+00:00"
+    "city": "Tours"
   },
   "contact@grilladeettacos.fr": {
     "sent_at": "2026-03-14T16:15:11.490607+00:00",
@@ -265,11 +265,11 @@
   },
   "contact@circuitdelabiere.fr": {
     "sent_at": "2026-03-14T16:15:15.127904+00:00",
-    "resend_id": "6bbd11a5-8dd8-4311-816c-1349ef52a4d0",
+    "last_sent_at": "2026-04-01T08:46:09.635367+00:00",
+    "send_count": 2,
+    "resend_id": "92900e4a-8aff-4179-958e-1e8e9a51dbb6",
     "name": "Circuit de la bière",
-    "city": "Le Mans",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:15.127904+00:00"
+    "city": "Le Mans"
   },
   "amaga.panino@gmail.com": {
     "sent_at": "2026-03-14T16:15:16.962118+00:00",
@@ -385,11 +385,11 @@
   },
   "bekir@live.fr": {
     "sent_at": "2026-03-14T16:15:42.313270+00:00",
-    "resend_id": "858d7820-c15c-4cd1-b3ac-9258c2a14d64",
+    "last_sent_at": "2026-04-01T08:45:59.248809+00:00",
+    "send_count": 2,
+    "resend_id": "067769e4-2b8c-425a-b6c4-dbfc0c1d3aa6",
     "name": "La Pizz'Zola",
-    "city": "Dijon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:42.313270+00:00"
+    "city": "Dijon"
   },
   "virgil_54840@hotmail.fr": {
     "sent_at": "2026-03-14T16:15:44.113059+00:00",
@@ -449,19 +449,19 @@
   },
   "contact@pizza-al-calzone.com": {
     "sent_at": "2026-03-14T16:15:56.854566+00:00",
-    "resend_id": "8d413dd1-9e31-40c2-a8b7-9f8c6763d6c4",
+    "last_sent_at": "2026-04-01T08:45:52.685845+00:00",
+    "send_count": 2,
+    "resend_id": "382c8451-172e-4981-b2fc-388d02ec6730",
     "name": "Al calzone",
-    "city": "Toulon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:56.854566+00:00"
+    "city": "Toulon"
   },
   "info@vesuve.net": {
     "sent_at": "2026-03-14T16:15:58.685502+00:00",
-    "resend_id": "e06bf86a-bfb5-40be-8889-905dfb77b2f4",
+    "last_sent_at": "2026-04-01T08:46:07.687213+00:00",
+    "send_count": 2,
+    "resend_id": "e173c91b-619f-4c38-934c-c9feba355b53",
     "name": "Restaurant-Pizzeria Le Vésuve",
-    "city": "Clermont-Ferrand",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:58.685502+00:00"
+    "city": "Clermont-Ferrand"
   },
   "contact@dipiu.fr": {
     "sent_at": "2026-03-14T16:16:00.545194+00:00",
@@ -473,27 +473,27 @@
   },
   "dhaoui_younes@hotmail.fr": {
     "sent_at": "2026-03-14T16:16:02.373085+00:00",
-    "resend_id": "71bd50d3-4ac7-4a54-b333-4e951cb5cc98",
+    "last_sent_at": "2026-04-01T08:46:15.602438+00:00",
+    "send_count": 2,
+    "resend_id": "a7743c74-f812-480f-8cff-bf6aee793651",
     "name": "Le Djerba",
-    "city": "Brest",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:02.373085+00:00"
+    "city": "Brest"
   },
   "tmw.38@hotmail.com": {
     "sent_at": "2026-03-14T16:16:04.181411+00:00",
-    "resend_id": "279fe673-1f61-4d83-bbe4-69f24b8d0182",
+    "last_sent_at": "2026-04-01T08:45:54.946251+00:00",
+    "send_count": 2,
+    "resend_id": "2ec86519-c5b4-4739-853b-be453211d913",
     "name": "HOMS Grillades",
-    "city": "Grenoble",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:04.181411+00:00"
+    "city": "Grenoble"
   },
   "hello.maisonnoshaix@gmail.com": {
     "sent_at": "2026-03-14T16:16:05.975477+00:00",
-    "resend_id": "2b1e75a6-ca1a-4fe7-a403-7ce63135d226",
+    "last_sent_at": "2026-04-01T08:46:13.554026+00:00",
+    "send_count": 2,
+    "resend_id": "55113c79-bb22-4c3c-a686-210e1295f807",
     "name": "Maison Nosh - Aix en Provence",
-    "city": "Aix-en-Provence",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:05.975477+00:00"
+    "city": "Aix-en-Provence"
   },
   "christophe.paillette@hotmail.fr": {
     "sent_at": "2026-03-14T16:16:07.815965+00:00",
@@ -521,11 +521,11 @@
   },
   "3brasseurs.saintetienne@gmail.com": {
     "sent_at": "2026-03-14T16:16:13.192293+00:00",
-    "resend_id": "5bf81ba8-3ee7-4b8c-824d-221f7fcc3510",
+    "last_sent_at": "2026-04-01T08:45:50.318767+00:00",
+    "send_count": 2,
+    "resend_id": "2980d502-9b91-4ca7-b4d9-469764e810f1",
     "name": "3 Brasseurs Saint Etienne",
-    "city": "Saint-Etienne",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:13.192293+00:00"
+    "city": "Saint-Etienne"
   },
   "contact@croque-studio.com": {
     "sent_at": "2026-03-14T16:16:14.992558+00:00",
@@ -585,11 +585,11 @@
   },
   "lemarcellino@manger-italien.com": {
     "sent_at": "2026-03-14T16:16:27.700392+00:00",
-    "resend_id": "c635f40b-5399-47be-9dae-7104c144d798",
+    "last_sent_at": "2026-04-01T08:46:05.739966+00:00",
+    "send_count": 2,
+    "resend_id": "bdfe9eb7-efbb-4e06-a9f0-893647d51f65",
     "name": "Le Marcellino",
-    "city": "Nimes",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:27.700392+00:00"
+    "city": "Nimes"
   },
   "contact@tipiz-pizza.fr": {
     "sent_at": "2026-03-14T16:16:29.496871+00:00",
