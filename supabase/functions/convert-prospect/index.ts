@@ -33,20 +33,50 @@ Deno.serve(async (req: Request) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Get restaurant info + menu item count
+    // Get restaurant info
     const { data: restaurant, error: rErr } = await supabase
       .from("restaurants")
-      .select("id, name, slug, account_status, address, restaurant_phone")
+      .select("id, name, slug, account_status, address, restaurant_phone, primary_color")
       .eq("id", restaurantId)
       .single();
     if (rErr || !restaurant) {
       return new Response(JSON.stringify({ error: "Restaurant not found" }), { status: 404, headers: corsHeaders });
     }
 
-    const { count: menuCount } = await supabase
+    // Get menu items (up to 12, grouped by category)
+    const { data: menuItems } = await supabase
       .from("menu_items")
-      .select("id", { count: "exact", head: true })
-      .eq("restaurant_id", restaurantId);
+      .select("name, price, category")
+      .eq("restaurant_id", restaurantId)
+      .eq("enabled", true)
+      .order("sort_order", { ascending: true })
+      .limit(50);
+
+    const menuCount = menuItems?.length ?? 0;
+    const brandColor = restaurant.primary_color || "#10B981";
+
+    // Group items by category (max 3 categories, max 4 items each)
+    const catMap = new Map<string, { name: string; price: number }[]>();
+    for (const item of (menuItems ?? [])) {
+      const cat = item.category || "Autres";
+      if (!catMap.has(cat)) catMap.set(cat, []);
+      catMap.get(cat)!.push({ name: item.name, price: item.price });
+    }
+    const categories = [...catMap.entries()].slice(0, 3);
+    const previewHtml = categories.map(([cat, items]) => {
+      const itemsHtml = items.slice(0, 4).map(i =>
+        `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F3F4F6;font-size:13px;">
+          <span style="color:#374151;">${i.name}</span>
+          <span style="color:#111827;font-weight:600;">${Number(i.price).toFixed(2).replace(".", ",")} &euro;</span>
+        </div>`
+      ).join("");
+      const moreCount = items.length > 4 ? items.length - 4 : 0;
+      const moreHtml = moreCount > 0 ? `<p style="font-size:11px;color:#9CA3AF;margin:4px 0 0;">+ ${moreCount} autre${moreCount > 1 ? "s" : ""}</p>` : "";
+      return `<div style="margin-bottom:12px;">
+        <p style="font-size:12px;font-weight:700;color:${brandColor};text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px;">${cat}</p>
+        ${itemsHtml}${moreHtml}
+      </div>`;
+    }).join("");
 
     const storeUrl = `https://app.commandeici.com/${restaurant.slug}`;
     const greeting = ownerName ? `Bonjour ${ownerName},` : "Bonjour,";
@@ -88,10 +118,25 @@ Deno.serve(async (req: Request) => {
 
     <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Ce qu'on a fait pour toi :</h3>
     <ul style="padding-left:20px;font-size:14px;color:#374151;">
-      <li style="margin-bottom:6px;"><strong>${menuCount ?? 0} produits</strong> ajoutés à ta carte</li>
+      <li style="margin-bottom:6px;"><strong>${menuCount} produits</strong> ajoutés à ta carte</li>
       <li style="margin-bottom:6px;"><strong>Horaires</strong> configurés automatiquement</li>
       <li style="margin-bottom:6px;"><strong>Page personnalisée</strong> avec les infos de ton commerce</li>
     </ul>
+
+    ${previewHtml ? `
+    <div style="border:1px solid #E5E7EB;border-radius:12px;overflow:hidden;margin:24px 0;">
+      <div style="background:${brandColor};padding:14px 16px;">
+        <span style="font-size:16px;font-weight:700;color:white;">${restaurant.name}</span>
+        ${restaurant.address ? `<p style="font-size:12px;color:rgba(255,255,255,0.8);margin:4px 0 0;">${restaurant.address}</p>` : ""}
+      </div>
+      <div style="padding:16px;">
+        ${previewHtml}
+      </div>
+      <div style="background:#F9FAFB;padding:8px 16px;text-align:center;border-top:1px solid #E5E7EB;">
+        <span style="font-size:11px;color:#9CA3AF;">Propulsé par <strong>CommandeIci</strong></span>
+      </div>
+    </div>
+    ` : ""}
 
     <h3 style="font-size:15px;margin:28px 0 12px;color:#111827;">Les prochaines étapes :</h3>
     <ul style="padding-left:20px;font-size:14px;color:#374151;">
