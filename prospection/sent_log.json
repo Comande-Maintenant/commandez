@@ -73,11 +73,11 @@
   },
   "ragazza.restaurant@hotmail.com": {
     "sent_at": "2026-03-14T16:14:30.788567+00:00",
-    "resend_id": "2200282a-6738-4a39-9e81-324bd2b57dec",
+    "last_sent_at": "2026-04-02T08:34:44.238793+00:00",
+    "send_count": 2,
+    "resend_id": "3b62abc0-b156-449e-88cb-a3f801b57f0e",
     "name": "RAGAZZA",
-    "city": "Nancy",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:14:30.788567+00:00"
+    "city": "Nancy"
   },
   "rachid.naqiri@gmail.com": {
     "sent_at": "2026-03-14T16:14:32.587653+00:00",
@@ -201,11 +201,11 @@
   },
   "contact@pizza-corleone.fr": {
     "sent_at": "2026-03-14T16:15:00.156847+00:00",
-    "resend_id": "0a5c3b51-d190-4658-8ab5-4e2aabd0c293",
+    "last_sent_at": "2026-04-02T08:34:59.231442+00:00",
+    "send_count": 2,
+    "resend_id": "08dfff2c-eb61-407d-b763-062a70c18501",
     "name": "CORLEONE Valence",
-    "city": "Valence",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:00.156847+00:00"
+    "city": "Valence"
   },
   "contact@bosphorus.fr": {
     "sent_at": "2026-03-14T16:15:02.299055+00:00",
@@ -257,11 +257,11 @@
   },
   "boutique@timebreakpoitiers.fr": {
     "sent_at": "2026-03-14T16:15:13.307347+00:00",
-    "resend_id": "92442b5a-415c-49da-80ba-5556234afba0",
+    "last_sent_at": "2026-04-02T08:34:50.042465+00:00",
+    "send_count": 2,
+    "resend_id": "0b77a851-addd-410b-8100-3bd5b5d01a5c",
     "name": "Time Break | Traiteur - Snacking - Boulangerie - After Work",
-    "city": "Poitiers",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:13.307347+00:00"
+    "city": "Poitiers"
   },
   "contact@circuitdelabiere.fr": {
     "sent_at": "2026-03-14T16:15:15.127904+00:00",
@@ -273,11 +273,11 @@
   },
   "amaga.panino@gmail.com": {
     "sent_at": "2026-03-14T16:15:16.962118+00:00",
-    "resend_id": "dbe5934e-f2d2-48de-8d01-fca68e5db3ec",
+    "last_sent_at": "2026-04-02T08:34:53.787194+00:00",
+    "send_count": 2,
+    "resend_id": "84e7e200-6529-45a6-a544-888ea2aac710",
     "name": "AMAGA",
-    "city": "La Rochelle",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:16.962118+00:00"
+    "city": "La Rochelle"
   },
   "contact@agence-elypse.com": {
     "sent_at": "2026-03-14T16:15:18.769394+00:00",
@@ -297,11 +297,11 @@
   },
   "baoquin.ponouilles@gmail.com": {
     "sent_at": "2026-03-14T16:15:22.367855+00:00",
-    "resend_id": "a8c135b2-afe0-471d-9807-69bbb7ea46b7",
+    "last_sent_at": "2026-04-02T08:34:55.567942+00:00",
+    "send_count": 2,
+    "resend_id": "fcf49223-7665-4cd5-8857-e82124f7fe12",
     "name": "Po-nouilles",
-    "city": "Pau",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:22.367855+00:00"
+    "city": "Pau"
   },
   "fanny.dubouclez@gmail.com": {
     "sent_at": "2026-03-14T16:15:24.195964+00:00",
@@ -313,11 +313,11 @@
   },
   "contact@steaknshake-calais-coquelles.fr": {
     "sent_at": "2026-03-14T16:15:25.998844+00:00",
-    "resend_id": "e83dda9e-66e9-4c75-bccb-b68e55f35c01",
+    "last_sent_at": "2026-04-02T08:34:57.391188+00:00",
+    "send_count": 2,
+    "resend_id": "62aff453-1215-4b6e-92a9-bc04dee81336",
     "name": "Steak 'n Shake",
-    "city": "Calais",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:25.998844+00:00"
+    "city": "Calais"
   },
   "solera.paris@gmail.com": {
     "sent_at": "2026-03-14T16:15:27.859681+00:00",
@@ -393,11 +393,11 @@
   },
   "virgil_54840@hotmail.fr": {
     "sent_at": "2026-03-14T16:15:44.113059+00:00",
-    "resend_id": "7e026104-c33e-46b7-bc5f-0f0c26f9ee6c",
+    "last_sent_at": "2026-04-02T08:34:42.229512+00:00",
+    "send_count": 2,
+    "resend_id": "abddbbf2-5124-4ed7-9a32-3e3e3a7bc441",
     "name": "Gilio's Pizza",
-    "city": "Nancy",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:15:44.113059+00:00"
+    "city": "Nancy"
   },
   "contact@ilristorante.fr": {
     "sent_at": "2026-03-14T16:15:45.906738+00:00",
@@ -513,11 +513,11 @@
   },
   "contact@joyfoods.fr": {
     "sent_at": "2026-03-14T16:16:11.406646+00:00",
-    "resend_id": "89f3246b-b42c-40c1-8e57-a142d8f830ce",
+    "last_sent_at": "2026-04-02T08:35:01.265898+00:00",
+    "send_count": 2,
+    "resend_id": "1ad2b37b-d80c-4949-88a6-7595974861e1",
     "name": "JOYS TACOS - Valence",
-    "city": "Valence",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:11.406646+00:00"
+    "city": "Valence"
   },
   "3brasseurs.saintetienne@gmail.com": {
     "sent_at": "2026-03-14T16:16:13.192293+00:00",
@@ -561,27 +561,27 @@
   },
   "contact@fiplink.com": {
     "sent_at": "2026-03-14T16:16:22.216392+00:00",
-    "resend_id": "4c3ee9e5-abfa-4997-80dc-ab9e37ef94b2",
+    "last_sent_at": "2026-04-02T08:34:46.215987+00:00",
+    "send_count": 2,
+    "resend_id": "5ad3ab27-977a-486b-85f2-99f0698c862a",
     "name": "L'AS PIZZA",
-    "city": "Avignon",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:22.216392+00:00"
+    "city": "Avignon"
   },
   "chez.jade.traiteur@gmail.com": {
     "sent_at": "2026-03-14T16:16:24.036611+00:00",
-    "resend_id": "cf5b850f-0b60-4833-91d1-abb0fe91bcb7",
+    "last_sent_at": "2026-04-02T08:34:48.224832+00:00",
+    "send_count": 2,
+    "resend_id": "e59cd86a-c37a-45c7-8142-2010c83a2cb1",
     "name": "Chez Jade",
-    "city": "Poitiers",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:24.036611+00:00"
+    "city": "Poitiers"
   },
   "unvoyageadamasse@gmail.com": {
     "sent_at": "2026-03-14T16:16:25.887971+00:00",
-    "resend_id": "5a20c70b-d438-4647-872b-f1f3588b2ae8",
+    "last_sent_at": "2026-04-02T08:34:52.017821+00:00",
+    "send_count": 2,
+    "resend_id": "a5c34d64-dde3-4e33-b619-82386a1f95ad",
     "name": "Un Voyage à Damas - Restaurant Syrien - La Rochelle",
-    "city": "La Rochelle",
-    "send_count": 1,
-    "last_sent_at": "2026-03-14T16:16:25.887971+00:00"
+    "city": "La Rochelle"
   },
   "lemarcellino@manger-italien.com": {
     "sent_at": "2026-03-14T16:16:27.700392+00:00",
@@ -1073,41 +1073,41 @@
   },
   "gozleon21@gmail.com": {
     "sent_at": "2026-03-15T17:02:51.445369+00:00",
-    "last_sent_at": "2026-03-15T17:02:51.445369+00:00",
-    "send_count": 1,
-    "resend_id": "50aecd71-a608-485d-9352-29e9ee7c9ffd",
+    "last_sent_at": "2026-04-02T08:35:10.823212+00:00",
+    "send_count": 2,
+    "resend_id": "afefd399-a50e-4868-8573-6c77ba52694b",
     "name": "Ekin Kebab",
     "city": "Dijon"
   },
   "goz.ekin@live.fr": {
     "sent_at": "2026-03-15T17:02:48.952194+00:00",
-    "last_sent_at": "2026-03-15T17:02:48.952194+00:00",
-    "send_count": 1,
-    "resend_id": "64c93645-1350-46ec-8ce3-5877c37d8600",
+    "last_sent_at": "2026-04-02T08:35:08.839472+00:00",
+    "send_count": 2,
+    "resend_id": "9116dce8-a1b5-4187-b667-322a75fce280",
     "name": "Ekin drapeau",
     "city": "Dijon"
   },
   "diran@hotmail.fr": {
     "sent_at": "2026-03-15T17:02:46.672152+00:00",
-    "last_sent_at": "2026-03-15T17:02:46.672152+00:00",
-    "send_count": 1,
-    "resend_id": "3c2f4166-1373-4e4b-b536-786bc8d7173d",
+    "last_sent_at": "2026-04-02T08:35:07.036642+00:00",
+    "send_count": 2,
+    "resend_id": "e206fb84-89a9-4870-ab52-94b0e3a887f8",
     "name": "Kébab de L'Université",
     "city": "Dijon"
   },
   "ba.bicerarsen@gmail.com": {
     "sent_at": "2026-03-15T17:02:43.956129+00:00",
-    "last_sent_at": "2026-03-15T17:02:43.956129+00:00",
-    "send_count": 1,
-    "resend_id": "cc4694ec-67bd-463d-b1bf-aafad3071dee",
+    "last_sent_at": "2026-04-02T08:35:04.845338+00:00",
+    "send_count": 2,
+    "resend_id": "65454c81-acb2-48fa-a971-d9fc147b1f63",
     "name": "Elmas Kebab",
     "city": "Dijon"
   },
   "galipilbin@icloud.com": {
     "sent_at": "2026-03-15T17:02:41.381423+00:00",
-    "last_sent_at": "2026-03-15T17:02:41.381423+00:00",
-    "send_count": 1,
-    "resend_id": "2b834288-e9c9-4a1c-b3a5-9883b8615590",
+    "last_sent_at": "2026-04-02T08:35:03.070712+00:00",
+    "send_count": 2,
+    "resend_id": "e6e4e846-0136-438e-a1f7-52903ccd77dd",
     "name": "Eden Kebab",
     "city": "Dijon"
   },
