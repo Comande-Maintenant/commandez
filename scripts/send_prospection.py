@@ -157,81 +157,77 @@ Vous recevez cet email parce que {name} est reference sur Google.
 
 
 def build_touch1(name: str, city: str, resto_type: str, email: str = "") -> dict:
-    """Touch 1: personal, type-specific accroche + product pitch + demo link."""
+    """Touch 1: short, direct, type-specific hook + demo link."""
     accroche = get_accroche(resto_type)
-    subject = f"{name} - une idee pour vos commandes"
+    subject = f"{name} - vos commandes"
     text = f"""Bonjour,
-
-Je m'appelle Sarah, je travaille chez commandeici.
 
 {accroche}
 
-On a cree un outil simple pour les restos comme {name} : vos clients commandent en ligne sur VOTRE page, vous recevez en cuisine. Pas de commission, pas d'engagement.
+commandeici, c'est simple : vos clients commandent sur votre page, vous recevez en cuisine. Zero commission.
 
-Vous pouvez voir a quoi ca ressemble ici : https://app.commandeici.com/demo
+Voila a quoi ca ressemble : https://app.commandeici.com/demo
 
-19 euros/mois, 4 semaines d'essai gratuit, pas de CB demandee.
+1 euro/mois pendant 3 mois pour tester, puis 29,99 euros/mois. Sans engagement.
 
-Si ca vous parle, repondez juste "oui" a ce mail et je vous aide a configurer votre page.
+Un "oui" en reponse et je vous aide a configurer votre page.
 
-Sarah - CommandeIci"""
+Sarah"""
 
     return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
 
 def build_touch2(name: str, city: str, resto_type: str, email: str = "") -> dict:
-    """Touch 2 (+15 days): chiffres angle."""
+    """Touch 2 (+15 days): ROI angle, short."""
     subject = f"Re: {name} - un calcul rapide"
     text = f"""Bonjour,
 
-Je vous avais ecrit il y a quelques jours. Pas de souci si vous n'avez pas eu le temps de regarder.
+50 commandes/semaine sur une plateforme a 25% de commission = environ 1 000 euros/mois qui partent.
 
-Un truc qui fait reflechir : si vous faites 50 commandes par semaine sur une plateforme, a 25% de commission, ca fait environ 1000 euros par mois qui partent en commissions.
+Sur commandeici : 1 euro/mois les 3 premiers mois, puis 29,99 euros/mois. Zero commission. Le reste est pour vous.
 
-Sur commandeici, c'est 19 euros/mois. Zero commission. Le reste, c'est pour vous.
+Vos clients commandent sur votre page, vous recevez en cuisine. C'est tout.
 
-Concretement : vos clients commandent sur votre page, vous recevez la commande en cuisine. C'est tout.
+Interessant pour {name} ? Repondez a ce mail.
 
-Si ca vous interesse pour {name}, repondez a ce mail, je vous montre en 2 minutes.
-
-Sarah - CommandeIci"""
+Sarah"""
 
     return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
 
 def build_touch3(name: str, city: str, resto_type: str, email: str = "") -> dict:
-    """Touch 3 (+30 days): social proof."""
-    subject = f"{name} - ce que disent les restaurateurs"
+    """Touch 3 (+30 days): social proof, short."""
+    subject = f"{name} - retour de restaurateurs"
     text = f"""Bonjour,
 
-Un retour qu'on a souvent des restaurateurs qui utilisent commandeici :
+Ce qu'on entend souvent :
 
-"Avant, le telephone sonnait 40 fois par service. Maintenant les clients commandent en ligne, on recoit direct en cuisine. On a reduit les erreurs et on gagne du temps."
+"Le telephone sonnait 40 fois par service. Maintenant les clients commandent en ligne, on recoit direct en cuisine."
 
-"J'etais sur Uber Eats, je perdais 25% sur chaque commande. Avec commandeici c'est 19 euros/mois, point. En un mois j'ai economise plus de 800 euros."
+"J'etais sur Uber Eats, je perdais 25% par commande. En un mois j'ai economise plus de 800 euros."
 
-Si vous voulez tester pour {name}, c'est gratuit pendant 4 semaines : https://app.commandeici.com/inscription
+Pour tester avec {name}, c'est 1 euro le premier mois : https://app.commandeici.com/inscription
 
-Sarah - CommandeIci"""
+Sarah"""
 
     return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
 
 def build_touch4(name: str, city: str, resto_type: str, email: str = "") -> dict:
-    """Touch 4 (+45 days): break-up email."""
+    """Touch 4 (+45 days): break-up, very short."""
     subject = f"Dernier message pour {name}"
     text = f"""Bonjour,
 
-C'est mon dernier mail, promis.
+Dernier mail, promis.
 
-Si la commande en ligne n'est pas un sujet pour {name} en ce moment, aucun souci. Je ne vous embeterai plus.
+Si la commande en ligne n'est pas un sujet pour {name}, aucun souci.
 
-Si un jour ca vous interesse : https://app.commandeici.com/inscription
-4 semaines gratuites, 19 euros/mois apres, resiliable en un clic.
+Sinon : https://app.commandeici.com/inscription
+1 euro/mois pendant 3 mois, sans engagement.
 
-Bonne continuation a toute l'equipe.
+Bonne continuation.
 
-Sarah - CommandeIci"""
+Sarah"""
 
     return {"subject": subject, "text": text, "html": text_to_html(text, name, email)}
 
