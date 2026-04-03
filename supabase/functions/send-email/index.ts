@@ -49,12 +49,12 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
     subject: `Votre essai commandeici se termine dans ${data.daysLeft} jours`,
     content: `
       <h2>Bonjour ${data.restaurantName || ""},</h2>
-      <p>Votre essai gratuit se termine dans <strong>${data.daysLeft} jours</strong>.</p>
+      <p>Votre essai se termine dans <strong>${data.daysLeft} jours</strong>.</p>
       <p>Pour continuer a recevoir des commandes directes, activez votre abonnement.</p>
       <div class="highlight-box">
-        <p><strong>19 euros/mois</strong>, sans engagement, arretez quand vous voulez.</p>
+        <p><strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement.</p>
       </div>
-      <p><a href="${APP_URL}/abonnement" class="cta-btn">Activer mon abonnement &rarr;</a></p>
+      <p><a href="${APP_URL}/choisir-plan" class="cta-btn">Activer mon abonnement &rarr;</a></p>
     `,
   }),
 
@@ -62,7 +62,7 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
     subject: "Votre essai commandeici est termine",
     content: `
       <h2>Bonjour ${data.restaurantName || ""},</h2>
-      <p>Votre essai gratuit est termine. Votre page de commande n'est plus accessible par vos clients.</p>
+      <p>Votre essai est termine. Votre page de commande n'est plus accessible par vos clients.</p>
       <p>Activez votre abonnement pour la remettre en ligne immediatement.</p>
       <p><a href="${APP_URL}/abonnement" class="cta-btn">Reactiver ma page &rarr;</a></p>
       <p style="font-size:13px;color:#6b7280;">Toutes vos donnees (menu, commandes, clients) sont conservees.</p>
@@ -86,7 +86,7 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
     subject: "Bienvenue ! Vous avez 8 semaines d'essai",
     content: `
       <h2>Bonjour ${data.refereeName || ""},</h2>
-      <p>Grace au parrainage de <strong>${data.referrerName || "un restaurateur"}</strong>, vous beneficiez de <strong>8 semaines d'essai gratuit</strong> au lieu de 4 !</p>
+      <p>Grace au parrainage de <strong>${data.referrerName || "un restaurateur"}</strong>, vous beneficiez de <strong>8 semaines d'essai</strong> au lieu de 4 !</p>
       <p>Profitez-en pour configurer votre menu et tester toutes les fonctionnalites.</p>
       <p><a href="${APP_URL}/inscription" class="cta-btn">Commencer &rarr;</a></p>
     `,
@@ -96,8 +96,8 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
     subject: "Votre abonnement commandeici est actif !",
     content: `
       <h2>Bonjour ${data.restaurantName || ""},</h2>
-      <p>Votre abonnement commandeici <strong>${data.plan === "annual" ? "annuel" : "mensuel"}</strong> est maintenant actif.</p>
-      <p>Votre essai gratuit de 14 jours a commence. Le premier prelevement aura lieu le <strong>${data.trialEnd || ""}</strong>.</p>
+      <p>Votre abonnement commandeici est maintenant actif.</p>
+      <p>Vous etes a <strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement.</p>
       <div class="highlight-box">
         <p>Ce qui est inclus :<br>
         - Page de commande personnalisee<br>
@@ -106,7 +106,7 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
         - Base de donnees clients</p>
       </div>
       <p><a href="${APP_URL}/admin" class="cta-btn">Acceder a mon dashboard &rarr;</a></p>
-      <p style="font-size:13px;color:#6b7280;">Sans engagement, resiliable a tout moment.</p>
+      <p style="font-size:13px;color:#6b7280;">Sans engagement, annulable a tout moment.</p>
     `,
   }),
 
@@ -116,7 +116,7 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
       <h2>Bonjour ${data.restaurantName || ""},</h2>
       <p>Votre dernier paiement pour commandeici a echoue.</p>
       <p>Mettez a jour vos informations de paiement pour continuer a recevoir des commandes.</p>
-      <p><a href="https://idwzsh-11.myshopify.com/account" class="cta-btn" style="background:#EF4444;">Mettre a jour mon paiement &rarr;</a></p>
+      <p><a href="${APP_URL}/choisir-plan" class="cta-btn" style="background:#EF4444;">Mettre a jour mon paiement &rarr;</a></p>
       <p style="font-size:13px;color:#6b7280;">Si vous avez besoin d'aide, repondez directement a cet email.</p>
     `,
   }),
@@ -154,7 +154,7 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
       <p>Vous vous etes inscrit il y a quelques jours mais votre page de commande n'est pas encore en ligne.</p>
       <p>Ca prend 5 minutes : ajoutez votre menu, personnalisez les couleurs, et partagez le lien a vos clients.</p>
       <div class="highlight-box">
-        <p><strong>Essai gratuit de 4 semaines</strong> : pas de carte bancaire requise. Testez, et decidez apres.</p>
+        <p><strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement.</p>
       </div>
       <p><a href="${APP_URL}/inscription" class="cta-btn">Creer ma page &rarr;</a></p>
     `,
@@ -169,7 +169,7 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
       - Menu en ligne avec photos et personnalisation<br>
       - Dashboard avec suivi des commandes en temps reel<br>
       - Base clients pour fidéliser</p>
-      <p><a href="${APP_URL}/inscription" class="cta-btn">Commencer gratuitement &rarr;</a></p>
+      <p><a href="${APP_URL}/inscription" class="cta-btn">Commencer pour 1 euro &rarr;</a></p>
       <p style="font-size:13px;color:#6b7280;">Si commandeici ne vous convient pas, pas de souci. Vous pouvez vous desinscrire ci-dessous.</p>
     `,
   }),
