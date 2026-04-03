@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer, DbOwner, DbSubscription, DbPromoCode } from "@/types/database";
-const PLAN_PRICES = { monthly: 29.99, annual: 239.88 } as const;
+const PLAN_PRICES = { monthly: 29.99 } as const;
 
 // ── Demo mode RPCs ──
 
@@ -758,24 +758,20 @@ export async function fetchSuperAdminKPIs(): Promise<SuperAdminKPIs> {
   const subs = (subscriptionsRes.data ?? []) as unknown as { status: string; plan: string; created_at: string }[];
   const activeSubs = subs.filter((s) => s.status === "active");
   const trialingCount = subs.filter((s) => s.status === "trialing" || s.status === "trial").length;
-  const monthlySubs = activeSubs.filter((s) => s.plan === "monthly");
-  const annualSubs = activeSubs.filter((s) => s.plan === "annual");
-
   const now = Date.now();
   const threeMonthsMs = 90 * 24 * 60 * 60 * 1000;
   let mrr = 0;
-  for (const s of monthlySubs) {
+  for (const s of activeSubs) {
     const age = now - new Date(s.created_at).getTime();
     mrr += age < threeMonthsMs ? 1 : PLAN_PRICES.monthly;
   }
-  mrr += annualSubs.length * (PLAN_PRICES.annual / 12);
   const arr = mrr * 12;
 
   return {
     realRestaurants,
     activeSubscribers: activeSubs.length,
-    monthlySubscribers: monthlySubs.length,
-    annualSubscribers: annualSubs.length,
+    monthlySubscribers: activeSubs.length,
+    annualSubscribers: 0,
     trialingCount,
     mrr,
     arr,

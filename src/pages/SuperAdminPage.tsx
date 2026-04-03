@@ -80,7 +80,7 @@ const PROMO_TYPE_LABELS: Record<string, string> = {
   free_trial_extension: "Extension essai",
 };
 
-const PLAN_PRICES = { monthly: 29.99, annual: 239.88 };
+const PLAN_PRICES = { monthly: 29.99 };
 
 // ── Helpers ──
 
@@ -555,7 +555,7 @@ const SuperAdminPage = () => {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
                   { label: "Restaurants", value: kpis.realRestaurants, icon: Store },
-                  { label: "Abonnes", value: `${kpis.activeSubscribers} (${kpis.monthlySubscribers}m + ${kpis.annualSubscribers}a)`, sub: kpis.trialingCount > 0 ? `+ ${kpis.trialingCount} en essai` : undefined, icon: Users },
+                  { label: "Abonnes", value: `${kpis.activeSubscribers}`, sub: kpis.trialingCount > 0 ? `+ ${kpis.trialingCount} en essai` : undefined, icon: Users },
                   { label: "MRR", value: `${kpis.mrr.toFixed(0)} EUR`, icon: Euro, accent: true },
                   { label: "ARR", value: `${kpis.arr.toFixed(0)} EUR`, icon: TrendingUp },
                 ].map((kpi) => (
@@ -750,7 +750,7 @@ const SuperAdminPage = () => {
               {[
                 { label: "MRR total", value: kpis ? `${kpis.mrr.toFixed(0)} EUR` : "-", icon: Euro, accent: true },
                 { label: "Mensuel", value: monthlyMRR ? `${(monthlyMRR.couponMRR + monthlyMRR.fullMRR).toFixed(0)} EUR` : "-", sub: monthlyMRR ? `${monthlyMRR.couponCount} a 1EUR + ${monthlyMRR.fullCount} a 29.99EUR` : undefined, icon: CreditCard },
-                { label: "Annuel", value: kpis ? `${(kpis.annualSubscribers * (PLAN_PRICES.annual / 12)).toFixed(0)} EUR/mois` : "-", sub: kpis && kpis.annualSubscribers > 0 ? `${kpis.annualSubscribers} abonnes` : undefined, icon: TrendingUp },
+                { label: "Abonnes", value: kpis ? `${kpis.activeSubscribers}` : "-", sub: kpis && kpis.trialingCount > 0 ? `+ ${kpis.trialingCount} en essai` : undefined, icon: TrendingUp },
                 { label: "Churn", value: funnel ? `${funnel.churned}` : "-", sub: funnel && funnel.paying > 0 ? `${Math.round((funnel.churned / (funnel.paying + funnel.churned)) * 100)}% du total` : undefined, icon: TrendingDown },
               ].map((kpi) => (
                 <Card key={kpi.label} className="rounded-2xl">
@@ -790,7 +790,7 @@ const SuperAdminPage = () => {
                         {activeSubscriptions.map((p) => {
                           const threeMonths = 90 * 86400000;
                           const isCoupon = p.plan === "monthly" && p.subCreatedAt && (Date.now() - new Date(p.subCreatedAt).getTime()) < threeMonths;
-                          const amount = p.plan === "annual" ? "239.88 EUR/an" : isCoupon ? "1 EUR/mois (coupon)" : "29.99 EUR/mois";
+                          const amount = isCoupon ? "1 EUR/mois (coupon)" : "29.99 EUR/mois";
                           return (
                             <tr key={p.id} className="border-b border-border last:border-0">
                               <td className="px-4 py-3 font-medium">{p.restaurantName || p.email}</td>

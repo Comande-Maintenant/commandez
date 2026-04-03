@@ -22,7 +22,7 @@ import { updateRestaurant } from "@/lib/api";
 import { ReferralSection } from "./referral/ReferralSection";
 import type { DbRestaurant, DbSubscription } from "@/types/database";
 import { Link } from "react-router-dom";
-const PLAN_PRICES = { monthly: 29.99, annual: 239.88 } as const;
+const PLAN_PRICES = { monthly: 29.99 } as const;
 import { ScheduleEditor, type ScheduleDay } from "./ScheduleEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -514,8 +514,8 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t('dashboard.settings.plan')}</span>
               <span className="text-sm font-medium text-foreground">
-                {subscription.plan === "annual" ? t('dashboard.settings.annual') : t('dashboard.settings.monthly')}{" "}
-                ({PLAN_PRICES[subscription.plan].toFixed(2)} €/{subscription.plan === "annual" ? t("dashboard.settings.annual_short") : t("dashboard.settings.monthly_short")})
+                {t('dashboard.settings.monthly')}{" "}
+                ({PLAN_PRICES.monthly.toFixed(2)} €/{t("dashboard.settings.monthly_short")})
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -550,9 +550,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{t('dashboard.settings.billing')}</span>
                 <span className="text-sm text-foreground">
-                  {subscription.plan === "annual"
-                    ? t('dashboard.settings.billing_desc_annual', { day: subscription.billing_day === 1 ? t('dashboard.settings.first_ordinal') : String(subscription.billing_day) })
-                    : t('dashboard.settings.billing_desc_monthly', { day: subscription.billing_day === 1 ? t('dashboard.settings.first_ordinal') : String(subscription.billing_day) })}
+                  {t('dashboard.settings.billing_desc_monthly', { day: subscription.billing_day === 1 ? t('dashboard.settings.first_ordinal') : String(subscription.billing_day) })}
                 </span>
               </div>
             )}

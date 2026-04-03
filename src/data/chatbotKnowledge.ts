@@ -110,7 +110,7 @@ export const chatbotKnowledge: ChatbotEntry[] = [
   {
     keywords: ["abonnement", "prix", "tarif", "gratuit", "plan", "offre", "facturation"],
     question: "Combien coûte commandeici ?",
-    answer: "commandeici propose un essai gratuit de 14 jours. Ensuite, 29,99 EUR/mois ou 19,99 EUR/mois en annuel. Aucune commission sur les commandes.",
+    answer: "commandeici, c'est 1 EUR/mois pendant 3 mois, puis 29,99 EUR/mois. Sans engagement, tu arretes quand tu veux. 0% de commission sur les commandes.",
   },
   // Desactivation
   {

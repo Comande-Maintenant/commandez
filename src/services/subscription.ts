@@ -19,14 +19,6 @@ export function getPricingPlans(t: (key: string, params?: Record<string, string 
       price: 29.99,
       features,
     },
-    {
-      id: 'annual',
-      name: t('subscription.annual'),
-      price: 19.99,
-      totalPrice: 239.88,
-      badge: t('subscription.popular'),
-      features,
-    },
   ];
 }
 

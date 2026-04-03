@@ -43,16 +43,16 @@ const AbonnementPage = () => {
         {/* Pricing card */}
         <div className="bg-card border-2 border-primary rounded-2xl p-8 text-center relative">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full">
-            {t("sub.all_included")}
+            {t("sub.launch_offer")}
           </div>
 
           <h3 className="text-xl font-bold text-foreground mb-1">{t("sub.pro_name")}</h3>
           <div className="flex items-baseline justify-center gap-1 mb-1">
-            <span className="text-4xl font-bold text-foreground">29,99&euro;</span>
-            <span className="text-muted-foreground">{t("sub.per_month")}</span>
+            <span className="text-4xl font-bold text-primary">1&euro;</span>
+            <span className="text-muted-foreground">/mois pendant 3 mois</span>
           </div>
           <p className="text-sm text-muted-foreground mb-1">
-            {t("sub.annual_option")}
+            puis 29,99&#8364;/mois
           </p>
           <p className="text-sm text-muted-foreground mb-6">{t("plan.no_commitment_short")}</p>
 
@@ -72,7 +72,7 @@ const AbonnementPage = () => {
           </Button>
 
           <p className="text-xs text-muted-foreground mt-3">
-            {t("sub.trial_info")}
+            {t("sub.stripe_info")}
           </p>
         </div>
 

@@ -6,10 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-const PLAN_PRICES = {
-  monthly: 29.99,
-  annual: 239.88,
-} as const;
 
 interface PromoResult {
   valid: boolean;
@@ -35,7 +31,6 @@ const ChoisirPlanPage = () => {
     t("plan.feature_9"),
   ];
 
-  const [plan, setPlan] = useState<"monthly" | "annual">("monthly");
   const [promoCode, setPromoCode] = useState("");
   const [promoResult, setPromoResult] = useState<PromoResult | null>(null);
   const [promoLoading, setPromoLoading] = useState(false);
@@ -106,7 +101,7 @@ const ChoisirPlanPage = () => {
       // Call Stripe checkout edge function
       const { data, error } = await supabase.functions.invoke("stripe-checkout", {
         body: {
-          plan,
+          plan: "monthly",
           restaurant_id: restaurantId,
           restaurant_slug: restaurantSlug,
           email,
@@ -132,8 +127,6 @@ const ChoisirPlanPage = () => {
     }
   };
 
-  const price = PLAN_PRICES[plan];
-
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -156,75 +149,18 @@ const ChoisirPlanPage = () => {
           {t("plan.no_commitment")}
         </p>
 
-        {/* Launch offer banner */}
-        <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-4 mb-8">
-          <Gift className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-semibold text-green-800">Offre de lancement : 3 mois a 1&#8364;/mois</p>
-            <p className="text-xs text-green-700 mt-0.5">
-              Testez pendant 3 mois pour 1&#8364;/mois, puis choisissez votre formule. Sans engagement.
-            </p>
+        {/* Pricing card */}
+        <div className="relative rounded-2xl border-2 border-primary bg-primary/5 p-8 text-center mb-8">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full">
+            {t("plan.launch_offer")}
           </div>
-        </div>
-
-        {/* Plan cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          {/* Monthly */}
-          <button
-            onClick={() => setPlan("monthly")}
-            className={`relative rounded-xl border-2 p-6 text-left transition-all ${
-              plan === "monthly"
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/30"
-            }`}
-          >
-            <div className="absolute -top-3 left-4 bg-primary text-primary-foreground text-xs font-semibold px-3 py-0.5 rounded-full">
-              POPULAIRE
-            </div>
-            <h3 className="font-semibold text-foreground text-lg">{t("plan.monthly")}</h3>
-            <div className="flex items-baseline gap-1 mt-2">
-              <span className="text-3xl font-bold text-primary">1&#8364;</span>
-              <span className="text-sm text-muted-foreground">/mois pendant 3 mois</span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              puis 29,99&#8364;/mois
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Sans engagement, annulable a tout moment
-            </p>
-            {plan === "monthly" && (
-              <div className="absolute top-3 right-3 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                <Check className="h-4 w-4 text-white" />
-              </div>
-            )}
-          </button>
-
-          {/* Annual */}
-          <button
-            onClick={() => setPlan("annual")}
-            className={`relative rounded-xl border-2 p-6 text-left transition-all ${
-              plan === "annual"
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/30"
-            }`}
-          >
-            <h3 className="font-semibold text-foreground text-lg">{t("plan.annual")}</h3>
-            <div className="flex items-baseline gap-1 mt-2">
-              <span className="text-3xl font-bold text-foreground">239,88&#8364;</span>
-              <span className="text-sm text-muted-foreground">/an</span>
-            </div>
-            <p className="text-xs text-primary font-medium mt-1">
-              = 19,99&#8364;/mois (-33% vs mensuel)
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Sans engagement, annulable a tout moment
-            </p>
-            {plan === "annual" && (
-              <div className="absolute top-3 right-3 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                <Check className="h-4 w-4 text-white" />
-              </div>
-            )}
-          </button>
+          <div className="flex items-baseline justify-center gap-1 mt-2">
+            <span className="text-4xl font-bold text-primary">1&#8364;</span>
+            <span className="text-muted-foreground">/mois pendant 3 mois</span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            puis 29,99&#8364;/mois. Sans engagement.
+          </p>
         </div>
 
         {/* Features */}
@@ -291,33 +227,18 @@ const ChoisirPlanPage = () => {
             {t("plan.summary")}
           </h3>
           <div className="space-y-2 text-sm">
-            {plan === "monthly" ? (
-              <>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Aujourd'hui</span>
-                  <span className="font-semibold text-primary">1,00&#8364;</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Mois 2 et 3</span>
-                  <span className="text-muted-foreground">1,00&#8364;/mois</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">A partir du mois 4</span>
-                  <span className="text-muted-foreground">29,99&#8364;/mois</span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Aujourd'hui</span>
-                  <span className="font-semibold text-foreground">239,88&#8364;</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Renouvellement annuel</span>
-                  <span className="text-muted-foreground">239,88&#8364;/an</span>
-                </div>
-              </>
-            )}
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Aujourd'hui</span>
+              <span className="font-semibold text-primary">1,00&#8364;</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Mois 2 et 3</span>
+              <span className="text-muted-foreground">1,00&#8364;/mois</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">A partir du mois 4</span>
+              <span className="text-muted-foreground">29,99&#8364;/mois</span>
+            </div>
           </div>
         </div>
 
@@ -332,15 +253,13 @@ const ChoisirPlanPage = () => {
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
               {t("plan.redirecting")}
             </>
-          ) : plan === "monthly" ? (
-            "Commencer pour 1\u20AC"
           ) : (
-            "Souscrire pour 239,88\u20AC/an"
+            t("plan.cta_start")
           )}
         </Button>
 
         <p className="text-xs text-center text-muted-foreground mt-3">
-          Paiement securise par Stripe. Annulable a tout moment.
+          {t("plan.secure_stripe")}
         </p>
 
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4">

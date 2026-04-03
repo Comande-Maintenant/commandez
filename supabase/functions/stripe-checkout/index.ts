@@ -6,10 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const PRICE_IDS: Record<string, string> = {
-  monthly: Deno.env.get("STRIPE_PRICE_MONTHLY") || "price_1TFfc91URUOTUP9a1YsBjdJq",
-  annual: Deno.env.get("STRIPE_PRICE_ANNUAL") || "price_1TFfcA1URUOTUP9ae4sv6vMA",
-};
+const PRICE_MONTHLY = Deno.env.get("STRIPE_PRICE_MONTHLY") || "price_1TFfc91URUOTUP9a1YsBjdJq";
 
 const COUPON_3MOIS = Deno.env.get("STRIPE_COUPON_3MOIS") || "kZdytKw3";
 
@@ -37,19 +34,13 @@ Deno.serve(async (req: Request) => {
 
     const { plan, restaurant_id, restaurant_slug, email, promo_code } = await req.json();
 
-    if (!plan || !["monthly", "annual"].includes(plan)) {
-      return new Response(JSON.stringify({ error: "plan must be 'monthly' or 'annual'" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     if (!restaurant_id || !email) {
       return new Response(JSON.stringify({ error: "restaurant_id and email are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const priceId = PRICE_IDS[plan];
+    const priceId = PRICE_MONTHLY;
 
     // ─── Find or create Stripe Customer ───────────────────────────────────
     let customerId: string | null = null;
@@ -90,25 +81,23 @@ Deno.serve(async (req: Request) => {
       metadata: {
         restaurant_id,
         restaurant_slug: restaurant_slug || "",
-        plan,
+        plan: "monthly",
       },
       subscription_data: {
         metadata: {
           restaurant_id,
           restaurant_slug: restaurant_slug || "",
-          plan,
+          plan: "monthly",
         },
       },
       custom_text: {
         submit: {
-          message: plan === "monthly"
-            ? "1 euro/mois pendant 3 mois, puis 29,99 euros/mois. Annulable a tout moment."
-            : "239,88 euros/an (soit 19,99 euros/mois). Annulable a tout moment.",
+          message: "1 euro/mois pendant 3 mois, puis 29,99 euros/mois. Sans engagement.",
         },
       },
     };
 
-    // Apply coupon for monthly plan (3 mois a 1 euro), unless external promo
+    // Apply coupon (3 mois a 1 euro), unless external promo
     if (promo_code) {
       try {
         const promoCodes = await stripe.promotionCodes.list({ code: promo_code, active: true, limit: 1 });
@@ -120,12 +109,9 @@ Deno.serve(async (req: Request) => {
       } catch {
         sessionParams.allow_promotion_codes = true;
       }
-    } else if (plan === "monthly") {
-      // Auto-apply 3 months at 1 euro coupon for monthly
-      sessionParams.discounts = [{ coupon: COUPON_3MOIS }];
     } else {
-      // Annual: allow manual promo codes
-      sessionParams.allow_promotion_codes = true;
+      // Auto-apply 3 months at 1 euro coupon
+      sessionParams.discounts = [{ coupon: COUPON_3MOIS }];
     }
 
     const session = await stripe.checkout.sessions.create(sessionParams);
@@ -135,7 +121,7 @@ Deno.serve(async (req: Request) => {
       restaurant_id,
       stripe_customer_id: customerId,
       stripe_session_id: session.id,
-      plan,
+      plan: "monthly",
       status: "pending_payment",
       updated_at: new Date().toISOString(),
     }, { onConflict: "restaurant_id" });
