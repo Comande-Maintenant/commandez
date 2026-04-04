@@ -7,36 +7,36 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ANALYSIS_PROMPT = `Tu es un expert en extraction de cartes de restaurant. Analyse cette photo et extrais TOUTES les informations visibles.
+const ANALYSIS_PROMPT = `Tu es un expert en extraction de cartes de restaurant. Tu recois TOUTES les photos en meme temps. Analyse-les ENSEMBLE pour produire UN SEUL menu coherent et complet.
 
-La photo peut etre :
-- Une carte/menu classique (papier, tableau, ardoise, ecran)
-- Une photo de frigo ou vitrine avec des produits visibles (boissons, desserts, etc.)
-- Une photo de comptoir, presentoir ou etagere avec des produits et prix
+Les photos peuvent inclure :
+- Des cartes/menus papier avec les noms des plats, prix, categories
+- Des photos de frigo ou vitrine montrant les produits (boissons, desserts)
+- Des photos de sauces, comptoir, presentoir
 
-Pour les photos de frigo/vitrine/presentoir :
-- Identifie chaque produit visible (bouteilles, canettes, gateaux, etc.)
-- Lis les etiquettes de prix si visibles
-- Lis les marques et noms sur les emballages (ex: Coca-Cola 33cl, Orangina 25cl, Perrier, Red Bull, Oasis, etc.)
-- Cree une categorie adaptee (ex: "Boissons", "Boissons fraiches", "Desserts", "Patisseries")
-- Si le format/taille est visible (33cl, 50cl, 1.5L), inclus-le dans le nom
+REGLE CRITIQUE - CROISEMENT INTELLIGENT DES INFORMATIONS :
+- Si la carte indique "Canettes 33cl : 1,50€" et que les photos du frigo montrent des Coca-Cola, Orangina, Fanta, Oasis, 7UP, etc. → cree UN item par marque visible dans le frigo, chacun a 1,50€
+- Si la carte indique un prix pour une categorie de produits (ex: "Bieres 25cl : 2,50€"), applique ce prix a toutes les bieres visibles dans le frigo
+- Les prix de la carte font autorite. Les photos du frigo/vitrine servent a identifier les marques et produits disponibles
+- Ne cree JAMAIS plusieurs categories pour le meme type de produit (pas "Boissons" + "Boissons fraiches" + "Boissons fraiches" → une seule categorie "Boissons")
+- Si une photo montre une liste de sauces, retourne-les comme supplements globaux, pas comme categorie separee
 
-Pour chaque categorie que tu trouves, retourne :
-- name : le nom de la categorie (ex: "Burgers", "Pizzas", "Desserts", "Boissons", "Menus/Formules")
+Pour chaque categorie, retourne :
+- name : le nom de la categorie (ex: "Sandwichs", "Assiettes", "Boissons", "Desserts", "Divers")
 
 Pour chaque article dans chaque categorie, retourne :
-- name : nom exact de l'article (inclure marque + format si visible, ex: "Coca-Cola 33cl")
-- price : prix en euros (nombre decimal). Si plusieurs prix (variantes), prends le prix de base.
-- description : description visible. Si aucune, mets une chaine vide.
-- variants : tableau de variantes/tailles si visible. Ex: [{"name": "Normal", "price": 8.50}, {"name": "Maxi", "price": 11.50}]. Si pas de variantes, tableau vide [].
-- supplements : tableau d'ajouts/extras avec prix. Ex: [{"name": "Fromage", "price": 1.00}, {"name": "Bacon", "price": 1.50}]. Si pas de supplements, tableau vide [].
-- tags : tableau de tags visibles. Valeurs possibles : "homemade", "spicy", "vegetarian", "vegan", "new", "bestseller", "gluten_free". Si aucun tag visible, tableau vide [].
+- name : nom exact (inclure marque + format si c'est une boisson, ex: "Coca-Cola 33cl", "Perrier 50cl")
+- price : prix en euros (nombre decimal). Utilise le prix de la carte si disponible. Si pas de prix visible, mets 0.
+- description : description visible sur la carte. Si aucune, chaine vide.
+- variants : tableau de variantes si visible. Ex: [{"name": "Normal", "price": 8.50}, {"name": "Maxi", "price": 11.50}]. Sinon [].
+- supplements : tableau d'extras avec prix. Sinon [].
+- tags : tableau parmi "homemade", "spicy", "vegetarian", "vegan", "new", "bestseller", "gluten_free". Sinon [].
 
 IMPORTANT :
 - Extrais TOUT ce qui est visible, y compris les formules/menus du jour
-- Les supplements qui apparaissent globalement pour une categorie, ajoute-les a chaque item de cette categorie
-- Si un prix n'est pas visible clairement, mets 0
-- Pour les boissons en frigo, identifie au maximum les marques meme si l'etiquette de prix n'est pas nette
+- UNE SEULE categorie par type (1 seule "Boissons", 1 seule "Sandwichs", etc.)
+- Les sauces listees sur une affiche separee = supplements globaux pour les sandwichs/assiettes, PAS une categorie
+- Deduplique : si un meme produit apparait sur la carte ET dans le frigo, ne le mets qu'une fois
 - Retourne UNIQUEMENT du JSON valide, sans texte avant ou apres
 
 Format de sortie :
@@ -48,14 +48,15 @@ Format de sortie :
         {
           "name": "Nom article",
           "price": 9.50,
-          "description": "Description",
-          "variants": [{"name": "Taille", "price": 9.50}],
-          "supplements": [{"name": "Extra", "price": 1.00}],
-          "tags": ["homemade"]
+          "description": "",
+          "variants": [],
+          "supplements": [],
+          "tags": []
         }
       ]
     }
-  ]
+  ],
+  "global_sauces": ["Ketchup", "Mayonnaise", "Harissa", "Samourai", "Algerienne", "Barbecue"]
 }`;
 
 serve(async (req) => {
@@ -73,67 +74,84 @@ serve(async (req) => {
       });
     }
 
-    const allCategories: any[] = [];
+    // Build content blocks: all images + prompt in ONE message
+    const contentBlocks: any[] = [];
 
     for (const url of imageUrls) {
       const isPdf = url.toLowerCase().endsWith('.pdf');
-      const contentBlock = isPdf
-        ? { type: "document" as const, source: { type: "url" as const, url } }
-        : { type: "image" as const, source: { type: "url" as const, url } };
-
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 4096,
-          messages: [
-            {
-              role: "user",
-              content: [contentBlock, { type: "text", text: ANALYSIS_PROMPT }],
-            },
-          ],
-        }),
-      });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        console.error("Anthropic API error:", errText);
-        continue;
-      }
-
-      const data = await response.json();
-      const text = data.content?.[0]?.text ?? "";
-
-      try {
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          if (parsed.categories) {
-            allCategories.push(...parsed.categories);
-          }
-        }
-      } catch (parseErr) {
-        console.error("JSON parse error:", parseErr);
-      }
+      contentBlocks.push(
+        isPdf
+          ? { type: "document", source: { type: "url", url } }
+          : { type: "image", source: { type: "url", url } }
+      );
     }
 
-    // Merge categories with same name
-    const merged: Record<string, any> = {};
-    for (const cat of allCategories) {
-      if (merged[cat.name]) {
-        merged[cat.name].items.push(...cat.items);
-      } else {
-        merged[cat.name] = { ...cat };
+    // Add the analysis prompt after all images
+    contentBlocks.push({ type: "text", text: ANALYSIS_PROMPT });
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 8192,
+        messages: [
+          {
+            role: "user",
+            content: contentBlocks,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("Anthropic API error:", errText);
+      return new Response(JSON.stringify({ error: "Analysis failed: " + errText }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text ?? "";
+
+    let categories: any[] = [];
+    let globalSauces: string[] = [];
+
+    try {
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        categories = parsed.categories || [];
+        globalSauces = parsed.global_sauces || [];
+      }
+    } catch (parseErr) {
+      console.error("JSON parse error:", parseErr);
+    }
+
+    // If global sauces were extracted, add them as supplements to sandwich/assiette categories
+    if (globalSauces.length > 0) {
+      const sauceSupplements = globalSauces.map((s: string) => ({ name: s, price: 0 }));
+      const sauceCategories = ["sandwichs", "sandwich", "assiettes", "assiette", "kebab", "kebabs", "tacos", "wraps", "burgers"];
+
+      for (const cat of categories) {
+        if (sauceCategories.some(sc => cat.name.toLowerCase().includes(sc))) {
+          for (const item of cat.items) {
+            if (!item.supplements || item.supplements.length === 0) {
+              item.supplements = sauceSupplements;
+            }
+          }
+        }
       }
     }
 
     return new Response(
-      JSON.stringify({ categories: Object.values(merged) }),
+      JSON.stringify({ categories }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
