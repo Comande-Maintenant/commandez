@@ -59,6 +59,25 @@ Format de sortie :
   "global_sauces": ["Ketchup", "Mayonnaise", "Harissa", "Samourai", "Algerienne", "Barbecue"]
 }`;
 
+/**
+ * Download an image from URL and convert to base64.
+ * This avoids Anthropic API issues with downloading from Supabase Storage directly.
+ */
+async function urlToBase64(url: string): Promise<{ base64: string; media_type: string } | null> {
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) return null;
+    const buffer = await resp.arrayBuffer();
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    const contentType = resp.headers.get("content-type") || "image/jpeg";
+    const media_type = contentType.split(";")[0].trim();
+    return { base64, media_type };
+  } catch (err) {
+    console.error("Failed to download image:", url, err);
+    return null;
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -68,7 +87,6 @@ serve(async (req) => {
     const body = await req.json();
     const { images, imageUrls } = body;
 
-    // Support both base64 images (new) and URLs (legacy)
     const hasImages = images && Array.isArray(images) && images.length > 0;
     const hasUrls = imageUrls && Array.isArray(imageUrls) && imageUrls.length > 0;
 
@@ -82,7 +100,7 @@ serve(async (req) => {
     // Build content blocks: all images + prompt in ONE message
     const contentBlocks: any[] = [];
 
-    // Add base64 images
+    // Add base64 images (if sent directly)
     if (hasImages) {
       for (const img of images) {
         contentBlocks.push({
@@ -96,16 +114,28 @@ serve(async (req) => {
       }
     }
 
-    // Add URL images (legacy fallback)
+    // Download URL images and convert to base64 (avoids Anthropic download issues)
     if (hasUrls) {
       for (const url of imageUrls) {
-        const isPdf = url.toLowerCase().endsWith('.pdf');
-        contentBlocks.push(
-          isPdf
-            ? { type: "document", source: { type: "url", url } }
-            : { type: "image", source: { type: "url", url } }
-        );
+        const img = await urlToBase64(url);
+        if (img) {
+          contentBlocks.push({
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: img.media_type,
+              data: img.base64,
+            },
+          });
+        }
       }
+    }
+
+    if (contentBlocks.length === 0) {
+      return new Response(JSON.stringify({ error: "No images could be processed" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Add the analysis prompt after all images
@@ -133,7 +163,7 @@ serve(async (req) => {
     if (!response.ok) {
       const errText = await response.text();
       console.error("Anthropic API error:", errText);
-      return new Response(JSON.stringify({ error: "Analysis failed: " + errText }), {
+      return new Response(JSON.stringify({ error: "Analysis failed" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
