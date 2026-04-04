@@ -22,6 +22,9 @@ const PASSTHROUGH_TYPES = [
 
 const HEIC_TYPES = ['image/heic', 'image/heif'];
 
+// Minimum reasonable size for a valid image (10KB)
+const MIN_VALID_SIZE = 10 * 1024;
+
 function isVideo(file: File): boolean {
   return file.type.startsWith('video/') || /\.(mov|mp4|avi|webm|mkv)$/i.test(file.name);
 }
@@ -42,11 +45,50 @@ function isImage(file: File): boolean {
 }
 
 /**
- * Convert HEIC/HEIF to JPEG. First tries native browser support via canvas,
- * falls back to heic2any library.
+ * Resize an image blob if it's too large (> 4MB) to avoid Anthropic API limits.
+ * Returns a smaller JPEG.
+ */
+async function resizeIfNeeded(blob: Blob, maxBytes = 4 * 1024 * 1024): Promise<Blob> {
+  if (blob.size <= maxBytes) return blob;
+
+  const bitmap = await createImageBitmap(blob);
+  const scale = Math.sqrt(maxBytes / blob.size) * 0.9; // 10% margin
+  const w = Math.round(bitmap.width * scale);
+  const h = Math.round(bitmap.height * scale);
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d')!;
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  bitmap.close();
+
+  return new Promise<Blob>((resolve) =>
+    canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.85)
+  );
+}
+
+/**
+ * Convert HEIC/HEIF to JPEG.
+ * Uses heic2any first (most reliable), then falls back to native canvas.
  */
 async function convertHeic(file: File): Promise<File> {
-  // Try native browser support (Safari, Chrome 124+)
+  const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+
+  // Try heic2any library first (most reliable cross-browser)
+  try {
+    const heic2any = await getHeic2any();
+    const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+    const result = Array.isArray(blob) ? blob[0] : blob;
+    if (result.size > MIN_VALID_SIZE) {
+      const resized = await resizeIfNeeded(result);
+      return new File([resized], newName, { type: 'image/jpeg' });
+    }
+  } catch (err) {
+    console.warn('[file-converter] heic2any failed, trying native:', err);
+  }
+
+  // Fallback: native browser support (Safari, Chrome 124+)
   try {
     const bitmap = await createImageBitmap(file);
     const canvas = document.createElement('canvas');
@@ -56,21 +98,17 @@ async function convertHeic(file: File): Promise<File> {
     ctx.drawImage(bitmap, 0, 0);
     bitmap.close();
     const blob = await new Promise<Blob>((resolve) =>
-      canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.92)
+      canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.85)
     );
-    return new File([blob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), {
-      type: 'image/jpeg',
-    });
-  } catch {
-    // Fallback to heic2any library
+    if (blob.size > MIN_VALID_SIZE) {
+      const resized = await resizeIfNeeded(blob);
+      return new File([resized], newName, { type: 'image/jpeg' });
+    }
+  } catch (err) {
+    console.warn('[file-converter] Native HEIC conversion failed:', err);
   }
 
-  const heic2any = await getHeic2any();
-  const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
-  const result = Array.isArray(blob) ? blob[0] : blob;
-  return new File([result], file.name.replace(/\.(heic|heif)$/i, '.jpg'), {
-    type: 'image/jpeg',
-  });
+  throw new Error(`Impossible de convertir ${file.name}. Essayez de prendre la photo directement depuis le navigateur.`);
 }
 
 /**
@@ -110,14 +148,14 @@ async function extractVideoFrame(file: File): Promise<File> {
           (blob) => {
             cleanup();
             if (!blob) {
-              reject(new Error('Extraction de frame échouée'));
+              reject(new Error('Extraction de frame echouee'));
               return;
             }
             const ext = file.name.replace(/\.[^.]+$/, '.jpg');
             resolve(new File([blob], ext, { type: 'image/jpeg' }));
           },
           'image/jpeg',
-          0.92
+          0.85
         );
       } catch (err) {
         cleanup();
@@ -150,7 +188,7 @@ async function convertSvg(file: File): Promise<File> {
         canvas.toBlob(
           (blob) => {
             if (!blob) {
-              reject(new Error('Conversion SVG échouée'));
+              reject(new Error('Conversion SVG echouee'));
               return;
             }
             resolve(
@@ -187,10 +225,24 @@ async function convertGenericImage(file: File): Promise<File> {
   ctx.drawImage(bitmap, 0, 0);
   bitmap.close();
   const blob = await new Promise<Blob>((resolve) =>
-    canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.92)
+    canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.85)
   );
+  const resized = await resizeIfNeeded(blob);
   const newName = file.name.replace(/\.[^.]+$/, '.jpg');
-  return new File([blob], newName, { type: 'image/jpeg' });
+  return new File([resized], newName, { type: 'image/jpeg' });
+}
+
+/**
+ * Validate that an image file is actually usable (not a corrupt/empty conversion).
+ */
+function validateConvertedFile(original: File, converted: File): File {
+  if (converted.size < MIN_VALID_SIZE && original.size > MIN_VALID_SIZE) {
+    throw new Error(
+      `La conversion de ${original.name} a produit un fichier trop petit (${(converted.size / 1024).toFixed(0)} Ko). ` +
+      `Essayez de convertir la photo en JPEG avant de l'importer.`
+    );
+  }
+  return converted;
 }
 
 /**
@@ -198,14 +250,19 @@ async function convertGenericImage(file: File): Promise<File> {
  * Returns the original file if already compatible.
  */
 export async function convertFileForAnalysis(file: File): Promise<File> {
-  // Already compatible - pass through
-  if (PASSTHROUGH_TYPES.includes(file.type)) {
-    return file;
+  // HEIC/HEIF - always convert (even if browser says image/jpeg for .heic files)
+  if (isHeic(file)) {
+    const converted = await convertHeic(file);
+    return validateConvertedFile(file, converted);
   }
 
-  // HEIC/HEIF
-  if (isHeic(file)) {
-    return convertHeic(file);
+  // Already compatible - pass through (but resize if too big)
+  if (PASSTHROUGH_TYPES.includes(file.type)) {
+    if (file.type.startsWith('image/') && file.size > 4 * 1024 * 1024) {
+      const resized = await resizeIfNeeded(file);
+      return new File([resized], file.name, { type: 'image/jpeg' });
+    }
+    return file;
   }
 
   // Video (MOV, MP4, etc.) - extract a frame
@@ -220,12 +277,14 @@ export async function convertFileForAnalysis(file: File): Promise<File> {
 
   // Any other image format (BMP, TIFF, etc.)
   if (isImage(file)) {
-    return convertGenericImage(file);
+    const converted = await convertGenericImage(file);
+    return validateConvertedFile(file, converted);
   }
 
   // Unknown format - try generic image conversion as last resort
   try {
-    return await convertGenericImage(file);
+    const converted = await convertGenericImage(file);
+    return validateConvertedFile(file, converted);
   } catch {
     // Return as-is, let the upload/analysis handle the error
     return file;
@@ -251,7 +310,7 @@ export async function convertFilesForAnalysis(
     if (result.status === 'fulfilled') {
       converted.push(result.value);
     } else {
-      errors.push(`${files[i].name}: ${result.reason?.message || 'Conversion échouée'}`);
+      errors.push(`${files[i].name}: ${result.reason?.message || 'Conversion echouee'}`);
     }
   }
 
