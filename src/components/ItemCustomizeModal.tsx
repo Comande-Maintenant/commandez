@@ -87,7 +87,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
         >
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
           <motion.div
-            className="relative w-full max-w-md max-h-[85vh] bg-white rounded-t-3xl sm:rounded-3xl overflow-y-auto"
+            className="relative w-full max-w-md max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl overflow-y-auto"
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
@@ -225,7 +225,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
               </div>
             </div>
 
-            <div className="sticky bottom-0 p-4 bg-white border-t border-gray-100">
+            <div className="sticky bottom-0 p-4 pb-6 bg-white border-t border-gray-100">
               <button
                 onClick={handleAdd}
                 disabled={!canAdd}
