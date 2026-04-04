@@ -65,10 +65,15 @@ serve(async (req) => {
   }
 
   try {
-    const { imageUrls } = await req.json();
+    const body = await req.json();
+    const { images, imageUrls } = body;
 
-    if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
-      return new Response(JSON.stringify({ error: "imageUrls array required" }), {
+    // Support both base64 images (new) and URLs (legacy)
+    const hasImages = images && Array.isArray(images) && images.length > 0;
+    const hasUrls = imageUrls && Array.isArray(imageUrls) && imageUrls.length > 0;
+
+    if (!hasImages && !hasUrls) {
+      return new Response(JSON.stringify({ error: "images or imageUrls array required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -77,13 +82,30 @@ serve(async (req) => {
     // Build content blocks: all images + prompt in ONE message
     const contentBlocks: any[] = [];
 
-    for (const url of imageUrls) {
-      const isPdf = url.toLowerCase().endsWith('.pdf');
-      contentBlocks.push(
-        isPdf
-          ? { type: "document", source: { type: "url", url } }
-          : { type: "image", source: { type: "url", url } }
-      );
+    // Add base64 images
+    if (hasImages) {
+      for (const img of images) {
+        contentBlocks.push({
+          type: "image",
+          source: {
+            type: "base64",
+            media_type: img.media_type || "image/jpeg",
+            data: img.base64,
+          },
+        });
+      }
+    }
+
+    // Add URL images (legacy fallback)
+    if (hasUrls) {
+      for (const url of imageUrls) {
+        const isPdf = url.toLowerCase().endsWith('.pdf');
+        contentBlocks.push(
+          isPdf
+            ? { type: "document", source: { type: "url", url } }
+            : { type: "image", source: { type: "url", url } }
+        );
+      }
     }
 
     // Add the analysis prompt after all images
