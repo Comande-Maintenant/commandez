@@ -124,7 +124,7 @@ function resolveStepOptions(
 }
 
 // Product types that use the configurable flow (viande -> garniture -> sauce -> frites)
-const CONFIGURABLE_PRODUCT_TYPES = ["sandwich", "galette", "tacos", "assiette", "hamburger"];
+const CONFIGURABLE_PRODUCT_TYPES = ["sandwich", "sandwich_personnalisable", "sandwich_simple", "galette", "tacos", "assiette", "hamburger"];
 
 // Which product types have a size/taille step (using restaurant_bases)
 const PRODUCT_TYPE_BASE_GROUP: Record<string, { group: string; label: string }> = {
