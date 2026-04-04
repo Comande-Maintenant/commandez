@@ -16,6 +16,7 @@ import { PrepSummaryBoard } from "./PrepSummaryBoard";
 import { CustomerBadge } from "./CustomerBadge";
 import { CustomerMiniProfile } from "./CustomerMiniProfile";
 import { toast } from "sonner";
+import { getBaseIngredients } from "@/lib/baseIngredients";
 
 type OrderStatus = "new" | "preparing" | "ready" | "done";
 
@@ -806,6 +807,57 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
             <SheetTitle>{t("dashboard.orders.stock_management")}</SheetTitle>
           </SheetHeader>
           <div className="mt-4 space-y-5">
+            {/* Section: Base ingredients (pain, poulet, viande, etc.) */}
+            {(() => {
+              const baseIngredients = getBaseIngredients(restaurant.cuisine_type);
+              if (baseIngredients.length === 0) return null;
+              return (
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                    Ingredients de base
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    En rupture = les plats concernes deviennent indisponibles
+                  </p>
+                  <div className="space-y-1.5">
+                    {baseIngredients.map((bi: any) => {
+                      const isOut = outOfStockIngredients.includes(bi.name);
+                      return (
+                        <div key={bi.name} className={`flex items-center justify-between p-2.5 rounded-xl ${isOut ? "bg-red-50" : "bg-secondary/50"}`}>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-lg shrink-0">{bi.icon}</span>
+                            <div className="min-w-0">
+                              <span className={`text-sm font-medium block ${isOut ? "text-red-700 line-through" : "text-foreground"}`}>{bi.name}</span>
+                              <span className="text-xs text-muted-foreground">{bi.affectsLabel}</span>
+                            </div>
+                          </div>
+                          <Switch
+                            checked={!isOut}
+                            onCheckedChange={async (available) => {
+                              const updated = available
+                                ? outOfStockIngredients.filter((i: string) => i !== bi.name)
+                                : [...outOfStockIngredients, bi.name];
+                              setOutOfStockIngredients(updated);
+                              if (isDemo) {
+                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", bi.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", bi.name));
+                                return;
+                              }
+                              try {
+                                await updateRestaurant(restaurant.id, { out_of_stock_ingredients: updated } as any);
+                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", bi.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", bi.name));
+                              } catch {
+                                toast.error(t("common.error"));
+                              }
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Section: Ingredients (sauces, supplements) */}
             {(() => {
               const ingredientSet = new Set<string>();

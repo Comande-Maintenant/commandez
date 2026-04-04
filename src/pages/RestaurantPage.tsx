@@ -7,6 +7,7 @@ import { checkRestaurantAvailability, canPlaceOrder } from "@/lib/schedule";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
 import type { UniversalCustomizationData } from "@/types/customization";
 import { MenuItemCard } from "@/components/MenuItemCard";
+import { isItemUnavailable, getItemRuptureReason } from "@/lib/baseIngredients";
 import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
 import { CartSheet } from "@/components/CartSheet";
 import { useCart } from "@/context/CartContext";
@@ -1069,6 +1070,8 @@ const RestaurantPage = () => {
                             menuItems={menuItems}
                             outOfStockIngredients={restaurant.out_of_stock_ingredients ?? []}
                             showPhotos={(restaurant as any).show_menu_photos !== false}
+                            isUnavailable={isItemUnavailable(item, restaurant.out_of_stock_ingredients ?? [], restaurant.cuisine_type)}
+                            unavailableReason={getItemRuptureReason(item, restaurant.out_of_stock_ingredients ?? [], restaurant.cuisine_type) ?? undefined}
                           />
                         ))}
                       </motion.div>

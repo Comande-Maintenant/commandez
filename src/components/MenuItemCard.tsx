@@ -21,11 +21,13 @@ interface Props {
   menuItems?: DbMenuItem[];
   outOfStockIngredients?: string[];
   showPhotos?: boolean;
+  isUnavailable?: boolean;
+  unavailableReason?: string;
 }
 
 const CUSTOMIZABLE_TYPES = ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement", "sandwich", "galette", "tacos", "assiette", "hamburger"];
 
-export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems, outOfStockIngredients, showPhotos = true }: Props) => {
+export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems, outOfStockIngredients, showPhotos = true, isUnavailable = false, unavailableReason }: Props) => {
   const [open, setOpen] = useState(false);
   const { t, tMenu } = useLanguage();
   const translated = tMenu(item);
@@ -53,8 +55,8 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         transition={{ duration: 0.3, delay: index * 0.05 }}
       >
         <motion.button
-          onClick={() => setOpen(true)}
-          className="w-full text-left flex gap-3 p-3 rounded-2xl transition-all group active:scale-[0.98]"
+          onClick={() => !isUnavailable && setOpen(true)}
+          className={`w-full text-left flex gap-3 p-3 rounded-2xl transition-all group ${isUnavailable ? "opacity-50 cursor-not-allowed" : "active:scale-[0.98]"}`}
           style={{
             background: "rgba(255,255,255,0.55)",
             backdropFilter: "blur(12px)",
@@ -66,8 +68,13 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         >
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-medium text-gray-900 text-[15px] leading-snug">{translated.name}</h4>
-              {item.popular && (
+              <h4 className={`font-medium text-[15px] leading-snug ${isUnavailable ? "text-gray-400" : "text-gray-900"}`}>{translated.name}</h4>
+              {isUnavailable && (
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-red-600 bg-red-50 px-1.5 py-0.5 rounded-full">
+                  Indisponible
+                </span>
+              )}
+              {!isUnavailable && item.popular && (
                 <span
                   className="text-[10px] font-semibold uppercase tracking-wider text-white px-1.5 py-0.5 rounded-full"
                   style={{ backgroundColor: primaryColor || "#10B981" }}
