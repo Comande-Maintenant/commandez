@@ -29,6 +29,7 @@
   "cart.increase": "Augmenter quantite",
   "order.your_name": "Votre nom",
   "order.phone": "Téléphone",
+  "order.invalid_phone": "Numero de telephone invalide (ex: 06 12 34 56 78)",
   "order.payment_onsite": "Paiement sur place",
   "order.estimated_time": "Temps estime : ~{minutes} min",
   "order.validate": "Valider ma commande",

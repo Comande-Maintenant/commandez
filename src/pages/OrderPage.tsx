@@ -28,6 +28,7 @@ const OrderPage = () => {
   const [isProspect, setIsProspect] = useState(false);
   const [estimatedMinutes, setEstimatedMinutes] = useState(15);
   const [banned, setBanned] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
   const [isDemo, setIsDemo] = useState(() => {
     // Detect demo immediately from cart slug to avoid race condition
     try {
@@ -114,8 +115,39 @@ const OrderPage = () => {
 
   const total = subtotal;
 
+  // Validate phone: accept French formats (06, 07, +33, 0033) and international
+  const isPhoneValid = (p: string): boolean => {
+    const cleaned = p.replace(/[\s.\-()]/g, "");
+    // French mobile: 06/07 + 8 digits
+    if (/^0[67]\d{8}$/.test(cleaned)) return true;
+    // French landline: 01-05, 09 + 8 digits
+    if (/^0[1-59]\d{8}$/.test(cleaned)) return true;
+    // +33 format
+    if (/^\+33[1-9]\d{8}$/.test(cleaned)) return true;
+    // 0033 format
+    if (/^0033[1-9]\d{8}$/.test(cleaned)) return true;
+    // International: + followed by 8-15 digits
+    if (/^\+\d{8,15}$/.test(cleaned)) return true;
+    return false;
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setPhone(value);
+    if (phoneError && value.length > 0) {
+      const cleaned = value.replace(/[\s.\-()]/g, "");
+      if (cleaned.length >= 10 && isPhoneValid(value)) {
+        setPhoneError("");
+      }
+    }
+  };
+
   const handleConfirm = async () => {
     if (!restaurantId || submitting) return;
+    // Validate phone before submitting
+    if (!isKiosk && phone && !isPhoneValid(phone)) {
+      setPhoneError(t("order.invalid_phone"));
+      return;
+    }
     setSubmitting(true);
     try {
       // Check subscription (skip for demo restaurants)
@@ -303,7 +335,10 @@ const OrderPage = () => {
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.your_info")}</h2>
               <div className="space-y-3">
                 <Input placeholder={t("order.your_name")} value={name} onChange={(e) => setName(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
-                <Input placeholder={t("order.phone")} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+                <div>
+                  <Input placeholder={t("order.phone")} type="tel" value={phone} onChange={(e) => handlePhoneChange(e.target.value)} className={`h-14 rounded-2xl bg-secondary border-0 text-base ${phoneError ? "ring-2 ring-red-400" : ""}`} />
+                  {phoneError && <p className="text-xs text-red-500 mt-1 ml-1">{phoneError}</p>}
+                </div>
                 <Input placeholder={t("order.email_optional")} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
               </div>
             </>
@@ -407,7 +442,7 @@ const OrderPage = () => {
 
           <Button
             onClick={handleConfirm}
-            disabled={(!isKiosk && (!name || !phone)) || submitting}
+            disabled={(!isKiosk && (!name || !phone || !isPhoneValid(phone))) || submitting}
             className="w-full h-14 text-base font-semibold rounded-2xl"
             size="lg"
           >
