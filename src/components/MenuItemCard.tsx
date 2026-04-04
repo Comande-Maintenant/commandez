@@ -23,12 +23,19 @@ interface Props {
   showPhotos?: boolean;
   isUnavailable?: boolean;
   unavailableReason?: string;
+  onModalChange?: (isOpen: boolean) => void;
 }
 
 const CUSTOMIZABLE_TYPES = ["sandwich_personnalisable", "sandwich_simple", "menu", "accompagnement", "sandwich", "galette", "tacos", "assiette", "hamburger"];
 
-export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems, outOfStockIngredients, showPhotos = true, isUnavailable = false, unavailableReason }: Props) => {
+export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, primaryColor, primaryLight, customizationConfig, customizationData, menuItems, outOfStockIngredients, showPhotos = true, isUnavailable = false, unavailableReason, onModalChange }: Props) => {
   const [open, setOpen] = useState(false);
+
+  // Notify parent when modal opens/closes
+  const setOpenAndNotify = (val: boolean) => {
+    setOpen(val);
+    onModalChange?.(val);
+  };
   const { t, tMenu } = useLanguage();
   const translated = tMenu(item);
 
@@ -55,7 +62,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         transition={{ duration: 0.3, delay: index * 0.05 }}
       >
         <motion.button
-          onClick={() => !isUnavailable && setOpen(true)}
+          onClick={() => !isUnavailable && setOpenAndNotify(true)}
           className={`w-full text-left flex gap-3 p-3 rounded-2xl transition-all group ${isUnavailable ? "opacity-50 cursor-not-allowed" : "active:scale-[0.98]"}`}
           style={{
             background: "rgba(255,255,255,0.55)",
@@ -124,7 +131,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         <ProductCustomizer
           item={item}
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => setOpenAndNotify(false)}
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
           customizationData={customizationData}
@@ -135,7 +142,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         <SavoryItemDrawer
           item={item}
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => setOpenAndNotify(false)}
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
           customizationConfig={customizationConfig}
@@ -147,7 +154,7 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
         <ItemCustomizeModal
           item={item}
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => setOpenAndNotify(false)}
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
           primaryColor={primaryColor}

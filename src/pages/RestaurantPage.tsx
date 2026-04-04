@@ -206,6 +206,7 @@ const RestaurantPage = () => {
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [customizationData, setCustomizationData] = useState<UniversalCustomizationData | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
+  const [itemModalOpen, setItemModalOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const navScrollRef = useRef<HTMLDivElement>(null);
@@ -1072,6 +1073,7 @@ const RestaurantPage = () => {
                             showPhotos={(restaurant as any).show_menu_photos !== false}
                             isUnavailable={isItemUnavailable(item, restaurant.out_of_stock_ingredients ?? [], restaurant.cuisine_type)}
                             unavailableReason={getItemRuptureReason(item, restaurant.out_of_stock_ingredients ?? [], restaurant.cuisine_type) ?? undefined}
+                            onModalChange={setItemModalOpen}
                           />
                         ))}
                       </motion.div>
@@ -1172,7 +1174,7 @@ const RestaurantPage = () => {
 
       {/* Floating cart bar */}
       <AnimatePresence>
-        {totalItems > 0 && orderCheck.canOrder && (
+        {totalItems > 0 && orderCheck.canOrder && !itemModalOpen && (
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
