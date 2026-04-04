@@ -209,34 +209,92 @@ serve(async (req) => {
       }
     }
 
-    // ── Cross-reference: apply prices from carte to fridge items ──
-    // Find drink items WITH a price (from carte)
-    if (merged["boissons"]) {
-      const items = merged["boissons"].items;
-      // Find the most common non-zero price for canettes (likely from the carte)
-      const canettePrices = items
-        .filter((i: any) => i.price > 0 && i.name.toLowerCase().includes("33cl"))
-        .map((i: any) => i.price);
+    // ── STEP 2: Cross-reference pass with Claude ──
+    // Send the merged raw data back to Claude for intelligent cross-referencing
+    const mergedCategories = Object.values(merged);
 
-      if (canettePrices.length > 0) {
-        // Most common canette price
-        const defaultCanettePrice = canettePrices.sort(
-          (a: number, b: number) =>
-            canettePrices.filter((v: number) => v === b).length -
-            canettePrices.filter((v: number) => v === a).length
-        )[0];
+    const CROSSREF_PROMPT = `Tu recois le resultat brut d'un scan de carte de restaurant, fait image par image. Certaines images etaient la carte papier (avec les prix), d'autres des photos de frigo (avec les marques visibles), et d'autres des affiches de sauces.
 
-        // Apply to items with price 0 that look like canettes
-        for (const item of items) {
-          if (item.price === 0 && /33cl|canette/i.test(item.name)) {
-            item.price = defaultCanettePrice;
+Ton travail : CROISER les informations pour produire un menu final COMPLET et COHERENT.
+
+REGLES DE CROISEMENT :
+1. PRIX : Si la carte indique un prix pour un type de produit (ex: "Canettes 33cl : 1,50€"), applique ce prix a TOUTES les canettes 33cl, meme celles vues dans le frigo sans prix. Le Red Bull, bieres, bouteilles ont souvent un prix different indique sur la carte.
+2. VARIANTES : Si la carte indique des tailles/formats (ex: barquette petite/moyenne/grande, ou sandwich normal/maxi), cree des VARIANTS pour chaque item concerne avec les bons prix.
+3. DOUBLONS : Si un meme produit apparait plusieurs fois (ex: "Coca-Cola" de la carte et "Coca-Cola 33cl" du frigo), garde une seule entree avec le bon prix.
+4. SAUCES : Si des sauces ont ete detectees, ajoute-les comme supplements (prix 0) aux sandwichs et assiettes.
+5. ITEMS A PRIX 0 : Essaie de deduire le prix correct a partir des autres infos. Si un groupe de produits similaires a un prix commun sur la carte, applique-le.
+6. NE SUPPRIME RIEN : Garde tous les items, meme si tu n'arrives pas a trouver un prix (laisse 0).
+
+Voici les donnees brutes :
+${JSON.stringify({ categories: mergedCategories, sauces }, null, 2)}
+
+Retourne le menu final corrige. UNIQUEMENT du JSON valide :
+{
+  "categories": [
+    {
+      "name": "Nom categorie",
+      "items": [
+        {
+          "name": "Nom article",
+          "price": 9.50,
+          "description": "",
+          "variants": [{"name": "Taille", "price": 9.50}],
+          "supplements": [{"name": "Sauce", "price": 0}],
+          "tags": []
+        }
+      ]
+    }
+  ]
+}`;
+
+    console.log(`Step 2: Cross-referencing ${mergedCategories.length} categories...`);
+
+    const crossRefResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 8192,
+        messages: [
+          {
+            role: "user",
+            content: CROSSREF_PROMPT,
+          },
+        ],
+      }),
+    });
+
+    if (crossRefResponse.ok) {
+      const crossRefData = await crossRefResponse.json();
+      const crossRefText = crossRefData.content?.[0]?.text ?? "";
+
+      try {
+        const jsonMatch = crossRefText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const finalMenu = JSON.parse(jsonMatch[0]);
+          if (finalMenu.categories && finalMenu.categories.length > 0) {
+            console.log(`Cross-reference done: ${finalMenu.categories.length} categories`);
+            return new Response(
+              JSON.stringify({ categories: finalMenu.categories }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
           }
         }
+      } catch (parseErr) {
+        console.error("Cross-reference JSON parse error:", parseErr);
       }
+    } else {
+      console.error("Cross-reference API error:", await crossRefResponse.text());
     }
 
+    // Fallback: return the basic merged data if cross-reference fails
+    console.log("Falling back to basic merge");
     return new Response(
-      JSON.stringify({ categories: Object.values(merged) }),
+      JSON.stringify({ categories: mergedCategories }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
