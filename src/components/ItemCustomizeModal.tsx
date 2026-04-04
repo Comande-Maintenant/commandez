@@ -87,20 +87,20 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
         >
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
           <motion.div
-            className="relative w-full max-w-md max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl overflow-y-auto"
+            className="relative w-full max-w-md max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl flex flex-col"
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
-            <div className="sticky top-0 bg-white/90 backdrop-blur-xl z-10 p-4 flex items-center justify-between border-b border-gray-100">
+            <div className="bg-white/90 backdrop-blur-xl z-10 p-4 flex items-center justify-between border-b border-gray-100 rounded-t-3xl shrink-0">
               <h3 className="text-lg font-semibold text-gray-900">{translated.name}</h3>
               <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label={t("custom.close")}>
                 <X className="h-5 w-5 text-gray-400" />
               </button>
             </div>
 
-            <div className="p-4 space-y-6">
+            <div className="p-4 space-y-6 overflow-y-auto flex-1">
               {item.image && (
                 <div className="w-full h-48 rounded-2xl overflow-hidden">
                   <img src={item.image} alt={translated.name} className="w-full h-full object-cover" loading="lazy" />
@@ -225,7 +225,7 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
               </div>
             </div>
 
-            <div className="sticky bottom-0 p-4 pb-6 bg-white border-t border-gray-100">
+            <div className="p-4 pb-6 bg-white border-t border-gray-100 shrink-0">
               <button
                 onClick={handleAdd}
                 disabled={!canAdd}
