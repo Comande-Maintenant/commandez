@@ -134,7 +134,7 @@ const PRODUCT_TYPE_BASE_GROUP: Record<string, { group: string; label: string }> 
 };
 
 // Which product types offer the frites option
-const HAS_FRITES_OPTION = ["sandwich", "galette", "tacos", "hamburger"];
+const HAS_FRITES_OPTION = ["sandwich", "sandwich_personnalisable", "sandwich_simple", "galette", "tacos", "hamburger"];
 
 // Build filtered steps based on product_type
 function buildStepsFromTemplates(
@@ -149,7 +149,9 @@ function buildStepsFromTemplates(
     steps = steps.filter((s) =>
       s.step_key === "accompagnement" || s.step_key === "sauce" || s.step_key === "recap"
     );
-  } else if (productType === "sandwich_simple") {
+  } else if (productType === "sandwich_simple" || productType === "sandwich_personnalisable") {
+    // Skip base and viande steps - the product itself is the choice
+    // Keep: garniture, sauce, frites, supplement, recap
     steps = steps.filter((s) =>
       s.step_key !== "base" && s.step_key !== "viande"
     );
