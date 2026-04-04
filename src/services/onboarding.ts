@@ -98,6 +98,21 @@ export async function generateSlug(name: string): Promise<string> {
   return `${base}-${i}`;
 }
 
+// Determine product_type based on category name
+function getProductType(categoryName: string): string {
+  const cat = categoryName.toLowerCase();
+  if (cat.includes('sandwich') || cat.includes('kebab') || cat.includes('burger') || cat.includes('wrap') || cat.includes('panini') || cat.includes('galette') || cat.includes('tacos')) {
+    return 'sandwich_personnalisable';
+  }
+  if (cat.includes('assiette')) {
+    return 'assiette';
+  }
+  if (cat.includes('accompagnement')) {
+    return 'accompagnement';
+  }
+  return 'simple';
+}
+
 // Create menu items from analyzed OCR data
 export async function createMenuItemsFromAnalysis(
   restaurantId: string,
@@ -109,6 +124,9 @@ export async function createMenuItemsFromAnalysis(
   for (const category of categories) {
     allCategories.push(category.name);
 
+    // Auto-assign product_type based on category
+    const productType = getProductType(category.name);
+
     for (const item of category.items) {
       const supplements = (item.supplements ?? []).map((s, i) => ({
         id: `supp-${i}`,
@@ -116,12 +134,24 @@ export async function createMenuItemsFromAnalysis(
         price: s.price,
       }));
 
+      // For individual items, check item name too for more specific typing
+      let itemProductType = productType;
+      if (productType === 'simple') {
+        const itemName = item.name.toLowerCase();
+        if (itemName.includes('kebab') || itemName.includes('sandwich') || itemName.includes('burger') || itemName.includes('tacos') || itemName.includes('galette') || itemName.includes('panini') || itemName.includes('wrap')) {
+          itemProductType = 'sandwich_personnalisable';
+        } else if (itemName.includes('assiette')) {
+          itemProductType = 'assiette';
+        }
+      }
+
       const { error } = await supabase.from('menu_items').insert({
         restaurant_id: restaurantId,
         name: item.name,
         description: item.description || null,
         price: item.price,
         category: category.name,
+        product_type: itemProductType,
         enabled: true,
         popular: false,
         sort_order: sortOrder++,
