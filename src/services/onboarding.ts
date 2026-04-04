@@ -107,6 +107,12 @@ function getProductType(categoryName: string): string {
   if (cat.includes('assiette')) {
     return 'assiette';
   }
+  if (cat.includes('boisson') || cat.includes('drink')) {
+    return 'boisson';
+  }
+  if (cat.includes('dessert')) {
+    return 'dessert';
+  }
   if (cat.includes('accompagnement')) {
     return 'accompagnement';
   }

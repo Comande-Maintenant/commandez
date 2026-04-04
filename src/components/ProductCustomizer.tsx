@@ -150,10 +150,10 @@ function buildStepsFromTemplates(
       s.step_key === "accompagnement" || s.step_key === "sauce" || s.step_key === "recap"
     );
   } else if (productType === "sandwich_simple" || productType === "sandwich_personnalisable") {
-    // Skip base and viande steps - the product itself is the choice
-    // Keep: garniture, sauce, frites, supplement, recap
+    // Skip base, viande, and accompagnement (frites are already in the frites step)
+    // Keep: garniture, sauce, frites, boisson upsell, recap
     steps = steps.filter((s) =>
-      s.step_key !== "base" && s.step_key !== "viande"
+      s.step_key !== "base" && s.step_key !== "viande" && s.step_key !== "accompagnement"
     );
   } else if (CONFIGURABLE_PRODUCT_TYPES.includes(productType)) {
     // Determine which steps this product type needs
