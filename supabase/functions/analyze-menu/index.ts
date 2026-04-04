@@ -7,23 +7,36 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ANALYSIS_PROMPT = `Tu es un expert en extraction de cartes de restaurant. Analyse cette photo de carte/menu et extrais TOUTES les informations visibles.
+const ANALYSIS_PROMPT = `Tu es un expert en extraction de cartes de restaurant. Analyse cette photo et extrais TOUTES les informations visibles.
+
+La photo peut etre :
+- Une carte/menu classique (papier, tableau, ardoise, ecran)
+- Une photo de frigo ou vitrine avec des produits visibles (boissons, desserts, etc.)
+- Une photo de comptoir, presentoir ou etagere avec des produits et prix
+
+Pour les photos de frigo/vitrine/presentoir :
+- Identifie chaque produit visible (bouteilles, canettes, gateaux, etc.)
+- Lis les etiquettes de prix si visibles
+- Lis les marques et noms sur les emballages (ex: Coca-Cola 33cl, Orangina 25cl, Perrier, Red Bull, Oasis, etc.)
+- Cree une categorie adaptee (ex: "Boissons", "Boissons fraiches", "Desserts", "Patisseries")
+- Si le format/taille est visible (33cl, 50cl, 1.5L), inclus-le dans le nom
 
 Pour chaque categorie que tu trouves, retourne :
-- name : le nom de la categorie (ex: "Burgers", "Pizzas", "Desserts", "Menus/Formules")
+- name : le nom de la categorie (ex: "Burgers", "Pizzas", "Desserts", "Boissons", "Menus/Formules")
 
 Pour chaque article dans chaque categorie, retourne :
-- name : nom exact de l'article
+- name : nom exact de l'article (inclure marque + format si visible, ex: "Coca-Cola 33cl")
 - price : prix en euros (nombre decimal). Si plusieurs prix (variantes), prends le prix de base.
-- description : description visible sur la carte. Si aucune, mets une chaine vide.
+- description : description visible. Si aucune, mets une chaine vide.
 - variants : tableau de variantes/tailles si visible. Ex: [{"name": "Normal", "price": 8.50}, {"name": "Maxi", "price": 11.50}]. Si pas de variantes, tableau vide [].
 - supplements : tableau d'ajouts/extras avec prix. Ex: [{"name": "Fromage", "price": 1.00}, {"name": "Bacon", "price": 1.50}]. Si pas de supplements, tableau vide [].
-- tags : tableau de tags visibles sur la carte. Valeurs possibles : "homemade", "spicy", "vegetarian", "vegan", "new", "bestseller", "gluten_free". Si aucun tag visible, tableau vide [].
+- tags : tableau de tags visibles. Valeurs possibles : "homemade", "spicy", "vegetarian", "vegan", "new", "bestseller", "gluten_free". Si aucun tag visible, tableau vide [].
 
 IMPORTANT :
 - Extrais TOUT ce qui est visible, y compris les formules/menus du jour
 - Les supplements qui apparaissent globalement pour une categorie, ajoute-les a chaque item de cette categorie
 - Si un prix n'est pas visible clairement, mets 0
+- Pour les boissons en frigo, identifie au maximum les marques meme si l'etiquette de prix n'est pas nette
 - Retourne UNIQUEMENT du JSON valide, sans texte avant ou apres
 
 Format de sortie :
