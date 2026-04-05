@@ -219,18 +219,36 @@ export const ProductCustomizer = ({
 
   const { bases, viandes, garnitures, sauces, accompagnements, config, stepTemplates } = customizationData;
 
-  const steps = useMemo(
+  const rawSteps = useMemo(
     () => buildStepsFromTemplates(stepTemplates, productType, config),
     [stepTemplates, productType, config]
   );
-  const [stepIndex, setStepIndex] = useState(0);
-  const currentStep = steps[stepIndex] ?? null;
 
   // Resolved options for each step
-  const resolvedSteps = useMemo(
-    () => steps.map((s) => ({ template: s, options: resolveStepOptions(s, customizationData, menuItems) })),
-    [steps, customizationData, menuItems]
+  const rawResolvedSteps = useMemo(
+    () => rawSteps.map((s) => ({ template: s, options: resolveStepOptions(s, customizationData, menuItems) })),
+    [rawSteps, customizationData, menuItems]
   );
+
+  // Filter out steps with no resolved options (skip empty base/viande steps)
+  const { steps, resolvedSteps } = useMemo(() => {
+    const skipTypes = new Set(["recap", "upsell", "toggle_group"]);
+    const inlineTypes = new Set(["frites"]); // steps with inline config options
+    const filtered: typeof rawResolvedSteps = [];
+    const filteredSteps: typeof rawSteps = [];
+    rawResolvedSteps.forEach((rs, i) => {
+      const s = rawSteps[i];
+      const hasInlineOptions = s.step_key === "frites" && (s.config?.options as any)?.length > 0;
+      if (skipTypes.has(s.step_type) || rs.options.length > 0 || hasInlineOptions) {
+        filtered.push(rs);
+        filteredSteps.push(s);
+      }
+    });
+    return { steps: filteredSteps, resolvedSteps: filtered };
+  }, [rawSteps, rawResolvedSteps]);
+
+  const [stepIndex, setStepIndex] = useState(0);
+  const currentStep = steps[stepIndex] ?? null;
 
   // Generic selections map
   const [selections, setSelections] = useState<Map<string, StepSelection>>(new Map());
