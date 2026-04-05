@@ -52,13 +52,13 @@ export function detectBusinessType(googleTypes: string[]): string {
 }
 
 export const BUSINESS_TYPES = [
-  { value: "restaurant", label: "Restaurant", emoji: "🍕" },
-  { value: "boulangerie", label: "Boulangerie", emoji: "🥖" },
-  { value: "boucherie", label: "Boucherie", emoji: "🥩" },
-  { value: "fleuriste", label: "Fleuriste", emoji: "🌷" },
-  { value: "epicerie", label: "Epicerie", emoji: "🛒" },
-  { value: "traiteur", label: "Traiteur", emoji: "🍽" },
-  { value: "autre", label: "Autre", emoji: "🏪" },
+  { value: "restaurant", label: "Restaurant", labelKey: "business_type.restaurant", emoji: "🍕" },
+  { value: "boulangerie", label: "Boulangerie", labelKey: "business_type.boulangerie", emoji: "🥖" },
+  { value: "boucherie", label: "Boucherie", labelKey: "business_type.boucherie", emoji: "🥩" },
+  { value: "fleuriste", label: "Fleuriste", labelKey: "business_type.fleuriste", emoji: "🌷" },
+  { value: "epicerie", label: "Epicerie", labelKey: "business_type.epicerie", emoji: "🛒" },
+  { value: "traiteur", label: "Traiteur", labelKey: "business_type.traiteur", emoji: "🍽" },
+  { value: "autre", label: "Autre", labelKey: "business_type.autre", emoji: "🏪" },
 ] as const;
 
 export function getBusinessEmoji(type: string): string {

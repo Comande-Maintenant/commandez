@@ -1,18 +1,18 @@
 import type { CuisineType } from "@/types/customization";
 
-export const CUISINE_TYPE_OPTIONS: { value: CuisineType; label: string }[] = [
-  { value: "kebab", label: "Kebab / Turc / Doner" },
-  { value: "pizza", label: "Pizzeria" },
-  { value: "burger", label: "Burger" },
-  { value: "sushi", label: "Sushi / Japonais" },
-  { value: "indian", label: "Indien" },
-  { value: "chinese", label: "Chinois / Asiatique" },
-  { value: "bakery", label: "Boulangerie / Sandwicherie" },
-  { value: "poke", label: "Poke Bowl" },
-  { value: "creperie", label: "Creperie" },
-  { value: "coffee_shop", label: "Coffee Shop / Cafe" },
-  { value: "tacos_fr", label: "Tacos (francais)" },
-  { value: "generic", label: "Autre / Generique" },
+export const CUISINE_TYPE_OPTIONS: { value: CuisineType; label: string; labelKey: string }[] = [
+  { value: "kebab", label: "Kebab / Turc / Doner", labelKey: "cuisine.kebab" },
+  { value: "pizza", label: "Pizzeria", labelKey: "cuisine.pizza" },
+  { value: "burger", label: "Burger", labelKey: "cuisine.burger" },
+  { value: "sushi", label: "Sushi / Japonais", labelKey: "cuisine.sushi" },
+  { value: "indian", label: "Indien", labelKey: "cuisine.indian" },
+  { value: "chinese", label: "Chinois / Asiatique", labelKey: "cuisine.chinese" },
+  { value: "bakery", label: "Boulangerie / Sandwicherie", labelKey: "cuisine.bakery" },
+  { value: "poke", label: "Poke Bowl", labelKey: "cuisine.poke" },
+  { value: "creperie", label: "Creperie", labelKey: "cuisine.creperie" },
+  { value: "coffee_shop", label: "Coffee Shop / Cafe", labelKey: "cuisine.coffee_shop" },
+  { value: "tacos_fr", label: "Tacos (francais)", labelKey: "cuisine.tacos_fr" },
+  { value: "generic", label: "Autre / Generique", labelKey: "cuisine.generic" },
 ];
 
 // Map cuisine display names to cuisine_type for auto-detection

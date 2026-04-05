@@ -80,7 +80,7 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
               <SelectContent>
                 {CUISINE_TYPE_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
+                    {t(opt.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>

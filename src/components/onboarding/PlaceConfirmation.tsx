@@ -182,7 +182,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
           <SelectContent>
             {CUISINE_TYPE_OPTIONS.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
+                {t(opt.labelKey)}
               </SelectItem>
             ))}
           </SelectContent>
