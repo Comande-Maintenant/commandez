@@ -1103,6 +1103,7 @@
   "schedule.friday": "Friday",
   "schedule.saturday": "Saturday",
   "schedule.not_accepting": "This restaurant is not accepting orders right now.",
+  "schedule.currently_closed": "This restaurant is currently closed.",
   "order.restaurant_unavailable": "This restaurant is not accepting orders right now.",
   "order.error_generic": "An error occurred. Please try again.",
   "client.today": "Today",

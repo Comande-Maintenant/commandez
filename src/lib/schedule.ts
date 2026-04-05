@@ -82,7 +82,7 @@ export function checkRestaurantAvailability(restaurant: DbRestaurant): {
 /**
  * Check if an order can be placed right now.
  * The "Disponible" toggle (is_accepting_orders) is the master switch.
- * If the restaurateur sets it to true, orders are accepted regardless of schedule.
+ * Schedule is also checked when availability_mode is "auto".
  */
 export function canPlaceOrder(restaurant: DbRestaurant): {
   canOrder: boolean;
@@ -94,6 +94,12 @@ export function canPlaceOrder(restaurant: DbRestaurant): {
 
   if (!restaurant.is_accepting_orders) {
     return { canOrder: false, reason: "schedule.not_accepting" };
+  }
+
+  // Also check schedule when in auto mode
+  const { isOpen } = checkRestaurantAvailability(restaurant);
+  if (!isOpen) {
+    return { canOrder: false, reason: "schedule.currently_closed" };
   }
 
   return { canOrder: true, reason: null };

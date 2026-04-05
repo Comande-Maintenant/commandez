@@ -719,7 +719,7 @@ const RestaurantPage = () => {
                   <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                     {isDemo ? t("demo.page_title") : restaurant.name}
                   </h1>
-                  {restaurant.is_accepting_orders ? (
+                  {restaurant.is_accepting_orders && availability.isOpen ? (
                     <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-emerald-500">
                       {t("status.open")}
                     </span>

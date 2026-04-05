@@ -1105,6 +1105,7 @@
   "schedule.friday": "Vendredi",
   "schedule.saturday": "Samedi",
   "schedule.not_accepting": "Ce restaurant n'accepte pas de commandes pour le moment.",
+  "schedule.currently_closed": "Ce restaurant est actuellement fermé.",
   "order.restaurant_unavailable": "Ce restaurant n'accepte pas de commandes pour le moment.",
   "order.error_generic": "Une erreur est survenue. Veuillez réessayer.",
   "client.today": "Aujourd'hui",
