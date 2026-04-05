@@ -192,6 +192,7 @@ interface CuisineDefaults {
   garnitures: Array<{ name: string; name_translations: Record<string, string>; is_default: boolean }>;
   sauces: Array<{ name: string; name_translations: Record<string, string>; is_for_sandwich: boolean; is_for_frites: boolean }>;
   viandes: Array<{ name: string; name_translations: Record<string, string>; supplement: number }>;
+  boissons: Array<{ name: string; price: number }>;
   orderConfig: {
     free_sauces_sandwich: number;
     free_sauces_frites: number;
@@ -235,6 +236,29 @@ const KEBAB_DEFAULTS: CuisineDefaults = {
     enable_boisson_upsell: true,
     enable_dessert_upsell: false,
   },
+  boissons: [
+    { name: 'Coca-Cola 33cl', price: 1.50 },
+    { name: 'Coca Cherry 33cl', price: 1.50 },
+    { name: 'Coca Zero 33cl', price: 1.50 },
+    { name: 'Orangina 33cl', price: 1.50 },
+    { name: 'Fanta Orange 33cl', price: 1.50 },
+    { name: 'Fanta Citron 33cl', price: 1.50 },
+    { name: 'Fanta Tropical 33cl', price: 1.50 },
+    { name: 'Fanta Cassis 33cl', price: 1.50 },
+    { name: 'Schweppes Agrumes 33cl', price: 1.50 },
+    { name: 'Schweppes Lemon 33cl', price: 1.50 },
+    { name: '7UP 33cl', price: 1.50 },
+    { name: 'Oasis Tropical 33cl', price: 1.50 },
+    { name: 'Oasis Fraise Framboise 33cl', price: 1.50 },
+    { name: 'Ice Tea Peche 33cl', price: 1.50 },
+    { name: 'Perrier 33cl', price: 1.50 },
+    { name: 'Minute Maid Orange 33cl', price: 1.50 },
+    { name: 'Cristaline 33cl', price: 1.50 },
+    { name: 'Red Bull 25cl', price: 3.00 },
+    { name: 'Eau', price: 1.00 },
+    { name: 'Cafe', price: 1.50 },
+    { name: 'Ayran', price: 1.50 },
+  ],
 };
 
 const CUISINE_DEFAULTS: Partial<Record<string, CuisineDefaults>> = {
@@ -296,6 +320,30 @@ export async function seedCuisineDefaults(restaurantId: string, cuisineType: str
         enabled: true,
       }))
     );
+  }
+
+  // Insert default boissons as menu items
+  if (defaults.boissons.length > 0) {
+    // Check if boissons already exist
+    const { data: existingBoissons } = await supabase
+      .from('menu_items')
+      .select('id')
+      .eq('restaurant_id', restaurantId)
+      .eq('product_type', 'boisson')
+      .limit(1);
+    if (!existingBoissons || existingBoissons.length === 0) {
+      await supabase.from('menu_items').insert(
+        defaults.boissons.map((b, i) => ({
+          restaurant_id: restaurantId,
+          name: b.name,
+          price: b.price,
+          category: 'Boissons',
+          product_type: 'boisson',
+          enabled: true,
+          sort_order: 200 + i,
+        }))
+      );
+    }
   }
 
   // Insert order config
