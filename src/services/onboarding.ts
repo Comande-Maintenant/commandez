@@ -191,6 +191,7 @@ export async function createMenuItemsFromAnalysis(
 interface CuisineDefaults {
   garnitures: Array<{ name: string; name_translations: Record<string, string>; is_default: boolean }>;
   sauces: Array<{ name: string; name_translations: Record<string, string>; is_for_sandwich: boolean; is_for_frites: boolean }>;
+  viandes: Array<{ name: string; name_translations: Record<string, string>; supplement: number }>;
   orderConfig: {
     free_sauces_sandwich: number;
     free_sauces_frites: number;
@@ -215,6 +216,16 @@ const KEBAB_DEFAULTS: CuisineDefaults = {
     { name: 'Harissa', name_translations: { en: 'Harissa', es: 'Harissa', de: 'Harissa' }, is_for_sandwich: true, is_for_frites: true },
     { name: 'Mayonnaise', name_translations: { en: 'Mayonnaise', es: 'Mayonesa', de: 'Mayonnaise' }, is_for_sandwich: true, is_for_frites: true },
     { name: 'Barbecue', name_translations: { en: 'BBQ', es: 'Barbacoa', de: 'BBQ' }, is_for_sandwich: true, is_for_frites: true },
+  ],
+  viandes: [
+    { name: 'Kebab', name_translations: { en: 'Doner kebab', es: 'Kebab', de: 'Doner Kebab' }, supplement: 0 },
+    { name: 'Poulet', name_translations: { en: 'Chicken', es: 'Pollo', de: 'Huhn' }, supplement: 0 },
+    { name: 'Merguez', name_translations: { en: 'Merguez', es: 'Merguez', de: 'Merguez' }, supplement: 0 },
+    { name: 'Steak', name_translations: { en: 'Steak', es: 'Bistec', de: 'Steak' }, supplement: 0 },
+    { name: 'Kofta', name_translations: { en: 'Kofta', es: 'Kofta', de: 'Kofta' }, supplement: 0 },
+    { name: 'Cordon bleu', name_translations: { en: 'Cordon bleu', es: 'Cordon bleu', de: 'Cordon bleu' }, supplement: 0 },
+    { name: 'Nuggets', name_translations: { en: 'Nuggets', es: 'Nuggets', de: 'Nuggets' }, supplement: 0 },
+    { name: 'Tenders', name_translations: { en: 'Tenders', es: 'Tenders', de: 'Tenders' }, supplement: 0 },
   ],
   orderConfig: {
     free_sauces_sandwich: 3,
@@ -267,6 +278,20 @@ export async function seedCuisineDefaults(restaurantId: string, cuisineType: str
         name_translations: s.name_translations,
         is_for_sandwich: s.is_for_sandwich,
         is_for_frites: s.is_for_frites,
+        sort_order: i + 1,
+        enabled: true,
+      }))
+    );
+  }
+
+  // Insert viandes
+  if (defaults.viandes.length > 0) {
+    await supabase.from('restaurant_viandes').insert(
+      defaults.viandes.map((v, i) => ({
+        restaurant_id: restaurantId,
+        name: v.name,
+        name_translations: v.name_translations,
+        supplement: v.supplement,
         sort_order: i + 1,
         enabled: true,
       }))
