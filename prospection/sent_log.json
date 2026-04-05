@@ -1609,9 +1609,9 @@
   },
   "contact@lemartadijon.fr": {
     "sent_at": "2026-03-16T08:36:37.751564+00:00",
-    "last_sent_at": "2026-03-16T08:36:37.751564+00:00",
-    "send_count": 1,
-    "resend_id": "7a83781e-8afc-4f59-94aa-3989e42c91c6",
+    "last_sent_at": "2026-04-05T15:30:33.198305+00:00",
+    "send_count": 2,
+    "resend_id": "2d65b280-d25b-4d0d-9efe-de64e6896505",
     "name": "Le Marta Dijon",
     "city": "Dijon"
   },
@@ -1697,17 +1697,17 @@
   },
   "contact@casimirpizza.fr": {
     "sent_at": "2026-03-16T16:04:33.817871+00:00",
-    "last_sent_at": "2026-03-16T16:04:33.817871+00:00",
-    "send_count": 1,
-    "resend_id": "9ff2564b-e197-4da6-8867-79b8184cf125",
+    "last_sent_at": "2026-04-05T15:30:41.311290+00:00",
+    "send_count": 2,
+    "resend_id": "9a5ab8cc-75e6-448c-bf69-e23e722fa719",
     "name": "Casimir Pizza Lyon Confluence",
     "city": "Lyon"
   },
   "contact@lyon-eats.fr": {
     "sent_at": "2026-03-16T16:04:41.694155+00:00",
-    "last_sent_at": "2026-03-16T16:04:41.694155+00:00",
-    "send_count": 1,
-    "resend_id": "264be2c1-5a20-49ef-9c81-26a8f2591e4a",
+    "last_sent_at": "2026-04-05T15:30:48.896708+00:00",
+    "send_count": 2,
+    "resend_id": "be1c4c17-9ab4-419c-81ce-decfaae8977c",
     "name": "LYON EATS",
     "city": "Lyon"
   },
@@ -1745,9 +1745,9 @@
   },
   "commercial@maisons-de-lyon.com": {
     "sent_at": "2026-03-16T16:04:37.572614+00:00",
-    "last_sent_at": "2026-03-16T16:04:37.572614+00:00",
-    "send_count": 1,
-    "resend_id": "a56e5210-e390-4905-8ef9-697e87cc674f",
+    "last_sent_at": "2026-04-05T15:30:44.878156+00:00",
+    "send_count": 2,
+    "resend_id": "08b04aed-324b-4037-a195-15f8c2523ac1",
     "name": "Mamma Osteria",
     "city": "Lyon"
   },
@@ -1793,49 +1793,49 @@
   },
   "contact@laffreuxjojo.com": {
     "sent_at": "2026-03-16T16:04:31.700637+00:00",
-    "last_sent_at": "2026-03-16T16:04:31.700637+00:00",
-    "send_count": 1,
-    "resend_id": "27ac94ae-ae30-4ed4-9ca3-59265ebc7772",
+    "last_sent_at": "2026-04-05T15:30:39.325158+00:00",
+    "send_count": 2,
+    "resend_id": "62bc8e42-2edf-4869-9176-7ae726ddb500",
     "name": "L’affreux Jojo - Restaurant Italien Lyon",
     "city": "Lyon"
   },
   "contact@royal-burger.fr": {
     "sent_at": "2026-03-16T16:04:39.725873+00:00",
-    "last_sent_at": "2026-03-16T16:04:39.725873+00:00",
-    "send_count": 1,
-    "resend_id": "dac81736-c9d8-4a62-a736-ecc88aa81371",
+    "last_sent_at": "2026-04-05T15:30:46.892131+00:00",
+    "send_count": 2,
+    "resend_id": "918be218-a0c3-4531-8798-065714017048",
     "name": "Royal Burger",
     "city": "Lyon"
   },
   "direction@chikinbang.com": {
     "sent_at": "2026-03-16T16:04:45.462111+00:00",
-    "last_sent_at": "2026-03-16T16:04:45.462111+00:00",
-    "send_count": 1,
-    "resend_id": "2fc5f7c2-9c64-4a03-b123-911ff7412fce",
+    "last_sent_at": "2026-04-05T15:30:52.698260+00:00",
+    "send_count": 2,
+    "resend_id": "3fb2bd66-b09f-4652-9093-5bbcabd01058",
     "name": "Chikin Bang - Korean Street Food - Cordeliers",
     "city": "Lyon"
   },
   "alex@pereetfishrestaurant.com": {
     "sent_at": "2026-03-16T16:04:55.13867+00:00",
-    "last_sent_at": "2026-03-16T16:04:55.13867+00:00",
-    "send_count": 1,
-    "resend_id": "5344ca8c-89db-41c2-a635-2bb7a80d5578",
+    "last_sent_at": "2026-04-05T15:31:02.265947+00:00",
+    "send_count": 2,
+    "resend_id": "22a21645-7a89-4d5e-b95e-9866afe6e367",
     "name": "Père & Fish - Lyon",
     "city": "Lyon"
   },
   "reservations@tigermilkgroup.com": {
     "sent_at": "2026-03-16T16:04:27.519534+00:00",
-    "last_sent_at": "2026-03-16T16:04:27.519534+00:00",
-    "send_count": 1,
-    "resend_id": "891ea7fc-aff3-4cd3-9f52-1ef53c5a5f94",
+    "last_sent_at": "2026-04-05T15:30:35.291062+00:00",
+    "send_count": 2,
+    "resend_id": "b4f1801c-adc4-4551-8603-3effcfe1e5a8",
     "name": "Tigermilk South-Pigalle - Paris 9",
     "city": "Paris"
   },
   "contact@fastyshotdog.com": {
     "sent_at": "2026-03-16T16:04:49.425114+00:00",
-    "last_sent_at": "2026-03-16T16:04:49.425114+00:00",
-    "send_count": 1,
-    "resend_id": "04899cc6-2d07-4976-a772-9d3a2ec39928",
+    "last_sent_at": "2026-04-05T15:30:56.680834+00:00",
+    "send_count": 2,
+    "resend_id": "aff41dc2-7299-4cf9-9540-3138f47a1d0f",
     "name": "Fasty's Food truck Hot-Dog & Burger Lyon",
     "city": "Lyon"
   },
@@ -1849,25 +1849,25 @@
   },
   "contact@chickensking.com": {
     "sent_at": "2026-03-16T16:04:29.62899+00:00",
-    "last_sent_at": "2026-03-16T16:04:29.62899+00:00",
-    "send_count": 1,
-    "resend_id": "4c87feff-df10-41ea-af4c-c5a0a8ec9f1c",
+    "last_sent_at": "2026-04-05T15:30:37.309390+00:00",
+    "send_count": 2,
+    "resend_id": "0ee1cc62-73c4-45ad-bbc0-228ea6944f66",
     "name": "Chicken’s King",
     "city": "Paris"
   },
   "contact@burger-s.fr": {
     "sent_at": "2026-03-16T16:04:43.549845+00:00",
-    "last_sent_at": "2026-03-16T16:04:43.549845+00:00",
-    "send_count": 1,
-    "resend_id": "e37c2365-7ddc-42a1-8364-83d895b4048b",
+    "last_sent_at": "2026-04-05T15:30:50.691642+00:00",
+    "send_count": 2,
+    "resend_id": "5a7fb9e6-1bcc-410e-9334-6629ff32920f",
     "name": "Burger's Lyon 8",
     "city": "Lyon"
   },
   "contact@streetcornerlyon.fr": {
     "sent_at": "2026-03-16T16:04:53.23014+00:00",
-    "last_sent_at": "2026-03-16T16:04:53.23014+00:00",
-    "send_count": 1,
-    "resend_id": "2b2e368c-36f2-4398-b02d-cf3518ceae37",
+    "last_sent_at": "2026-04-05T15:31:00.469549+00:00",
+    "send_count": 2,
+    "resend_id": "1db601d4-8041-4ad1-8d08-72582179a97b",
     "name": "Street Corner - Food Truck Lyon",
     "city": "Lyon"
   },
@@ -1897,25 +1897,25 @@
   },
   "contact@culinaries.fr": {
     "sent_at": "2026-03-16T16:04:35.683897+00:00",
-    "last_sent_at": "2026-03-16T16:04:35.683897+00:00",
-    "send_count": 1,
-    "resend_id": "2b6d3d68-d0ac-4291-8619-200c893df87e",
+    "last_sent_at": "2026-04-05T15:30:43.119280+00:00",
+    "send_count": 2,
+    "resend_id": "08833b2c-f987-4177-997f-f02902fca122",
     "name": "Little YARD Lyon",
     "city": "Lyon"
   },
   "contact@smokeandfries.fr": {
     "sent_at": "2026-03-16T16:04:47.540223+00:00",
-    "last_sent_at": "2026-03-16T16:04:47.540223+00:00",
-    "send_count": 1,
-    "resend_id": "9548ebfc-6ea9-44f9-bf89-84af4fffdfd8",
+    "last_sent_at": "2026-04-05T15:30:54.690624+00:00",
+    "send_count": 2,
+    "resend_id": "f542c6bf-e864-4ab8-b1e9-db8658ab0354",
     "name": "Smoké and Fries",
     "city": "Lyon"
   },
   "contact@biggroupe.com": {
     "sent_at": "2026-03-16T16:04:51.326407+00:00",
-    "last_sent_at": "2026-03-16T16:04:51.326407+00:00",
-    "send_count": 1,
-    "resend_id": "46096681-52e8-4ffc-9f46-88c4de1252ef",
+    "last_sent_at": "2026-04-05T15:30:58.671312+00:00",
+    "send_count": 2,
+    "resend_id": "9e12e0ed-781e-4893-a39f-cfd9f27e041b",
     "name": "Big Fernand",
     "city": "Lyon"
   },
