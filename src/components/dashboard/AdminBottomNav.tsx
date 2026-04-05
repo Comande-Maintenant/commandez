@@ -1,5 +1,6 @@
 import { Flame, Receipt, Eye, Settings } from "lucide-react";
 import type { DashboardView } from "@/types/dashboard";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   activeView: DashboardView;
@@ -9,18 +10,19 @@ interface Props {
 
 const adminViews = new Set(["carte", "page", "qrcodes", "borne", "parametres", "stats", "clients"]);
 
-const items: { id: DashboardView; label: string; icon: typeof Flame }[] = [
-  { id: "cuisine", label: "Cuisine", icon: Flame },
-  { id: "caisse", label: "Caisse", icon: Receipt },
-  { id: "en-direct", label: "En direct", icon: Eye },
-  { id: "gerer", label: "Gerer", icon: Settings },
+const NAV_ITEMS: { id: DashboardView; labelKey: string; icon: typeof Flame }[] = [
+  { id: "cuisine", labelKey: "dashboard.nav.kitchen", icon: Flame },
+  { id: "caisse", labelKey: "dashboard.nav.pos", icon: Receipt },
+  { id: "en-direct", labelKey: "dashboard.nav.live", icon: Eye },
+  { id: "gerer", labelKey: "dashboard.nav.manage", icon: Settings },
 ];
 
 export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Props) => {
+  const { t } = useLanguage();
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-background border-t border-border">
       <div className="flex">
-        {items.map((item) => {
+        {NAV_ITEMS.map((item) => {
           const isActive = item.id === activeView || (item.id === "gerer" && adminViews.has(activeView));
           return (
             <button
@@ -39,7 +41,7 @@ export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Prop
                   </span>
                 )}
               </div>
-              <span>{item.label}</span>
+              <span>{t(item.labelKey)}</span>
             </button>
           );
         })}

@@ -8,6 +8,7 @@ import { formatDisplayNumber } from "@/lib/orderNumber";
 import type { DbMenuItem, DbOrder, CustomizationConfig } from "@/types/database";
 import type { POSCustomization, POSDrinkItem, POSDessertItem } from "@/types/pos";
 import { usePOSCustomization } from "./usePOSCustomization";
+import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 
 interface Props {
@@ -22,6 +23,7 @@ interface Props {
 type AddMode = "custom" | "drink" | "dessert";
 
 export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpdated }: Props) => {
+  const { t } = useLanguage();
   const [mode, setMode] = useState<AddMode>("drink");
   const [extraDrinks, setExtraDrinks] = useState<POSDrinkItem[]>([]);
   const [extraDesserts, setExtraDesserts] = useState<POSDessertItem[]>([]);
@@ -105,7 +107,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
       for (const d of extraDrinks) {
         newItems.push({
           type: "drink",
-          personLabel: "Boissons (ajout)",
+          personLabel: t("pos.drinks_addition"),
           name: d.name,
           price: d.price,
           quantity: d.quantity,
@@ -115,7 +117,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
       for (const d of extraDesserts) {
         newItems.push({
           type: "dessert",
-          personLabel: "Desserts (ajout)",
+          personLabel: t("pos.desserts_addition"),
           name: d.name,
           price: d.price,
           quantity: d.quantity,
@@ -124,11 +126,11 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
 
       const newTotal = Number(order.total) + extraTotal;
       await updateOrderItems(order.id, newItems, newTotal);
-      toast.success("Article(s) ajoute(s)");
+      toast.success(t("pos.items_added"));
       onUpdated();
       onClose();
     } catch {
-      toast.error("Erreur lors de l'ajout");
+      toast.error(t("pos.add_error"));
     } finally {
       setSubmitting(false);
     }
@@ -138,7 +140,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Ajouter a {formatDisplayNumber(order)}</DialogTitle>
+          <DialogTitle>{t("pos.add_to_order")} {formatDisplayNumber(order)}</DialogTitle>
         </DialogHeader>
 
         {/* Mode tabs */}
@@ -149,7 +151,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
               mode === "drink" ? "bg-foreground text-primary-foreground" : "bg-secondary text-foreground"
             }`}
           >
-            Boissons
+            {t("pos.drinks")}
           </button>
           <button
             onClick={() => setMode("dessert")}
@@ -157,7 +159,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
               mode === "dessert" ? "bg-foreground text-primary-foreground" : "bg-secondary text-foreground"
             }`}
           >
-            Desserts
+            {t("pos.desserts")}
           </button>
         </div>
 
@@ -245,7 +247,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
               </div>
             ))}
             <div className="flex justify-between text-sm font-bold pt-2">
-              <span>A ajouter</span>
+              <span>{t("pos.to_add")}</span>
               <span>+{extraTotal.toFixed(2)} €</span>
             </div>
           </div>
@@ -257,7 +259,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
           onClick={handleConfirm}
           disabled={submitting || (extraDrinks.length === 0 && extraDesserts.length === 0)}
         >
-          {submitting ? "Ajout..." : "Confirmer l'ajout"}
+          {submitting ? t("pos.adding") : t("pos.confirm_add")}
         </Button>
       </DialogContent>
     </Dialog>

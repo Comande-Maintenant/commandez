@@ -42,7 +42,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
         setCustomers(data);
       }
     } catch {
-      toast.error("Erreur chargement clients");
+      toast.error(t("dashboard.clients.load_error"));
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
       setCustomers((prev) =>
         prev.map((c) => (c.id === customer.id ? { ...c, is_banned: false, banned_at: null, banned_reason: "", ban_expires_at: null } : c))
       );
-      toast.success(`${customer.customer_name || customer.customer_phone} debanni`);
+      toast.success(`${customer.customer_name || customer.customer_phone} ${t("dashboard.clients.unbanned")}`);
       return;
     }
     try {
@@ -99,9 +99,9 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
       setCustomers((prev) =>
         prev.map((c) => (c.id === customer.id ? { ...c, is_banned: false, banned_at: null, banned_reason: "", ban_expires_at: null } : c))
       );
-      toast.success(`${customer.customer_name || customer.customer_phone} debanni`);
+      toast.success(`${customer.customer_name || customer.customer_phone} ${t("dashboard.clients.unbanned")}`);
     } catch {
-      toast.error("Erreur");
+      toast.error(t("dashboard.clients.load_error"));
     }
   };
 
@@ -120,7 +120,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-foreground mb-4">Mes clients</h2>
+      <h2 className="text-xl font-bold text-foreground mb-4">{t("dashboard.clients.title")}</h2>
 
       {/* Stats summary */}
       {(() => {
@@ -131,15 +131,15 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
         return (
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="bg-card rounded-2xl border border-border p-3">
-              <p className="text-xs text-muted-foreground">Total clients</p>
+              <p className="text-xs text-muted-foreground">{t("dashboard.clients.total")}</p>
               <p className="text-2xl font-bold text-foreground">{totalCount.toLocaleString(locale)}</p>
             </div>
             <div className="bg-card rounded-2xl border border-border p-3">
-              <p className="text-xs text-muted-foreground">Reguliers (5+)</p>
+              <p className="text-xs text-muted-foreground">{t("dashboard.clients.regulars")}</p>
               <p className="text-2xl font-bold text-foreground">{regularsCount.toLocaleString(locale)}</p>
             </div>
             <div className="bg-card rounded-2xl border border-border p-3">
-              <p className="text-xs text-muted-foreground">Bannis</p>
+              <p className="text-xs text-muted-foreground">{t("dashboard.clients.banned")}</p>
               <p className="text-2xl font-bold text-destructive">{bannedCount}</p>
             </div>
           </div>
@@ -151,7 +151,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
         <div className="relative flex-1">
           <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Rechercher par nom, téléphone, email..."
+            placeholder={t("dashboard.clients.search_placeholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="ps-10 rounded-xl"
@@ -162,9 +162,9 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
       {/* Filter tabs */}
       <div className="flex gap-2 overflow-x-auto no-scrollbar mb-3">
         {([
-          { id: "all" as FilterKey, label: "Tous" },
-          { id: "regulars" as FilterKey, label: "Reguliers" },
-          { id: "banned" as FilterKey, label: "Bannis" },
+          { id: "all" as FilterKey, label: t("dashboard.clients.filter_all") },
+          { id: "regulars" as FilterKey, label: t("dashboard.clients.filter_regulars") },
+          { id: "banned" as FilterKey, label: t("dashboard.clients.filter_banned") },
         ]).map((f) => (
           <button
             key={f.id}
@@ -180,9 +180,9 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
         ))}
         <div className="border-l border-border mx-1" />
         {([
-          { id: "last_order" as SortKey, label: "Recents" },
-          { id: "total_orders" as SortKey, label: "Fideles" },
-          { id: "total_spent" as SortKey, label: "CA" },
+          { id: "last_order" as SortKey, label: t("dashboard.clients.sort_recent") },
+          { id: "total_orders" as SortKey, label: t("dashboard.clients.sort_loyal") },
+          { id: "total_spent" as SortKey, label: t("dashboard.clients.sort_revenue") },
         ]).map((s) => (
           <button
             key={s.id}
@@ -205,8 +205,8 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
             <ShoppingBag className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p className="text-sm">
               {customers.length === 0
-                ? "Pas encore de client. Ils apparaîtront ici après leur première commande terminée."
-                : "Aucun client ne correspond à votre recherche."}
+                ? t("dashboard.clients.empty_state")
+                : t("dashboard.clients.no_match")}
             </p>
           </div>
         )}
@@ -217,11 +217,11 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-semibold text-foreground">
-                    {customer.customer_name || "Client inconnu"}
+                    {customer.customer_name || t("dashboard.clients.unknown")}
                   </span>
                   {customer.is_banned && (
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-destructive/10 text-destructive">
-                      Banni
+                      {t("dashboard.clients.banned_badge")}
                     </span>
                   )}
                   {customer.total_orders >= 10 && !customer.is_banned && (
@@ -231,7 +231,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                   )}
                   {customer.total_orders >= 5 && customer.total_orders < 10 && !customer.is_banned && (
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
-                      Regulier
+                      {t("dashboard.clients.regular_badge")}
                     </span>
                   )}
                 </div>
@@ -253,14 +253,14 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                 <div className="flex flex-wrap gap-3 mt-2 text-sm">
                   <span className="flex items-center gap-1 text-foreground">
                     <ShoppingBag className="h-3.5 w-3.5 text-muted-foreground" />
-                    {customer.total_orders} commande{customer.total_orders > 1 ? "s" : ""}
+                    {customer.total_orders} {t("dashboard.clients.orders_count")}
                   </span>
                   <span className="flex items-center gap-1 text-foreground blur-sensitive">
                     <Euro className="h-3.5 w-3.5 text-muted-foreground" />
                     {Number(customer.total_spent).toFixed(2)} €
                   </span>
                   <span className="text-muted-foreground blur-sensitive">
-                    Panier moy. {Number(customer.average_basket).toFixed(2)} €
+                    {t("dashboard.clients.avg_basket")} {Number(customer.average_basket).toFixed(2)} €
                   </span>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
               <div className="mt-3 pt-3 border-t border-border space-y-3">
                 {customer.favorite_items && (customer.favorite_items as string[]).length > 0 && (
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground mb-1">Favoris</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-1">{t("dashboard.clients.favorites")}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {(customer.favorite_items as string[]).map((item, i) => (
                         <span key={i} className="text-xs px-2 py-1 rounded-full bg-secondary text-foreground">
@@ -296,7 +296,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                 )}
                 {customer.last_items && (customer.last_items as string[]).length > 0 && (
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground mb-1">Derniere commande</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-1">{t("dashboard.clients.last_order")}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {(customer.last_items as string[]).map((item, i) => (
                         <span key={i} className="text-xs px-2 py-1 rounded-full bg-secondary/50 text-muted-foreground">
@@ -309,9 +309,9 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                 {customer.is_banned && customer.banned_reason && (
                   <div className="p-2 bg-destructive/5 rounded-lg">
                     <p className="text-xs text-destructive">
-                      Raison : {customer.banned_reason}
+                      {t("dashboard.clients.ban_reason").replace("{reason}", customer.banned_reason)}
                       {customer.ban_expires_at && (
-                        <> (expire le {new Date(customer.ban_expires_at).toLocaleDateString(locale)})</>
+                        <> {t("dashboard.clients.ban_expires").replace("{date}", new Date(customer.ban_expires_at).toLocaleDateString(locale))}</>
                       )}
                     </p>
                   </div>
@@ -325,7 +325,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                       onClick={() => handleUnban(customer)}
                     >
                       <ShieldCheck className="h-3.5 w-3.5" />
-                      Debannir
+                      {t("dashboard.clients.unban")}
                     </Button>
                   ) : (
                     <Button
@@ -337,14 +337,15 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
                           setCustomers((prev) =>
                             prev.map((c) => (c.id === customer.id ? { ...c, is_banned: true, banned_at: new Date().toISOString(), banned_reason: "Demo" } : c))
                           );
-                          toast.success(`${customer.customer_name || customer.customer_phone} banni`);
+                          toast.success(`${customer.customer_name || customer.customer_phone} ${t("dashboard.clients.banned_badge")}`);
+
                           return;
                         }
                         setBanTarget(customer);
                       }}
                     >
                       <ShieldBan className="h-3.5 w-3.5" />
-                      Bannir
+                      {t("dashboard.clients.ban")}
                     </Button>
                   )}
                 </div>

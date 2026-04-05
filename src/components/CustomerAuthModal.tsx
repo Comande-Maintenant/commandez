@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, ArrowLeft, Mail, Lock } from "lucide-react";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 
 type View = "login" | "signup" | "reset";
@@ -17,6 +18,7 @@ interface Props {
 
 export function CustomerAuthModal({ open, onClose, defaultView = "login", prefillEmail }: Props) {
   const { signIn, signUp, resetPassword } = useCustomerAuth();
+  const { t } = useLanguage();
   const [view, setView] = useState<View>(defaultView);
   const [email, setEmail] = useState(prefillEmail || "");
   const [password, setPassword] = useState("");
@@ -27,10 +29,10 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
     setLoading(true);
     try {
       await signIn(email, password);
-      toast.success("Connexion réussie !");
+      toast.success(t("auth.customer.login_success"));
       onClose();
     } catch (e: any) {
-      toast.error(e.message || "Erreur de connexion");
+      toast.error(e.message || t("auth.customer.login_error"));
     } finally {
       setLoading(false);
     }
@@ -39,7 +41,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
   const handleSignup = async () => {
     if (!email || !password) return;
     if (password.length < 6) {
-      toast.error("Le mot de passe doit faire au moins 6 caractères");
+      toast.error(t("auth.customer.password_too_short"));
       return;
     }
     setLoading(true);
@@ -58,10 +60,10 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
       if (!name) name = email.split("@")[0];
 
       await signUp(email, password, name, phone);
-      toast.success("Profil créé avec succès !");
+      toast.success(t("auth.customer.profile_created"));
       onClose();
     } catch (e: any) {
-      toast.error(e.message || "Erreur lors de l'inscription");
+      toast.error(e.message || t("auth.customer.signup_error"));
     } finally {
       setLoading(false);
     }
@@ -72,10 +74,10 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
     setLoading(true);
     try {
       await resetPassword(email);
-      toast.success("Lien de reinitialisation envoye par email");
+      toast.success(t("auth.customer.reset_sent"));
       setView("login");
     } catch (e: any) {
-      toast.error(e.message || "Erreur");
+      toast.error(e.message || t("auth.customer.login_error"));
     } finally {
       setLoading(false);
     }
@@ -91,9 +93,9 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {view === "login" && "Se connecter"}
-            {view === "signup" && "Creer mon profil"}
-            {view === "reset" && "Mot de passe oublie"}
+            {view === "login" && t("auth.customer.login_title")}
+            {view === "signup" && t("auth.customer.create_title")}
+            {view === "reset" && t("auth.customer.forgot_title")}
           </DialogTitle>
         </DialogHeader>
 
@@ -103,7 +105,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="email"
-              placeholder="Email"
+              placeholder={t("auth.customer.email_placeholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="pl-10 h-12"
@@ -117,7 +119,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="password"
-                placeholder="Mot de passe"
+                placeholder={t("auth.customer.password_placeholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 h-12"
@@ -135,15 +137,15 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
           {view === "login" && (
             <>
               <Button onClick={handleLogin} disabled={loading || !email || !password} className="w-full h-12">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Se connecter"}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.customer.login_button")}
               </Button>
               <div className="flex items-center justify-between text-sm">
                 <button onClick={() => switchView("reset")} className="text-muted-foreground hover:text-foreground underline">
-                  Mot de passe oublie ?
+                  {t("auth.customer.forgot_link")}
                 </button>
               </div>
               <p className="text-xs text-muted-foreground text-center">
-                Pas de compte ? Commandez directement, c'est possible sans compte.
+                {t("auth.customer.no_account_info")}
               </p>
             </>
           )}
@@ -151,11 +153,11 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
           {view === "signup" && (
             <>
               <Button onClick={handleSignup} disabled={loading || !email || !password} className="w-full h-12">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Creer mon profil"}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.customer.create_button")}
               </Button>
               <button onClick={() => switchView("login")} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mx-auto">
                 <ArrowLeft className="h-3 w-3" />
-                Déjà un compte ? Se connecter
+                {t("auth.customer.has_account")}
               </button>
             </>
           )}
@@ -163,11 +165,11 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
           {view === "reset" && (
             <>
               <Button onClick={handleReset} disabled={loading || !email} className="w-full h-12">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Envoyer le lien"}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.customer.send_link")}
               </Button>
               <button onClick={() => switchView("login")} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mx-auto">
                 <ArrowLeft className="h-3 w-3" />
-                Retour à la connexion
+                {t("auth.customer.back_to_login")}
               </button>
             </>
           )}

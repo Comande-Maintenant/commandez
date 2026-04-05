@@ -49,10 +49,10 @@ const AbonnementPage = () => {
           <h3 className="text-xl font-bold text-foreground mb-1">{t("sub.pro_name")}</h3>
           <div className="flex items-baseline justify-center gap-1 mb-1">
             <span className="text-4xl font-bold text-primary">1&euro;</span>
-            <span className="text-muted-foreground">/mois pendant 3 mois</span>
+            <span className="text-muted-foreground">{t("pricing.per_month_3")}</span>
           </div>
           <p className="text-sm text-muted-foreground mb-1">
-            puis 29,99&#8364;/mois
+            {t("pricing.then_price")}
           </p>
           <p className="text-sm text-muted-foreground mb-6">{t("plan.no_commitment_short")}</p>
 

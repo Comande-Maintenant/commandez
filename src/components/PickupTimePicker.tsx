@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Clock, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantHours } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ScheduleHour {
   day_of_week: number;
@@ -53,6 +54,7 @@ function formatTime(d: Date): string {
 }
 
 export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, onChange, primaryColor }: Props) => {
+  const { t } = useLanguage();
   const [mode, setMode] = useState<"asap" | "scheduled">(value ? "scheduled" : "asap");
   const [hours, setHours] = useState<ScheduleHour[]>([]);
   const [loading, setLoading] = useState(false);
@@ -98,24 +100,24 @@ export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, o
       const beforeAfternoon = available.filter((s) => s.getHours() < 15);
       const afternoon = available.filter((s) => s.getHours() >= 15);
 
-      const dayLabel = isToday ? "Aujourd'hui" : isTomorrow ? "Demain" : "";
+      const dayLabel = isToday ? t("pickup.today") : isTomorrow ? t("pickup.tomorrow") : "";
 
       if (beforeAfternoon.length > 0) {
         groups.push({
-          label: `${dayLabel}${beforeAfternoon[0].getHours() < 12 ? " - midi" : ""}`,
+          label: `${dayLabel}${beforeAfternoon[0].getHours() < 12 ? t("pickup.lunch") : ""}`,
           slots: beforeAfternoon.map((s) => s.toISOString()),
         });
       }
       if (afternoon.length > 0) {
         groups.push({
-          label: `${dayLabel} - soir`,
+          label: `${dayLabel}${t("pickup.dinner")}`,
           slots: afternoon.map((s) => s.toISOString()),
         });
       }
     }
 
     return groups;
-  }, [hours]);
+  }, [hours, t]);
 
   const handleSelectMode = (m: "asap" | "scheduled") => {
     setMode(m);
@@ -134,7 +136,7 @@ export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, o
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
         <Clock className="h-4 w-4" style={{ color: accent }} />
-        Quand souhaitez-vous récupérer votre commande ?
+        {t("pickup.title")}
       </h3>
 
       {/* ASAP / Scheduled toggle */}
@@ -147,8 +149,8 @@ export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, o
             backgroundColor: mode === "asap" ? `${accent}08` : "#f3f4f6",
           }}
         >
-          <p className="text-sm font-medium text-gray-900">Des que possible</p>
-          <p className="text-xs text-gray-500 mt-0.5">Environ {estimatedMinutes} min</p>
+          <p className="text-sm font-medium text-gray-900">{t("pickup.asap")}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t("pickup.asap_time").replace("{minutes}", String(estimatedMinutes))}</p>
         </button>
         <button
           onClick={() => handleSelectMode("scheduled")}
@@ -158,9 +160,9 @@ export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, o
             backgroundColor: mode === "scheduled" ? `${accent}08` : "#f3f4f6",
           }}
         >
-          <p className="text-sm font-medium text-gray-900">Choisir un horaire</p>
+          <p className="text-sm font-medium text-gray-900">{t("pickup.choose_time")}</p>
           <p className="text-xs text-gray-500 mt-0.5">
-            {selectedTime ? formatTime(selectedTime) : "Planifier"}
+            {selectedTime ? formatTime(selectedTime) : t("pickup.choose_time_desc")}
           </p>
         </button>
       </div>
@@ -176,9 +178,9 @@ export const PickupTimePicker = ({ restaurantId, estimatedMinutes = 15, value, o
             className="overflow-hidden"
           >
             {loading ? (
-              <div className="py-6 text-center text-sm text-gray-400">Chargement des créneaux...</div>
+              <div className="py-6 text-center text-sm text-gray-400">{t("pickup.loading_slots")}</div>
             ) : slotGroups.length === 0 ? (
-              <div className="py-6 text-center text-sm text-gray-400">Aucun créneau disponible pour le moment</div>
+              <div className="py-6 text-center text-sm text-gray-400">{t("pickup.no_slots")}</div>
             ) : (
               <div className="space-y-4 pt-1">
                 {slotGroups.map((group) => (

@@ -3,6 +3,7 @@ import { Search, MapPin, Star, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { searchPlaces } from '@/services/google-places';
+import { useLanguage } from '@/context/LanguageContext';
 import type { GooglePlaceResult } from '@/types/onboarding';
 
 interface GooglePlaceSearchProps {
@@ -10,6 +11,7 @@ interface GooglePlaceSearchProps {
 }
 
 export function GooglePlaceSearch({ onSelect }: GooglePlaceSearchProps) {
+  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GooglePlaceResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,7 @@ export function GooglePlaceSearch({ onSelect }: GooglePlaceSearchProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          placeholder="Nom de votre restaurant..."
+          placeholder={t('onboarding.place.search_placeholder')}
           className="flex-1"
         />
         <Button onClick={handleSearch} disabled={loading || query.trim().length < 3}>

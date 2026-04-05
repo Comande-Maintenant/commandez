@@ -4,21 +4,23 @@ import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/context/LanguageContext';
 
-function getPasswordStrength(pw: string) {
+function getPasswordStrength(pw: string, t: (key: string) => string) {
   if (!pw || pw.length < 8)
-    return { label: 'Faible', color: '#EF4444', percent: 25 };
+    return { label: t('auth.reset.strength_weak'), color: '#EF4444', percent: 25 };
   let score = 1;
   if (pw.length >= 12) score++;
   if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
   if (/[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
-  if (score <= 2) return { label: 'Moyen', color: '#F59E0B', percent: 55 };
-  return { label: 'Fort', color: '#10B981', percent: 100 };
+  if (score <= 2) return { label: t('auth.reset.strength_medium'), color: '#F59E0B', percent: 55 };
+  return { label: t('auth.reset.strength_strong'), color: '#10B981', percent: 100 };
 }
 
 const ReinitialiserMotDePassePage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -60,20 +62,20 @@ const ReinitialiserMotDePassePage = () => {
     };
   }, []);
 
-  const strength = getPasswordStrength(password);
+  const strength = getPasswordStrength(password, t);
 
   const handleReset = async () => {
     setError('');
     if (!password) {
-      setError('Entrez un nouveau mot de passe.');
+      setError(t('auth.reset.password_required'));
       return;
     }
     if (password.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caracteres.');
+      setError(t('auth.reset.password_min_length'));
       return;
     }
     if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas.');
+      setError(t('auth.reset.passwords_no_match'));
       return;
     }
 
@@ -83,7 +85,7 @@ const ReinitialiserMotDePassePage = () => {
       if (updateError) throw updateError;
       navigate('/connexion?reset=1');
     } catch (err: any) {
-      setError(err.message || 'Erreur lors de la reinitialisation.');
+      setError(err.message || t('auth.reset.reset_error'));
     } finally {
       setLoading(false);
     }
@@ -110,12 +112,12 @@ const ReinitialiserMotDePassePage = () => {
             <div className="w-14 h-14 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
               <AlertCircle className="h-7 w-7 text-destructive" />
             </div>
-            <h2 className="text-xl font-bold text-foreground">Lien expiré ou invalide</h2>
+            <h2 className="text-xl font-bold text-foreground">{t('auth.reset.link_expired')}</h2>
             <p className="text-sm text-muted-foreground">
-              Ce lien de réinitialisation a expiré ou a déjà été utilisé.
+              {t('auth.reset.link_expired_desc')}
             </p>
             <Link to="/mot-de-passe-oublie">
-              <Button className="w-full h-12 rounded-xl mt-2">Demander un nouveau lien</Button>
+              <Button className="w-full h-12 rounded-xl mt-2">{t('auth.reset.request_new')}</Button>
             </Link>
           </div>
         </main>
@@ -129,7 +131,7 @@ const ReinitialiserMotDePassePage = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-3">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
-          <p className="text-sm text-muted-foreground">Verification du lien...</p>
+          <p className="text-sm text-muted-foreground">{t('auth.reset.verifying')}</p>
         </div>
       </div>
     );
@@ -155,16 +157,16 @@ const ReinitialiserMotDePassePage = () => {
           >
             <div className="bg-card rounded-xl border border-border p-6 space-y-5">
               <div>
-                <h2 className="text-xl font-bold text-foreground">Nouveau mot de passe</h2>
+                <h2 className="text-xl font-bold text-foreground">{t('auth.reset.new_password_title')}</h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Choisissez un nouveau mot de passe pour votre compte.
+                  {t('auth.reset.new_password_desc')}
                 </p>
               </div>
 
               {/* New password */}
               <div className="space-y-1.5">
                 <label htmlFor="new-password" className="text-sm font-medium text-foreground">
-                  Nouveau mot de passe
+                  {t('auth.reset.new_password_label')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -174,7 +176,7 @@ const ReinitialiserMotDePassePage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="8 caracteres minimum"
+                    placeholder={t('auth.reset.new_password_placeholder')}
                     disabled={loading}
                     className="flex w-full rounded-xl border-2 border-input bg-background px-3 py-3 pl-10 pr-10 text-base transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
                   />
@@ -198,7 +200,7 @@ const ReinitialiserMotDePassePage = () => {
                       />
                     </div>
                     <p className="text-xs" style={{ color: strength.color }}>
-                      Force du mot de passe : {strength.label}
+                      {t('auth.reset.strength_prefix')} {strength.label}
                     </p>
                   </div>
                 )}
@@ -207,7 +209,7 @@ const ReinitialiserMotDePassePage = () => {
               {/* Confirm password */}
               <div className="space-y-1.5">
                 <label htmlFor="confirm-password" className="text-sm font-medium text-foreground">
-                  Confirmer le mot de passe
+                  {t('auth.reset.confirm_password')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -217,7 +219,7 @@ const ReinitialiserMotDePassePage = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Confirmez votre mot de passe"
+                    placeholder={t('auth.reset.confirm_placeholder')}
                     disabled={loading}
                     className="flex w-full rounded-xl border-2 border-input bg-background px-3 py-3 pl-10 pr-10 text-base transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
                   />
@@ -248,7 +250,7 @@ const ReinitialiserMotDePassePage = () => {
                 {loading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  'Reinitialiser \u2192'
+                  t('auth.reset.reset_button')
                 )}
               </Button>
             </div>

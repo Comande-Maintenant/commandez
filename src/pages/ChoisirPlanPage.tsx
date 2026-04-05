@@ -156,10 +156,10 @@ const ChoisirPlanPage = () => {
           </div>
           <div className="flex items-baseline justify-center gap-1 mt-2">
             <span className="text-4xl font-bold text-primary">1&#8364;</span>
-            <span className="text-muted-foreground">/mois pendant 3 mois</span>
+            <span className="text-muted-foreground">{t("pricing.per_month_3")}</span>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            puis 29,99&#8364;/mois. Sans engagement.
+            {t("pricing.then_price_no_commitment")}
           </p>
         </div>
 
@@ -228,15 +228,15 @@ const ChoisirPlanPage = () => {
           </h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Aujourd'hui</span>
+              <span className="text-muted-foreground">{t("pricing.today")}</span>
               <span className="font-semibold text-primary">1,00&#8364;</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Mois 2 et 3</span>
+              <span className="text-muted-foreground">{t("pricing.months_2_3")}</span>
               <span className="text-muted-foreground">1,00&#8364;/mois</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">A partir du mois 4</span>
+              <span className="text-muted-foreground">{t("pricing.from_month_4")}</span>
               <span className="text-muted-foreground">29,99&#8364;/mois</span>
             </div>
           </div>
