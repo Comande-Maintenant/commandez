@@ -106,6 +106,8 @@
   "custom.complet": "Full",
   "custom.skip": "Skip",
   "custom.no_thanks": "No thanks",
+  "custom.which_meat": "Which meat?",
+  "custom.cancel": "Cancel",
   "custom.same_sauce_frites": "Fries sauce",
   "custom.free_sauces": "{count} free",
   "custom.extra_sauce": "+{price} € per sauce",

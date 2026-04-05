@@ -245,6 +245,7 @@ export const ProductCustomizer = ({
   const [selectedAccompagnements, setSelectedAccompagnements] = useState<DbAccompagnement[]>([]);
   const [accompSize, setAccompSize] = useState<"small" | "medium" | "large">("medium");
   const [fritesSauces, setFritesSauces] = useState<string[]>([]);
+  const [supplementViandePicker, setSupplementViandePicker] = useState<ResolvedStep["options"][0] | null>(null);
 
   const isAssiette = productType === "assiette";
   const freeAccompagnements = config?.free_accompagnements ?? 1;
@@ -920,6 +921,8 @@ export const ProductCustomizer = ({
                       {currentStep.step_type === "multi_select" && (() => {
                         // Max depends on step: viande uses base's max_viandes, others unlimited
                         const stepMax = currentStep.step_key === "viande" ? maxViandes : 99;
+                        const isSupplementStep = currentStep.step_key === "supplement";
+                        const isViandeSupp = (name: string) => /viande/i.test(name);
                         return (
                         <div>
                           <h4 className="text-sm font-semibold text-gray-900 mb-1">{t(currentStep.label_i18n)}</h4>
@@ -935,7 +938,18 @@ export const ProductCustomizer = ({
                               return (
                                 <button
                                   key={option.id}
-                                  onClick={() => handleMultiSelect(currentStep.step_key, t(currentStep.label_i18n), option, stepMax)}
+                                  onClick={() => {
+                                    // Supplement viande: open viande picker instead of direct toggle
+                                    if (isSupplementStep && isViandeSupp(option.name) && viandes.length > 0 && !isSelected) {
+                                      setSupplementViandePicker(option);
+                                      return;
+                                    }
+                                    // If deselecting a viande supplement, also close picker
+                                    if (isSupplementStep && isViandeSupp(option.name) && isSelected) {
+                                      setSupplementViandePicker(null);
+                                    }
+                                    handleMultiSelect(currentStep.step_key, t(currentStep.label_i18n), option, stepMax);
+                                  }}
                                   className={`p-3 rounded-xl border-2 text-left transition-all active:scale-[0.97] ${
                                     isSelected ? "border-current" : "border-gray-200"
                                   }`}
@@ -952,6 +966,40 @@ export const ProductCustomizer = ({
                               );
                             })}
                           </div>
+                          {/* Viande picker for supplement */}
+                          {supplementViandePicker && isSupplementStep && (
+                            <div className="mt-3 p-3 rounded-xl bg-gray-50 border border-gray-200">
+                              <p className="text-xs font-semibold text-gray-700 mb-2">{t("custom.which_meat")}</p>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                {viandes.filter((v) => v.enabled).map((v) => (
+                                  <button
+                                    key={v.id}
+                                    onClick={() => {
+                                      const opt = supplementViandePicker;
+                                      // Add the supplement with viande name appended
+                                      const modifiedOpt = {
+                                        ...opt,
+                                        id: `${opt.id}__${v.id}`,
+                                        name: `${opt.name} (${v.name})`,
+                                      };
+                                      handleMultiSelect(currentStep.step_key, t(currentStep.label_i18n), modifiedOpt, stepMax);
+                                      setSupplementViandePicker(null);
+                                    }}
+                                    className="p-2 rounded-lg border border-gray-200 text-xs font-medium text-gray-800 hover:border-current transition-all active:scale-[0.97]"
+                                    style={{ "--tw-border-opacity": 1 } as any}
+                                  >
+                                    {v.name}
+                                  </button>
+                                ))}
+                              </div>
+                              <button
+                                onClick={() => setSupplementViandePicker(null)}
+                                className="mt-2 text-xs text-gray-400 underline"
+                              >
+                                {t("custom.cancel")}
+                              </button>
+                            </div>
+                          )}
                           {!currentStep.required && (
                             <button onClick={goNext} className="mt-4 text-sm font-medium text-gray-500 underline">
                               {t("custom.skip")}
