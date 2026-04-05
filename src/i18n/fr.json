@@ -91,7 +91,7 @@
   "custom.previous": "Precedent",
   "custom.required": "Obligatoire",
   "custom.optional": "Optionnel",
-  "custom.max_selections": "max {max}",
+  "custom.max_selections": "choix ({max} max)",
   "custom.add_to_cart": "Ajouter à la commande",
   "custom.your_selection": "Votre selection",
   "custom.base_price": "Base : {price} €",

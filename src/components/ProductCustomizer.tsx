@@ -300,8 +300,11 @@ export const ProductCustomizer = ({
     if (step?.config?.max_from_base && selectedBase) {
       return selectedBase.max_viandes ?? 1;
     }
-    return 99;
-  }, [steps, selectedBase]);
+    // Fallback: parse item name for "X viande(s)" pattern
+    const match = item.name.match(/(\d+)\s*viandes?/i);
+    if (match) return parseInt(match[1], 10);
+    return 1;
+  }, [steps, selectedBase, item.name]);
 
   // Upsell items helpers
   const boissonItems = useMemo(
@@ -414,8 +417,12 @@ export const ProductCustomizer = ({
     if (!currentStep.required) return true;
     if (currentStep.step_type === "recap") return true;
     const sel = getStepSelections(currentStep.step_key);
+    // For viande step with a specific count, require exactly that many
+    if (currentStep.step_key === "viande" && maxViandes > 1 && maxViandes < 99) {
+      return sel.length === maxViandes;
+    }
     return sel.length > 0;
-  }, [currentStep, getStepSelections]);
+  }, [currentStep, getStepSelections, maxViandes]);
 
   const tName = (nameTranslations: Record<string, string> | undefined, fallback: string) => {
     return nameTranslations?.[language] || fallback;
