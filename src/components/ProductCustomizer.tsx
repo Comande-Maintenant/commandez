@@ -456,22 +456,38 @@ export const ProductCustomizer = ({
     }
   };
 
-  // Handle multi_select
-  const handleMultiSelect = (stepKey: string, label: string, option: ResolvedStep["options"][0], max: number) => {
+  // Handle multi_select (viande step allows duplicates, others toggle)
+  const handleMultiSelect = (stepKey: string, label: string, option: ResolvedStep["options"][0], max: number, allowDuplicates = false) => {
     const current = getStepSelections(stepKey);
-    const exists = current.find((s) => s.id === option.id);
     let next: StepSelection["selections"];
-    if (exists) {
-      next = current.filter((s) => s.id !== option.id);
-    } else {
+
+    if (allowDuplicates) {
+      const countThis = current.filter((s) => s.id === option.id).length;
       if (current.length >= max) {
-        if (max === 1) {
-          next = [{ id: option.id, name: option.name, price: option.price }];
+        // At max: remove all instances of this meat (cycle reset)
+        if (countThis > 0) {
+          next = current.filter((s) => s.id !== option.id);
         } else {
-          return; // at max
+          return; // can't add, at max and this one isn't selected
         }
       } else {
+        // Under max: add one more
         next = [...current, { id: option.id, name: option.name, price: option.price }];
+      }
+    } else {
+      const exists = current.find((s) => s.id === option.id);
+      if (exists) {
+        next = current.filter((s) => s.id !== option.id);
+      } else {
+        if (current.length >= max) {
+          if (max === 1) {
+            next = [{ id: option.id, name: option.name, price: option.price }];
+          } else {
+            return; // at max
+          }
+        } else {
+          next = [...current, { id: option.id, name: option.name, price: option.price }];
+        }
       }
     }
     setStepSelections(stepKey, label, next);
@@ -939,6 +955,7 @@ export const ProductCustomizer = ({
                       {currentStep.step_type === "multi_select" && (() => {
                         // Max depends on step: viande uses base's max_viandes, others unlimited
                         const stepMax = currentStep.step_key === "viande" ? maxViandes : 99;
+                        const isViandeStep = currentStep.step_key === "viande";
                         const isSupplementStep = currentStep.step_key === "supplement";
                         const isViandeSupp = (name: string) => /viande/i.test(name);
                         return (
@@ -953,6 +970,7 @@ export const ProductCustomizer = ({
                             {currentResolved.options.map((option) => {
                               const sel = getStepSelections(currentStep.step_key);
                               const isSelected = sel.some((s) => s.id === option.id);
+                              const countThis = isViandeStep ? sel.filter((s) => s.id === option.id).length : 0;
                               return (
                                 <button
                                   key={option.id}
@@ -962,11 +980,10 @@ export const ProductCustomizer = ({
                                       setSupplementViandePicker(option);
                                       return;
                                     }
-                                    // If deselecting a viande supplement, also close picker
                                     if (isSupplementStep && isViandeSupp(option.name) && isSelected) {
                                       setSupplementViandePicker(null);
                                     }
-                                    handleMultiSelect(currentStep.step_key, t(currentStep.label_i18n), option, stepMax);
+                                    handleMultiSelect(currentStep.step_key, t(currentStep.label_i18n), option, stepMax, isViandeStep);
                                   }}
                                   className={`p-3 rounded-xl border-2 text-left transition-all active:scale-[0.97] ${
                                     isSelected ? "border-current" : "border-gray-200"
@@ -975,7 +992,13 @@ export const ProductCustomizer = ({
                                 >
                                   <div className="flex items-center justify-between">
                                     <p className="text-sm font-medium text-gray-900">{tName(option.name_translations, option.name)}</p>
-                                    {isSelected && <Check className="h-4 w-4" style={{ color: accent }} />}
+                                    {isViandeStep && countThis > 0 ? (
+                                      <span className="min-w-[24px] h-6 rounded-full text-xs font-bold text-white flex items-center justify-center" style={{ backgroundColor: accent }}>
+                                        x{countThis}
+                                      </span>
+                                    ) : isSelected ? (
+                                      <Check className="h-4 w-4" style={{ color: accent }} />
+                                    ) : null}
                                   </div>
                                   {option.price > 0 && (
                                     <p className="text-xs text-gray-500 mt-0.5">+{option.price.toFixed(2)} €</p>
