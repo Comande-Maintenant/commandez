@@ -5,6 +5,7 @@ import {
   AlertTriangle, Clock, Trash2, CreditCard, UserX, Search, Mail, Send,
   RefreshCw, Ticket, Gift, ShoppingBag, ChevronDown, ChevronUp,
   BarChart3, ArrowRight, ExternalLink, Plus, Eye, Pencil, UserPlus, Check, ArrowDown, RotateCw,
+  Activity, Globe, Monitor, Smartphone, Languages,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -12,8 +13,10 @@ import {
   fetchSuperAdminKPIs, fetchAcquisitionFunnel, fetchProspectList,
   fetchDemoStats, fetchAllPromoCodes, fetchAllReferrals,
   fetchAllProspects, createProspect,
+  fetchAcquisitionStats, fetchLiveSessions,
   type SuperAdminKPIs, type AcquisitionFunnelData, type ProspectItem,
   type DemoStatsData, type AllReferralsData, type ProspectRow,
+  type AcquisitionStats,
 } from "@/lib/api";
 import type { DbOrder, DbCustomer, DbPromoCode, DbRestaurant } from "@/types/database";
 import { getPlaceDetails } from "@/services/google-places";
@@ -39,6 +42,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 
 const TABS = [
   { key: "overview", label: "Vue d'ensemble", icon: BarChart3 },
+  { key: "acquisition", label: "Acquisition", icon: Activity },
   { key: "prospects", label: "Prospects", icon: UserPlus },
   { key: "restaurants", label: "Restaurants", icon: Store },
   { key: "revenue", label: "Revenue", icon: Euro },
@@ -153,6 +157,11 @@ const SuperAdminPage = () => {
   const [demoStats, setDemoStats] = useState<DemoStatsData | null>(null);
   const [demoOpen, setDemoOpen] = useState(false);
 
+  // Acquisition
+  const [acqStats, setAcqStats] = useState<AcquisitionStats | null>(null);
+  const [acqPeriod, setAcqPeriod] = useState(30);
+  const [liveSessions, setLiveSessions] = useState<{ count: number; sessions: any[] }>({ count: 0, sessions: [] });
+
   // Prospects
   const [prospectRows, setProspectRows] = useState<ProspectRow[]>([]);
   const [prospectSearch, setProspectSearch] = useState("");
@@ -210,7 +219,7 @@ const SuperAdminPage = () => {
   const loadData = useCallback(async () => {
     setRefreshing(true);
     try {
-      const [k, f, p, demo, promos, refs, emailRes, unsubRes, prospectData] = await Promise.all([
+      const [k, f, p, demo, promos, refs, emailRes, unsubRes, prospectData, acq, live] = await Promise.all([
         fetchSuperAdminKPIs(),
         fetchAcquisitionFunnel(),
         fetchProspectList(),
@@ -220,6 +229,8 @@ const SuperAdminPage = () => {
         supabase.from("email_logs").select("id, email_type, recipient_email, sent_at").order("sent_at", { ascending: false }).limit(200),
         supabase.from("user_email_preferences").select("id", { count: "exact" }).not("unsubscribed_at", "is", null),
         fetchAllProspects(),
+        fetchAcquisitionStats(acqPeriod),
+        fetchLiveSessions(),
       ]);
       setKpis(k);
       setFunnel(f);
@@ -230,11 +241,13 @@ const SuperAdminPage = () => {
       setReferralsData(refs);
       setEmailLogs((emailRes.data ?? []) as unknown as EmailLog[]);
       setUnsubCount(unsubRes.count ?? 0);
+      setAcqStats(acq);
+      setLiveSessions(live);
     } catch (e) {
       console.error("loadData error:", e);
     }
     setRefreshing(false);
-  }, []);
+  }, [acqPeriod]);
 
   // ── Load alerts ──
   const loadAlerts = useCallback(async () => {
@@ -663,6 +676,320 @@ const SuperAdminPage = () => {
                   </div>
                 </CardContent>
               </Card>
+            )}
+          </>
+        )}
+
+        {/* ════════ TAB: ACQUISITION ════════ */}
+        {tab === "acquisition" && (
+          <>
+            {/* Live sessions banner */}
+            <Card className="rounded-2xl border-emerald-200 bg-emerald-50/50">
+              <CardContent className="py-4">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                    <div className="absolute inset-0 h-3 w-3 rounded-full bg-emerald-500 animate-ping" />
+                  </div>
+                  <span className="text-lg font-semibold">
+                    {liveSessions.count} visiteur{liveSessions.count !== 1 ? "s" : ""} en direct
+                  </span>
+                </div>
+                {liveSessions.sessions.length > 0 && (
+                  <div className="mt-3 space-y-1">
+                    {liveSessions.sessions.slice(0, 8).map((s, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        {s.device === "mobile" ? <Smartphone className="h-3.5 w-3.5" /> : <Monitor className="h-3.5 w-3.5" />}
+                        <span className="font-mono text-xs">{s.page_path}</span>
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                          {s.side === "restaurateur" ? "resto" : "client"}
+                        </Badge>
+                        <span className="text-xs">{s.language?.toUpperCase()}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Period selector */}
+            <div className="flex gap-2">
+              {[7, 14, 30, 90].map((d) => (
+                <Button
+                  key={d}
+                  variant={acqPeriod === d ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    setAcqPeriod(d);
+                    fetchAcquisitionStats(d).then(setAcqStats);
+                  }}
+                >
+                  {d}j
+                </Button>
+              ))}
+            </div>
+
+            {!acqStats ? (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <Card key={i} className="rounded-2xl"><CardContent className="py-4"><Skeleton className="h-10 w-full" /></CardContent></Card>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* KPI cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {[
+                    { label: "Pages vues", value: acqStats.totalViews, icon: Eye },
+                    { label: "Visiteurs uniques", value: acqStats.uniqueVisitors, icon: Users },
+                    { label: "Sessions", value: acqStats.uniqueSessions, icon: Activity },
+                    { label: "Aujourd'hui", value: acqStats.viewsToday, icon: TrendingUp },
+                  ].map((kpi) => (
+                    <Card key={kpi.label} className="rounded-2xl">
+                      <CardContent className="py-4">
+                        <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+                          <kpi.icon className="h-3.5 w-3.5" />
+                          {kpi.label}
+                        </div>
+                        <div className="text-2xl font-bold">{kpi.value.toLocaleString("fr-FR")}</div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Views per day chart */}
+                <Card className="rounded-2xl">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Visites / jour</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-52">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={acqStats.viewsPerDay}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="date" fontSize={11} />
+                          <YAxis fontSize={11} />
+                          <Tooltip />
+                          <Area type="monotone" dataKey="count" name="Pages vues" stroke="#10B981" fill="#10B981" fillOpacity={0.15} />
+                          <Area type="monotone" dataKey="unique_visitors" name="Visiteurs uniques" stroke="#6366F1" fill="#6366F1" fillOpacity={0.1} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Side breakdown + Device + Language */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {/* User vs Restaurateur */}
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Users className="h-4 w-4" /> Client vs Resto
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {acqStats.viewsBySide.map((s) => {
+                        const pct = acqStats.totalViews ? Math.round((s.count / acqStats.totalViews) * 100) : 0;
+                        return (
+                          <div key={s.side} className="flex items-center justify-between py-1.5">
+                            <span className="text-sm capitalize">{s.side === "user" ? "Clients" : "Restaurateurs"}</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-20 h-2 rounded-full bg-muted overflow-hidden">
+                                <div
+                                  className="h-full rounded-full"
+                                  style={{ width: `${pct}%`, backgroundColor: s.side === "user" ? "#10B981" : "#6366F1" }}
+                                />
+                              </div>
+                              <span className="text-xs font-medium w-10 text-right">{pct}%</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </CardContent>
+                  </Card>
+
+                  {/* Device */}
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Monitor className="h-4 w-4" /> Appareils
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {acqStats.viewsByDevice.map((d) => {
+                        const pct = acqStats.totalViews ? Math.round((d.count / acqStats.totalViews) * 100) : 0;
+                        return (
+                          <div key={d.device} className="flex items-center justify-between py-1.5">
+                            <div className="flex items-center gap-2 text-sm">
+                              {d.device === "mobile" ? <Smartphone className="h-3.5 w-3.5" /> : <Monitor className="h-3.5 w-3.5" />}
+                              <span className="capitalize">{d.device}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-20 h-2 rounded-full bg-muted overflow-hidden">
+                                <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                              </div>
+                              <span className="text-xs font-medium w-10 text-right">{pct}%</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </CardContent>
+                  </Card>
+
+                  {/* Languages */}
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Languages className="h-4 w-4" /> Langues
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {acqStats.viewsByLanguage.slice(0, 6).map((l) => {
+                        const pct = acqStats.totalViews ? Math.round((l.count / acqStats.totalViews) * 100) : 0;
+                        return (
+                          <div key={l.language} className="flex items-center justify-between py-1.5">
+                            <span className="text-sm uppercase">{l.language}</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-20 h-2 rounded-full bg-muted overflow-hidden">
+                                <div className="h-full rounded-full bg-amber-500" style={{ width: `${pct}%` }} />
+                              </div>
+                              <span className="text-xs font-medium w-10 text-right">{pct}%</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Page types breakdown */}
+                <Card className="rounded-2xl">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Par type de page</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {acqStats.viewsByPageType.map((pt) => (
+                        <div key={pt.page_type} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                          <span className="text-sm capitalize">{pt.page_type}</span>
+                          <span className="text-sm font-semibold">{pt.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Top pages + Top referrers + UTM sources */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Top pages</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {acqStats.topPages.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">Pas encore de donnees</p>
+                      ) : (
+                        <div className="space-y-1.5">
+                          {acqStats.topPages.map((p, i) => (
+                            <div key={i} className="flex items-center justify-between text-sm">
+                              <span className="font-mono text-xs truncate max-w-[180px]">{p.page_path}</span>
+                              <span className="font-semibold">{p.count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Globe className="h-4 w-4" /> Referrers
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {acqStats.topReferrers.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">Pas encore de donnees</p>
+                      ) : (
+                        <div className="space-y-1.5">
+                          {acqStats.topReferrers.map((r, i) => (
+                            <div key={i} className="flex items-center justify-between text-sm">
+                              <span className="truncate max-w-[180px]">{r.referrer}</span>
+                              <span className="font-semibold">{r.count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Sources UTM</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {acqStats.topUtmSources.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">Pas encore de donnees</p>
+                      ) : (
+                        <div className="space-y-1.5">
+                          {acqStats.topUtmSources.map((u, i) => (
+                            <div key={i} className="flex items-center justify-between text-sm">
+                              <span className="truncate max-w-[180px]">{u.utm_source}</span>
+                              <span className="font-semibold">{u.count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Conversion funnel based on real page data */}
+                <Card className="rounded-2xl">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Funnel de conversion (pages vues)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {(() => {
+                      const landing = acqStats.viewsByPageType.find((p) => p.page_type === "landing")?.count || 0;
+                      const menu = acqStats.viewsByPageType.find((p) => p.page_type === "menu")?.count || 0;
+                      const demo = acqStats.viewsByPageType.find((p) => p.page_type === "demo")?.count || 0;
+                      const order = acqStats.viewsByPageType.find((p) => p.page_type === "order")?.count || 0;
+                      const inscription = acqStats.viewsByPageType.find((p) => p.page_type === "inscription")?.count || 0;
+                      const admin = acqStats.viewsByPageType.find((p) => p.page_type === "admin")?.count || 0;
+                      const steps = [
+                        { label: "Landing", count: landing, color: "#10B981" },
+                        { label: "Menu restaurant", count: menu, color: "#10B981" },
+                        { label: "Demo", count: demo, color: "#6366F1" },
+                        { label: "Commande", count: order, color: "#F59E0B" },
+                        { label: "Inscription resto", count: inscription, color: "#3B82F6" },
+                        { label: "Dashboard admin", count: admin, color: "#8B5CF6" },
+                      ];
+                      const maxCount = Math.max(...steps.map((s) => s.count), 1);
+                      return (
+                        <div className="space-y-2">
+                          {steps.map((s) => (
+                            <div key={s.label} className="flex items-center gap-3">
+                              <span className="text-sm w-36 shrink-0">{s.label}</span>
+                              <div className="flex-1 h-6 bg-muted rounded overflow-hidden">
+                                <div
+                                  className="h-full rounded flex items-center px-2"
+                                  style={{
+                                    width: `${Math.max((s.count / maxCount) * 100, s.count > 0 ? 8 : 0)}%`,
+                                    backgroundColor: s.color,
+                                  }}
+                                >
+                                  <span className="text-xs font-semibold text-white">{s.count}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                  </CardContent>
+                </Card>
+              </>
             )}
           </>
         )}

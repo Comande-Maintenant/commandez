@@ -9,6 +9,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { useCrossDomainAuth } from "@/hooks/useCrossDomainAuth";
+import { usePageTracking } from "@/hooks/usePageTracking";
 
 // Static imports: hot paths, small pages
 import Index from "./pages/Index";
@@ -55,6 +56,11 @@ function AuthSync() {
   return null;
 }
 
+function PageTracker() {
+  usePageTracking();
+  return null;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -66,6 +72,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <PageTracker />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />

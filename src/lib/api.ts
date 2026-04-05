@@ -1048,6 +1048,169 @@ export async function createProspect(data: CreateProspectData): Promise<DbRestau
   return result as unknown as DbRestaurant;
 }
 
+// ── Acquisition Analytics ──
+
+export interface AcquisitionStats {
+  // Views
+  totalViews: number;
+  viewsToday: number;
+  viewsThisWeek: number;
+  viewsThisMonth: number;
+  uniqueVisitors: number;
+  uniqueSessions: number;
+  // Breakdown
+  viewsByPageType: { page_type: string; count: number }[];
+  viewsBySide: { side: string; count: number }[];
+  viewsByDevice: { device: string; count: number }[];
+  viewsByLanguage: { language: string; count: number }[];
+  // Top pages
+  topPages: { page_path: string; count: number }[];
+  topReferrers: { referrer: string; count: number }[];
+  topUtmSources: { utm_source: string; count: number }[];
+  // Per-day chart
+  viewsPerDay: { date: string; count: number; unique_visitors: number }[];
+}
+
+export async function fetchAcquisitionStats(days: number = 30): Promise<AcquisitionStats> {
+  const since = new Date();
+  since.setDate(since.getDate() - days);
+  const sinceIso = since.toISOString();
+
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - 7);
+
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+
+  // Fetch all page views in the period
+  const { data: views, error } = await supabase
+    .from("page_views")
+    .select("page_path, page_type, side, device, language, referrer, utm_source, visitor_id, session_id, created_at")
+    .gte("created_at", sinceIso)
+    .order("created_at", { ascending: false })
+    .limit(10000);
+
+  if (error) throw error;
+  const rows = views ?? [];
+
+  const totalViews = rows.length;
+  const viewsToday = rows.filter((r) => new Date(r.created_at) >= todayStart).length;
+  const viewsThisWeek = rows.filter((r) => new Date(r.created_at) >= weekStart).length;
+  const viewsThisMonth = rows.filter((r) => new Date(r.created_at) >= monthStart).length;
+  const uniqueVisitors = new Set(rows.map((r) => r.visitor_id)).size;
+  const uniqueSessions = new Set(rows.map((r) => r.session_id)).size;
+
+  // Aggregate helpers
+  function countBy<T extends string>(key: T) {
+    const map = new Map<string, number>();
+    for (const r of rows) {
+      const val = (r as any)[key] || "unknown";
+      map.set(val, (map.get(val) || 0) + 1);
+    }
+    return Array.from(map.entries())
+      .map(([k, count]) => ({ [key]: k, count }) as any)
+      .sort((a: any, b: any) => b.count - a.count);
+  }
+
+  // Views per day
+  const dayMap = new Map<string, { count: number; visitors: Set<string> }>();
+  for (const r of rows) {
+    const d = new Date(r.created_at);
+    const label = `${d.getDate()}/${d.getMonth() + 1}`;
+    if (!dayMap.has(label)) dayMap.set(label, { count: 0, visitors: new Set() });
+    const entry = dayMap.get(label)!;
+    entry.count++;
+    if (r.visitor_id) entry.visitors.add(r.visitor_id);
+  }
+  // Build array sorted by date
+  const viewsPerDay: AcquisitionStats["viewsPerDay"] = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const label = `${d.getDate()}/${d.getMonth() + 1}`;
+    const entry = dayMap.get(label);
+    viewsPerDay.push({ date: label, count: entry?.count || 0, unique_visitors: entry?.visitors.size || 0 });
+  }
+
+  // Top pages (deduplicated by path)
+  const pageMap = new Map<string, number>();
+  for (const r of rows) {
+    pageMap.set(r.page_path, (pageMap.get(r.page_path) || 0) + 1);
+  }
+  const topPages = Array.from(pageMap.entries())
+    .map(([page_path, count]) => ({ page_path, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+
+  // Top referrers (filter nulls)
+  const refMap = new Map<string, number>();
+  for (const r of rows) {
+    if (r.referrer) refMap.set(r.referrer, (refMap.get(r.referrer) || 0) + 1);
+  }
+  const topReferrers = Array.from(refMap.entries())
+    .map(([referrer, count]) => ({ referrer, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+
+  // Top UTM sources
+  const utmMap = new Map<string, number>();
+  for (const r of rows) {
+    if (r.utm_source) utmMap.set(r.utm_source, (utmMap.get(r.utm_source) || 0) + 1);
+  }
+  const topUtmSources = Array.from(utmMap.entries())
+    .map(([utm_source, count]) => ({ utm_source, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+
+  return {
+    totalViews,
+    viewsToday,
+    viewsThisWeek,
+    viewsThisMonth,
+    uniqueVisitors,
+    uniqueSessions,
+    viewsByPageType: countBy("page_type"),
+    viewsBySide: countBy("side"),
+    viewsByDevice: countBy("device"),
+    viewsByLanguage: countBy("language"),
+    topPages,
+    topReferrers,
+    topUtmSources,
+    viewsPerDay,
+  };
+}
+
+/** Fetch live sessions: visitors active in the last 5 minutes */
+export async function fetchLiveSessions(): Promise<{
+  count: number;
+  sessions: { visitor_id: string; page_path: string; device: string; language: string; side: string; created_at: string }[];
+}> {
+  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+  const { data, error } = await supabase
+    .from("page_views")
+    .select("visitor_id, page_path, device, language, side, created_at")
+    .gte("created_at", fiveMinAgo)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  const rows = data ?? [];
+
+  // Deduplicate by visitor_id (keep most recent)
+  const seen = new Map<string, typeof rows[0]>();
+  for (const r of rows) {
+    if (r.visitor_id && !seen.has(r.visitor_id)) seen.set(r.visitor_id, r);
+  }
+
+  return {
+    count: seen.size,
+    sessions: Array.from(seen.values()),
+  };
+}
+
 // ── Stock Photos Auto-Match ──
 
 interface StockPhoto {
