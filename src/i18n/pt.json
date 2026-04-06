@@ -1196,5 +1196,6 @@
   "error.file_too_small": "A conversao de {filename} produziu um arquivo muito pequeno ({size} KB). Tente converter a foto para JPEG antes de importar.",
   "error.conversion_failed": "Falha na conversao",
   "error.image_too_large": "A imagem excede 2 MB. Escolha uma imagem mais leve.",
-  "custom.step_of": "{current} / {total}"
+  "custom.step_of": "{current} / {total}",
+  "custom.max_selections": "máx {max}"
 }

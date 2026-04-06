@@ -1196,5 +1196,6 @@
   "error.file_too_small": "Конвертация {filename} дала слишком маленький файл ({size} КБ). Попробуйте конвертировать фото в JPEG перед импортом.",
   "error.conversion_failed": "Ошибка конвертации",
   "error.image_too_large": "Изображение превышает 2 МБ. Выберите более легкое изображение.",
-  "custom.step_of": "{current} / {total}"
+  "custom.step_of": "{current} / {total}",
+  "custom.max_selections": "макс {max}"
 }

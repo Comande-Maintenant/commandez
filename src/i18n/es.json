@@ -1196,5 +1196,6 @@
   "error.file_too_small": "La conversion de {filename} produjo un archivo muy pequeno ({size} KB). Intenta convertir la foto a JPEG antes de importar.",
   "error.conversion_failed": "Error de conversion",
   "error.image_too_large": "La imagen supera los 2 MB. Elige una imagen mas ligera.",
-  "custom.step_of": "{current} / {total}"
+  "custom.step_of": "{current} / {total}",
+  "custom.max_selections": "máx {max}"
 }

@@ -1196,5 +1196,6 @@
   "error.file_too_small": "{filename} の変換結果が小さすぎます（{size} KB）。インポート前に JPEG に変換してみてください。",
   "error.conversion_failed": "変換に失敗しました",
   "error.image_too_large": "画像が 2 MB を超えています。より軽い画像を選択してください。",
-  "custom.step_of": "{current} / {total}"
+  "custom.step_of": "{current} / {total}",
+  "custom.max_selections": "最大 {max}"
 }
