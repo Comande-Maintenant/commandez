@@ -1209,12 +1209,12 @@ const RestaurantPage = () => {
       {restaurant && (restaurant as any).account_status === "prospect" && !isKiosk && (
         <div className="border-t border-border/50 py-4 px-4 text-center" style={{ background: "hsl(var(--secondary))" }}>
           <p className="text-xs text-muted-foreground">
-            Propulse par{" "}
+            {t("footer.powered_by").split("commandeici")[0]}
             <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:underline">
-              CommandeIci
+              commandeici
             </a>
           </p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Commande en ligne sans commission pour les commerces locaux</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{t("footer.tagline")}</p>
         </div>
       )}
 
