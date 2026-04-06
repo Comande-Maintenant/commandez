@@ -1343,5 +1343,21 @@
   "suivi.ready": "Ready!",
   "suivi.received": "Received",
   "suivi.takeaway": "Takeaway",
-  "footer.tagline": "Commission-free online ordering for local businesses"
+  "footer.tagline": "Commission-free online ordering for local businesses",
+  "custom.choose_base": "Choose your base",
+  "custom.choose_bread": "Choose your bread",
+  "custom.choose_filling": "Choose your filling",
+  "custom.choose_formula": "Choose your formula",
+  "custom.choose_pieces": "Choose your pieces",
+  "custom.choose_protein": "Choose your protein",
+  "custom.choose_sauce": "Choose your sauce",
+  "custom.choose_supplements": "Extras",
+  "custom.choose_toppings": "Choose your toppings",
+  "custom.choose_type": "Choose the type",
+  "custom.dessert_upsell": "Add a dessert?",
+  "custom.drink_upsell": "Add a drink?",
+  "custom.extras": "Extras",
+  "custom.frites_option": "Fries",
+  "custom.sauces": "Sauces",
+  "custom.spice_level": "Spice level"
 }

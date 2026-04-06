@@ -1343,5 +1343,21 @@
   "suivi.ready": "Pret !",
   "suivi.received": "Recu",
   "suivi.takeaway": "A emporter",
-  "footer.tagline": "Commande en ligne sans commission pour les commerces locaux"
+  "footer.tagline": "Commande en ligne sans commission pour les commerces locaux",
+  "custom.choose_base": "Choisissez votre base",
+  "custom.choose_bread": "Choisissez votre pain",
+  "custom.choose_filling": "Choisissez votre garniture",
+  "custom.choose_formula": "Choisissez votre formule",
+  "custom.choose_pieces": "Choisissez vos pieces",
+  "custom.choose_protein": "Choisissez votre proteine",
+  "custom.choose_sauce": "Choisissez votre sauce",
+  "custom.choose_supplements": "Supplements",
+  "custom.choose_toppings": "Choisissez vos garnitures",
+  "custom.choose_type": "Choisissez le type",
+  "custom.dessert_upsell": "Un dessert ?",
+  "custom.drink_upsell": "Une boisson ?",
+  "custom.extras": "Extras",
+  "custom.frites_option": "Frites",
+  "custom.sauces": "Sauces",
+  "custom.spice_level": "Niveau de piment"
 }
