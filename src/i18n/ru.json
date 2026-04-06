@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "Ошибка конвертации",
   "error.image_too_large": "Изображение превышает 2 МБ. Выберите более легкое изображение.",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "макс {max}"
+  "custom.max_selections": "макс {max}",
+  "custom.free_sauces": "{count} соус(а) включено"
 }

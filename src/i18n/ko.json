@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "변환 실패",
   "error.image_too_large": "이미지가 2 MB를 초과합니다. 더 가벼운 이미지를 선택하세요.",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "최대 {max}"
+  "custom.max_selections": "최대 {max}",
+  "custom.free_sauces": "소스 {count}개 포함"
 }

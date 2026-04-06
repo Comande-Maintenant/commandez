@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "Error de conversion",
   "error.image_too_large": "La imagen supera los 2 MB. Elige una imagen mas ligera.",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "máx {max}"
+  "custom.max_selections": "máx {max}",
+  "custom.free_sauces": "{count} salsa(s) incluida(s)"
 }

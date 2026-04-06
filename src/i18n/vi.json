@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "Chuyen doi that bai",
   "error.image_too_large": "Hinh anh vuot qua 2 MB. Vui long chon hinh anh nhe hon.",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "tối đa {max}"
+  "custom.max_selections": "tối đa {max}",
+  "custom.free_sauces": "{count} sốt miễn phí"
 }

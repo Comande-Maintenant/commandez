@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "Falha na conversao",
   "error.image_too_large": "A imagem excede 2 MB. Escolha uma imagem mais leve.",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "máx {max}"
+  "custom.max_selections": "máx {max}",
+  "custom.free_sauces": "{count} molho(s) incluído(s)"
 }

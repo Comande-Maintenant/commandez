@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "Konvertierung fehlgeschlagen",
   "error.image_too_large": "Das Bild uberschreitet 2 MB. Bitte wahlen Sie ein leichteres Bild.",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "max {max}"
+  "custom.max_selections": "max {max}",
+  "custom.free_sauces": "{count} Soße(n) inklusive"
 }

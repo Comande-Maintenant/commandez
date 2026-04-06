@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "変換に失敗しました",
   "error.image_too_large": "画像が 2 MB を超えています。より軽い画像を選択してください。",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "最大 {max}"
+  "custom.max_selections": "最大 {max}",
+  "custom.free_sauces": "ソース {count} 個無料"
 }

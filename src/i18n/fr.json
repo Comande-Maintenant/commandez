@@ -1197,5 +1197,6 @@
   "error.file_too_small": "La conversion de {filename} a produit un fichier trop petit ({size} Ko). Essayez de convertir la photo en JPEG avant de l'importer.",
   "error.conversion_failed": "Conversion echouee",
   "error.image_too_large": "L'image depasse 2 Mo. Veuillez choisir une image plus legere.",
-  "custom.max_selections": "max {max}"
+  "custom.max_selections": "max {max}",
+  "custom.free_sauces": "{count} sauce(s) incluse(s)"
 }

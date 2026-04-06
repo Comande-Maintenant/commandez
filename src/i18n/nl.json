@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "Conversie mislukt",
   "error.image_too_large": "Afbeelding groter dan 2 MB. Kies een lichtere afbeelding.",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "max {max}"
+  "custom.max_selections": "max {max}",
+  "custom.free_sauces": "{count} saus(en) inbegrepen"
 }

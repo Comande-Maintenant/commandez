@@ -1197,5 +1197,6 @@
   "error.conversion_failed": "转换失败",
   "error.image_too_large": "图片超过 2 MB。请选择更小的图片。",
   "custom.step_of": "{current} / {total}",
-  "custom.max_selections": "最多 {max}"
+  "custom.max_selections": "最多 {max}",
+  "custom.free_sauces": "含 {count} 份酱料"
 }
