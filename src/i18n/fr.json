@@ -1359,5 +1359,20 @@
   "custom.extras": "Extras",
   "custom.frites_option": "Frites",
   "custom.sauces": "Sauces",
-  "custom.spice_level": "Niveau de piment"
+  "custom.spice_level": "Niveau de piment",
+  "dashboard.orders.status_pending": "En attente",
+  "dashboard.orders.status_confirmed": "Confirmee",
+  "dashboard.orders.status_completed": "Terminee",
+  "dashboard.orders.status_cancelled": "Annulee",
+  "dashboard.orders.status_picked_up": "Recuperee",
+  "dashboard.orders.status_waiting": "En attente",
+  "business.autre.menu_label": "Carte",
+  "business.autre.items_label": "Articles",
+  "business.autre.order_label": "Commande",
+  "business.autre.order_verb": "Commander",
+  "business.autre.category_default": "Nos produits",
+  "business.autre.empty_menu": "La carte sera bientot disponible",
+  "business.autre.storefront_subtitle": "Commandez et recuperez sur place",
+  "schedule.currently_closed": "Actuellement ferme",
+  "schedule.not_accepting": "Ne prend pas de commandes pour le moment"
 }

@@ -1359,5 +1359,20 @@
   "custom.extras": "Extras",
   "custom.frites_option": "Fries",
   "custom.sauces": "Sauces",
-  "custom.spice_level": "Spice level"
+  "custom.spice_level": "Spice level",
+  "dashboard.orders.status_pending": "Pending",
+  "dashboard.orders.status_confirmed": "Confirmed",
+  "dashboard.orders.status_completed": "Completed",
+  "dashboard.orders.status_cancelled": "Cancelled",
+  "dashboard.orders.status_picked_up": "Picked up",
+  "dashboard.orders.status_waiting": "Waiting",
+  "business.autre.menu_label": "Menu",
+  "business.autre.items_label": "Items",
+  "business.autre.order_label": "Order",
+  "business.autre.order_verb": "Order",
+  "business.autre.category_default": "Our products",
+  "business.autre.empty_menu": "Menu coming soon",
+  "business.autre.storefront_subtitle": "Order and pick up on site",
+  "schedule.currently_closed": "Currently closed",
+  "schedule.not_accepting": "Not accepting orders right now"
 }
