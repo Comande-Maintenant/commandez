@@ -1255,5 +1255,17 @@
   "dashboard.tablets.usage_service": "Service",
   "kiosk.splash.touch_to_order": "Touch to order",
   "pos.portion_label": "Portion",
-  "pos.side_sauce_label": "Side sauce"
+  "pos.side_sauce_label": "Side sauce",
+  "order.confirm": "Confirm - {price} EUR",
+  "order.banned_contact": "Contact the restaurant at {phone}",
+  "order.capacity_info": "{max} seats available",
+  "kiosk.terminal_name_table": "Table {table}",
+  "custom.max_count": "max {max}",
+  "custom.max_meats_hint": "Up to {max} meats",
+  "custom.meat_count": "{count} meat(s)",
+  "item.add_to_cart": "Add - {price} EUR",
+  "restaurant.greeting": "Hello {name}!",
+  "restaurant.opens_day_at": "Opens {day} at {time}",
+  "restaurant.opens_today_at": "Opens today at {time}",
+  "restaurant.orders_preparing": "{count} order(s) in preparation"
 }

@@ -1255,5 +1255,17 @@
   "dashboard.tablets.usage_service": "Service",
   "kiosk.splash.touch_to_order": "Touchez pour commander",
   "pos.portion_label": "Portion",
-  "pos.side_sauce_label": "Sauce accompagnement"
+  "pos.side_sauce_label": "Sauce accompagnement",
+  "order.confirm": "Confirmer - {price} EUR",
+  "order.banned_contact": "Contactez le restaurant au {phone}",
+  "order.capacity_info": "{max} places disponibles",
+  "kiosk.terminal_name_table": "Table {table}",
+  "custom.max_count": "max {max}",
+  "custom.max_meats_hint": "Jusqu'a {max} viandes",
+  "custom.meat_count": "{count} viande(s)",
+  "item.add_to_cart": "Ajouter - {price} EUR",
+  "restaurant.greeting": "Bonjour {name} !",
+  "restaurant.opens_day_at": "Ouvre {day} a {time}",
+  "restaurant.opens_today_at": "Ouvre aujourd'hui a {time}",
+  "restaurant.orders_preparing": "{count} commande(s) en preparation"
 }
