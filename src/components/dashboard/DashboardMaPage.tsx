@@ -119,9 +119,9 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: "logo" | "cover") => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const sizeError = validateImageSize(file);
-    if (sizeError) {
-      toast.error(sizeError);
+    const sizeErrorKey = validateImageSize(file);
+    if (sizeErrorKey) {
+      toast.error(t(sizeErrorKey));
       return;
     }
     const resized = await resizeImage(file);

@@ -7,7 +7,7 @@ const MENU_MAX_SIZE = 400;
  */
 export function validateImageSize(file: File): string | null {
   if (file.size > MAX_SIZE_BYTES) {
-    return "L'image depasse 2 Mo. Veuillez choisir une image plus legere.";
+    return "error.image_too_large";
   }
   return null;
 }

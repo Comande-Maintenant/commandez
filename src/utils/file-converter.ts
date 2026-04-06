@@ -2,6 +2,8 @@
  * Convert any file (HEIC, MOV, SVG, BMP, TIFF, etc.) to a format
  * that Claude's vision API can process (JPEG/PNG/WebP/GIF).
  * PDFs are kept as-is.
+ *
+ * Error messages use i18n keys (error.*) with {filename} and {size} placeholders.
  */
 // Lazy-loaded to avoid adding ~1.3MB to main bundle
 let heic2anyModule: typeof import('heic2any') | null = null;
@@ -42,6 +44,34 @@ function isSvg(file: File): boolean {
 
 function isImage(file: File): boolean {
   return file.type.startsWith('image/') || /\.(bmp|tiff?|ico|jfif)$/i.test(file.name);
+}
+
+/** Build a translatable error string: "key|param1=val1|param2=val2" */
+function i18nError(key: string, params?: Record<string, string>): string {
+  let msg = key;
+  if (params) {
+    for (const [k, v] of Object.entries(params)) {
+      msg += `|${k}=${v}`;
+    }
+  }
+  return msg;
+}
+
+/**
+ * Parse an i18n error string and translate it using a t() function.
+ * Format: "key|param1=val1|param2=val2"
+ */
+export function translateError(encoded: string, t: (key: string) => string): string {
+  const parts = encoded.split('|');
+  const key = parts[0];
+  let result = t(key);
+  for (let i = 1; i < parts.length; i++) {
+    const [k, v] = parts[i].split('=');
+    if (k && v !== undefined) {
+      result = result.replace(`{${k}}`, v);
+    }
+  }
+  return result;
 }
 
 /**
@@ -108,7 +138,7 @@ async function convertHeic(file: File): Promise<File> {
     console.warn('[file-converter] Native HEIC conversion failed:', err);
   }
 
-  throw new Error(`Impossible de convertir ${file.name}. Essayez de prendre la photo directement depuis le navigateur.`);
+  throw new Error(i18nError('error.heic_convert', { filename: file.name }));
 }
 
 /**
@@ -129,7 +159,7 @@ async function extractVideoFrame(file: File): Promise<File> {
 
     video.addEventListener('error', () => {
       cleanup();
-      reject(new Error(`Impossible de lire le fichier video: ${file.name}`));
+      reject(new Error(i18nError('error.video_read', { filename: file.name })));
     });
 
     video.addEventListener('loadeddata', () => {
@@ -148,7 +178,7 @@ async function extractVideoFrame(file: File): Promise<File> {
           (blob) => {
             cleanup();
             if (!blob) {
-              reject(new Error('Extraction de frame echouee'));
+              reject(new Error(i18nError('error.frame_extract')));
               return;
             }
             const ext = file.name.replace(/\.[^.]+$/, '.jpg');
@@ -188,7 +218,7 @@ async function convertSvg(file: File): Promise<File> {
         canvas.toBlob(
           (blob) => {
             if (!blob) {
-              reject(new Error('Conversion SVG echouee'));
+              reject(new Error(i18nError('error.svg_convert')));
               return;
             }
             resolve(
@@ -202,7 +232,7 @@ async function convertSvg(file: File): Promise<File> {
       };
       img.onerror = () => {
         URL.revokeObjectURL(url);
-        reject(new Error('SVG invalide'));
+        reject(new Error(i18nError('error.svg_invalid')));
       };
       img.src = url;
     };
@@ -238,8 +268,10 @@ async function convertGenericImage(file: File): Promise<File> {
 function validateConvertedFile(original: File, converted: File): File {
   if (converted.size < MIN_VALID_SIZE && original.size > MIN_VALID_SIZE) {
     throw new Error(
-      `La conversion de ${original.name} a produit un fichier trop petit (${(converted.size / 1024).toFixed(0)} Ko). ` +
-      `Essayez de convertir la photo en JPEG avant de l'importer.`
+      i18nError('error.file_too_small', {
+        filename: original.name,
+        size: (converted.size / 1024).toFixed(0),
+      })
     );
   }
   return converted;
@@ -293,7 +325,8 @@ export async function convertFileForAnalysis(file: File): Promise<File> {
 
 /**
  * Convert multiple files in parallel.
- * Returns converted files + any errors.
+ * Returns converted files + any errors (encoded as i18n keys).
+ * Use translateError() to convert error strings to user-facing text.
  */
 export async function convertFilesForAnalysis(
   files: File[]
@@ -310,7 +343,8 @@ export async function convertFilesForAnalysis(
     if (result.status === 'fulfilled') {
       converted.push(result.value);
     } else {
-      errors.push(`${files[i].name}: ${result.reason?.message || 'Conversion echouee'}`);
+      const msg = result.reason?.message || i18nError('error.conversion_failed');
+      errors.push(`${files[i].name}: ${msg}`);
     }
   }
 

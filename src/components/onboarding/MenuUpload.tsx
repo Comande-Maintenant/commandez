@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { analyzeMenuImages } from '@/services/menu-analysis';
 import { extractColors } from '@/services/color-extraction';
-import { convertFilesForAnalysis } from '@/utils/file-converter';
+import { convertFilesForAnalysis, translateError } from '@/utils/file-converter';
 import { useLanguage } from '@/context/LanguageContext';
 import type { AnalyzedMenu, ExtractedColors } from '@/types/onboarding';
 
@@ -269,7 +269,7 @@ export function MenuUpload({ onAnalysisComplete, onSkip }: MenuUploadProps) {
             {t('onboarding.upload.conversion_failed')}
           </div>
           {conversionErrors.map((err, i) => (
-            <p key={i} className="text-xs text-destructive/80 ml-6">{err}</p>
+            <p key={i} className="text-xs text-destructive/80 ml-6">{translateError(err, t)}</p>
           ))}
         </div>
       )}

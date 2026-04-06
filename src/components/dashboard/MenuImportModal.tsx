@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { MenuReviewEditor } from "@/components/onboarding/MenuReviewEditor";
 import { analyzeMenuImages } from "@/services/menu-analysis";
-import { convertFilesForAnalysis } from "@/utils/file-converter";
+import { convertFilesForAnalysis, translateError } from "@/utils/file-converter";
 import { insertMenuItem, updateRestaurantCategories, fetchAllMenuItems } from "@/lib/api";
 import type { AnalyzedCategory } from "@/types/onboarding";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
