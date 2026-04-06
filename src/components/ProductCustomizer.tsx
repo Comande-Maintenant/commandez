@@ -233,8 +233,19 @@ export const ProductCustomizer = ({
   // Check if product name already contains a viande name (e.g. "Assiette Kebab" -> skip viande step)
   const nameImpliesViande = useMemo(() => {
     if (viandes.length === 0) return false;
-    const nameLower = item.name.toLowerCase();
-    return viandes.some((v) => nameLower.includes(v.name.toLowerCase()));
+    const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nameNorm = normalize(item.name);
+    // Extract the meat keyword from the product name (everything after "assiette"/"petite assiette")
+    const meatKeyword = nameNorm.replace(/^.*?assiette\s*/i, "").trim();
+    if (!meatKeyword || /^\d+\s*viandes?$/.test(meatKeyword)) return false; // "2 viandes" -> let user choose
+    return viandes.some((v) => {
+      const vNorm = normalize(v.name);
+      // "Assiette Poulet" -> "poulet" found in "poulet creme", or "Assiette Kebab" -> "kebab" === "kebab"
+      // Also check if first word of either matches (handles kofte/kofta variations)
+      const meatFirst = meatKeyword.split(/\s+/)[0];
+      const vFirst = vNorm.split(/\s+/)[0];
+      return nameNorm.includes(vNorm) || vNorm.includes(meatKeyword) || vFirst.startsWith(meatFirst.slice(0, 4)) || meatFirst.startsWith(vFirst.slice(0, 4));
+    });
   }, [item.name, viandes]);
 
   // Filter out steps with no resolved options (skip empty base/viande steps)
