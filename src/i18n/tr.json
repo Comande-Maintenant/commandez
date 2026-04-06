@@ -1195,5 +1195,6 @@
   "error.svg_invalid": "Gecersiz SVG",
   "error.file_too_small": "{filename} donusumu cok kucuk bir dosya uretti ({size} KB). Iceri aktarmadan once fotoğrafi JPEG'e donusturmeyi deneyin.",
   "error.conversion_failed": "Donusum basarisiz",
-  "error.image_too_large": "Gorsel 2 MB'yi asiyor. Daha hafif bir gorsel secin."
+  "error.image_too_large": "Gorsel 2 MB'yi asiyor. Daha hafif bir gorsel secin.",
+  "custom.step_of": "{current} / {total}"
 }

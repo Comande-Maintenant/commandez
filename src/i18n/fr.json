@@ -78,6 +78,7 @@
   "custom.meat_slot": "Viande {number}",
   "custom.no_sauce": "Pas de sauce",
   "custom.no_supplement": "Pas de supplement",
+  "custom.step_of": "{current} / {total}",
   "common.save": "Enregistrer",
   "common.cancel": "Annuler",
   "common.delete": "Supprimer",

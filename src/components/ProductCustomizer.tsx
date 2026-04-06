@@ -230,6 +230,13 @@ export const ProductCustomizer = ({
     [rawSteps, customizationData, menuItems]
   );
 
+  // Check if product name already contains a viande name (e.g. "Assiette Kebab" -> skip viande step)
+  const nameImpliesViande = useMemo(() => {
+    if (viandes.length === 0) return false;
+    const nameLower = item.name.toLowerCase();
+    return viandes.some((v) => nameLower.includes(v.name.toLowerCase()));
+  }, [item.name, viandes]);
+
   // Filter out steps with no resolved options (skip empty base/viande steps)
   const { steps, resolvedSteps } = useMemo(() => {
     const skipTypes = new Set(["recap", "upsell", "toggle_group"]);
@@ -238,6 +245,8 @@ export const ProductCustomizer = ({
     const filteredSteps: typeof rawSteps = [];
     rawResolvedSteps.forEach((rs, i) => {
       const s = rawSteps[i];
+      // Skip viande step if the product name already specifies the viande
+      if (s.step_key === "viande" && nameImpliesViande) return;
       const hasInlineOptions = s.step_key === "frites" && (s.config?.options as any)?.length > 0;
       if (skipTypes.has(s.step_type) || rs.options.length > 0 || hasInlineOptions) {
         filtered.push(rs);
@@ -245,7 +254,7 @@ export const ProductCustomizer = ({
       }
     });
     return { steps: filteredSteps, resolvedSteps: filtered };
-  }, [rawSteps, rawResolvedSteps]);
+  }, [rawSteps, rawResolvedSteps, nameImpliesViande]);
 
   const [stepIndex, setStepIndex] = useState(0);
   const currentStep = steps[stepIndex] ?? null;

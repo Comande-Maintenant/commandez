@@ -1195,5 +1195,6 @@
   "error.svg_invalid": "SVG غير صالح",
   "error.file_too_small": "أنتج تحويل {filename} ملفاً صغيراً جداً ({size} كيلوبايت). حاول تحويل الصورة إلى JPEG قبل الاستيراد.",
   "error.conversion_failed": "فشل التحويل",
-  "error.image_too_large": "الصورة تتجاوز 2 ميغابايت. يرجى اختيار صورة أخف."
+  "error.image_too_large": "الصورة تتجاوز 2 ميغابايت. يرجى اختيار صورة أخف.",
+  "custom.step_of": "{current} / {total}"
 }

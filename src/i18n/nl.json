@@ -1195,5 +1195,6 @@
   "error.svg_invalid": "Ongeldige SVG",
   "error.file_too_small": "De conversie van {filename} leverde een te klein bestand op ({size} KB). Probeer de foto naar JPEG te converteren voor het importeren.",
   "error.conversion_failed": "Conversie mislukt",
-  "error.image_too_large": "Afbeelding groter dan 2 MB. Kies een lichtere afbeelding."
+  "error.image_too_large": "Afbeelding groter dan 2 MB. Kies een lichtere afbeelding.",
+  "custom.step_of": "{current} / {total}"
 }

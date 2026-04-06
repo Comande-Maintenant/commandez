@@ -1195,5 +1195,6 @@
   "error.svg_invalid": "无效的 SVG",
   "error.file_too_small": "{filename} 转换后文件过小（{size} KB）。请尝试先将照片转换为 JPEG 再导入。",
   "error.conversion_failed": "转换失败",
-  "error.image_too_large": "图片超过 2 MB。请选择更小的图片。"
+  "error.image_too_large": "图片超过 2 MB。请选择更小的图片。",
+  "custom.step_of": "{current} / {total}"
 }

@@ -1195,5 +1195,6 @@
   "error.svg_invalid": "SVG khong hop le",
   "error.file_too_small": "Chuyen doi {filename} tao ra tep qua nho ({size} KB). Hay thu chuyen doi anh sang JPEG truoc khi nhap.",
   "error.conversion_failed": "Chuyen doi that bai",
-  "error.image_too_large": "Hinh anh vuot qua 2 MB. Vui long chon hinh anh nhe hon."
+  "error.image_too_large": "Hinh anh vuot qua 2 MB. Vui long chon hinh anh nhe hon.",
+  "custom.step_of": "{current} / {total}"
 }
