@@ -1,75 +1,77 @@
 import type { DbMenuItem } from "@/types/database";
 
 export interface BaseIngredient {
-  name: string;
+  name: string; // Technical ID (stored in DB as out-of-stock list)
+  nameKey: string; // i18n key for display
   icon: string;
   rule: {
     type: "category" | "name_contains";
     match: string[];
   };
-  affectsLabel: string; // Description of what gets disabled
+  affectsLabel: string; // Fallback description
+  affectsLabelKey: string; // i18n key for display
 }
 
 const KEBAB_BASE_INGREDIENTS: BaseIngredient[] = [
   {
-    name: "Pain",
+    name: "Pain", nameKey: "ingredient.pain",
     icon: "🥖",
     rule: { type: "category", match: ["Sandwichs"] },
-    affectsLabel: "Tous les sandwichs",
+    affectsLabel: "Tous les sandwichs", affectsLabelKey: "ingredient.affects_sandwichs",
   },
   {
-    name: "Galette",
+    name: "Galette", nameKey: "ingredient.galette",
     icon: "🫓",
     rule: { type: "name_contains", match: ["galette"] },
-    affectsLabel: "Galettes",
+    affectsLabel: "Galettes", affectsLabelKey: "ingredient.affects_galettes",
   },
   {
-    name: "Tortilla",
+    name: "Tortilla", nameKey: "ingredient.tortilla",
     icon: "🌮",
     rule: { type: "name_contains", match: ["tacos", "wrap"] },
-    affectsLabel: "Tacos et wraps",
+    affectsLabel: "Tacos et wraps", affectsLabelKey: "ingredient.affects_tacos",
   },
   {
-    name: "Poulet",
+    name: "Poulet", nameKey: "ingredient.poulet",
     icon: "🍗",
     rule: { type: "name_contains", match: ["poulet", "chicken", "tikka"] },
-    affectsLabel: "Plats avec poulet",
+    affectsLabel: "Plats avec poulet", affectsLabelKey: "ingredient.affects_poulet",
   },
   {
-    name: "Viande kebab",
+    name: "Viande kebab", nameKey: "ingredient.viande_kebab",
     icon: "🥩",
     rule: { type: "name_contains", match: ["kebab"] },
-    affectsLabel: "Plats avec kebab",
+    affectsLabel: "Plats avec kebab", affectsLabelKey: "ingredient.affects_kebab",
   },
   {
-    name: "Steak",
+    name: "Steak", nameKey: "ingredient.steak",
     icon: "🥩",
     rule: { type: "name_contains", match: ["steak", "steack", "hamburger"] },
-    affectsLabel: "Steaks et hamburgers",
+    affectsLabel: "Steaks et hamburgers", affectsLabelKey: "ingredient.affects_steak",
   },
   {
-    name: "Merguez",
+    name: "Merguez", nameKey: "ingredient.merguez",
     icon: "🌭",
     rule: { type: "name_contains", match: ["merguez"] },
-    affectsLabel: "Plats avec merguez",
+    affectsLabel: "Plats avec merguez", affectsLabelKey: "ingredient.affects_merguez",
   },
   {
-    name: "Köfte",
+    name: "Köfte", nameKey: "ingredient.kofte",
     icon: "🧆",
     rule: { type: "name_contains", match: ["kofte", "köfte", "kôfte", "kâfte", "kafte"] },
-    affectsLabel: "Plats avec köfte",
+    affectsLabel: "Plats avec köfte", affectsLabelKey: "ingredient.affects_kofte",
   },
   {
-    name: "Nuggets",
+    name: "Nuggets", nameKey: "ingredient.nuggets",
     icon: "🍗",
     rule: { type: "name_contains", match: ["nugget", "tender"] },
-    affectsLabel: "Nuggets et tenders",
+    affectsLabel: "Nuggets et tenders", affectsLabelKey: "ingredient.affects_nuggets",
   },
   {
-    name: "Frites",
+    name: "Frites", nameKey: "ingredient.frites",
     icon: "🍟",
     rule: { type: "name_contains", match: ["frites", "barquette frites"] },
-    affectsLabel: "Barquettes frites",
+    affectsLabel: "Barquettes frites", affectsLabelKey: "ingredient.affects_frites",
   },
 ];
 

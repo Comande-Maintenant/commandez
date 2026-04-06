@@ -827,8 +827,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                           <div className="flex items-center gap-2 min-w-0">
                             <span className="text-lg shrink-0">{bi.icon}</span>
                             <div className="min-w-0">
-                              <span className={`text-sm font-medium block ${isOut ? "text-red-700 line-through" : "text-foreground"}`}>{bi.name}</span>
-                              <span className="text-xs text-muted-foreground">{bi.affectsLabel}</span>
+                              <span className={`text-sm font-medium block ${isOut ? "text-red-700 line-through" : "text-foreground"}`}>{t(bi.nameKey)}</span>
+                              <span className="text-xs text-muted-foreground">{t(bi.affectsLabelKey)}</span>
                             </div>
                           </div>
                           <Switch
@@ -839,12 +839,12 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
                                 : [...outOfStockIngredients, bi.name];
                               setOutOfStockIngredients(updated);
                               if (isDemo) {
-                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", bi.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", bi.name));
+                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", t(bi.nameKey)) : t("dashboard.orders.item_out_of_stock").replace("{name}", t(bi.nameKey)));
                                 return;
                               }
                               try {
                                 await updateRestaurant(restaurant.id, { out_of_stock_ingredients: updated } as any);
-                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", bi.name) : t("dashboard.orders.item_out_of_stock").replace("{name}", bi.name));
+                                toast.success(available ? t("dashboard.orders.item_available").replace("{name}", t(bi.nameKey)) : t("dashboard.orders.item_out_of_stock").replace("{name}", t(bi.nameKey)));
                               } catch {
                                 toast.error(t("common.error"));
                               }
