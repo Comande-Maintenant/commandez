@@ -102,8 +102,8 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function getDefaultCoverImage(cuisine: string): string {
-  const c = cuisine.toLowerCase();
+function getDefaultCoverImage(cuisine: string | null | undefined): string {
+  const c = (cuisine || "").toLowerCase();
   if (c.includes("kebab") || c.includes("turc") || c.includes("döner") || c.includes("doner")) return "/images/covers/kebab.jpg";
   if (c.includes("pizza") || c.includes("italien") || c.includes("italian")) return "/images/covers/pizza.jpg";
   if (c.includes("burger") || c.includes("américain") || c.includes("american")) return "/images/covers/burger.jpg";
