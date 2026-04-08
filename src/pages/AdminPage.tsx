@@ -504,8 +504,9 @@ const AdminPage = () => {
     </div>
   );
 
-  // Skip SubscriptionGate for demo
-  if (isDemo) {
+  // Skip SubscriptionGate for demo and prospect restaurants
+  const isProspect = (restaurant as any)?.account_status === "prospect";
+  if (isDemo || isProspect) {
     return dashboardContent;
   }
 

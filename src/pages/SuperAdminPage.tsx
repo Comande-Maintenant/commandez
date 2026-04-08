@@ -28,6 +28,7 @@ import type { GooglePlaceResult } from "@/types/onboarding";
 import { generateSlug } from "@/services/onboarding";
 import { detectBusinessType, BUSINESS_TYPES, getBusinessEmoji } from "@/utils/detect-business-type";
 import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
+import { useLanguage } from "@/context/LanguageContext";
 import { MenuReviewEditor } from "@/components/onboarding/MenuReviewEditor";
 import { insertMenuItem, updateRestaurantCategories, fetchAllMenuItems as fetchAllItems } from "@/lib/api";
 import type { AnalyzedCategory } from "@/types/onboarding";
@@ -136,6 +137,12 @@ interface EmailLog {
 // ── Component ──
 
 const SuperAdminPage = () => {
+  // Force French for super admin dashboard
+  const { language, changeLanguage } = useLanguage();
+  useEffect(() => {
+    if (language !== "fr") changeLanguage("fr");
+  }, [language, changeLanguage]);
+
   // Auth
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
