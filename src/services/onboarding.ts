@@ -78,15 +78,17 @@ export async function createRestaurantFromOnboarding(data: {
 function slugify(name: string): string {
   return name
     .toLowerCase()
+    .replace(/œ/g, 'oe')
+    .replace(/æ/g, 'ae')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 }
 
-// Generate a unique slug, appending -2, -3 etc. if needed
-export async function generateSlug(name: string): Promise<string> {
-  const base = slugify(name);
+// Generate a unique slug, appending city and -2, -3 etc. if needed
+export async function generateSlug(name: string, city?: string): Promise<string> {
+  const base = city ? `${slugify(name)}-${slugify(city)}` : slugify(name);
   const { data } = await supabase
     .from('restaurants')
     .select('slug')

@@ -217,7 +217,7 @@ const InscriptionPage = () => {
     setCreating(true);
 
     try {
-      const slug = await generateSlug(restaurantData?.name ?? 'restaurant');
+      const slug = await generateSlug(restaurantData?.name ?? 'restaurant', restaurantData?.city);
 
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();

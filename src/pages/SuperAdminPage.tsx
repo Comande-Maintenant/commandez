@@ -1368,7 +1368,7 @@ const SuperAdminPage = () => {
                           const merged = { ...place, ...details };
                           setSelectedPlace(merged);
                           setProspectBusinessType(detectBusinessType(merged.types ?? []));
-                          setProspectSlug(await generateSlug(merged.name));
+                          setProspectSlug(await generateSlug(merged.name, merged.city || merged.vicinity?.split(',').pop()?.trim()));
                         }} />
                       )}
                       {prospectSearchMode === "nearby" && (
@@ -1377,7 +1377,7 @@ const SuperAdminPage = () => {
                           const merged = { ...place, ...details };
                           setSelectedPlace(merged);
                           setProspectBusinessType(detectBusinessType(merged.types ?? []));
-                          setProspectSlug(await generateSlug(merged.name));
+                          setProspectSlug(await generateSlug(merged.name, merged.city || merged.vicinity?.split(',').pop()?.trim()));
                         }} />
                       )}
                       {prospectSearchMode === "manual" && (
