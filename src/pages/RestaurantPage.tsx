@@ -289,6 +289,25 @@ const RestaurantPage = () => {
           document.title = `${r.name} - ${r.city || ""}`;
           setDemoMeta(false);
         }
+        // OG meta tags for social sharing (client-side, works for Google + pre-rendered previews)
+        if (!(r as any).is_demo) {
+          const setMeta = (name: string, content: string, attr = "name") => {
+            let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+            if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+            el.setAttribute("content", content);
+          };
+          const ogTitle = `${r.name} - Commandez en ligne`;
+          const ogDesc = r.city ? `Decouvrez la carte de ${r.name} a ${r.city} et commandez en ligne.` : `Decouvrez la carte de ${r.name} et commandez en ligne.`;
+          const ogImage = r.image || r.cover_image || `/images/covers/${getDefaultCoverImage((r as any).cuisine).split("/").pop()}`;
+          setMeta("og:title", ogTitle, "property");
+          setMeta("og:description", ogDesc, "property");
+          setMeta("og:type", "website", "property");
+          setMeta("og:url", window.location.href, "property");
+          if (ogImage.startsWith("http")) setMeta("og:image", ogImage, "property");
+          setMeta("twitter:title", ogTitle);
+          setMeta("twitter:description", ogDesc);
+          setMeta("description", ogDesc);
+        }
         // Inject reorder from profile page
         try {
           const reorderRaw = localStorage.getItem("cm_reorder");
