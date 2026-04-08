@@ -38,6 +38,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { toast } from "sonner";
 
 // ── Constants ──
 
@@ -1632,6 +1633,47 @@ const SuperAdminPage = () => {
                 </a>
               </div>
             </div>
+
+            {/* SMS templates to copy */}
+            <Card className="rounded-2xl">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2"><Send className="h-4 w-4" /> Textes a copier</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 space-y-3">
+                {[
+                  {
+                    label: "Page de commande",
+                    text: `Bonjour, voici la page de commande en ligne de ${editingProspect.name} : https://app.commandeici.com/${editingProspect.slug}\n\nVos clients peuvent commander directement depuis leur telephone.`,
+                  },
+                  {
+                    label: "Dashboard admin (cuisine)",
+                    text: `Voici votre espace cuisine pour recevoir les commandes en temps reel : https://app.commandeici.com/admin/${editingProspect.slug}?view=cuisine\n\nVous verrez les nouvelles commandes arriver avec une notification sonore.`,
+                  },
+                  {
+                    label: "Dashboard admin (caisse)",
+                    text: `Voici votre espace caisse pour prendre les commandes sur place : https://app.commandeici.com/admin/${editingProspect.slug}?view=caisse`,
+                  },
+                ].map((tpl) => (
+                  <div key={tpl.label} className="bg-secondary/30 rounded-xl p-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-muted-foreground">{tpl.label}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 px-2 text-xs rounded-lg"
+                        onClick={() => {
+                          navigator.clipboard.writeText(tpl.text);
+                          toast.success("Copie !");
+                        }}
+                      >
+                        Copier
+                      </Button>
+                    </div>
+                    <p className="text-xs text-foreground whitespace-pre-line">{tpl.text}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
             {/* QR Code + Uploaded photos */}
             <Card className="rounded-2xl">
