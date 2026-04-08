@@ -1035,7 +1035,15 @@ const SuperAdminPage = () => {
                             onClick={() => p.restaurantId && openDetail({ id: p.restaurantId, name: p.restaurantName, slug: p.restaurantSlug })}
                           >
                             <td className="px-4 py-3 font-medium truncate max-w-[200px]">{p.email}</td>
-                            <td className="px-4 py-3">{p.restaurantName || <span className="text-muted-foreground italic">Aucun</span>}</td>
+                            <td className="px-4 py-3">
+                              {p.restaurantName || <span className="text-muted-foreground italic">Aucun</span>}
+                              {p.restaurantSlug && (
+                                <span className="ml-2 inline-flex gap-1">
+                                  <a href={`/${p.restaurantSlug}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-emerald-600 hover:text-emerald-800" title="Page commande"><Eye className="h-3.5 w-3.5 inline" /></a>
+                                  <a href={`/admin/${p.restaurantSlug}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-800" title="Dashboard"><ExternalLink className="h-3.5 w-3.5 inline" /></a>
+                                </span>
+                              )}
+                            </td>
                             <td className="px-4 py-3">
                               {badge ? (
                                 <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-medium ${badge.className}`}>{badge.label}</span>
@@ -1062,7 +1070,15 @@ const SuperAdminPage = () => {
                     return (
                       <div key={p.id} onClick={() => p.restaurantId && openDetail({ id: p.restaurantId, name: p.restaurantName, slug: p.restaurantSlug })} className="bg-secondary/30 rounded-xl p-3 space-y-1 cursor-pointer">
                         <p className="text-sm font-medium truncate">{p.email}</p>
-                        <p className="text-xs text-muted-foreground">{p.restaurantName || "Pas de restaurant"}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {p.restaurantName || "Pas de restaurant"}
+                          {p.restaurantSlug && (
+                            <span className="ml-2 inline-flex gap-2">
+                              <a href={`/${p.restaurantSlug}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-emerald-600 underline">Page</a>
+                              <a href={`/admin/${p.restaurantSlug}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 underline">Admin</a>
+                            </span>
+                          )}
+                        </p>
                         <div className="flex items-center gap-2 flex-wrap">
                           {badge && <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-medium ${badge.className}`}>{badge.label}</span>}
                           {p.plan && <span className="text-[11px] text-muted-foreground capitalize">{p.plan}</span>}
@@ -1607,6 +1623,14 @@ const SuperAdminPage = () => {
                 <ArrowLeft className="h-4 w-4 mr-1" /> Retour
               </Button>
               <h2 className="text-lg font-semibold">{getBusinessEmoji(editingProspect.business_type ?? "restaurant")} {editingProspect.name} - Catalogue</h2>
+              <div className="ml-auto flex items-center gap-2">
+                <a href={`/${editingProspect.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-medium hover:bg-emerald-100 transition-colors">
+                  <Eye className="h-3.5 w-3.5" /> Page commande
+                </a>
+                <a href={`/admin/${editingProspect.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-medium hover:bg-blue-100 transition-colors">
+                  <ExternalLink className="h-3.5 w-3.5" /> Dashboard
+                </a>
+              </div>
             </div>
 
             {/* QR Code + Uploaded photos */}
