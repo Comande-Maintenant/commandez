@@ -398,6 +398,22 @@ const AdminPage = () => {
             </div>
           )}
 
+          {/* Prospect banner */}
+          {(restaurant as any)?.account_status === "prospect" && (
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="text-sm text-blue-900">
+                <p className="font-medium">Page de demonstration</p>
+                <p className="text-blue-700">Ta page est prete ! Active ton abonnement pour recevoir des commandes.</p>
+              </div>
+              <Link
+                to="/choisir-plan"
+                className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Activer mon abonnement
+              </Link>
+            </div>
+          )}
+
           {isOpsView(activeView) && activeView !== "caisse" && activeView !== "cuisine" && (
             <LiveSummaryBanner
               visitors={visitors}
