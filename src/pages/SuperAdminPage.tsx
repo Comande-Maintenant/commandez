@@ -1642,8 +1642,12 @@ const SuperAdminPage = () => {
               <CardContent className="p-4 pt-0 space-y-3">
                 {[
                   {
-                    label: "Page de commande",
+                    label: "Page de commande (lien direct)",
                     text: `Bonjour, voici la page de commande en ligne de ${editingProspect.name} : https://app.commandeici.com/${editingProspect.slug}\n\nVos clients peuvent commander directement depuis leur telephone.`,
+                  },
+                  {
+                    label: "Page de commande (lien partage avec apercu)",
+                    text: `Bonjour, voici la page de commande en ligne de ${editingProspect.name} : https://rbqgsxhkccbhqdmdtxwr.supabase.co/functions/v1/og-restaurant?slug=${editingProspect.slug}\n\nVos clients peuvent commander directement depuis leur telephone.`,
                   },
                   {
                     label: "Dashboard admin (cuisine)",
