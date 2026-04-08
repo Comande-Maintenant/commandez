@@ -1374,5 +1374,12 @@
   "business.autre.empty_menu": "Menu coming soon",
   "business.autre.storefront_subtitle": "Order and pick up on site",
   "schedule.currently_closed": "Currently closed",
-  "schedule.not_accepting": "Not accepting orders right now"
+  "schedule.not_accepting": "Not accepting orders right now",
+  "dashboard.demand.day_0": "日",
+  "dashboard.demand.day_1": "月",
+  "dashboard.demand.day_2": "火",
+  "dashboard.demand.day_3": "水",
+  "dashboard.demand.day_4": "木",
+  "dashboard.demand.day_5": "金",
+  "dashboard.demand.day_6": "土"
 }

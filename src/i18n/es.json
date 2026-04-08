@@ -1374,5 +1374,12 @@
   "business.autre.empty_menu": "Menu coming soon",
   "business.autre.storefront_subtitle": "Order and pick up on site",
   "schedule.currently_closed": "Currently closed",
-  "schedule.not_accepting": "Not accepting orders right now"
+  "schedule.not_accepting": "Not accepting orders right now",
+  "dashboard.demand.day_0": "Dom",
+  "dashboard.demand.day_1": "Lun",
+  "dashboard.demand.day_2": "Mar",
+  "dashboard.demand.day_3": "Mie",
+  "dashboard.demand.day_4": "Jue",
+  "dashboard.demand.day_5": "Vie",
+  "dashboard.demand.day_6": "Sab"
 }

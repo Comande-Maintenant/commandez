@@ -1374,5 +1374,12 @@
   "business.autre.empty_menu": "La carte sera bientot disponible",
   "business.autre.storefront_subtitle": "Commandez et recuperez sur place",
   "schedule.currently_closed": "Actuellement ferme",
-  "schedule.not_accepting": "Ne prend pas de commandes pour le moment"
+  "schedule.not_accepting": "Ne prend pas de commandes pour le moment",
+  "dashboard.demand.day_0": "Dim",
+  "dashboard.demand.day_1": "Lun",
+  "dashboard.demand.day_2": "Mar",
+  "dashboard.demand.day_3": "Mer",
+  "dashboard.demand.day_4": "Jeu",
+  "dashboard.demand.day_5": "Ven",
+  "dashboard.demand.day_6": "Sam"
 }
