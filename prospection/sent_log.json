@@ -25,17 +25,17 @@
   },
   "greenadine21@gmail.com": {
     "sent_at": "2026-03-14T16:14:19.682564+00:00",
-    "last_sent_at": "2026-03-31T08:37:38.849704+00:00",
-    "send_count": 2,
-    "resend_id": "0faae6fd-2d31-4d0f-b2d9-90eb3db55773",
+    "last_sent_at": "2026-04-15T16:04:14.056305+00:00",
+    "send_count": 3,
+    "resend_id": "ae20b00d-3a94-4e98-92ee-ad0b865c8a9d",
     "name": "GREENADINE pizzeria cauderan",
     "city": "Bordeaux"
   },
   "jean.dupont@mail.fr": {
     "sent_at": "2026-03-14T16:14:21.530807+00:00",
-    "last_sent_at": "2026-03-31T08:37:34.878484+00:00",
-    "send_count": 2,
-    "resend_id": "26bf8780-5c83-4b56-8c10-46a9327f782a",
+    "last_sent_at": "2026-04-15T16:04:09.867860+00:00",
+    "send_count": 3,
+    "resend_id": "1066645f-d10d-4cc0-b052-5a2be74c7c13",
     "name": "Prima Bonheur",
     "city": "Toulouse"
   },
@@ -137,17 +137,17 @@
   },
   "contact@etre-visible.local.fr": {
     "sent_at": "2026-03-14T16:14:45.235302+00:00",
-    "last_sent_at": "2026-03-31T08:37:30.997540+00:00",
-    "send_count": 2,
-    "resend_id": "6014acb0-9d09-43a3-859c-0a05460e6ae2",
+    "last_sent_at": "2026-04-15T16:04:07.833680+00:00",
+    "send_count": 3,
+    "resend_id": "40eac6c3-f383-430a-a574-202c9663f01c",
     "name": "CHEZ ALEX",
     "city": "Marseille"
   },
   "info@sale-e-pepe.fr": {
     "sent_at": "2026-03-14T16:14:47.268294+00:00",
-    "last_sent_at": "2026-03-31T08:37:46.992303+00:00",
-    "send_count": 2,
-    "resend_id": "33cb9a84-e282-486d-90db-b56c5fde7008",
+    "last_sent_at": "2026-04-15T16:04:21.709535+00:00",
+    "send_count": 3,
+    "resend_id": "a956f284-3cbe-4227-b4cb-0a22a67e09a4",
     "name": "La pizza sale e pepe",
     "city": "Nice"
   },
@@ -345,17 +345,17 @@
   },
   "contact@pausk.com": {
     "sent_at": "2026-03-14T16:15:33.333368+00:00",
-    "last_sent_at": "2026-03-31T08:37:40.776026+00:00",
-    "send_count": 2,
-    "resend_id": "5b19f7c7-7ee8-4eec-85a4-4ef32b0237a9",
+    "last_sent_at": "2026-04-15T16:04:15.882714+00:00",
+    "send_count": 3,
+    "resend_id": "b1b64340-af36-4a5d-aace-aaced8461820",
     "name": "paus'k",
     "city": "Bordeaux"
   },
   "contact@pizzicotto-chicken.fr": {
     "sent_at": "2026-03-14T16:15:35.127021+00:00",
-    "last_sent_at": "2026-03-31T08:37:36.899123+00:00",
-    "send_count": 2,
-    "resend_id": "19e81b3a-e0b3-4e1f-80c4-ad349471c03e",
+    "last_sent_at": "2026-04-15T16:04:11.959688+00:00",
+    "send_count": 3,
+    "resend_id": "9606a6ba-3f9e-4674-a1d9-b12a24f9b51a",
     "name": "Pizzicotto & Chicken - Pizza Toulouse",
     "city": "Toulouse"
   },
@@ -425,17 +425,17 @@
   },
   "hello@mapszi.com": {
     "sent_at": "2026-03-14T16:15:51.360885+00:00",
-    "last_sent_at": "2026-03-31T08:37:42.703513+00:00",
-    "send_count": 2,
-    "resend_id": "21f4eda8-564d-4c7f-95fa-b382d59478db",
+    "last_sent_at": "2026-04-15T16:04:17.730240+00:00",
+    "send_count": 3,
+    "resend_id": "47bf081c-0397-401d-b749-4ab731652f2d",
     "name": "Snack St Maurice",
     "city": "Nice"
   },
   "support@ovhcloud.com": {
     "sent_at": "2026-03-14T16:15:53.210742+00:00",
-    "last_sent_at": "2026-03-31T08:37:44.990273+00:00",
-    "send_count": 2,
-    "resend_id": "c7a70e7f-fd03-4803-8bb6-a2550a6cb99c",
+    "last_sent_at": "2026-04-15T16:04:19.656344+00:00",
+    "send_count": 3,
+    "resend_id": "af826d65-939e-4c7b-8086-213d08c4d09b",
     "name": "Mamma Pizza Nice",
     "city": "Nice"
   },
@@ -601,25 +601,25 @@
   },
   "info@mima-lyon.fr": {
     "sent_at": "2026-03-15T08:01:09.095429+00:00",
-    "last_sent_at": "2026-03-31T08:37:29.045071+00:00",
-    "send_count": 2,
-    "resend_id": "f0bd7925-aa1d-4fcd-84f5-037bb3d8d8ca",
+    "last_sent_at": "2026-04-15T16:04:05.736119+00:00",
+    "send_count": 3,
+    "resend_id": "87680c75-b8d0-46ac-a577-482dfd68ee2e",
     "name": "MIMA – Pizzeria & Cuisine Italienne",
     "city": "Lyon"
   },
   "namylyon3@gmail.com": {
     "sent_at": "2026-03-15T08:01:07.121724+00:00",
-    "last_sent_at": "2026-03-31T08:37:27.112374+00:00",
-    "send_count": 2,
-    "resend_id": "96e51a3e-3221-4547-991a-736d324a2405",
+    "last_sent_at": "2026-04-15T16:04:03.573508+00:00",
+    "send_count": 3,
+    "resend_id": "d12d21a2-d75d-476b-80e5-ba4fafc0d127",
     "name": "Pizzeria La Mama",
     "city": "Lyon"
   },
   "contact@acadenice.fr": {
     "sent_at": "2026-03-15T08:01:05.120376+00:00",
-    "last_sent_at": "2026-03-31T08:37:24.751605+00:00",
-    "send_count": 2,
-    "resend_id": "d419de78-dba4-4cba-8c3b-c52d4ada218b",
+    "last_sent_at": "2026-04-15T16:04:01.337094+00:00",
+    "send_count": 3,
+    "resend_id": "f2b725f3-edc3-424f-bf90-962a1699f8e6",
     "name": "Pizzeria Bocca Di Rosa",
     "city": "Lyon"
   },
@@ -4337,129 +4337,129 @@
   },
   "vigueur.%5cnbrahimjerbi89@gmail.com": {
     "sent_at": "2026-03-20T15:40:47.156543+00:00",
-    "last_sent_at": "2026-03-20T15:40:47.156543+00:00",
-    "send_count": 1,
-    "resend_id": "278d9043-a967-4db7-8e57-9053797b1d29",
+    "last_sent_at": "2026-04-15T16:04:23.563393+00:00",
+    "send_count": 2,
+    "resend_id": "091ed11f-d668-4351-9f5b-34a4650a8ff5",
     "name": "Pimentos kebab",
     "city": "Lille"
   },
   "pittafives@gmail.com": {
     "sent_at": "2026-03-20T15:40:49.151177+00:00",
-    "last_sent_at": "2026-03-20T15:40:49.151177+00:00",
-    "send_count": 1,
-    "resend_id": "8ef62d2b-f7a7-406e-8ea9-2bc7c2116be0",
+    "last_sent_at": "2026-04-15T16:04:25.596186+00:00",
+    "send_count": 2,
+    "resend_id": "b7ef469c-7a7e-4121-b7a5-c556c2514507",
     "name": "Pitta Fives",
     "city": "Lille"
   },
   "bym2022@outlook.fr": {
     "sent_at": "2026-03-20T15:40:51.234294+00:00",
-    "last_sent_at": "2026-03-20T15:40:51.234294+00:00",
-    "send_count": 1,
-    "resend_id": "b1d4f76b-93ee-4b17-a53d-486ef256e4b6",
+    "last_sent_at": "2026-04-15T16:04:27.703551+00:00",
+    "send_count": 2,
+    "resend_id": "d400a81e-8563-4b05-8887-e9d496550e83",
     "name": "The Best",
     "city": "Lille"
   },
   "k.saim@le-special.com": {
     "sent_at": "2026-03-20T15:40:53.317815+00:00",
-    "last_sent_at": "2026-03-20T15:40:53.317815+00:00",
-    "send_count": 1,
-    "resend_id": "88115d1e-fc0e-4b74-ae33-9297ed41789b",
+    "last_sent_at": "2026-04-15T16:04:29.586709+00:00",
+    "send_count": 2,
+    "resend_id": "a3f00ca3-3555-49dd-9641-b760e42a29cf",
     "name": "LE SPECIAL restaurant",
     "city": "Lille"
   },
   "oussha.lesgourmandises@gmail.com": {
     "sent_at": "2026-03-20T15:40:55.262258+00:00",
-    "last_sent_at": "2026-03-20T15:40:55.262258+00:00",
-    "send_count": 1,
-    "resend_id": "545cc9bc-f23d-4c40-a9b5-f5e4c5e26ac9",
+    "last_sent_at": "2026-04-15T16:04:31.402129+00:00",
+    "send_count": 2,
+    "resend_id": "2e53f2ee-0781-44e3-bd6d-8c23a1baccc7",
     "name": "Resto Alpha",
     "city": "Lille"
   },
   "info@pacha-saint-andre.fr": {
     "sent_at": "2026-03-20T15:40:57.201869+00:00",
-    "last_sent_at": "2026-03-20T15:40:57.201869+00:00",
-    "send_count": 1,
-    "resend_id": "8d4e973c-7abd-4968-b03a-3e5f8c5f89ea",
+    "last_sent_at": "2026-04-15T16:04:33.195438+00:00",
+    "send_count": 2,
+    "resend_id": "ab9232b0-9841-4a4b-8876-46fe8e6271b3",
     "name": "Kebab Le Pacha",
     "city": "Lille"
   },
   "contact@squadraclub.fr": {
     "sent_at": "2026-03-20T15:40:59.151610+00:00",
-    "last_sent_at": "2026-03-20T15:40:59.151610+00:00",
-    "send_count": 1,
-    "resend_id": "d80be2c8-3104-456b-a753-c8ce2bf83b56",
+    "last_sent_at": "2026-04-15T16:04:35.030494+00:00",
+    "send_count": 2,
+    "resend_id": "567dd057-38c7-4613-aab3-bad4db1eab8a",
     "name": "SQUADRA CLUB",
     "city": "Lille"
   },
   "mammacucina@mail.com": {
     "sent_at": "2026-03-20T15:41:01.154966+00:00",
-    "last_sent_at": "2026-03-20T15:41:01.154966+00:00",
-    "send_count": 1,
-    "resend_id": "8342e1b6-e342-406d-bd6b-0a7da829f5a5",
+    "last_sent_at": "2026-04-15T16:04:37.029894+00:00",
+    "send_count": 2,
+    "resend_id": "8d04e3f0-2886-4841-bd71-fb13e78558f8",
     "name": "Mamma Cucina Lille🍕",
     "city": "Lille"
   },
   "il@piccolino.fr": {
     "sent_at": "2026-03-20T15:41:03.091041+00:00",
-    "last_sent_at": "2026-03-20T15:41:03.091041+00:00",
-    "send_count": 1,
-    "resend_id": "97edf903-c46d-4982-8f9c-1a63a681a579",
+    "last_sent_at": "2026-04-15T16:04:38.927395+00:00",
+    "send_count": 2,
+    "resend_id": "d1a5172f-34bc-40a8-b31c-80ea74122c53",
     "name": "Pizzeria Il Piccolino",
     "city": "Lille"
   },
   "contact@la-bottega.com": {
     "sent_at": "2026-03-20T15:41:05.298013+00:00",
-    "last_sent_at": "2026-03-20T15:41:05.298013+00:00",
-    "send_count": 1,
-    "resend_id": "ec9ba483-4fd3-41cd-8da2-4859e93f4fdd",
+    "last_sent_at": "2026-04-15T16:04:40.933591+00:00",
+    "send_count": 2,
+    "resend_id": "d5f49424-a9f3-47bf-bbfa-52465b2c8f65",
     "name": "La Bottega Pizzeria",
     "city": "Lille"
   },
   "contact@restobellini.fr": {
     "sent_at": "2026-03-20T15:41:07.250010+00:00",
-    "last_sent_at": "2026-03-20T15:41:07.250010+00:00",
-    "send_count": 1,
-    "resend_id": "cfe698c3-ce96-4f2b-a213-158473b5f5ad",
+    "last_sent_at": "2026-04-15T16:04:42.757125+00:00",
+    "send_count": 2,
+    "resend_id": "6d9733bd-4884-4e7c-a37d-c9c40969776b",
     "name": "Bellini",
     "city": "Lille"
   },
   "contact@poppiespizza.fr": {
     "sent_at": "2026-03-20T15:41:09.157900+00:00",
-    "last_sent_at": "2026-03-20T15:41:09.157900+00:00",
-    "send_count": 1,
-    "resend_id": "9ccb18bd-055f-4466-a5d4-cde3e4177060",
+    "last_sent_at": "2026-04-15T16:04:44.811204+00:00",
+    "send_count": 2,
+    "resend_id": "435a8ffd-cdcb-4dc5-b324-57c463de1f33",
     "name": "Poppie's Pizza Lille",
     "city": "Lille"
   },
   "contact@palaisbienetre.fr": {
     "sent_at": "2026-03-20T15:41:11.120520+00:00",
-    "last_sent_at": "2026-03-20T15:41:11.120520+00:00",
-    "send_count": 1,
-    "resend_id": "f720389a-50ba-4008-828b-4672c640d40c",
+    "last_sent_at": "2026-04-15T16:04:46.853403+00:00",
+    "send_count": 2,
+    "resend_id": "c3318a0c-afd1-4524-b893-776ca4e1a182",
     "name": "LE GOURMAND LILLE",
     "city": "Lille"
   },
   "pizzafornello@msn.com": {
     "sent_at": "2026-03-20T15:41:13.047989+00:00",
-    "last_sent_at": "2026-03-20T15:41:13.047989+00:00",
-    "send_count": 1,
-    "resend_id": "c364ece0-8161-4750-9cf2-1547e8f04758",
+    "last_sent_at": "2026-04-15T16:04:48.697822+00:00",
+    "send_count": 2,
+    "resend_id": "6122dce6-6de7-47d2-8cb0-d8084a390dc6",
     "name": "Al Fornello",
     "city": "Lille"
   },
   "claudionigro@free.fr": {
     "sent_at": "2026-03-20T15:41:15.115187+00:00",
-    "last_sent_at": "2026-03-20T15:41:15.115187+00:00",
-    "send_count": 1,
-    "resend_id": "a11f125c-9430-4a98-97c1-3d233ed834fe",
+    "last_sent_at": "2026-04-15T16:04:50.771593+00:00",
+    "send_count": 2,
+    "resend_id": "390c43dd-9bc3-4742-bd0a-7e4ff89af86b",
     "name": "Viva Italian Pizza",
     "city": "Lille"
   },
   "contact@pierrehenripoiret.com": {
     "sent_at": "2026-03-20T15:41:17.056154+00:00",
-    "last_sent_at": "2026-03-20T15:41:17.056154+00:00",
-    "send_count": 1,
-    "resend_id": "683735c6-8352-41e6-8b7a-85c79ae95c35",
+    "last_sent_at": "2026-04-15T16:04:52.625447+00:00",
+    "send_count": 2,
+    "resend_id": "5f56141f-fdc6-4564-8239-9cf497007087",
     "name": "Pizza Armand",
     "city": "Lille"
   },
@@ -11548,6 +11548,14 @@
     "last_sent_at": "2026-04-15T09:05:25.976960+00:00",
     "send_count": 1,
     "resend_id": "8dd5c6cb-e07b-4b56-b23a-427915d6ea48",
+    "name": "DUOMO - Pizzeria Napolitaine",
+    "city": "Lyon"
+  },
+  "info@natasun.com": {
+    "sent_at": "2026-04-15T16:04:54.668438+00:00",
+    "last_sent_at": "2026-04-15T16:04:54.668438+00:00",
+    "send_count": 1,
+    "resend_id": "80798493-bec0-44f2-b35c-eb75c902317c",
     "name": "DUOMO - Pizzeria Napolitaine",
     "city": "Lyon"
   }
