@@ -329,9 +329,9 @@
   },
   "okjapizza@gmail.com": {
     "sent_at": "2026-03-14T16:15:29.675039+00:00",
-    "last_sent_at": "2026-03-31T08:37:17.913805+00:00",
-    "send_count": 2,
-    "resend_id": "6f112592-8966-4f4f-9ba9-d8c2a4511e88",
+    "last_sent_at": "2026-04-15T09:04:46.286957+00:00",
+    "send_count": 3,
+    "resend_id": "62957bfd-af84-4bce-a88d-ecf41834345b",
     "name": "OKJA - Pizzeria & Cocktails à Lyon 7",
     "city": "Lyon"
   },
@@ -625,89 +625,89 @@
   },
   "contact@pizzeria-lafocaccia.fr": {
     "sent_at": "2026-03-15T08:01:03.15585+00:00",
-    "last_sent_at": "2026-03-31T08:37:22.790515+00:00",
-    "send_count": 2,
-    "resend_id": "1f5bd155-3f67-4bd8-863c-2617f9d74fb9",
+    "last_sent_at": "2026-04-15T09:04:50.266151+00:00",
+    "send_count": 3,
+    "resend_id": "89d1acba-705e-4207-b3fe-3b38699cd4e6",
     "name": "Pizzeria La Focaccia",
     "city": "Lyon"
   },
   "contact@restaurant-casalula.com": {
     "sent_at": "2026-03-15T08:01:01.214472+00:00",
-    "last_sent_at": "2026-03-31T08:37:20.409473+00:00",
-    "send_count": 2,
-    "resend_id": "ceec81e9-2853-447c-9a2f-2d573c6b1172",
+    "last_sent_at": "2026-04-15T09:04:48.265035+00:00",
+    "send_count": 3,
+    "resend_id": "961483b8-2328-4ba3-ac72-79afffac9a53",
     "name": "CASA LULA - Restaurant Italien Lyon",
     "city": "Lyon"
   },
   "contact@groupenobile.com": {
     "sent_at": "2026-03-15T08:00:57.261689+00:00",
-    "last_sent_at": "2026-03-30T16:04:59.398648+00:00",
-    "send_count": 2,
-    "resend_id": "0430b7e9-4351-4150-93c8-b69b80095396",
+    "last_sent_at": "2026-04-15T09:04:44.213520+00:00",
+    "send_count": 3,
+    "resend_id": "d9b8ae43-6a62-4b9e-8a6f-dc5394271ddf",
     "name": "Casa Nobile",
     "city": "Lyon"
   },
   "amigopizza69007@gmail.com": {
     "sent_at": "2026-03-15T08:00:55.285639+00:00",
-    "last_sent_at": "2026-03-30T16:04:57.432829+00:00",
-    "send_count": 2,
-    "resend_id": "9428b724-997f-45a3-9f4c-8e3b62629ffb",
+    "last_sent_at": "2026-04-15T09:04:42.237344+00:00",
+    "send_count": 3,
+    "resend_id": "46d170dc-5993-49ca-ac72-2cf6e63e29e3",
     "name": "Amigo Food",
     "city": "Lyon"
   },
   "fistonrestaurant@gmail.com": {
     "sent_at": "2026-03-15T08:00:53.202853+00:00",
-    "last_sent_at": "2026-03-30T16:04:55.390583+00:00",
-    "send_count": 2,
-    "resend_id": "04acf38b-44b1-4c63-b58a-f8dbd77f415d",
+    "last_sent_at": "2026-04-15T09:04:39.921567+00:00",
+    "send_count": 3,
+    "resend_id": "4bc7c80c-ffe3-40fc-b533-dad9b50fa828",
     "name": "Figlio by Fiston - Cuisine italienne & pinsa romana",
     "city": "Lyon"
   },
   "alipod@free.fr": {
     "sent_at": "2026-03-15T08:00:51.201067+00:00",
-    "last_sent_at": "2026-03-30T16:04:53.427721+00:00",
-    "send_count": 2,
-    "resend_id": "808596ea-747b-4f68-a5cc-69f578fb70c0",
+    "last_sent_at": "2026-04-15T09:04:37.884255+00:00",
+    "send_count": 3,
+    "resend_id": "85844494-12c1-49dc-8dd5-02350c16a101",
     "name": "L’ As de Pizz'",
     "city": "Lyon"
   },
   "maria.restaurantlyon@gmail.com": {
     "sent_at": "2026-03-15T08:00:49.250905+00:00",
-    "last_sent_at": "2026-03-30T16:04:51.456140+00:00",
-    "send_count": 2,
-    "resend_id": "434aed25-753d-41fd-8d9c-d1009fccc4b5",
+    "last_sent_at": "2026-04-15T09:04:35.600100+00:00",
+    "send_count": 3,
+    "resend_id": "cdecb131-8450-4527-bfe0-6a56d52d8d69",
     "name": "MARIA.",
     "city": "Lyon"
   },
   "ilfico.restaurant@gmail.com": {
     "sent_at": "2026-03-15T08:00:47.298046+00:00",
-    "last_sent_at": "2026-03-30T16:04:49.519854+00:00",
-    "send_count": 2,
-    "resend_id": "49164013-0d4c-4da7-bdb8-f64959a1eb68",
+    "last_sent_at": "2026-04-15T09:04:33.602934+00:00",
+    "send_count": 3,
+    "resend_id": "d96816f7-c3fb-4e53-9d7a-edf199f89b6e",
     "name": "Il Fico",
     "city": "Lyon"
   },
   "contactvolfoni@groupe-bertrand.com": {
     "sent_at": "2026-03-15T08:00:45.174456+00:00",
-    "last_sent_at": "2026-03-30T16:04:47.536078+00:00",
-    "send_count": 2,
-    "resend_id": "026c7828-8af1-42df-b68a-d919d2a2fa93",
+    "last_sent_at": "2026-04-15T09:04:31.405933+00:00",
+    "send_count": 3,
+    "resend_id": "ed7ade10-2f41-417d-b21b-65a002c14779",
     "name": "Volfoni Lyon",
     "city": "Lyon"
   },
   "giogiopizzalyon@gmail.com": {
     "sent_at": "2026-03-15T08:00:43.165886+00:00",
-    "last_sent_at": "2026-03-30T16:04:45.474343+00:00",
-    "send_count": 2,
-    "resend_id": "408849b3-b312-4fc3-a9fc-2c3703b6f6be",
+    "last_sent_at": "2026-04-15T09:04:29.411205+00:00",
+    "send_count": 3,
+    "resend_id": "cc06346f-98d2-464e-b68e-6c6c1cbfd1b9",
     "name": "Gio Gio Pizzeria Lyon 2",
     "city": "Lyon"
   },
   "contact@jtpizza.com": {
     "sent_at": "2026-03-15T08:00:41.182523+00:00",
-    "last_sent_at": "2026-03-30T16:04:43.471905+00:00",
-    "send_count": 2,
-    "resend_id": "82e5f63b-0d9c-47f0-ad63-7608b6edd4b6",
+    "last_sent_at": "2026-04-15T09:04:26.879140+00:00",
+    "send_count": 3,
+    "resend_id": "f7ae73e7-ced0-4b8e-9bdc-0b8455ac3f55",
     "name": "Jordan Tomas Pizza - Lyon Gerland",
     "city": "Lyon"
   },
@@ -4201,105 +4201,105 @@
   },
   "contact@caravaggio.fr": {
     "sent_at": "2026-03-20T08:02:39.192960+00:00",
-    "last_sent_at": "2026-03-20T08:02:39.192960+00:00",
-    "send_count": 1,
-    "resend_id": "d8130ef1-b3a7-4fb7-94a0-814d740301ff",
+    "last_sent_at": "2026-04-15T09:04:52.303064+00:00",
+    "send_count": 2,
+    "resend_id": "502130fa-56d0-4bf0-b71f-1fefa73bd215",
     "name": "Caravaggio",
     "city": "Montpellier"
   },
   "contact@nopo.fr": {
     "sent_at": "2026-03-20T08:02:41.242980+00:00",
-    "last_sent_at": "2026-03-20T08:02:41.242980+00:00",
-    "send_count": 1,
-    "resend_id": "6f684c56-3cc3-482b-987a-a56dcdb452f4",
+    "last_sent_at": "2026-04-15T09:04:54.609288+00:00",
+    "send_count": 2,
+    "resend_id": "1623630c-28dc-451a-b01e-8431b2cf6e3d",
     "name": "B9 - Montpellier",
     "city": "Montpellier"
   },
   "contact@enjoytacos.com": {
     "sent_at": "2026-03-20T08:02:43.044296+00:00",
-    "last_sent_at": "2026-03-20T08:02:43.044296+00:00",
-    "send_count": 1,
-    "resend_id": "122b8981-edda-4bdf-b6ac-54b7bc1dd413",
+    "last_sent_at": "2026-04-15T09:04:56.565957+00:00",
+    "send_count": 2,
+    "resend_id": "157cf254-0670-45f7-bc34-eec855a68326",
     "name": "Enjoy Tacos® - Montpellier Université",
     "city": "Montpellier"
   },
   "contact@goodvibes-burger-montpellier.fr": {
     "sent_at": "2026-03-20T08:02:44.862853+00:00",
-    "last_sent_at": "2026-03-20T08:02:44.862853+00:00",
-    "send_count": 1,
-    "resend_id": "fef0c566-c6fc-4ca0-8aaf-68d62fc8d8c6",
+    "last_sent_at": "2026-04-15T09:04:58.492545+00:00",
+    "send_count": 2,
+    "resend_id": "1d7f1a9e-8a7b-48a0-9884-16a19cb8a4b6",
     "name": "Good Vibes Food : burgers, paninis, salades & bowls",
     "city": "Montpellier"
   },
   "smokygrillburger.shop@gmail.com": {
     "sent_at": "2026-03-20T08:02:46.656061+00:00",
-    "last_sent_at": "2026-03-20T08:02:46.656061+00:00",
-    "send_count": 1,
-    "resend_id": "9eb0b06a-328e-464d-ab26-24c8eee8db43",
+    "last_sent_at": "2026-04-15T09:05:00.425455+00:00",
+    "send_count": 2,
+    "resend_id": "07ae5824-7e72-4d33-adc6-8834916866f6",
     "name": "SMOKY GRILL BURGER",
     "city": "Montpellier"
   },
   "localoria.com@gmail.com": {
     "sent_at": "2026-03-20T08:02:48.441989+00:00",
-    "last_sent_at": "2026-03-20T08:02:48.441989+00:00",
-    "send_count": 1,
-    "resend_id": "11dc0d8d-6fde-4e2a-abc3-e083574999da",
+    "last_sent_at": "2026-04-15T09:05:02.375175+00:00",
+    "send_count": 2,
+    "resend_id": "046f3164-e210-4ce8-981c-afda956895ce",
     "name": "Full Tacos",
     "city": "Montpellier"
   },
   "contact@crustfrance.com": {
     "sent_at": "2026-03-20T08:02:50.242768+00:00",
-    "last_sent_at": "2026-03-20T08:02:50.242768+00:00",
-    "send_count": 1,
-    "resend_id": "e8860b21-0ee1-4969-8ee7-041784540525",
+    "last_sent_at": "2026-04-15T09:05:04.437554+00:00",
+    "send_count": 2,
+    "resend_id": "f4e512a6-fe1b-415a-bb6b-56859677e419",
     "name": "CRUST Montpellier ALL FOOD",
     "city": "Montpellier"
   },
   "stanleychickencorner@gmail.com": {
     "sent_at": "2026-03-20T08:02:52.026217+00:00",
-    "last_sent_at": "2026-03-20T08:02:52.026217+00:00",
-    "send_count": 1,
-    "resend_id": "25014de4-04f4-4e1a-b8a8-012e69ef804b",
+    "last_sent_at": "2026-04-15T09:05:06.530044+00:00",
+    "send_count": 2,
+    "resend_id": "a385a445-cc10-4aa9-82fc-f338ca85e615",
     "name": "Stanley's Chicken Corner",
     "city": "Montpellier"
   },
   "contact@texmex34.fr": {
     "sent_at": "2026-03-20T08:02:57.071887+00:00",
-    "last_sent_at": "2026-03-20T08:02:57.071887+00:00",
-    "send_count": 1,
-    "resend_id": "e4292c23-0d4d-4277-b9f9-beaa8ac01f2a",
+    "last_sent_at": "2026-04-15T09:05:08.524722+00:00",
+    "send_count": 2,
+    "resend_id": "f6cd3f45-bafa-4704-bf7a-17c07ca6b472",
     "name": "TEX MEX",
     "city": "Montpellier"
   },
   "gnl.moutarde@gmail.com": {
     "sent_at": "2026-03-20T08:02:58.922493+00:00",
-    "last_sent_at": "2026-03-20T08:02:58.922493+00:00",
-    "send_count": 1,
-    "resend_id": "36dc98b7-3d07-4261-a9fe-4099b8f6335f",
+    "last_sent_at": "2026-04-15T09:05:10.861702+00:00",
+    "send_count": 2,
+    "resend_id": "469826d5-d4b6-4fd7-8ecd-825e3ef51a63",
     "name": "General Moutarde Traiteur / Food Truck herault et gard événementiel / anniversaire / mariage Montpellier/ Brunch",
     "city": "Montpellier"
   },
   "contact@pizzalif.com": {
     "sent_at": "2026-03-20T08:03:00.744412+00:00",
-    "last_sent_at": "2026-03-20T08:03:00.744412+00:00",
-    "send_count": 1,
-    "resend_id": "c4c58151-f839-4a48-9e9d-e4e46804e37b",
+    "last_sent_at": "2026-04-15T09:05:12.808654+00:00",
+    "send_count": 2,
+    "resend_id": "ecf546c7-69b2-4182-b60c-150e7520f34f",
     "name": "Pizzalif Montpellier",
     "city": "Montpellier"
   },
   "gaudinners@gmail.com": {
     "sent_at": "2026-03-20T08:03:02.548711+00:00",
-    "last_sent_at": "2026-03-20T08:03:02.548711+00:00",
-    "send_count": 1,
-    "resend_id": "9dab0c03-a71b-4962-913a-da407ddb3128",
+    "last_sent_at": "2026-04-15T09:05:14.902037+00:00",
+    "send_count": 2,
+    "resend_id": "0665e095-bab2-47e8-aa74-f791a62316ee",
     "name": "Croq'cœur Montpellier",
     "city": "Montpellier"
   },
   "contact@matt-burger.fr": {
     "sent_at": "2026-03-20T08:03:04.361905+00:00",
-    "last_sent_at": "2026-03-20T08:03:04.361905+00:00",
-    "send_count": 1,
-    "resend_id": "1ec925ca-1c8e-4254-aa22-923c517bb4ec",
+    "last_sent_at": "2026-04-15T09:05:16.840367+00:00",
+    "send_count": 2,
+    "resend_id": "5f3c6dd5-db60-4490-aa69-cab14e04a96e",
     "name": "Matt Burger",
     "city": "Montpellier"
   },
@@ -4313,25 +4313,25 @@
   },
   "celma.mallaury@hotmail.fr": {
     "sent_at": "2026-03-20T15:40:40.789134+00:00",
-    "last_sent_at": "2026-03-20T15:40:40.789134+00:00",
-    "send_count": 1,
-    "resend_id": "acb7f147-49f7-4d69-acf2-b02a2f5aad18",
+    "last_sent_at": "2026-04-15T09:05:19.972980+00:00",
+    "send_count": 2,
+    "resend_id": "04eacac6-4278-4c1f-8eeb-e73c4eb4c682",
     "name": "Green Lab",
     "city": "Montpellier"
   },
   "bonjour@la-quincaillerie.fr": {
     "sent_at": "2026-03-20T15:40:43.073498+00:00",
-    "last_sent_at": "2026-03-20T15:40:43.073498+00:00",
-    "send_count": 1,
-    "resend_id": "b1ce05af-c745-41f4-bee0-ffd9e2514eb2",
+    "last_sent_at": "2026-04-15T09:05:21.913432+00:00",
+    "send_count": 2,
+    "resend_id": "beeea959-f31d-4bbb-bd18-55f162efad55",
     "name": "GUR Kebab - Lille Gare",
     "city": "Lille"
   },
   "contact@lebraise.fr": {
     "sent_at": "2026-03-20T15:40:45.084058+00:00",
-    "last_sent_at": "2026-03-20T15:40:45.084058+00:00",
-    "send_count": 1,
-    "resend_id": "b55cb9fb-c121-47b9-8252-783e58d736ae",
+    "last_sent_at": "2026-04-15T09:05:24.010906+00:00",
+    "send_count": 2,
+    "resend_id": "0438b4fc-55ee-4f9e-bfd3-0cb8b04457a9",
     "name": "LE BRAISÉ - Burger Gourmet Lille",
     "city": "Lille"
   },
@@ -11542,5 +11542,13 @@
     "resend_id": "358ab77e-54b1-4191-bdf1-e4a9acdb4181",
     "name": "Big Smash Toulouse - Matabiau",
     "city": "Toulouse"
+  },
+  "direction@duomopizzeria.fr": {
+    "sent_at": "2026-04-15T09:05:25.976960+00:00",
+    "last_sent_at": "2026-04-15T09:05:25.976960+00:00",
+    "send_count": 1,
+    "resend_id": "8dd5c6cb-e07b-4b56-b23a-427915d6ea48",
+    "name": "DUOMO - Pizzeria Napolitaine",
+    "city": "Lyon"
   }
 }
