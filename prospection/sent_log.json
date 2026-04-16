@@ -41,17 +41,17 @@
   },
   "ari6712@gmail.com": {
     "sent_at": "2026-03-14T16:14:23.341739+00:00",
-    "last_sent_at": "2026-03-31T16:04:14.857490+00:00",
-    "send_count": 2,
-    "resend_id": "1b6cdd2d-04bd-4086-a2ff-ab8bbc5c7f15",
+    "last_sent_at": "2026-04-16T09:03:47.657668+00:00",
+    "send_count": 3,
+    "resend_id": "10fa1beb-f82b-455e-8129-4f6caad563df",
     "name": "One Street",
     "city": "Strasbourg"
   },
   "welcome@backbay.fr": {
     "sent_at": "2026-03-14T16:14:25.209555+00:00",
-    "last_sent_at": "2026-03-31T16:04:08.996868+00:00",
-    "send_count": 2,
-    "resend_id": "7cfc4a38-f993-4185-b93f-cc3c92152fa8",
+    "last_sent_at": "2026-04-16T09:03:41.183924+00:00",
+    "send_count": 3,
+    "resend_id": "0f1d93b6-54ed-424d-84d4-1e8f19630029",
     "name": "Back Bay",
     "city": "Nantes"
   },
@@ -81,17 +81,17 @@
   },
   "rachid.naqiri@gmail.com": {
     "sent_at": "2026-03-14T16:14:32.587653+00:00",
-    "last_sent_at": "2026-03-31T16:04:22.300493+00:00",
-    "send_count": 2,
-    "resend_id": "b87091e3-2a57-4060-b2c0-a1c527e480a2",
+    "last_sent_at": "2026-04-16T09:03:56.720004+00:00",
+    "send_count": 3,
+    "resend_id": "12cb9be5-1a5f-4667-827a-f0fe62961f6c",
     "name": "Food factory",
     "city": "Lille"
   },
   "guindani.najib@gmail.com": {
     "sent_at": "2026-03-14T16:14:34.397218+00:00",
-    "last_sent_at": "2026-03-31T16:04:20.419248+00:00",
-    "send_count": 2,
-    "resend_id": "1f510dae-c214-419c-aa41-976f66faf340",
+    "last_sent_at": "2026-04-16T09:03:54.488531+00:00",
+    "send_count": 3,
+    "resend_id": "2a600766-ec9f-489c-ae09-81c53d41de41",
     "name": "Pizzeria-Dei-Guindani",
     "city": "Montpellier"
   },
@@ -129,9 +129,9 @@
   },
   "service.communication@g-ladalle.com": {
     "sent_at": "2026-03-14T16:14:43.449340+00:00",
-    "last_sent_at": "2026-03-31T16:04:04.806155+00:00",
-    "send_count": 2,
-    "resend_id": "ebbe1a21-f161-461e-8ccd-42517696e7f0",
+    "last_sent_at": "2026-04-16T09:03:36.335740+00:00",
+    "send_count": 3,
+    "resend_id": "c0550db9-96ef-4e1d-a87f-852bad71a946",
     "name": "G LA DALLE - Nice",
     "city": "Nice"
   },
@@ -249,9 +249,9 @@
   },
   "contact@grilladeettacos.fr": {
     "sent_at": "2026-03-14T16:15:11.490607+00:00",
-    "last_sent_at": "2026-03-31T16:04:16.701023+00:00",
-    "send_count": 2,
-    "resend_id": "6b14b804-e67a-452a-8349-7cbaf7407768",
+    "last_sent_at": "2026-04-16T09:03:50.268596+00:00",
+    "send_count": 3,
+    "resend_id": "512d2638-98dd-417d-8d55-8f73e8841ea1",
     "name": "Grillade & Tacos Montpellier",
     "city": "Montpellier"
   },
@@ -361,17 +361,17 @@
   },
   "lepicobello@hotmail.fr": {
     "sent_at": "2026-03-14T16:15:36.933633+00:00",
-    "last_sent_at": "2026-03-31T16:04:12.996966+00:00",
-    "send_count": 2,
-    "resend_id": "5ada6cd2-f92c-44dc-a87a-9cb6dca688ab",
+    "last_sent_at": "2026-04-16T09:03:45.722748+00:00",
+    "send_count": 3,
+    "resend_id": "fe1f5efb-0918-48d1-a610-2c0900b5da52",
     "name": "Picobello",
     "city": "Strasbourg"
   },
   "contact.milopizzeria@gmail.com": {
     "sent_at": "2026-03-14T16:15:38.714009+00:00",
-    "last_sent_at": "2026-03-31T16:04:06.950588+00:00",
-    "send_count": 2,
-    "resend_id": "19e96d83-028b-43e0-b487-de5f0a148167",
+    "last_sent_at": "2026-04-16T09:03:38.846472+00:00",
+    "send_count": 3,
+    "resend_id": "8f5aec00-3200-44fa-8cb5-30f39dc662d0",
     "name": "Milo handmade pizzas",
     "city": "Nantes"
   },
@@ -401,17 +401,17 @@
   },
   "contact@ilristorante.fr": {
     "sent_at": "2026-03-14T16:15:45.906738+00:00",
-    "last_sent_at": "2026-03-31T16:04:24.180307+00:00",
-    "send_count": 2,
-    "resend_id": "93aefbdc-96f6-491c-83dc-0e2561c0a5aa",
+    "last_sent_at": "2026-04-16T09:03:58.697640+00:00",
+    "send_count": 3,
+    "resend_id": "dcdcc67b-9950-4749-bd48-ca0914805eb1",
     "name": "IL RISTORANTE - Le restaurant Italien de Lille",
     "city": "Lille"
   },
   "contact@aufedebois.fr": {
     "sent_at": "2026-03-14T16:15:47.756507+00:00",
-    "last_sent_at": "2026-03-31T16:04:18.546367+00:00",
-    "send_count": 2,
-    "resend_id": "1691c648-a289-493f-a316-6096c4058ddb",
+    "last_sent_at": "2026-04-16T09:03:52.539502+00:00",
+    "send_count": 3,
+    "resend_id": "c8397016-dda2-4dd8-8854-aafcd3230c19",
     "name": "Pizza Vera Napoli pizzeria feu de bois montpellier",
     "city": "Montpellier"
   },
@@ -465,9 +465,9 @@
   },
   "contact@dipiu.fr": {
     "sent_at": "2026-03-14T16:16:00.545194+00:00",
-    "last_sent_at": "2026-03-31T08:37:48.924871+00:00",
-    "send_count": 2,
-    "resend_id": "f32ea2dd-1403-484d-b8cf-c27374f94715",
+    "last_sent_at": "2026-04-16T09:03:33.810619+00:00",
+    "send_count": 3,
+    "resend_id": "dee04c08-7761-4578-a21f-addd8c41f00f",
     "name": "Di Più - Restaurant italien Nice",
     "city": "Nice"
   },
@@ -537,9 +537,9 @@
   },
   "sav@fivepizzaoriginal.fr": {
     "sent_at": "2026-03-14T16:16:16.800606+00:00",
-    "last_sent_at": "2026-03-31T16:04:10.894147+00:00",
-    "send_count": 2,
-    "resend_id": "b60ddd96-26a1-454e-b6e9-92bb476f671f",
+    "last_sent_at": "2026-04-16T09:03:43.794230+00:00",
+    "send_count": 3,
+    "resend_id": "b331c829-354a-4915-866f-5f5e072fee1e",
     "name": "Five Pizza Original - Strasbourg",
     "city": "Strasbourg"
   },
@@ -4465,129 +4465,129 @@
   },
   "love@bigmamma.com": {
     "sent_at": "2026-03-20T15:41:20.544421+00:00",
-    "last_sent_at": "2026-03-20T15:41:20.544421+00:00",
-    "send_count": 1,
-    "resend_id": "5bfaa3dd-8ab4-4b39-821d-5277464c7f74",
+    "last_sent_at": "2026-04-16T09:04:00.788145+00:00",
+    "send_count": 2,
+    "resend_id": "41a629aa-af5d-4a5a-a353-d2021c3a93f8",
     "name": "Napoli gang",
     "city": "Lille"
   },
   "vigueur.%5cnsalim.rezig@dualpub.fr": {
     "sent_at": "2026-03-20T15:41:22.552488+00:00",
-    "last_sent_at": "2026-03-20T15:41:22.552488+00:00",
-    "send_count": 1,
-    "resend_id": "40c4d7c5-f193-401e-9c3f-a1134f17b556",
+    "last_sent_at": "2026-04-16T09:04:02.763654+00:00",
+    "send_count": 2,
+    "resend_id": "4e61850b-0faa-4f5a-bc06-0e7b63d67130",
     "name": "So Drive Burger Lille",
     "city": "Lille"
   },
   "raptorlille@gmail.com": {
     "sent_at": "2026-03-20T15:41:24.501217+00:00",
-    "last_sent_at": "2026-03-20T15:41:24.501217+00:00",
-    "send_count": 1,
-    "resend_id": "c569dd63-e504-46f0-9bd3-08ac24ed48e3",
+    "last_sent_at": "2026-04-16T09:04:04.806231+00:00",
+    "send_count": 2,
+    "resend_id": "7e42010e-ad2c-4f79-a673-69eacdba6309",
     "name": "Raptor Shack",
     "city": "Lille"
   },
   "daniel@digitaldg.fr": {
     "sent_at": "2026-03-20T15:41:26.448622+00:00",
-    "last_sent_at": "2026-03-20T15:41:26.448622+00:00",
-    "send_count": 1,
-    "resend_id": "28fbbdac-7568-4151-bcff-05016691b217",
+    "last_sent_at": "2026-04-16T09:04:06.731354+00:00",
+    "send_count": 2,
+    "resend_id": "54c875d6-0e7b-458c-b958-47b2ba803837",
     "name": "CHICKEN STREET NAAN AND FRIED CHICKEN LILLE",
     "city": "Lille"
   },
   "contact@les3brasseurs.com": {
     "sent_at": "2026-03-20T15:41:28.408834+00:00",
-    "last_sent_at": "2026-03-20T15:41:28.408834+00:00",
-    "send_count": 1,
-    "resend_id": "aceb113c-56ab-4aa3-9686-9f961e05add7",
+    "last_sent_at": "2026-04-16T09:04:08.683124+00:00",
+    "send_count": 2,
+    "resend_id": "1195148c-3e8d-4c90-80f6-a77a75c223d0",
     "name": "3 Brasseurs Lille",
     "city": "Lille"
   },
   "contact@hollyfood.fr": {
     "sent_at": "2026-03-20T15:41:30.329703+00:00",
-    "last_sent_at": "2026-03-20T15:41:30.329703+00:00",
-    "send_count": 1,
-    "resend_id": "3a99b39f-7560-46ae-a1e4-2e76d1c24011",
+    "last_sent_at": "2026-04-16T09:04:10.639516+00:00",
+    "send_count": 2,
+    "resend_id": "484f047e-fac2-4f39-bf64-9b837e240c85",
     "name": "Hollyfood",
     "city": "Lille"
   },
   "contact@friteriedeslilas.com": {
     "sent_at": "2026-03-20T15:41:32.360796+00:00",
-    "last_sent_at": "2026-03-20T15:41:32.360796+00:00",
-    "send_count": 1,
-    "resend_id": "434b2102-7a57-4393-beb2-81506aa5eab8",
+    "last_sent_at": "2026-04-16T09:04:12.578051+00:00",
+    "send_count": 2,
+    "resend_id": "e745bb38-a31c-4df8-86c4-033420f5d487",
     "name": "Friterie des Lilas",
     "city": "Lille"
   },
   "contact@lunicco.fr": {
     "sent_at": "2026-03-20T15:41:34.285826+00:00",
-    "last_sent_at": "2026-03-20T15:41:34.285826+00:00",
-    "send_count": 1,
-    "resend_id": "63a77f84-1ebf-45a9-8bde-fd3afb343d3c",
+    "last_sent_at": "2026-04-16T09:04:14.624013+00:00",
+    "send_count": 2,
+    "resend_id": "11928507-cc76-4147-9567-fadde9bd65ed",
     "name": "Lunicco - Euralille",
     "city": "Lille"
   },
   "contact@master-poulet.fr": {
     "sent_at": "2026-03-20T15:41:36.221093+00:00",
-    "last_sent_at": "2026-03-20T15:41:36.221093+00:00",
-    "send_count": 1,
-    "resend_id": "59cb2a4b-290d-4643-aacd-78dae8994de2",
+    "last_sent_at": "2026-04-16T09:04:16.596996+00:00",
+    "send_count": 2,
+    "resend_id": "07f0087c-4c02-4d12-8370-a9723a2f5eb5",
     "name": "MASTER POULET - Lille",
     "city": "Lille"
   },
   "contact@jaldijaldi.fr": {
     "sent_at": "2026-03-20T15:41:38.180642+00:00",
-    "last_sent_at": "2026-03-20T15:41:38.180642+00:00",
-    "send_count": 1,
-    "resend_id": "b1246436-1980-417e-b22e-32b911767760",
+    "last_sent_at": "2026-04-16T09:04:18.552823+00:00",
+    "send_count": 2,
+    "resend_id": "930b11fd-a757-43b7-aec5-8a8928499e59",
     "name": "Jaldi Jaldi",
     "city": "Lille"
   },
   "sarayexpresslille@gmail.com": {
     "sent_at": "2026-03-20T15:41:40.302509+00:00",
-    "last_sent_at": "2026-03-20T15:41:40.302509+00:00",
-    "send_count": 1,
-    "resend_id": "9603ab2d-bf43-4899-a497-51b95adcb69e",
+    "last_sent_at": "2026-04-16T09:04:20.510479+00:00",
+    "send_count": 2,
+    "resend_id": "f53f048a-4e29-4c82-8302-c071e7dc779b",
     "name": "Saray Express Lille",
     "city": "Lille"
   },
   "los3compadres@gmx.fr": {
     "sent_at": "2026-03-20T15:41:42.430230+00:00",
-    "last_sent_at": "2026-03-20T15:41:42.430230+00:00",
-    "send_count": 1,
-    "resend_id": "a14f54f3-231e-4cfe-b12b-e6ef700e48ac",
+    "last_sent_at": "2026-04-16T09:04:22.462571+00:00",
+    "send_count": 2,
+    "resend_id": "69148651-1447-4d18-91bf-77feed7b0725",
     "name": "Los 3 compadres",
     "city": "Lille"
   },
   "restaurantaralille@gmail.com": {
     "sent_at": "2026-03-20T15:41:44.565982+00:00",
-    "last_sent_at": "2026-03-20T15:41:44.565982+00:00",
-    "send_count": 1,
-    "resend_id": "b37293ea-8604-4d84-979c-ee21fdbc2ba5",
+    "last_sent_at": "2026-04-16T09:04:24.425655+00:00",
+    "send_count": 2,
+    "resend_id": "d3ab8292-7bda-48d5-9926-d6fc3a6810ae",
     "name": "WE ARE ARA",
     "city": "Lille"
   },
   "contact@kaprispepper.fr": {
     "sent_at": "2026-03-20T15:41:46.625038+00:00",
-    "last_sent_at": "2026-03-20T15:41:46.625038+00:00",
-    "send_count": 1,
-    "resend_id": "9338bf89-3662-44f8-a0bc-3928bcd431ee",
+    "last_sent_at": "2026-04-16T09:04:26.392658+00:00",
+    "send_count": 2,
+    "resend_id": "1fd5ad96-0c32-472a-94d5-80622b908621",
     "name": "Kapris Pepper - Restaurant Burger Lille Vieux Lille",
     "city": "Lille"
   },
   "aix@lf.fr": {
     "sent_at": "2026-03-20T15:41:48.599992+00:00",
-    "last_sent_at": "2026-03-20T15:41:48.599992+00:00",
-    "send_count": 1,
-    "resend_id": "531e4b7e-24dc-4680-815c-6b509e535330",
+    "last_sent_at": "2026-04-16T09:04:28.345333+00:00",
+    "send_count": 2,
+    "resend_id": "1e5d7397-fef1-4f78-a485-96977bc6ac69",
     "name": "La Famille, Finest Lunch - Lille Europe",
     "city": "Lille"
   },
   "comptitepoutine@gmail.com": {
     "sent_at": "2026-03-20T15:41:50.526832+00:00",
-    "last_sent_at": "2026-03-20T15:41:50.526832+00:00",
-    "send_count": 1,
-    "resend_id": "de1f5900-2f9e-467e-8ddf-5571f4d6ce13",
+    "last_sent_at": "2026-04-16T09:04:30.288310+00:00",
+    "send_count": 2,
+    "resend_id": "00153144-0c21-4e0b-a776-d5591822cabc",
     "name": "P'tite Poutine",
     "city": "Lille"
   },
