@@ -105,9 +105,9 @@
   },
   "contact@ladresse-amiens.fr": {
     "sent_at": "2026-03-14T16:14:38.027723+00:00",
-    "last_sent_at": "2026-04-01T16:05:14.770167+00:00",
-    "send_count": 2,
-    "resend_id": "a294c2d3-7f44-40d4-983d-76199f806e6e",
+    "last_sent_at": "2026-04-17T15:58:54.481191+00:00",
+    "send_count": 3,
+    "resend_id": "6eb83184-8fd3-41dc-b4e2-9026a564480e",
     "name": "L'adresse",
     "city": "Amiens"
   },
@@ -193,9 +193,9 @@
   },
   "loc66.fr@gmail.com": {
     "sent_at": "2026-03-14T16:14:58.355548+00:00",
-    "last_sent_at": "2026-04-01T16:05:21.004547+00:00",
-    "send_count": 2,
-    "resend_id": "1030db64-9a69-494b-b688-06fb25816a9b",
+    "last_sent_at": "2026-04-17T15:59:00.887336+00:00",
+    "send_count": 3,
+    "resend_id": "fd38e66f-37b5-4791-913c-aece61a4ee4b",
     "name": "VENTRAYOU PIZZA PERPIGNAN",
     "city": "Perpignan"
   },
@@ -217,9 +217,9 @@
   },
   "pascal.dicandia@icloud.com": {
     "sent_at": "2026-03-14T16:15:04.139100+00:00",
-    "last_sent_at": "2026-04-01T16:05:24.889637+00:00",
-    "send_count": 2,
-    "resend_id": "72c1df5d-8805-43cb-871b-4a3ed034d23b",
+    "last_sent_at": "2026-04-17T15:59:04.900630+00:00",
+    "send_count": 3,
+    "resend_id": "78ea42ee-d184-41ea-81c6-8baf55323984",
     "name": "Angel's Food",
     "city": "Metz"
   },
@@ -289,9 +289,9 @@
   },
   "labonnepate30@gmail.com": {
     "sent_at": "2026-03-14T16:15:20.572842+00:00",
-    "last_sent_at": "2026-04-01T16:05:19.044792+00:00",
-    "send_count": 2,
-    "resend_id": "f0bcac01-d5a8-4dd1-bb1c-5a8b9c46c17c",
+    "last_sent_at": "2026-04-17T15:58:58.910381+00:00",
+    "send_count": 3,
+    "resend_id": "46c7cd13-cb92-48cd-8c88-b5f88a735cf1",
     "name": "Francky La Bonne Pâte - Couzeix",
     "city": "Limoges"
   },
@@ -505,9 +505,9 @@
   },
   "omegaburgerperpignan@gmail.com": {
     "sent_at": "2026-03-14T16:16:09.602539+00:00",
-    "last_sent_at": "2026-04-01T16:05:22.924848+00:00",
-    "send_count": 2,
-    "resend_id": "f91c0b79-f08d-4516-a196-2b57e3dbd47b",
+    "last_sent_at": "2026-04-17T15:59:02.897142+00:00",
+    "send_count": 3,
+    "resend_id": "80e65fa6-1c0f-4875-9e7f-ba003a51a73d",
     "name": "Oméga Burger",
     "city": "Perpignan"
   },
@@ -529,9 +529,9 @@
   },
   "contact@croque-studio.com": {
     "sent_at": "2026-03-14T16:16:14.992558+00:00",
-    "last_sent_at": "2026-04-01T16:05:27.114950+00:00",
-    "send_count": 2,
-    "resend_id": "eea3796f-ae41-4a8e-b981-c9bdecbfe97b",
+    "last_sent_at": "2026-04-17T15:59:07.189927+00:00",
+    "send_count": 3,
+    "resend_id": "16aebe47-db55-4f87-be88-dfc60f2572f2",
     "name": "Queen Mamma - Mercy/Peltre",
     "city": "Metz"
   },
@@ -553,9 +553,9 @@
   },
   "chezpiatours@gmail.com": {
     "sent_at": "2026-03-14T16:16:20.421939+00:00",
-    "last_sent_at": "2026-04-01T16:05:12.528819+00:00",
-    "send_count": 2,
-    "resend_id": "93f8ac63-8324-40a0-894e-db0277b93af5",
+    "last_sent_at": "2026-04-17T15:58:52.505677+00:00",
+    "send_count": 3,
+    "resend_id": "52d137e0-982d-4ab3-808a-38ae22605aa8",
     "name": "Casa Pia",
     "city": "Tours"
   },
@@ -593,9 +593,9 @@
   },
   "contact@tipiz-pizza.fr": {
     "sent_at": "2026-03-14T16:16:29.496871+00:00",
-    "last_sent_at": "2026-04-01T16:05:17.064377+00:00",
-    "send_count": 2,
-    "resend_id": "6b980f5c-47fc-45e8-82b2-0642c4824e0d",
+    "last_sent_at": "2026-04-17T15:58:56.939925+00:00",
+    "send_count": 3,
+    "resend_id": "0aaeb840-0c43-432d-91be-b3ed01af0ea6",
     "name": "TIPIZ' Pizza.",
     "city": "Limoges"
   },
@@ -1073,25 +1073,25 @@
   },
   "gozleon21@gmail.com": {
     "sent_at": "2026-03-15T17:02:51.445369+00:00",
-    "last_sent_at": "2026-04-02T08:35:10.823212+00:00",
-    "send_count": 2,
-    "resend_id": "afefd399-a50e-4868-8573-6c77ba52694b",
+    "last_sent_at": "2026-04-17T15:58:50.007777+00:00",
+    "send_count": 3,
+    "resend_id": "a6e05e33-6937-4231-be41-c734d5e41930",
     "name": "Ekin Kebab",
     "city": "Dijon"
   },
   "goz.ekin@live.fr": {
     "sent_at": "2026-03-15T17:02:48.952194+00:00",
-    "last_sent_at": "2026-04-02T08:35:08.839472+00:00",
-    "send_count": 2,
-    "resend_id": "9116dce8-a1b5-4187-b667-322a75fce280",
+    "last_sent_at": "2026-04-17T15:58:47.616735+00:00",
+    "send_count": 3,
+    "resend_id": "ac639c8e-1506-4e7f-aef8-9f2f714f76a1",
     "name": "Ekin drapeau",
     "city": "Dijon"
   },
   "diran@hotmail.fr": {
     "sent_at": "2026-03-15T17:02:46.672152+00:00",
-    "last_sent_at": "2026-04-02T08:35:07.036642+00:00",
-    "send_count": 2,
-    "resend_id": "e206fb84-89a9-4870-ab52-94b0e3a887f8",
+    "last_sent_at": "2026-04-17T15:58:45.112804+00:00",
+    "send_count": 3,
+    "resend_id": "c7fd6cac-3191-4d5c-89e2-40acad955315",
     "name": "Kébab de L'Université",
     "city": "Dijon"
   },
@@ -4849,129 +4849,129 @@
   },
   "contact@restaurantlavilla.fr": {
     "sent_at": "2026-03-21T07:54:09.532813+00:00",
-    "last_sent_at": "2026-03-21T07:54:09.532813+00:00",
-    "send_count": 1,
-    "resend_id": "8af17c06-349e-4497-a527-be81dfe1496a",
+    "last_sent_at": "2026-04-17T15:59:09.396062+00:00",
+    "send_count": 2,
+    "resend_id": "92e6c258-1046-4b44-9a75-34bca8e2f68a",
     "name": "La Villa",
     "city": "Mulhouse"
   },
   "contact@vinoegustogruppo.fr": {
     "sent_at": "2026-03-21T07:54:11.751049+00:00",
-    "last_sent_at": "2026-03-21T07:54:11.751049+00:00",
-    "send_count": 1,
-    "resend_id": "61536581-1e85-4ff0-b625-385844e108bd",
+    "last_sent_at": "2026-04-17T15:59:11.477826+00:00",
+    "send_count": 2,
+    "resend_id": "b0e8d2a0-3ae2-44d8-98e8-1a437dea8339",
     "name": "Vino E Gusto Gruppo",
     "city": "Rennes"
   },
   "contact@au-comptoir-ditalie.fr": {
     "sent_at": "2026-03-21T07:54:13.691478+00:00",
-    "last_sent_at": "2026-03-21T07:54:13.691478+00:00",
-    "send_count": 1,
-    "resend_id": "9edc8e53-34cb-42a2-b0b3-83a3c4a9a686",
+    "last_sent_at": "2026-04-17T15:59:13.428596+00:00",
+    "send_count": 2,
+    "resend_id": "eb1f7c50-f746-497f-9dee-0b2bdb829e9e",
     "name": "Au Comptoir d'Italie",
     "city": "Rennes"
   },
   "lecamloic@neuf.fr": {
     "sent_at": "2026-03-21T07:54:15.621665+00:00",
-    "last_sent_at": "2026-03-21T07:54:15.621665+00:00",
-    "send_count": 1,
-    "resend_id": "e84f7f50-9991-4a17-983a-8262b3c40c34",
+    "last_sent_at": "2026-04-17T15:59:15.438005+00:00",
+    "send_count": 2,
+    "resend_id": "440c32c9-a193-4626-8dc7-661c3efa5d50",
     "name": "Brasserie Pizzeria Marius",
     "city": "Rennes"
   },
   "email@exemple.fr": {
     "sent_at": "2026-03-21T07:54:17.524185+00:00",
-    "last_sent_at": "2026-03-21T07:54:17.524185+00:00",
-    "send_count": 1,
-    "resend_id": "0ad672cc-dd28-4ce4-86f5-576d494ee4d4",
+    "last_sent_at": "2026-04-17T15:59:17.481727+00:00",
+    "send_count": 2,
+    "resend_id": "bc56b8db-9dd8-4af0-991e-ca3581940a6e",
     "name": "Bánh Bánh",
     "city": "Rennes"
   },
   "contact@burgouzz.fr": {
     "sent_at": "2026-03-21T07:54:19.483998+00:00",
-    "last_sent_at": "2026-03-21T07:54:19.483998+00:00",
-    "send_count": 1,
-    "resend_id": "7d78ce60-c39c-4343-a6da-7ee28bf85b0e",
+    "last_sent_at": "2026-04-17T15:59:19.530463+00:00",
+    "send_count": 2,
+    "resend_id": "fdceb580-c28c-4154-81f1-03c47aaf9dd1",
     "name": "Burgouzz Rennes",
     "city": "Rennes"
   },
   "franchise@restaurant-made.fr": {
     "sent_at": "2026-03-21T07:54:21.397989+00:00",
-    "last_sent_at": "2026-03-21T07:54:21.397989+00:00",
-    "send_count": 1,
-    "resend_id": "c66ff631-2c5d-4bff-b8c8-7e685e6e87ff",
+    "last_sent_at": "2026-04-17T15:59:21.503542+00:00",
+    "send_count": 2,
+    "resend_id": "f43888bb-95b0-4606-9d96-49024852bb98",
     "name": "Made Burger Rennes",
     "city": "Rennes"
   },
   "contact@banco-rennes.com": {
     "sent_at": "2026-03-21T07:54:23.276871+00:00",
-    "last_sent_at": "2026-03-21T07:54:23.276871+00:00",
-    "send_count": 1,
-    "resend_id": "4182db2b-30e1-4fe7-872e-0264f38ccef0",
+    "last_sent_at": "2026-04-17T15:59:23.498480+00:00",
+    "send_count": 2,
+    "resend_id": "3ce0442d-d97d-478e-8e52-16812d4bccb1",
     "name": "Banco",
     "city": "Rennes"
   },
   "contact@crepes-house.fr": {
     "sent_at": "2026-03-21T07:54:25.175922+00:00",
-    "last_sent_at": "2026-03-21T07:54:25.175922+00:00",
-    "send_count": 1,
-    "resend_id": "905920f4-ef66-4603-b914-ad4b385ac071",
+    "last_sent_at": "2026-04-17T15:59:25.471142+00:00",
+    "send_count": 2,
+    "resend_id": "f6b0bd8f-8160-4cf5-929d-0731fae9527d",
     "name": "Crêpe House",
     "city": "Rennes"
   },
   "tandooriexpress35@gmail.com": {
     "sent_at": "2026-03-21T07:54:27.091284+00:00",
-    "last_sent_at": "2026-03-21T07:54:27.091284+00:00",
-    "send_count": 1,
-    "resend_id": "6df94486-738d-4289-9381-3bccf5383db7",
+    "last_sent_at": "2026-04-17T15:59:27.461731+00:00",
+    "send_count": 2,
+    "resend_id": "baae5e65-dacd-4088-8ae8-6a08ac19673a",
     "name": "Tandoori express",
     "city": "Rennes"
   },
   "phillysstmichel@gmail.com": {
     "sent_at": "2026-03-21T07:54:29.053306+00:00",
-    "last_sent_at": "2026-03-21T07:54:29.053306+00:00",
-    "send_count": 1,
-    "resend_id": "92a3bc1c-858c-456d-8abe-e568e4ee0d70",
+    "last_sent_at": "2026-04-17T15:59:29.403397+00:00",
+    "send_count": 2,
+    "resend_id": "430f2d9a-3ebc-4419-9f26-5a4e3e8e8ae8",
     "name": "Philly's",
     "city": "Rennes"
   },
   "contact@popotes.fr": {
     "sent_at": "2026-03-21T07:54:30.930815+00:00",
-    "last_sent_at": "2026-03-21T07:54:30.930815+00:00",
-    "send_count": 1,
-    "resend_id": "e91e84de-8653-46a7-84a6-023f8d317bf9",
+    "last_sent_at": "2026-04-17T15:59:31.390791+00:00",
+    "send_count": 2,
+    "resend_id": "f4fc3066-02b1-46d5-9c89-8cfb8fa75dc7",
     "name": "Popotes - Isly - Rennes",
     "city": "Rennes"
   },
   "surpriseparty@lesfilsamaman.com": {
     "sent_at": "2026-03-21T07:54:32.841542+00:00",
-    "last_sent_at": "2026-03-21T07:54:32.841542+00:00",
-    "send_count": 1,
-    "resend_id": "5352683e-d26e-4494-8683-9b0353b66eaf",
+    "last_sent_at": "2026-04-17T15:59:33.371858+00:00",
+    "send_count": 2,
+    "resend_id": "e92536bf-a814-41d0-bff1-e6239ad74243",
     "name": "Les Fils à Maman Rennes",
     "city": "Rennes"
   },
   "contact@naani-food.com": {
     "sent_at": "2026-03-21T07:54:34.767224+00:00",
-    "last_sent_at": "2026-03-21T07:54:34.767224+00:00",
-    "send_count": 1,
-    "resend_id": "c40ed345-2524-435a-be3d-b1a6ed8ca2aa",
+    "last_sent_at": "2026-04-17T15:59:35.357903+00:00",
+    "send_count": 2,
+    "resend_id": "cd79816c-73bf-4f07-b841-3780e7e5aad8",
     "name": "Naani",
     "city": "Rennes"
   },
   "dom-fred@potofeu.fr": {
     "sent_at": "2026-03-21T07:54:36.692777+00:00",
-    "last_sent_at": "2026-03-21T07:54:36.692777+00:00",
-    "send_count": 1,
-    "resend_id": "8c24021b-dfdf-4cbb-ad3f-b3262a334e54",
+    "last_sent_at": "2026-04-17T15:59:37.407040+00:00",
+    "send_count": 2,
+    "resend_id": "064078d8-2fab-4a9f-8721-41bb9d211fbb",
     "name": "Les Pot O Feu - Restaurant Traiteur",
     "city": "Rennes"
   },
   "emiliceelik@outlook.fr": {
     "sent_at": "2026-03-21T07:54:38.613047+00:00",
-    "last_sent_at": "2026-03-21T07:54:38.613047+00:00",
-    "send_count": 1,
-    "resend_id": "78b9ad8d-213e-4f12-8341-d179ed1cdf3c",
+    "last_sent_at": "2026-04-17T15:59:39.389051+00:00",
+    "send_count": 2,
+    "resend_id": "8d8b3839-217a-4a22-b77a-eb8fc396de6b",
     "name": "À Table!",
     "city": "Reims"
   },
