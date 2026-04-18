@@ -73,9 +73,9 @@
   },
   "ragazza.restaurant@hotmail.com": {
     "sent_at": "2026-03-14T16:14:30.788567+00:00",
-    "last_sent_at": "2026-04-02T08:34:44.238793+00:00",
-    "send_count": 2,
-    "resend_id": "3b62abc0-b156-449e-88cb-a3f801b57f0e",
+    "last_sent_at": "2026-04-18T15:35:38.962153+00:00",
+    "send_count": 3,
+    "resend_id": "a371155a-e52e-4000-b52c-34203fa58656",
     "name": "RAGAZZA",
     "city": "Nancy"
   },
@@ -201,9 +201,9 @@
   },
   "contact@pizza-corleone.fr": {
     "sent_at": "2026-03-14T16:15:00.156847+00:00",
-    "last_sent_at": "2026-04-02T08:34:59.231442+00:00",
-    "send_count": 2,
-    "resend_id": "08dfff2c-eb61-407d-b763-062a70c18501",
+    "last_sent_at": "2026-04-18T15:35:55.730255+00:00",
+    "send_count": 3,
+    "resend_id": "ac6954be-06c8-4e9d-b14a-297ea6c53c97",
     "name": "CORLEONE Valence",
     "city": "Valence"
   },
@@ -257,9 +257,9 @@
   },
   "boutique@timebreakpoitiers.fr": {
     "sent_at": "2026-03-14T16:15:13.307347+00:00",
-    "last_sent_at": "2026-04-02T08:34:50.042465+00:00",
-    "send_count": 2,
-    "resend_id": "0b77a851-addd-410b-8100-3bd5b5d01a5c",
+    "last_sent_at": "2026-04-18T15:35:45.553205+00:00",
+    "send_count": 3,
+    "resend_id": "ae44c7bc-1306-448b-b913-6882646e27b1",
     "name": "Time Break | Traiteur - Snacking - Boulangerie - After Work",
     "city": "Poitiers"
   },
@@ -273,9 +273,9 @@
   },
   "amaga.panino@gmail.com": {
     "sent_at": "2026-03-14T16:15:16.962118+00:00",
-    "last_sent_at": "2026-04-02T08:34:53.787194+00:00",
-    "send_count": 2,
-    "resend_id": "84e7e200-6529-45a6-a544-888ea2aac710",
+    "last_sent_at": "2026-04-18T15:35:49.849705+00:00",
+    "send_count": 3,
+    "resend_id": "8c64ad59-8f0c-4858-bb4b-c0dd0a196234",
     "name": "AMAGA",
     "city": "La Rochelle"
   },
@@ -297,9 +297,9 @@
   },
   "baoquin.ponouilles@gmail.com": {
     "sent_at": "2026-03-14T16:15:22.367855+00:00",
-    "last_sent_at": "2026-04-02T08:34:55.567942+00:00",
-    "send_count": 2,
-    "resend_id": "fcf49223-7665-4cd5-8857-e82124f7fe12",
+    "last_sent_at": "2026-04-18T15:35:51.784335+00:00",
+    "send_count": 3,
+    "resend_id": "e3fc7f06-0709-43a5-8aaf-69781c28d989",
     "name": "Po-nouilles",
     "city": "Pau"
   },
@@ -313,9 +313,9 @@
   },
   "contact@steaknshake-calais-coquelles.fr": {
     "sent_at": "2026-03-14T16:15:25.998844+00:00",
-    "last_sent_at": "2026-04-02T08:34:57.391188+00:00",
-    "send_count": 2,
-    "resend_id": "62aff453-1215-4b6e-92a9-bc04dee81336",
+    "last_sent_at": "2026-04-18T15:35:53.766555+00:00",
+    "send_count": 3,
+    "resend_id": "4264a3ba-5fc4-434f-8229-a768f74aac13",
     "name": "Steak 'n Shake",
     "city": "Calais"
   },
@@ -393,9 +393,9 @@
   },
   "virgil_54840@hotmail.fr": {
     "sent_at": "2026-03-14T16:15:44.113059+00:00",
-    "last_sent_at": "2026-04-02T08:34:42.229512+00:00",
-    "send_count": 2,
-    "resend_id": "abddbbf2-5124-4ed7-9a32-3e3e3a7bc441",
+    "last_sent_at": "2026-04-18T15:35:36.537487+00:00",
+    "send_count": 3,
+    "resend_id": "a881c5ab-7770-4b39-8dde-816836d335ae",
     "name": "Gilio's Pizza",
     "city": "Nancy"
   },
@@ -513,9 +513,9 @@
   },
   "contact@joyfoods.fr": {
     "sent_at": "2026-03-14T16:16:11.406646+00:00",
-    "last_sent_at": "2026-04-02T08:35:01.265898+00:00",
-    "send_count": 2,
-    "resend_id": "1ad2b37b-d80c-4949-88a6-7595974861e1",
+    "last_sent_at": "2026-04-18T15:35:57.733551+00:00",
+    "send_count": 3,
+    "resend_id": "4b085980-51a5-49b8-9a15-810e905db185",
     "name": "JOYS TACOS - Valence",
     "city": "Valence"
   },
@@ -561,25 +561,25 @@
   },
   "contact@fiplink.com": {
     "sent_at": "2026-03-14T16:16:22.216392+00:00",
-    "last_sent_at": "2026-04-02T08:34:46.215987+00:00",
-    "send_count": 2,
-    "resend_id": "5ad3ab27-977a-486b-85f2-99f0698c862a",
+    "last_sent_at": "2026-04-18T15:35:41.295718+00:00",
+    "send_count": 3,
+    "resend_id": "80a2eb2d-a93d-4ab6-b3b5-6dee0694ff3f",
     "name": "L'AS PIZZA",
     "city": "Avignon"
   },
   "chez.jade.traiteur@gmail.com": {
     "sent_at": "2026-03-14T16:16:24.036611+00:00",
-    "last_sent_at": "2026-04-02T08:34:48.224832+00:00",
-    "send_count": 2,
-    "resend_id": "e59cd86a-c37a-45c7-8142-2010c83a2cb1",
+    "last_sent_at": "2026-04-18T15:35:43.288671+00:00",
+    "send_count": 3,
+    "resend_id": "eed56e62-38e7-4cb1-8814-2a18101f8128",
     "name": "Chez Jade",
     "city": "Poitiers"
   },
   "unvoyageadamasse@gmail.com": {
     "sent_at": "2026-03-14T16:16:25.887971+00:00",
-    "last_sent_at": "2026-04-02T08:34:52.017821+00:00",
-    "send_count": 2,
-    "resend_id": "a5c34d64-dde3-4e33-b619-82386a1f95ad",
+    "last_sent_at": "2026-04-18T15:35:47.869553+00:00",
+    "send_count": 3,
+    "resend_id": "fee64df3-d2a1-4142-b531-ed637dbf2a40",
     "name": "Un Voyage à Damas - Restaurant Syrien - La Rochelle",
     "city": "La Rochelle"
   },
@@ -5105,129 +5105,129 @@
   },
   "linstant1959@gmail.com": {
     "sent_at": "2026-03-21T15:24:09.882303+00:00",
-    "last_sent_at": "2026-03-21T15:24:09.882303+00:00",
-    "send_count": 1,
-    "resend_id": "96a1fee3-ed0f-47c5-ad4a-828ed3e3c07a",
+    "last_sent_at": "2026-04-18T15:35:59.999717+00:00",
+    "send_count": 2,
+    "resend_id": "1c829044-360a-41f5-81d4-06a5e35ef89b",
     "name": "FoodTruck L'instant",
     "city": "Reims"
   },
   "contact@ati4group.com": {
     "sent_at": "2026-03-21T15:24:11.774567+00:00",
-    "last_sent_at": "2026-03-21T15:24:11.774567+00:00",
-    "send_count": 1,
-    "resend_id": "fccb674d-88a6-4c8a-b566-149b34b98bc5",
+    "last_sent_at": "2026-04-18T15:36:02.288334+00:00",
+    "send_count": 2,
+    "resend_id": "0a8f31dd-48fd-49a7-9ca9-5f3a7853e9b6",
     "name": "231 East Street",
     "city": "Reims"
   },
   "contact@wafflefactory.com": {
     "sent_at": "2026-03-21T15:24:13.701203+00:00",
-    "last_sent_at": "2026-03-21T15:24:13.701203+00:00",
-    "send_count": 1,
-    "resend_id": "5a8f9a12-7c52-4799-b5f5-9dfd61177031",
+    "last_sent_at": "2026-04-18T15:36:04.538545+00:00",
+    "send_count": 2,
+    "resend_id": "391bc72b-7891-4bbd-90c0-420c81eedc27",
     "name": "Waffle Factory",
     "city": "Reims"
   },
   "reservation@nobigroupe.com": {
     "sent_at": "2026-03-21T15:24:15.628565+00:00",
-    "last_sent_at": "2026-03-21T15:24:15.628565+00:00",
-    "send_count": 1,
-    "resend_id": "aabfde9e-5a75-4221-9020-2046cd1de1d2",
+    "last_sent_at": "2026-04-18T15:36:06.487852+00:00",
+    "send_count": 2,
+    "resend_id": "a484b40d-8068-48d9-af3f-fa8a6317d215",
     "name": "Sacrés P'tits Coches",
     "city": "Reims"
   },
   "oanh@agencematch.fr": {
     "sent_at": "2026-03-21T15:24:17.841755+00:00",
-    "last_sent_at": "2026-03-21T15:24:17.841755+00:00",
-    "send_count": 1,
-    "resend_id": "11f0da51-d8ab-4f93-8f9f-73b8ddcaf072",
+    "last_sent_at": "2026-04-18T15:36:08.448270+00:00",
+    "send_count": 2,
+    "resend_id": "9df9c54c-3a51-43dd-8027-81f877723fb3",
     "name": "Café Feuillette",
     "city": "Reims"
   },
   "pal.pak@hotmail.com": {
     "sent_at": "2026-03-21T15:24:19.788177+00:00",
-    "last_sent_at": "2026-03-21T15:24:19.788177+00:00",
-    "send_count": 1,
-    "resend_id": "0daca34a-e160-48dc-a848-73933a1f3668",
+    "last_sent_at": "2026-04-18T15:36:10.409126+00:00",
+    "send_count": 2,
+    "resend_id": "ec3aaa6c-cdbc-4b5e-a2e2-22682ffe339a",
     "name": "Le Roi de la Frite",
     "city": "Le Havre"
   },
   "marmaralehavre1@gmail.com": {
     "sent_at": "2026-03-21T15:24:21.731883+00:00",
-    "last_sent_at": "2026-03-21T15:24:21.731883+00:00",
-    "send_count": 1,
-    "resend_id": "22cff4f9-9270-4a21-861d-1964b1225821",
+    "last_sent_at": "2026-04-18T15:36:12.371447+00:00",
+    "send_count": 2,
+    "resend_id": "c54baef4-a53a-42dc-b0c5-0b2165579f7e",
     "name": "MARMARA",
     "city": "Le Havre"
   },
   "alanya.lh76@gmail.com": {
     "sent_at": "2026-03-21T15:24:23.656783+00:00",
-    "last_sent_at": "2026-03-21T15:24:23.656783+00:00",
-    "send_count": 1,
-    "resend_id": "f330e43d-ea3d-4eaf-82ad-beb4aabb1bf2",
+    "last_sent_at": "2026-04-18T15:36:14.342834+00:00",
+    "send_count": 2,
+    "resend_id": "b5ffd6d1-ddbc-4da4-b885-3bf62278026f",
     "name": "Mac fast food",
     "city": "Le Havre"
   },
   "odbs.mehmet@icloud.com": {
     "sent_at": "2026-03-21T15:24:25.579622+00:00",
-    "last_sent_at": "2026-03-21T15:24:25.579622+00:00",
-    "send_count": 1,
-    "resend_id": "3bda6b1e-30c9-4b19-b423-ef92564108a9",
+    "last_sent_at": "2026-04-18T15:36:16.585213+00:00",
+    "send_count": 2,
+    "resend_id": "c283b96f-351d-4b7f-b0bb-69ed73df6eef",
     "name": "L'oda",
     "city": "Le Havre"
   },
   "contact@hubdev.fr": {
     "sent_at": "2026-03-21T15:24:27.498641+00:00",
-    "last_sent_at": "2026-03-21T15:24:27.498641+00:00",
-    "send_count": 1,
-    "resend_id": "653ffe03-ce78-4880-86db-b769f30bde1d",
+    "last_sent_at": "2026-04-18T15:36:18.566050+00:00",
+    "send_count": 2,
+    "resend_id": "02031a91-a92e-418f-a9fd-1f82767f4030",
     "name": "Namasty India",
     "city": "Le Havre"
   },
   "ahmed.asseif@gmail.com": {
     "sent_at": "2026-03-21T15:24:29.394731+00:00",
-    "last_sent_at": "2026-03-21T15:24:29.394731+00:00",
-    "send_count": 1,
-    "resend_id": "23292cb6-6475-466d-a4b8-430157a76787",
+    "last_sent_at": "2026-04-18T15:36:20.582532+00:00",
+    "send_count": 2,
+    "resend_id": "f6b0d666-9f67-4eb1-9153-a6d3d0e48cf4",
     "name": "Le Tacous",
     "city": "Le Havre"
   },
   "info@don-gusto.fr": {
     "sent_at": "2026-03-21T15:24:31.319326+00:00",
-    "last_sent_at": "2026-03-21T15:24:31.319326+00:00",
-    "send_count": 1,
-    "resend_id": "19f5576d-4629-4e80-ba83-ec057907ceec",
+    "last_sent_at": "2026-04-18T15:36:22.561579+00:00",
+    "send_count": 2,
+    "resend_id": "e43fb571-6a35-4d53-805e-76d24de69bb9",
     "name": "DON GUSTO",
     "city": "Le Havre"
   },
   "macicialh@gmail.com": {
     "sent_at": "2026-03-21T15:24:33.252743+00:00",
-    "last_sent_at": "2026-03-21T15:24:33.252743+00:00",
-    "send_count": 1,
-    "resend_id": "6717d29a-8411-44c7-abf9-39ea2db6bd37",
+    "last_sent_at": "2026-04-18T15:36:24.507376+00:00",
+    "send_count": 2,
+    "resend_id": "3863234b-0634-4d2e-ac30-7ac31a97aee1",
     "name": "MACICIA - Epicerie Traiteur Italien & Pizzeria Napolitaine",
     "city": "Le Havre"
   },
   "contact@danonnina.fr": {
     "sent_at": "2026-03-21T15:24:35.180947+00:00",
-    "last_sent_at": "2026-03-21T15:24:35.180947+00:00",
-    "send_count": 1,
-    "resend_id": "6e8c4730-486b-4516-8828-e925bbdcb88f",
+    "last_sent_at": "2026-04-18T15:36:26.496187+00:00",
+    "send_count": 2,
+    "resend_id": "02051ebc-52b1-48e5-bae0-f010fd280599",
     "name": "Da Nonnina - Pizzeria de la plage",
     "city": "Le Havre"
   },
   "compliance@hostinger.com": {
     "sent_at": "2026-03-21T15:24:37.104318+00:00",
-    "last_sent_at": "2026-03-21T15:24:37.104318+00:00",
-    "send_count": 1,
-    "resend_id": "fa25d04c-7e6f-4986-a2ab-897115b53da9",
+    "last_sent_at": "2026-04-18T15:36:28.443479+00:00",
+    "send_count": 2,
+    "resend_id": "88f5d385-7822-4962-982c-006f3f115cee",
     "name": "CÔME",
     "city": "Le Havre"
   },
   "contact@ollca.com": {
     "sent_at": "2026-03-21T15:24:39.020347+00:00",
-    "last_sent_at": "2026-03-21T15:24:39.020347+00:00",
-    "send_count": 1,
-    "resend_id": "2e19f01f-c79e-41bc-b382-f0a3f4033606",
+    "last_sent_at": "2026-04-18T15:36:30.460606+00:00",
+    "send_count": 2,
+    "resend_id": "901676f6-5ff5-4aa6-bec4-0aa8c72b12c3",
     "name": "Aux Gourmets d'Italie - Le Havre",
     "city": "Le Havre"
   },
