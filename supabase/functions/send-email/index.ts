@@ -28,7 +28,9 @@ const corsHeaders = {
 
 // Transactional emails bypass marketing preferences (but not full unsubscribe)
 const TRANSACTIONAL_TYPES = [
-  "subscription_activated", "payment_failed", "subscription_cancelled", "trial_expired",
+  "subscription_activated", "payment_failed", "subscription_cancelled",
+  "trial_checkin", "trial_expiring", "trial_expired",
+  "trial_expired_relance1", "trial_expired_relance2",
 ];
 
 // One-time emails: never resent to the same user/restaurant
@@ -45,27 +47,61 @@ const MARKETING_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 type TemplateData = Record<string, string>;
 
 const templates: Record<string, (data: TemplateData) => { subject: string; content: string }> = {
-  trial_expiring: (data) => ({
-    subject: `Votre essai commandeici se termine dans ${data.daysLeft} jours`,
+  trial_checkin: (data) => ({
+    subject: `Ca roule chez ${data.restaurantName || "toi"} ?`,
     content: `
-      <h2>Bonjour ${data.restaurantName || ""},</h2>
-      <p>Votre essai se termine dans <strong>${data.daysLeft} jours</strong>.</p>
-      <p>Pour continuer a recevoir des commandes directes, activez votre abonnement.</p>
+      <h2>Salut ${data.restaurantName || ""},</h2>
+      <p>Ca fait une semaine que tu as installe ta page commandeici. Tout va bien ?</p>
+      <p>Si tu as une question, une galere ou une idee, reponds directement a cet email, je lis tout.</p>
+      <p><a href="${APP_URL}/admin" class="cta-btn">Voir mon tableau de bord &rarr;</a></p>
+      <p style="font-size:13px;color:#6b7280;">Rappel : tes 30 jours gratuits sont actifs, pas de CB demandee.</p>
+    `,
+  }),
+
+  trial_expiring: (data) => ({
+    subject: `Plus que ${data.daysLeft} jours gratuits sur commandeici`,
+    content: `
+      <h2>Salut ${data.restaurantName || ""},</h2>
+      <p>Ton essai gratuit se termine dans <strong>${data.daysLeft} jours</strong>.</p>
+      <p>Pour continuer a recevoir des commandes sans interruption, ajoute ta carte bancaire. Ca prend une minute.</p>
       <div class="highlight-box">
-        <p><strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement.</p>
+        <p><strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement, annulable a tout moment.</p>
       </div>
-      <p><a href="${APP_URL}/choisir-plan" class="cta-btn">Activer mon abonnement &rarr;</a></p>
+      <p><a href="${APP_URL}/choisir-plan" class="cta-btn">Ajouter ma carte &rarr;</a></p>
     `,
   }),
 
   trial_expired: (data) => ({
-    subject: "Votre essai commandeici est termine",
+    subject: "Ton essai commandeici est termine",
     content: `
-      <h2>Bonjour ${data.restaurantName || ""},</h2>
-      <p>Votre essai est termine. Votre page de commande n'est plus accessible par vos clients.</p>
-      <p>Activez votre abonnement pour la remettre en ligne immediatement.</p>
-      <p><a href="${APP_URL}/abonnement" class="cta-btn">Reactiver ma page &rarr;</a></p>
-      <p style="font-size:13px;color:#6b7280;">Toutes vos donnees (menu, commandes, clients) sont conservees.</p>
+      <h2>Salut ${data.restaurantName || ""},</h2>
+      <p>Tes 30 jours gratuits sont termines. Bonne nouvelle : ta page reste en ligne et tes donnees sont intactes.</p>
+      <p>Pour continuer, il te reste juste a ajouter ta carte bancaire.</p>
+      <div class="highlight-box">
+        <p><strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement.</p>
+      </div>
+      <p><a href="${APP_URL}/choisir-plan" class="cta-btn">Ajouter ma carte &rarr;</a></p>
+    `,
+  }),
+
+  trial_expired_relance1: (data) => ({
+    subject: `${data.restaurantName || "Ton resto"}, une minute pour garder ta page ?`,
+    content: `
+      <h2>Salut ${data.restaurantName || ""},</h2>
+      <p>Ca fait une semaine que ton essai est termine. Ta page est toujours en ligne, tes clients peuvent toujours commander.</p>
+      <p>Ajoute ta carte bancaire quand tu veux, c'est rapide.</p>
+      <p><a href="${APP_URL}/choisir-plan" class="cta-btn">Ajouter ma carte &rarr;</a></p>
+      <p style="font-size:13px;color:#6b7280;">Une question ? Reponds a cet email.</p>
+    `,
+  }),
+
+  trial_expired_relance2: (data) => ({
+    subject: "Derniere relance avant suspension de ton compte",
+    content: `
+      <h2>Salut ${data.restaurantName || ""},</h2>
+      <p>Ca fait deux semaines que ton essai est fini. Si tu veux garder ta page et tes donnees, ajoute ta carte bancaire maintenant.</p>
+      <p>Sinon pas de souci, repond simplement a cet email et je supprime le compte.</p>
+      <p><a href="${APP_URL}/choisir-plan" class="cta-btn">Ajouter ma carte &rarr;</a></p>
     `,
   }),
 

@@ -1,8 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, AlertTriangle, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
@@ -22,16 +21,13 @@ interface SubState {
 }
 
 /**
- * Wraps the dashboard. Checks subscription status from the new
- * subscriptions table first, with fallback to the legacy restaurants table
- * for backward compatibility.
+ * Wraps the dashboard. Non-blocking model: access is always granted,
+ * with contextual banners nudging toward payment when needed.
  *
- * - trial + trial_end > now -> access OK (with trial banner)
- * - active / promo -> access OK
- * - past_due -> blocked with payment error screen
- * - expired / cancelled -> redirect to /abonnement
- * - pending_payment -> redirect to /choisir-plan
- * - no subscription row -> check legacy, then redirect
+ * - active / promo -> access OK, no banner
+ * - trial + trial_end > now -> access + trial countdown banner
+ * - trial expired / pending_payment / expired / cancelled -> access + "add card" banner
+ * - past_due -> access + payment-failed banner
  */
 export function SubscriptionGate({ restaurantId, children }: Props) {
   const [state, setState] = useState<SubState | null>(null);
@@ -82,12 +78,10 @@ export function SubscriptionGate({ restaurantId, children }: Props) {
   if (state.subStatus) {
     const { subStatus, subTrialEnd, subBonusDays } = state;
 
-    // Active or promo -> always OK
     if (subStatus === "active" || subStatus === "promo") {
       return <>{children}</>;
     }
 
-    // Trial -> check end date
     if (subStatus === "trial" && subTrialEnd) {
       const endDate = new Date(subTrialEnd);
       if (subBonusDays > 0) {
@@ -104,22 +98,29 @@ export function SubscriptionGate({ restaurantId, children }: Props) {
           </>
         );
       }
-      // Trial expired
-      return <Navigate to="/abonnement" replace />;
+      return (
+        <>
+          <ExpiredBanner />
+          {children}
+        </>
+      );
     }
 
-    // Past due -> show payment error screen
     if (subStatus === "past_due") {
-      return <PastDueScreen />;
+      return (
+        <>
+          <PastDueBanner />
+          {children}
+        </>
+      );
     }
 
-    // Pending payment -> redirect to plan selection
-    if (subStatus === "pending_payment") {
-      return <Navigate to="/choisir-plan" replace />;
-    }
-
-    // Expired or cancelled -> redirect to reactivation
-    return <Navigate to="/abonnement" replace />;
+    return (
+      <>
+        <ExpiredBanner />
+        {children}
+      </>
+    );
   }
 
   // ---- Legacy system (restaurants table only) ----
@@ -145,7 +146,12 @@ export function SubscriptionGate({ restaurantId, children }: Props) {
     }
   }
 
-  return <Navigate to="/abonnement" replace />;
+  return (
+    <>
+      <ExpiredBanner />
+      {children}
+    </>
+  );
 }
 
 // ---- Trial Banner ----
@@ -177,31 +183,40 @@ function TrialBanner({ daysLeft }: { daysLeft: number }) {
   );
 }
 
-// ---- Past Due Screen ----
-function PastDueScreen() {
+// ---- Expired Banner (trial terminé, non bloquant) ----
+function ExpiredBanner() {
   const { t } = useLanguage();
-
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="max-w-sm mx-auto text-center px-4">
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
-          <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-3" />
-          <h2 className="text-lg font-semibold text-foreground mb-2">
-            {t('subscription.gate.payment_problem')}
-          </h2>
-          <p className="text-sm text-muted-foreground mb-4">
-            {t('subscription.gate.payment_desc')}
-          </p>
-          <Button asChild className="w-full">
-            <Link to="/choisir-plan">
-              {t('subscription.gate.manage_payment')}
-            </Link>
-          </Button>
-          <p className="text-xs text-muted-foreground mt-3">
-            support@commandeici.com
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-xl mb-4 px-4 py-3 rounded-xl flex items-center gap-3 text-sm bg-amber-50 border border-amber-200 text-amber-800">
+      <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+      <span>
+        <strong>{t('subscription.gate.expired_title')}</strong> · {t('subscription.gate.expired_desc')}
+      </span>
+      <Link
+        to="/choisir-plan"
+        className="ml-auto text-xs font-semibold underline whitespace-nowrap text-amber-700"
+      >
+        {t('subscription.gate.add_card')}
+      </Link>
+    </div>
+  );
+}
+
+// ---- Past Due Banner (paiement échoué, non bloquant) ----
+function PastDueBanner() {
+  const { t } = useLanguage();
+  return (
+    <div className="mx-auto max-w-xl mb-4 px-4 py-3 rounded-xl flex items-center gap-3 text-sm bg-red-50 border border-red-200 text-red-800">
+      <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+      <span>
+        <strong>{t('subscription.gate.payment_problem')}</strong> · {t('subscription.gate.payment_desc')}
+      </span>
+      <Link
+        to="/choisir-plan"
+        className="ml-auto text-xs font-semibold underline whitespace-nowrap text-red-700"
+      >
+        {t('subscription.gate.manage_payment')}
+      </Link>
     </div>
   );
 }

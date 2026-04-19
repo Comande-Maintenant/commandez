@@ -264,13 +264,24 @@ const InscriptionPage = () => {
         await processReferral(restaurant.id, refCode).catch(() => {});
       }
 
-      // Insert pending subscription
+      // Insert trial subscription (30 days free, no card required)
+      const trialStart = new Date();
+      const trialEnd = new Date();
+      trialEnd.setDate(trialEnd.getDate() + 30);
       await supabase.from('subscriptions').insert({
         restaurant_id: restaurant.id,
-        status: 'pending_payment',
+        status: 'trial',
         plan: plan === 'none' ? 'monthly' : plan,
         billing_day: 15,
+        trial_start: trialStart.toISOString(),
+        trial_end: trialEnd.toISOString(),
       });
+
+      // Keep legacy restaurants row in sync so SubscriptionGate fallback works
+      await updateRestaurant(restaurant.id, {
+        subscription_status: 'trial',
+        trial_end_date: trialEnd.toISOString(),
+      } as any);
 
       // Send welcome email (fire-and-forget, non-blocking)
       supabase.functions.invoke("send-welcome-email", {
