@@ -31,6 +31,7 @@ const TRANSACTIONAL_TYPES = [
   "subscription_activated", "payment_failed", "subscription_cancelled",
   "trial_checkin", "trial_expiring", "trial_expired",
   "trial_expired_relance1", "trial_expired_relance2",
+  "trial_migration_30d",
 ];
 
 // One-time emails: never resent to the same user/restaurant
@@ -47,6 +48,30 @@ const MARKETING_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 type TemplateData = Record<string, string>;
 
 const templates: Record<string, (data: TemplateData) => { subject: string; content: string }> = {
+  trial_migration_30d: (data) => ({
+    subject: `Ta page ${data.restaurantName || "commandeici"} est prete, 30 jours gratuits`,
+    content: `
+      <h2>Salut ${data.restaurantName || ""},</h2>
+      <p>Petit message pour te dire que ta page commandeici est 100% operationnelle. Tu n'as rien a payer pour l'instant, tu as <strong>30 jours gratuits</strong> pour tester tranquille, sans carte bancaire.</p>
+
+      <p><strong>Ton tableau de bord (c'est la que ca se passe) :</strong><br>
+      <a href="${APP_URL}/admin/${data.slug}">${APP_URL}/admin/${data.slug}</a></p>
+
+      <p><strong>Ta page de commande pour tes clients :</strong><br>
+      <a href="${APP_URL}/${data.slug}">${APP_URL}/${data.slug}</a></p>
+
+      <div class="highlight-box">
+        <p><strong>Ton QR code est pret.</strong> Va dans ton admin, onglet "QR code" : tu peux le telecharger, l'imprimer, le coller sur ton comptoir ou tes tables. Tes clients le scannent et commandent directement.</p>
+      </div>
+
+      <p>Pendant tes 30 jours, teste tout : ajoute tes plats, personnalise tes couleurs, prends une vraie commande. Si quelque chose ne va pas ou si tu as une question, reponds simplement a cet email.</p>
+
+      <p><a href="${APP_URL}/admin/${data.slug}" class="cta-btn">Acceder a mon admin &rarr;</a></p>
+
+      <p style="font-size:13px;color:#6b7280;">Apres tes 30 jours, si tu veux continuer, tu ajouteras ta carte bancaire en 1 minute (1 euro/mois pendant 3 mois, puis 29,99 euros/mois, sans engagement).</p>
+    `,
+  }),
+
   trial_checkin: (data) => ({
     subject: `Ca roule chez ${data.restaurantName || "toi"} ?`,
     content: `
