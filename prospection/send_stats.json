@@ -1,6 +1,6 @@
 {
-  "total_sent": 76,
-  "total_errors": 0,
+  "total_sent": 103,
+  "total_errors": 1,
   "runs": [
     {
       "timestamp": "2026-03-14T07:57:49.731792+00:00",
@@ -15,10 +15,10 @@
       "errors": 0
     },
     {
-      "timestamp": "2026-04-20T16:28:36.804543+00:00",
-      "batch_size": 1,
-      "sent": 1,
-      "errors": 0
+      "timestamp": "2026-04-21T09:12:24.533318+00:00",
+      "batch_size": 29,
+      "sent": 28,
+      "errors": 1
     }
   ]
 }
