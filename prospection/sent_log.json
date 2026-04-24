@@ -1609,9 +1609,9 @@
   },
   "contact@lemartadijon.fr": {
     "sent_at": "2026-03-16T08:36:37.751564+00:00",
-    "last_sent_at": "2026-04-05T15:30:33.198305+00:00",
-    "send_count": 2,
-    "resend_id": "2d65b280-d25b-4d0d-9efe-de64e6896505",
+    "last_sent_at": "2026-04-24T16:03:41.026717+00:00",
+    "send_count": 3,
+    "resend_id": "a5763069-e682-4158-be65-8475ab44cf8a",
     "name": "Le Marta Dijon",
     "city": "Dijon"
   },
@@ -1713,9 +1713,9 @@
   },
   "deg519@yahoo.fr": {
     "sent_at": "2026-03-16T16:05:00.929876+00:00",
-    "last_sent_at": "2026-04-06T08:53:32.301953+00:00",
-    "send_count": 2,
-    "resend_id": "9afef7fb-aa6b-44b0-bd65-99687a03b7fa",
+    "last_sent_at": "2026-04-24T16:03:47.592859+00:00",
+    "send_count": 3,
+    "resend_id": "d2b045e2-f2eb-4d93-97a0-943814b4572c",
     "name": "Royal food halal",
     "city": "Lyon"
   },
@@ -1753,9 +1753,9 @@
   },
   "snackbrasil@hotmail.com": {
     "sent_at": "2026-03-16T16:05:04.902893+00:00",
-    "last_sent_at": "2026-04-06T08:53:36.387977+00:00",
-    "send_count": 2,
-    "resend_id": "cb48872a-1653-46d8-8a72-0e38b5def49b",
+    "last_sent_at": "2026-04-24T16:03:51.458735+00:00",
+    "send_count": 3,
+    "resend_id": "ae2fb2d8-9ede-480a-9c92-2bb8361f755e",
     "name": "Snack Brasil",
     "city": "Lyon"
   },
@@ -1817,9 +1817,9 @@
   },
   "alex@pereetfishrestaurant.com": {
     "sent_at": "2026-03-16T16:04:55.13867+00:00",
-    "last_sent_at": "2026-04-05T15:31:02.265947+00:00",
-    "send_count": 2,
-    "resend_id": "22a21645-7a89-4d5e-b95e-9866afe6e367",
+    "last_sent_at": "2026-04-24T16:03:38.755587+00:00",
+    "send_count": 3,
+    "resend_id": "f0188014-7f91-4be8-826b-13af70def1b2",
     "name": "Père & Fish - Lyon",
     "city": "Lyon"
   },
@@ -1841,9 +1841,9 @@
   },
   "real.virtual.food@gmail.com": {
     "sent_at": "2026-03-16T16:05:06.904322+00:00",
-    "last_sent_at": "2026-04-06T08:53:38.438266+00:00",
-    "send_count": 2,
-    "resend_id": "5e7cde4a-bc92-4f9c-8737-2adf6b242f1b",
+    "last_sent_at": "2026-04-24T16:03:53.371182+00:00",
+    "send_count": 3,
+    "resend_id": "39ed9f84-2ded-4a25-8fea-1b38d6024e15",
     "name": "La Kazdalerie - Lyon",
     "city": "Lyon"
   },
@@ -1865,17 +1865,17 @@
   },
   "contact@streetcornerlyon.fr": {
     "sent_at": "2026-03-16T16:04:53.23014+00:00",
-    "last_sent_at": "2026-04-05T15:31:00.469549+00:00",
-    "send_count": 2,
-    "resend_id": "1db601d4-8041-4ad1-8d08-72582179a97b",
+    "last_sent_at": "2026-04-24T16:03:36.655120+00:00",
+    "send_count": 3,
+    "resend_id": "89206e32-9b08-428a-a120-b6cf7e3cad92",
     "name": "Street Corner - Food Truck Lyon",
     "city": "Lyon"
   },
   "bacabamba@gmail.com": {
     "sent_at": "2026-03-16T16:05:02.926171+00:00",
-    "last_sent_at": "2026-04-06T08:53:34.233417+00:00",
-    "send_count": 2,
-    "resend_id": "2681ddf0-ff35-409f-9865-a5d7544d8883",
+    "last_sent_at": "2026-04-24T16:03:49.534316+00:00",
+    "send_count": 3,
+    "resend_id": "86559295-7989-4d15-9805-1352f0fad651",
     "name": "Le Baca Bamba",
     "city": "Lyon"
   },
@@ -1921,17 +1921,17 @@
   },
   "communication@les-filous.fr": {
     "sent_at": "2026-03-16T16:04:57.097299+00:00",
-    "last_sent_at": "2026-04-06T08:53:27.316335+00:00",
-    "send_count": 2,
-    "resend_id": "028b957b-8610-42ac-828b-821028604683",
+    "last_sent_at": "2026-04-24T16:03:43.056784+00:00",
+    "send_count": 3,
+    "resend_id": "da4e5bb6-bde3-46fa-b066-30ce72fea132",
     "name": "Les Filous Lyon - Street Food Grecque",
     "city": "Lyon"
   },
   "contact@junkgroup.fr": {
     "sent_at": "2026-03-16T16:05:08.839417+00:00",
-    "last_sent_at": "2026-04-06T08:53:40.480738+00:00",
-    "send_count": 2,
-    "resend_id": "2007252b-894a-4324-9e7d-4f0d88bfe6af",
+    "last_sent_at": "2026-04-24T16:03:55.306084+00:00",
+    "send_count": 3,
+    "resend_id": "3a85a931-b32c-41af-a261-c73b84d91171",
     "name": "JUNK LYON",
     "city": "Lyon"
   },
@@ -1953,17 +1953,17 @@
   },
   "easylunch@outlook.fr": {
     "sent_at": "2026-03-16T16:04:59.029765+00:00",
-    "last_sent_at": "2026-04-06T08:53:30.023898+00:00",
-    "send_count": 2,
-    "resend_id": "dcbfb6bc-b135-4e13-97e0-58aed3de12e9",
+    "last_sent_at": "2026-04-24T16:03:45.633551+00:00",
+    "send_count": 3,
+    "resend_id": "4f804437-c7f1-45e2-9eec-fefa22734b44",
     "name": "Easy Lunch Lyon",
     "city": "Lyon"
   },
   "contact@woko.fr": {
     "sent_at": "2026-03-16T16:05:11.0271+00:00",
-    "last_sent_at": "2026-04-06T08:53:42.376042+00:00",
-    "send_count": 2,
-    "resend_id": "1c78c590-7b84-4fb8-b988-55323fccdb1c",
+    "last_sent_at": "2026-04-24T16:03:57.309192+00:00",
+    "send_count": 3,
+    "resend_id": "e15e0967-056c-42e3-a814-927eaa02b847",
     "name": "WOKO asian street food",
     "city": "Lyon"
   },
@@ -6393,129 +6393,129 @@
   },
   "contact@tommys.fr": {
     "sent_at": "2026-03-23T08:31:26.731240+00:00",
-    "last_sent_at": "2026-03-23T08:31:26.731240+00:00",
-    "send_count": 1,
-    "resend_id": "50c92d56-af8a-4a0e-9c09-b7d6f79c2df4",
+    "last_sent_at": "2026-04-24T16:03:59.228432+00:00",
+    "send_count": 2,
+    "resend_id": "ab7cfee2-1b3f-4f3d-8b9e-9112b784eb24",
     "name": "TOMMY'S Diner",
     "city": "Angers"
   },
   "nightbox.angers@gmail.com": {
     "sent_at": "2026-03-23T08:31:28.675317+00:00",
-    "last_sent_at": "2026-03-23T08:31:28.675317+00:00",
-    "send_count": 1,
-    "resend_id": "411c942d-b72e-469d-ae18-d4cce00c94a9",
+    "last_sent_at": "2026-04-24T16:04:01.181868+00:00",
+    "send_count": 2,
+    "resend_id": "4a079fe9-c83b-4bd0-83bd-cfc4c61e90f9",
     "name": "NightBox - Livraison d'Alcool et Flashs - Commande par Téléphone / Épicerie de Nuit",
     "city": "Angers"
   },
   "kjebahi@hotmail.com": {
     "sent_at": "2026-03-23T08:31:30.558858+00:00",
-    "last_sent_at": "2026-03-23T08:31:30.558858+00:00",
-    "send_count": 1,
-    "resend_id": "cf804cd0-5837-40d3-bcc3-4a917a7b5ecc",
+    "last_sent_at": "2026-04-24T16:04:03.101578+00:00",
+    "send_count": 2,
+    "resend_id": "160f2470-1ea5-4aa2-ae54-8ae80990e711",
     "name": "Yezza Sandwich",
     "city": "Angers"
   },
   "lelezardvertangers@sfr.fr": {
     "sent_at": "2026-03-23T08:31:32.712832+00:00",
-    "last_sent_at": "2026-03-23T08:31:32.712832+00:00",
-    "send_count": 1,
-    "resend_id": "7a8e6144-9b92-40e3-ba09-19659b66dec6",
+    "last_sent_at": "2026-04-24T16:04:04.983588+00:00",
+    "send_count": 2,
+    "resend_id": "c2280ce1-7bc7-4772-85be-52a35344dcf3",
     "name": "Le Lézard Vert",
     "city": "Angers"
   },
   "badem.tartare@gmail.com": {
     "sent_at": "2026-03-23T08:31:34.594602+00:00",
-    "last_sent_at": "2026-03-23T08:31:34.594602+00:00",
-    "send_count": 1,
-    "resend_id": "b269f8e6-ba35-4abf-9d0e-7213e57c9461",
+    "last_sent_at": "2026-04-24T16:04:06.903707+00:00",
+    "send_count": 2,
+    "resend_id": "b581aa75-a164-41fe-828b-ab40e75559a9",
     "name": "BADEM concept tartare",
     "city": "Angers"
   },
   "g.swynghedauw@groupe-delineo.fr": {
     "sent_at": "2026-03-23T08:31:36.514621+00:00",
-    "last_sent_at": "2026-03-23T08:31:36.514621+00:00",
-    "send_count": 1,
-    "resend_id": "a7913060-c47a-4414-9941-23b148f6ed54",
+    "last_sent_at": "2026-04-24T16:04:08.818108+00:00",
+    "send_count": 2,
+    "resend_id": "d9782b0f-cd0b-48a0-8312-963b928166f7",
     "name": "La Croissanterie",
     "city": "Angers"
   },
   "guilmotpolizzi@hotmail.fr": {
     "sent_at": "2026-03-23T08:31:38.549859+00:00",
-    "last_sent_at": "2026-03-23T08:31:38.549859+00:00",
-    "send_count": 1,
-    "resend_id": "21419c95-2fa4-42f2-96d0-952ccef299cb",
+    "last_sent_at": "2026-04-24T16:04:10.763732+00:00",
+    "send_count": 2,
+    "resend_id": "0612633e-7257-459e-b92c-6e497c493978",
     "name": "LE FAT' BAZZ",
     "city": "Angers"
   },
   "leclosduroi.angers@gmail.com": {
     "sent_at": "2026-03-23T08:31:40.576754+00:00",
-    "last_sent_at": "2026-03-23T08:31:40.576754+00:00",
-    "send_count": 1,
-    "resend_id": "3ed6f85b-1d4f-4609-958a-e109413f4253",
+    "last_sent_at": "2026-04-24T16:04:12.721032+00:00",
+    "send_count": 2,
+    "resend_id": "bbba24a7-f9d6-48e2-9158-04d6f8bd7d90",
     "name": "Le Clos du Roi - Restaurant du Château d'Angers",
     "city": "Angers"
   },
   "maisonpaganelli@gmail.com": {
     "sent_at": "2026-03-23T08:31:42.613253+00:00",
-    "last_sent_at": "2026-03-23T08:31:42.613253+00:00",
-    "send_count": 1,
-    "resend_id": "914f63a6-1e1d-4213-8e35-17e37007d689",
+    "last_sent_at": "2026-04-24T16:04:14.587685+00:00",
+    "send_count": 2,
+    "resend_id": "90d2e835-8b8f-4756-9d93-5b79065f2a87",
     "name": "Maison Paganelli Angers",
     "city": "Angers"
   },
   "carre.gourmand.49@gmail.com": {
     "sent_at": "2026-03-23T08:31:44.522730+00:00",
-    "last_sent_at": "2026-03-23T08:31:44.522730+00:00",
-    "send_count": 1,
-    "resend_id": "8411ad52-07cb-4802-9123-a9e5a4a426cf",
+    "last_sent_at": "2026-04-24T16:04:16.477367+00:00",
+    "send_count": 2,
+    "resend_id": "a1dbd320-f4a7-4787-b1bc-4504c57937f0",
     "name": "Carré Gourmand",
     "city": "Angers"
   },
   "contact@commeungrd.fr": {
     "sent_at": "2026-03-23T08:31:46.471289+00:00",
-    "last_sent_at": "2026-03-23T08:31:46.471289+00:00",
-    "send_count": 1,
-    "resend_id": "07de906a-333e-4849-9e39-2fc27250810c",
+    "last_sent_at": "2026-04-24T16:04:18.357545+00:00",
+    "send_count": 2,
+    "resend_id": "c57396d3-5c67-4a3f-8c55-47b011001cfe",
     "name": "OBG nimes",
     "city": "Nimes"
   },
   "mrservice35@gmail.com": {
     "sent_at": "2026-03-23T08:31:48.371795+00:00",
-    "last_sent_at": "2026-03-23T08:31:48.371795+00:00",
-    "send_count": 1,
-    "resend_id": "25bbb42a-4a1c-48c1-b9f1-298c64ad29ce",
+    "last_sent_at": "2026-04-24T16:04:20.252321+00:00",
+    "send_count": 2,
+    "resend_id": "b7959148-2a16-49b3-9f71-ab606b448d5d",
     "name": "M’Délice",
     "city": "Nimes"
   },
   "contact@le-prestige.fr": {
     "sent_at": "2026-03-23T08:31:50.242089+00:00",
-    "last_sent_at": "2026-03-23T08:31:50.242089+00:00",
-    "send_count": 1,
-    "resend_id": "e4bdb89e-3e97-46e4-967c-967f42218701",
+    "last_sent_at": "2026-04-24T16:04:22.184470+00:00",
+    "send_count": 2,
+    "resend_id": "7daa5c24-f48b-42ab-802b-79d6fff8d155",
     "name": "le prestige tacos gratiné burger Poutine",
     "city": "Nimes"
   },
   "lolivenoire30@gmail.com": {
     "sent_at": "2026-03-23T08:31:52.262152+00:00",
-    "last_sent_at": "2026-03-23T08:31:52.262152+00:00",
-    "send_count": 1,
-    "resend_id": "819e836a-2a1f-4608-b695-5a794aa4b542",
+    "last_sent_at": "2026-04-24T16:04:24.100934+00:00",
+    "send_count": 2,
+    "resend_id": "cfa2dca3-49d1-4d7c-bcd6-c7baf0531dad",
     "name": "L'Olive Noire",
     "city": "Nimes"
   },
   "support@spread-communication.com": {
     "sent_at": "2026-03-23T08:31:54.187043+00:00",
-    "last_sent_at": "2026-03-23T08:31:54.187043+00:00",
-    "send_count": 1,
-    "resend_id": "75def659-b8e5-4a28-9f52-d368a74c5f2b",
+    "last_sent_at": "2026-04-24T16:04:25.987187+00:00",
+    "send_count": 2,
+    "resend_id": "f0e61e32-8f45-4fc4-9653-0fac7de134d1",
     "name": "IL PADRINO DELLA PIZZA",
     "city": "Nimes"
   },
   "contact@italia-mia.fr": {
     "sent_at": "2026-03-23T08:31:56.139255+00:00",
-    "last_sent_at": "2026-03-23T08:31:56.139255+00:00",
-    "send_count": 1,
-    "resend_id": "3588fe4d-3a23-46bd-874b-4e59b3424a8d",
+    "last_sent_at": "2026-04-24T16:04:27.927801+00:00",
+    "send_count": 2,
+    "resend_id": "1e8b1271-5787-4fb2-b2a4-fb8fefcec9f7",
     "name": "Italia mia",
     "city": "Nimes"
   },
