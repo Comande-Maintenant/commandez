@@ -1113,33 +1113,33 @@
   },
   "contact@plateauxandco.com": {
     "sent_at": "2026-03-15T16:33:17.44418+00:00",
-    "last_sent_at": "2026-04-05T08:05:15.240205+00:00",
-    "send_count": 2,
-    "resend_id": "99524b38-c9aa-4150-acef-71591895f28d",
+    "last_sent_at": "2026-04-24T09:16:54.024027+00:00",
+    "send_count": 3,
+    "resend_id": "3ccaf134-f87e-49f2-af9c-b1b0a2b8e4b5",
     "name": "plateaux repas dijon and co",
     "city": "Dijon"
   },
   "monasse.jerome64@gmail.com": {
     "sent_at": "2026-03-15T16:33:15.519986+00:00",
-    "last_sent_at": "2026-04-05T08:05:13.014341+00:00",
-    "send_count": 2,
-    "resend_id": "84a4a11c-f240-4a31-aa02-67584f214e95",
+    "last_sent_at": "2026-04-24T09:16:52.034960+00:00",
+    "send_count": 3,
+    "resend_id": "84ee1846-bd03-411e-9e58-2aa96b9ecbd8",
     "name": "Monasse Restauration rapide",
     "city": "Dijon"
   },
   "contact.sastmb@gmail.com": {
     "sent_at": "2026-03-15T16:33:13.582881+00:00",
-    "last_sent_at": "2026-04-05T08:05:10.772187+00:00",
-    "send_count": 2,
-    "resend_id": "a0b2a8b0-d896-438f-ab31-102c5661faec",
+    "last_sent_at": "2026-04-24T09:16:50.034424+00:00",
+    "send_count": 3,
+    "resend_id": "e2afcd81-ce74-44f5-9c20-ace35e38960b",
     "name": "Restaurant 100Dô",
     "city": "Dijon"
   },
   "tokadiane@gmail.com": {
     "sent_at": "2026-03-15T16:33:11.692191+00:00",
-    "last_sent_at": "2026-04-05T08:05:08.393333+00:00",
-    "send_count": 2,
-    "resend_id": "569eada7-a2b5-4634-a9f1-937cc0439528",
+    "last_sent_at": "2026-04-24T09:16:47.940301+00:00",
+    "send_count": 3,
+    "resend_id": "f40a5485-5456-4e7a-afd5-e2b0f146ddcb",
     "name": "Tokadiane",
     "city": "Dijon"
   },
@@ -1705,9 +1705,9 @@
   },
   "contact@lyon-eats.fr": {
     "sent_at": "2026-03-16T16:04:41.694155+00:00",
-    "last_sent_at": "2026-04-05T15:30:48.896708+00:00",
-    "send_count": 2,
-    "resend_id": "be1c4c17-9ab4-419c-81ce-decfaae8977c",
+    "last_sent_at": "2026-04-24T09:16:59.786935+00:00",
+    "send_count": 3,
+    "resend_id": "2ce6536f-1ab1-4bd7-93c9-60bdc95cdfc0",
     "name": "LYON EATS",
     "city": "Lyon"
   },
@@ -1745,9 +1745,9 @@
   },
   "commercial@maisons-de-lyon.com": {
     "sent_at": "2026-03-16T16:04:37.572614+00:00",
-    "last_sent_at": "2026-04-05T15:30:44.878156+00:00",
-    "send_count": 2,
-    "resend_id": "08b04aed-324b-4037-a195-15f8c2523ac1",
+    "last_sent_at": "2026-04-24T09:16:55.922744+00:00",
+    "send_count": 3,
+    "resend_id": "4b0d04b9-df63-4bc2-80fa-2cdc3fbf7455",
     "name": "Mamma Osteria",
     "city": "Lyon"
   },
@@ -1801,17 +1801,17 @@
   },
   "contact@royal-burger.fr": {
     "sent_at": "2026-03-16T16:04:39.725873+00:00",
-    "last_sent_at": "2026-04-05T15:30:46.892131+00:00",
-    "send_count": 2,
-    "resend_id": "918be218-a0c3-4531-8798-065714017048",
+    "last_sent_at": "2026-04-24T09:16:57.886694+00:00",
+    "send_count": 3,
+    "resend_id": "1f742795-cc93-4a1d-883b-a908f1809f1e",
     "name": "Royal Burger",
     "city": "Lyon"
   },
   "direction@chikinbang.com": {
     "sent_at": "2026-03-16T16:04:45.462111+00:00",
-    "last_sent_at": "2026-04-05T15:30:52.698260+00:00",
-    "send_count": 2,
-    "resend_id": "3fb2bd66-b09f-4652-9093-5bbcabd01058",
+    "last_sent_at": "2026-04-24T09:17:03.623813+00:00",
+    "send_count": 3,
+    "resend_id": "cc78db97-1c64-4a3f-88b3-cda668efcadb",
     "name": "Chikin Bang - Korean Street Food - Cordeliers",
     "city": "Lyon"
   },
@@ -1833,9 +1833,9 @@
   },
   "contact@fastyshotdog.com": {
     "sent_at": "2026-03-16T16:04:49.425114+00:00",
-    "last_sent_at": "2026-04-05T15:30:56.680834+00:00",
-    "send_count": 2,
-    "resend_id": "aff41dc2-7299-4cf9-9540-3138f47a1d0f",
+    "last_sent_at": "2026-04-24T09:17:07.541283+00:00",
+    "send_count": 3,
+    "resend_id": "856df347-3fb9-40dc-8354-7abe8b4cc2f4",
     "name": "Fasty's Food truck Hot-Dog & Burger Lyon",
     "city": "Lyon"
   },
@@ -1857,9 +1857,9 @@
   },
   "contact@burger-s.fr": {
     "sent_at": "2026-03-16T16:04:43.549845+00:00",
-    "last_sent_at": "2026-04-05T15:30:50.691642+00:00",
-    "send_count": 2,
-    "resend_id": "5a7fb9e6-1bcc-410e-9334-6629ff32920f",
+    "last_sent_at": "2026-04-24T09:17:01.666826+00:00",
+    "send_count": 3,
+    "resend_id": "50fca3c6-0c30-4a6f-9439-9054e4a326ac",
     "name": "Burger's Lyon 8",
     "city": "Lyon"
   },
@@ -1905,17 +1905,17 @@
   },
   "contact@smokeandfries.fr": {
     "sent_at": "2026-03-16T16:04:47.540223+00:00",
-    "last_sent_at": "2026-04-05T15:30:54.690624+00:00",
-    "send_count": 2,
-    "resend_id": "f542c6bf-e864-4ab8-b1e9-db8658ab0354",
+    "last_sent_at": "2026-04-24T09:17:05.605942+00:00",
+    "send_count": 3,
+    "resend_id": "f5183128-142b-495c-b558-236c64bdeefd",
     "name": "Smoké and Fries",
     "city": "Lyon"
   },
   "contact@biggroupe.com": {
     "sent_at": "2026-03-16T16:04:51.326407+00:00",
-    "last_sent_at": "2026-04-05T15:30:58.671312+00:00",
-    "send_count": 2,
-    "resend_id": "9e12e0ed-781e-4893-a39f-cfd9f27e041b",
+    "last_sent_at": "2026-04-24T09:17:09.412453+00:00",
+    "send_count": 3,
+    "resend_id": "41f3283c-c66d-45d9-ba9d-964ebc2e1d55",
     "name": "Big Fernand",
     "city": "Lyon"
   },
@@ -6265,129 +6265,129 @@
   },
   "info@loveebasta.com": {
     "sent_at": "2026-03-23T08:30:55.550927+00:00",
-    "last_sent_at": "2026-03-23T08:30:55.550927+00:00",
-    "send_count": 1,
-    "resend_id": "ea2feea5-9585-43bc-855c-4b98ec3f860e",
+    "last_sent_at": "2026-04-24T09:17:11.311891+00:00",
+    "send_count": 2,
+    "resend_id": "2c10e166-91b8-433f-88a7-6c480c145241",
     "name": "Love e Basta - Pizzeria - Angers",
     "city": "Angers"
   },
   "leaualabouche49@gmail.com": {
     "sent_at": "2026-03-23T08:30:57.541675+00:00",
-    "last_sent_at": "2026-03-23T08:30:57.541675+00:00",
-    "send_count": 1,
-    "resend_id": "f9109ca0-42ea-46c7-89ff-cde02f4e1633",
+    "last_sent_at": "2026-04-24T09:17:13.300474+00:00",
+    "send_count": 2,
+    "resend_id": "39f791ed-aafa-43f4-ad30-a0b2b81f1857",
     "name": "L'Eau A La Bouche",
     "city": "Angers"
   },
   "contact@signorizza.fr": {
     "sent_at": "2026-03-23T08:30:59.475745+00:00",
-    "last_sent_at": "2026-03-23T08:30:59.475745+00:00",
-    "send_count": 1,
-    "resend_id": "d00cbbf7-73e8-4489-9a13-70a7a5b76dca",
+    "last_sent_at": "2026-04-24T09:17:15.232874+00:00",
+    "send_count": 2,
+    "resend_id": "6815cfad-6028-4e83-b5a4-be131e3e1021",
     "name": "Signorizza Pizzeria Restaurant Angers Orgemont",
     "city": "Angers"
   },
   "posto.angers@gmail.com": {
     "sent_at": "2026-03-23T08:31:01.387533+00:00",
-    "last_sent_at": "2026-03-23T08:31:01.387533+00:00",
-    "send_count": 1,
-    "resend_id": "c7f9f1f5-2063-4e4e-b17a-67d5d6289f74",
+    "last_sent_at": "2026-04-24T09:17:17.149707+00:00",
+    "send_count": 2,
+    "resend_id": "f58c14f1-486e-480a-9d74-8aa3fcfe8b4d",
     "name": "Posto Ristorante",
     "city": "Angers"
   },
   "contact@pizzaduroy.fr": {
     "sent_at": "2026-03-23T08:31:03.278815+00:00",
-    "last_sent_at": "2026-03-23T08:31:03.278815+00:00",
-    "send_count": 1,
-    "resend_id": "ee27def8-b226-4de5-8a32-b55412e23cac",
+    "last_sent_at": "2026-04-24T09:17:19.065003+00:00",
+    "send_count": 2,
+    "resend_id": "cb7b08ba-b9d0-4cfc-b1e0-80b1d98f375a",
     "name": "Pizza du Roy",
     "city": "Angers"
   },
   "coliseepizzeria@gmail.com": {
     "sent_at": "2026-03-23T08:31:05.183135+00:00",
-    "last_sent_at": "2026-03-23T08:31:05.183135+00:00",
-    "send_count": 1,
-    "resend_id": "c1ccfeb0-ba3c-4f4d-bcba-e3250813b825",
+    "last_sent_at": "2026-04-24T09:17:20.953213+00:00",
+    "send_count": 2,
+    "resend_id": "999bc825-7a13-407e-8c3b-6ea1c5a1c623",
     "name": "Le Colisée",
     "city": "Angers"
   },
   "contact@pizza-tempo.com": {
     "sent_at": "2026-03-23T08:31:07.069553+00:00",
-    "last_sent_at": "2026-03-23T08:31:07.069553+00:00",
-    "send_count": 1,
-    "resend_id": "fef9cfb6-1763-4f77-a3a3-c9a42de05580",
+    "last_sent_at": "2026-04-24T09:17:22.823031+00:00",
+    "send_count": 2,
+    "resend_id": "97f78d0f-e891-4319-af55-0e9f4a1707b3",
     "name": "Distributeur Pizza Tempo Box Lac de Maine",
     "city": "Angers"
   },
   "leraboliot49@gmail.com": {
     "sent_at": "2026-03-23T08:31:08.987252+00:00",
-    "last_sent_at": "2026-03-23T08:31:08.987252+00:00",
-    "send_count": 1,
-    "resend_id": "b4221e69-e2b0-4118-954d-45e4c50aa6fc",
+    "last_sent_at": "2026-04-24T09:17:24.723885+00:00",
+    "send_count": 2,
+    "resend_id": "db7d63a4-c848-4b2e-a673-0789ec183996",
     "name": "Le Raboliot",
     "city": "Angers"
   },
   "salle@groupe3h.com": {
     "sent_at": "2026-03-23T08:31:10.976162+00:00",
-    "last_sent_at": "2026-03-23T08:31:10.976162+00:00",
-    "send_count": 1,
-    "resend_id": "8888940a-ac92-4f0a-87a2-89728f9aab92",
+    "last_sent_at": "2026-04-24T09:17:26.661536+00:00",
+    "send_count": 2,
+    "resend_id": "4d6412e1-21d2-482b-9542-c9085648666c",
     "name": "Mamie Fada",
     "city": "Angers"
   },
   "restaurantrougecerise@gmail.com": {
     "sent_at": "2026-03-23T08:31:13.070882+00:00",
-    "last_sent_at": "2026-03-23T08:31:13.070882+00:00",
-    "send_count": 1,
-    "resend_id": "cc49b19d-8cc1-4457-b32c-19235d91d20e",
+    "last_sent_at": "2026-04-24T09:17:28.548408+00:00",
+    "send_count": 2,
+    "resend_id": "b7b9824e-b180-4abb-9f57-e9fd042e5caa",
     "name": "ROUGE CERISE RESTAURANT & PIZZERIA",
     "city": "Angers"
   },
   "espacebeaussier@gmail.com": {
     "sent_at": "2026-03-23T08:31:14.966763+00:00",
-    "last_sent_at": "2026-03-23T08:31:14.966763+00:00",
-    "send_count": 1,
-    "resend_id": "b3e26349-c1c9-4790-9e07-e535fc03c5bd",
+    "last_sent_at": "2026-04-24T09:17:30.454937+00:00",
+    "send_count": 2,
+    "resend_id": "1755f5e0-aef5-42a7-b2ad-25ace3ff20f6",
     "name": "L'Espace Beaussier",
     "city": "Angers"
   },
   "pizza.angela49@gmail.com": {
     "sent_at": "2026-03-23T08:31:16.863520+00:00",
-    "last_sent_at": "2026-03-23T08:31:16.863520+00:00",
-    "send_count": 1,
-    "resend_id": "e76a4e27-23f5-4f36-8ac0-8751b70e8758",
+    "last_sent_at": "2026-04-24T09:17:32.334839+00:00",
+    "send_count": 2,
+    "resend_id": "36563c00-75ff-4478-9efd-5117e25e58f9",
     "name": "PIZZA ANGELA",
     "city": "Angers"
   },
   "contact@lamaisonangers.com": {
     "sent_at": "2026-03-23T08:31:19.065187+00:00",
-    "last_sent_at": "2026-03-23T08:31:19.065187+00:00",
-    "send_count": 1,
-    "resend_id": "22c8abb3-535e-438a-9b3f-a4d923f09d74",
+    "last_sent_at": "2026-04-24T09:17:34.235291+00:00",
+    "send_count": 2,
+    "resend_id": "b2760b61-5c76-4a37-ada7-5db4c1dfed0f",
     "name": "La Maison",
     "city": "Angers"
   },
   "burgersandfriends@gmail.com": {
     "sent_at": "2026-03-23T08:31:20.994962+00:00",
-    "last_sent_at": "2026-03-23T08:31:20.994962+00:00",
-    "send_count": 1,
-    "resend_id": "1bf92dca-bdf7-460b-a072-01f87564b4a0",
+    "last_sent_at": "2026-04-24T09:17:36.131791+00:00",
+    "send_count": 2,
+    "resend_id": "54fb9513-ac74-4426-9afe-49c4f16a6c00",
     "name": "burgers&friends",
     "city": "Angers"
   },
   "communication@lesburgersdepapa.fr": {
     "sent_at": "2026-03-23T08:31:22.903628+00:00",
-    "last_sent_at": "2026-03-23T08:31:22.903628+00:00",
-    "send_count": 1,
-    "resend_id": "a360dbf7-6d35-4c06-a05e-4cecd7f912e4",
+    "last_sent_at": "2026-04-24T09:17:38.015363+00:00",
+    "send_count": 2,
+    "resend_id": "018c0d30-558d-4a72-9b1a-9384131abe78",
     "name": "Les Burgers de Papa",
     "city": "Angers"
   },
   "contact@thaibreak.fr": {
     "sent_at": "2026-03-23T08:31:24.805377+00:00",
-    "last_sent_at": "2026-03-23T08:31:24.805377+00:00",
-    "send_count": 1,
-    "resend_id": "bc96ee54-80f5-45bf-8137-d96678cadea5",
+    "last_sent_at": "2026-04-24T09:17:39.903371+00:00",
+    "send_count": 2,
+    "resend_id": "cf816581-4d2a-40f5-b017-d8da764cb2ba",
     "name": "Thaï Break - Angers",
     "city": "Angers"
   },
