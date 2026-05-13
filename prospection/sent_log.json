@@ -201,9 +201,9 @@
   },
   "contact@pizza-corleone.fr": {
     "sent_at": "2026-03-14T16:15:00.156847+00:00",
-    "last_sent_at": "2026-04-18T15:35:55.730255+00:00",
-    "send_count": 3,
-    "resend_id": "ac6954be-06c8-4e9d-b14a-297ea6c53c97",
+    "last_sent_at": "2026-05-13T10:03:58.596669+00:00",
+    "send_count": 4,
+    "resend_id": "0431da8c-d399-4c57-8cd4-8f21e32d6eeb",
     "name": "CORLEONE Valence",
     "city": "Valence"
   },
@@ -513,9 +513,9 @@
   },
   "contact@joyfoods.fr": {
     "sent_at": "2026-03-14T16:16:11.406646+00:00",
-    "last_sent_at": "2026-04-18T15:35:57.733551+00:00",
-    "send_count": 3,
-    "resend_id": "4b085980-51a5-49b8-9a15-810e905db185",
+    "last_sent_at": "2026-05-13T10:04:00.523850+00:00",
+    "send_count": 4,
+    "resend_id": "6eb49beb-bbab-4a63-a5c5-cb260d6bb097",
     "name": "JOYS TACOS - Valence",
     "city": "Valence"
   },
@@ -1561,17 +1561,17 @@
   },
   "hello@parsley.fr": {
     "sent_at": "2026-03-16T08:36:51.704107+00:00",
-    "last_sent_at": "2026-04-20T16:17:19.357482+00:00",
-    "send_count": 3,
-    "resend_id": "d2578e14-48ab-4775-9c44-f16c03d245d4",
+    "last_sent_at": "2026-05-13T10:04:04.315441+00:00",
+    "send_count": 4,
+    "resend_id": "05d1e4e3-4ea7-4ece-a4d4-b63095ce724c",
     "name": "PARSLEY - KEBAB MAISON",
     "city": "Paris"
   },
   "contact@ckebab.fr": {
     "sent_at": "2026-03-16T08:36:49.375101+00:00",
-    "last_sent_at": "2026-04-20T16:17:17.118106+00:00",
-    "send_count": 3,
-    "resend_id": "28818d34-b3e2-46ba-9c17-0421677cb890",
+    "last_sent_at": "2026-05-13T10:04:02.477092+00:00",
+    "send_count": 4,
+    "resend_id": "a2a7e357-0235-4ed4-9eb5-8fe3b9cc5523",
     "name": "C KEBAB Paris",
     "city": "Paris"
   },
@@ -5289,97 +5289,97 @@
   },
   "lamarrage.pro@gmail.com": {
     "sent_at": "2026-03-21T15:24:54.460552+00:00",
-    "last_sent_at": "2026-04-20T16:18:14.137551+00:00",
-    "send_count": 2,
-    "resend_id": "d59dd81c-c85c-416b-8feb-87d5fe332979",
+    "last_sent_at": "2026-05-13T10:04:06.166867+00:00",
+    "send_count": 3,
+    "resend_id": "b469f947-2329-47a9-a00a-5861bae0dcc9",
     "name": "Brasserie L'Amarrage",
     "city": "Le Havre"
   },
   "ledenvercoffee@gmail.com": {
     "sent_at": "2026-03-21T15:24:56.409488+00:00",
-    "last_sent_at": "2026-04-20T16:18:15.948149+00:00",
-    "send_count": 2,
-    "resend_id": "77dfbfc7-be5e-4605-995d-56d4a538b5d0",
+    "last_sent_at": "2026-05-13T10:04:07.994311+00:00",
+    "send_count": 3,
+    "resend_id": "bddfe6f4-c6aa-4c42-a5a3-8015cd9210ae",
     "name": "Le Denver",
     "city": "Le Havre"
   },
   "le.whynotlh@gmail.com": {
     "sent_at": "2026-03-21T15:24:58.691738+00:00",
-    "last_sent_at": "2026-04-20T16:18:17.934171+00:00",
-    "send_count": 2,
-    "resend_id": "961f88ad-7675-404f-b4fa-de9b48533896",
+    "last_sent_at": "2026-05-13T10:04:09.801882+00:00",
+    "send_count": 3,
+    "resend_id": "ace6a1b4-6fe2-49fd-8bf8-5dfe730d1b21",
     "name": "Why Not LH",
     "city": "Le Havre"
   },
   "pokeshop.paris12@gmail.com": {
     "sent_at": "2026-03-21T15:25:00.635322+00:00",
-    "last_sent_at": "2026-04-20T16:18:19.767581+00:00",
-    "send_count": 2,
-    "resend_id": "3b3df870-f5cf-4b83-a774-a93c6214eead",
+    "last_sent_at": "2026-05-13T10:04:11.620824+00:00",
+    "send_count": 3,
+    "resend_id": "833c5b37-8007-4b49-8c09-53c7abfb92c8",
     "name": "Pokeshop Le Havre",
     "city": "Le Havre"
   },
   "contact@arison.fr": {
     "sent_at": "2026-03-21T15:25:02.742911+00:00",
-    "last_sent_at": "2026-04-20T16:18:22.136698+00:00",
-    "send_count": 2,
-    "resend_id": "c0580840-2678-4a6b-b82b-c0293b8d6b39",
+    "last_sent_at": "2026-05-13T10:04:13.450163+00:00",
+    "send_count": 3,
+    "resend_id": "b9d6c827-8977-4990-8ceb-69f088df3976",
     "name": "BIG MOH'S",
     "city": "Le Havre"
   },
   "contact@cafe-sirius.fr": {
     "sent_at": "2026-03-21T15:25:04.693960+00:00",
-    "last_sent_at": "2026-04-20T16:18:23.960585+00:00",
-    "send_count": 2,
-    "resend_id": "71a2a656-c969-4137-8f5f-72a319594603",
+    "last_sent_at": "2026-05-13T10:04:15.246300+00:00",
+    "send_count": 3,
+    "resend_id": "0946e188-da0a-4e26-89f7-58a89403d2c2",
     "name": "Le Café du Sirius",
     "city": "Le Havre"
   },
   "contact@lamiecaline.com": {
     "sent_at": "2026-03-21T15:25:06.630911+00:00",
-    "last_sent_at": "2026-04-20T16:18:25.819086+00:00",
-    "send_count": 2,
-    "resend_id": "c662f924-fc56-4444-8421-ff822c100b33",
+    "last_sent_at": "2026-05-13T10:04:17.069796+00:00",
+    "send_count": 3,
+    "resend_id": "039e7ae2-171b-4ecd-ad6f-69822dede362",
     "name": "La Mie Câline",
     "city": "Le Havre"
   },
   "optitpoelon@gmail.com": {
     "sent_at": "2026-03-21T15:25:08.581253+00:00",
-    "last_sent_at": "2026-04-20T16:18:27.748437+00:00",
-    "send_count": 2,
-    "resend_id": "a0688a08-4677-45ca-9a43-5f3f89ac5b9a",
+    "last_sent_at": "2026-05-13T10:04:18.871670+00:00",
+    "send_count": 3,
+    "resend_id": "75523c01-d82f-4b22-98e8-05288974f72d",
     "name": "O p'tit Poêlon",
     "city": "Le Havre"
   },
   "ma.dame.lehavre@gmail.com": {
     "sent_at": "2026-03-21T15:25:10.499036+00:00",
-    "last_sent_at": "2026-04-20T16:18:29.576163+00:00",
-    "send_count": 2,
-    "resend_id": "7c9e158b-2309-4a0f-bf91-1175771e4cbc",
+    "last_sent_at": "2026-05-13T10:04:20.660039+00:00",
+    "send_count": 3,
+    "resend_id": "e4355f48-e000-4d8c-b0ec-d208931f9a3f",
     "name": "MA DAME",
     "city": "Le Havre"
   },
   "contact@ovillage-brunch.com": {
     "sent_at": "2026-03-21T15:25:12.395689+00:00",
-    "last_sent_at": "2026-04-20T16:18:31.414365+00:00",
-    "send_count": 2,
-    "resend_id": "0916044e-366d-4133-9ae6-5de93576b9cc",
+    "last_sent_at": "2026-05-13T10:04:22.491967+00:00",
+    "send_count": 3,
+    "resend_id": "1420b343-2c74-4029-8444-a5ad1e1f2516",
     "name": "O'Village",
     "city": "Le Havre"
   },
   "contact@babayoshi.fr": {
     "sent_at": "2026-03-21T15:25:14.304179+00:00",
-    "last_sent_at": "2026-04-20T16:18:33.254142+00:00",
-    "send_count": 2,
-    "resend_id": "5814ee60-39a8-497c-b805-f8809d321d91",
+    "last_sent_at": "2026-05-13T10:04:24.403841+00:00",
+    "send_count": 3,
+    "resend_id": "f46b3462-d7c4-4031-820f-09124485aa5a",
     "name": "Babayoshi - Le Havre",
     "city": "Le Havre"
   },
   "hamitgungor42@gmail.com": {
     "sent_at": "2026-03-21T15:25:16.246211+00:00",
-    "last_sent_at": "2026-04-20T16:18:35.098125+00:00",
-    "send_count": 2,
-    "resend_id": "cdbd4bfe-32dd-4c95-ae17-284ef7fc031d",
+    "last_sent_at": "2026-05-13T10:04:26.299668+00:00",
+    "send_count": 3,
+    "resend_id": "fbf41046-0642-4ab8-b741-6eb199d7a2b5",
     "name": "KEBAB STORE (1er BERLINER de la Loire) Kebab fait maison",
     "city": "Saint-Etienne"
   },
@@ -11153,129 +11153,129 @@
   },
   "nejahyaya@gmail.com": {
     "sent_at": "2026-03-29T15:30:03.922040+00:00",
-    "last_sent_at": "2026-03-29T15:30:03.922040+00:00",
-    "send_count": 1,
-    "resend_id": "a37fc530-9324-483e-8d01-7a0ec1044406",
+    "last_sent_at": "2026-05-13T10:04:28.152989+00:00",
+    "send_count": 2,
+    "resend_id": "ca79773d-5b46-49c2-be80-654e22bf82ba",
     "name": "TACOS NOUVELLE ETOILE",
     "city": "Pau"
   },
   "contact@papyandcie.fr": {
     "sent_at": "2026-03-29T15:30:05.919492+00:00",
-    "last_sent_at": "2026-03-29T15:30:05.919492+00:00",
-    "send_count": 1,
-    "resend_id": "fe2f4ebd-1379-498f-b111-ec7f93a5b573",
+    "last_sent_at": "2026-05-13T10:04:29.997077+00:00",
+    "send_count": 2,
+    "resend_id": "e6712fdb-0660-43b2-8237-19bd8cd428b8",
     "name": "Papy&cie burger shop",
     "city": "Pau"
   },
   "contact@opetitpau.fr": {
     "sent_at": "2026-03-29T15:30:07.727894+00:00",
-    "last_sent_at": "2026-03-29T15:30:07.727894+00:00",
-    "send_count": 1,
-    "resend_id": "69580298-60cb-4b9b-b966-0ad0556385a1",
+    "last_sent_at": "2026-05-13T10:04:31.809537+00:00",
+    "send_count": 2,
+    "resend_id": "40e7ca47-ad72-4dc1-b22a-0e337fd1147e",
     "name": "Ô petit pau",
     "city": "Pau"
   },
   "smashtime@outlook.fr": {
     "sent_at": "2026-03-29T15:30:09.550185+00:00",
-    "last_sent_at": "2026-03-29T15:30:09.550185+00:00",
-    "send_count": 1,
-    "resend_id": "206acdfe-3265-4aae-8f5c-0003ab66169c",
+    "last_sent_at": "2026-05-13T10:04:33.635209+00:00",
+    "send_count": 2,
+    "resend_id": "f6c13cf9-e01c-4e76-9bf1-706723f5d591",
     "name": "Smash Time",
     "city": "Calais"
   },
   "contact@andiamo-pizza62.fr": {
     "sent_at": "2026-03-29T15:30:11.551724+00:00",
-    "last_sent_at": "2026-03-29T15:30:11.551724+00:00",
-    "send_count": 1,
-    "resend_id": "b1518096-5c85-44cf-b97a-fb2a7dc0f5c3",
+    "last_sent_at": "2026-05-13T10:04:35.455510+00:00",
+    "send_count": 2,
+    "resend_id": "70cc1dc8-0383-460f-a0c0-c53452321d51",
     "name": "ANDIAMO PIZZA",
     "city": "Calais"
   },
   "contact@calaistruckstop.com": {
     "sent_at": "2026-03-29T15:30:13.354414+00:00",
-    "last_sent_at": "2026-03-29T15:30:13.354414+00:00",
-    "send_count": 1,
-    "resend_id": "fc5940d2-fe1c-45e7-833a-4f0b76057941",
+    "last_sent_at": "2026-05-13T10:04:37.295231+00:00",
+    "send_count": 2,
+    "resend_id": "ba1d19bb-f5d5-41fe-bc45-3238c7f2d6f8",
     "name": "Calais TruckStop",
     "city": "Calais"
   },
   "letopher62100@gmail.com": {
     "sent_at": "2026-03-29T15:30:15.176475+00:00",
-    "last_sent_at": "2026-03-29T15:30:15.176475+00:00",
-    "send_count": 1,
-    "resend_id": "c2084b9d-49ee-4668-b662-f8bc0766ca06",
+    "last_sent_at": "2026-05-13T10:04:39.118143+00:00",
+    "send_count": 2,
+    "resend_id": "4538cfe6-05eb-421d-8b45-80ed1ef6d02d",
     "name": "Friterie Leroux",
     "city": "Calais"
   },
   "korkmazbulentcan817@gmail.com": {
     "sent_at": "2026-03-29T15:30:16.984465+00:00",
-    "last_sent_at": "2026-03-29T15:30:16.984465+00:00",
-    "send_count": 1,
-    "resend_id": "f27b5d0b-0d85-4642-9402-c9dcf955358e",
+    "last_sent_at": "2026-05-13T10:04:40.901211+00:00",
+    "send_count": 2,
+    "resend_id": "f4dbf3a8-b7b8-438a-864d-acd0ef8c9c24",
     "name": "TAKOS LAND",
     "city": "Calais"
   },
   "contact@il-napoli.fr": {
     "sent_at": "2026-03-29T15:30:18.976259+00:00",
-    "last_sent_at": "2026-03-29T15:30:18.976259+00:00",
-    "send_count": 1,
-    "resend_id": "28595f3f-8ca0-48ae-905a-4a0d3c1db29e",
+    "last_sent_at": "2026-05-13T10:04:42.721779+00:00",
+    "send_count": 2,
+    "resend_id": "9255923d-2fee-4b42-9428-65edd67ba702",
     "name": "IL NAPOLI",
     "city": "Calais"
   },
   "pizza.fams.calais@gmail.com": {
     "sent_at": "2026-03-29T15:30:20.762209+00:00",
-    "last_sent_at": "2026-03-29T15:30:20.762209+00:00",
-    "send_count": 1,
-    "resend_id": "545f2ff8-61ac-4e46-bdcc-9ab05dd72cf5",
+    "last_sent_at": "2026-05-13T10:04:44.519308+00:00",
+    "send_count": 2,
+    "resend_id": "77a098b5-03a6-4a68-993f-b73efc571192",
     "name": "Pizza Fam's",
     "city": "Calais"
   },
   "pizzafolies62100@outlook.fr": {
     "sent_at": "2026-03-29T15:30:22.587572+00:00",
-    "last_sent_at": "2026-03-29T15:30:22.587572+00:00",
-    "send_count": 1,
-    "resend_id": "265d44b4-0920-4860-b3fb-ebe3cd984937",
+    "last_sent_at": "2026-05-13T10:04:46.309451+00:00",
+    "send_count": 2,
+    "resend_id": "2cb7385f-6e97-4293-bb43-189e162e9a8f",
     "name": "Pizza Folie'S",
     "city": "Calais"
   },
   "pizzadomscalais@gmail.com": {
     "sent_at": "2026-03-29T15:30:24.567848+00:00",
-    "last_sent_at": "2026-03-29T15:30:24.567848+00:00",
-    "send_count": 1,
-    "resend_id": "76730b3e-ed45-4e7f-bc02-db322cd27bff",
+    "last_sent_at": "2026-05-13T10:04:48.121616+00:00",
+    "send_count": 2,
+    "resend_id": "b28e9ce2-2099-4a82-9323-d0bf49fb8b16",
     "name": "Pizza dom's",
     "city": "Calais"
   },
   "fidelite@sophie-lebreuilly.com": {
     "sent_at": "2026-03-29T15:30:26.413693+00:00",
-    "last_sent_at": "2026-03-29T15:30:26.413693+00:00",
-    "send_count": 1,
-    "resend_id": "a64fdf69-0c05-44c3-8d23-5a2cd5ede99e",
+    "last_sent_at": "2026-05-13T10:04:49.944749+00:00",
+    "send_count": 2,
+    "resend_id": "babe63da-ef4e-42a6-9b07-017c4f591412",
     "name": "Sophie Lebreuilly",
     "city": "Calais"
   },
   "lebistroduportdecalais@gmail.com": {
     "sent_at": "2026-03-29T15:30:28.426139+00:00",
-    "last_sent_at": "2026-03-29T15:30:28.426139+00:00",
-    "send_count": 1,
-    "resend_id": "d4ef5113-0b76-4010-a478-7cbc6b0b3b9e",
+    "last_sent_at": "2026-05-13T10:04:51.733498+00:00",
+    "send_count": 2,
+    "resend_id": "c5083fe9-f158-4ef2-8bf6-2087c7770ba6",
     "name": "Le Bistro du Port, restaurant panoramique au Port de Calais",
     "city": "Calais"
   },
   "moutonblanc.calais@gmail.com": {
     "sent_at": "2026-03-29T15:30:30.241439+00:00",
-    "last_sent_at": "2026-03-29T15:30:30.241439+00:00",
-    "send_count": 1,
-    "resend_id": "2e9e5f97-6b87-4006-8b9b-87d594187b24",
+    "last_sent_at": "2026-05-13T10:04:53.532068+00:00",
+    "send_count": 2,
+    "resend_id": "904f4bc0-1938-4f52-8a10-0cffafd150ab",
     "name": "Le Mouton Blanc",
     "city": "Calais"
   },
   "carontheo@aol.com": {
     "sent_at": "2026-03-29T15:30:32.230965+00:00",
-    "last_sent_at": "2026-03-29T15:30:32.230965+00:00",
-    "send_count": 1,
-    "resend_id": "128aa4fc-30ff-4568-ad2d-fb5d07d75fbb",
+    "last_sent_at": "2026-05-13T10:04:55.326332+00:00",
+    "send_count": 2,
+    "resend_id": "7e402e40-cfb0-4797-8939-5813d22b4172",
     "name": "Friterie Pizzeria Des Sables",
     "city": "Calais"
   },
@@ -11558,5 +11558,13 @@
     "resend_id": "80798493-bec0-44f2-b35c-eb75c902317c",
     "name": "DUOMO - Pizzeria Napolitaine",
     "city": "Lyon"
+  },
+  "account-recovery@hostinger.com": {
+    "sent_at": "2026-05-13T10:04:58.827936+00:00",
+    "last_sent_at": "2026-05-13T10:04:58.827936+00:00",
+    "send_count": 1,
+    "resend_id": "dc359f88-8dd2-4004-98d7-c806eb2992cf",
+    "name": "S-Tacos C-Burger",
+    "city": "Pau"
   }
 }
