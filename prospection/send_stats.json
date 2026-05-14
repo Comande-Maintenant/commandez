@@ -1,5 +1,5 @@
 {
-  "total_sent": 106,
+  "total_sent": 107,
   "total_errors": 1,
   "runs": [
     {
@@ -15,9 +15,9 @@
       "errors": 0
     },
     {
-      "timestamp": "2026-05-13T17:15:05.340385+00:00",
-      "batch_size": 32,
-      "sent": 31,
+      "timestamp": "2026-05-14T09:56:25.184633+00:00",
+      "batch_size": 33,
+      "sent": 32,
       "errors": 1
     }
   ]
