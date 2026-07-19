@@ -19,9 +19,9 @@ The application must be safe to demonstrate and operate across the existing publ
 |---|---|---|---|
 | Application code | GitHub `Comande-Maintenant/commandez`, `origin/main` | fetched commit `38d7f48` | dirty older checkout at `/Users/lestoilettesdeminette/commandez` |
 | Marketing and SEO | `August1nnnn/commandeici-site` and live `commandeici.com` | separate Astro repository and public HTTP response | retired Shopify theme |
-| Database contract | versioned files in `supabase/migrations` plus generated TypeScript types | 48 local migration files at initial audit | prose migration counts in stale `CLAUDE.md` |
-| Live data and deployed functions | remote Supabase project | must be inspected without printing credentials before deployment | local assumptions and historical notes |
-| App deployment | Lovable custom domain and GitHub repository | live shell at `app.commandeici.com`; runtime health not yet proven | local `dist` directory |
+| Database contract | versioned files in `supabase/migrations` plus generated TypeScript types | 49 historical migrations recovered, then one additive cron migration | prose migration counts in stale documentation |
+| Live data and deployed functions | Supabase project `tgtvkzmokypztdudwzne` | 50 migrations, 15 Edge Functions, RLS and remote canaries verified | deleted historical Supabase project |
+| App deployment | Cloudflare Pages project `commandeici-app` | `app.commandeici.com` active, historical routes and browser flows verified | retired Lovable origin and local `dist` directory |
 
 The original checkout contains unrelated tracked and untracked prospecting data. It is preserved and will not be copied into, edited from, or committed by this recovery worktree.
 
@@ -80,7 +80,7 @@ The original checkout contains unrelated tracked and untracked prospecting data.
 
 Risk class: High.
 
-Primary risks are cross-tenant data exposure, lost or duplicated orders, incorrect totals, broken auth/session cookies, invalid subscription state, localization regressions, and production drift between GitHub, Lovable, and Supabase.
+Primary risks are cross-tenant data exposure, lost or duplicated orders, incorrect totals, broken auth/session cookies, invalid subscription state, localization regressions, and production drift between GitHub, Cloudflare Pages, and Supabase.
 
 Local rollback is branch deletion only after user confirmation. Application rollback is redeployment of the recorded previous commit/artifact. Database changes require an additive migration and a separately tested compensating migration; no destructive migration is permitted without a verified remote backup and explicit gate.
 
@@ -95,4 +95,4 @@ Local rollback is branch deletion only after user confirmation. Application roll
 
 ## Open decisions
 
-None for baseline and local remediation. Production data mutation, real payment, credential rotation, and bulk communication remain separately gated by the exclusions above.
+The historical CommandeIci Stripe account credentials were not recoverable. The known CommandeIci price identifiers do not exist in the unrelated Stripe account available locally. Checkout must remain fail-closed until Augustin reconnects the original account or explicitly selects an account in which new products and prices may be created. Production data mutation, real payment, credential rotation, and bulk communication remain separately gated by the exclusions above.

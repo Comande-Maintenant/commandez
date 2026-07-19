@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { escapeHtml, safeHttpUrl } from "../_shared/html.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -45,17 +46,22 @@ Deno.serve(async (req) => {
 
   if (!restaurant) {
     // Redirect to app anyway
-    return Response.redirect(`${APP_URL}/${slug}`, 302);
+    return Response.redirect(`${APP_URL}/${encodeURIComponent(slug)}`, 302);
   }
 
   const emoji = getCuisineEmoji(restaurant.cuisine_type);
-  const title = `${emoji} ${restaurant.name} - Commandez en ligne`;
-  const desc = restaurant.city
+  const title = escapeHtml(`${emoji} ${restaurant.name} - Commandez en ligne`);
+  const desc = escapeHtml(restaurant.city
     ? `Decouvrez la carte de ${restaurant.name} a ${restaurant.city} et commandez en ligne. ${restaurant.cuisine || ""}`
-    : `Decouvrez la carte de ${restaurant.name} et commandez en ligne.`;
-  const ogImage = restaurant.image || restaurant.cover_image || getCoverImage(restaurant.cuisine, restaurant.cuisine_type);
-  const pageUrl = `${APP_URL}/${slug}`;
-  const categories = (restaurant.categories || []).slice(0, 4).join(" · ");
+    : `Decouvrez la carte de ${restaurant.name} et commandez en ligne.`);
+  const fallbackImage = getCoverImage(restaurant.cuisine, restaurant.cuisine_type);
+  const ogImage = escapeHtml(safeHttpUrl(
+    restaurant.image || restaurant.cover_image,
+    fallbackImage,
+  ));
+  const pageUrl = escapeHtml(`${APP_URL}/${encodeURIComponent(slug)}`);
+  const categories = escapeHtml((restaurant.categories || []).slice(0, 4).join(" · "));
+  const restaurantName = escapeHtml(restaurant.name);
 
   const html = `<!DOCTYPE html>
 <html lang="fr">
@@ -76,7 +82,7 @@ Deno.serve(async (req) => {
   <meta http-equiv="refresh" content="0;url=${pageUrl}">
 </head>
 <body>
-  <p>Redirection vers <a href="${pageUrl}">${restaurant.name}</a>...</p>
+  <p>Redirection vers <a href="${pageUrl}">${restaurantName}</a>...</p>
 </body>
 </html>`;
 

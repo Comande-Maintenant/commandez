@@ -1,8 +1,8 @@
 # commandeici - SaaS Menu Restaurant
 
 ## Architecture
-- **Site vitrine** : commandeici.com (Shopify, theme custom)
-- **App SaaS** : app.commandeici.com (React, ce repo)
+- **Site vitrine** : commandeici.com (Cloudflare Pages, depot separe `August1nnnn/commandeici-site`)
+- **App SaaS** : app.commandeici.com (React, ce repo, Cloudflare Pages `commandeici-app`)
 - Les deux partagent l'etat auth via un cookie cross-subdomain sur `.commandeici.com`
 
 ## Stack technique
@@ -11,17 +11,18 @@
 - Supabase : DB + Auth + Storage + Realtime + Edge Functions
 - Framer Motion (animations), React Query (data fetching)
 - React Router (routing)
-- Shopify Subscriptions (paiements recurrents via checkout Shopify)
+- Stripe Billing (paiements recurrents via Edge Functions)
 
 ## Backend Supabase
-- **Projet historique** : supprimé ; ne plus utiliser son identifiant ni son URL
+- **Projet actif** : `tgtvkzmokypztdudwzne` (`CommandeIci`, region Paris `eu-west-3`)
+- **Projet historique** : supprime ; ne plus utiliser son identifiant ni son URL
 - **Configuration active** : variables d'environnement locales/de déploiement, jamais dans le repo
 - **Secrets** : gestionnaire de secrets Supabase et environnement CI uniquement
-- **Edge functions deployees** : send-email, send-welcome-email, trial-reminders, shopify-webhooks, validate-promo
-- **Cron** : pg_cron + pg_net, trial-reminders daily a 3h UTC
-- **Secret** : SHOPIFY_WEBHOOK_SECRET (= client_secret de l'app Shopify)
+- **Edge functions deployees** : 15 fonctions dans `supabase/functions/`, inventaire pilote par `supabase/config.toml`
+- **Cron** : nettoyage demo toutes les 4h et trial-reminders chaque jour a 3h UTC, secrets chiffres dans Vault
+- **Secrets** : gestionnaire Supabase + trousseau macOS ; aucun secret dans Git
 
-## Theme Shopify (commandeici.com)
+## Theme Shopify historique (ne plus deployer sur commandeici.com)
 - **Store** : idwzsh-11.myshopify.com
 - **Theme ID** : 196602659155
 - **API** : Shopify Admin API 2025-01, OAuth Client Credentials
@@ -58,7 +59,7 @@
 - `src/pages/RestaurantPage.tsx` : menu publique (`/:slug`)
 - `src/pages/AdminPage.tsx` : dashboard admin (`/admin/:slug`)
 - `src/pages/InscriptionPage.tsx` : onboarding + capture `?ref=CODE`
-- `src/pages/ChoisirPlanPage.tsx` : selection plan + redirect checkout Shopify (`/choisir-plan`)
+- `src/pages/ChoisirPlanPage.tsx` : selection plan + redirect checkout Stripe (`/choisir-plan`)
 - `src/pages/AbonnementConfirmePage.tsx` : polling post-checkout (`/abonnement-confirme`)
 - `src/pages/AbonnementPage.tsx` : page reactivation post-expiration (`/abonnement`)
 
@@ -71,7 +72,7 @@
 
 ### Fonctionnalites
 - `src/components/auth/SubscriptionGate.tsx` : gate abonnement (dual table: subscriptions + legacy restaurants)
-- `src/services/shopify-checkout.ts` : URL checkout Shopify avec selling plans
+- `src/services/shopify-checkout.ts` : integration Shopify historique, non utilisee par le parcours actif
 - `src/services/referral.ts` : logique parrainage
 - `src/components/dashboard/referral/ReferralSection.tsx` : UI parrainage
 - `src/components/CustomOrderBuilder.tsx` : configurateur multi-etapes
@@ -101,21 +102,21 @@
 - Inscription avec `?ref=CODE` : filleul 8 semaines, parrain +4 semaines
 - Trigger DB : auto-genere code + set trial 4 semaines a l'INSERT
 
-## Abonnement (paywall Shopify)
-- **Plans** : mensuel 29.99 EUR/mois, annuel 239.88 EUR/an
-- **Trial** : 14 jours, CB requise via Shopify checkout
-- **Checkout** : cart permalink Shopify avec selling_plan + note_attributes (restaurant_id, plan, promo_code)
+## Abonnement (paywall Stripe)
+- **Plan vendu dans l'interface** : mensuel 29.99 EUR/mois
+- **Offre de lancement** : 1 EUR/mois pendant 3 mois via coupon Stripe
+- **Trial applicatif** : 30 jours sans CB avant passage au checkout
+- **Checkout** : Stripe Checkout cree par `stripe-checkout`, metadata restaurant et plan cote serveur
 - **Lifecycle** : pending_payment -> trial -> active -> past_due/cancelled/expired
-- **Produit Shopify** : "commandeici Pro" (Product: 10461219324243, Variant: 53146218692947)
-- **Selling Plans** : Mensuel (690731942227), Annuel (690731974995)
-- **Webhooks Shopify** : subscription_contracts/create, orders/paid, subscription_billing_attempts/failure, subscription_contracts/update
+- **Webhooks actifs** : checkout, abonnement et factures traites par `stripe-webhooks`
+- **Shopify** : colonnes et fonction webhook conservees uniquement pour compatibilite historique
 - **Codes promo** : LANCEMENT (30j gratuits), BIENVENUE (+14j trial), MOITIE (50% 1er cycle)
 - **SubscriptionGate** : check table subscriptions, fallback restaurants (legacy), banniere trial, ecran past_due
-- **Cron trial-reminders** : daily 3AM UTC, dual table (subscriptions + legacy restaurants), emails J-7/J-3/J-1
+- **Cron trial-reminders** : daily 3AM UTC, J+7, J+21, J+28, expiration J+30 et relances post-expiration
 
 ## Tables Supabase principales
 - **restaurants** : slug, name, categories, primary_color, customization_config, referral_code, referred_by, bonus_weeks, trial_end_date, subscription_status, owner_id
-- **subscriptions** : restaurant_id (UNIQUE), status, plan, billing_day, trial_start/end, shopify_contract_id (UNIQUE), shopify_customer_id, shopify_order_id, bonus_days, promo_code_used
+- **subscriptions** : restaurant_id (UNIQUE), status, plan, trial_start/end, stripe_customer/subscription/session_id, current_period_start/end, bonus_days, promo_code_used ; colonnes Shopify legacy conservees
 - **promo_codes** : code (UNIQUE), type, value, max_uses, current_uses, valid_from/until, active
 - **promo_code_uses** : promo_code_id, restaurant_id, UNIQUE(promo_code_id, restaurant_id)
 - **menu_items** : restaurant_id, name, price, category, supplements, sauces, translations, variants
@@ -150,14 +151,14 @@ curl -s -X POST "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/data
 ### Notes
 - Les fichiers de migration doivent utiliser `IF NOT EXISTS` / `IF EXISTS` pour etre idempotents
 - La table de suivi est `supabase_migrations.schema_migrations` (version + name)
-- 20 migrations enregistrees (002 a 019 + 2 migrations auto-generees)
+- 50 migrations enregistrees et appliquees au projet actif au 19 juillet 2026
 
 ## Regles
 - Ne JAMAIS modifier la DA sans demander
 - PULL BEFORE PUSH sur theme Shopify (live gagne toujours)
 - git pull avant modifications app
 - Francais pour les interfaces, anglais pour le code
-- Lovable : commit+push GitHub, sync manuellement dans Lovable
+- App : build Vite puis deploiement Cloudflare Pages `commandeici-app`; conserver `app.commandeici.com`
 - Ne JAMAIS utiliser le tiret cadratin (em dash, en dash) dans les textes
 
 ## REGLE COPYWRITING - ZERO STYLE "IA"
