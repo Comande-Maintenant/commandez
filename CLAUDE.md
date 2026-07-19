@@ -14,9 +14,9 @@
 - Shopify Subscriptions (paiements recurrents via checkout Shopify)
 
 ## Backend Supabase
-- **Project** : rbqgsxhkccbhqdmdtxwr
-- **URL** : https://rbqgsxhkccbhqdmdtxwr.supabase.co
-- **Management API token** : voir .env ou CLAUDE.md local (pas dans le repo)
+- **Projet historique** : supprimé ; ne plus utiliser son identifiant ni son URL
+- **Configuration active** : variables d'environnement locales/de déploiement, jamais dans le repo
+- **Secrets** : gestionnaire de secrets Supabase et environnement CI uniquement
 - **Edge functions deployees** : send-email, send-welcome-email, trial-reminders, shopify-webhooks, validate-promo
 - **Cron** : pg_cron + pg_net, trial-reminders daily a 3h UTC
 - **Secret** : SHOPIFY_WEBHOOK_SECRET (= client_secret de l'app Shopify)
@@ -132,17 +132,17 @@
 
 ### Setup (deja fait)
 Le remote a une table `supabase_migrations.schema_migrations` qui track les migrations appliquees.
-Le projet est linke : `SUPABASE_ACCESS_TOKEN=sbp_230be05e89adf1016d7b2fb7120155f5c082ed14 npx supabase link --project-ref rbqgsxhkccbhqdmdtxwr`
+Lier explicitement le nouveau projet avec `npx supabase link --project-ref "$SUPABASE_PROJECT_REF"` après validation du gate de déploiement.
 
 ### Deployer une nouvelle migration
 1. Creer le fichier : `supabase/migrations/NNN_description.sql`
-2. Dry-run : `SUPABASE_ACCESS_TOKEN=sbp_230be05e89adf1016d7b2fb7120155f5c082ed14 npx supabase db push --dry-run`
-3. Push : `SUPABASE_ACCESS_TOKEN=sbp_230be05e89adf1016d7b2fb7120155f5c082ed14 npx supabase db push`
+2. Dry-run : `npx supabase db push --dry-run`
+3. Push : `npx supabase db push`
 
 ### Executer du SQL ad-hoc sur le remote (sans migration)
 ```bash
-curl -s -X POST "https://api.supabase.com/v1/projects/rbqgsxhkccbhqdmdtxwr/database/query" \
-  -H "Authorization: Bearer sbp_230be05e89adf1016d7b2fb7120155f5c082ed14" \
+curl -s -X POST "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query": "SELECT 1"}'
 ```

@@ -6,19 +6,22 @@
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { verifyToken } from "../_shared/signed-token.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-function decodeToken(token: string): { uid: string } | null {
-  try {
-    const decoded = JSON.parse(atob(token));
-    return decoded?.uid ? { uid: decoded.uid } : null;
-  } catch {
-    return null;
-  }
+const EMAIL_TOKEN_SECRET = Deno.env.get("EMAIL_TOKEN_SECRET") ?? "";
+
+async function decodeToken(token: string): Promise<{ uid: string } | null> {
+  const payload = await verifyToken<{ uid: string; purpose: string; exp: number }>(
+    token,
+    EMAIL_TOKEN_SECRET,
+    "email-preferences",
+  );
+  return payload?.uid ? { uid: payload.uid } : null;
 }
 
 Deno.serve(async (req: Request) => {
@@ -40,7 +43,7 @@ Deno.serve(async (req: Request) => {
         });
       }
 
-      const decoded = decodeToken(token);
+      const decoded = await decodeToken(token);
       if (!decoded) {
         return new Response(JSON.stringify({ error: "Invalid token" }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -71,7 +74,7 @@ Deno.serve(async (req: Request) => {
         });
       }
 
-      const decoded = decodeToken(token);
+      const decoded = await decodeToken(token);
       if (!decoded) {
         return new Response(JSON.stringify({ error: "Invalid token" }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },

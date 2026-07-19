@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14?target=deno";
+import { requireUser } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,6 +19,12 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
+    const user = await requireUser(req);
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
       return new Response(JSON.stringify({ error: "Stripe not configured" }), {
@@ -37,6 +44,19 @@ Deno.serve(async (req: Request) => {
     if (!restaurant_id || !email) {
       return new Response(JSON.stringify({ error: "restaurant_id and email are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+
+    const { data: ownedRestaurant } = await supabase
+      .from("restaurants")
+      .select("id")
+      .eq("id", restaurant_id)
+      .eq("owner_id", user.id)
+      .maybeSingle();
+    if (!ownedRestaurant || (user.email && user.email.toLowerCase() !== String(email).toLowerCase())) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 

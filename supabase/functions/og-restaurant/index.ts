@@ -1,8 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const SUPABASE_URL = "https://rbqgsxhkccbhqdmdtxwr.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY";
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const APP_URL = "https://app.commandeici.com";
 
@@ -39,13 +38,10 @@ Deno.serve(async (req) => {
     return new Response("Missing slug", { status: 400 });
   }
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
   const { data: restaurant } = await supabase
-    .from("restaurants")
-    .select("name, city, address, cuisine, cuisine_type, image, cover_image, rating, categories")
-    .eq("slug", slug)
-    .maybeSingle();
+    .rpc("get_public_restaurant_by_slug", { p_slug: slug });
 
   if (!restaurant) {
     // Redirect to app anyway
