@@ -44,3 +44,9 @@ The current rollback state is fail-closed: Stripe secrets are absent from the ne
 ## Current discovery result
 
 The local master environment contains only L'Observatoire Stripe credentials, and the CommandeIci GitHub repository has no Stripe Actions secrets. Those credentials are excluded. Browser history proves prior Stripe dashboard use but does not yet prove an authenticated session for the historical CommandeIci account. The historical credential itself has not yet been recovered.
+
+## Paused state
+
+Paused by Augustin on 2026-07-19 for later resumption. No Stripe secret was added to Supabase and no Stripe product, price, coupon, webhook, customer, or subscription was created, changed, or deleted during discovery.
+
+The historical account is identified as `acct_1TFfTR1URUOTUP9a`. Opening its historical product URL redirects to Stripe login, and Chrome has no saved value prefilled in the email or password fields. Resume only after Augustin authenticates that account in the already opened Stripe tab. The first resumed action is a read-only account and resource identity check; secret deployment remains gated on that proof.
