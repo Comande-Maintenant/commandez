@@ -6,14 +6,17 @@ Run once, not committed. Uses Supabase Management API (bypass RLS).
 """
 
 import json
+import os
 import random
 import uuid
 from datetime import datetime, timedelta
 import requests
 
 # ── Config ──
-SUPABASE_PROJECT = "rbqgsxhkccbhqdmdtxwr"
-SUPABASE_TOKEN = "sbp_230be05e89adf1016d7b2fb7120155f5c082ed14"
+SUPABASE_PROJECT = os.environ.get("SUPABASE_PROJECT_REF", "")
+SUPABASE_TOKEN = os.environ.get("SUPABASE_ACCESS_TOKEN", "")
+if not SUPABASE_PROJECT or not SUPABASE_TOKEN:
+    raise SystemExit("SUPABASE_PROJECT_REF and SUPABASE_ACCESS_TOKEN are required")
 API_URL = f"https://api.supabase.com/v1/projects/{SUPABASE_PROJECT}/database/query"
 HEADERS = {
     "Authorization": f"Bearer {SUPABASE_TOKEN}",

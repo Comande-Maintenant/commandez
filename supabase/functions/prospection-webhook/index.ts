@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Webhook } from "https://esm.sh/svix@1.24.0";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -19,7 +20,20 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const body = await req.json();
+    if (!RESEND_WEBHOOK_SECRET) {
+      return new Response(JSON.stringify({ error: "Webhook not configured" }), { status: 503 });
+    }
+    const rawBody = await req.text();
+    let body: Record<string, any>;
+    try {
+      body = new Webhook(RESEND_WEBHOOK_SECRET).verify(rawBody, {
+        "svix-id": req.headers.get("svix-id") ?? "",
+        "svix-timestamp": req.headers.get("svix-timestamp") ?? "",
+        "svix-signature": req.headers.get("svix-signature") ?? "",
+      }) as Record<string, any>;
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid signature" }), { status: 401 });
+    }
 
     // Resend webhook format: { type, created_at, data: { email_id, to, ... } }
     const eventType = body.type; // email.delivered, email.opened, email.clicked, email.bounced, email.complained

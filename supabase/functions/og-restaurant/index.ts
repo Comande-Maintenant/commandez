@@ -1,8 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { escapeHtml, safeHttpUrl } from "../_shared/html.ts";
 
-const SUPABASE_URL = "https://rbqgsxhkccbhqdmdtxwr.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY";
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const APP_URL = "https://app.commandeici.com";
 
@@ -39,27 +39,29 @@ Deno.serve(async (req) => {
     return new Response("Missing slug", { status: 400 });
   }
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
   const { data: restaurant } = await supabase
-    .from("restaurants")
-    .select("name, city, address, cuisine, cuisine_type, image, cover_image, rating, categories")
-    .eq("slug", slug)
-    .maybeSingle();
+    .rpc("get_public_restaurant_by_slug", { p_slug: slug });
 
   if (!restaurant) {
     // Redirect to app anyway
-    return Response.redirect(`${APP_URL}/${slug}`, 302);
+    return Response.redirect(`${APP_URL}/${encodeURIComponent(slug)}`, 302);
   }
 
   const emoji = getCuisineEmoji(restaurant.cuisine_type);
-  const title = `${emoji} ${restaurant.name} - Commandez en ligne`;
-  const desc = restaurant.city
+  const title = escapeHtml(`${emoji} ${restaurant.name} - Commandez en ligne`);
+  const desc = escapeHtml(restaurant.city
     ? `Decouvrez la carte de ${restaurant.name} a ${restaurant.city} et commandez en ligne. ${restaurant.cuisine || ""}`
-    : `Decouvrez la carte de ${restaurant.name} et commandez en ligne.`;
-  const ogImage = restaurant.image || restaurant.cover_image || getCoverImage(restaurant.cuisine, restaurant.cuisine_type);
-  const pageUrl = `${APP_URL}/${slug}`;
-  const categories = (restaurant.categories || []).slice(0, 4).join(" · ");
+    : `Decouvrez la carte de ${restaurant.name} et commandez en ligne.`);
+  const fallbackImage = getCoverImage(restaurant.cuisine, restaurant.cuisine_type);
+  const ogImage = escapeHtml(safeHttpUrl(
+    restaurant.image || restaurant.cover_image,
+    fallbackImage,
+  ));
+  const pageUrl = escapeHtml(`${APP_URL}/${encodeURIComponent(slug)}`);
+  const categories = escapeHtml((restaurant.categories || []).slice(0, 4).join(" · "));
+  const restaurantName = escapeHtml(restaurant.name);
 
   const html = `<!DOCTYPE html>
 <html lang="fr">
@@ -80,7 +82,7 @@ Deno.serve(async (req) => {
   <meta http-equiv="refresh" content="0;url=${pageUrl}">
 </head>
 <body>
-  <p>Redirection vers <a href="${pageUrl}">${restaurant.name}</a>...</p>
+  <p>Redirection vers <a href="${pageUrl}">${restaurantName}</a>...</p>
 </body>
 </html>`;
 

@@ -8,6 +8,7 @@
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { requireSuperAdmin } from "../_shared/auth.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -26,6 +27,9 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
+    if (!await requireSuperAdmin(req)) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
+    }
     const { restaurantId, email, freeMonths, ownerName, action } = await req.json();
     if (!restaurantId || !email) {
       return new Response(JSON.stringify({ error: "restaurantId and email required" }), { status: 400, headers: corsHeaders });

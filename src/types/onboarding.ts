@@ -12,6 +12,7 @@ export interface GooglePlaceResult {
   name: string;
   formatted_address?: string;
   vicinity?: string;
+  city?: string;
   formatted_phone_number?: string;
   international_phone_number?: string;
   rating?: number;

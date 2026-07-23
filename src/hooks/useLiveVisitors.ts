@@ -75,12 +75,26 @@ export function useLiveVisitors(restaurantId: string | null) {
   return { visitors, alerts, visitorCount: visitors.length };
 }
 
-export function useLiveOrderCounts(restaurantId: string | null) {
+export function useLiveOrderCounts(restaurantId: string | null, isDemo = false) {
   const [newCount, setNewCount] = useState(0);
   const [preparingCount, setPreparingCount] = useState(0);
 
   const loadCounts = useCallback(async () => {
     if (!restaurantId) return;
+    if (isDemo) {
+      const { data, error } = await supabase.rpc("get_demo_orders", {
+        p_restaurant_id: restaurantId,
+      });
+      if (error) {
+        setNewCount(0);
+        setPreparingCount(0);
+        return;
+      }
+      const orders = (data ?? []) as Array<{ status?: string }>;
+      setNewCount(orders.filter((order) => order.status === "new").length);
+      setPreparingCount(orders.filter((order) => order.status === "preparing").length);
+      return;
+    }
     const { count: nc } = await supabase
       .from("orders")
       .select("*", { count: "exact", head: true })
@@ -93,11 +107,16 @@ export function useLiveOrderCounts(restaurantId: string | null) {
       .eq("status", "preparing");
     setNewCount(nc ?? 0);
     setPreparingCount(pc ?? 0);
-  }, [restaurantId]);
+  }, [restaurantId, isDemo]);
 
   useEffect(() => {
     loadCounts();
     if (!restaurantId) return;
+
+    if (isDemo) {
+      const interval = setInterval(loadCounts, 5000);
+      return () => clearInterval(interval);
+    }
 
     const channel = supabase
       .channel(`order-counts-${restaurantId}`)
@@ -116,7 +135,7 @@ export function useLiveOrderCounts(restaurantId: string | null) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [restaurantId, loadCounts]);
+  }, [restaurantId, isDemo, loadCounts]);
 
   return { newCount, preparingCount };
 }
