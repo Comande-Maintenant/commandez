@@ -1,20 +1,20 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { verifyToken } from "../_shared/signed-token.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const PROSPECTION_TOKEN_SECRET = Deno.env.get("PROSPECTION_TOKEN_SECRET") ?? "";
 
-function decodeEmail(t: string): string | null {
-  try {
-    // URL-safe base64 decode
-    const base64 = t.replace(/-/g, "+").replace(/_/g, "/");
-    const decoded = atob(base64);
-    if (!decoded.includes("@")) return null;
-    return decoded.toLowerCase().trim();
-  } catch {
-    return null;
-  }
+async function decodeEmail(t: string): Promise<string | null> {
+  const payload = await verifyToken<{ email: string; purpose: string; exp: number }>(
+    t,
+    PROSPECTION_TOKEN_SECRET,
+    "prospection-unsubscribe",
+  );
+  const email = payload?.email?.toLowerCase().trim() ?? "";
+  return email.includes("@") && email.length <= 254 ? email : null;
 }
 
 function htmlResponse(title: string, message: string, status = 200): Response {
@@ -135,7 +135,7 @@ serve(async (req: Request) => {
     return htmlResponse("Lien invalide", "Le lien de desinscription est invalide ou expire.", 400);
   }
 
-  const email = decodeEmail(t);
+  const email = await decodeEmail(t);
   if (!email) {
     return htmlResponse("Lien invalide", "Le lien de desinscription est invalide ou expire.", 400);
   }
