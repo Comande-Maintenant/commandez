@@ -1,4 +1,4 @@
-import ColorThief from 'colorthief';
+import ColorThief from 'colorthief/dist/color-thief.mjs';
 import type { ExtractedColors } from '@/types/onboarding';
 
 function rgbToHex(r: number, g: number, b: number): string {

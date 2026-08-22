@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
-import { getTranslations, loadLanguage, isLanguageLoaded, detectBrowserLanguage, SUPPORTED_LANGUAGES, type Language } from "@/i18n";
+import { getTranslations, loadLanguage, isLanguageLoaded, detectBrowserLanguage, isRtlLanguage, SUPPORTED_LANGUAGES, type Language } from "@/i18n";
 import { translateMenuText } from "@/lib/menuTranslations";
 
 interface MenuTranslatable {
@@ -165,7 +165,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     [language]
   );
 
-  const isRTL = language === "ar";
+  const isRTL = isRtlLanguage(language);
 
   useEffect(() => {
     document.documentElement.dir = isRTL ? "rtl" : "ltr";

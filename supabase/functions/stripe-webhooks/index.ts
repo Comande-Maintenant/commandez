@@ -7,8 +7,8 @@ const corsHeaders = {
 };
 
 const PRICE_TO_PLAN: Record<string, string> = {
-  "price_1TFfc91URUOTUP9a1YsBjdJq": "monthly",
-  "price_1TFfcA1URUOTUP9ae4sv6vMA": "annual",
+  [Deno.env.get("STRIPE_PRICE_MONTHLY") || "price_1TFfc91URUOTUP9a1YsBjdJq"]: "monthly",
+  [Deno.env.get("STRIPE_PRICE_ANNUAL") || "price_1TFfcA1URUOTUP9ae4sv6vMA"]: "annual",
 };
 
 Deno.serve(async (req: Request) => {
@@ -112,7 +112,7 @@ Deno.serve(async (req: Request) => {
           if (owner?.email) {
             supabase.functions.invoke("send-email", {
               body: {
-                type: "subscription_activated",
+                template: "subscription_activated",
                 to: owner.email,
                 data: { restaurantName: restaurant.name, plan },
               },
@@ -200,7 +200,7 @@ Deno.serve(async (req: Request) => {
           if (owner?.email) {
             supabase.functions.invoke("send-email", {
               body: {
-                type: "subscription_cancelled",
+                template: "subscription_cancelled",
                 to: owner.email,
                 data: { restaurantName: restaurant.name },
               },
@@ -280,7 +280,7 @@ Deno.serve(async (req: Request) => {
           if (owner?.email) {
             supabase.functions.invoke("send-email", {
               body: {
-                type: "payment_failed",
+                template: "payment_failed",
                 to: owner.email,
                 data: { restaurantName: restaurant.name },
               },
