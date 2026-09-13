@@ -439,8 +439,8 @@ export const ProductCustomizer = ({
   }, [getStepSelections, selections, selectedAccompagnement, selectedAccompagnements, accompSize, fritesSauces, isMenu, isAssiette, freeAccompagnements, extraAccompPrice, item.price, productType, freeSaucesSandwich, freeSaucesFrites, extraSaucePrice, steps]);
 
   const goNext = useCallback(() => {
-    if (stepIndex < steps.length - 1) setStepIndex(stepIndex + 1);
-  }, [stepIndex, steps.length]);
+    setStepIndex((current) => Math.min(current + 1, steps.length - 1));
+  }, [steps.length]);
 
   const goBack = useCallback(() => {
     if (stepIndex > 0) setStepIndex(stepIndex - 1);
@@ -470,10 +470,8 @@ export const ProductCustomizer = ({
   // Handle single_select
   const handleSingleSelect = (stepKey: string, label: string, option: ResolvedStep["options"][0]) => {
     setStepSelections(stepKey, label, [{ id: option.id, name: option.name, price: option.price }]);
-    // Auto-advance on single select
-    if (stepIndex < steps.length - 1) {
-      setTimeout(() => setStepIndex(stepIndex + 1), 150);
-    }
+    // Advance atomically so a quick second interaction cannot skip a step.
+    goNext();
   };
 
   // Handle multi_select (viande step allows duplicates, others toggle)
@@ -570,7 +568,7 @@ export const ProductCustomizer = ({
       garnitures.forEach((g) => { next[g.id] = true; });
       return next;
     });
-    setTimeout(() => goNext(), 200);
+    goNext();
   };
 
   const handleGarnitureNature = () => {
@@ -579,7 +577,7 @@ export const ProductCustomizer = ({
       garnitures.forEach((g) => { next[g.id] = false; });
       return next;
     });
-    setTimeout(() => goNext(), 200);
+    goNext();
   };
 
   const handleAddToCart = () => {
@@ -595,7 +593,6 @@ export const ProductCustomizer = ({
 
     const viandeChoice = viandeSel.map((v) => v.name).join(", ");
     const fritesSel = getStepSelections("frites");
-    const extraCost = totalPrice - (baseSel.length > 0 ? baseSel[0].price : item.price);
 
     // Build standardized display name for cart
     let displayName = "";
@@ -629,6 +626,7 @@ export const ProductCustomizer = ({
     // Build generic customChoices
     const customChoices: StepSelection[] = [];
     for (const [key, sel] of selections.entries()) {
+      if (key === "garniture" || key === "accompagnement") continue;
       if (sel.selections.length > 0) {
         customChoices.push(sel);
       }
@@ -638,9 +636,42 @@ export const ProductCustomizer = ({
       customChoices.push({
         stepKey: "garniture",
         stepLabel: t("custom.toppings"),
-        selections: chosenGarnitures.map((g) => ({ id: g.name, name: g.name, price: 0 })),
+        selections: garnitures
+          .filter((g) => garnitureState[g.id])
+          .map((g) => ({ id: g.id, name: g.name, price: 0, meta: { level: "oui" } })),
       });
     }
+
+    const canonicalAccompagnements = isAssiette
+      ? selectedAccompagnements
+      : selectedAccompagnement ? [selectedAccompagnement] : [];
+    if (canonicalAccompagnements.length > 0) {
+      customChoices.push({
+        stepKey: "accompagnement",
+        stepLabel: t("custom.side"),
+        selections: canonicalAccompagnements.map((acc) => ({
+          id: acc.id,
+          name: acc.name,
+          price: 0,
+          meta: { size: !isAssiette && acc.has_sizes ? accompSize : "default" },
+        })),
+      });
+    }
+
+    const canonicalFritesSauces = sauces.filter((s) => fritesSauces.includes(s.name));
+    if (canonicalFritesSauces.length > 0) {
+      customChoices.push({
+        stepKey: "frites_sauce",
+        stepLabel: t("custom.same_sauce_frites"),
+        selections: canonicalFritesSauces.map((s) => ({ id: s.id, name: s.name, price: 0 })),
+      });
+    }
+
+    const extraSandwichSauces = Math.max(0, sauceSel.length - freeSaucesSandwich);
+    const sauceExtraCost = extraSandwichSauces * extraSaucePrice;
+    const extraCost = totalPrice
+      - (baseSel.length > 0 ? baseSel[0].price : item.price)
+      - sauceExtraCost;
 
     // Build options with both legacy and generic fields
     const cartOptions: Record<string, any> = {
@@ -671,9 +702,8 @@ export const ProductCustomizer = ({
     }
 
     // Sauce extra cost for cart display
-    const extraSandwichSauces = Math.max(0, sauceSel.length - freeSaucesSandwich);
     if (extraSandwichSauces > 0) {
-      cartOptions.sauceExtraCost = extraSandwichSauces * extraSaucePrice;
+      cartOptions.sauceExtraCost = sauceExtraCost;
     }
 
     for (let i = 0; i < quantity; i++) {
@@ -749,7 +779,12 @@ export const ProductCustomizer = ({
                   )}
                   <div className="min-w-0">
                     <h3 className="text-base font-bold text-gray-900 truncate">{translated.name}</h3>
-                    <p className="text-xs text-gray-500">
+                    <p
+                      className="text-xs text-gray-500"
+                      data-testid="customizer-progress"
+                      data-current={stepIndex + 1}
+                      data-total={steps.length}
+                    >
                       {t("custom.step_of", { current: String(stepIndex + 1), total: String(steps.length) })}
                     </p>
                   </div>
@@ -1354,6 +1389,7 @@ export const ProductCustomizer = ({
               style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
               {currentStep?.step_type === "recap" ? (
                 <button
+                  data-testid="customizer-add"
                   onClick={handleAddToCart}
                   className="w-full py-3.5 rounded-2xl text-white font-semibold text-sm transition-all active:scale-[0.98]"
                   style={{ backgroundColor: accent }}
@@ -1362,6 +1398,7 @@ export const ProductCustomizer = ({
                 </button>
               ) : (
                 <button
+                  data-testid="customizer-next"
                   onClick={goNext}
                   disabled={!canProceed}
                   className="w-full py-3.5 rounded-2xl text-white font-semibold text-sm transition-all active:scale-[0.98] disabled:opacity-50"

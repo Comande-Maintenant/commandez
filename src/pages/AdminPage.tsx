@@ -1,22 +1,11 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX, X, Clock } from "lucide-react";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchRestaurantBySlug, fetchDemoRestaurant, updateRestaurant } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
-import { DashboardOrders } from "@/components/dashboard/DashboardOrders";
-import { DashboardStats } from "@/components/dashboard/DashboardStats";
-import { DashboardMaCarte } from "@/components/dashboard/DashboardMaCarte";
-import { DashboardMaPage } from "@/components/dashboard/DashboardMaPage";
-import { DashboardQRCodes } from "@/components/dashboard/DashboardQRCodes";
-import { DashboardBorneClient } from "@/components/dashboard/DashboardBorneClient";
-import { DashboardParametres } from "@/components/dashboard/DashboardParametres";
-import { DashboardPOS } from "@/components/dashboard/pos/DashboardPOS";
-import { DashboardEnDirect } from "@/components/dashboard/DashboardEnDirect";
-import { DashboardClients } from "@/components/dashboard/DashboardClients";
 import { GererMenu } from "@/components/dashboard/GererMenu";
-import { DashboardCustomization } from "@/components/dashboard/DashboardCustomization";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
 import { AdminBottomNav } from "@/components/dashboard/AdminBottomNav";
 import { LiveSummaryBanner } from "@/components/dashboard/LiveSummaryBanner";
@@ -32,6 +21,18 @@ import { SubscriptionGate } from "@/components/auth/SubscriptionGate";
 import { OrderHistorySheet } from "@/components/dashboard/OrderHistorySheet";
 import { LanguageSelector } from "@/components/restaurant/LanguageSelector";
 import { useLanguage } from "@/context/LanguageContext";
+
+const DashboardOrders = lazy(() => import("@/components/dashboard/DashboardOrders").then((module) => ({ default: module.DashboardOrders })));
+const DashboardStats = lazy(() => import("@/components/dashboard/DashboardStats").then((module) => ({ default: module.DashboardStats })));
+const DashboardMaCarte = lazy(() => import("@/components/dashboard/DashboardMaCarte").then((module) => ({ default: module.DashboardMaCarte })));
+const DashboardMaPage = lazy(() => import("@/components/dashboard/DashboardMaPage").then((module) => ({ default: module.DashboardMaPage })));
+const DashboardQRCodes = lazy(() => import("@/components/dashboard/DashboardQRCodes").then((module) => ({ default: module.DashboardQRCodes })));
+const DashboardBorneClient = lazy(() => import("@/components/dashboard/DashboardBorneClient").then((module) => ({ default: module.DashboardBorneClient })));
+const DashboardParametres = lazy(() => import("@/components/dashboard/DashboardParametres").then((module) => ({ default: module.DashboardParametres })));
+const DashboardPOS = lazy(() => import("@/components/dashboard/pos/DashboardPOS").then((module) => ({ default: module.DashboardPOS })));
+const DashboardEnDirect = lazy(() => import("@/components/dashboard/DashboardEnDirect").then((module) => ({ default: module.DashboardEnDirect })));
+const DashboardClients = lazy(() => import("@/components/dashboard/DashboardClients").then((module) => ({ default: module.DashboardClients })));
+const DashboardCustomization = lazy(() => import("@/components/dashboard/DashboardCustomization").then((module) => ({ default: module.DashboardCustomization })));
 
 const validViews: DashboardView[] = ["cuisine", "caisse", "en-direct", "carte", "page", "qrcodes", "borne", "parametres", "stats", "gerer", "clients", "customization"];
 
@@ -84,7 +85,7 @@ const AdminPage = () => {
   }, [sound.audioUnlocked, sound.unlockAudio]);
 
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
-  const orderCounts = useLiveOrderCounts(restaurant?.id ?? null);
+  const orderCounts = useLiveOrderCounts(restaurant?.id ?? null, isDemo);
 
   const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -432,17 +433,19 @@ const AdminPage = () => {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
             >
-              {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} onNewOrderSound={sound.play} isDemo={isDemo} />}
-              {activeView === "caisse" && <DashboardPOS restaurant={restaurant} isDemo={isDemo} />}
-              {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} isDemo={isDemo} />}
-              {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} isDemo={isDemo} />}
-              {activeView === "page" && <DashboardMaPage restaurant={restaurant} isDemo={isDemo} />}
-              {activeView === "qrcodes" && <DashboardQRCodes restaurant={restaurant} />}
-              {activeView === "borne" && <DashboardBorneClient restaurant={restaurant} />}
-              {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} isDemo={isDemo} />}
-              {activeView === "stats" && <DashboardStats restaurant={restaurant} isDemo={isDemo} />}
-              {activeView === "clients" && <DashboardClients restaurant={restaurant} isDemo={isDemo} />}
-              {activeView === "customization" && <DashboardCustomization restaurant={restaurant} />}
+              <Suspense fallback={<div className="flex justify-center py-16"><Loader2 className="h-7 w-7 animate-spin" /></div>}>
+                {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} onNewOrderSound={sound.play} isDemo={isDemo} />}
+                {activeView === "caisse" && <DashboardPOS restaurant={restaurant} isDemo={isDemo} />}
+                {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} isDemo={isDemo} />}
+                {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} isDemo={isDemo} />}
+                {activeView === "page" && <DashboardMaPage restaurant={restaurant} isDemo={isDemo} />}
+                {activeView === "qrcodes" && <DashboardQRCodes restaurant={restaurant} />}
+                {activeView === "borne" && <DashboardBorneClient restaurant={restaurant} />}
+                {activeView === "parametres" && <DashboardParametres restaurant={restaurant} sound={sound} isDemo={isDemo} />}
+                {activeView === "stats" && <DashboardStats restaurant={restaurant} isDemo={isDemo} />}
+                {activeView === "clients" && <DashboardClients restaurant={restaurant} isDemo={isDemo} />}
+                {activeView === "customization" && <DashboardCustomization restaurant={restaurant} />}
+              </Suspense>
               {activeView === "gerer" && <GererMenu onViewChange={handleViewChange} />}
             </motion.div>
           </AnimatePresence>

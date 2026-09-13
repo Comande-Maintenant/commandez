@@ -1,13 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { Camera, Upload, Check, Loader2, Image as ImageIcon } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+
+const endpoint = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/photo-upload`;
+const publicHeaders = {
+  Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+  apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+};
 
 const PhotoUploadPage = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
   const [searchParams] = useSearchParams();
-  const key = searchParams.get("key");
+  const token = searchParams.get("token") ?? "";
 
   const [restaurantName, setRestaurantName] = useState<string | null>(null);
   const [authorized, setAuthorized] = useState(false);
@@ -16,45 +20,23 @@ const PhotoUploadPage = () => {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Verify access key (simple hash check)
   useEffect(() => {
-    if (!restaurantId || !key) {
+    if (!restaurantId || !token) {
       setError("Lien invalide");
       return;
     }
-    // Key is first 8 chars of restaurant ID reversed - simple but enough
-    const expected = restaurantId.slice(0, 8).split("").reverse().join("");
-    if (key !== expected) {
-      setError("Lien invalide ou expire");
-      return;
-    }
-    setAuthorized(true);
-
-    // Fetch restaurant name
-    supabase
-      .from("restaurants")
-      .select("name")
-      .eq("id", restaurantId)
-      .single()
-      .then(({ data }) => {
-        if (data) setRestaurantName(data.name);
-      });
-
-    // Load existing uploads
-    supabase.storage
-      .from("prospect-uploads")
-      .list(restaurantId, { limit: 50 })
-      .then(({ data }) => {
-        if (data) {
-          setUploaded(
-            data.map(
-              (f) =>
-                `https://rbqgsxhkccbhqdmdtxwr.supabase.co/storage/v1/object/public/prospect-uploads/${restaurantId}/${f.name}`
-            )
-          );
-        }
-      });
-  }, [restaurantId, key]);
+    fetch(`${endpoint}?token=${encodeURIComponent(token)}`, { headers: publicHeaders })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("invalid_link");
+        return response.json();
+      })
+      .then((data) => {
+        setRestaurantName(data.restaurantName);
+        setUploaded(data.photos ?? []);
+        setAuthorized(true);
+      })
+      .catch(() => setError("Lien invalide ou expire"));
+  }, [restaurantId, token]);
 
   const handleUpload = async (files: FileList | null) => {
     if (!files || !restaurantId) return;
@@ -62,21 +44,16 @@ const PhotoUploadPage = () => {
 
     const newUrls: string[] = [];
     for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const ext = file.name.split(".").pop() || "jpg";
-      const fileName = `${Date.now()}-${i}.${ext}`;
-      const path = `${restaurantId}/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("prospect-uploads")
-        .upload(path, file, { contentType: file.type, upsert: false });
-
-      if (!uploadError) {
-        newUrls.push(
-          `https://rbqgsxhkccbhqdmdtxwr.supabase.co/storage/v1/object/public/prospect-uploads/${path}`
-        );
-      } else {
-        console.error("Upload error:", uploadError);
+      const form = new FormData();
+      form.append("file", files[i]);
+      const response = await fetch(`${endpoint}?token=${encodeURIComponent(token)}`, {
+        method: "POST",
+        headers: publicHeaders,
+        body: form,
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.url) newUrls.push(data.url);
       }
     }
 

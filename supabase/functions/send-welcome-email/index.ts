@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { requireUser } from "../_shared/auth.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const EMAIL_FROM = "commandeici <contact@commandeici.com>";
@@ -15,7 +17,7 @@ async function generateQRCodeBase64(url: string, size = 400): Promise<string> {
   const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&ecc=H&margin=8`;
   const response = await fetch(qrApiUrl);
   if (!response.ok) throw new Error("Failed to generate QR code");
-  const buffer = new Uint8Array(await response.arrayBuffer());
+  const buffer = await response.arrayBuffer();
   return base64Encode(buffer);
 }
 
@@ -151,6 +153,13 @@ serve(async (req) => {
   }
 
   try {
+    const user = await requireUser(req);
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const { restaurantName, slug, email } = await req.json();
 
     if (!restaurantName || !slug || !email) {
@@ -158,6 +167,23 @@ serve(async (req) => {
         JSON.stringify({ error: "restaurantName, slug, and email are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    const service = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+    );
+    const { data: restaurant } = await service
+      .from("restaurants")
+      .select("id, name")
+      .eq("slug", slug)
+      .eq("owner_id", user.id)
+      .maybeSingle();
+    if (!restaurant || (user.email && user.email.toLowerCase() !== String(email).toLowerCase())) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const publicUrl = `${BASE_URL}/${slug}`;
@@ -169,7 +195,7 @@ serve(async (req) => {
 
     // Render HTML
     const html = renderWelcomeEmailHtml({
-      restaurantName,
+      restaurantName: restaurant.name,
       publicUrl,
       adminUrl,
       email,

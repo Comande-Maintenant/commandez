@@ -2,6 +2,11 @@ import fr from "./fr.json";
 
 export const SUPPORTED_LANGUAGES = ["fr", "en", "es", "de", "it", "pt", "nl", "ar", "zh", "ja", "ko", "ru", "tr", "vi"] as const;
 export type Language = (typeof SUPPORTED_LANGUAGES)[number];
+export const RTL_LANGUAGES = ["ar"] as const satisfies readonly Language[];
+
+export function isRtlLanguage(language: Language): boolean {
+  return (RTL_LANGUAGES as readonly Language[]).includes(language);
+}
 
 export const LANGUAGES = [
   { code: "fr" as const, name: "Francais", flag: "\ud83c\uddeb\ud83c\uddf7" },

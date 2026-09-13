@@ -67,6 +67,15 @@ export const ItemCustomizeModal = ({ item, open, onClose, restaurantSlug, restau
     for (let i = 0; i < quantity; i++) {
       addItem(syntheticItem, selectedSauces, selectedSupplements, restaurantSlug, restaurantId, {
         sauceExtraCost: sauceCost,
+        customChoices: selectedVariant === null ? undefined : [{
+          stepKey: "variant",
+          stepLabel: t("custom.choose_option"),
+          selections: [{
+            id: variants[selectedVariant].name,
+            name: variants[selectedVariant].name,
+            price: variants[selectedVariant].price,
+          }],
+        }],
       });
     }
     setSelectedSauces([]);

@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle, CreditCard, Banknote, UtensilsCrossed } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
-import { createOrder, fetchClientIp, fetchRestaurantById, isCustomerBanned, incrementCustomerStats } from "@/lib/api";
+import { createOrder, fetchRestaurantById, isCustomerBanned } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProtectedPhone } from "@/components/ProtectedPhone";
@@ -47,7 +47,6 @@ const OrderPage = () => {
   const [covers, setCovers] = useState(1);
   const [dineInEnabled, setDineInEnabled] = useState(false);
   const [dineInCapacity, setDineInCapacity] = useState<number | null>(null);
-  const clientIpRef = useRef<string | null>(null);
 
   // Pre-fill from localStorage (or demo defaults)
   useEffect(() => {
@@ -98,7 +97,6 @@ const OrderPage = () => {
         return; // Skip ban check for demo
       }
     });
-    fetchClientIp().then((ip) => { clientIpRef.current = ip; });
     // Check ban (skipped for demo via early return above)
     try {
       const raw = localStorage.getItem("cm_customer");
@@ -211,7 +209,6 @@ const OrderPage = () => {
         items: orderItems,
         subtotal,
         total,
-        client_ip: clientIpRef.current,
         pickup_time: pickupTime,
         payment_method: paymentMethod,
       };
@@ -232,10 +229,6 @@ const OrderPage = () => {
       // Save last order for reorder feature (with full customizations)
       if (restaurantId && !demoOrder) {
         localStorage.setItem(`last-order-${restaurantId}`, JSON.stringify(orderItems));
-      }
-      // Update customer profile stats if logged in
-      if (isLoggedIn && user && !demoOrder) {
-        incrementCustomerStats(user.id, total).catch(() => {});
       }
       clearCart();
       // Kiosk mode: go back to restaurant with confirmation overlay
