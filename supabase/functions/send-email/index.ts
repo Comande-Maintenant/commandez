@@ -10,8 +10,11 @@
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isServiceRole } from "../_shared/auth.ts";
+import { signToken } from "../_shared/signed-token.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const EMAIL_TOKEN_SECRET = Deno.env.get("EMAIL_TOKEN_SECRET") ?? "";
 const EMAIL_FROM = "commandeici <noreply@commandeici.com>";
 
 const APP_URL = "https://app.commandeici.com";
@@ -324,6 +327,13 @@ Deno.serve(async (req: Request) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (!isServiceRole(req)) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   try {
     const { template, to, data = {}, userId, restaurantId } = await req.json() as {
       template: string;
@@ -425,7 +435,11 @@ Deno.serve(async (req: Request) => {
 
     // ─── Generate unsubscribe token ───────────────────────────────────────────
     const unsubscribeToken = userId
-      ? btoa(JSON.stringify({ uid: userId, ts: Date.now() }))
+      ? await signToken({
+          uid: userId,
+          purpose: "email-preferences",
+          exp: Date.now() + 365 * 24 * 60 * 60 * 1000,
+        }, EMAIL_TOKEN_SECRET)
       : "";
     const unsubscribeUrl = `${APP_URL}/unsubscribe${unsubscribeToken ? "?token=" + unsubscribeToken : ""}`;
 

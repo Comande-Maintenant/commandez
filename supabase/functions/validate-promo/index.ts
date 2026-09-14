@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { requireUser } from "../_shared/auth.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -27,6 +28,13 @@ serve(async (req) => {
   }
 
   try {
+    const user = await requireUser(req);
+    if (!user) {
+      return new Response(JSON.stringify({ valid: false, error: "Non autorise" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const { code, restaurant_id } = await req.json();
 
     if (!code) {
@@ -37,6 +45,19 @@ serve(async (req) => {
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    if (restaurant_id) {
+      const { data: ownedRestaurant } = await supabase.from("restaurants")
+        .select("id")
+        .eq("id", restaurant_id)
+        .eq("owner_id", user.id)
+        .maybeSingle();
+      if (!ownedRestaurant) {
+        return new Response(JSON.stringify({ valid: false, error: "Non autorise" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
     const upperCode = code.toUpperCase().trim();
 
     // Find promo code

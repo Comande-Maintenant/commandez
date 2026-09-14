@@ -267,6 +267,8 @@ export const CustomerMiniProfile = ({ customer, restaurantId, onClose, onUpdated
       {showBanDialog && (
         <BanDialog
           customer={customer}
+          open={showBanDialog}
+          restaurantId={restaurantId}
           onClose={() => setShowBanDialog(false)}
           onBanned={() => {
             setShowBanDialog(false);
