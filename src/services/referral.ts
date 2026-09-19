@@ -66,46 +66,11 @@ export async function getReferrals(restaurantId: string): Promise<Referral[]> {
  */
 export async function processReferral(refereeRestaurantId: string, refCode: string): Promise<boolean> {
   try {
-    // Find the referrer by code
-    const { data: referrer } = await supabase
-      .from("restaurants")
-      .select("id, bonus_weeks")
-      .eq("referral_code", refCode.toUpperCase())
-      .single();
-
-    if (!referrer) return false;
-
-    // Don't allow self-referral
-    if (referrer.id === refereeRestaurantId) return false;
-
-    // Create referral entry
-    await supabase.from("referrals").insert({
-      referrer_id: referrer.id,
-      referee_id: refereeRestaurantId,
-      status: "completed",
-      bonus_weeks_granted: 4,
-      completed_at: new Date().toISOString(),
+    const { data, error } = await supabase.rpc("process_referral_code", {
+      p_referee_restaurant_id: refereeRestaurantId,
+      p_ref_code: refCode,
     });
-
-    // Add +4 weeks to the referrer (via SECURITY DEFINER RPC)
-    await supabase.rpc("grant_referral_bonus", {
-      p_referrer_id: referrer.id,
-      p_bonus_weeks: 4,
-    });
-
-    // Set the referee's referred_by and extend trial to 8 weeks (4 base + 4 bonus)
-    const eightWeeksFromNow = new Date();
-    eightWeeksFromNow.setDate(eightWeeksFromNow.getDate() + 56); // 8 weeks
-    await supabase
-      .from("restaurants")
-      .update({
-        referred_by: referrer.id,
-        trial_end_date: eightWeeksFromNow.toISOString(),
-        bonus_weeks: 4,
-      })
-      .eq("id", refereeRestaurantId);
-
-    return true;
+    return !error && data === true;
   } catch {
     return false;
   }

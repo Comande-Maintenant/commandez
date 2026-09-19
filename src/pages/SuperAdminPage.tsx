@@ -1237,7 +1237,7 @@ const SuperAdminPage = () => {
           <>
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-foreground">Prospects</h2>
-              <Button size="sm" className="rounded-xl" onClick={() => { setShowCreateProspect(true); setSelectedPlace(null); setPlaceQuery(""); setPlaceResults([]); setProspectSlug(""); }}>
+              <Button size="sm" className="rounded-xl" onClick={() => { setShowCreateProspect(true); setSelectedPlace(null); setProspectSlug(""); }}>
                 <Plus className="h-4 w-4 mr-1" /> Nouveau
               </Button>
             </div>
@@ -1520,9 +1520,15 @@ const SuperAdminPage = () => {
                     <Button disabled={sendingRecap || !recapEmail.includes("@")} className="rounded-xl" onClick={async () => {
                       setSendingRecap(true);
                       try {
+                        const { data: { session } } = await supabase.auth.getSession();
+                        if (!session) throw new Error("Session administrateur expirée");
                         const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/convert-prospect`, {
                           method: "POST",
-                          headers: { "Content-Type": "application/json" },
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${session.access_token}`,
+                            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+                          },
                           body: JSON.stringify({
                             restaurantId: recapProspect.id,
                             email: recapEmail,
@@ -1584,9 +1590,15 @@ const SuperAdminPage = () => {
                     <Button disabled={converting || !convertEmail.includes("@")} className="rounded-xl" onClick={async () => {
                       setConverting(true);
                       try {
+                        const { data: { session } } = await supabase.auth.getSession();
+                        if (!session) throw new Error("Session administrateur expirée");
                         const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/convert-prospect`, {
                           method: "POST",
-                          headers: { "Content-Type": "application/json" },
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${session.access_token}`,
+                            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+                          },
                           body: JSON.stringify({
                             restaurantId: convertingProspect.id,
                             email: convertEmail,
@@ -1683,15 +1695,16 @@ const SuperAdminPage = () => {
                   <div className="flex flex-col items-center gap-2 sm:w-48 flex-shrink-0">
                     {!qrCodeDataUrl ? (
                       <Button variant="outline" className="rounded-xl w-full" onClick={async () => {
-                        const key = editingProspect.id.slice(0, 8).split("").reverse().join("");
-                        const url = `https://app.commandeici.com/upload/${editingProspect.id}?key=${key}`;
-                        const dataUrl = await QRCode.toDataURL(url, { width: 256, margin: 1 });
-                        setQrCodeDataUrl(dataUrl);
-                        // Also load existing uploads
-                        const { data } = await supabase.storage.from("prospect-uploads").list(editingProspect.id, { limit: 50 });
-                        if (data) {
-                          setUploadedPhotos(data.map((f) => `https://rbqgsxhkccbhqdmdtxwr.supabase.co/storage/v1/object/public/prospect-uploads/${editingProspect.id}/${f.name}`));
+                        const { data, error } = await supabase.functions.invoke("photo-upload", {
+                          body: { action: "create_link", restaurantId: editingProspect.id },
+                        });
+                        if (error || !data?.url) {
+                          toast.error("Impossible de générer le lien sécurisé");
+                          return;
                         }
+                        const dataUrl = await QRCode.toDataURL(data.url, { width: 256, margin: 1 });
+                        setQrCodeDataUrl(dataUrl);
+                        setUploadedPhotos(data.photos ?? []);
                       }}>
                         Generer QR Code
                       </Button>
@@ -1700,11 +1713,11 @@ const SuperAdminPage = () => {
                         <img src={qrCodeDataUrl} alt="QR Code" className="w-40 h-40 rounded-lg border border-border" />
                         <p className="text-[11px] text-muted-foreground text-center">Scannez pour envoyer des photos depuis le telephone</p>
                         <Button variant="ghost" size="sm" className="text-xs" onClick={async () => {
-                          // Refresh uploaded photos
-                          const { data } = await supabase.storage.from("prospect-uploads").list(editingProspect.id, { limit: 50 });
-                          if (data) {
-                            setUploadedPhotos(data.map((f) => `https://rbqgsxhkccbhqdmdtxwr.supabase.co/storage/v1/object/public/prospect-uploads/${editingProspect.id}/${f.name}`));
-                          }
+                          const { data, error } = await supabase.functions.invoke("photo-upload", {
+                            body: { action: "create_link", restaurantId: editingProspect.id },
+                          });
+                          if (error) toast.error("Impossible d'actualiser les photos");
+                          else setUploadedPhotos(data?.photos ?? []);
                         }}>
                           <RefreshCw className="h-3 w-3 mr-1" /> Actualiser les photos
                         </Button>

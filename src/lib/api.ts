@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer, DbOwner, DbSubscription, DbPromoCode } from "@/types/database";
+import type { Database } from "@/integrations/supabase/types";
+import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer, DbOwner, DbSubscription, DbPromoCode, DbTablet } from "@/types/database";
 const PLAN_PRICES = { monthly: 29.99 } as const;
 
 // ── Demo mode RPCs ──
@@ -43,21 +44,17 @@ export async function fetchRestaurants(): Promise<DbRestaurant[]> {
 }
 
 export async function fetchRestaurantById(id: string): Promise<DbRestaurant | null> {
-  const { data, error } = await supabase
-    .from("restaurants")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
+  const { data, error } = await supabase.rpc("get_public_restaurant_by_id", {
+    p_id: id,
+  });
   if (error) throw error;
   return data as unknown as DbRestaurant | null;
 }
 
 export async function fetchRestaurantBySlug(slug: string): Promise<DbRestaurant | null> {
-  const { data, error } = await supabase
-    .from("restaurants")
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
+  const { data, error } = await supabase.rpc("get_public_restaurant_by_slug", {
+    p_slug: slug,
+  });
   if (error) throw error;
   return data as unknown as DbRestaurant | null;
 }
@@ -84,16 +81,6 @@ export async function fetchAllMenuItems(restaurantId: string): Promise<DbMenuIte
   return (data ?? []) as unknown as DbMenuItem[];
 }
 
-export async function fetchClientIp(): Promise<string | null> {
-  try {
-    const res = await fetch("https://api.ipify.org?format=json");
-    const data = await res.json();
-    return data.ip || null;
-  } catch {
-    return null;
-  }
-}
-
 export async function createOrder(order: {
   restaurant_id: string;
   customer_name: string;
@@ -112,34 +99,24 @@ export async function createOrder(order: {
   estimated_ready_at?: string;
   is_test?: boolean;
 }): Promise<DbOrder> {
-  // Server-side price validation (skip for demo orders)
-  if (order.source !== "demo") {
-    const { data: valid, error: validErr } = await supabase.rpc("validate_order_total", {
-      p_items: order.items,
-      p_claimed_total: order.total,
-    });
-    if (validErr || !valid) {
-      throw new Error("Le total de la commande ne correspond pas aux prix du menu.");
-    }
-
-    // Alcohol validation: reject orders containing alcohol items
-    const itemIds = (order.items as any[]).map((i: any) => i.id).filter(Boolean);
-    if (itemIds.length > 0) {
-      const { data: alcoholItems } = await supabase
-        .from("menu_items")
-        .select("id")
-        .in("id", itemIds)
-        .eq("is_alcohol", true);
-      if (alcoholItems && alcoholItems.length > 0) {
-        throw new Error("Les produits alcoolisés ne peuvent pas être commandés en ligne.");
-      }
-    }
-  }
-  const { data, error } = await supabase
-    .from("orders")
-    .insert(order)
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc("place_order", {
+    p_restaurant_id: order.restaurant_id,
+    p_customer_name: order.customer_name,
+    p_customer_phone: order.customer_phone,
+    p_customer_email: order.customer_email ?? "",
+    p_order_type: order.order_type,
+    p_source: order.source ?? "web",
+    p_covers: order.covers ?? null,
+    p_items: order.items,
+    p_subtotal: order.subtotal,
+    p_total: order.total,
+    p_notes: order.notes ?? "",
+    p_client_ip: null,
+    p_pickup_time: order.pickup_time ?? null,
+    p_payment_method: order.payment_method ?? "",
+    p_estimated_ready_at: order.estimated_ready_at ?? null,
+    p_is_test: order.is_test ?? false,
+  });
   if (error) throw error;
   return data as unknown as DbOrder;
 }
@@ -214,6 +191,10 @@ export async function insertMenuItem(item: {
   supplements?: any;
   sauces?: string[];
   variants?: Array<{ name: string; price: number }>;
+  enabled?: boolean;
+  popular?: boolean;
+  product_type?: string;
+  sort_order?: number;
 }) {
   const { error } = await supabase
     .from("menu_items")
@@ -232,7 +213,9 @@ export async function deleteMenuItem(id: string) {
 export async function updateRestaurant(id: string, updates: Partial<DbRestaurant>) {
   const { error } = await supabase
     .from("restaurants")
-    .update(updates)
+    .update(
+      updates as unknown as Database["public"]["Tables"]["restaurants"]["Update"]
+    )
     .eq("id", id);
   if (error) throw error;
 }
@@ -252,6 +235,46 @@ export async function upsertRestaurantHours(restaurantId: string, hours: { day_o
   const { error } = await supabase
     .from("restaurant_hours")
     .upsert(rows, { onConflict: "restaurant_id,day_of_week" });
+  if (error) throw error;
+}
+
+export async function fetchTablets(restaurantId: string): Promise<DbTablet[]> {
+  const { data, error } = await supabase
+    .from("restaurant_tablets")
+    .select("*")
+    .eq("restaurant_id", restaurantId)
+    .order("created_at");
+  if (error) throw error;
+  return (data ?? []) as unknown as DbTablet[];
+}
+
+export async function insertTablet(tablet: {
+  restaurant_id: string;
+  serial_number: string;
+  name: string;
+  usage_type: string;
+  notes: string;
+}): Promise<DbTablet> {
+  const { data, error } = await supabase
+    .from("restaurant_tablets")
+    .insert(tablet)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as unknown as DbTablet;
+}
+
+export async function updateTablet(
+  id: string,
+  updates: Partial<Pick<
+    DbTablet,
+    "serial_number" | "name" | "usage_type" | "notes" | "status" | "deactivated_at"
+  >>
+): Promise<void> {
+  const { error } = await supabase
+    .from("restaurant_tablets")
+    .update(updates)
+    .eq("id", id);
   if (error) throw error;
 }
 
@@ -526,47 +549,25 @@ export async function isCustomerBanned(
   email?: string,
   ip?: string
 ): Promise<{ banned: boolean; reason?: string; expires?: string | null }> {
-  // Check by phone
   const { data, error } = await supabase
-    .from("restaurant_customers")
-    .select("is_banned, banned_reason, ban_expires_at, banned_ip")
-    .eq("restaurant_id", restaurantId)
-    .eq("customer_phone", phone)
-    .eq("is_banned", true)
-    .maybeSingle();
+    .rpc("check_customer_ban", {
+      p_restaurant_id: restaurantId,
+      p_phone: phone,
+      p_email: email ?? null,
+    });
   if (error || !data) {
-    // Also check by IP if provided
-    if (ip) {
-      const { data: ipData } = await supabase
-        .from("restaurant_customers")
-        .select("is_banned, banned_reason, ban_expires_at")
-        .eq("restaurant_id", restaurantId)
-        .eq("banned_ip", ip)
-        .eq("is_banned", true)
-        .maybeSingle();
-      if (ipData) {
-        const d = ipData as any;
-        if (d.ban_expires_at && new Date(d.ban_expires_at) < new Date()) {
-          return { banned: false };
-        }
-        return { banned: true, reason: d.banned_reason, expires: d.ban_expires_at };
-      }
-    }
     return { banned: false };
   }
-  const d = data as any;
-  // Auto-unban if expired
-  if (d.ban_expires_at && new Date(d.ban_expires_at) < new Date()) {
-    // Don't await, fire-and-forget unban
-    supabase
-      .from("restaurant_customers")
-      .update({ is_banned: false, banned_at: null, banned_reason: "", ban_expires_at: null, banned_ip: "" })
-      .eq("restaurant_id", restaurantId)
-      .eq("customer_phone", phone)
-      .then(() => {});
-    return { banned: false };
-  }
-  return { banned: true, reason: d.banned_reason, expires: d.ban_expires_at };
+  const result = data as {
+    banned?: boolean;
+    reason?: string;
+    expires?: string | null;
+  };
+  return {
+    banned: result.banned === true,
+    reason: result.reason,
+    expires: result.expires,
+  };
 }
 
 // --- Owner / Super Admin ---

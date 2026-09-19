@@ -11,12 +11,10 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { useCrossDomainAuth } from "@/hooks/useCrossDomainAuth";
 import { usePageTracking } from "@/hooks/usePageTracking";
 
-// Static imports: hot paths, small pages
-import Index from "./pages/Index";
-import RestaurantPage from "./pages/RestaurantPage";
-import NotFound from "./pages/NotFound";
-
-// Lazy imports: split into separate chunks
+// Every route is split so visitors only download the surface they open.
+const Index = lazy(() => import("./pages/Index"));
+const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 const OrderPage = lazy(() => import("./pages/OrderPage"));
 const SuiviPage = lazy(() => import("./pages/SuiviPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
@@ -28,6 +26,7 @@ const AbonnementPage = lazy(() => import("./pages/AbonnementPage"));
 const ChoisirPlanPage = lazy(() => import("./pages/ChoisirPlanPage"));
 const AbonnementConfirmePage = lazy(() => import("./pages/AbonnementConfirmePage"));
 const SuperAdminPage = lazy(() => import("./pages/SuperAdminPage"));
+const UnsubscribePage = lazy(() => import("./pages/UnsubscribePage"));
 const CustomerProfilePage = lazy(() => import("./pages/CustomerProfilePage"));
 const PhotoUploadPage = lazy(() => import("./pages/PhotoUploadPage"));
 
@@ -87,6 +86,7 @@ const App = () => (
               <Route path="/choisir-plan" element={<ChoisirPlanPage />} />
               <Route path="/abonnement-confirme" element={<AbonnementConfirmePage />} />
               <Route path="/super-admin" element={<SuperAdminPage />} />
+              <Route path="/unsubscribe" element={<UnsubscribePage />} />
               <Route path="/upload/:restaurantId" element={<PhotoUploadPage />} />
               <Route path="/profil" element={<CustomerProfilePage />} />
               <Route path="/signup" element={<Navigate to="/inscription" replace />} />
