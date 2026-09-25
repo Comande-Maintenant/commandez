@@ -4,6 +4,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const SHOPIFY_WEBHOOK_SECRET = Deno.env.get("SHOPIFY_WEBHOOK_SECRET") ?? "";
+const createServiceClient = () => createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+type ServiceClient = ReturnType<typeof createServiceClient>;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -47,7 +49,7 @@ serve(async (req) => {
 
   const topic = req.headers.get("x-shopify-topic") ?? "";
   const payload = JSON.parse(rawBody);
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+  const supabase = createServiceClient();
 
   console.log(`[shopify-webhooks] Received topic: ${topic}`);
 
@@ -102,7 +104,7 @@ async function verifyHmac(body: string, hmac: string, secret: string): Promise<b
 // Extract restaurant_id from note_attributes or email
 // ============================================================
 async function resolveRestaurantId(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   payload: Record<string, unknown>
 ): Promise<string | null> {
   // Try note_attributes first
@@ -147,7 +149,7 @@ function getNoteAttr(payload: Record<string, unknown>, name: string): string | n
 // subscription_contracts/create
 // ============================================================
 async function handleContractCreate(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   payload: Record<string, unknown>
 ) {
   const restaurantId = await resolveRestaurantId(supabase, payload);
@@ -208,7 +210,7 @@ async function handleContractCreate(
 // orders/paid
 // ============================================================
 async function handleOrderPaid(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   payload: Record<string, unknown>
 ) {
   const restaurantId = await resolveRestaurantId(supabase, payload);
@@ -248,7 +250,7 @@ async function handleOrderPaid(
 // subscription_billing_attempts/failure
 // ============================================================
 async function handleBillingFailure(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   payload: Record<string, unknown>
 ) {
   const contractId = String(
@@ -285,7 +287,7 @@ async function handleBillingFailure(
 // subscription_contracts/update (cancellation)
 // ============================================================
 async function handleContractUpdate(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   payload: Record<string, unknown>
 ) {
   const contractId = String((payload as any).admin_graphql_api_id || (payload as any).id || "");
@@ -325,7 +327,7 @@ async function handleContractUpdate(
 // Helpers
 // ============================================================
 async function syncRestaurantStatus(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   restaurantId: string,
   status: string
 ) {
@@ -336,7 +338,7 @@ async function syncRestaurantStatus(
 }
 
 async function applyPromoCode(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   restaurantId: string,
   code: string
 ) {
@@ -416,7 +418,7 @@ async function applyPromoCode(
 }
 
 async function sendEmailNotification(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ServiceClient,
   restaurantId: string,
   template: string,
   data: Record<string, string>

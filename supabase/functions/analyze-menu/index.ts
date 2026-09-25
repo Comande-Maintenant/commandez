@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { requireUser } from "../_shared/auth.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 
@@ -66,7 +67,7 @@ Format de sortie :
  * "Boissons fraiches", "Boissons fraîches", "BOISSONS" → "boissons"
  */
 function normalizeCategory(name: string): string {
-  let n = name.toLowerCase().trim();
+  const n = name.toLowerCase().trim();
   // Merge all drink variants into "boissons"
   if (n.includes("boisson")) return "boissons";
   if (n.includes("drink")) return "boissons";
@@ -99,9 +100,18 @@ serve(async (req) => {
   }
 
   try {
+    const user = await requireUser(req);
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const { imageUrls } = await req.json();
 
-    if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
+    const storagePrefix = `${Deno.env.get("SUPABASE_URL")}/storage/v1/object/sign/menu-uploads/${user.id}/`;
+    if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0 || imageUrls.length > 5
+      || imageUrls.some((url) => typeof url !== "string" || !url.startsWith(storagePrefix))) {
       return new Response(JSON.stringify({ error: "imageUrls array required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
