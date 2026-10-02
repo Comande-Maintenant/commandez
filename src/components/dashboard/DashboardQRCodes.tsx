@@ -1,3 +1,4 @@
+import { publicAppUrl } from '@/lib/native';
 import { useState, useEffect, useCallback } from "react";
 import {
   QrCode,
@@ -33,8 +34,8 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
   const [copied, setCopied] = useState(false);
 
   const primaryColor = restaurant.primary_color || "#000000";
-  const pageUrl = typeof window !== "undefined" ? `${window.location.origin}/${restaurant.slug}` : "";
-  const posUrl = typeof window !== "undefined" ? `${window.location.origin}/admin/${restaurant.slug}?tab=caisse` : "";
+  const pageUrl = typeof window !== "undefined" ? `${publicAppUrl}/${restaurant.slug}` : "";
+  const posUrl = typeof window !== "undefined" ? `${publicAppUrl}/admin/${restaurant.slug}?tab=caisse` : "";
 
   const copyLink = () => {
     navigator.clipboard.writeText(pageUrl);

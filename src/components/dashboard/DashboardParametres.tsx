@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { DeleteAccountButton } from '@/components/auth/DeleteAccountButton';
+import { isNative } from '@/lib/native';
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Power,
@@ -509,7 +511,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
           <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.my_subscription')}</h3>
         </div>
 
-        {subscription ? (
+        {isNative() ? <p className="text-sm text-muted-foreground">{t('native.subscription')}</p> : subscription ? (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t('dashboard.settings.plan')}</span>
@@ -607,6 +609,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
       <ReferralSection restaurantId={restaurant.id} />
 
       {/* Danger zone */}
+      {!isDemo && <DeleteAccountButton />}
       <section className="bg-card rounded-2xl border border-destructive/30 p-5">
         <div className="flex items-center gap-2 mb-3">
           <AlertTriangle className="h-5 w-5 text-destructive" />

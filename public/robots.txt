@@ -1,19 +1,9 @@
-User-agent: Googlebot
-Allow: /
-Disallow: /demo
-Disallow: /antalya-kebab-moneteau
-
-User-agent: Bingbot
-Allow: /
-Disallow: /demo
-Disallow: /antalya-kebab-moneteau
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
-Disallow: /demo
+Disallow: /admin/
+Disallow: /super-admin
+Disallow: /order
+Disallow: /suivi/
+Disallow: /profil
+
+Sitemap: https://app.commandeici.com/sitemap.xml

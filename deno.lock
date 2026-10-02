@@ -26,6 +26,13 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@capacitor/app@^8.1.2",
+        "npm:@capacitor/cli@^8.4.3",
+        "npm:@capacitor/core@^8.5.2",
+        "npm:@capacitor/ios@^8.5.2",
+        "npm:@capacitor/keyboard@^8.0.6",
+        "npm:@capacitor/network@^8.0.1",
+        "npm:@capacitor/share@^8.0.3",
         "npm:@dnd-kit/core@^6.3.1",
         "npm:@dnd-kit/sortable@10",
         "npm:@dnd-kit/utilities@^3.2.2",
@@ -97,7 +104,7 @@
         "npm:react-dom@^18.3.1",
         "npm:react-hook-form@^7.61.1",
         "npm:react-resizable-panels@^2.1.9",
-        "npm:react-router-dom@^6.30.1",
+        "npm:react-router-dom@^7.18.4",
         "npm:react@^18.3.1",
         "npm:recharts@^2.15.4",
         "npm:sonner@^1.7.4",
@@ -108,9 +115,12 @@
         "npm:typescript@^5.8.3",
         "npm:vaul@~0.9.9",
         "npm:vite@^7.3.6",
-        "npm:vitest@^3.2.4",
+        "npm:vitest@^4.1.11",
         "npm:zod@^3.25.76"
-      ]
+      ],
+      "overrides": {
+        "sharp": "^0.35.5"
+      }
     }
   }
 }

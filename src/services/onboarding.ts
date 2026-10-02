@@ -3,12 +3,17 @@ import type { AnalyzedCategory, SubscriptionPlan } from '@/types/onboarding';
 
 // Create owner record after auth signup
 export async function createOwner(userId: string, email: string, phone: string) {
+  // A confirmed user may return from the email link or retry a creation.
+  // Never overwrite an existing profile when restoring a session.
+  const { data: existing, error: readError } = await supabase.from('owners').select('id').eq('id', userId).maybeSingle();
+  if (readError) throw readError;
+  if (existing) return;
   const { error } = await supabase.from('owners').insert({
     id: userId,
     email,
     phone,
   });
-  if (error) throw error;
+  if (error && error.code !== '23505') throw error;
 }
 
 // Create restaurant with all onboarding data
@@ -353,4 +358,26 @@ export async function seedCuisineDefaults(restaurantId: string, cuisineType: str
     restaurant_id: restaurantId,
     ...defaults.orderConfig,
   });
+}
+
+// One transaction publishes a complete restaurant; retries reuse the creation key.
+export async function completeOnboarding(key: string, restaurant: Record<string, unknown>, categories: AnalyzedCategory[]) {
+  const cuisine = String(restaurant.cuisine_type || 'generic');
+  const defaults = CUISINE_DEFAULTS[cuisine];
+  const menu = categories.flatMap(category => category.items.map(item => ({
+    name: item.name, description: item.description || '', price: item.price,
+    category: category.name,
+    product_type: getProductType(category.name) === 'simple' ? getProductType(item.name) : getProductType(category.name),
+    supplements: (item.supplements || []).map((supplement, i) => ({ id: `supp-${i}`, ...supplement })),
+    variants: item.variants || [], tags: item.tags || [],
+  })));
+  if (defaults && !menu.some(item => item.product_type === 'boisson')) {
+    menu.push(...defaults.boissons.map(item => ({ ...item, description: '', category: 'Boissons', product_type: 'boisson', supplements: [], variants: [], tags: [] })));
+  }
+  const { data, error } = await supabase.rpc('complete_onboarding' as never, {
+    p_key: key, p_restaurant: restaurant, p_menu: menu, p_defaults: defaults || {},
+  } as never);
+  if (error) throw error;
+  if (!data || !(data as { id?: string }).id) throw new Error('Restaurant creation failed');
+  return data as { id: string; slug: string; name: string; created: boolean };
 }

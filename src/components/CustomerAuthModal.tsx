@@ -7,6 +7,9 @@ import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 
+import { EmailConfirmation } from '@/components/auth/EmailConfirmation';
+import { authRedirectUrl } from '@/lib/native';
+
 type View = "login" | "signup" | "reset";
 
 interface Props {
@@ -22,6 +25,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
   const [view, setView] = useState<View>(defaultView);
   const [email, setEmail] = useState(prefillEmail || "");
   const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -59,7 +63,9 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
       } catch { /* ignore */ }
       if (!name) name = email.split("@")[0];
 
-      await signUp(email, password, name, phone);
+      const result = await signUp(email, password, name, phone);
+      setPassword('');
+      if (result === 'confirmation') { setConfirmation(true); return; }
       toast.success(t("auth.customer.profile_created"));
       onClose();
     } catch (e: any) {
@@ -100,6 +106,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
+          {confirmation ? <EmailConfirmation email={email} redirect={authRedirectUrl('/profil')} onChangeEmail={() => setConfirmation(false)} /> : <>
           {/* Email */}
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -173,6 +180,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
               </button>
             </>
           )}
+          </>}
         </div>
       </DialogContent>
     </Dialog>

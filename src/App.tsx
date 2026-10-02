@@ -10,6 +10,9 @@ import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { useCrossDomainAuth } from "@/hooks/useCrossDomainAuth";
 import { usePageTracking } from "@/hooks/usePageTracking";
+import { NativeLifecycle } from '@/components/NativeLifecycle';
+import { isNative } from '@/lib/native';
+import { NativeSubscription } from '@/components/NativeSubscription';
 
 // Every route is split so visitors only download the surface they open.
 const Index = lazy(() => import("./pages/Index"));
@@ -70,6 +73,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <NativeLifecycle />
           <ScrollToTop />
           <PageTracker />
           <Suspense fallback={<PageLoader />}>
@@ -82,8 +86,8 @@ const App = () => (
               <Route path="/order" element={<OrderPage />} />
               <Route path="/suivi/:orderId" element={<SuiviPage />} />
               <Route path="/admin/:slug" element={<AdminPage />} />
-              <Route path="/abonnement" element={<AbonnementPage />} />
-              <Route path="/choisir-plan" element={<ChoisirPlanPage />} />
+              <Route path="/abonnement" element={isNative() ? <NativeSubscription /> : <AbonnementPage />} />
+              <Route path="/choisir-plan" element={isNative() ? <NativeSubscription /> : <ChoisirPlanPage />} />
               <Route path="/abonnement-confirme" element={<AbonnementConfirmePage />} />
               <Route path="/super-admin" element={<SuperAdminPage />} />
               <Route path="/unsubscribe" element={<UnsubscribePage />} />

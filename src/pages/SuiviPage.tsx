@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
+import { EmailConfirmation } from '@/components/auth/EmailConfirmation';
+import { authRedirectUrl } from '@/lib/native';
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -101,6 +103,7 @@ const SuiviPage = () => {
   const confettiFiredRef = useRef(false);
   const [signupPassword, setSignupPassword] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
+  const [signupConfirmation, setSignupConfirmation] = useState(false);
   const [profileDismissed, setProfileDismissed] = useState(() => {
     try { return localStorage.getItem("cm_profile_dismissed") === "true"; } catch { return false; }
   });
@@ -431,7 +434,7 @@ const SuiviPage = () => {
                 <p className="text-xs text-gray-500 mt-0.5">{t("suivi.create_profile_desc")}</p>
               </div>
             </div>
-            <div className="space-y-3">
+            {signupConfirmation ? <EmailConfirmation email={order.customer_email} redirect={authRedirectUrl('/profil')} onChangeEmail={() => setSignupConfirmation(false)} /> : <div className="space-y-3">
               <Input
                 type="email"
                 value={order.customer_email}
@@ -454,13 +457,15 @@ const SuiviPage = () => {
                     }
                     setSignupLoading(true);
                     try {
-                      await signUp(
+                      const result = await signUp(
                         order.customer_email,
                         signupPassword,
                         order.customer_name,
                         order.customer_phone
                       );
-                      toast.success(t("suivi.profile_created"));
+                      setSignupPassword('');
+                      if (result === 'confirmation') setSignupConfirmation(true);
+                      else toast.success(t("suivi.profile_created"));
                     } catch (e: any) {
                       toast.error(e.message || t("suivi.signup_error"));
                     } finally {
@@ -484,7 +489,7 @@ const SuiviPage = () => {
                   {t("suivi.no_thanks")}
                 </Button>
               </div>
-            </div>
+            </div>}
           </div>
         )}
 

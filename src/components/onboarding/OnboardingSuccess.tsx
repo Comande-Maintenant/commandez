@@ -1,3 +1,4 @@
+import { publicAppUrl, shareRestaurant, isNative } from '@/lib/native';
 import { useState } from 'react';
 import { Check, Copy, ChevronDown, ChevronUp, Loader2, ExternalLink, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -33,10 +34,10 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
   const [promoLoading, setPromoLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
-  const publicUrl = `${window.location.origin}/${slug}`;
+  const publicUrl = `${publicAppUrl}/${slug}`;
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(publicUrl);
+    await shareRestaurant(slug, restaurantName);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -131,7 +132,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
         </Button>
       </Link>
 
-      <div className="pt-4 border-t border-border max-w-md mx-auto">
+      {!isNative() && <div className="pt-4 border-t border-border max-w-md mx-auto">
         <button
           onClick={() => setPromoOpen(!promoOpen)}
           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mx-auto"
@@ -175,7 +176,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
           {checkoutLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
           {t('onboarding.success.add_card_now')}
         </button>
-      </div>
+      </div>}
     </div>
   );
 }

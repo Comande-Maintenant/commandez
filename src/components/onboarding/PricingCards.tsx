@@ -3,13 +3,15 @@ import { Button } from '@/components/ui/button';
 import { getPricingPlans } from '@/services/subscription';
 import { useLanguage } from '@/context/LanguageContext';
 import type { SubscriptionPlan } from '@/types/onboarding';
+import { isNative } from '@/lib/native';
 
 interface PricingCardsProps {
   onSelect: (plan: SubscriptionPlan) => void;
   selected?: SubscriptionPlan;
+  disabled?: boolean;
 }
 
-export function PricingCards({ onSelect, selected }: PricingCardsProps) {
+export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps) {
   const { t } = useLanguage();
   const plans = getPricingPlans(t);
   const plan = plans[0];
@@ -35,27 +37,24 @@ export function PricingCards({ onSelect, selected }: PricingCardsProps) {
               ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
               : 'border-primary/40 bg-primary/5 hover:border-primary'
           }`}
-          onClick={() => onSelect('monthly')}
         >
           <h3 className="font-semibold text-foreground text-lg">{plan.name}</h3>
 
-          <div className="mt-3 flex items-baseline justify-center gap-1">
+          {!isNative() && <div className="mt-3 flex items-baseline justify-center gap-1">
             <span className="text-4xl font-bold text-primary">1&#8364;</span>
-            <span className="text-sm text-muted-foreground">/mois pendant 3 mois</span>
-          </div>
+            <span className="text-sm text-muted-foreground">{t('pricing.per_month_3')}</span>
+          </div>}
 
-          <p className="text-sm text-muted-foreground mt-2">
-            puis 29,99&#8364;/mois. Sans engagement.
-          </p>
+          {!isNative() && <p className="text-sm text-muted-foreground mt-2">{t('pricing.then_price_no_commitment')}</p>}
 
-          <Button
+          <Button disabled={disabled}
             className="w-full mt-5"
             onClick={(e) => {
               e.stopPropagation();
               onSelect('monthly');
             }}
           >
-            {selected === 'monthly' ? t('subscription.selected') : t('subscription.choose_this_plan')}
+            {t('onboarding.start_trial')}
           </Button>
         </div>
       </div>

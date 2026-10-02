@@ -34,6 +34,15 @@ test("Arabic changes document direction and preserves the catalogue", async ({
 test("a customer can configure a kebab and add it to the order", async ({
   page,
 }) => {
+  // Read the real public catalogue; never create a production order in this check.
+  const orderId = '20000000-0000-4000-8000-000000000001';
+  let placedOrder: Record<string, unknown> = {};
+  await page.route(url => url.pathname.endsWith('/rpc/place_order'), async route => {
+    const payload = route.request().postDataJSON();
+    placedOrder = { id: orderId, order_number: 1, status: 'new', created_at: new Date().toISOString(), customer_name: payload.p_customer_name, customer_phone: payload.p_customer_phone, customer_email: '', items: payload.p_items, total: payload.p_total, order_type: payload.p_order_type, restaurant: { name: 'Antalya Kebab', slug: 'demo', primary_color: '#22c55e', restaurant_phone: '', is_demo: true } };
+    await route.fulfill({ json: placedOrder });
+  });
+  await page.route(url => url.pathname.endsWith('/rpc/get_order_for_tracking'), async route => { await route.fulfill({ json: placedOrder }); });
   const runtimeErrors: string[] = [];
   page.on("pageerror", (error) => runtimeErrors.push(error.message));
   await page.goto("/demo?lang=en", { waitUntil: "networkidle" });
@@ -67,6 +76,7 @@ test("a customer can configure a kebab and add it to the order", async ({
   await page.getByRole("button", { name: /^Confirm -/ }).click();
 
   await expect(page).toHaveURL(/\/suivi\/[0-9a-f-]{36}$/);
+  expect((placedOrder.items as unknown[]).length).toBeGreaterThan(0);
   await expect(page.getByText(/Order|Commande/).first()).toBeVisible();
   expect(runtimeErrors).toEqual([]);
 });
@@ -83,6 +93,7 @@ test("the demo dashboard loads operational and menu views", async ({ page }) => 
 
   await page.addInitScript(() => {
     localStorage.setItem("cm_onboarding_done_antalya-kebab-moneteau", "true");
+    localStorage.setItem("cm_onboarding_done_demo", "true");
   });
   const response = await page.goto("/admin/demo?lang=en", { waitUntil: "networkidle" });
   expect(response?.ok()).toBe(true);
@@ -96,7 +107,6 @@ test("the demo dashboard loads operational and menu views", async ({ page }) => 
     : page.getByRole("button", { name: "Menu", exact: true }).first();
   await expect(menuButton).toBeVisible();
   await menuButton.click();
-  await expect(page.getByText("SANDWICHS", { exact: true })).toBeVisible();
-  await expect(page.getByText("Kebab", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/^(Kebab|Assiette composee)$/).first()).toBeVisible();
   expect(runtimeErrors).toEqual([]);
 });

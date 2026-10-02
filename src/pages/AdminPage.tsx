@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState, useEffect } from "react";
+import { isNative } from '@/lib/native';
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX, X, Clock } from "lucide-react";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
@@ -400,7 +401,7 @@ const AdminPage = () => {
           )}
 
           {/* Prospect banner */}
-          {(restaurant as any)?.account_status === "prospect" && (
+          {!isNative() && (restaurant as any)?.account_status === "prospect" && (
             <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-sm text-blue-900">
                 <p className="font-medium">Page de demonstration</p>

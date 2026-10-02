@@ -4,10 +4,11 @@ import {
   fetchCustomerProfile,
   upsertCustomerProfile,
   updateCustomerProfile as apiUpdateProfile,
-  deleteCustomerProfile as apiDeleteProfile,
   linkOrdersToUser,
   type CustomerProfile,
 } from "@/lib/api";
+import { registerCustomer, type RegistrationResult } from '@/services/account-registration';
+import { authRedirectUrl } from '@/lib/native';
 import type { User } from "@supabase/supabase-js";
 
 interface CustomerAuthContextValue {
@@ -15,7 +16,7 @@ interface CustomerAuthContextValue {
   profile: CustomerProfile | null;
   isLoggedIn: boolean;
   isLoading: boolean;
-  signUp: (email: string, password: string, name: string, phone?: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string, phone?: string) => Promise<RegistrationResult>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -39,7 +40,12 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
 
   const loadProfile = useCallback(async (u: User) => {
     try {
-      const p = await fetchCustomerProfile(u.id);
+      let p = await fetchCustomerProfile(u.id);
+      if (!p && u.email_confirmed_at && u.email) {
+        await upsertCustomerProfile({ id: u.id, email: u.email, name: u.user_metadata?.name || u.email.split('@')[0], phone: u.user_metadata?.phone || null });
+        await linkOrdersToUser(u.id, u.email, u.user_metadata?.phone).catch(() => {});
+        p = await fetchCustomerProfile(u.id);
+      }
       setProfile(p);
       if (p) {
         // Sync with cm_customer localStorage for compatibility
@@ -57,10 +63,10 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
 
   // Restore session on mount
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user && isCustomerUser(session.user)) {
         setUser(session.user);
-        loadProfile(session.user);
+        await loadProfile(session.user);
       }
       setIsLoading(false);
     });
@@ -68,10 +74,12 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user && isCustomerUser(session.user)) {
         setUser(session.user);
-        loadProfile(session.user);
+        setIsLoading(true);
+        setTimeout(() => { void loadProfile(session.user).finally(() => setIsLoading(false)); }, 0);
       } else {
         setUser(null);
         setProfile(null);
+        setIsLoading(false);
       }
     });
 
@@ -79,35 +87,13 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
   }, [isCustomerUser, loadProfile]);
 
   const signUp = useCallback(async (email: string, password: string, name: string, phone?: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { role: "customer", name, phone: phone || "" },
-      },
-    });
-    if (error) throw error;
-    if (!data.user) throw new Error("Inscription échouée");
-
-    // Create profile row
-    await upsertCustomerProfile({
-      id: data.user.id,
-      name,
-      email,
-      phone: phone || null,
-    });
-
-    // Link existing orders by email/phone
-    await linkOrdersToUser(data.user.id, email, phone).catch(() => {});
-
-    // Set state
-    setUser(data.user);
-    const p = await fetchCustomerProfile(data.user.id);
-    setProfile(p);
-
-    // Sync localStorage
-    localStorage.setItem("cm_customer", JSON.stringify({ name, phone: phone || "", email }));
-  }, []);
+    const result = await registerCustomer(email, password, name, phone || '', authRedirectUrl('/profil'));
+    if (result === 'ready') {
+      const { data: { user: confirmed } } = await supabase.auth.getUser();
+      if (confirmed) { setUser(confirmed); await loadProfile(confirmed); }
+    }
+    return result;
+  }, [loadProfile]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -134,7 +120,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const resetPassword = useCallback(async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: authRedirectUrl('/reinitialiser-mot-de-passe') });
     if (error) throw error;
   }, []);
 
@@ -156,7 +142,8 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
 
   const deleteAccount = useCallback(async () => {
     if (!user) return;
-    await apiDeleteProfile(user.id);
+    const { data, error } = await supabase.rpc('delete_own_account' as never, { p_confirmation: 'DELETE' } as never);
+    if (error || !(data as { deleted?: boolean })?.deleted) throw new Error('La suppression du compte a échoué. Réessayez.');
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);

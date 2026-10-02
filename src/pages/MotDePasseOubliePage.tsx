@@ -1,3 +1,4 @@
+import { authRedirectUrl } from '@/lib/native';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -29,7 +30,7 @@ const MotDePasseOubliePage = () => {
     setLoading(true);
     try {
       await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
+        redirectTo: authRedirectUrl('/reinitialiser-mot-de-passe'),
       });
     } catch {
       // Never reveal if email exists or not
@@ -45,7 +46,7 @@ const MotDePasseOubliePage = () => {
     setLoading(true);
     try {
       await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
+        redirectTo: authRedirectUrl('/reinitialiser-mot-de-passe'),
       });
     } catch {
       // Silent
@@ -105,7 +106,7 @@ const MotDePasseOubliePage = () => {
                     {loading ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : countdown > 0 ? (
-                      t('auth.reset.resend_countdown', { countdown })
+                      t('auth.reset.resend_countdown', { seconds: countdown })
                     ) : (
                       t('auth.reset.resend')
                     )}
