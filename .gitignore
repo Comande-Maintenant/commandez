@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+playwright-report/
+test-results/
 
 # Editor directories and files
 .vscode/*
@@ -25,3 +28,4 @@ dist-ssr
 
 # Supabase
 supabase/.temp/
+supabase/.branches/

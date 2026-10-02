@@ -190,11 +190,9 @@ export async function fetchCuisineStepTemplates(cuisineType: string): Promise<Db
 }
 
 export async function fetchRestaurantCuisineType(restaurantId: string): Promise<CuisineType> {
-  const { data } = await supabase
-    .from("restaurants")
-    .select("cuisine_type")
-    .eq("id", restaurantId)
-    .maybeSingle();
+  const { data } = await supabase.rpc("get_public_restaurant_by_id", {
+    p_id: restaurantId,
+  });
   return ((data as any)?.cuisine_type as CuisineType) ?? "generic";
 }
 

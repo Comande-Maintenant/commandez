@@ -1,94 +1,26 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const SUPABASE_URL = "https://rbqgsxhkccbhqdmdtxwr.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMTUxMDgsImV4cCI6MjA4Nzc5MTEwOH0.NC1DkzxoJGDsbqvvScUVFdrWfqVmyTBV3k6b2yolOeY";
-
-const APP_URL = "https://app.commandeici.com";
-
-// Cover images by cuisine type
-const COVER_IMAGES: Record<string, string> = {
-  kebab: `${APP_URL}/images/covers/kebab.jpg`,
-  pizza: `${APP_URL}/images/covers/pizza.jpg`,
-  burger: `${APP_URL}/images/covers/burger.jpg`,
-};
-const DEFAULT_COVER = `${APP_URL}/images/covers/default.jpg`;
-
-function getCoverImage(cuisine: string | null, cuisineType: string | null): string {
-  if (cuisineType && COVER_IMAGES[cuisineType]) return COVER_IMAGES[cuisineType];
-  const c = (cuisine || "").toLowerCase();
-  if (c.includes("pizza") || c.includes("italien")) return COVER_IMAGES.pizza;
-  if (c.includes("kebab") || c.includes("turc")) return COVER_IMAGES.kebab;
-  if (c.includes("burger")) return COVER_IMAGES.burger;
-  return DEFAULT_COVER;
-}
-
-function getCuisineEmoji(cuisineType: string | null): string {
-  const emojis: Record<string, string> = {
-    kebab: "🥙", pizza: "🍕", burger: "🍔", sushi: "🍣",
-    chinese: "🥡", indian: "🍛", creperie: "🥞", poke: "🥗",
-  };
-  return emojis[cuisineType || ""] || "🍽️";
-}
-
-Deno.serve(async (req) => {
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { escapeHtml } from '../_shared/html.ts';
+import { restaurantDocument } from '../_shared/restaurant-document.ts';
+const backend = () => createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
+Deno.serve(async req => {
   const url = new URL(req.url);
-  const slug = url.searchParams.get("slug");
-
-  if (!slug) {
-    return new Response("Missing slug", { status: 400 });
+  if (!['GET','HEAD'].includes(req.method)) return new Response('Method not allowed', { status: 405 });
+  const supabase = backend();
+  if (url.searchParams.get('format') === 'sitemap') {
+    const { data, error } = await supabase.rpc('list_public_restaurants');
+    if (error) return new Response('Unavailable', { status: 503 });
+    const xml = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${(data || []).map((row: { slug: string; updated_at: string }) => `<url><loc>https://app.commandeici.com/${escapeHtml(encodeURIComponent(row.slug))}</loc><lastmod>${new Date(row.updated_at).toISOString()}</lastmod></url>`).join('')}</urlset>`;
+    return new Response(xml, { headers: { 'content-type':'application/xml; charset=utf-8','cache-control':'public, max-age=300' } });
   }
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const { data: restaurant } = await supabase
-    .from("restaurants")
-    .select("name, city, address, cuisine, cuisine_type, image, cover_image, rating, categories")
-    .eq("slug", slug)
-    .maybeSingle();
-
-  if (!restaurant) {
-    // Redirect to app anyway
-    return Response.redirect(`${APP_URL}/${slug}`, 302);
-  }
-
-  const emoji = getCuisineEmoji(restaurant.cuisine_type);
-  const title = `${emoji} ${restaurant.name} - Commandez en ligne`;
-  const desc = restaurant.city
-    ? `Decouvrez la carte de ${restaurant.name} a ${restaurant.city} et commandez en ligne. ${restaurant.cuisine || ""}`
-    : `Decouvrez la carte de ${restaurant.name} et commandez en ligne.`;
-  const ogImage = restaurant.image || restaurant.cover_image || getCoverImage(restaurant.cuisine, restaurant.cuisine_type);
-  const pageUrl = `${APP_URL}/${slug}`;
-  const categories = (restaurant.categories || []).slice(0, 4).join(" · ");
-
-  const html = `<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>${title}</title>
-  <meta name="description" content="${desc}">
-  <meta property="og:title" content="${title}">
-  <meta property="og:description" content="${desc}${categories ? " | " + categories : ""}">
-  <meta property="og:image" content="${ogImage}">
-  <meta property="og:url" content="${pageUrl}">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="commandeici">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${title}">
-  <meta name="twitter:description" content="${desc}">
-  <meta name="twitter:image" content="${ogImage}">
-  <meta http-equiv="refresh" content="0;url=${pageUrl}">
-</head>
-<body>
-  <p>Redirection vers <a href="${pageUrl}">${restaurant.name}</a>...</p>
-</body>
-</html>`;
-
-  const body = new TextEncoder().encode(html);
-  return new Response(body, {
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=3600",
-    },
-  });
+  const slug = url.searchParams.get('slug');
+  if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length>170) return new Response('Invalid slug',{ status:400 });
+  const { data: restaurant, error } = await supabase.rpc('get_public_restaurant_by_slug', { p_slug: slug });
+  if (error) return new Response('Unavailable', { status: 503 });
+  if (!restaurant || restaurant.deactivated_at || (!restaurant.is_demo && restaurant.account_status !== 'active')) return new Response('Not found', { status: 404 });
+  const { data: items, error: menuError } = await supabase.from('menu_items').select('name,category,description,price').eq('restaurant_id',restaurant.id).eq('enabled',true).order('sort_order').limit(500);
+  if (menuError) return new Response('Unavailable', { status: 503 });
+  const document = restaurantDocument(restaurant, items || []);
+  const headers = { 'cache-control':'public, max-age=300','x-content-type-options':'nosniff' };
+  if (url.searchParams.get('format') === 'json') return new Response(JSON.stringify(document), { headers: { ...headers, 'content-type':'application/json; charset=utf-8' } });
+  return new Response(`<!doctype html><html lang="fr"><head><meta charset="UTF-8">${document.head}</head><body>${document.body}</body></html>`, { headers: { ...headers, 'content-type':'text/html; charset=utf-8' } });
 });

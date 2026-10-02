@@ -1,6 +1,9 @@
 import { useState, useMemo, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
+import { registerOwner } from '@/services/account-registration';
+import { EmailConfirmation } from '@/components/auth/EmailConfirmation';
+import { authRedirectUrl } from '@/lib/native';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
@@ -22,14 +25,11 @@ import { toast } from 'sonner';
 import { LanguageSelector } from '@/components/restaurant/LanguageSelector';
 import {
   createOwner,
-  createRestaurantFromOnboarding,
-  createMenuItemsFromAnalysis,
+  completeOnboarding,
   generateSlug,
-  seedCuisineDefaults,
 } from '@/services/onboarding';
 import { getPlaceDetails } from '@/services/google-places';
 import { processReferral } from '@/services/referral';
-import { updateRestaurant } from '@/lib/api';
 import type { ParsedScheduleDay } from '@/utils/parse-google-hours';
 import type {
   GooglePlaceResult,
@@ -76,19 +76,11 @@ const InscriptionPage = () => {
   const refCode = useMemo(() => searchParams.get('ref') || '', [searchParams]);
   const [step, setStep] = useState(1);
 
-  // If user is already authenticated (e.g. redirected from /connexion), skip to step 2
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setStep(2);
-      }
-    });
-  }, []);
-
   // Step 1: Account
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [confirmationEmail, setConfirmationEmail] = useState(() => (() => { try { return sessionStorage.getItem('commandeici_pending_owner') || ''; } catch { return ''; } })());
   const [accountError, setAccountError] = useState('');
   const [accountLoading, setAccountLoading] = useState(false);
 
@@ -117,6 +109,59 @@ const InscriptionPage = () => {
 
   // Final creation loading
   const [creating, setCreating] = useState(false);
+  const [creationKey] = useState(() => {
+    try {
+      const existing = localStorage.getItem('commandeici_creation_key');
+      const key = existing || crypto.randomUUID();
+      localStorage.setItem('commandeici_creation_key', key);
+      return key;
+    } catch { return crypto.randomUUID(); }
+  });
+
+  // Auth callbacks run outside the auth event lock. Confirmation never loses the draft.
+  useEffect(() => {
+    let active = true;
+    const resume = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (!active || error || !user) return;
+      try {
+        await createOwner(user.id, user.email || '', user.user_metadata?.phone || '');
+        if (!active) return;
+        setEmail(user.email || '');
+        setPhone(user.user_metadata?.phone || '');
+        setConfirmationEmail('');
+        sessionStorage.removeItem('commandeici_pending_owner');
+        try {
+          const saved = JSON.parse(localStorage.getItem('commandeici_onboarding_draft') || 'null');
+          if (saved?.email === user.email && saved.restaurantData) {
+            setRestaurantData(saved.restaurantData);
+            setMenuCategories(saved.menuCategories || []);
+            setPrimaryColor(saved.primaryColor || '#000000');
+            setBgColor(saved.bgColor || '#ffffff');
+            setDescription(saved.description || '');
+            setLogoUrl(saved.logoUrl || '');
+            setStep(Math.max(2, Math.min(5, saved.step || 2)));
+            return;
+          }
+        } catch { /* An invalid or full browser store cannot block registration. */ }
+        setStep(current => Math.max(current, 2));
+      } catch {
+        if (active) setAccountError(t('auth.signup.signup_error'));
+      }
+    };
+    void resume();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) setTimeout(() => { if (active) void resume(); }, 0);
+    });
+    return () => { active = false; subscription.unsubscribe(); };
+  }, [t]);
+
+  useEffect(() => {
+    if (step < 2 || step > 5 || !email) return;
+    try {
+      localStorage.setItem('commandeici_onboarding_draft', JSON.stringify({ email, step, restaurantData, menuCategories, primaryColor, bgColor, description, logoUrl }));
+    } catch { /* Storage quota does not prevent continuing in this tab. */ }
+  }, [email, step, restaurantData, menuCategories, primaryColor, bgColor, description, logoUrl]);
 
   // ---- Step 1: Create account ----
   const handleSignUp = async () => {
@@ -131,16 +176,15 @@ const InscriptionPage = () => {
     }
     setAccountLoading(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { phone } },
-      });
-      if (error) throw error;
-      if (data.user) {
-        await createOwner(data.user.id, email, phone);
+      const result = await registerOwner(email, password, phone, authRedirectUrl('/inscription'));
+      setPassword('');
+      if (result === 'confirmation') {
+        setConfirmationEmail(email.trim());
+        sessionStorage.setItem('commandeici_pending_owner', email.trim());
+      } else {
+        setEmail(email.trim());
+        setStep(2);
       }
-      setStep(2);
     } catch (err: any) {
       const msg = err.message || '';
       if (msg.includes('already registered') || msg.includes('already been registered')) {
@@ -213,6 +257,7 @@ const InscriptionPage = () => {
 
   // ---- Step 5: Create restaurant then redirect to plan selection ----
   const handlePlanSelect = async (plan: SubscriptionPlan) => {
+    if (creating || !restaurantData) return;
     setSelectedPlan(plan);
     setCreating(true);
 
@@ -220,9 +265,10 @@ const InscriptionPage = () => {
       const slug = await generateSlug(restaurantData?.name ?? 'restaurant', restaurantData?.city);
 
       // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) throw new Error(t('auth.email_not_confirmed'));
 
-      const restaurant = await createRestaurantFromOnboarding({
+      const restaurant = await completeOnboarding(creationKey, {
         name: restaurantData?.name ?? '',
         slug,
         address: restaurantData?.address,
@@ -239,57 +285,25 @@ const InscriptionPage = () => {
         primary_color: primaryColor,
         bg_color: bgColor,
         subscription_plan: plan,
-        owner_id: user?.id,
         preferred_language: language,
-      });
-
-      // Create menu items if any
-      if (menuCategories.length > 0) {
-        await createMenuItemsFromAnalysis(restaurant.id, menuCategories);
-      }
-
-      // Seed cuisine-specific defaults (garnitures, sauces, config)
-      await seedCuisineDefaults(restaurant.id, restaurantData?.cuisine_type || 'generic');
-
-      // Store parsed schedule JSON + set auto mode
-      if (restaurantData?.useAutoHours && restaurantData.parsedSchedule) {
-        await updateRestaurant(restaurant.id, {
-          schedule: restaurantData.parsedSchedule,
-          availability_mode: 'auto',
-        } as any);
-      }
+        schedule: restaurantData?.useAutoHours ? restaurantData.parsedSchedule : null,
+      }, menuCategories);
 
       // Process referral code if present
       if (refCode) {
         await processReferral(restaurant.id, refCode).catch(() => {});
       }
 
-      // Insert trial subscription (30 days free, no card required)
-      const trialStart = new Date();
-      const trialEnd = new Date();
-      trialEnd.setDate(trialEnd.getDate() + 30);
-      await supabase.from('subscriptions').insert({
-        restaurant_id: restaurant.id,
-        status: 'trial',
-        plan: plan === 'none' ? 'monthly' : plan,
-        billing_day: 15,
-        trial_start: trialStart.toISOString(),
-        trial_end: trialEnd.toISOString(),
-      });
-
-      // Keep legacy restaurants row in sync so SubscriptionGate fallback works
-      await updateRestaurant(restaurant.id, {
-        subscription_status: 'trial',
-        trial_end_date: trialEnd.toISOString(),
-      } as any);
-
-      // Send welcome email (fire-and-forget, non-blocking)
-      supabase.functions.invoke("send-welcome-email", {
-        body: { restaurantName: restaurantData?.name ?? '', slug, email },
-      }).catch((err) => console.warn("[welcome-email] Failed to send:", err));
-
-      setCreatedSlug(slug);
-      setCreatedName(restaurantData?.name ?? '');
+      // Receipt email is optional; a completed creation must not be retried for email errors.
+      if (restaurant.created) {
+        void supabase.functions.invoke('send-welcome-email', {
+          body: { restaurantName: restaurant.name, slug: restaurant.slug, email: user.email },
+        }).catch(() => {});
+      }
+      localStorage.removeItem('commandeici_onboarding_draft');
+      localStorage.removeItem('commandeici_creation_key');
+      setCreatedSlug(restaurant.slug);
+      setCreatedName(restaurant.name);
       setCreatedRestaurantId(restaurant.id);
       setStep(6);
     } catch (err: any) {
@@ -310,7 +324,7 @@ const InscriptionPage = () => {
           </a>
           <div className="flex items-center gap-3">
             {step < 6 && (
-              <span className="text-xs text-muted-foreground">{t('auth.signup.step_counter', { step })}</span>
+              <span className="text-xs text-muted-foreground">{t('auth.signup.step_counter', { current: step, total: 6 })}</span>
             )}
             <LanguageSelector />
           </div>
@@ -339,6 +353,7 @@ const InscriptionPage = () => {
           {step === 1 && (
             <motion.div key="step1" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6 space-y-4">
+              {confirmationEmail ? <EmailConfirmation email={confirmationEmail} redirect={authRedirectUrl('/inscription')} onChangeEmail={() => { setConfirmationEmail(''); sessionStorage.removeItem('commandeici_pending_owner'); }} /> : <form className="space-y-4" onSubmit={e => { e.preventDefault(); void handleSignUp(); }}>
                 <h2 className="text-xl font-bold text-foreground">{t('auth.signup.create_account')}</h2>
                 <p className="text-sm text-muted-foreground">
                   {t('auth.signup.create_desc')}
@@ -349,6 +364,7 @@ const InscriptionPage = () => {
                   <Input
                     id="email"
                     type="email"
+                    required autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t('auth.email_placeholder')}
@@ -360,6 +376,7 @@ const InscriptionPage = () => {
                   <Input
                     id="password"
                     type="password"
+                    required minLength={6} autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={t('auth.signup.password_placeholder')}
@@ -371,6 +388,7 @@ const InscriptionPage = () => {
                   <Input
                     id="phone"
                     type="tel"
+                    autoComplete="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder={t('auth.signup.phone_placeholder')}
@@ -382,7 +400,7 @@ const InscriptionPage = () => {
                 )}
 
                 <Button
-                  onClick={handleSignUp}
+                  type="submit"
                   disabled={accountLoading}
                   className="w-full"
                 >
@@ -395,6 +413,7 @@ const InscriptionPage = () => {
                     {t('auth.signup.login')}
                   </Link>
                 </p>
+              </form>}
               </div>
             </motion.div>
           )}
@@ -548,7 +567,7 @@ const InscriptionPage = () => {
 
           {/* STEP 5: Pricing */}
           {step === 5 && (
-            <motion.div key="step5" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }} className="max-w-4xl -mx-[calc((100vw-32rem)/2+1rem)] sm:mx-0">
+            <motion.div key="step5" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }} className="w-full">
               <div className="bg-card rounded-xl border border-border p-6">
                 <h2 className="text-xl font-bold text-foreground mb-2">{t('auth.signup.choose_plan')}</h2>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -557,6 +576,7 @@ const InscriptionPage = () => {
                 <PricingCards
                   onSelect={handlePlanSelect}
                   selected={selectedPlan}
+                  disabled={creating}
                 />
                 {creating && (
                   <div className="text-center mt-4">

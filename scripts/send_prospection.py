@@ -13,6 +13,8 @@ Usage:
 import argparse
 import base64
 import csv
+import hashlib
+import hmac
 import json
 import os
 import sys
@@ -30,8 +32,9 @@ REPLY_TO = "contact@commandeici.com"
 
 PRIORITY_CITIES = ["Dijon"]
 
-SUPABASE_URL = "https://rbqgsxhkccbhqdmdtxwr.supabase.co"
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJicWdzeGhrY2NiaHFkbWR0eHdyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjIxNTEwOCwiZXhwIjoyMDg3NzkxMTA4fQ.XICYwfF3oEYFG5M-32ltu-D8QI3NlSPwLxBcsl_64No")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+PROSPECTION_TOKEN_SECRET = os.environ.get("PROSPECTION_TOKEN_SECRET", "")
 
 JUNK_PATTERNS = [
     ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".js",
@@ -123,7 +126,18 @@ def get_accroche(resto_type: str) -> str:
 
 def _unsub_link(email: str) -> str:
     """Build the unsubscribe URL for a given email."""
-    token = base64.urlsafe_b64encode(email.encode()).decode()
+    if len(PROSPECTION_TOKEN_SECRET) < 32:
+        raise RuntimeError("PROSPECTION_TOKEN_SECRET must contain at least 32 characters")
+    payload = json.dumps({
+        "email": email.lower().strip(),
+        "purpose": "prospection-unsubscribe",
+        "exp": int(time.time() * 1000) + 365 * 24 * 60 * 60 * 1000,
+    }, separators=(",", ":")).encode()
+    encoded = base64.urlsafe_b64encode(payload).decode().rstrip("=")
+    signature = hmac.new(
+        PROSPECTION_TOKEN_SECRET.encode(), encoded.encode(), hashlib.sha256,
+    ).digest()
+    token = f"{encoded}.{base64.urlsafe_b64encode(signature).decode().rstrip('=')}"
     return f"{SUPABASE_URL}/functions/v1/prospection-unsubscribe?t={token}"
 
 

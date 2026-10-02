@@ -3,9 +3,13 @@ import type { AnalyzedMenu } from '@/types/onboarding';
 
 export async function analyzeMenuImages(files: File[]): Promise<AnalyzedMenu> {
   const imageUrls: string[] = [];
+  const uploadedPaths: string[] = [];
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Authentication required');
 
   for (const file of files) {
-    const fileName = `${Date.now()}-${file.name}`;
+    const extension = file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+    const fileName = `${user.id}/${crypto.randomUUID()}.${extension}`;
     const { error: uploadError } = await supabase.storage
       .from('menu-uploads')
       .upload(fileName, file);
@@ -15,12 +19,13 @@ export async function analyzeMenuImages(files: File[]): Promise<AnalyzedMenu> {
       continue;
     }
 
-    const { data: urlData } = supabase.storage
+    uploadedPaths.push(fileName);
+    const { data: urlData } = await supabase.storage
       .from('menu-uploads')
-      .getPublicUrl(fileName);
+      .createSignedUrl(fileName, 15 * 60);
 
-    if (urlData?.publicUrl) {
-      imageUrls.push(urlData.publicUrl);
+    if (urlData?.signedUrl) {
+      imageUrls.push(urlData.signedUrl);
     }
   }
 
@@ -28,11 +33,15 @@ export async function analyzeMenuImages(files: File[]): Promise<AnalyzedMenu> {
     throw new Error('No images uploaded successfully');
   }
 
-  const { data, error } = await supabase.functions.invoke('analyze-menu', {
-    body: { imageUrls },
-  });
-
-  if (error) throw error;
-
-  return { categories: data?.categories ?? [] };
+  try {
+    const { data, error } = await supabase.functions.invoke('analyze-menu', {
+      body: { imageUrls },
+    });
+    if (error) throw error;
+    return { categories: data?.categories ?? [] };
+  } finally {
+    if (uploadedPaths.length > 0) {
+      await supabase.storage.from('menu-uploads').remove(uploadedPaths);
+    }
+  }
 }

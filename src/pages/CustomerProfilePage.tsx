@@ -47,6 +47,7 @@ const CustomerProfilePage = () => {
   const [editPhone, setEditPhone] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
   const [resetModalOpen, setResetModalOpen] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   // Redirect if not logged in
   useEffect(() => {
@@ -96,6 +97,7 @@ const CustomerProfilePage = () => {
   };
 
   const handleDeleteAccount = async () => {
+    if (deleteConfirmation !== 'DELETE') return;
     try {
       await deleteAccount();
       toast.success(t("client.profile_deleted"));
@@ -271,7 +273,7 @@ const CustomerProfilePage = () => {
             <LogOut className="h-4 w-4 mr-2" />
             {t("client.logout")}
           </Button>
-          <AlertDialog>
+          <AlertDialog onOpenChange={() => setDeleteConfirmation('')}>
             <AlertDialogTrigger asChild>
               <Button variant="ghost" className="w-full h-11 text-sm justify-start text-red-600 hover:text-red-700 hover:bg-red-50">
                 <Trash2 className="h-4 w-4 mr-2" />
@@ -285,9 +287,10 @@ const CustomerProfilePage = () => {
                   {t("client.delete_confirm_desc")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
+              <Input aria-label={t("account.confirm")} placeholder="DELETE" value={deleteConfirmation} onChange={event => setDeleteConfirmation(event.target.value)} autoComplete="off" />
               <AlertDialogFooter>
                 <AlertDialogCancel>{t("client.cancel")}</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700">
+                <AlertDialogAction disabled={deleteConfirmation !== 'DELETE'} onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700">
                   {t("cart.remove")}
                 </AlertDialogAction>
               </AlertDialogFooter>

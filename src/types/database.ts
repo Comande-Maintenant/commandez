@@ -85,6 +85,21 @@ export interface DbRestaurant {
   is_demo?: boolean;
   business_type?: string;
   account_status?: string;
+  owner_id?: string | null;
+}
+
+export interface DbTablet {
+  id: string;
+  restaurant_id: string;
+  serial_number: string;
+  name: string;
+  usage_type: "cuisine" | "caisse" | "service_client" | "autre";
+  status: "active" | "inactive" | "maintenance";
+  notes: string;
+  activated_at: string | null;
+  deactivated_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface DbMenuItem {

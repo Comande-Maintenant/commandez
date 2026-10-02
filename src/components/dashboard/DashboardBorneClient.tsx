@@ -1,3 +1,4 @@
+import { publicAppUrl } from '@/lib/native';
 import { useState, useEffect, useCallback } from "react";
 import { Copy, Check, Tablet, Settings2, BookOpen } from "lucide-react";
 import QRCode from "qrcode";
@@ -32,7 +33,7 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
 
   // Build the kiosk URL dynamically based on config
   const baseUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/${restaurant.slug}?kiosk=true`
+    ? `${publicAppUrl}/${restaurant.slug}?kiosk=true`
     : "";
 
   const kioskUrl = (() => {
@@ -42,7 +43,7 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
     if (askTable) params.set("table", "ask");
     if (defaultPayment !== "counter") params.set("payment", defaultPayment);
     if (timeout !== "60") params.set("timeout", timeout);
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const origin = typeof window !== "undefined" ? publicAppUrl : "";
     return `${origin}/${restaurant.slug}?${params.toString()}`;
   })();
 

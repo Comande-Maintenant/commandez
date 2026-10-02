@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
+import { isNative, nativeSessionStorage } from '@/lib/native';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -19,8 +20,9 @@ const cookieStorage = {
 };
 
 // Use cookie storage on commandeici.com domain, localStorage for local dev
-const isCommandeiciDomain = typeof window !== 'undefined' && window.location.hostname.endsWith('commandeici.com');
-const storage = isCommandeiciDomain ? cookieStorage : localStorage;
+const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+const isCommandeiciDomain = hostname === 'commandeici.com' || hostname.endsWith('.commandeici.com');
+const storage = isNative() ? nativeSessionStorage : isCommandeiciDomain ? cookieStorage : localStorage;
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
@@ -28,5 +30,6 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     persistSession: true,
     autoRefreshToken: true,
     storageKey: 'commandeici_auth',
+    flowType: isNative() ? 'pkce' : 'implicit',
   },
 });

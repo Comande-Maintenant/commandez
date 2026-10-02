@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, AlertTriangle, Clock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { isNative } from '@/lib/native';
 
 interface Props {
   restaurantId: string;
@@ -35,6 +36,7 @@ export function SubscriptionGate({ restaurantId, children }: Props) {
 
   useEffect(() => {
     async function check() {
+      if (isNative()) { setLoading(false); return; }
       // Query new subscriptions table
       const { data: sub } = await supabase
         .from("subscriptions")
@@ -64,6 +66,7 @@ export function SubscriptionGate({ restaurantId, children }: Props) {
     check();
   }, [restaurantId]);
 
+  if (isNative()) return <>{children}</>;
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">

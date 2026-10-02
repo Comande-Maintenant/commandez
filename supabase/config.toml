@@ -1,34 +1,81 @@
-project_id = "rbqgsxhkccbhqdmdtxwr"
+project_id = "commandeici-recovery-local"
+
+# Dedicated local ports keep this recovery environment isolated from the
+# other Supabase stack already running on the workstation.
+[api]
+port = 55321
+
+[db]
+port = 55322
+shadow_port = 55320
+
+[studio]
+port = 55323
+
+[local_smtp]
+port = 55324
+
+# Analytics is not part of CommandeIci's application contract. Disabling it
+# avoids mounting the host Docker socket into the local logging sidecar.
+[analytics]
+enabled = false
 
 [functions.send-email]
-verify_jwt = false
+verify_jwt = true
+entrypoint = "./functions/send-email/index.ts"
 
 [functions.send-welcome-email]
-verify_jwt = false
+verify_jwt = true
+entrypoint = "./functions/send-welcome-email/index.ts"
 
 [functions.trial-reminders]
 verify_jwt = false
+entrypoint = "./functions/trial-reminders/index.ts"
 
 [functions.shopify-webhooks]
 verify_jwt = false
+entrypoint = "./functions/shopify-webhooks/index.ts"
 
 [functions.validate-promo]
-verify_jwt = false
+verify_jwt = true
+entrypoint = "./functions/validate-promo/index.ts"
 
 [functions.unsubscribe]
 verify_jwt = false
+entrypoint = "./functions/unsubscribe/index.ts"
 
 [functions.prospection-webhook]
 verify_jwt = false
+entrypoint = "./functions/prospection-webhook/index.ts"
 
 [functions.prospection-unsubscribe]
 verify_jwt = false
+entrypoint = "./functions/prospection-unsubscribe/index.ts"
 
 [functions.google-places]
 verify_jwt = false
+entrypoint = "./functions/google-places/index.ts"
 
 [functions.convert-prospect]
-verify_jwt = false
+verify_jwt = true
+entrypoint = "./functions/convert-prospect/index.ts"
 
 [functions.analyze-menu]
+verify_jwt = true
+entrypoint = "./functions/analyze-menu/index.ts"
+
+[functions.stripe-checkout]
+verify_jwt = true
+entrypoint = "./functions/stripe-checkout/index.ts"
+
+[functions.stripe-webhooks]
 verify_jwt = false
+entrypoint = "./functions/stripe-webhooks/index.ts"
+
+[functions.og-restaurant]
+verify_jwt = false
+entrypoint = "./functions/og-restaurant/index.ts"
+
+[functions.photo-upload]
+verify_jwt = false
+entrypoint = "./functions/photo-upload/index.ts"

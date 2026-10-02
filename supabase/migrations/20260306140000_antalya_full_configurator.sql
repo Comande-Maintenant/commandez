@@ -34,6 +34,39 @@ UPDATE cuisine_step_templates SET sort_order = 10 WHERE cuisine_type = 'kebab' A
 -- ============================================================
 -- 2. Antalya Kebab demo restaurant data
 -- ============================================================
+-- The live project already contained this tenant when the original migration
+-- ran. Seed its minimal canonical row so a clean rebuild produces the same
+-- public demo surface before attaching the configurable catalogue.
+INSERT INTO restaurants (
+  id,
+  slug,
+  name,
+  description,
+  cuisine,
+  cuisine_type,
+  address,
+  city,
+  categories,
+  is_demo,
+  is_open,
+  is_accepting_orders
+)
+VALUES (
+  '769f54f9-09a6-40a9-a490-26597a717646',
+  'antalya-kebab-moneteau',
+  'Antalya Kebab',
+  'Restaurant de démonstration CommandeIci',
+  'Kebab',
+  'kebab',
+  'Adresse de démonstration',
+  'Monéteau',
+  ARRAY['SANDWICHS', 'ASSIETTES', 'DIVERS']::TEXT[],
+  TRUE,
+  TRUE,
+  TRUE
+)
+ON CONFLICT (id) DO NOTHING;
+
 DO $$
 DECLARE
   rid uuid := '769f54f9-09a6-40a9-a490-26597a717646';

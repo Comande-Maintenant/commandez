@@ -1,0 +1,23 @@
+BEGIN;
+CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA extensions;
+SELECT extensions.plan(5);
+INSERT INTO auth.users(id,email,email_confirmed_at) VALUES
+('90000000-0000-0000-0000-000000000001','sitemap@example.test',now());
+SELECT set_config('request.jwt.claim.sub','90000000-0000-0000-0000-000000000001',true);
+SELECT public.complete_onboarding('90000000-0000-0000-0000-000000000011','{"name":"Public","slug":"sitemap-public"}','[{"name":"Pizza","category":"Pizzas","price":12}]','{}');
+SELECT public.complete_onboarding('90000000-0000-0000-0000-000000000012','{"name":"Empty","slug":"sitemap-empty"}','[]','{}');
+SELECT public.complete_onboarding('90000000-0000-0000-0000-000000000013','{"name":"Demo","slug":"sitemap-demo"}','[{"name":"Pizza","category":"Pizzas","price":12}]','{}');
+SELECT public.complete_onboarding('90000000-0000-0000-0000-000000000014','{"name":"Closed","slug":"sitemap-closed"}','[{"name":"Pizza","category":"Pizzas","price":12}]','{}');
+UPDATE restaurants SET is_demo=true WHERE slug='sitemap-demo';
+UPDATE restaurants SET deactivated_at=now() WHERE slug='sitemap-closed';
+SELECT extensions.is((SELECT count(*)::int FROM list_public_restaurants() WHERE slug='sitemap-public'),1,'active owned page with menu is listed');
+SELECT extensions.is((SELECT count(*)::int FROM list_public_restaurants() WHERE slug IN ('sitemap-empty','sitemap-demo','sitemap-closed')),0,'empty, demonstration and deactivated pages excluded');
+SELECT extensions.is((SELECT count(*)::int FROM jsonb_object_keys((SELECT to_jsonb(p) FROM list_public_restaurants() p WHERE slug='sitemap-public'))),2,'only slug and update date are public');
+SELECT extensions.ok(has_function_privilege('anon','public.list_public_restaurants()','EXECUTE'),'anonymous sitemap access granted');
+SET LOCAL ROLE anon;
+SELECT slug AS anonymous_slug FROM list_public_restaurants() WHERE slug='sitemap-public';
+RESET ROLE;
+UPDATE menu_items SET enabled=false WHERE restaurant_id=(SELECT id FROM restaurants WHERE slug='sitemap-public');
+SELECT extensions.is((SELECT count(*)::int FROM list_public_restaurants() WHERE slug='sitemap-public'),0,'disabled menu removes page from sitemap');
+SELECT * FROM extensions.finish();
+ROLLBACK;

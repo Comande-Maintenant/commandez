@@ -29,7 +29,7 @@ const Index = () => {
         }
       }
       setChecking(false);
-    });
+    }).catch(() => setChecking(false));
   }, [navigate, t]);
 
   if (checking) {

@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const COOKIE_DOMAIN = ".commandeici.com";
-const isCommandeiciDomain = typeof window !== "undefined" && window.location.hostname.endsWith("commandeici.com");
+const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+const isCommandeiciDomain = hostname === 'commandeici.com' || hostname.endsWith('.commandeici.com');
 
 function hasConsent(): boolean {
   if (typeof document === "undefined") return false;

@@ -14,11 +14,7 @@ const ConnexionPage = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const STATS = [
-    { icon: '\uD83D\uDCB0', value: '+12 400\u20AC', label: t('auth.stats_saved') },
-    { icon: '\uD83D\uDCE6', value: '1 847', label: t('auth.stats_orders') },
-    { icon: '\uD83C\uDFEA', value: '+50', label: t('auth.stats_trust') },
-  ];
+
 
   const FIRST_LOGIN_STEPS = [
     t('auth.step_create'),
@@ -66,7 +62,7 @@ const ConnexionPage = () => {
       if (authError) throw authError;
 
       // Redirect if query param
-      if (redirectTo) {
+      if (redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//') && !redirectTo.includes('\\')) {
         navigate(redirectTo);
         return;
       }
@@ -155,22 +151,6 @@ const ConnexionPage = () => {
               <br />
               {t('auth.tagline_margins')}
             </h1>
-          </div>
-
-          {/* Middle: stats */}
-          <div className="relative z-10 space-y-6">
-            <p className="text-sm font-medium text-white/60 uppercase tracking-wider">
-              {t('auth.current_stats')}
-            </p>
-            {STATS.map((stat) => (
-              <div key={stat.value} className="flex items-start gap-3">
-                <span className="text-2xl">{stat.icon}</span>
-                <div>
-                  <p className="text-xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-white/70">{stat.label}</p>
-                </div>
-              </div>
-            ))}
           </div>
 
           {/* Bottom: testimonial */}
