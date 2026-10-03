@@ -37,8 +37,8 @@ final class CommandeIciUITests: XCTestCase {
         png.tap()
         XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.otherElements.matching(NSPredicate(format: "label CONTAINS 'Image PNG'")).firstMatch.exists)
-        if let more = app.cells.matching(identifier: "Plus").allElementsBoundByIndex.last { more.tap() }
         let save = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'Fichiers' OR label CONTAINS[c] 'Save to Files'")).firstMatch
+        if !save.isHittable { app.otherElements["ActivityListView"].swipeUp() }
         XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "QR PNG partage iOS"; shot.lifetime = .keepAlways; add(shot)
     }
