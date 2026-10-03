@@ -1,3 +1,4 @@
+import { suspendNativePushBeforeSignOut } from '@/services/native-push-client';
 import { useState, useEffect, useMemo } from "react";
 import { DeleteAccountButton } from '@/components/auth/DeleteAccountButton';
 import { useLanguage } from "@/context/LanguageContext";
@@ -58,6 +59,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
     { id: "apple_google_pay", label: t('dashboard.settings.apple_google_pay') },
   ], [t]);
 
+  const [loggingOut, setLoggingOut] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isAccepting, setIsAccepting] = useState(restaurant.is_accepting_orders);
   const [availabilityMode, setAvailabilityMode] = useState(restaurant.availability_mode || "manual");
@@ -145,8 +147,21 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
 
   const handleLogout = async () => {
     if (isDemo) { window.location.href = "/"; return; }
-    await supabase.auth.signOut();
-    window.location.href = "/";
+    if (loggingOut) return;
+    setLoggingOut(true);
+    try {
+      await suspendNativePushBeforeSignOut();
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError) throw authError;
+      if (data.user?.id !== restaurant.owner_id) return;
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      window.location.href = "/";
+    } catch {
+      toast.error(t('auth.generic_error'));
+    } finally {
+      setLoggingOut(false);
+    }
   };
 
   const [deactivateConfirm, setDeactivateConfirm] = useState("");
@@ -446,7 +461,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
             </button>
           </div>
 
-          <Button variant="outline" className="w-full rounded-xl gap-2" onClick={handleLogout}>
+          <Button variant="outline" className="w-full rounded-xl gap-2" onClick={handleLogout} disabled={loggingOut}>
             <LogOut className="h-4 w-4" />{t('dashboard.settings.logout')}
           </Button>
         </div>

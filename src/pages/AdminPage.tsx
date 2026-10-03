@@ -1,3 +1,4 @@
+import { NativeOrderNotifications } from '@/components/NativeOrderNotifications';
 import { lazy, Suspense, useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX, X, Clock } from "lucide-react";
@@ -383,6 +384,7 @@ const AdminPage = () => {
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
+          {!isDemo && <NativeOrderNotifications ownerUserId={restaurant.owner_id} />}
           {/* Audio unlock banner for mobile */}
           {isOpsView(activeView) && !sound.audioUnlocked && (
             <button

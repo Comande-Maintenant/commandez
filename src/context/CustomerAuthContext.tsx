@@ -8,6 +8,7 @@ import {
   type CustomerProfile,
 } from "@/lib/api";
 import { registerCustomer, type RegistrationResult } from '@/services/account-registration';
+import { suspendNativePushBeforeSignOut } from '@/services/native-push-client';
 import { authRedirectUrl } from '@/lib/native';
 import type { User } from "@supabase/supabase-js";
 
@@ -131,7 +132,10 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
     // Check not an owner
     const role = data.user.user_metadata?.role;
     if (role === "owner" || data.user.user_metadata?.is_owner) {
-      await supabase.auth.signOut();
+      await suspendNativePushBeforeSignOut();
+      if (authUserIdRef.current !== data.user.id) return;
+      const { error: logoutError } = await supabase.auth.signOut();
+      if (logoutError) throw logoutError;
       throw new Error("Ce compte est un compte restaurateur. Utilisez la page admin.");
     }
 
@@ -140,10 +144,15 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
   }, [beginSession, loadProfile]);
 
   const signOut = useCallback(async () => {
-    beginSession(null);
-    try { localStorage.removeItem("cm_customer"); } catch { /* preferences are optional */ }
+    const leavingUserId = authUserIdRef.current;
+    await suspendNativePushBeforeSignOut();
+    // A newer account may arrive while the device cleanup is in flight.
+    if (authUserIdRef.current !== leavingUserId) return;
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+    if (authUserIdRef.current && authUserIdRef.current !== leavingUserId) return;
+    beginSession(null);
+    try { localStorage.removeItem("cm_customer"); } catch { /* preferences are optional */ }
   }, [beginSession]);
 
   const resetPassword = useCallback(async (email: string) => {
@@ -171,6 +180,8 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
 
   const deleteAccount = useCallback(async () => {
     if (!user) return;
+    await suspendNativePushBeforeSignOut();
+    if (currentUserIdRef.current !== user.id) return;
     const { data, error } = await supabase.rpc('delete_own_account' as never, { p_confirmation: 'DELETE' } as never);
     if (error || !(data as { deleted?: boolean })?.deleted) throw new Error('La suppression du compte a échoué. Réessayez.');
     if (currentUserIdRef.current !== user.id) return;
