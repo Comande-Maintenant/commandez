@@ -65,7 +65,7 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
           </button>
         </SheetTrigger>
       )}
-      <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
+      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 [&>button]:top-[calc(1rem+env(safe-area-inset-top,0px))] [&>button]:min-h-11 [&>button]:min-w-11" style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
         <SheetHeader className="p-4 border-b border-border">
           <SheetTitle className="text-lg font-semibold">
             {t("cart.your_cart")} {totalItems > 0 && `(${totalItems})`}
@@ -79,7 +79,7 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-3 p-3 bg-secondary/50 rounded-xl">
                   <div className="flex-1 min-w-0">

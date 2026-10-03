@@ -113,4 +113,42 @@ final class CommandeIciUITests: XCTestCase {
         shot.lifetime = .keepAlways
         add(shot)
     }
+
+    func testNativeCustomerCartClearsHomeIndicator() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
+        app.launchArguments = []
+        app.launch()
+        let kebab = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch
+        XCTAssertTrue(kebab.waitForExistence(timeout: 15), app.debugDescription)
+        if !kebab.isHittable { app.swipeUp() }
+        kebab.tap()
+        let full = app.buttons["Complet"].firstMatch
+        XCTAssertTrue(full.waitForExistence(timeout: 5), app.debugDescription)
+        full.tap()
+        for _ in 0..<3 {
+            let next = app.buttons["Suivant"].firstMatch
+            XCTAssertTrue(next.waitForExistence(timeout: 5), app.debugDescription)
+            next.tap()
+        }
+        let addButton = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Ajouter à la commande'")).firstMatch
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), app.debugDescription)
+        addButton.tap()
+        let cart = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch
+        XCTAssertTrue(cart.waitForExistence(timeout: 5), app.debugDescription)
+        let clear = NSPredicate { object, _ in
+            guard let button = object as? XCUIElement else { return false }
+            return button.frame.maxY <= app.frame.height - 34
+        }
+        let settled = expectation(for: clear, evaluatedWith: cart)
+        let result = XCTWaiter.wait(for: [settled], timeout: 3)
+        XCTAssertEqual(result, .completed, "Cart action must stay above the 34-point home indicator")
+        cart.tap()
+        let checkout = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Commander'")).firstMatch
+        XCTAssertTrue(checkout.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertLessThanOrEqual(checkout.frame.maxY, app.frame.height - 34)
+        XCTAssertGreaterThanOrEqual(app.staticTexts["Votre commande"].firstMatch.frame.minY, 50)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Panier client iOS"; shot.lifetime = .keepAlways; add(shot)
+    }
 }

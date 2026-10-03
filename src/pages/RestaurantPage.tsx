@@ -1067,7 +1067,7 @@ const RestaurantPage = () => {
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed bottom-0 left-0 right-0 z-[35] px-4 pb-4 pt-2"
-            style={{ background: `linear-gradient(to top, ${bg} 60%, transparent)` }}
+            style={{ background: `linear-gradient(to top, ${bg} 60%, transparent)`, paddingBottom: "max(1rem, env(safe-area-inset-bottom, 0px))" }}
           >
             <div className="max-w-3xl mx-auto">
               <button
