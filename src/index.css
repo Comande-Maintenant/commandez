@@ -102,6 +102,15 @@
 /* Keep actions above the iPhone home indicator. */
 .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 .native-ios #root { padding-top: env(safe-area-inset-top, 0px); }
+.native-ios body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: hsl(var(--background));
+  z-index: 1000;
+  pointer-events: none;
+}
 .native-ios .min-h-screen { min-height: calc(100dvh - env(safe-area-inset-top, 0px)); }
 .native-ios .sticky.top-0 { top: env(safe-area-inset-top, 0px); }
 .native-ios .menu-category-nav { top: calc(var(--menu-banner-height, 0px) + env(safe-area-inset-top, 0px)); }
