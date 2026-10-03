@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 const mocks = vi.hoisted(() => ({ from: vi.fn(), getUser: vi.fn(), invoke: vi.fn(), maybeSingle: vi.fn(), native: false }));
+vi.mock('@/services/native-push-client', () => ({ suspendNativePushBeforeSignOut: vi.fn().mockResolvedValue(undefined) }));
 vi.mock('@/integrations/supabase/client', () => ({ supabase: { from: mocks.from, auth: { getUser: mocks.getUser }, functions: { invoke: mocks.invoke } } }));
 vi.mock('@/context/LanguageContext', () => ({ useLanguage: () => ({ t: (key: string) => key, language: 'fr' }) }));
 vi.mock('@/lib/native', () => ({ isNative: () => mocks.native, publicAppUrl: 'https://app.commandeici.com', shareRestaurant: vi.fn() }));

@@ -1,3 +1,4 @@
+import { useDashboardAuth } from '@/hooks/useDashboardAuth';
 import { NativeOrderNotifications } from '@/components/NativeOrderNotifications';
 import { lazy, Suspense, useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
@@ -67,8 +68,7 @@ const AdminPage = () => {
     return "cuisine";
   });
   const [blurred, setBlurred] = useState(() => localStorage.getItem("dashboard-blur") === "true");
-  const [authChecked, setAuthChecked] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
+  const { authChecked, authError, authUserId } = useDashboardAuth(isDemo);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [pwaPrompt, setPwaPrompt] = useState<any>(null);
   const [showPwaBanner, setShowPwaBanner] = useState(false);
@@ -89,7 +89,6 @@ const AdminPage = () => {
   }, [sound.audioUnlocked, sound.unlockAudio]);
 
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
   const orderFeed = useRestaurantOrders(restaurant && (isDemo || authUserId === restaurant.owner_id) ? restaurant.id : null, {
     isDemo, onNewOrder: order => {
       sound.play();
@@ -101,29 +100,6 @@ const AdminPage = () => {
     preparingCount: orderFeed.orders.filter(order => order.status === 'preparing').length,
   };
   const [historyOpen, setHistoryOpen] = useState(false);
-
-  // Auth check - skip for demo
-  useEffect(() => {
-    if (isDemo) {
-      setAuthChecked(true);
-      return;
-    }
-    let disposed = false;
-    supabase.auth.getUser().then(({ data, error }) => {
-      if (disposed) return;
-      if (error) {
-        setAuthError('unavailable');
-      } else if (!data.user) {
-        setAuthError("not_logged_in");
-      } else {
-        setAuthUserId(data.user.id);
-      }
-      setAuthChecked(true);
-    }).catch(() => {
-      if (!disposed) { setAuthError('unavailable'); setAuthChecked(true); }
-    });
-    return () => { disposed = true; };
-  }, [isDemo]);
 
   // Show the tour only after a successful load, and cancel it on navigation.
   useEffect(() => {
