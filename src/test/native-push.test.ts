@@ -1,15 +1,20 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createNativePush, notificationRoute } from '@/services/native-push';
 const user = '520191e5-1b13-4b56-8c69-ae36ac03df1b';
+const identity = { id: user, secret: 'b'.repeat(64) };
 const token = 'a'.repeat(64);
-function fixture(native = true) {
+function fixture(native = true, persisted = false) {
   const listeners: Record<string, (event: any) => void> = {};
   const sdk = { checkPermissions: vi.fn().mockResolvedValue({ receive: 'prompt' }), requestPermissions: vi.fn().mockResolvedValue({ receive: 'granted' }), register: vi.fn().mockResolvedValue(undefined), unregister: vi.fn().mockResolvedValue(undefined), removeAllDeliveredNotifications: vi.fn().mockResolvedValue(undefined), addListener: vi.fn(async (event: string, callback: (event: any) => void) => { listeners[event] = callback; return { remove: vi.fn() }; }) };
+  const initialize = vi.fn().mockResolvedValue(undefined);
   const register = vi.fn().mockResolvedValue(undefined), revoke = vi.fn().mockResolvedValue(undefined);
   let fStored: string | null = null;
   const storage = { getItem: vi.fn().mockImplementation(async () => fStored), setItem: vi.fn().mockImplementation(async (_key: string, value: string) => { fStored = value; }), removeItem: vi.fn().mockResolvedValue(undefined) };
-  const push = createNativePush({ native, sdk, register, revoke, storage, environment: 'production', onChange: vi.fn() });
-  return { push, sdk, register, revoke, listeners, storage };
+  let created = persisted; let number = persisted ? 1 : 0; let currentIdentity = identity;
+  const installation = vi.fn(async (create: boolean) => { if (create && !created) { created = true; number++; currentIdentity = number === 1 ? identity : { id: '620191e5-1b13-4b56-8c69-ae36ac03df1b', secret: 'c'.repeat(64) }; } return created ? currentIdentity : null; });
+  const resetInstallation = vi.fn(async () => { created = false; });
+  const push = createNativePush({ native, sdk, register, revoke, storage, installation, initialize, resetInstallation, environment: 'production', onChange: vi.fn() });
+  return { push, sdk, register, revoke, listeners, storage, initialize, installation, resetInstallation };
 }
 describe('native order push', () => {
   it('never asks for OS permission automatically or for a guest', async () => {
@@ -22,7 +27,7 @@ describe('native order push', () => {
     const f = fixture(); await f.push.sync(user); await f.push.enable();
     expect(f.sdk.requestPermissions).toHaveBeenCalledOnce(); expect(f.sdk.register).toHaveBeenCalledOnce();
     await f.listeners.registration({ value: token });
-    expect(f.register).toHaveBeenCalledWith(token, 'production'); expect(f.storage.setItem).toHaveBeenCalledWith('commandeici_push_token', token);
+    expect(f.register).toHaveBeenCalledWith(token, 'production', identity, expect.any(AbortSignal)); expect(f.storage.setItem).toHaveBeenCalledWith('commandeici_push_token', token);
   });
   it('does not register if logout happens while the OS permission dialog is open', async () => {
     const f = fixture(); let resolve!: (value: { receive: string }) => void;
@@ -36,16 +41,72 @@ describe('native order push', () => {
     try { const f = fixture(); await f.push.sync(user); await f.push.enable(); await vi.advanceTimersByTimeAsync(20001); expect(f.push.status()).toBe('error'); }
     finally { vi.useRealTimers(); }
   });
+  it('initializes the private installation before registering with Apple', async () => {
+    const f = fixture(); await f.push.sync(user); await f.push.enable();
+    expect(f.initialize).toHaveBeenCalledOnce();
+    expect(f.initialize.mock.invocationCallOrder[0]).toBeLessThan(f.sdk.register.mock.invocationCallOrder[0]);
+  });
+  it('rejects a late token when installation initialization failed', async () => {
+    const f = fixture(); f.initialize.mockRejectedValue(new Error('offline')); await f.push.sync(user); await f.push.enable();
+    expect(f.sdk.register).not.toHaveBeenCalled(); await f.listeners.registration({ value: token });
+    expect(f.register).not.toHaveBeenCalled(); expect(f.push.status()).toBe('error');
+  });
+  it('never registers after logout overtakes an in-flight initialization', async () => {
+    const f = fixture(); let resolve!: () => void;
+    f.initialize.mockImplementationOnce(() => new Promise<void>(done => { resolve = done; }));
+    await f.push.sync(user); const enabling = f.push.enable(); await vi.waitFor(() => expect(resolve).toBeDefined());
+    const logout = f.push.suspend(); resolve(); await enabling; await logout;
+    expect(f.sdk.register).not.toHaveBeenCalled(); expect(f.revoke).toHaveBeenCalledOnce(); expect(f.resetInstallation).toHaveBeenCalled();
+  });
+  it('rotates installation credentials after revocation before another account', async () => {
+    const f = fixture(); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token });
+    await f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b'); await f.push.enable();
+    expect(f.initialize.mock.calls[1][0].id).not.toBe(f.initialize.mock.calls[0][0].id);
+    expect(f.initialize.mock.calls[1][0].secret).not.toBe(f.initialize.mock.calls[0][0].secret);
+  });
   it('respects denied permission and ignores malformed APNs tokens', async () => {
     const f = fixture(); f.sdk.requestPermissions.mockResolvedValue({ receive: 'denied' }); await f.push.sync(user); await f.push.enable(); expect(f.sdk.register).not.toHaveBeenCalled(); await f.listeners.registration({ value: 'email@example.com' }); expect(f.register).not.toHaveBeenCalled();
   });
   it('unregisters iOS and server before returning from logout preparation', async () => {
     const f = fixture(); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token });
-    await f.push.suspend(); expect(f.sdk.unregister).toHaveBeenCalledOnce(); expect(f.sdk.removeAllDeliveredNotifications).toHaveBeenCalledOnce(); expect(f.revoke).toHaveBeenCalledWith(token); expect(f.storage.removeItem).toHaveBeenCalledWith('commandeici_push_token');
+    await f.push.suspend(); expect(f.sdk.unregister).toHaveBeenCalledOnce(); expect(f.sdk.removeAllDeliveredNotifications).toHaveBeenCalledOnce(); expect(f.revoke).toHaveBeenCalledWith(identity, expect.any(AbortSignal)); expect(f.storage.removeItem).toHaveBeenCalledWith('commandeici_push_token');
     await f.listeners.registration({ value: token }); expect(f.register).toHaveBeenCalledTimes(1);
   });
   it('surfaces backend failures and retries without reporting enabled', async () => {
     const f = fixture(); f.register.mockRejectedValueOnce(new Error('offline')); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token }); expect(f.push.status()).toBe('error'); await f.listeners.registration({ value: token }); expect(f.push.status()).toBe('enabled');
+  });
+  it('retries cold-start cleanup before enabling a device for a new merchant', async () => {
+    const f = fixture(true, true); f.revoke.mockRejectedValueOnce(new Error('offline'));
+    await f.push.sync(user); expect(f.push.status()).toBe('error'); expect(f.sdk.checkPermissions).not.toHaveBeenCalled();
+    await f.push.enable(); expect(f.revoke).toHaveBeenCalledTimes(2); expect(f.sdk.register).toHaveBeenCalledOnce();
+  });
+  it('revokes a lost session installation and can resume after a failed logout', async () => {
+    const f = fixture(); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token });
+    f.revoke.mockRejectedValueOnce(new Error('offline')); await expect(f.push.suspend()).rejects.toThrow('offline');
+    await f.push.sync(user); await f.push.enable(); expect(f.sdk.register).toHaveBeenCalledTimes(2);
+    await f.push.sync(null); expect(f.revoke).toHaveBeenCalledTimes(3); expect(f.push.status()).toBe('idle');
+  });
+  it('revokes the old installation before another account registers a different token', async () => {
+    const f = fixture(); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token });
+    await f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b'); await f.push.enable(); await f.listeners.registration({ value: 'c'.repeat(64) });
+    expect(f.revoke).toHaveBeenCalledOnce(); expect(f.register).toHaveBeenCalledTimes(2);
+    expect(f.revoke.mock.invocationCallOrder[0]).toBeLessThan(f.register.mock.invocationCallOrder[1]);
+  });
+  it('aborts a hanging backend request and releases the serial queue for retry', async () => {
+    const f = fixture(); let signal: AbortSignal | undefined;
+    f.register.mockImplementationOnce(async (_token, _env, _identity, requestSignal) => { signal = requestSignal; await new Promise(() => {}); });
+    await f.push.sync(user); await f.push.enable(); vi.useFakeTimers();
+    try {
+      const pending = f.listeners.registration({ value: token }); await vi.advanceTimersByTimeAsync(10001); await pending;
+      expect(signal!.aborted).toBe(true); expect(f.push.status()).toBe('error');
+      await f.listeners.registration({ value: token }); expect(f.push.status()).toBe('enabled');
+    } finally { vi.useRealTimers(); }
+  });
+  it('still revokes on the server when iOS cleanup fails', async () => {
+    const f = fixture(); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token });
+    f.sdk.unregister.mockRejectedValueOnce(new Error('native cleanup failed'));
+    await expect(f.push.suspend()).rejects.toThrow('native cleanup failed');
+    expect(f.revoke).toHaveBeenCalledOnce(); expect(f.sdk.removeAllDeliveredNotifications).toHaveBeenCalledOnce();
   });
   it('removes OS registration even if server revocation fails', async () => {
     const f = fixture(); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token }); f.revoke.mockRejectedValue(new Error('offline'));

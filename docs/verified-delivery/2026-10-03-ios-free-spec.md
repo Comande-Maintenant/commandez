@@ -42,3 +42,30 @@ pendant dialogue OS, permission refusée, web/guest sans effet, token invalide,
 tooltip borné au viewport et bouton fermeture accessible, 2 E2E avant/après.
 La validation IAP RevenueCat production reste à contrôler ; authentification
 Apple sandbox de la clé active acceptée. Aucun produit/achat/offering payant.
+
+
+### Contrat final push et revue
+
+La migration backend 180 nécessite initialize_order_push_installation(id,secret)
+authentifié commerçant AVANT register OS ; identité UUID + secret HEX64 de 256 bits
+conservés dans Keychain. register_order_push_device reçoit aussi installation_id
+et installation_secret. revoke_order_push_installation(id,secret) permet la
+révocation de la seule installation par preuve de possession, même après perte de
+session, sans création de ligne anonyme inconnue. Révocation = tombstone immutable ;
+après confirmation de cleanup, supprimer la paire locale et générer une nouvelle
+paire à la prochaine activation. Aucun transfert de propriétaire par register.
+RPC client abortés à 10 secondes, timeout DB 5 secondes ; le garde de génération
+bloque un token tardif après initialisation échouée ou déconnexion. Cleanup tente
+serveur et OS indépendamment. La reprise après cleanup hors réseau est vérifiée.
+Le widget revalide l'ID de session courant au montage et à la demande, y compris
+pour le premier restaurant créé sans nouvel événement auth.
+
+Revue indépendante par fils auth/SEO et fonctionnel/orders : signOut directs sous
+responsabilité fonctionnelle (hooks à intégrer dans leur snapshot), cleanup SDK,
+reprise cold start, tokens différents A/B et deadline RPC corrigés. Preuves finales
+à relancer sur l'assemblage core b9d943c + notre native avant archive.
+Native exports : UIImage PNG (8 ko) réellement présent dans share sheet et action
+Enregistrer dans Fichiers vérifiés via XCTest signé (xctest-qr-isolated.log).
+La première erreur Keychain provenait de CODE_SIGNING_ALLOWED=NO sur simulateur.
+Les tests natifs finaux doivent être signés ad hoc, sans remplacer Keychain.
+RevenueCat 04:20 : deux clés validées format/permissions, aucune offre créée.

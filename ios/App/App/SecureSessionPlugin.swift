@@ -17,7 +17,7 @@ public class SecureSessionPlugin: CAPPlugin, CAPBridgedPlugin {
                 kSecAttrService as String: service, kSecAttrAccount as String: key]
     }
     private func key(_ call: CAPPluginCall) -> String? {
-        guard let value = call.getString("key"), value == "commandeici_auth" || value.hasPrefix("commandeici_auth-") else {
+        guard let value = call.getString("key"), value == "commandeici_auth" || value.hasPrefix("commandeici_auth-") || ["commandeici_push_token", "commandeici_push_installation_id", "commandeici_push_installation_secret"].contains(value) else {
             call.reject("Invalid session key"); return nil
         }
         return value
