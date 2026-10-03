@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect } from 'react';
+import { randomUuid } from '@/lib/uuid';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { registerOwner } from '@/services/account-registration';
@@ -28,6 +29,7 @@ import {
   completeOnboarding,
   generateSlug,
 } from '@/services/onboarding';
+import { googleSignInEnabled, signInWithGoogle } from '@/services/google-sign-in';
 import { getPlaceDetails } from '@/services/google-places';
 import { processReferral } from '@/services/referral';
 import type { ParsedScheduleDay } from '@/utils/parse-google-hours';
@@ -85,6 +87,7 @@ const InscriptionPage = () => {
   const [accountLoading, setAccountLoading] = useState(false);
 
   // Step 2: Restaurant
+  const selectedPlaceRequest = useRef(0);
   const [selectedPlace, setSelectedPlace] = useState<GooglePlaceResult | null>(null);
   const [restaurantData, setRestaurantData] = useState<RestaurantData | null>(null);
   const [searchMode, setSearchMode] = useState<'search' | 'nearby' | 'manual'>('search');
@@ -112,10 +115,10 @@ const InscriptionPage = () => {
   const [creationKey] = useState(() => {
     try {
       const existing = localStorage.getItem('commandeici_creation_key');
-      const key = existing || crypto.randomUUID();
+      const key = existing || randomUuid();
       localStorage.setItem('commandeici_creation_key', key);
       return key;
-    } catch { return crypto.randomUUID(); }
+    } catch { return randomUuid(); }
   });
 
   // Auth callbacks run outside the auth event lock. Confirmation never loses the draft.
@@ -199,11 +202,14 @@ const InscriptionPage = () => {
 
   // ---- Step 2: Place selected → enrich with details ----
   const handlePlaceSelect = async (place: GooglePlaceResult) => {
+    const request = ++selectedPlaceRequest.current;
     try {
       const details = await getPlaceDetails(place.place_id);
+      if (request !== selectedPlaceRequest.current) return;
       // Merge: keep nearby fields, overlay with details where available
       setSelectedPlace({
         ...place,
+        city: details?.city || place.city,
         formatted_address: details?.formatted_address || place.formatted_address || place.vicinity,
         formatted_phone_number: details?.formatted_phone_number || place.formatted_phone_number || place.international_phone_number,
         website: details?.website || place.website,
@@ -213,7 +219,7 @@ const InscriptionPage = () => {
       });
     } catch {
       // If details fail, use what we have from nearby search
-      setSelectedPlace(place);
+      if (request === selectedPlaceRequest.current) setSelectedPlace(place);
     }
   };
 
@@ -358,6 +364,13 @@ const InscriptionPage = () => {
                 <p className="text-sm text-muted-foreground">
                   {t('auth.signup.create_desc')}
                 </p>
+
+                {googleSignInEnabled && <Button type="button" variant="outline" className="w-full" disabled={accountLoading} onClick={async () => {
+                  setAccountLoading(true);
+                  try { await signInWithGoogle('/inscription'); }
+                  catch { setAccountError(t('auth.generic_error')); }
+                  finally { setAccountLoading(false); }
+                }}>Google</Button>}
 
                 <div>
                   <Label htmlFor="email">{t('auth.signup.email')}</Label>

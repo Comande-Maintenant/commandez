@@ -24,7 +24,7 @@ interface Props {
   primaryColor: string;
   availablePaymentMethods: string[];
   prepTimeConfig?: PrepTimeConfig | null;
-  onSubmit: (items: any[], total: number, orderType: string, customerName: string, covers: number, paymentMethod: string, estimatedMinutes: number) => Promise<void>;
+  onSubmit: (items: any[], total: number, orderType: string, customerName: string, covers: number, paymentMethod: string, estimatedMinutes: number) => Promise<boolean>;
   submitting: boolean;
 }
 
@@ -54,8 +54,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
   const [topItemIds, setTopItemIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    clearCart();
-    fetchUniversalCustomizationData(restaurantId).then(setCustomizationData);
+    fetchUniversalCustomizationData(restaurantId).then(setCustomizationData).catch(() => {});
     // Compute popular items from last 14 days of orders
     const since = new Date();
     since.setDate(since.getDate() - 14);
@@ -90,16 +89,26 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
       menu_item_id: i.menuItem.id,
       quantity: i.quantity,
       price: i.totalPrice,
+      extra_cost: Math.max(0, +(i.totalPrice - i.menuItem.price - i.selectedSupplements.reduce((sum, supplement) => sum + supplement.price, 0)).toFixed(2)),
       sauces: i.selectedSauces,
       supplements: i.selectedSupplements.map((s) => ({ name: s.name, price: s.price })),
       viande_choice: i.viandeChoice || null,
       garniture_choices: i.garnitureChoices || null,
+      base_choice: i.baseChoice || null,
+      frites_inside: i.fritesInside ?? null,
+      accompagnement_choice: i.accompagnementChoice || null,
+      accompagnement_choices: i.accompagnementChoices || null,
+      drink_choice: i.drinkChoice || null,
+      dessert_choice: i.dessertChoice || null,
+      sauce_extra_cost: i.sauceExtraCost || null,
+      custom_choices: i.customChoices?.filter(choice => choice.selections.length > 0) || [],
     }));
     const total = subtotal;
     const name = customerName || t("pos.pos_name").replace("{covers}", String(covers));
-    await onSubmit(orderItems, total, orderType, name, covers, paymentMethod, prepMinutes);
-    clearCart();
-    setScreen("success");
+    if (await onSubmit(orderItems, total, orderType, name, covers, paymentMethod, prepMinutes)) {
+      clearCart();
+      setScreen("success");
+    }
   };
 
   if (screen === "success") {

@@ -71,6 +71,8 @@ export function MenuReviewEditor({ menu, onConfirm, onBack }: MenuReviewEditorPr
   };
 
   const totalItems = categories.reduce((sum, c) => sum + c.items.length, 0);
+  const validMenu = totalItems > 0 && categories.every((category) => category.name.trim()
+    && category.items.every((item) => item.name.trim() && Number.isFinite(item.price) && item.price >= 0));
 
   return (
     <div className="space-y-4">
@@ -140,6 +142,7 @@ export function MenuReviewEditor({ menu, onConfirm, onBack }: MenuReviewEditorPr
                     <Input
                       type="number"
                       step="0.01"
+                      min="0"
                       value={item.price}
                       onChange={(e) => updateItem(catIdx, itemIdx, 'price', parseFloat(e.target.value) || 0)}
                       className="h-8 text-sm text-right"
@@ -172,9 +175,9 @@ export function MenuReviewEditor({ menu, onConfirm, onBack }: MenuReviewEditorPr
           Retour
         </Button>
         <Button
-          onClick={() => onConfirm(categories)}
+          onClick={() => { if (validMenu) onConfirm(categories); }}
           className="flex-1"
-          disabled={totalItems === 0}
+          disabled={!validMenu}
         >
           Valider ma carte
         </Button>

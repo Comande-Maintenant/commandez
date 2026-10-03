@@ -237,7 +237,7 @@ export function usePOSCustomization(config: CustomizationConfig | null): UsePOSC
         optionId,
         name: opt.name,
         portion: "normale",
-        portionPriceMod: 0,
+        portionPriceMod: opt.portion_options?.find(portion => portion.id === 'normale')?.price_modifier || 0,
         subSauceId: undefined,
         subSauceName: undefined,
       });

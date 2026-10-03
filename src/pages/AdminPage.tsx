@@ -1,10 +1,13 @@
 import { lazy, Suspense, useState, useEffect } from "react";
-import { isNative } from '@/lib/native';
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, Eye, EyeOff, Volume2, VolumeX, X, Clock } from "lucide-react";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
+import { useRestaurantOrders } from "@/hooks/useRestaurantOrders";
+import { useDashboardRestaurant } from "@/hooks/useDashboardRestaurant";
+import { RestaurantOrdersContext } from "@/context/RestaurantOrdersContext";
+import { formatDisplayNumber } from "@/lib/orderNumber";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchRestaurantBySlug, fetchDemoRestaurant, updateRestaurant } from "@/lib/api";
+import { updateRestaurant } from "@/lib/api";
 import type { DbRestaurant } from "@/types/database";
 import { GererMenu } from "@/components/dashboard/GererMenu";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
@@ -15,7 +18,7 @@ import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useLiveVisitors, useLiveOrderCounts } from "@/hooks/useLiveVisitors";
+import { useLiveVisitors } from "@/hooks/useLiveVisitors";
 import { supabase } from "@/integrations/supabase/client";
 import type { DashboardView } from "@/types/dashboard";
 import { SubscriptionGate } from "@/components/auth/SubscriptionGate";
@@ -48,8 +51,7 @@ const AdminPage = () => {
   const navigate = useNavigate();
   const { t, isRTL } = useLanguage();
   const isDemo = slug === "demo";
-  const [restaurant, setRestaurant] = useState<DbRestaurant | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { restaurant, setRestaurant, loading, error: restaurantError, retry: retryRestaurant } = useDashboardRestaurant(slug, isDemo);
   const [demoBannerDismissed, setDemoBannerDismissed] = useState(() => sessionStorage.getItem("demo_banner_dismissed") === "1");
   const [activeView, setActiveView] = useState<DashboardView>(() => {
     const params = new URLSearchParams(window.location.search);
@@ -86,9 +88,17 @@ const AdminPage = () => {
   }, [sound.audioUnlocked, sound.unlockAudio]);
 
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
-  const orderCounts = useLiveOrderCounts(restaurant?.id ?? null, isDemo);
-
   const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const orderFeed = useRestaurantOrders(restaurant && (isDemo || authUserId === restaurant.owner_id) ? restaurant.id : null, {
+    isDemo, onNewOrder: order => {
+      sound.play();
+      if (activeView !== 'cuisine') toast.info(t('dashboard.orders.new_order_popup'), { description: formatDisplayNumber(order), duration: 12000 });
+    },
+  });
+  const orderCounts = {
+    newCount: orderFeed.orders.filter(order => order.status === 'new').length,
+    preparingCount: orderFeed.orders.filter(order => order.status === 'preparing').length,
+  };
   const [historyOpen, setHistoryOpen] = useState(false);
 
   // Auth check - skip for demo
@@ -97,29 +107,32 @@ const AdminPage = () => {
       setAuthChecked(true);
       return;
     }
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
+    let disposed = false;
+    supabase.auth.getUser().then(({ data, error }) => {
+      if (disposed) return;
+      if (error) {
+        setAuthError('unavailable');
+      } else if (!data.user) {
         setAuthError("not_logged_in");
       } else {
         setAuthUserId(data.user.id);
       }
       setAuthChecked(true);
+    }).catch(() => {
+      if (!disposed) { setAuthError('unavailable'); setAuthChecked(true); }
     });
+    return () => { disposed = true; };
   }, [isDemo]);
 
-  // Fetch restaurant - use demo RPC for demo mode
+  // Show the tour only after a successful load, and cancel it on navigation.
   useEffect(() => {
-    if (!slug) return;
-    const fetchFn = isDemo ? fetchDemoRestaurant(slug) : fetchRestaurantBySlug(slug);
-    fetchFn.then((r) => {
-      setRestaurant(r);
-      setLoading(false);
-      // Show onboarding tour if not already completed (or if user restarted it)
-      if (r && !localStorage.getItem(`cm_onboarding_done_${r.slug}`)) {
-        setTimeout(() => setShowOnboarding(true), 1000);
-      }
-    });
-  }, [slug, isDemo]);
+    if (!restaurant?.slug) return;
+    let completed = false;
+    try { completed = Boolean(localStorage.getItem(`cm_onboarding_done_${restaurant.slug}`)); } catch { /* show the tour if preferences cannot be read */ }
+    if (completed) return;
+    const timeout = setTimeout(() => setShowOnboarding(true), 1000);
+    return () => clearTimeout(timeout);
+  }, [restaurant?.slug]);
 
   // PWA install prompt
   useEffect(() => {
@@ -181,6 +194,15 @@ const AdminPage = () => {
     );
   }
 
+  if (!isDemo && authError === 'unavailable') {
+    return (
+      <div role="alert" className="min-h-screen flex flex-col gap-4 items-center justify-center bg-background">
+        <p>{t('auth.generic_error')}</p>
+        <Button onClick={() => window.location.reload()}>{t('common.retry')}</Button>
+      </div>
+    );
+  }
+
   // Auth gate - skip for demo
   if (!isDemo && authError === "not_logged_in") {
     return (
@@ -189,6 +211,17 @@ const AdminPage = () => {
           <h1 className="text-2xl font-bold text-foreground mb-2">{t("dashboard.admin.login_required")}</h1>
           <p className="text-muted-foreground mb-4">{t("dashboard.admin.login_required_desc")}</p>
           <Link to="/connexion" className="text-sm text-foreground underline">{t("dashboard.admin.login")}</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (restaurantError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div role="alert" className="text-center space-y-4">
+          <p>{t('auth.generic_error')}</p>
+          <Button onClick={retryRestaurant}>{t('common.retry')}</Button>
         </div>
       </div>
     );
@@ -219,6 +252,7 @@ const AdminPage = () => {
   }
 
   const dashboardContent = (
+    <RestaurantOrdersContext.Provider value={orderFeed}>
     <div className="min-h-screen bg-secondary/50 lg:flex" data-blurred={blurred}>
       <style>{`[data-blurred="true"] .blur-sensitive { filter: blur(8px); user-select: none; }`}</style>
 
@@ -401,18 +435,12 @@ const AdminPage = () => {
           )}
 
           {/* Prospect banner */}
-          {!isNative() && (restaurant as any)?.account_status === "prospect" && (
+          {(restaurant as any)?.account_status === "prospect" && (
             <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-sm text-blue-900">
-                <p className="font-medium">Page de demonstration</p>
-                <p className="text-blue-700">Ta page est prete ! Active ton abonnement pour recevoir des commandes.</p>
+                <p className="font-medium">{t('commerce.free_title')}</p>
+                <p className="text-blue-700">{t('commerce.free_desc')}</p>
               </div>
-              <Link
-                to="/choisir-plan"
-                className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Activer mon abonnement
-              </Link>
             </div>
           )}
 
@@ -435,7 +463,7 @@ const AdminPage = () => {
               transition={{ duration: 0.2 }}
             >
               <Suspense fallback={<div className="flex justify-center py-16"><Loader2 className="h-7 w-7 animate-spin" /></div>}>
-                {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} onNewOrderSound={sound.play} isDemo={isDemo} />}
+                {activeView === "cuisine" && <DashboardOrders restaurant={restaurant} isDemo={isDemo} />}
                 {activeView === "caisse" && <DashboardPOS restaurant={restaurant} isDemo={isDemo} />}
                 {activeView === "en-direct" && <DashboardEnDirect restaurant={restaurant} visitors={visitors} alerts={alerts} isDemo={isDemo} />}
                 {activeView === "carte" && <DashboardMaCarte restaurant={restaurant} isDemo={isDemo} />}
@@ -522,6 +550,7 @@ const AdminPage = () => {
         />
       )}
     </div>
+    </RestaurantOrdersContext.Provider>
   );
 
   // Skip SubscriptionGate for demo and prospect restaurants

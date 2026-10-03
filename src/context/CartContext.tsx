@@ -37,24 +37,33 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_KEY = "resto-order-cart";
 
-function loadCart(): { items: CartItem[]; restaurantSlug: string | null; restaurantId: string | null } {
+function loadCart(storageKey: string): { items: CartItem[]; restaurantSlug: string | null; restaurantId: string | null } {
   try {
-    const raw = localStorage.getItem(CART_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (Array.isArray(saved?.items)) return {
+        items: saved.items.filter((item: CartItem) => item && typeof item.id === 'string' && item.menuItem && typeof item.menuItem.id === 'string'
+          && Number.isFinite(item.quantity) && item.quantity > 0 && Number.isFinite(item.totalPrice) && item.totalPrice >= 0
+          && Array.isArray(item.selectedSauces) && Array.isArray(item.selectedSupplements)),
+        restaurantSlug: typeof saved.restaurantSlug === 'string' ? saved.restaurantSlug : null,
+        restaurantId: typeof saved.restaurantId === 'string' ? saved.restaurantId : null,
+      };
+    }
+  } catch { /* malformed or blocked storage starts with an empty basket */ }
   return { items: [], restaurantSlug: null, restaurantId: null };
 }
 
-function saveCart(items: CartItem[], restaurantSlug: string | null, restaurantId: string | null) {
-  localStorage.setItem(CART_KEY, JSON.stringify({ items, restaurantSlug, restaurantId }));
+function saveCart(items: CartItem[], restaurantSlug: string | null, restaurantId: string | null, storageKey: string) {
+  try { localStorage.setItem(storageKey, JSON.stringify({ items, restaurantSlug, restaurantId })); } catch { /* keep the in-memory basket */ }
 }
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setState] = useState(loadCart);
+export const CartProvider: React.FC<{ children: React.ReactNode; storageKey?: string }> = ({ children, storageKey = CART_KEY }) => {
+  const [state, setState] = useState(() => loadCart(storageKey));
 
   useEffect(() => {
-    saveCart(state.items, state.restaurantSlug, state.restaurantId);
-  }, [state]);
+    saveCart(state.items, state.restaurantSlug, state.restaurantId, storageKey);
+  }, [state, storageKey]);
 
   const addItem = useCallback((menuItem: DbMenuItem, sauces: string[], supplements: Supplement[], slug: string, restId: string, options?: { garnitureChoices?: { name: string; level: "oui" | "x2" }[]; viandeChoice?: string; extraCost?: number; baseChoice?: string; fritesInside?: boolean; accompagnementChoice?: { name: string; size?: string; sauces?: string[] }; accompagnementChoices?: { name: string; size?: string; sauces?: string[] }[]; drinkChoice?: { name: string; price: number }; dessertChoice?: { name: string; price: number }; customChoices?: StepSelection[]; sauceExtraCost?: number }) => {
     setState((prev) => {
@@ -104,8 +113,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = useCallback(() => {
     setState({ items: [], restaurantSlug: null, restaurantId: null });
-    localStorage.removeItem(CART_KEY);
-  }, []);
+    try { localStorage.removeItem(storageKey); } catch { /* the in-memory basket is cleared */ }
+  }, [storageKey]);
 
   const totalItems = state.items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = state.items.reduce((sum, i) => sum + i.totalPrice * i.quantity, 0);

@@ -97,7 +97,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
 
   const [name, setName] = useState(place.name);
   const [address, setAddress] = useState(fullAddress);
-  const [city, setCity] = useState(extractCity(fullAddress, isVicinity));
+  const [city, setCity] = useState(place.city || extractCity(fullAddress, isVicinity));
   const [phone, setPhone] = useState(
     place.formatted_phone_number || place.international_phone_number || ''
   );
@@ -123,9 +123,9 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
 
   const handleConfirm = () => {
     onConfirm({
-      name,
-      address,
-      city,
+      name: name.trim(),
+      address: address.trim(),
+      city: city.trim(),
       phone,
       cuisine,
       cuisine_type: cuisineType,
@@ -264,7 +264,7 @@ export function PlaceConfirmation({ place, onConfirm, onBack }: PlaceConfirmatio
         <Button variant="outline" onClick={onBack} className="flex-1">
           {t('onboarding.place.back')}
         </Button>
-        <Button onClick={handleConfirm} className="flex-1">
+        <Button onClick={handleConfirm} disabled={!name.trim() || !city.trim()} className="flex-1">
           {t('onboarding.place.confirm')}
         </Button>
       </div>

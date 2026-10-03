@@ -62,6 +62,10 @@ function i18nError(key: string, params?: Record<string, string>): string {
  * Format: "key|param1=val1|param2=val2"
  */
 export function translateError(encoded: string, t: (key: string) => string): string {
+  const prefixIndex = encoded.indexOf(': error.');
+  if (prefixIndex !== -1) {
+    return encoded.slice(0, prefixIndex + 2) + translateError(encoded.slice(prefixIndex + 2), t);
+  }
   const parts = encoded.split('|');
   const key = parts[0];
   let result = t(key);
@@ -282,6 +286,9 @@ function validateConvertedFile(original: File, converted: File): File {
  * Returns the original file if already compatible.
  */
 export async function convertFileForAnalysis(file: File): Promise<File> {
+  if (!file.type && /\.pdf$/i.test(file.name)) {
+    return new File([file], file.name, { type: 'application/pdf' });
+  }
   // HEIC/HEIF - always convert (even if browser says image/jpeg for .heic files)
   if (isHeic(file)) {
     const converted = await convertHeic(file);
@@ -318,8 +325,7 @@ export async function convertFileForAnalysis(file: File): Promise<File> {
     const converted = await convertGenericImage(file);
     return validateConvertedFile(file, converted);
   } catch {
-    // Return as-is, let the upload/analysis handle the error
-    return file;
+    throw new Error(i18nError('error.conversion_failed'));
   }
 }
 

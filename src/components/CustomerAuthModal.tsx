@@ -8,6 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 
 import { EmailConfirmation } from '@/components/auth/EmailConfirmation';
+import { googleSignInEnabled, signInWithGoogle } from '@/services/google-sign-in';
 import { authRedirectUrl } from '@/lib/native';
 
 type View = "login" | "signup" | "reset";
@@ -17,9 +18,10 @@ interface Props {
   onClose: () => void;
   defaultView?: View;
   prefillEmail?: string;
+  redirectPath?: '/profil' | '/order';
 }
 
-export function CustomerAuthModal({ open, onClose, defaultView = "login", prefillEmail }: Props) {
+export function CustomerAuthModal({ open, onClose, defaultView = "login", prefillEmail, redirectPath = "/profil" }: Props) {
   const { signIn, signUp, resetPassword } = useCustomerAuth();
   const { t } = useLanguage();
   const [view, setView] = useState<View>(defaultView);
@@ -63,7 +65,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
       } catch { /* ignore */ }
       if (!name) name = email.split("@")[0];
 
-      const result = await signUp(email, password, name, phone);
+      const result = await signUp(email, password, name, phone, redirectPath);
       setPassword('');
       if (result === 'confirmation') { setConfirmation(true); return; }
       toast.success(t("auth.customer.profile_created"));
@@ -106,7 +108,13 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
-          {confirmation ? <EmailConfirmation email={email} redirect={authRedirectUrl('/profil')} onChangeEmail={() => setConfirmation(false)} /> : <>
+          {confirmation ? <EmailConfirmation email={email} redirect={authRedirectUrl(redirectPath)} onChangeEmail={() => setConfirmation(false)} /> : <>
+          {googleSignInEnabled && view !== 'reset' && <Button variant="outline" className="w-full h-12" disabled={loading} onClick={async () => {
+            setLoading(true);
+            try { await signInWithGoogle(redirectPath); }
+            catch { toast.error(t('auth.customer.login_error')); }
+            finally { setLoading(false); }
+          }}>Google</Button>}
           {/* Email */}
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -151,9 +159,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
                   {t("auth.customer.forgot_link")}
                 </button>
               </div>
-              <p className="text-xs text-muted-foreground text-center">
-                {t("auth.customer.no_account_info")}
-              </p>
+              <Button variant="outline" className="w-full" onClick={() => switchView("signup")} disabled={loading}>{t("auth.customer.create_button")}</Button>
             </>
           )}
 

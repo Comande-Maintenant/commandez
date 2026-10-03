@@ -9,14 +9,13 @@ export function getPricingPlans(t: (key: string, params?: Record<string, string 
     t('subscription.features.auto_translation'),
     t('subscription.features.advanced_stats'),
     t('subscription.features.ocr_menu'),
-    t('subscription.features.priority_support'),
   ];
 
   return [
     {
       id: 'monthly',
-      name: t('subscription.monthly'),
-      price: 29.99,
+      name: t('commerce.free_title'),
+      price: 0,
       features,
     },
   ];

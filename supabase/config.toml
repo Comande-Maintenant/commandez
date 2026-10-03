@@ -79,3 +79,7 @@ entrypoint = "./functions/og-restaurant/index.ts"
 [functions.photo-upload]
 verify_jwt = false
 entrypoint = "./functions/photo-upload/index.ts"
+
+[functions.push-order-notification]
+verify_jwt = false
+entrypoint = "./functions/push-order-notification/index.ts"

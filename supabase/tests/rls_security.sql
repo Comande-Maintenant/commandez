@@ -178,24 +178,24 @@ BEGIN
     RAISE EXCEPTION 'anon can read service-only prospection data';
   END IF;
 
-  SELECT (public.place_order(
-    '10000000-0000-4000-8000-000000000001',
-    'RPC Customer',
-    '0622222222',
-    'rpc@example.test',
-    'collect',
-    'web',
-    NULL,
-    '[{"menu_item_id":"30000000-0000-4000-8000-000000000001","name":"Security Test Item","quantity":1,"supplements":[],"extra_cost":0}]'::jsonb,
-    10,
-    10,
-    '',
-    NULL,
-    NULL,
-    'cash',
-    NULL,
-    FALSE
-  )).id
+  SELECT (public.place_order_once('50000000-0000-4000-8000-000000000001',jsonb_build_object(
+    'restaurant_id', '10000000-0000-4000-8000-000000000001',
+    'customer_name', 'RPC Customer',
+    'customer_phone', '0622222222',
+    'customer_email', 'rpc@example.test',
+    'order_type', 'collect',
+    'source', 'web',
+    'covers', NULL,
+    'items', '[{"menu_item_id":"30000000-0000-4000-8000-000000000001","name":"Security Test Item","quantity":1,"supplements":[],"extra_cost":0}]'::jsonb,
+    'subtotal', 10,
+    'total', 10,
+    'notes', '',
+    'client_ip', NULL,
+    'pickup_time', NULL,
+    'payment_method', 'cash',
+    'estimated_ready_at', NULL,
+    'is_test', FALSE
+  ))).id
   INTO created_id;
 
   IF created_id IS NULL THEN
@@ -204,24 +204,24 @@ BEGIN
 
   denied := false;
   BEGIN
-    PERFORM public.place_order(
-      '10000000-0000-4000-8000-000000000001',
-      'Tampered Price',
-      '0633333333',
-      'tampered@example.test',
-      'collect',
-      'web',
-      NULL,
-      '[{"menu_item_id":"30000000-0000-4000-8000-000000000001","name":"Security Test Item","quantity":1,"supplements":[],"extra_cost":0,"custom_choices":[{"stepKey":"supplement","selections":[{"id":"30000000-0000-4000-8000-000000000002","name":"Security Test Supplement","price":0}]}]}]'::jsonb,
-      10,
-      10,
-      '',
-      NULL,
-      NULL,
-      'cash',
-      NULL,
-      FALSE
-    );
+    PERFORM public.place_order_once('50000000-0000-4000-8000-000000000002',jsonb_build_object(
+    'restaurant_id', '10000000-0000-4000-8000-000000000001',
+    'customer_name', 'Tampered Price',
+    'customer_phone', '0633333333',
+    'customer_email', 'tampered@example.test',
+    'order_type', 'collect',
+    'source', 'web',
+    'covers', NULL,
+    'items', '[{"menu_item_id":"30000000-0000-4000-8000-000000000001","name":"Security Test Item","quantity":1,"supplements":[],"extra_cost":0,"custom_choices":[{"stepKey":"supplement","selections":[{"id":"30000000-0000-4000-8000-000000000002","name":"Security Test Supplement","price":0}]}]}]'::jsonb,
+    'subtotal', 10,
+    'total', 10,
+    'notes', '',
+    'client_ip', NULL,
+    'pickup_time', NULL,
+    'payment_method', 'cash',
+    'estimated_ready_at', NULL,
+    'is_test', FALSE
+  ));
   EXCEPTION WHEN SQLSTATE '22023' THEN
     denied := true;
   END;

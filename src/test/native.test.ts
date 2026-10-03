@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { nativeRoute } from '@/lib/native';
 describe('native links', () => {
-  it('keeps authenticated callback fragments for session recovery', () => {
-    expect(nativeRoute('commandeici://auth/inscription#access_token=abc&refresh_token=def')).toBe('/inscription#access_token=abc&refresh_token=def');
+  it('refuses implicit session tokens while preserving public links', () => {
+    expect(nativeRoute('commandeici://auth/inscription#access_token=abc&refresh_token=def')).toBeNull();
     expect(nativeRoute('https://app.commandeici.com/demo?lang=fr')).toBe('/demo?lang=fr');
   });
   it('preserves the OAuth callback query and permits checkout/account paths', () => {

@@ -1,7 +1,10 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Check, Plus, Phone, ShoppingBag, UtensilsCrossed, Clock, Timer } from "lucide-react";
-import { fetchMenuItems, createOrder, fetchOrders, fetchDemoOrders, updateOrderStatus, advanceDemoOrder, subscribeToOrders } from "@/lib/api";
+import { ChevronDown, Check, Plus, Phone, ShoppingBag, UtensilsCrossed, Clock, Timer, WifiOff } from "lucide-react";
+import { fetchMenuItems, updateOrderStatus, advanceDemoOrder } from "@/lib/api";
+import { submitPosOrder } from "@/services/pos-order-request";
+import { useRestaurantOrderFeed } from "@/context/RestaurantOrdersContext";
+import { CartProvider } from "@/context/CartContext";
 import { buildOrderItems, calculateGrandTotal } from "@/lib/posHelpers";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { formatOrderTime } from "@/lib/formatOrderTime";
@@ -60,8 +63,12 @@ const initialState = {
 export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [state, setState] = useState(initialState);
-  const [readyOrders, setReadyOrders] = useState<DbOrder[]>([]);
-  const [doneOrders, setDoneOrders] = useState<DbOrder[]>([]);
+  const submittingRef = useRef(false);
+  const { orders, setOrders, disconnected } = useRestaurantOrderFeed();
+  const readyOrders = orders.filter(order => order.status === "ready");
+  const today = new Date().toDateString();
+  const doneOrders = orders.filter(order => order.status === "done" && new Date(order.created_at).toDateString() === today)
+    .sort((a, b) => new Date(b.completed_at || b.created_at).getTime() - new Date(a.completed_at || a.created_at).getTime());
   const [activeTab, setActiveTab] = useState<CaisseTab>("commande");
   const [expandedDoneId, setExpandedDoneId] = useState<string | null>(null);
   const { t, language } = useLanguage();
@@ -74,52 +81,10 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   }, []);
 
   useEffect(() => {
-    fetchMenuItems(restaurant.id).then(setMenuItems);
+    let disposed = false;
+    fetchMenuItems(restaurant.id).then(items => { if (!disposed) setMenuItems(items); }).catch(() => {});
+    return () => { disposed = true; };
   }, [restaurant.id]);
-
-  // Fetch and subscribe to ready + done orders for "A encaisser" panel
-  const updateOrderLists = (orders: DbOrder[]) => {
-    setReadyOrders(orders.filter((o) => o.status === "ready"));
-    const today = new Date().toDateString();
-    setDoneOrders(
-      orders
-        .filter((o) => o.status === "done" && new Date(o.created_at).toDateString() === today)
-        .sort((a, b) => new Date(b.completed_at || b.created_at).getTime() - new Date(a.completed_at || a.created_at).getTime())
-    );
-  };
-
-  useEffect(() => {
-    const fetchFn = isDemo ? fetchDemoOrders(restaurant.id) : fetchOrders(restaurant.id);
-    fetchFn.then(updateOrderLists);
-
-    if (isDemo) {
-      const poll = setInterval(() => {
-        fetchDemoOrders(restaurant.id).then(updateOrderLists);
-      }, 5000);
-      return () => clearInterval(poll);
-    }
-
-    const unsub = subscribeToOrders(restaurant.id, (order) => {
-      if (order.status === "ready") {
-        setReadyOrders((prev) => {
-          const exists = prev.find((o) => o.id === order.id);
-          if (exists) return prev.map((o) => (o.id === order.id ? order : o));
-          return [order, ...prev];
-        });
-      } else if (order.status === "done") {
-        setReadyOrders((prev) => prev.filter((o) => o.id !== order.id));
-        setDoneOrders((prev) => {
-          const exists = prev.find((o) => o.id === order.id);
-          if (exists) return prev.map((o) => (o.id === order.id ? order : o));
-          return [order, ...prev];
-        });
-      } else {
-        setReadyOrders((prev) => prev.filter((o) => o.id !== order.id));
-      }
-    });
-
-    return unsub;
-  }, [restaurant.id, isDemo]);
 
   const setScreen = (screen: POSScreen) =>
     setState((s) => ({ ...s, screen }));
@@ -193,6 +158,8 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   }, []);
 
   const handleSubmit = async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setState((s) => ({ ...s, submitting: true }));
     try {
       const allItems = buildOrderItems(state.persons, state.drinks, state.desserts);
@@ -203,21 +170,19 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
         state.customerName ||
         t("pos.caisse_name").replace("{table}", state.tableNumber ? ` T${state.tableNumber}` : "").replace("{count}", String(personCount));
 
-      const estimatedReadyAt = new Date(Date.now() + state.prepMinutes * 60000).toISOString();
-      const order = await createOrder({
+      const order = await submitPosOrder({
         restaurant_id: restaurant.id,
         customer_name: customerName,
         customer_phone: "",
         order_type: state.orderType,
-        source: isDemo ? "demo" : "pos",
+        source: "pos",
         covers: personCount,
         items: allItems,
         subtotal: total,
         total,
         notes: state.notes || undefined,
         payment_method: state.paymentMethod,
-        estimated_ready_at: estimatedReadyAt,
-      });
+      }, isDemo ? "demo" : restaurant.owner_id, state.prepMinutes);
 
       const dn = formatDisplayNumber(order);
       setState((s) => ({
@@ -230,6 +195,8 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
     } catch (e) {
       toast.error(t("pos.order_error"));
       setState((s) => ({ ...s, submitting: false }));
+    } finally {
+      submittingRef.current = false;
     }
   };
 
@@ -240,41 +207,42 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
       } else {
         await updateOrderStatus(orderId, "done");
       }
-      const completed = readyOrders.find((o) => o.id === orderId);
-      setReadyOrders((prev) => prev.filter((o) => o.id !== orderId));
-      if (completed) {
-        setDoneOrders((prev) => [{ ...completed, status: "done", completed_at: new Date().toISOString() }, ...prev]);
-      }
+      setOrders(previous => previous.map(order => order.id === orderId
+        ? { ...order, status: "done", completed_at: new Date().toISOString() }
+        : order));
       toast.success(t("pos.order_cashed"));
     } catch {
       toast.error(t("pos.update_error"));
     }
   };
 
-  const config = restaurant.customization_config;
+  const config = restaurant.customization_config?.enabled ? restaurant.customization_config : null;
   const [simpleSubmitting, setSimpleSubmitting] = useState(false);
 
   const handleSimpleSubmit = async (items: any[], total: number, orderType: string, customerName: string, covers: number, paymentMethod: string, estimatedMinutes: number) => {
+    if (submittingRef.current) return false;
+    submittingRef.current = true;
     setSimpleSubmitting(true);
     try {
-      const estimatedReadyAt = new Date(Date.now() + estimatedMinutes * 60000).toISOString();
-      await createOrder({
+      await submitPosOrder({
         restaurant_id: restaurant.id,
         customer_name: customerName,
         customer_phone: "",
         order_type: orderType,
-        source: isDemo ? "demo" : "pos",
+        source: "pos",
         covers,
         items,
         subtotal: total,
         total,
         payment_method: paymentMethod,
-        estimated_ready_at: estimatedReadyAt,
-      });
+      }, isDemo ? "demo" : restaurant.owner_id, estimatedMinutes);
       toast.success(t("pos.order_sent_toast"));
+      return true;
     } catch (e) {
       toast.error(t("pos.send_error"));
+      return false;
     } finally {
+      submittingRef.current = false;
       setSimpleSubmitting(false);
     }
   };
@@ -470,6 +438,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const renderPOS = () => {
     if (!config) {
       return (
+        <CartProvider key={`${restaurant.owner_id}:${restaurant.id}`} storageKey={`commandeici_pos_cart:${restaurant.owner_id}:${restaurant.id}`}>
         <POSSimple
           restaurantId={restaurant.id}
           restaurantSlug={restaurant.slug}
@@ -480,6 +449,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
           onSubmit={handleSimpleSubmit}
           submitting={simpleSubmitting}
         />
+        </CartProvider>
       );
     }
 
@@ -571,6 +541,12 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
 
   return (
     <div className="relative">
+      {disconnected && (
+        <div role="status" className="mb-4 p-3 bg-destructive/10 rounded-xl flex items-center gap-2 text-sm text-destructive">
+          <WifiOff className="h-4 w-4 flex-shrink-0" />
+          {t('dashboard.orders.connection_lost')}
+        </div>
+      )}
       {/* Tabs: Prise de commande / A encaisser */}
       <div className="flex gap-2 mb-4">
         <button

@@ -1,3 +1,4 @@
+import { FREE_ACCESS, freeAccessResponse } from '../_shared/access-policy.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14?target=deno";
 import { requireUser } from "../_shared/auth.ts";
@@ -25,6 +26,10 @@ Deno.serve(async (req: Request) => {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+  if (FREE_ACCESS) {
+    return new Response(JSON.stringify(freeAccessResponse()), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
       return new Response(JSON.stringify({ error: "Stripe not configured" }), {

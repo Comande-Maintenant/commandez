@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useLanguage } from '@/context/LanguageContext';
+import { googleSignInEnabled, signInWithGoogle } from '@/services/google-sign-in';
 import { LanguageSelector } from '@/components/restaurant/LanguageSelector';
 
 const ConnexionPage = () => {
@@ -41,6 +42,19 @@ const ConnexionPage = () => {
       toast.success(t('auth.password_changed'));
     }
   }, [resetSuccess]);
+
+  useEffect(() => {
+    let stopped = false;
+    const resume = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || stopped) return;
+      if (redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//') && !redirectTo.includes('\\')) { navigate(redirectTo); return; }
+      const { data } = await supabase.from('restaurants').select('slug').eq('owner_id', user.id).limit(1);
+      if (!stopped) navigate(data?.[0] ? `/admin/${data[0].slug}` : '/inscription', { replace: true });
+    };
+    void resume();
+    return () => { stopped = true; };
+  }, [navigate, redirectTo]);
 
   const handleSignIn = async () => {
     setError('');
@@ -205,6 +219,12 @@ const ConnexionPage = () => {
                     </div>
                   )}
 
+                  {googleSignInEnabled && <Button variant="outline" className="w-full h-12" disabled={loading} onClick={async () => {
+                    setLoading(true);
+                    try { await signInWithGoogle('/connexion'); }
+                    catch { setError(t('auth.generic_error')); }
+                    finally { setLoading(false); }
+                  }}>Google</Button>}
                   {/* Form fields */}
                   <div className="space-y-4">
                     {/* Email */}

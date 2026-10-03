@@ -1,9 +1,9 @@
+import { isNative } from '@/lib/native';
 import { Check, Gift, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getPricingPlans } from '@/services/subscription';
 import { useLanguage } from '@/context/LanguageContext';
 import type { SubscriptionPlan } from '@/types/onboarding';
-import { isNative } from '@/lib/native';
 
 interface PricingCardsProps {
   onSelect: (plan: SubscriptionPlan) => void;
@@ -41,9 +41,9 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
       <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-4 max-w-2xl mx-auto">
         <Gift className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm font-semibold text-green-800">{t('subscription.trial_banner')}</p>
+          <p className="text-sm font-semibold text-green-800">{t('commerce.free_title')}</p>
           <p className="text-xs text-green-700 mt-0.5">
-            {t('subscription.trial_desc')}
+            {t('commerce.free_desc')}
           </p>
         </div>
       </div>
@@ -59,12 +59,10 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
         >
           <h3 className="font-semibold text-foreground text-lg">{plan.name}</h3>
 
-          {!isNative() && <div className="mt-3 flex items-baseline justify-center gap-1">
-            <span className="text-4xl font-bold text-primary">1&#8364;</span>
-            <span className="text-sm text-muted-foreground">{t('pricing.per_month_3')}</span>
-          </div>}
-
-          {!isNative() && <p className="text-sm text-muted-foreground mt-2">{t('pricing.then_price_no_commitment')}</p>}
+          <div className="mt-3 flex items-baseline justify-center gap-1">
+            <span className="text-4xl font-bold text-primary">0 €</span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">{t('commerce.free_desc')}</p>
 
           <Button disabled={disabled}
             className="w-full mt-5"
@@ -73,7 +71,7 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
               onSelect('monthly');
             }}
           >
-            {t('onboarding.start_trial')}
+            {t('commerce.publish')}
           </Button>
         </div>
       </div>
@@ -90,14 +88,14 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
           ))}
         </ul>
         <p className="mt-3 text-xs">
-          {t('subscription.pricing_fine_print')}
+          {t('commerce.free_future')}
         </p>
       </div>
 
       {/* Security footer */}
       <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground max-w-2xl mx-auto">
         <Lock className="h-3.5 w-3.5" />
-        <span>{t('subscription.secure_payment')}</span>
+        <span>{t('commerce.free_desc')}</span>
       </div>
     </div>
   );

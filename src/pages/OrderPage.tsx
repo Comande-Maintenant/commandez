@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle, CreditCard, Banknote, UtensilsCrossed } from "lucide-react";
 import { motion } from "framer-motion";
@@ -12,13 +12,17 @@ import { ProtectedPhone } from "@/components/ProtectedPhone";
 import { PickupTimePicker } from "@/components/PickupTimePicker";
 import { toast } from "sonner";
 import { useKioskMode } from "@/hooks/useKioskMode";
+import { CustomerAuthModal } from "@/components/CustomerAuthModal";
+import { checkoutRequestId, clearCheckoutRequest } from "@/services/order-request";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 
 const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
   const navigate = useNavigate();
   const { t, tMenu, isRTL } = useLanguage();
-  const { user, isLoggedIn } = useCustomerAuth();
+  const { user, isLoggedIn, profile, isLoading: authLoading } = useCustomerAuth();
+  const [authOpen, setAuthOpen] = useState(false);
+  const submittingRef = useRef(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -111,6 +115,11 @@ const OrderPage = () => {
     } catch { /* ignore */ }
   }, [restaurantId]);
 
+  useEffect(() => {
+    if (profile && profile.id === user?.id) { setName(profile.name || name); setPhone(profile.phone || phone); setEmail(profile.email || email); }
+    if (user?.email_confirmed_at) setAuthOpen(false);
+  }, [profile, user?.id, user?.email_confirmed_at]);
+
   const total = subtotal;
 
   // Validate phone: accept French formats (06, 07, +33, 0033) and international
@@ -140,38 +149,28 @@ const OrderPage = () => {
   };
 
   const handleConfirm = async () => {
-    if (!restaurantId || submitting) return;
+    if (!restaurantId || submittingRef.current || authLoading) return;
+    // Browsing and cart editing stay public. Real validation requires a session;
+    // the server enforces this independently from the client/demo hints.
+    if (!isDemo && !user?.email_confirmed_at) {
+      try { localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email })); } catch {}
+      setAuthOpen(true);
+      return;
+    }
     // Validate phone before submitting
     if (!isKiosk && phone && !isPhoneValid(phone)) {
       setPhoneError(t("order.invalid_phone"));
       return;
     }
+    submittingRef.current = true;
     setSubmitting(true);
     try {
       // Check subscription (skip for demo restaurants)
       const resto = await fetchRestaurantById(restaurantId);
       const demoOrder = isDemo || !!(resto as any)?.is_demo;
-      if (!demoOrder && resto) {
-        const status = resto.subscription_status;
-        if (status === "expired" || status === "cancelled" || status === "past_due" || status === "pending_payment") {
-          toast.error(t("order.restaurant_unavailable"));
-          setSubmitting(false);
-          return;
-        }
-        if (status === "trial" && resto.trial_end_date) {
-          const trialEnd = new Date(resto.trial_end_date);
-          if (resto.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + resto.bonus_weeks * 7);
-          if (trialEnd < new Date()) {
-            toast.error(t("order.restaurant_unavailable"));
-            setSubmitting(false);
-            return;
-          }
-        }
-      }
-
       // Save customer info to localStorage
       if (!demoOrder) {
-        localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email }));
+        try { localStorage.setItem("cm_customer", JSON.stringify({ name, phone, email })); } catch {}
       }
 
       const orderItems = items.map((i) => {
@@ -194,7 +193,7 @@ const OrderPage = () => {
           drink_choice: i.drinkChoice || null,
           dessert_choice: i.dessertChoice || null,
           sauce_extra_cost: i.sauceExtraCost || null,
-          custom_choices: i.customChoices?.filter((c) => c.selections.length > 0) || null,
+          custom_choices: i.customChoices?.filter((c) => c.selections.length > 0) || [],
         };
       });
       const kioskName = isKiosk ? (tableNumber ? t("kiosk.terminal_name_table", { table: tableNumber }) : t("kiosk.terminal_name")) : name;
@@ -202,7 +201,7 @@ const OrderPage = () => {
         restaurant_id: restaurantId,
         customer_name: isKiosk ? kioskName : name,
         customer_phone: isKiosk ? "" : phone,
-        customer_email: isKiosk ? undefined : (email || undefined),
+        customer_email: isKiosk ? undefined : (user?.email || email || undefined),
         order_type: orderType,
         covers: orderType === "sur_place" ? covers : undefined,
         source: demoOrder ? "demo" : (isKiosk ? "kiosk" : undefined),
@@ -220,15 +219,18 @@ const OrderPage = () => {
       if (isProspect) {
         (orderPayload as any).is_test = true;
       }
+      const account = user?.id || 'demo';
+      orderPayload.request_id = await checkoutRequestId(orderPayload, account);
       const order = await createOrder(orderPayload);
-      localStorage.setItem("active-order", JSON.stringify({
+      clearCheckoutRequest(restaurantId, account);
+      try { localStorage.setItem("active-order", JSON.stringify({
         orderId: order.id,
         restaurantSlug: restaurantSlug || "",
         createdAt: Date.now(),
-      }));
+      })); } catch {}
       // Save last order for reorder feature (with full customizations)
       if (restaurantId && !demoOrder) {
-        localStorage.setItem(`last-order-${restaurantId}`, JSON.stringify(orderItems));
+        try { localStorage.setItem(`last-order-${restaurantId}`, JSON.stringify(orderItems)); } catch {}
       }
       clearCart();
       // Kiosk mode: go back to restaurant with confirmation overlay
@@ -244,8 +246,11 @@ const OrderPage = () => {
     } catch (e: any) {
       console.error("Order error:", e);
       const msg = e?.message || e?.details || String(e);
-      toast.error(t("order.submit_error"));
+      if (msg.includes('authentication_required')) setAuthOpen(true);
+      if (msg.includes('customer_banned')) { setBanned(true); toast.error(t("order.banned_title")); }
+      else toast.error(t("order.submit_error"));
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   };
@@ -282,6 +287,7 @@ const OrderPage = () => {
 
   return (
     <div className="min-h-screen bg-background" dir={isRTL ? "rtl" : "ltr"}>
+      <CustomerAuthModal open={authOpen} onClose={() => setAuthOpen(false)} redirectPath="/order" />
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="p-2" aria-label={t("nav.back")}>
@@ -435,7 +441,7 @@ const OrderPage = () => {
 
           <Button
             onClick={handleConfirm}
-            disabled={(!isKiosk && (!name || !phone || !isPhoneValid(phone))) || submitting}
+            disabled={(!isKiosk && (!name || !phone || !isPhoneValid(phone))) || submitting || authLoading}
             className="w-full h-14 text-base font-semibold rounded-2xl"
             size="lg"
           >

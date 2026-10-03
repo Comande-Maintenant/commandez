@@ -13,7 +13,7 @@ SELECT extensions.is((SELECT count(*)::int FROM public.restaurants WHERE slug='a
 SELECT public.complete_onboarding('20000000-0000-0000-0000-000000000001','{"name":"Atomic Restaurant","slug":"atomic"}','[]','{}');
 SELECT extensions.is((SELECT count(*)::int FROM public.restaurants WHERE onboarding_key='20000000-0000-0000-0000-000000000001'),1,'retry does not duplicate');
 SELECT extensions.is((SELECT count(*)::int FROM public.menu_items WHERE restaurant_id=(SELECT id FROM restaurants WHERE slug='atomic')),1,'retry preserves original menu');
-SELECT extensions.is((SELECT round(extract(epoch FROM trial_end-trial_start)/86400)::int FROM subscriptions WHERE restaurant_id=(SELECT id FROM restaurants WHERE slug='atomic')),30,'trial lasts thirty days');
+SELECT extensions.is((SELECT status FROM subscriptions WHERE restaurant_id=(SELECT id FROM restaurants WHERE slug='atomic')),'free','publication is free without a trial deadline');
 SELECT extensions.throws_ok($$SELECT public.complete_onboarding('20000000-0000-0000-0000-000000000003','{"name":"Broken","slug":"broken"}','[{"name":"Bad","category":"Main","price":-5}]','{}')$$,'22023','invalid_menu','invalid menu rolls back creation');
 SELECT extensions.is((SELECT count(*)::int FROM public.restaurants WHERE slug='broken'),0,'no partial restaurant remains');
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000002',true);

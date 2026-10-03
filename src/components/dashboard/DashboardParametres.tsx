@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { DeleteAccountButton } from '@/components/auth/DeleteAccountButton';
-import { isNative } from '@/lib/native';
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Power,
@@ -17,14 +16,10 @@ import {
   VolumeX,
   Play,
   Crown,
-  Tag,
-  ExternalLink,
 } from "lucide-react";
 import { updateRestaurant } from "@/lib/api";
 import { ReferralSection } from "./referral/ReferralSection";
-import type { DbRestaurant, DbSubscription } from "@/types/database";
-import { Link } from "react-router-dom";
-const PLAN_PRICES = { monthly: 29.99 } as const;
+import type { DbRestaurant } from "@/types/database";
 import { ScheduleEditor, type ScheduleDay } from "./ScheduleEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,10 +38,7 @@ interface Props {
 const orderedDays = [1, 2, 3, 4, 5, 6, 0];
 
 export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
-  const { t, language } = useLanguage();
-
-  const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
-  const locale = LOCALE_MAP[language] || "fr-FR";
+  const { t } = useLanguage();
 
   const availabilityModes = useMemo(() => [
     { id: "manual", label: t('dashboard.settings.manual'), desc: t('dashboard.settings.manual_desc') },
@@ -155,50 +147,6 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
     if (isDemo) { window.location.href = "/"; return; }
     await supabase.auth.signOut();
     window.location.href = "/";
-  };
-
-  const [subscription, setSubscription] = useState<DbSubscription | null>(null);
-
-  // Load subscription info
-  useEffect(() => {
-    supabase
-      .from("subscriptions")
-      .select("*")
-      .eq("restaurant_id", restaurant.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single()
-      .then(({ data }) => {
-        if (data) setSubscription(data as unknown as DbSubscription);
-      });
-  }, [restaurant.id]);
-
-  const [promoInput, setPromoInput] = useState("");
-  const [promoLoading, setPromoLoading] = useState(false);
-
-  const handleApplyPromo = async () => {
-    if (!promoInput.trim()) return;
-    if (isDemo) {
-      toast.success(t('dashboard.settings.promo_applied'));
-      setPromoInput("");
-      return;
-    }
-    setPromoLoading(true);
-    try {
-      const { data } = await supabase.functions.invoke("validate-promo", {
-        body: { code: promoInput.trim(), restaurant_id: restaurant.id },
-      });
-      if (data?.valid) {
-        toast.success(data.description || t('dashboard.settings.promo_applied'));
-        setPromoInput("");
-      } else {
-        toast.error(data?.error || t('dashboard.settings.invalid_code'));
-      }
-    } catch {
-      toast.error(t('subscription.validation_error'));
-    } finally {
-      setPromoLoading(false);
-    }
   };
 
   const [deactivateConfirm, setDeactivateConfirm] = useState("");
@@ -504,105 +452,15 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
         </div>
       </section>
 
-      {/* Subscription / Abonnement */}
+      {/* Current access, independent of historical subscriptions. */}
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-2 mb-4">
           <Crown className="h-5 w-5 text-foreground" />
-          <h3 className="text-base font-semibold text-foreground">{t('dashboard.settings.my_subscription')}</h3>
+          <h3 className="text-base font-semibold text-foreground">{t('commerce.access_title')}</h3>
         </div>
-
-        {isNative() ? <p className="text-sm text-muted-foreground">{t('native.subscription')}</p> : subscription ? (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t('dashboard.settings.plan')}</span>
-              <span className="text-sm font-medium text-foreground">
-                {t('dashboard.settings.monthly')}{" "}
-                ({PLAN_PRICES.monthly.toFixed(2)} €/{t("dashboard.settings.monthly_short")})
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t('dashboard.settings.status')}</span>
-              <span className={`text-sm font-medium ${
-                subscription.status === "active" || subscription.status === "promo"
-                  ? "text-green-600"
-                  : subscription.status === "trial"
-                  ? "text-blue-600"
-                  : subscription.status === "past_due"
-                  ? "text-red-600"
-                  : "text-amber-600"
-              }`}>
-                {subscription.status === "active" ? t('dashboard.settings.status_active') :
-                 subscription.status === "trial" ? t('dashboard.settings.status_trial') :
-                 subscription.status === "past_due" ? t('dashboard.settings.status_pending') :
-                 subscription.status === "cancelled" ? t('dashboard.settings.status_cancelled') :
-                 subscription.status === "expired" ? t('dashboard.settings.status_expired') :
-                 subscription.status === "promo" ? t('dashboard.settings.status_promo') :
-                 t('dashboard.settings.status_waiting')}
-              </span>
-            </div>
-            {subscription.trial_end && subscription.status === "trial" && (
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">{t('dashboard.settings.trial_end')}</span>
-                <span className="text-sm font-medium text-foreground">
-                  {new Date(subscription.trial_end).toLocaleDateString(locale)}
-                </span>
-              </div>
-            )}
-            {subscription.billing_day && (
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">{t('dashboard.settings.billing')}</span>
-                <span className="text-sm text-foreground">
-                  {t('dashboard.settings.billing_desc_monthly', { day: subscription.billing_day === 1 ? t('dashboard.settings.first_ordinal') : String(subscription.billing_day) })}
-                </span>
-              </div>
-            )}
-
-            <div className="flex gap-2 pt-2">
-              <Button variant="outline" size="sm" className="flex-1 gap-1.5" asChild>
-                <Link to="/choisir-plan">
-                  <ExternalLink className="h-3.5 w-3.5" />
-                  {t('dashboard.settings.manage')}
-                </Link>
-              </Button>
-              <Button variant="outline" size="sm" className="flex-1" asChild>
-                <Link to="/choisir-plan">{t('dashboard.settings.change_plan')}</Link>
-              </Button>
-            </div>
-
-            {/* Promo code input */}
-            <div className="pt-2 border-t border-border">
-              <div className="flex items-center gap-2 mb-2">
-                <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">{t('dashboard.settings.promo_code')}</span>
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  value={promoInput}
-                  onChange={(e) => setPromoInput(e.target.value)}
-                  placeholder="LANCEMENT"
-                  className="flex-1 h-9 text-sm"
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleApplyPromo}
-                  disabled={promoLoading || !promoInput.trim()}
-                >
-                  {promoLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : t('common.apply')}
-                </Button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="text-center py-4">
-            <p className="text-sm text-muted-foreground mb-3">
-              {t('dashboard.settings.no_subscription')}
-            </p>
-            <Button size="sm" asChild>
-              <Link to="/choisir-plan">{t('dashboard.settings.choose_plan')}</Link>
-            </Button>
-          </div>
-        )}
+        <p className="text-sm font-medium text-foreground">{t('commerce.free_title')}</p>
+        <p className="text-sm text-muted-foreground mt-2">{t('commerce.free_desc')}</p>
+        <p className="text-xs text-muted-foreground mt-3">{t('commerce.free_future')}</p>
       </section>
 
       {/* Referral / Parrainage */}

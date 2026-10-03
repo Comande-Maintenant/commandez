@@ -1,3 +1,4 @@
+import { randomUuid } from '@/lib/uuid';
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,7 +9,7 @@ const SESSION_KEY = "cm_session_id";
 function getOrCreateSessionId(): string {
   let id = sessionStorage.getItem(SESSION_KEY);
   if (!id) {
-    id = crypto.randomUUID?.() || Math.random().toString(36).slice(2);
+    id = randomUuid();
     sessionStorage.setItem(SESSION_KEY, id);
   }
   return id;

@@ -1,0 +1,30 @@
+import { act, cleanup, render } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+const mocks = vi.hoisted(() => ({ app: vi.fn(), start: vi.fn(), stop: vi.fn(), remove: vi.fn() }));
+vi.mock('@/lib/native', () => ({ isNative: () => true, nativeRoute: () => null }));
+vi.mock('@/context/LanguageContext', () => ({ useLanguage: () => ({ t: (key: string) => key }) }));
+vi.mock('react-router-dom', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('@capacitor/app', () => ({ App: { addListener: mocks.app, getLaunchUrl: vi.fn().mockResolvedValue(null) } }));
+vi.mock('@capacitor/network', () => ({ Network: { getStatus: vi.fn().mockResolvedValue({ connected: true }), addListener: vi.fn().mockResolvedValue({ remove: mocks.remove }) } }));
+vi.mock('@/integrations/supabase/client', () => ({ supabase: { auth: { startAutoRefresh: mocks.start, stopAutoRefresh: mocks.stop } } }));
+import { NativeLifecycle } from '@/components/NativeLifecycle';
+afterEach(() => { cleanup(); vi.clearAllMocks(); });
+describe('native merchant wake-up', () => {
+  it('requests an order refresh when iOS returns to the foreground', async () => {
+    mocks.app.mockResolvedValue({ remove: mocks.remove });
+    const resume = vi.fn();
+    window.addEventListener('commandeici:resume', resume);
+    const { unmount } = render(<NativeLifecycle />);
+    await act(async () => { await Promise.resolve(); });
+    const stateChange = mocks.app.mock.calls.find(call => call[0] === 'appStateChange')![1];
+    act(() => stateChange({ isActive: false }));
+    expect(mocks.stop).toHaveBeenCalled();
+    expect(resume).not.toHaveBeenCalled();
+    act(() => stateChange({ isActive: true }));
+    expect(mocks.start).toHaveBeenCalled();
+    expect(resume).toHaveBeenCalledTimes(1);
+    unmount();
+    expect(mocks.remove).toHaveBeenCalledTimes(3);
+    window.removeEventListener('commandeici:resume', resume);
+  });
+});

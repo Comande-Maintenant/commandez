@@ -8,10 +8,16 @@ export const authRedirectUrl = (path: string) => isNative() ? `commandeici://aut
 export function nativeRoute(input: string): string | null {
   try {
     const url = new URL(input);
+    const callbackPaths = ['/inscription', '/profil', '/order', '/connexion', '/reinitialiser-mot-de-passe'];
+    if (url.username || url.password || (url.port && url.port !== '443')) return null;
     if (url.protocol === 'commandeici:' && url.hostname === 'auth') {
-      if (!['/inscription', '/profil', '/order', '/connexion', '/reinitialiser-mot-de-passe'].includes(url.pathname)) return null;
+      if (!callbackPaths.includes(url.pathname)) return null;
     } else if (url.protocol !== 'https:' || url.hostname !== 'app.commandeici.com') return null;
     if (!url.pathname.startsWith('/') || url.pathname.startsWith('//')) return null;
+    const fragment = new URLSearchParams(url.hash.slice(1));
+    // Native auth uses PKCE. Supplied bearer tokens must never replace its session.
+    if (['access_token', 'refresh_token'].some(key => fragment.has(key) || url.searchParams.has(key))) return null;
+    if (url.searchParams.has('code') && (!callbackPaths.includes(url.pathname) || !url.searchParams.get('code') || url.searchParams.getAll('code').length !== 1)) return null;
     return url.pathname + url.search + url.hash;
   } catch { return null; }
 }
