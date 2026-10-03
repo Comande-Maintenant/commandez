@@ -182,8 +182,8 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
                   style={{ backgroundColor: c }}
                 />
               ))}
-              <label className="w-8 h-8 rounded-full border-2 border-border cursor-pointer overflow-hidden">
-                <input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="w-full h-full cursor-pointer opacity-0 absolute" />
+              <label className="relative w-8 h-8 rounded-full border-2 border-border cursor-pointer overflow-hidden">
+                <input type="color" aria-label={t('dashboard.page.primary_color')} value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="absolute inset-0 w-full h-full cursor-pointer opacity-0" />
                 <div className="w-full h-full bg-gradient-to-br from-red-500 via-green-500 to-blue-500 rounded-full" />
               </label>
             </div>
@@ -200,8 +200,8 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
                   style={{ backgroundColor: c }}
                 />
               ))}
-              <label className="w-8 h-8 rounded-full border-2 border-border cursor-pointer overflow-hidden">
-                <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-full h-full cursor-pointer opacity-0 absolute" />
+              <label className="relative w-8 h-8 rounded-full border-2 border-border cursor-pointer overflow-hidden">
+                <input type="color" aria-label={t('dashboard.page.background_color')} value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="absolute inset-0 w-full h-full cursor-pointer opacity-0" />
                 <div className="w-full h-full bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 rounded-full" />
               </label>
             </div>

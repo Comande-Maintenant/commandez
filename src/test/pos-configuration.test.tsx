@@ -18,7 +18,7 @@ afterEach(cleanup);
 describe('POS uses the enabled merchant configuration and canonical portion prices', () => {
   it('opens the simple POS when the custom configuration is disabled', async () => {
     const restaurant = { id: 'restaurant-a', slug: 'a', owner_id: 'owner-a', customization_config: { ...config, enabled: false } } as DbRestaurant;
-    const feed = { orders: [], setOrders: vi.fn(), loading: false, disconnected: false, notification: null };
+    const feed = { orders: [], setOrders: vi.fn(), loading: false, disconnected: false, notification: null, receiveDemoOrder: vi.fn() };
     render(<RestaurantOrdersContext.Provider value={feed}><DashboardPOS restaurant={restaurant} /></RestaurantOrdersContext.Provider>);
     await act(async () => { await Promise.resolve(); });
     expect(screen.getByText('simple POS')).toBeInTheDocument();

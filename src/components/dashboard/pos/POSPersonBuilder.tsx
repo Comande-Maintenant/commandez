@@ -1,3 +1,4 @@
+import { usePOSViewport } from "@/hooks/usePOSViewport";
 import { useRef, useCallback, useEffect } from "react";
 import { ArrowLeft, Check, Minus, Plus } from "lucide-react";
 import { motion } from "framer-motion";
@@ -32,6 +33,7 @@ export const POSPersonBuilder = ({
   onBack,
 }: Props) => {
   const { t } = useLanguage();
+  const viewportRef = usePOSViewport();
   const {
     baseId,
     viandeIds,
@@ -152,7 +154,9 @@ export const POSPersonBuilder = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col h-[calc(100vh-2rem)] max-h-[900px]"
+      ref={viewportRef}
+      data-testid="pos-viewport"
+      className="flex flex-col min-h-0 max-h-[900px] [&>div:not(.flex-1)]:shrink-0"
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
@@ -166,7 +170,7 @@ export const POSPersonBuilder = ({
       </div>
 
       {/* Scrollable content */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+      <div ref={scrollContainerRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-6">
 
         {/* === BASE === */}
         {baseStep && (

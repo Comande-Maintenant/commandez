@@ -54,6 +54,8 @@ describe('merchant screen integration', () => {
     mocks.fetch.mockResolvedValue([order()]);
     render(<Dashboard tab="cuisine" />);
     await act(async () => { await Promise.resolve(); });
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape', code: 'Escape' });
+    await act(async () => { await Promise.resolve(); });
     expect(screen.getByRole('button', { name: 'Client test' })).toBeInTheDocument();
     await act(async () => { await vi.advanceTimersByTimeAsync(60000); });
     expect(mocks.update).not.toHaveBeenCalled();

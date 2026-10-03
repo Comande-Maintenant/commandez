@@ -1,5 +1,5 @@
 import { setRestaurantHead } from '@/lib/restaurant-head';
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer, Maximize } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -382,7 +382,7 @@ const RestaurantPage = () => {
   }, []);
 
   const isDemo = !!(restaurant as any)?.is_demo;
-  const primary = useMemo(() => softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color]);
+  const primary = useMemo(() => isDemo ? "#10B981" : softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color, isDemo]);
   const bg = UNIVERSAL_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
   const primaryDark = useMemo(() => darken(primary, 0.15), [primary]);
@@ -528,14 +528,14 @@ const RestaurantPage = () => {
 
       {/* Sticky demo banner - always visible, not dismissable */}
       {isDemo && !isKiosk && (
-        <div className="sticky top-0 z-50 bg-indigo-600 text-white px-4 py-2 flex items-center justify-between gap-3">
+        <div className="sticky top-0 z-50 bg-emerald-600 text-white px-4 py-2 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-sm font-semibold whitespace-nowrap">MODE DEMO</span>
             <span className="text-xs opacity-90 hidden sm:inline truncate">{t("demo.sticky_text")}</span>
           </div>
           <a
             href="/inscription"
-            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-white text-indigo-700 hover:bg-indigo-50 transition-colors"
+            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-white text-emerald-700 hover:bg-emerald-50 transition-colors"
           >
             {t("demo.seo_banner_cta")}
           </a>
@@ -552,7 +552,7 @@ const RestaurantPage = () => {
       />
 
       {/* Cover / Hero */}
-      <div className="relative h-[200px] sm:h-64" style={{ zIndex: 1 }}>
+      <div className={`relative ${isDemo ? "h-[140px]" : "h-[180px]"} sm:h-64`} style={{ zIndex: 1 }}>
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={restaurant.cover_image || getDefaultCoverImage(restaurant.cuisine)}
@@ -586,13 +586,13 @@ const RestaurantPage = () => {
         <div ref={heroSentinelRef} className="absolute bottom-0 h-1 w-full" />
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 -mt-16 relative" style={{ zIndex: 2 }}>
+      <div className="max-w-3xl mx-auto px-4 -mt-12 sm:-mt-16 relative" style={{ zIndex: 2 }}>
         {/* Restaurant Info Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <div
-            className="rounded-2xl p-5 transition-shadow duration-300"
+            className="rounded-2xl p-4 sm:p-5 transition-shadow duration-300"
             style={{
-              background: "rgba(255,255,255,0.65)",
+              background: "rgba(255,255,255,0.96)",
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)",
               border: "1px solid rgba(255,255,255,0.4)",
@@ -605,12 +605,12 @@ const RestaurantPage = () => {
                 <img
                   src={restaurant.image}
                   alt={restaurant.name}
-                  className="w-16 h-16 rounded-xl object-cover flex-shrink-0 border-2"
+                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover flex-shrink-0 border-2"
                   style={{ borderColor: primary }}
                 />
               ) : (
                 <div
-                  className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold"
+                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold"
                   style={{ backgroundColor: primary }}
                 >
                   {initial}
@@ -632,12 +632,12 @@ const RestaurantPage = () => {
                   )}
                 </div>
                 {isDemo && (
-                  <p className="text-xs text-indigo-600 mt-0.5">{restaurant.name} ({t("demo.fictional_menu")})</p>
+                  <p className="text-xs text-emerald-600 mt-0.5">{restaurant.name} ({t("demo.fictional_menu")})</p>
                 )}
                 {!isDemo && restaurant.cuisine && (
                   <p className="text-sm text-gray-500 mt-0.5">{restaurant.cuisine}</p>
                 )}
-                {(restaurant.rating > 0) && (
+                {(!isDemo && restaurant.rating > 0) && (
                   <div className="flex items-center gap-1.5 mt-1.5">
                     <div className="flex items-center">
                       {[1, 2, 3, 4, 5].map((i) => {
@@ -667,12 +667,12 @@ const RestaurantPage = () => {
               </div>
             </div>
 
-            {!isKiosk && restaurant.description && (
+            {!isKiosk && !isDemo && restaurant.description && (
               <p className="text-sm text-gray-600 mt-3">{restaurant.description}</p>
             )}
 
-            {/* Info: address, phone, hours - hidden in kiosk */}
-            {!isKiosk && (
+            {/* Info: address, phone, hours - hidden in kiosk and fictional demo */}
+            {!isKiosk && !isDemo && (
             <div className="mt-4 space-y-2 text-sm text-gray-600">
               {(restaurant.address || restaurant.city) && (
                 <div className="flex items-start gap-2">
@@ -731,7 +731,7 @@ const RestaurantPage = () => {
             )}
 
             {/* Payment methods - hidden in kiosk */}
-            {!isKiosk && payments.length > 0 && (
+            {!isKiosk && !isDemo && payments.length > 0 && (
               <div className="flex flex-wrap items-center gap-2 mt-4">
                 {payments.map((method) => {
                   const config = PAYMENT_ICONS[method];
@@ -753,7 +753,7 @@ const RestaurantPage = () => {
             {/* Reassurance block - hidden in kiosk */}
             {!isKiosk && (
             <motion.div
-              className="mt-4 p-3.5 rounded-xl flex items-start gap-3"
+              className="mt-3 p-2.5 rounded-xl flex items-start gap-3"
               style={{
                 background: `${hexToRgba(primary, 0.08)}`,
                 backdropFilter: "blur(12px)",
@@ -774,7 +774,7 @@ const RestaurantPage = () => {
             )}
 
             {/* Wait estimate + active orders - hidden in kiosk */}
-            {!isKiosk && activeOrderCount > 0 && (
+            {!isKiosk && !isDemo && activeOrderCount > 0 && (
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span
                   className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full"
@@ -788,7 +788,7 @@ const RestaurantPage = () => {
                 </span>
               </div>
             )}
-            {!isKiosk && activeOrderCount === 0 && orderCheck.canOrder && (
+            {!isKiosk && !isDemo && activeOrderCount === 0 && orderCheck.canOrder && (
               <div className="mt-3">
                 <span
                   className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full"
@@ -810,27 +810,10 @@ const RestaurantPage = () => {
           </div>
         </motion.div>
 
-        {/* Demo banner - inline, links to dashboard + inscription */}
         {isDemo && !isKiosk && (
-          <div className="mt-4 px-4 py-3 rounded-xl bg-indigo-50 border border-indigo-200">
-            <p className="text-sm font-semibold text-indigo-900">{t("demo.seo_banner_title")}</p>
-            <p className="text-xs text-indigo-700 mt-1">{t("demo.seo_banner_text")}</p>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <a
-                href="/admin/demo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-indigo-500 hover:bg-indigo-600 transition-colors"
-              >
-                {t("demo.suivi_cta")}
-              </a>
-              <a
-                href="/inscription"
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition-colors"
-              >
-                {t("demo.seo_banner_cta")}
-              </a>
-            </div>
+          <div className="mt-3 px-3 py-2.5 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-between gap-3">
+            <div className="min-w-0"><p className="text-xs font-semibold text-emerald-900">{t("demo.seo_banner_title")}</p><p className="text-xs text-emerald-700 mt-1 hidden sm:block">{t("demo.seo_banner_text")}</p></div>
+            <Link to="/admin/demo" className="shrink-0 inline-flex items-center min-h-11 px-3 rounded-xl text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700">{t("demo.suivi_cta")}</Link>
           </div>
         )}
 
@@ -913,13 +896,14 @@ const RestaurantPage = () => {
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
               <div
-                className={`sticky ${isDemo && !isKiosk ? "top-[40px]" : "top-0"} z-30 mt-4 -mx-4 px-4 py-3 transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
+                className={`menu-category-nav sticky ${isDemo && !isKiosk ? "top-[40px]" : "top-0"} z-30 mt-4 -mx-4 px-4 py-3 transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}
                 style={{
+                  "--menu-banner-height": isDemo && !isKiosk ? "44px" : "0px",
                   background: "rgba(255,255,255,0.55)",
                   backdropFilter: "blur(16px)",
                   WebkitBackdropFilter: "blur(16px)",
                   borderBottom: "1px solid rgba(255,255,255,0.3)",
-                }}
+                } as React.CSSProperties}
               >
                 <div ref={navScrollRef} className="flex gap-2 overflow-x-auto no-scrollbar">
                   {activeCategories.map((cat) => (
@@ -1045,13 +1029,13 @@ const RestaurantPage = () => {
 
         {/* Footer */}
         {isKiosk ? null : isDemo ? (
-          <div className="mt-8 mb-4 p-5 rounded-2xl bg-indigo-50 border border-indigo-200 text-center">
-            <p className="text-sm font-semibold text-indigo-900">{t("demo.footer_title")}</p>
-            <p className="text-xs text-indigo-700 mt-1">{t("demo.footer_text")}</p>
+          <div className="mt-8 mb-4 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center">
+            <p className="text-sm font-semibold text-emerald-900">{t("demo.footer_title")}</p>
+            <p className="text-xs text-emerald-700 mt-1">{t("demo.footer_text")}</p>
             <div className="flex flex-wrap justify-center gap-3 mt-3">
               <a
                 href="/inscription"
-                className="px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors"
               >
                 {t("demo.footer_cta_signup")}
               </a>
@@ -1059,7 +1043,7 @@ const RestaurantPage = () => {
                 href="https://commandeici.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-full text-sm font-semibold text-indigo-700 bg-white border border-indigo-200 hover:bg-indigo-50 transition-colors"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold text-emerald-700 bg-white border border-emerald-200 hover:bg-emerald-50 transition-colors"
               >
                 {t("demo.footer_cta_site")}
               </a>

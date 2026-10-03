@@ -1,3 +1,4 @@
+import { usePOSViewport } from "@/hooks/usePOSViewport";
 import { UtensilsCrossed, ShoppingBag, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import type { POSOrderType as POSOrderTypeValue } from "@/types/pos";
@@ -15,22 +16,25 @@ const optionsDef: { type: POSOrderTypeValue; labelKey: string; icon: typeof Uten
 
 export const POSOrderType = ({ onSelect }: Props) => {
   const { t } = useLanguage();
+  const viewportRef = usePOSViewport();
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col items-center justify-center min-h-[80vh] px-4"
+      ref={viewportRef}
+      data-testid="pos-viewport"
+      className="flex flex-col min-h-0 items-center overflow-y-auto px-4 py-4"
     >
-      <h2 className="text-2xl font-bold text-foreground mb-8">{t('pos.order_type')}</h2>
+      <h2 className="text-xl font-bold text-foreground mb-4 shrink-0">{t('pos.order_type')}</h2>
 
-      <div className="grid gap-4 w-full max-w-md">
+      <div className="grid gap-3 w-full max-w-md shrink-0">
         {optionsDef.map((opt) => (
           <button
             key={opt.type}
             onClick={() => onSelect(opt.type)}
-            className="flex items-center gap-4 bg-card border border-border rounded-2xl p-6 min-h-[80px] hover:shadow-md hover:border-foreground/20 transition-all active:scale-[0.98]"
+            className="flex items-center gap-4 bg-card border border-border rounded-2xl p-4 min-h-[64px] hover:shadow-md hover:border-foreground/20 transition-all active:scale-[0.98]"
           >
             <opt.icon className="h-8 w-8 text-foreground flex-shrink-0" />
             <span className="text-xl font-semibold text-foreground">{t(opt.labelKey)}</span>

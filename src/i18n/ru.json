@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "Шаг {current} из {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "Получайте уведомления даже при заблокированном экране.",
   "native.push.enable": "Включить",
   "native.push.denied": "Разрешите уведомления CommandeIci в Настройки > Уведомления.",
-  "native.push.error": "Не удалось подключить уведомления. Попробуйте снова."
+  "native.push.error": "Не удалось подключить уведомления. Попробуйте снова.",
+  "native.push.enabled": "Уведомления включены. Новые заказы отображаются даже на заблокированном экране.",
+  "native.push.settings": "Открыть настройки",
+  "demo.try.title": "Ваш первый заказ за несколько секунд",
+  "demo.try.description": "Получите пробный заказ, приготовьте его и завершите. Оплата не взимается.",
+  "demo.try.receive": "Получить пробный заказ",
+  "demo.try.ios": "Проверить уведомление iOS",
+  "demo.try.scheduled": "Демо-уведомление запланировано",
+  "demo.try.instructions": "Заблокируйте iPhone: через 10 секунд придёт демо-уведомление.",
+  "demo.try.notification_title": "CommandeIci · Демо",
+  "demo.try.notification_body": "Новый пробный заказ. Откройте демо, чтобы его приготовить.",
+  "demo.try.customer": "Демо-клиент",
+  "demo.try.notes": "Пробный заказ для проверки демо",
+  "menu.illustration": "Иллюстрация"
 }

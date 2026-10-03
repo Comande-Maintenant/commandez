@@ -1,0 +1,95 @@
+[
+  {
+    "name": "coca-cola",
+    "source": "https://www.coca-cola.com/fr/fr/brands/coca-cola",
+    "assetSource": "https://www.coca-cola.com/content/dam/onexp/fr/home-images/brands/coca-cola/fr_coca-cola_logo_360x360_v1-01.svg",
+    "file": "coca-cola.svg",
+    "retrieved": "2026-10-03",
+    "alt": "Logo Coca-Cola",
+    "sourceSha256": "a3a68545e1adba3b72eeaae931fc6bfa281ae19e0f74e520d2660e817a137718",
+    "assetSha256": "a3a68545e1adba3b72eeaae931fc6bfa281ae19e0f74e520d2660e817a137718",
+    "bytes": 30940
+  },
+  {
+    "name": "fanta",
+    "source": "https://www.coca-cola.com/fr/fr/brands/fanta",
+    "assetSource": "https://www.coca-cola.com/content/dam/onexp/fr/fr/fanta/new/fanta_logo_regular.png",
+    "file": "fanta.png",
+    "retrieved": "2026-10-03",
+    "alt": "Logo Fanta",
+    "sourceSha256": "4bf1e176c01a0beef832ac41657851f050185967a87194ed7b6a91daa0c95e7c",
+    "assetSha256": "ee65a6bb2d8637dd6ea6013d0fd05f9265f19a0eaefd2da3acb973f739065011",
+    "bytes": 6616
+  },
+  {
+    "name": "sprite",
+    "source": "https://www.coca-cola.com/fr/fr/brands/sprite",
+    "assetSource": "https://www.coca-cola.com/content/dam/onexp/fr/fr/sprite/logo-sprite-green-360x360.png",
+    "file": "sprite.png",
+    "retrieved": "2026-10-03",
+    "alt": "Logo de Sprite",
+    "sourceSha256": "504a71109533bd9ca2513546fd1ce3723050cf06c307b7b565418f0025e644f0",
+    "assetSha256": "e762efd14a5074ae937a068d7cb160310401fe0ab278f3e1a1701bc1854542ba",
+    "bytes": 4327
+  },
+  {
+    "name": "coca-cola-zero",
+    "source": "https://www.coca-cola.com/fr/fr/brands/coca-cola-sans-sucres",
+    "assetSource": "https://www.coca-cola.com/content/dam/onexp/fr/fr/coca-cola-sans-sucres/loco-coca-cola-zero-sugar.png",
+    "file": "coca-cola-zero.png",
+    "retrieved": "2026-10-03",
+    "sourceSha256": "16386a6f6bfcfb1fed2829e0c583e6bd9ee23a7ea36f27edac111e0dcbd0305a",
+    "assetSha256": "f42bacd56e6114a1d282142934b012328cf613e2bccd05579b217dd10db55851",
+    "bytes": 8376
+  },
+  {
+    "name": "red-bull",
+    "source": "https://www.redbull.com/fr-fr/energydrink",
+    "assetSource": "https://www.redbull.com/energydrink/v1/resources/safari-pinned-tab.svg",
+    "file": "red-bull.svg",
+    "retrieved": "2026-10-03",
+    "sourceSha256": "322cab7c81c07e88814d2cddcebf6cc4245fedf2f38748f74c563aaf12159831",
+    "assetSha256": "322cab7c81c07e88814d2cddcebf6cc4245fedf2f38748f74c563aaf12159831",
+    "bytes": 5737
+  },
+  {
+    "name": "oasis",
+    "source": "https://suntorybfe.com/france/marques/oasis/",
+    "assetSource": "https://suntorybfe.com/media/bj3dticx/oasis_logo_branding.png",
+    "file": "oasis.png",
+    "retrieved": "2026-10-03",
+    "sourceSha256": "94907da157f516579cb9230bbaf50ce3de5fb4c4656bdf8b7c5922ceb9d8ecb3",
+    "assetSha256": "34ed4dfc1ba315bea927ea9ee37057722e16fc115c2775ce9658fcdbf3449973",
+    "bytes": 23951
+  },
+  {
+    "name": "evian",
+    "source": "https://www.evian.com/fr/",
+    "assetSource": "https://www.evian.com/_assets/af7dc473c9de279d395f914f7cd9cad1/img/logo200.png",
+    "file": "evian.png",
+    "retrieved": "2026-10-03",
+    "sourceSha256": "fd378b0c5daadf33cb2a5bcb81e554e225b8bf90acd1531c377b11d395d735de",
+    "assetSha256": "e26636641d0279260afe7f3f529038156c44c4a117698af7252ef2bb2cfa52f6",
+    "bytes": 7712
+  },
+  {
+    "name": "orangina",
+    "source": "https://suntorybfe.com/france/marques/orangina/",
+    "assetSource": "https://suntorybfe.com/media/uvspztby/logo_orangina_1.webp",
+    "file": "orangina.webp",
+    "retrieved": "2026-10-03",
+    "sourceSha256": "a6ecdc1fa1d282d211909c342b80402b2af9673d1fcdce6a8841715b910f38f4",
+    "assetSha256": "37a775992c940c61ae78f08208327a422135a278b57b41e15346472150010fc3",
+    "bytes": 17710
+  },
+  {
+    "name": "schweppes",
+    "source": "https://suntorybfe.com/france/marques/schweppes/",
+    "assetSource": "https://suntorybfe.com/media/uyoib3o3/431088_logo_schweppes_fond_transparent.png",
+    "file": "schweppes.png",
+    "retrieved": "2026-10-03",
+    "sourceSha256": "faf1ba24637d5dcdcb88f1ba4cdeb0addcee16a6d10284def8d52fc31a4c4231",
+    "assetSha256": "2240c5b6abc175b1a9f0464f22b323824ab97a920c2dba7bf92539fa33cbf745",
+    "bytes": 10584
+  }
+]

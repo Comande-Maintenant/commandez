@@ -1300,7 +1300,7 @@
   "time.months_ago": "Il y a {m} mois",
   "time.yesterday_at": "Hier a {time}",
   "auth.reset.resend_countdown": "Renvoyer dans {seconds}s",
-  "auth.signup.step_counter": "Etape {current} sur {total}",
+  "auth.signup.step_counter": "Étape {current} sur {total}",
   "dashboard.ban.success": "Client bloque avec succes",
   "dashboard.demand.tip_afternoon_busy": "Rush de l'apres-midi, preparez les ingredients !",
   "dashboard.demand.tip_afternoon_calm": "Apres-midi calme, bon moment pour preparer",
@@ -1418,5 +1418,18 @@
   "native.push.description": "Soyez averti même lorsque l’écran est verrouillé.",
   "native.push.enable": "Activer",
   "native.push.denied": "Autorisez les notifications pour CommandeIci dans Réglages > Notifications.",
-  "native.push.error": "Connexion aux notifications impossible. Réessayez."
+  "native.push.error": "Connexion aux notifications impossible. Réessayez.",
+  "native.push.enabled": "Notifications activées. Les nouvelles commandes vous alertent aussi sur écran verrouillé.",
+  "native.push.settings": "Ouvrir Réglages",
+  "demo.try.title": "Votre première commande, en quelques secondes",
+  "demo.try.description": "Recevez une commande fictive, préparez-la puis encaissez-la. Rien n’est facturé.",
+  "demo.try.receive": "Recevoir une commande",
+  "demo.try.ios": "Tester la notification iOS",
+  "demo.try.scheduled": "Notification de démonstration programmée",
+  "demo.try.instructions": "Verrouillez votre iPhone : une notification de démonstration arrivera dans 10 secondes.",
+  "demo.try.notification_title": "CommandeIci · Démonstration",
+  "demo.try.notification_body": "Nouvelle commande fictive. Ouvrez la démo pour la préparer.",
+  "demo.try.customer": "Client de démonstration",
+  "demo.try.notes": "Commande fictive pour tester la démo",
+  "menu.illustration": "Illustration"
 }

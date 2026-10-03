@@ -1,3 +1,4 @@
+import { isLocalDemoOrder } from '@/lib/demo-order';
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Check, Plus, Phone, ShoppingBag, UtensilsCrossed, Clock, Timer, WifiOff } from "lucide-react";
@@ -203,7 +204,8 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const markAsDone = async (orderId: string) => {
     try {
       if (isDemo) {
-        await advanceDemoOrder(orderId, "done");
+        const order=orders.find(candidate=>candidate.id===orderId);
+        if (order && !isLocalDemoOrder(order)) await advanceDemoOrder(orderId, "done");
       } else {
         await updateOrderStatus(orderId, "done");
       }

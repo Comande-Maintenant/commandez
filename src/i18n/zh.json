@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "第 {current} 步，共 {total} 步",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "屏幕锁定时也能收到通知。",
   "native.push.enable": "启用",
   "native.push.denied": "请在设置 > 通知中允许 CommandeIci 发送通知。",
-  "native.push.error": "无法连接通知服务，请重试。"
+  "native.push.error": "无法连接通知服务，请重试。",
+  "native.push.enabled": "通知已开启。屏幕锁定时也会收到新订单提醒。",
+  "native.push.settings": "打开设置",
+  "demo.try.title": "几秒钟内收到第一份订单",
+  "demo.try.description": "接收一份模拟订单，制作并完成它。不会产生任何费用。",
+  "demo.try.receive": "接收模拟订单",
+  "demo.try.ios": "测试 iOS 通知",
+  "demo.try.scheduled": "演示通知已安排",
+  "demo.try.instructions": "锁定您的 iPhone：10 秒后将收到演示通知。",
+  "demo.try.notification_title": "CommandeIci · 演示",
+  "demo.try.notification_body": "新的模拟订单。打开演示以开始制作。",
+  "demo.try.customer": "演示顾客",
+  "demo.try.notes": "用于测试演示的模拟订单",
+  "menu.illustration": "示意图片"
 }

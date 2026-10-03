@@ -1,3 +1,4 @@
+import { MenuItemImage } from "./MenuItemImage";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, ChevronLeft, Check, Minus, Plus } from "lucide-react";
@@ -1218,9 +1219,7 @@ export const ProductCustomizer = ({
                                   }`}
                                   style={isSelected ? { borderColor: accent, backgroundColor: `${accent}10` } : {}}
                                 >
-                                  {option.image && (
-                                    <img src={option.image} alt={itemTranslated.name} className="h-14 w-14 object-cover rounded-lg mx-auto mb-2" loading="lazy" />
-                                  )}
+                                  <MenuItemImage item={{name:option.name,image:option.image}} className="h-20 w-20 rounded-lg mx-auto mb-2" />
                                   <p className="text-xs font-medium text-gray-900 line-clamp-2">{itemTranslated.name}</p>
                                   <p className="text-xs font-bold mt-1" style={{ color: accent }}>
                                     {isMenu && currentStep.step_key === "boisson" ? t("custom.complet") : `${option.price.toFixed(2)} €`}

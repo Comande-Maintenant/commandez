@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "{total}단계 중 {current}단계",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "화면이 잠겨 있어도 알림을 받으세요.",
   "native.push.enable": "활성화",
   "native.push.denied": "설정 > 알림에서 CommandeIci 알림을 허용하세요.",
-  "native.push.error": "알림에 연결할 수 없습니다. 다시 시도하세요."
+  "native.push.error": "알림에 연결할 수 없습니다. 다시 시도하세요.",
+  "native.push.enabled": "알림이 켜져 있습니다. 화면이 잠겨 있어도 새 주문을 알려드립니다.",
+  "native.push.settings": "설정 열기",
+  "demo.try.title": "몇 초 만에 첫 주문을 체험하세요",
+  "demo.try.description": "샘플 주문을 받고 준비한 후 완료하세요. 요금은 청구되지 않습니다.",
+  "demo.try.receive": "샘플 주문 받기",
+  "demo.try.ios": "iOS 알림 테스트",
+  "demo.try.scheduled": "데모 알림이 예약되었습니다",
+  "demo.try.instructions": "iPhone을 잠그세요. 10초 후 데모 알림이 도착합니다.",
+  "demo.try.notification_title": "CommandeIci · 데모",
+  "demo.try.notification_body": "새 샘플 주문입니다. 데모를 열어 준비하세요.",
+  "demo.try.customer": "데모 고객",
+  "demo.try.notes": "데모 테스트용 샘플 주문",
+  "menu.illustration": "예시 이미지"
 }

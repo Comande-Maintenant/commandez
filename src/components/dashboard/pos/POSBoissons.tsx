@@ -1,3 +1,5 @@
+import { usePOSViewport } from "@/hooks/usePOSViewport";
+import { MenuItemImage } from "@/components/MenuItemImage";
 import { useMemo } from "react";
 import { ArrowLeft, Minus, Plus } from "lucide-react";
 import { motion } from "framer-motion";
@@ -16,6 +18,7 @@ interface Props {
 
 export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack }: Props) => {
   const { t } = useLanguage();
+  const viewportRef = usePOSViewport();
   const drinkItems = useMemo(
     () => menuItems.filter((item) => item.category.toLowerCase().includes("boisson")),
     [menuItems]
@@ -55,7 +58,9 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col h-[calc(100vh-2rem)] max-h-[900px]"
+      ref={viewportRef}
+      data-testid="pos-viewport"
+      className="flex flex-col min-h-0 max-h-[900px] [&>div:not(.flex-1)]:shrink-0"
     >
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-background">
@@ -66,7 +71,7 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
       </div>
 
       {/* Items grid */}
-      <div className="flex-1 overflow-y-auto px-4 py-3">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">
         {drinkItems.length === 0 ? (
           <p className="text-center text-muted-foreground py-12">{t('pos.no_drinks')}</p>
         ) : (
@@ -81,6 +86,7 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
                     inCart ? "border-foreground" : "border-border"
                   }`}
                 >
+                  <MenuItemImage item={item} className="w-full aspect-square rounded-xl mb-3" />
                   <p className="font-semibold text-foreground text-sm leading-tight">{item.name}</p>
                   <p className="text-foreground/70 font-bold mt-1">{item.price.toFixed(2)} €</p>
                   {inCart && (
@@ -93,7 +99,7 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
             })}
           </div>
         )}
-      </div>
+
 
       {/* Recap */}
       {drinks.length > 0 && (
@@ -117,6 +123,8 @@ export const POSBoissons = ({ drinks, menuItems, onUpdateDrinks, onNext, onBack 
           <p className="text-sm text-muted-foreground">{t('pos.drinks_total')} {drinksTotal.toFixed(2)} €</p>
         </div>
       )}
+
+      </div>
 
       {/* Bottom buttons */}
       <div className="px-4 py-3 border-t border-border bg-background flex gap-3">

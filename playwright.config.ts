@@ -9,8 +9,7 @@ export default defineConfig({
   reporter: [["list"]],
   use: {
     baseURL: externalBaseUrl ?? "http://127.0.0.1:4173",
-    executablePath:
-      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    launchOptions: { executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" },
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
@@ -23,6 +22,7 @@ export default defineConfig({
         timeout: 120_000,
       },
   projects: [
+    {name: "ios-webkit", use: {...devices["iPhone 13"], launchOptions: {}}},
     {
       name: "desktop-chrome",
       use: { ...devices["Desktop Chrome"] },

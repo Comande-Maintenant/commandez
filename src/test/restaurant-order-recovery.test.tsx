@@ -7,7 +7,7 @@ vi.mock('@/lib/api', () => ({ fetchOrders: mocks.fetch, fetchDemoOrders: mocks.d
 import { useRestaurantOrders } from '@/hooks/useRestaurantOrders';
 const order = (id: string, status = 'new', restaurant_id = 'restaurant-a') => ({ id, status, restaurant_id, created_at: new Date().toISOString() } as DbOrder);
 const flush = async () => { await act(async () => { await Promise.resolve(); }); };
-beforeEach(() => { vi.clearAllMocks(); vi.useFakeTimers(); mocks.fetch.mockResolvedValue([]); mocks.subscribe.mockReturnValue(mocks.stop); });
+beforeEach(() => { sessionStorage.clear(); vi.clearAllMocks(); vi.useFakeTimers(); mocks.fetch.mockResolvedValue([]); mocks.subscribe.mockReturnValue(mocks.stop); });
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 describe('merchant recovery shared by kitchen and POS', () => {
@@ -127,4 +127,50 @@ describe('merchant recovery shared by kitchen and POS', () => {
     expect(mocks.subscribe).not.toHaveBeenCalled();
     expect(result.current.orders).toEqual([]);
   });
+});
+
+describe('isolated interactive demo', () => {
+  it('receives a sample once, preserves its preparation through polling, and resets for another restaurant', async () => {
+    mocks.demo.mockResolvedValue([]);
+    const ring=vi.fn();
+    const {result,rerender}=renderHook(({id})=>useRestaurantOrders(id,{isDemo:true,onNewOrder:ring}),{initialProps:{id:'restaurant-a'}});
+    await flush();
+    act(()=>result.current.receiveDemoOrder({...order('demo-local-a'),is_test:true}));
+    expect(result.current.orders).toHaveLength(1);
+    expect(result.current.notification?.order.id).toBe('demo-local-a');
+    expect(ring).toHaveBeenCalledTimes(1);
+    act(()=>result.current.setOrders(previous=>previous.map(o=>({...o,status:'preparing'}))));
+    await act(async()=>{await vi.advanceTimersByTimeAsync(5000);});
+    expect(result.current.orders[0].status).toBe('preparing');
+    expect(ring).toHaveBeenCalledTimes(1);
+    rerender({id:'restaurant-b'}); await flush();
+    expect(result.current.orders).toEqual([]);
+    expect(result.current.notification).toBeNull();
+  });
+  it('rejects sample injection on real restaurants and foreign restaurant identities', async () => {
+    const {result,rerender}=renderHook(({isDemo})=>useRestaurantOrders('restaurant-a',{isDemo}),{initialProps:{isDemo:false}});
+    await flush();
+    act(()=>result.current.receiveDemoOrder({...order('demo-local-a'),is_test:true}));
+    expect(result.current.orders).toEqual([]);
+    rerender({isDemo:true}); mocks.demo.mockResolvedValue([]); await flush();
+    act(()=>result.current.receiveDemoOrder({...order('demo-local-a','new','foreign'),is_test:true}));
+    expect(result.current.orders).toEqual([]);
+  });
+});
+it('rejects a stale sample callback after switching restaurants', async()=>{
+ mocks.demo.mockResolvedValue([]);
+ const {result,rerender}=renderHook(({id})=>useRestaurantOrders(id,{isDemo:true}),{initialProps:{id:'restaurant-a'}});await flush();
+ const staleReceive=result.current.receiveDemoOrder;
+ rerender({id:'restaurant-b'});await flush();
+ act(()=>staleReceive({...order('demo-local-stale'),is_test:true}));
+ expect(result.current.orders).toEqual([]);
+});
+it('restores local demo orders and their statuses on remount without announcing again',async()=>{
+ mocks.demo.mockResolvedValue([]);
+ const ring=vi.fn();
+ const first=renderHook(()=>useRestaurantOrders('restore-demo',{isDemo:true,onNewOrder:ring}));await flush();
+ act(()=>first.result.current.receiveDemoOrder({id:'demo-local-restore',restaurant_id:'restore-demo',is_test:true,source:'demo',status:'new',created_at:new Date().toISOString(),customer_name:'Demo',order_number:1,daily_number:1,total:6.5,subtotal:6.5,items:[{name:'Kebab',quantity:1,price:6.5}],order_type:'collect',notes:''} as DbOrder));
+ act(()=>first.result.current.setOrders(previous=>previous.map(order=>({...order,status:'preparing'}))));first.unmount();
+ const second=renderHook(()=>useRestaurantOrders('restore-demo',{isDemo:true,onNewOrder:ring}));await flush();
+ expect(second.result.current.orders).toHaveLength(1);expect(second.result.current.orders[0].status).toBe('preparing');expect(ring).toHaveBeenCalledTimes(1);
 });

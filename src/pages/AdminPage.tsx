@@ -1,4 +1,7 @@
 import { useDashboardAuth } from '@/hooks/useDashboardAuth';
+import { isNative } from '@/lib/native';
+import { nativePushStatus } from '@/services/native-push-client';
+import { DemoOrderControls } from '@/components/DemoOrderControls';
 import { NativeOrderNotifications } from '@/components/NativeOrderNotifications';
 import { lazy, Suspense, useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
@@ -91,7 +94,7 @@ const AdminPage = () => {
   const { visitors, alerts } = useLiveVisitors(restaurant?.id ?? null);
   const orderFeed = useRestaurantOrders(restaurant && (isDemo || authUserId === restaurant.owner_id) ? restaurant.id : null, {
     isDemo, onNewOrder: order => {
-      sound.play();
+      if (isDemo || !isNative() || nativePushStatus() !== 'enabled') sound.play();
       if (activeView !== 'cuisine') toast.info(t('dashboard.orders.new_order_popup'), { description: formatDisplayNumber(order), duration: 12000 });
     },
   });
@@ -241,7 +244,7 @@ const AdminPage = () => {
 
       <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
         {/* Header (+ demo banner) - single sticky block */}
-        <div className="sticky top-0 z-50">
+        <div data-dashboard-header className="sticky top-0 z-40">
           {isDemo && !demoBannerDismissed && (
             <div className="bg-emerald-500 text-white">
               <div className="max-w-6xl mx-auto px-4 h-8 flex items-center justify-between">
@@ -269,9 +272,9 @@ const AdminPage = () => {
             </div>
           )}
           <header className="bg-background border-b border-border">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 min-h-14 py-2 flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-3 gap-y-1">
+            <div className="flex items-center gap-3 min-w-0 basis-full sm:basis-auto">
+              <button onClick={() => navigate(-1)} className="min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </button>
               <div className="min-w-0">
@@ -279,7 +282,7 @@ const AdminPage = () => {
                 <p className="text-xs text-muted-foreground hidden sm:block">{t("dashboard.admin.dashboard_subtitle")}</p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+            <div className="flex items-center justify-end w-full sm:w-auto gap-1.5 sm:gap-3 flex-shrink-0">
               {/* Sound toggle (cuisine view) */}
               {isOpsView(activeView) && (
                 <button
@@ -312,7 +315,7 @@ const AdminPage = () => {
               {isOpsView(activeView) && (
                 <button
                   onClick={() => setHistoryOpen(true)}
-                  className="p-2 rounded-xl hover:bg-secondary transition-colors relative"
+                  className="min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors relative"
                   title={t("dashboard.history.title")}
                   aria-label={t("dashboard.history.title")}
                 >
@@ -329,7 +332,7 @@ const AdminPage = () => {
               {["en-direct", "stats", "clients"].includes(activeView) && (
                 <button
                   onClick={toggleBlur}
-                  className="p-2 rounded-xl hover:bg-secondary transition-colors"
+                  className="min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors"
                   title={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
                   aria-label={blurred ? t("dashboard.admin.show_amounts") : t("dashboard.admin.hide_amounts")}
                 >
@@ -360,6 +363,7 @@ const AdminPage = () => {
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
+          {isDemo && activeView === "cuisine" && <DemoOrderControls restaurantId={restaurant.id} />}
           {!isDemo && <NativeOrderNotifications ownerUserId={restaurant.owner_id} />}
           {/* Audio unlock banner for mobile */}
           {isOpsView(activeView) && !sound.audioUnlocked && (
@@ -435,9 +439,9 @@ const AdminPage = () => {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeView}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
               <Suspense fallback={<div className="flex justify-center py-16"><Loader2 className="h-7 w-7 animate-spin" /></div>}>

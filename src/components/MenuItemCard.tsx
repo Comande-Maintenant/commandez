@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MenuItemImage } from "./MenuItemImage";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import type { DbMenuItem, CustomizationConfig } from "@/types/database";
@@ -56,20 +57,19 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.3, delay: index * 0.05 }}
+        transition={{ duration: 0.15 }}
       >
         <motion.button
+          disabled={isUnavailable}
           onClick={() => !isUnavailable && setOpenAndNotify(true)}
           className={`w-full text-left flex gap-3 p-3 rounded-2xl transition-all group ${isUnavailable ? "opacity-50 cursor-not-allowed" : "active:scale-[0.98]"}`}
           style={{
-            background: "rgba(255,255,255,0.55)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.3)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+            background: "#fff",
+            border: "1px solid rgba(15,23,42,0.07)",
+            boxShadow: "0 2px 8px rgba(15,23,42,0.025)",
           }}
           whileTap={{ scale: 0.98 }}
         >
@@ -98,11 +98,11 @@ export const MenuItemCard = ({ item, index = 0, restaurantSlug, restaurantId, pr
             )}
           </div>
 
-          {item.image && showPhotos ? (
-            <div className="relative w-20 h-20 sm:w-[100px] sm:h-[100px] rounded-xl overflow-hidden flex-shrink-0">
-              <img src={item.image} alt={translated.name} className="w-full h-full object-cover" loading="lazy" />
+          {showPhotos ? (
+            <div className="relative w-[104px] h-[104px] sm:w-[112px] sm:h-[112px] rounded-xl overflow-hidden flex-shrink-0">
+              <MenuItemImage item={item} className="w-full h-full" />
               <motion.div
-                className="absolute bottom-1 right-1 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-white"
+                className="absolute bottom-5 right-1 rounded-full p-2 shadow-sm text-white"
                 style={{ backgroundColor: primaryColor || "#10B981" }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}

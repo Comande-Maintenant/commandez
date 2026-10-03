@@ -42,6 +42,7 @@ export async function shareRestaurant(slug: string, title: string) {
 }
 
 interface FileExportPlugin {
+  openNotificationSettings(): Promise<void>;
   openExternalUrl(options: { url: string }): Promise<void>;
   share(options: { base64: string; filename: string; mimeType: string }): Promise<{ completed: boolean }>;
 }
@@ -88,4 +89,8 @@ export async function openExternalUrl(input: string): Promise<void> {
   }
   if (isNative()) await fileExport.openExternalUrl({ url: url.href });
   else window.location.assign(url.href);
+}
+
+export async function openNotificationSettings(): Promise<void> {
+  if (isNative()) await fileExport.openNotificationSettings();
 }

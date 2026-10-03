@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "الخطوة {current} من {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "تلقَّ إشعارات حتى عندما تكون الشاشة مقفلة.",
   "native.push.enable": "تفعيل",
   "native.push.denied": "اسمح بإشعارات CommandeIci في الإعدادات > الإشعارات.",
-  "native.push.error": "تعذر توصيل الإشعارات. حاول مرة أخرى."
+  "native.push.error": "تعذر توصيل الإشعارات. حاول مرة أخرى.",
+  "native.push.enabled": "تم تفعيل الإشعارات. تصلك الطلبات الجديدة حتى عند قفل الشاشة.",
+  "native.push.settings": "فتح الإعدادات",
+  "demo.try.title": "طلبك الأول خلال ثوانٍ",
+  "demo.try.description": "استقبل طلباً تجريبياً وحضّره ثم أكمله. لا يتم تحصيل أي مبلغ.",
+  "demo.try.receive": "استقبال طلب تجريبي",
+  "demo.try.ios": "اختبار إشعار iOS",
+  "demo.try.scheduled": "تمت جدولة إشعار تجريبي",
+  "demo.try.instructions": "اقفل جهاز iPhone: سيصلك إشعار تجريبي خلال 10 ثوانٍ.",
+  "demo.try.notification_title": "CommandeIci · عرض تجريبي",
+  "demo.try.notification_body": "طلب تجريبي جديد. افتح العرض التجريبي لتحضيره.",
+  "demo.try.customer": "عميل تجريبي",
+  "demo.try.notes": "طلب وهمي لاختبار العرض التجريبي",
+  "menu.illustration": "صورة توضيحية"
 }
