@@ -12,6 +12,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { isServiceRole } from "../_shared/auth.ts";
 import { signToken } from "../_shared/signed-token.ts";
+import { FREE_ACCESS, freeAccessResponse } from '../_shared/access-policy.ts';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const EMAIL_TOKEN_SECRET = Deno.env.get("EMAIL_TOKEN_SECRET") ?? "";
@@ -36,6 +37,12 @@ const TRANSACTIONAL_TYPES = [
   "trial_expired_relance1", "trial_expired_relance2",
   "trial_migration_30d",
 ];
+const FINANCIAL_TYPES = new Set([
+  'subscription_activated', 'payment_failed', 'subscription_cancelled',
+  'trial_checkin', 'trial_expiring', 'trial_expired',
+  'trial_expired_relance1', 'trial_expired_relance2', 'trial_migration_30d',
+  'referral_completed_referrer', 'referral_completed_referee', 'promo_applied',
+]);
 
 // One-time emails: never resent to the same user/restaurant
 const ONE_TIME_TYPES = [
@@ -218,7 +225,7 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
       <p>Vous vous etes inscrit il y a quelques jours mais votre page de commande n'est pas encore en ligne.</p>
       <p>Ca prend 5 minutes : ajoutez votre menu, personnalisez les couleurs, et partagez le lien a vos clients.</p>
       <div class="highlight-box">
-        <p><strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement.</p>
+        <p>${FREE_ACCESS ? '<strong>Le service est gratuit actuellement.</strong> Des offres payantes pourront être proposées plus tard.' : '<strong>1 euro/mois pendant 3 mois</strong>, puis 29,99 euros/mois. Sans engagement.'}</p>
       </div>
       <p><a href="${APP_URL}/inscription" class="cta-btn">Creer ma page &rarr;</a></p>
     `,
@@ -233,7 +240,8 @@ const templates: Record<string, (data: TemplateData) => { subject: string; conte
       - Menu en ligne avec photos et personnalisation<br>
       - Dashboard avec suivi des commandes en temps reel<br>
       - Base clients pour fidéliser</p>
-      <p><a href="${APP_URL}/inscription" class="cta-btn">Commencer pour 1 euro &rarr;</a></p>
+      <p>${FREE_ACCESS ? 'Le service est gratuit actuellement. Des offres payantes pourront être proposées plus tard.' : ''}</p>
+      <p><a href="${APP_URL}/inscription" class="cta-btn">${FREE_ACCESS ? 'Créer ma page' : 'Commencer pour 1 euro'} &rarr;</a></p>
       <p style="font-size:13px;color:#6b7280;">Si commandeici ne vous convient pas, pas de souci. Vous pouvez vous desinscrire ci-dessous.</p>
     `,
   }),
@@ -348,6 +356,11 @@ Deno.serve(async (req: Request) => {
         JSON.stringify({ error: "Invalid template or missing 'to' address" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+    if (FREE_ACCESS && FINANCIAL_TYPES.has(template)) {
+      return new Response(JSON.stringify(freeAccessResponse()), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     if (!RESEND_API_KEY) {
