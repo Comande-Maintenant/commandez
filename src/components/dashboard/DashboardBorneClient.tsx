@@ -1,4 +1,4 @@
-import { publicAppUrl } from '@/lib/native';
+import { publicAppUrl, exportPublicFile, isNative } from '@/lib/native';
 import { useState, useEffect, useCallback } from "react";
 import { Copy, Check, Tablet, Settings2, BookOpen } from "lucide-react";
 import QRCode from "qrcode";
@@ -33,7 +33,7 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
 
   // Build the kiosk URL dynamically based on config
   const baseUrl = typeof window !== "undefined"
-    ? `${publicAppUrl}/${restaurant.slug}?kiosk=true`
+    ? `${publicAppUrl}/${encodeURIComponent(restaurant.slug)}?kiosk=true`
     : "";
 
   const kioskUrl = (() => {
@@ -44,7 +44,7 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
     if (defaultPayment !== "counter") params.set("payment", defaultPayment);
     if (timeout !== "60") params.set("timeout", timeout);
     const origin = typeof window !== "undefined" ? publicAppUrl : "";
-    return `${origin}/${restaurant.slug}?${params.toString()}`;
+    return `${origin}/${encodeURIComponent(restaurant.slug)}?${params.toString()}`;
   })();
 
   // Generate QR code
@@ -52,7 +52,7 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
     try {
       const url = await QRCode.toDataURL(kioskUrl, {
         width: 512,
-        margin: 2,
+        margin: 4,
         color: { dark: "#000000", light: "#ffffff" },
         errorCorrectionLevel: "H",
       });
@@ -64,11 +64,15 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
     generateQR();
   }, [generateQR]);
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(kioskUrl);
-    setCopied(true);
-    toast.success(t("admin.kiosk.link_copied"));
-    window.setTimeout(() => setCopied(false), 2000);
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(kioskUrl);
+      setCopied(true);
+      toast.success(t("admin.kiosk.link_copied"));
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(t("common.toast.copy_error"));
+    }
   };
 
   return (
@@ -113,7 +117,13 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
             />
             <a
               href={qrDataUrl}
-              download={`borne-${restaurant.slug}.png`}
+              onClick={event => {
+                if (!isNative()) return;
+                event.preventDefault();
+                void exportPublicFile(qrDataUrl, `borne-${restaurant.slug}.png`, 'image/png')
+                  .catch(() => toast.error(t('common.error')));
+              }}
+              download={`borne-${encodeURIComponent(restaurant.slug)}.png`}
               className="text-xs text-primary hover:underline"
             >
               {t("admin.kiosk.download_qr")}
@@ -135,7 +145,7 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
             <p className="text-sm font-medium text-foreground">{t("admin.kiosk.config.mode_takeaway")}</p>
             <p className="text-xs text-muted-foreground">{t("admin.kiosk.config.mode_takeaway_desc")}</p>
           </div>
-          <Switch checked={allowTakeaway} onCheckedChange={setAllowTakeaway} />
+          <Switch aria-label={t("admin.kiosk.config.mode_takeaway")} checked={allowTakeaway} onCheckedChange={setAllowTakeaway} />
         </div>
 
         {/* Table number */}
@@ -144,7 +154,7 @@ export const DashboardBorneClient = ({ restaurant }: Props) => {
             <p className="text-sm font-medium text-foreground">{t("admin.kiosk.config.ask_table")}</p>
             <p className="text-xs text-muted-foreground">{t("admin.kiosk.config.ask_table_desc")}</p>
           </div>
-          <Switch checked={askTable} onCheckedChange={setAskTable} />
+          <Switch aria-label={t("admin.kiosk.config.ask_table")} checked={askTable} onCheckedChange={setAskTable} />
         </div>
 
         {/* Default payment */}

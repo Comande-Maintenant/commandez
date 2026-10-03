@@ -91,18 +91,35 @@ function slugify(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
-// Generate a unique slug, appending city and -2, -3 etc. if needed
+// Reserve collisions atomically in complete_onboarding, never via a client-side
+// read of other merchants' private records. Keep candidates stable across retries.
+const RESERVED_SLUGS = new Set([
+  'demo', 'inscription', 'connexion', 'signup', 'order', 'profil', 'admin',
+  'abonnement', 'choisir-plan', 'abonnement-confirme', 'suivi', 'super-admin',
+  'unsubscribe', 'upload', 'mot-de-passe-oublie', 'reinitialiser-mot-de-passe',
+]);
+
+function slugPart(value: string): string {
+  const ascii = slugify(value);
+  if (ascii) return ascii;
+  // Names in non-Latin scripts remain intact in the public title and schema.
+  // A stable identifier keeps their ASCII URL valid without dropping them.
+  let hash = 2166136261;
+  for (const character of value.trim().normalize('NFC')) {
+    hash = Math.imul(hash ^ character.codePointAt(0)!, 16777619);
+  }
+  return `restaurant-${(hash >>> 0).toString(36)}`;
+}
+
 export async function generateSlug(name: string, city?: string): Promise<string> {
-  const base = city ? `${slugify(name)}-${slugify(city)}` : slugify(name);
-  const { data } = await supabase
-    .from('restaurants')
-    .select('slug')
-    .like('slug', `${base}%`);
-  const existing = new Set((data ?? []).map((r: any) => r.slug));
-  if (!existing.has(base)) return base;
-  let i = 2;
-  while (existing.has(`${base}-${i}`)) i++;
-  return `${base}-${i}`;
+  if (!name.trim()) throw new Error('Restaurant name is required');
+  const namePart = slugPart(name);
+  const cityPart = city?.trim() ? slugPart(city) : '';
+  // Leave space for the server collision suffix, preserving the city on long names.
+  const citySuffix = cityPart ? `-${cityPart.slice(0, 60).replace(/-+$/, '')}` : '';
+  let base = `${namePart.slice(0, 140 - citySuffix.length).replace(/-+$/, '')}${citySuffix}`;
+  if (RESERVED_SLUGS.has(base)) base = `restaurant-${base}`;
+  return base;
 }
 
 // Determine product_type based on category name

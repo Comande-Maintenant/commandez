@@ -42,13 +42,17 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
   const [coverPreview, setCoverPreview] = useState(restaurant.cover_image || "");
 
   const [copied, setCopied] = useState(false);
-  const pageUrl = typeof window !== "undefined" ? `${publicAppUrl}/${restaurant.slug}` : "";
+  const pageUrl = typeof window !== "undefined" ? `${publicAppUrl}/${encodeURIComponent(restaurant.slug)}` : "";
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(pageUrl);
-    setCopied(true);
-    toast.success(t('common.toast.link_copied'));
-    setTimeout(() => setCopied(false), 2000);
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      setCopied(true);
+      toast.success(t('common.toast.link_copied'));
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(t('common.toast.copy_error'));
+    }
   };
 
   const handleSaveColors = async () => {
