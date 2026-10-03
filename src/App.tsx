@@ -18,6 +18,8 @@ import { NativeBillingLifecycle } from '@/components/NativeBillingLifecycle';
 
 // Every route is split so visitors only download the surface they open.
 const Index = lazy(() => import("./pages/Index"));
+const DemoDiscoveryPage = lazy(() => import("./pages/DemoDiscoveryPage"));
+const CommerceDemoPage = lazy(() => import("./pages/CommerceDemoPage"));
 const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const OrderPage = lazy(() => import("./pages/OrderPage"));
@@ -83,6 +85,8 @@ const App = () => (
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/decouvrir" element={<DemoDiscoveryPage />} />
+              <Route path="/demo/:sector" element={<CommerceDemoPage />} />
               <Route path="/inscription" element={<InscriptionPage />} />
               <Route path="/connexion" element={<ConnexionPage />} />
               <Route path="/mot-de-passe-oublie" element={<MotDePasseOubliePage />} />

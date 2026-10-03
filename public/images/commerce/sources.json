@@ -1,0 +1,36 @@
+{
+  "assets": [
+    {
+      "file": "grocery-basket.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-6fd231bf-b89b-415b-a0ec-9424487e840a.png",
+      "masterSha256": "67fa7331f657afc800756af9c800eb46a398d8ce4e1d0a7120e585e52fd5be59",
+      "sha256": "eb501d371ae5b67e327250b35d38ee162bf4312f181a173ef01a4a42679b5cbc",
+      "bytes": 50140
+    },
+    {
+      "file": "seasonal-bouquet.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-ad259e57-7704-4bff-92db-86825c017b2b.png",
+      "masterSha256": "0753f3624fef9e2c94b0208185fe2e4a090399059012af60d7e553134f1716f0",
+      "sha256": "e42104c40813991a51fef99e1a91cdeecc0fabca839d92d946d7bea9c4918d5e",
+      "bytes": 69750
+    },
+    {
+      "file": "rose-bouquet.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-1e6d7179-7316-4d09-8eb7-0d5d69259fcc.png",
+      "masterSha256": "140cbe29f35883b8fff92e969d984a42ef5fbadef99d1fa2e7f6a29c3c7a8756",
+      "sha256": "263db46dcb411a79667fa2e895d92bb765a7c3d0137688ea5eed10610fcdda1d",
+      "bytes": 41486
+    },
+    {
+      "file": "white-orchid.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-0600dd82-0f12-4eca-8505-c50dc96fb16d.png",
+      "masterSha256": "6cef827dd1539f4d9441de0b21cea54b3da8cee929d8044da60b50eea42cb682",
+      "sha256": "8004d7b941d35d6b9e42828d1850c8fd8e4b0a1314f1492b8ef70b43a2cc547e",
+      "bytes": 28356
+    }
+  ]
+}

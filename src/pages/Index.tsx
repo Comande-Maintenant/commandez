@@ -48,7 +48,7 @@ const Index = () => {
           <h1 className="text-[30px] sm:text-4xl leading-tight font-bold tracking-tight text-slate-900 max-w-lg">{t('journey.home_title')}</h1>
           <p className="mt-3 text-base leading-relaxed text-slate-600 max-w-md">{t('journey.home_description')}</p>
           <div className="mt-6 space-y-3">
-            <Button data-primary-action="demo" onClick={() => navigate("/admin/demo")} className="w-full h-auto min-h-12 py-3 whitespace-normal text-start rounded-2xl bg-primary hover:bg-primary/90 text-base font-semibold justify-between px-5">{t('journey.home_demo')}<ArrowRight className="h-5 w-5 shrink-0 rtl:rotate-180" aria-hidden="true"/></Button>
+            <Button data-primary-action="demo" onClick={() => navigate("/decouvrir")} className="w-full h-auto min-h-12 py-3 whitespace-normal text-start rounded-2xl bg-primary hover:bg-primary/90 text-base font-semibold justify-between px-5">{t('journey.home_demo')}<ArrowRight className="h-5 w-5 shrink-0 rtl:rotate-180" aria-hidden="true"/></Button>
             <Button variant="outline" onClick={() => navigate("/inscription")} className="w-full h-auto min-h-12 py-3 whitespace-normal rounded-2xl text-base font-semibold border-slate-200">{t('home.create_free')}</Button>
           </div>
           <p className="mt-4 flex items-start gap-2 text-sm leading-relaxed text-slate-600"><Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" aria-hidden="true"/>{t('journey.home_free')}</p>

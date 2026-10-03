@@ -346,7 +346,7 @@ const InscriptionPage = () => {
         {step === 1 && (
           <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4">
             <Link
-              to="/admin/demo"
+              to="/decouvrir"
               className="flex min-h-11 items-center justify-center text-sm font-semibold text-primary underline underline-offset-4"
             >
               {t('journey.home_demo')}
