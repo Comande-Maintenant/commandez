@@ -102,3 +102,22 @@ interne et invitation : dossier externe
 /Users/lestoilettesdeminette/reports/commandeici-ios-free-2026-10-03.
 Rollback : retirer seulement ce build du groupe interne ou l'expirer si une
 régression est observée. Ne pas activer un abonnement pour tester le mode gratuit.
+
+### Reprise visibilité TestFlight — 03/10 vers 18:00 Europe/Paris
+
+Après livraison observée le matin, les builds1 et2 ont été expirés à15:12Paris,
+ainsi que SkinScore une seconde après. L'auteur/cause n'est pas établi ; les
+propriétaires fonctionnel et SkinScore ne déclarent aucun retrait coordonné.
+Apple renvoie409 ENTITY_ERROR.ATTRIBUTE.INVALID pour expired=false : impossible
+de réactiver2. Le compte/API fonctionne et le certificat Distribution reste
+valide ; adhésion/contrats actuels à relire après reconnexion de la session web.
+Un cas comparable multi-apps est signalé sur le forum officiel Apple813703,
+sans preuve qu'il s'agit du même défaut ici. Ne pas annoncer la cause certaine.
+
+Préparer build3 : seule CURRENT_PROJECT_VERSION passe2→3, UI/JS/backend/RC/APNs
+inchangés. Diff limité + build/archive/export/signature + comparaison octets JS
+avec IPA2 avant upload unique. Contrôler app6818680948 et absence3 avant l'envoi.
+Ne pas expirer d'autres builds ni modifier SkinScore. Après traitement, relire
+expired=false ET IN_BETA_TESTING/groupe/tester, puis vérifier avec Augustin la
+visibilité sur son iPhone. INVITED seul ne prouve pas installation réelle.
+Aucun paiement/renouvellement/acceptation de contrat/support externe sans autorité.
