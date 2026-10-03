@@ -1399,6 +1399,9 @@
   "account.confirm": "Digita DELETE",
   "account.cancel_first": "Annulla l’abbonamento prima di eliminare l’account.",
   "account.deleted": "Account eliminato",
-  "native.subscription": "Gestisci il ristorante e gli ordini. La fatturazione si gestisce sul sito CommandeIci.",
-  "onboarding.start_trial": "Inizia la prova gratuita"
+  "native.subscription": "Gratis fino al 2027. Il menu, i codici QR e gli ordini sono inclusi. Nessuna carta di pagamento richiesta.",
+  "onboarding.start_trial": "Inizia la prova gratuita",
+  "native.free.title": "Gratis fino al 2027",
+  "native.free.description": "Il menu, i codici QR e gli ordini sono inclusi. Nessuna carta di pagamento richiesta.",
+  "native.free.publish": "Crea il mio menu gratis"
 }

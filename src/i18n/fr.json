@@ -1399,6 +1399,9 @@
   "account.confirm": "Saisissez DELETE",
   "account.cancel_first": "Annulez votre abonnement actif avant de supprimer le compte.",
   "account.deleted": "Compte supprimé",
-  "native.subscription": "Cette application permet de gérer votre restaurant et de commander. La facturation de l’abonnement se gère sur le site CommandeIci.",
-  "onboarding.start_trial": "Commencer mon essai gratuit"
+  "native.subscription": "Gratuit jusqu'en 2027. Votre carte, vos QR codes et vos commandes sont inclus. Aucune carte bancaire demandée.",
+  "onboarding.start_trial": "Commencer mon essai gratuit",
+  "native.free.title": "Gratuit jusqu'en 2027",
+  "native.free.description": "Votre carte, vos QR codes et vos commandes sont inclus. Aucune carte bancaire demandée.",
+  "native.free.publish": "Créer ma carte gratuitement"
 }

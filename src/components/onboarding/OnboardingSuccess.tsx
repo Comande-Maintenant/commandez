@@ -107,7 +107,7 @@ export function OnboardingSuccess({ restaurantName, slug, email, restaurantId, p
           {t('onboarding.success.online', { name: restaurantName })}
         </h2>
         <p className="text-muted-foreground mt-2">
-          {t('onboarding.success.trial_started')}
+          {t(isNative() ? 'native.free.title' : 'onboarding.success.trial_started')}
         </p>
       </div>
 

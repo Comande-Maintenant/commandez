@@ -1399,6 +1399,9 @@
   "account.confirm": "Nhập DELETE",
   "account.cancel_first": "Hủy đăng ký trước khi xóa tài khoản.",
   "account.deleted": "Đã xóa tài khoản",
-  "native.subscription": "Quản lý nhà hàng và đơn hàng. Thanh toán đăng ký được quản lý trên trang CommandeIci.",
-  "onboarding.start_trial": "Bắt đầu dùng thử"
+  "native.subscription": "Miễn phí đến năm 2027. Bao gồm thực đơn, mã QR và đơn hàng. Không cần thẻ thanh toán.",
+  "onboarding.start_trial": "Bắt đầu dùng thử",
+  "native.free.title": "Miễn phí đến năm 2027",
+  "native.free.description": "Bao gồm thực đơn, mã QR và đơn hàng. Không cần thẻ thanh toán.",
+  "native.free.publish": "Tạo thực đơn miễn phí"
 }

@@ -1399,6 +1399,9 @@
   "account.confirm": "Введите DELETE",
   "account.cancel_first": "Отмените подписку перед удалением аккаунта.",
   "account.deleted": "Аккаунт удалён",
-  "native.subscription": "Управляйте рестораном и заказами. Оплата подписки управляется на сайте CommandeIci.",
-  "onboarding.start_trial": "Начать бесплатный период"
+  "native.subscription": "Бесплатно до 2027 года. Меню, QR-коды и заказы включены. Банковская карта не требуется.",
+  "onboarding.start_trial": "Начать бесплатный период",
+  "native.free.title": "Бесплатно до 2027 года",
+  "native.free.description": "Меню, QR-коды и заказы включены. Банковская карта не требуется.",
+  "native.free.publish": "Создать меню бесплатно"
 }

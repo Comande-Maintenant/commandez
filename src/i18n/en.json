@@ -1399,6 +1399,9 @@
   "account.confirm": "Type DELETE",
   "account.cancel_first": "Cancel your active subscription before deleting your account.",
   "account.deleted": "Account deleted",
-  "native.subscription": "Use this app to manage your restaurant and place orders. Subscription billing is managed on the CommandeIci website.",
-  "onboarding.start_trial": "Start my free trial"
+  "native.subscription": "Free until 2027. Your menu, QR codes and orders are included. No payment card required.",
+  "onboarding.start_trial": "Start my free trial",
+  "native.free.title": "Free until 2027",
+  "native.free.description": "Your menu, QR codes and orders are included. No payment card required.",
+  "native.free.publish": "Create my menu for free"
 }

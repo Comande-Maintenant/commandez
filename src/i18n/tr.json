@@ -1399,6 +1399,9 @@
   "account.confirm": "DELETE yazın",
   "account.cancel_first": "Hesabı silmeden önce aboneliğinizi iptal edin.",
   "account.deleted": "Hesap silindi",
-  "native.subscription": "Restoranı ve siparişleri yönetin. Abonelik faturalandırması CommandeIci sitesinde yönetilir.",
-  "onboarding.start_trial": "Ücretsiz denemeyi başlat"
+  "native.subscription": "2027'ye kadar ücretsiz. Menünüz, QR kodlarınız ve siparişleriniz dahildir. Banka kartı gerekmez.",
+  "onboarding.start_trial": "Ücretsiz denemeyi başlat",
+  "native.free.title": "2027'ye kadar ücretsiz",
+  "native.free.description": "Menünüz, QR kodlarınız ve siparişleriniz dahildir. Banka kartı gerekmez.",
+  "native.free.publish": "Menümü ücretsiz oluştur"
 }

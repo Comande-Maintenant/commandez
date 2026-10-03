@@ -1399,6 +1399,9 @@
   "account.confirm": "DELETEと入力",
   "account.cancel_first": "削除前にサブスクリプションを解約してください。",
   "account.deleted": "アカウントを削除しました",
-  "native.subscription": "店舗と注文を管理できます。請求はCommandeIciウェブサイトで管理します。",
-  "onboarding.start_trial": "無料体験を開始"
+  "native.subscription": "2027年まで無料. メニュー、QRコード、注文機能が含まれます。クレジットカードは不要です。",
+  "onboarding.start_trial": "無料体験を開始",
+  "native.free.title": "2027年まで無料",
+  "native.free.description": "メニュー、QRコード、注文機能が含まれます。クレジットカードは不要です。",
+  "native.free.publish": "メニューを無料で作成"
 }

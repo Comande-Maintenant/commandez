@@ -1399,6 +1399,9 @@
   "account.confirm": "输入DELETE",
   "account.cancel_first": "删除账户前请取消订阅。",
   "account.deleted": "账户已删除",
-  "native.subscription": "管理餐厅和订单。订阅账单在CommandeIci网站管理。",
-  "onboarding.start_trial": "开始免费试用"
+  "native.subscription": "免费使用至2027年. 包含菜单、二维码和订单功能。无需提供银行卡。",
+  "onboarding.start_trial": "开始免费试用",
+  "native.free.title": "免费使用至2027年",
+  "native.free.description": "包含菜单、二维码和订单功能。无需提供银行卡。",
+  "native.free.publish": "免费创建菜单"
 }

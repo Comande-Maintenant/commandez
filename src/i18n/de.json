@@ -1399,6 +1399,9 @@
   "account.confirm": "DELETE eingeben",
   "account.cancel_first": "Kündige dein Abo vor der Kontolöschung.",
   "account.deleted": "Konto gelöscht",
-  "native.subscription": "Verwalte dein Restaurant und Bestellungen. Die Abrechnung erfolgt auf der CommandeIci-Website.",
-  "onboarding.start_trial": "Kostenlosen Test starten"
+  "native.subscription": "Kostenlos bis 2027. Speisekarte, QR-Codes und Bestellungen sind enthalten. Keine Zahlungskarte erforderlich.",
+  "onboarding.start_trial": "Kostenlosen Test starten",
+  "native.free.title": "Kostenlos bis 2027",
+  "native.free.description": "Speisekarte, QR-Codes und Bestellungen sind enthalten. Keine Zahlungskarte erforderlich.",
+  "native.free.publish": "Meine Speisekarte kostenlos erstellen"
 }

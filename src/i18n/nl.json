@@ -1399,6 +1399,9 @@
   "account.confirm": "Typ DELETE",
   "account.cancel_first": "Zeg je abonnement op voordat je je account verwijdert.",
   "account.deleted": "Account verwijderd",
-  "native.subscription": "Beheer je restaurant en bestellingen. Facturering wordt beheerd op de CommandeIci-website.",
-  "onboarding.start_trial": "Gratis proefperiode starten"
+  "native.subscription": "Gratis tot 2027. Je menukaart, QR-codes en bestellingen zijn inbegrepen. Geen betaalkaart nodig.",
+  "onboarding.start_trial": "Gratis proefperiode starten",
+  "native.free.title": "Gratis tot 2027",
+  "native.free.description": "Je menukaart, QR-codes en bestellingen zijn inbegrepen. Geen betaalkaart nodig.",
+  "native.free.publish": "Mijn menukaart gratis maken"
 }

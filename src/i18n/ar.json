@@ -1399,6 +1399,9 @@
   "account.confirm": "اكتب DELETE",
   "account.cancel_first": "ألغِ اشتراكك قبل حذف الحساب.",
   "account.deleted": "تم حذف الحساب",
-  "native.subscription": "إدارة مطعمك والطلبات. تتم إدارة الفواتير عبر موقع CommandeIci.",
-  "onboarding.start_trial": "ابدأ التجربة المجانية"
+  "native.subscription": "مجاني حتى 2027. قائمة الطعام ورموز QR والطلبات مشمولة. لا حاجة إلى بطاقة بنكية.",
+  "onboarding.start_trial": "ابدأ التجربة المجانية",
+  "native.free.title": "مجاني حتى 2027",
+  "native.free.description": "قائمة الطعام ورموز QR والطلبات مشمولة. لا حاجة إلى بطاقة بنكية.",
+  "native.free.publish": "إنشاء قائمة الطعام مجانًا"
 }

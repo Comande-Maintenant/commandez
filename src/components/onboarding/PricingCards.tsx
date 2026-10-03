@@ -16,6 +16,25 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
   const plans = getPricingPlans(t);
   const plan = plans[0];
 
+  if (isNative()) return (
+    <div className="space-y-5 max-w-2xl mx-auto">
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center">
+        <Gift className="h-7 w-7 text-primary mx-auto mb-3" aria-hidden="true" />
+        <h3 className="font-semibold text-foreground text-lg">{t('native.free.title')}</h3>
+        <p className="text-sm text-muted-foreground mt-2">{t('native.free.description')}</p>
+        <Button disabled={disabled} className="w-full mt-5 min-h-12" onClick={() => onSelect('none')}>
+          {t('native.free.publish')}
+        </Button>
+      </div>
+      <div className="rounded-lg bg-muted/50 p-4 text-sm">
+        <p className="font-medium mb-2">{t('subscription.included')}</p>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-muted-foreground">
+          {plan.features.map(feature => <li key={feature} className="flex items-start gap-2"><Check className="h-4 w-4 text-primary shrink-0 mt-0.5" aria-hidden="true" />{feature}</li>)}
+        </ul>
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Launch offer banner */}

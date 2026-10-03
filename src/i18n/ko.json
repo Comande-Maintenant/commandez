@@ -1399,6 +1399,9 @@
   "account.confirm": "DELETE 입력",
   "account.cancel_first": "계정 삭제 전에 구독을 취소하세요.",
   "account.deleted": "계정 삭제됨",
-  "native.subscription": "식당과 주문을 관리합니다. 구독 결제는CommandeIci웹사이트에서 관리합니다.",
-  "onboarding.start_trial": "무료 체험 시작"
+  "native.subscription": "2027년까지 무료. 메뉴, QR 코드, 주문 기능이 포함됩니다. 결제 카드가 필요하지 않습니다.",
+  "onboarding.start_trial": "무료 체험 시작",
+  "native.free.title": "2027년까지 무료",
+  "native.free.description": "메뉴, QR 코드, 주문 기능이 포함됩니다. 결제 카드가 필요하지 않습니다.",
+  "native.free.publish": "무료로 메뉴 만들기"
 }
