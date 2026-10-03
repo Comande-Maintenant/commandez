@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Empezar prueba gratis",
   "native.free.title": "Gratis hasta 2027",
   "native.free.description": "Tu carta, tus códigos QR y tus pedidos están incluidos. No necesitas tarjeta bancaria.",
-  "native.free.publish": "Crear mi carta gratis"
+  "native.free.publish": "Crear mi carta gratis",
+  "restaurant.load_error": "No se pudo cargar la carta. Vuelve a intentarlo.",
+  "common.retry": "Reintentar",
+  "native.push.title": "Recibir pedidos",
+  "native.push.description": "Recibe avisos incluso con la pantalla bloqueada.",
+  "native.push.enable": "Activar",
+  "native.push.denied": "Permite las notificaciones de CommandeIci en Ajustes > Notificaciones.",
+  "native.push.error": "No se pudieron conectar las notificaciones. Inténtalo de nuevo."
 }

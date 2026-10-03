@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Iniciar teste gratuito",
   "native.free.title": "Grátis até 2027",
   "native.free.description": "A sua ementa, os códigos QR e os pedidos estão incluídos. Não é necessário cartão bancário.",
-  "native.free.publish": "Criar a minha ementa grátis"
+  "native.free.publish": "Criar a minha ementa grátis",
+  "restaurant.load_error": "Não foi possível carregar o menu. Tente novamente.",
+  "common.retry": "Tentar novamente",
+  "native.push.title": "Receber pedidos",
+  "native.push.description": "Receba avisos mesmo com o ecrã bloqueado.",
+  "native.push.enable": "Ativar",
+  "native.push.denied": "Permita as notificações de CommandeIci em Definições > Notificações.",
+  "native.push.error": "Não foi possível ligar as notificações. Tente novamente."
 }

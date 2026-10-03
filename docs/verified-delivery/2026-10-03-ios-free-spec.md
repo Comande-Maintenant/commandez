@@ -18,3 +18,27 @@ Plan exécutable:
 5. Contrôle Apple doublon build, export IPA puis upload altool autorisé; attendre processing valide, rattacher au groupe interne existant ou dédié incluant Augustin; relire statut et groupe. Aucune soumission publique App Review dans cette mission.
 
 Risques et retour: auth et identité élevés, checkout volontairement inexistant; ancien iOS build1 non signé sauvegardé le02octobre; retour local git restore des seuls fichiers du lot/reconstruction commit base; TestFlight expirer uniquement le nouveau build en cas de régression démontrée, ne pas supprimer groupes/versions externes. Aucun secret privé, migration destructrice, paiement ou mail de campagne. Critères d'arrêt: absence de credential/profil Apple, identité croisées, signature invalide, app grisée/offline non récupérable. Documenter le blocage précis sans annoncer TestFlight livré.
+
+
+## Notifications iOS — extension coordonnée du 03/10
+
+Le propriétaire fonctionnel demande la réception des commandes écran verrouillé.
+Notre périmètre : SDK Capacitor officiel, consentement explicite sur dashboard
+marchand réel, callbacks APNs, entitlements/signature, stockage token Keychain,
+révocation avant logout/suppression, navigation validée par propriété actuelle.
+Le propriétaire fonctionnel garde migration, RLS, outbox idempotente et worker APNs.
+RPC confirmés : register_order_push_device(p_token,p_environment,p_platform) et
+unregister_order_push_device(p_token), identité issue auth.uid() côté serveur.
+Payload : aps alerte générique sans nom/commande détaillée, type=new_order et
+restaurant_slug à la racine. Le foreground présente uniquement badge pour éviter
+le double son du realtime. Production uniquement dans TestFlight ; aucune clé
+sandbox créée. La clé privée dédiée reste hors dépôt/rapport, permissions 0600.
+TestFlight ne vaut pas preuve de réception APNs sur appareil physique : ce test
+reste à observer sur l’iPhone. Ne pas déclarer APNs live avant preuve serveur.
+
+Preuves intermédiaires : 10 tests service push, 2 tests suppression ; race logout
+pendant dialogue OS, permission refusée, web/guest sans effet, token invalide,
+échec RPC et timeout token. Guide mobile : cible visible (pas sidebar cachée),
+tooltip borné au viewport et bouton fermeture accessible, 2 E2E avant/après.
+La validation IAP RevenueCat production reste à contrôler ; authentification
+Apple sandbox de la clé active acceptée. Aucun produit/achat/offering payant.

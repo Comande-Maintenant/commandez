@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Inizia la prova gratuita",
   "native.free.title": "Gratis fino al 2027",
   "native.free.description": "Il menu, i codici QR e gli ordini sono inclusi. Nessuna carta di pagamento richiesta.",
-  "native.free.publish": "Crea il mio menu gratis"
+  "native.free.publish": "Crea il mio menu gratis",
+  "restaurant.load_error": "Non è stato possibile caricare il menu. Riprova.",
+  "common.retry": "Riprova",
+  "native.push.title": "Ricevi gli ordini",
+  "native.push.description": "Ricevi avvisi anche con lo schermo bloccato.",
+  "native.push.enable": "Attiva",
+  "native.push.denied": "Consenti le notifiche di CommandeIci in Impostazioni > Notifiche.",
+  "native.push.error": "Impossibile collegare le notifiche. Riprova."
 }

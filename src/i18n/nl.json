@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Gratis proefperiode starten",
   "native.free.title": "Gratis tot 2027",
   "native.free.description": "Je menukaart, QR-codes en bestellingen zijn inbegrepen. Geen betaalkaart nodig.",
-  "native.free.publish": "Mijn menukaart gratis maken"
+  "native.free.publish": "Mijn menukaart gratis maken",
+  "restaurant.load_error": "Het menu kon niet worden geladen. Probeer opnieuw.",
+  "common.retry": "Opnieuw proberen",
+  "native.push.title": "Bestellingen ontvangen",
+  "native.push.description": "Ontvang meldingen, ook als uw scherm is vergrendeld.",
+  "native.push.enable": "Inschakelen",
+  "native.push.denied": "Sta CommandeIci toe via Instellingen > Meldingen.",
+  "native.push.error": "Meldingen konden niet worden verbonden. Probeer opnieuw."
 }

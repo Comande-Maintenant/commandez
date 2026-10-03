@@ -1,3 +1,4 @@
+import { suspendNativePushBeforeSignOut } from '@/services/native-push-client';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,6 +17,11 @@ export function DeleteAccountButton() {
   async function remove() {
     if (confirmation !== 'DELETE' || busy) return;
     setBusy(true); setError('');
+    try {
+      await suspendNativePushBeforeSignOut();
+    } catch {
+      setError(t('client.delete_error')); setBusy(false); return;
+    }
     const { error } = await supabase.rpc('delete_own_account' as never, { p_confirmation: confirmation } as never);
     if (error) {
       setError(error.message.includes('cancel_subscription') ? t('account.cancel_first') : t('client.delete_error'));

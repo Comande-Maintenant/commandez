@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Start my free trial",
   "native.free.title": "Free until 2027",
   "native.free.description": "Your menu, QR codes and orders are included. No payment card required.",
-  "native.free.publish": "Create my menu for free"
+  "native.free.publish": "Create my menu for free",
+  "restaurant.load_error": "The menu could not be loaded. Try again.",
+  "common.retry": "Try again",
+  "native.push.title": "Receive orders",
+  "native.push.description": "Get notified even when your screen is locked.",
+  "native.push.enable": "Enable",
+  "native.push.denied": "Allow CommandeIci notifications in Settings > Notifications.",
+  "native.push.error": "Unable to connect notifications. Try again."
 }

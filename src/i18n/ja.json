@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "無料体験を開始",
   "native.free.title": "2027年まで無料",
   "native.free.description": "メニュー、QRコード、注文機能が含まれます。クレジットカードは不要です。",
-  "native.free.publish": "メニューを無料で作成"
+  "native.free.publish": "メニューを無料で作成",
+  "restaurant.load_error": "メニューを読み込めませんでした。もう一度お試しください。",
+  "common.retry": "再試行",
+  "native.push.title": "注文を受け取る",
+  "native.push.description": "画面のロック中も通知を受け取れます。",
+  "native.push.enable": "有効にする",
+  "native.push.denied": "設定 > 通知で CommandeIci の通知を許可してください。",
+  "native.push.error": "通知に接続できませんでした。再試行してください。"
 }

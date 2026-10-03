@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Commencer mon essai gratuit",
   "native.free.title": "Gratuit jusqu'en 2027",
   "native.free.description": "Votre carte, vos QR codes et vos commandes sont inclus. Aucune carte bancaire demandée.",
-  "native.free.publish": "Créer ma carte gratuitement"
+  "native.free.publish": "Créer ma carte gratuitement",
+  "restaurant.load_error": "La carte n’a pas pu être chargée. Réessayez.",
+  "common.retry": "Réessayer",
+  "native.push.title": "Recevoir les commandes",
+  "native.push.description": "Soyez averti même lorsque l’écran est verrouillé.",
+  "native.push.enable": "Activer",
+  "native.push.denied": "Autorisez les notifications pour CommandeIci dans Réglages > Notifications.",
+  "native.push.error": "Connexion aux notifications impossible. Réessayez."
 }

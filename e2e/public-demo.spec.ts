@@ -37,7 +37,7 @@ test("a customer can configure a kebab and add it to the order", async ({
   // Read the real public catalogue; never create a production order in this check.
   const orderId = '20000000-0000-4000-8000-000000000001';
   let placedOrder: Record<string, unknown> = {};
-  await page.route(url => url.pathname.endsWith('/rpc/place_order'), async route => {
+  await page.route(url => /\/rpc\/place_order(?:_once)?$/.test(url.pathname), async route => {
     const payload = route.request().postDataJSON();
     placedOrder = { id: orderId, order_number: 1, status: 'new', created_at: new Date().toISOString(), customer_name: payload.p_customer_name, customer_phone: payload.p_customer_phone, customer_email: '', items: payload.p_items, total: payload.p_total, order_type: payload.p_order_type, restaurant: { name: 'Antalya Kebab', slug: 'demo', primary_color: '#22c55e', restaurant_phone: '', is_demo: true } };
     await route.fulfill({ json: placedOrder });

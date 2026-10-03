@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Kostenlosen Test starten",
   "native.free.title": "Kostenlos bis 2027",
   "native.free.description": "Speisekarte, QR-Codes und Bestellungen sind enthalten. Keine Zahlungskarte erforderlich.",
-  "native.free.publish": "Meine Speisekarte kostenlos erstellen"
+  "native.free.publish": "Meine Speisekarte kostenlos erstellen",
+  "restaurant.load_error": "Die Speisekarte konnte nicht geladen werden. Bitte erneut versuchen.",
+  "common.retry": "Erneut versuchen",
+  "native.push.title": "Bestellungen empfangen",
+  "native.push.description": "Erhalten Sie Hinweise auch bei gesperrtem Bildschirm.",
+  "native.push.enable": "Aktivieren",
+  "native.push.denied": "Erlauben Sie CommandeIci unter Einstellungen > Mitteilungen.",
+  "native.push.error": "Benachrichtigungen konnten nicht verbunden werden. Versuchen Sie es erneut."
 }

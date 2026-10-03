@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "开始免费试用",
   "native.free.title": "免费使用至2027年",
   "native.free.description": "包含菜单、二维码和订单功能。无需提供银行卡。",
-  "native.free.publish": "免费创建菜单"
+  "native.free.publish": "免费创建菜单",
+  "restaurant.load_error": "无法加载菜单，请重试。",
+  "common.retry": "重试",
+  "native.push.title": "接收订单",
+  "native.push.description": "屏幕锁定时也能收到通知。",
+  "native.push.enable": "启用",
+  "native.push.denied": "请在设置 > 通知中允许 CommandeIci 发送通知。",
+  "native.push.error": "无法连接通知服务，请重试。"
 }

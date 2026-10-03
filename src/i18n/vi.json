@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Bắt đầu dùng thử",
   "native.free.title": "Miễn phí đến năm 2027",
   "native.free.description": "Bao gồm thực đơn, mã QR và đơn hàng. Không cần thẻ thanh toán.",
-  "native.free.publish": "Tạo thực đơn miễn phí"
+  "native.free.publish": "Tạo thực đơn miễn phí",
+  "restaurant.load_error": "Không thể tải thực đơn. Vui lòng thử lại.",
+  "common.retry": "Thử lại",
+  "native.push.title": "Nhận đơn hàng",
+  "native.push.description": "Nhận thông báo ngay cả khi màn hình bị khóa.",
+  "native.push.enable": "Bật",
+  "native.push.denied": "Cho phép thông báo CommandeIci trong Cài đặt > Thông báo.",
+  "native.push.error": "Không thể kết nối thông báo. Vui lòng thử lại."
 }

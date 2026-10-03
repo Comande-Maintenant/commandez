@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -59,6 +59,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
   ], [t]);
   const [currentStep, setCurrentStep] = useState(0);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const updatePosition = useCallback(() => {
@@ -66,13 +67,16 @@ export const OnboardingTour = ({ onComplete }: Props) => {
     if (!step) return;
 
     // Try to find the element
-    let el = document.querySelector(step.selector);
+    let el: Element | undefined = [...document.querySelectorAll(step.selector)].find(candidate => {
+      const rect = candidate.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    });
 
     // Fallback: try to find by text content in nav buttons
     if (!el) {
       const buttons = document.querySelectorAll("button, a");
       for (const btn of buttons) {
-        if (btn.textContent?.trim() === step.title) {
+        if (btn.textContent?.trim() === step.title && btn.getBoundingClientRect().width > 0) {
           el = btn;
           break;
         }
@@ -99,29 +103,30 @@ export const OnboardingTour = ({ onComplete }: Props) => {
   const step = steps[currentStep];
   const isLast = currentStep === steps.length - 1;
 
+  useLayoutEffect(() => {
+    const observer = new ResizeObserver(updatePosition);
+    if (tooltipRef.current) observer.observe(tooltipRef.current);
+    return () => observer.disconnect();
+  }, [currentStep, updatePosition]);
+
   const tooltipStyle = (): React.CSSProperties => {
-    if (!targetRect) {
-      return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
-    }
-
     const padding = 16;
-    const tooltipWidth = 300;
-
-    if (step.position === "bottom") {
-      return {
-        top: targetRect.bottom + padding,
-        left: Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding)),
-      };
-    }
-    if (step.position === "top") {
-      return {
-        bottom: window.innerHeight - targetRect.top + padding,
-        left: Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding)),
-      };
+    const width = Math.min(300, window.innerWidth - padding * 2);
+    const height = tooltipRef.current?.offsetHeight || 300;
+    const maxTop = Math.max(padding, window.innerHeight - height - padding);
+    let top = (window.innerHeight - height) / 2;
+    let left = (window.innerWidth - width) / 2;
+    if (targetRect) {
+      top = step.position === 'top' ? targetRect.top - height - padding : targetRect.bottom + padding;
+      if (step.position === 'bottom' && top > maxTop) top = targetRect.top - height - padding;
+      left = targetRect.left + targetRect.width / 2 - width / 2;
     }
     return {
-      top: targetRect.top,
-      left: targetRect.right + padding,
+      top: Math.max(padding, Math.min(top, maxTop)),
+      left: Math.max(padding, Math.min(left, window.innerWidth - width - padding)),
+      width,
+      maxHeight: window.innerHeight - padding * 2,
+      overflowY: 'auto',
     };
   };
 
@@ -145,6 +150,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
       {/* Tooltip */}
       <AnimatePresence mode="wait">
         <motion.div
+          ref={tooltipRef}
           key={currentStep}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -154,6 +160,7 @@ export const OnboardingTour = ({ onComplete }: Props) => {
         >
           <button
             onClick={onComplete}
+            aria-label={t('common.close')}
             className="absolute top-3 end-3 p-1 rounded-lg hover:bg-secondary"
           >
             <X className="h-4 w-4 text-muted-foreground" />

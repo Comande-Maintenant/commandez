@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Ücretsiz denemeyi başlat",
   "native.free.title": "2027'ye kadar ücretsiz",
   "native.free.description": "Menünüz, QR kodlarınız ve siparişleriniz dahildir. Banka kartı gerekmez.",
-  "native.free.publish": "Menümü ücretsiz oluştur"
+  "native.free.publish": "Menümü ücretsiz oluştur",
+  "restaurant.load_error": "Menü yüklenemedi. Tekrar deneyin.",
+  "common.retry": "Tekrar dene",
+  "native.push.title": "Siparişleri alın",
+  "native.push.description": "Ekran kilitliyken bile bildirim alın.",
+  "native.push.enable": "Etkinleştir",
+  "native.push.denied": "Ayarlar > Bildirimler bölümünde CommandeIci bildirimlerine izin verin.",
+  "native.push.error": "Bildirimlere bağlanılamadı. Tekrar deneyin."
 }

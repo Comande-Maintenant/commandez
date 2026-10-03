@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "무료 체험 시작",
   "native.free.title": "2027년까지 무료",
   "native.free.description": "메뉴, QR 코드, 주문 기능이 포함됩니다. 결제 카드가 필요하지 않습니다.",
-  "native.free.publish": "무료로 메뉴 만들기"
+  "native.free.publish": "무료로 메뉴 만들기",
+  "restaurant.load_error": "메뉴를 불러올 수 없습니다. 다시 시도해 주세요.",
+  "common.retry": "다시 시도",
+  "native.push.title": "주문 알림 받기",
+  "native.push.description": "화면이 잠겨 있어도 알림을 받으세요.",
+  "native.push.enable": "활성화",
+  "native.push.denied": "설정 > 알림에서 CommandeIci 알림을 허용하세요.",
+  "native.push.error": "알림에 연결할 수 없습니다. 다시 시도하세요."
 }

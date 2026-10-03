@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "ابدأ التجربة المجانية",
   "native.free.title": "مجاني حتى 2027",
   "native.free.description": "قائمة الطعام ورموز QR والطلبات مشمولة. لا حاجة إلى بطاقة بنكية.",
-  "native.free.publish": "إنشاء قائمة الطعام مجانًا"
+  "native.free.publish": "إنشاء قائمة الطعام مجانًا",
+  "restaurant.load_error": "تعذر تحميل القائمة. أعد المحاولة.",
+  "common.retry": "أعد المحاولة",
+  "native.push.title": "استلام الطلبات",
+  "native.push.description": "تلقَّ إشعارات حتى عندما تكون الشاشة مقفلة.",
+  "native.push.enable": "تفعيل",
+  "native.push.denied": "اسمح بإشعارات CommandeIci في الإعدادات > الإشعارات.",
+  "native.push.error": "تعذر توصيل الإشعارات. حاول مرة أخرى."
 }

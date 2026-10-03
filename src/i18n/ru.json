@@ -1403,5 +1403,12 @@
   "onboarding.start_trial": "Начать бесплатный период",
   "native.free.title": "Бесплатно до 2027 года",
   "native.free.description": "Меню, QR-коды и заказы включены. Банковская карта не требуется.",
-  "native.free.publish": "Создать меню бесплатно"
+  "native.free.publish": "Создать меню бесплатно",
+  "restaurant.load_error": "Не удалось загрузить меню. Попробуйте ещё раз.",
+  "common.retry": "Повторить",
+  "native.push.title": "Получать заказы",
+  "native.push.description": "Получайте уведомления даже при заблокированном экране.",
+  "native.push.enable": "Включить",
+  "native.push.denied": "Разрешите уведомления CommandeIci в Настройки > Уведомления.",
+  "native.push.error": "Не удалось подключить уведомления. Попробуйте снова."
 }

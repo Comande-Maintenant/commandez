@@ -5,6 +5,6 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   loggingBehavior: 'none',
   ios: { contentInset: 'automatic', preferredContentMode: 'mobile' },
-  plugins: { Keyboard: { resize: 'body' } },
+  plugins: { Keyboard: { resize: 'body' }, PushNotifications: { presentationOptions: ['badge'] } },
 };
 export default config;
