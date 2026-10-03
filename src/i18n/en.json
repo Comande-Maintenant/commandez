@@ -1418,5 +1418,18 @@
   "native.push.description": "Get notified even when your screen is locked.",
   "native.push.enable": "Enable",
   "native.push.denied": "Allow CommandeIci notifications in Settings > Notifications.",
-  "native.push.error": "Unable to connect notifications. Try again."
+  "native.push.error": "Unable to connect notifications. Try again.",
+  "native.push.enabled": "Notifications enabled. New orders also alert you when your screen is locked.",
+  "native.push.settings": "Open Settings",
+  "demo.try.title": "Your first order, in seconds",
+  "demo.try.description": "Receive a sample order, prepare it and complete it. Nothing is charged.",
+  "demo.try.receive": "Receive a sample order",
+  "demo.try.ios": "Test iOS notification",
+  "demo.try.scheduled": "Demo notification scheduled",
+  "demo.try.instructions": "Lock your iPhone: a demo notification will arrive in 10 seconds.",
+  "demo.try.notification_title": "CommandeIci · Demo",
+  "demo.try.notification_body": "New sample order. Open the demo to prepare it.",
+  "demo.try.customer": "Demo customer",
+  "demo.try.notes": "Sample order to try the demo",
+  "menu.illustration": "Illustration"
 }

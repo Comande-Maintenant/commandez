@@ -67,8 +67,20 @@ public class FileExportPlugin: CAPPlugin, CAPBridgedPlugin {
     public let jsName = "FileExport"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "share", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "openExternalUrl", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "openExternalUrl", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openNotificationSettings", returnType: CAPPluginReturnPromise)
     ]
+
+    @objc func openNotificationSettings(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            guard let url = URL(string: UIApplication.openSettingsURLString) else {
+                call.reject("Settings unavailable"); return
+            }
+            UIApplication.shared.open(url, options: [:]) { opened in
+                if opened { call.resolve() } else { call.reject("Settings unavailable") }
+            }
+        }
+    }
 
     @objc func openExternalUrl(_ call: CAPPluginCall) {
         guard let input = call.getString("url"), let parts = URLComponents(string: input),

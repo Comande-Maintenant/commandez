@@ -11,6 +11,14 @@ class CommandeIciViewController: CAPBridgeViewController {
             let script = "localStorage.setItem('cm_onboarding_done_demo', 'true'); localStorage.setItem('cm_onboarding_done_antalya-kebab-moneteau', 'true'); history.replaceState(null, '', '/admin/demo?view=qrcodes&lang=fr'); window.dispatchEvent(new PopStateEvent('popstate'));"
             webView?.configuration.userContentController.addUserScript(WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
         }
+        if ProcessInfo.processInfo.environment["COMMANDEICI_QA_DEMO"] == "1" {
+            let script = "localStorage.setItem('cm_onboarding_done_demo', 'true'); localStorage.setItem('cm_onboarding_done_antalya-kebab-moneteau', 'true'); history.replaceState(null, '', '/admin/demo?view=cuisine&lang=fr'); window.dispatchEvent(new PopStateEvent('popstate'));"
+            webView?.configuration.userContentController.addUserScript(WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
+        }
+        if ProcessInfo.processInfo.environment["COMMANDEICI_QA_MENU"] == "1" {
+            let script = "history.replaceState(null, '', '/demo?lang=fr'); window.dispatchEvent(new PopStateEvent('popstate'));"
+            webView?.configuration.userContentController.addUserScript(WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
+        }
         #endif
     }
 }

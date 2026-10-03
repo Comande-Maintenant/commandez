@@ -45,7 +45,7 @@ test('owner finds Google listing, retries a provider error, imports a PDF and pu
     await route.fulfill({ json: {} });
   });
   await page.goto('/inscription');
-  await expect(page.getByText('Etape 2 sur 6')).toBeVisible();
+  await expect(page.getByText('Étape 2 sur 6')).toBeVisible();
   await page.getByPlaceholder('Nom de votre restaurant...').fill('Chez Alice Auxerre');
   await page.getByRole('button', { name: 'Rechercher mon établissement' }).click();
   await expect(page.getByRole('alert')).toContainText('La recherche Google est indisponible');
@@ -54,11 +54,11 @@ test('owner finds Google listing, retries a provider error, imports a PDF and pu
   await expect(page.getByRole('textbox').nth(2)).toHaveValue('Auxerre');
   await expect(page.getByText('Lundi : 11:00-14:30, 17:30-22:30')).toBeVisible();
   await page.getByRole('button', { name: 'Confirmer ces informations' }).click();
-  await expect(page.getByText('Etape 3 sur 6')).toBeVisible();
+  await expect(page.getByText('Étape 3 sur 6')).toBeVisible();
   await page.locator('input[type=file][multiple]').setInputFiles({ name: 'carte.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.7 fixture') });
   await page.getByRole('button', { name: 'Analyser ma carte', exact: true }).click();
   await page.getByRole('button', { name: 'Valider ma carte', exact: true }).click();
-  await expect(page.getByText('Etape 4 sur 6')).toBeVisible();
+  await expect(page.getByText('Étape 4 sur 6')).toBeVisible();
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
   await page.getByRole('button', { name: 'Publier mon établissement', exact: true }).click();
   await expect(page.getByText('https://app.commandeici.com/chez-alice-auxerre', { exact: true })).toBeVisible();

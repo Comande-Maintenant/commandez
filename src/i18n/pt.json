@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "Passo {current} de {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "Receba avisos mesmo com o ecrã bloqueado.",
   "native.push.enable": "Ativar",
   "native.push.denied": "Permita as notificações de CommandeIci em Definições > Notificações.",
-  "native.push.error": "Não foi possível ligar as notificações. Tente novamente."
+  "native.push.error": "Não foi possível ligar as notificações. Tente novamente.",
+  "native.push.enabled": "Notificações ativadas. Receba alertas de novos pedidos mesmo com o ecrã bloqueado.",
+  "native.push.settings": "Abrir definições",
+  "demo.try.title": "O seu primeiro pedido, em segundos",
+  "demo.try.description": "Receba um pedido fictício, prepare-o e conclua-o. Nada é cobrado.",
+  "demo.try.receive": "Receber um pedido",
+  "demo.try.ios": "Testar notificação iOS",
+  "demo.try.scheduled": "Notificação de demonstração agendada",
+  "demo.try.instructions": "Bloqueie o iPhone: receberá uma notificação de demonstração em 10 segundos.",
+  "demo.try.notification_title": "CommandeIci · Demonstração",
+  "demo.try.notification_body": "Novo pedido fictício. Abra a demonstração para o preparar.",
+  "demo.try.customer": "Cliente de demonstração",
+  "demo.try.notes": "Pedido fictício para testar a demonstração",
+  "menu.illustration": "Ilustração"
 }

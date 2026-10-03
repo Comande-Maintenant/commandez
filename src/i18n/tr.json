@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "Adım {current} / {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "Ekran kilitliyken bile bildirim alın.",
   "native.push.enable": "Etkinleştir",
   "native.push.denied": "Ayarlar > Bildirimler bölümünde CommandeIci bildirimlerine izin verin.",
-  "native.push.error": "Bildirimlere bağlanılamadı. Tekrar deneyin."
+  "native.push.error": "Bildirimlere bağlanılamadı. Tekrar deneyin.",
+  "native.push.enabled": "Bildirimler açık. Ekran kilitliyken de yeni siparişlerden haberdar olursunuz.",
+  "native.push.settings": "Ayarları aç",
+  "demo.try.title": "Saniyeler içinde ilk siparişiniz",
+  "demo.try.description": "Örnek sipariş alın, hazırlayın ve tamamlayın. Ücret alınmaz.",
+  "demo.try.receive": "Örnek sipariş al",
+  "demo.try.ios": "iOS bildirimini dene",
+  "demo.try.scheduled": "Demo bildirimi planlandı",
+  "demo.try.instructions": "iPhone’unuzu kilitleyin: 10 saniye sonra demo bildirimi gelecek.",
+  "demo.try.notification_title": "CommandeIci · Demo",
+  "demo.try.notification_body": "Yeni örnek sipariş. Hazırlamak için demoyu açın.",
+  "demo.try.customer": "Demo müşterisi",
+  "demo.try.notes": "Demoyu denemek için örnek sipariş",
+  "menu.illustration": "Örnek görsel"
 }

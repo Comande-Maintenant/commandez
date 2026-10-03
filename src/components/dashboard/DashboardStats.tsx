@@ -247,9 +247,9 @@ export const DashboardStats = ({ restaurant, isDemo }: Props) => {
   return (
     <div className="space-y-6">
       <Tabs value={period} onValueChange={(v) => setPeriod(v as Period)}>
-        <TabsList className="rounded-xl">
+        <TabsList className="rounded-xl grid grid-cols-2 sm:grid-cols-4 w-full max-w-xl h-auto gap-1">
           {(["day", "week", "30days", "month"] as Period[]).map((p) => (
-            <TabsTrigger key={p} value={p} className="rounded-lg text-sm">{t(periodLabelKeys[p])}</TabsTrigger>
+            <TabsTrigger key={p} value={p} className="rounded-lg text-sm min-h-11 whitespace-normal">{t(periodLabelKeys[p])}</TabsTrigger>
           ))}
         </TabsList>
       </Tabs>

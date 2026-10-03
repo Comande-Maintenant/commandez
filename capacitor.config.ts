@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appName: 'CommandeIci',
   webDir: 'dist',
   loggingBehavior: 'none',
-  ios: { contentInset: 'automatic', preferredContentMode: 'mobile' },
-  plugins: { Keyboard: { resize: 'body' }, PushNotifications: { presentationOptions: ['badge'] } },
+  ios: { contentInset: 'never', preferredContentMode: 'mobile' },
+  plugins: { Keyboard: { resize: 'body' }, PushNotifications: { presentationOptions: ['badge', 'sound', 'alert'] } },
 };
 export default config;

@@ -1,4 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { isLocalDemoOrder } from '@/lib/demo-order';
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   ArrowLeft,
   Check,
@@ -175,7 +177,7 @@ export const OrderDetailSheet = ({
     setAdvancing(true);
     try {
       if (isDemo) {
-        await advanceDemoOrder(order.id, action.next);
+        if (!isLocalDemoOrder(order)) await advanceDemoOrder(order.id, action.next);
         // Set timer locally for demo
         if (action.next === "preparing") {
           const estimatedAt = new Date(Date.now() + defaultPrepMinutes * 60000).toISOString();
@@ -196,7 +198,7 @@ export const OrderDetailSheet = ({
     setAdvancing(true);
     try {
       if (isDemo) {
-        await advanceDemoOrder(order.id, "done");
+        if (!isLocalDemoOrder(order)) await advanceDemoOrder(order.id, "done");
       } else {
         await updateOrderStatus(order.id, "done");
       }
@@ -213,7 +215,7 @@ export const OrderDetailSheet = ({
     setAdvancing(true);
     try {
       if (isDemo) {
-        await advanceDemoOrder(order.id, prev);
+        if (!isLocalDemoOrder(order)) await advanceDemoOrder(order.id, prev);
       } else {
         await updateOrderStatus(order.id, prev);
       }
@@ -285,7 +287,7 @@ export const OrderDetailSheet = ({
   const saveEdit = async () => {
     setAdvancing(true);
     try {
-      await updateOrderItems(order.id, editItems, editTotal);
+      if (!isDemo) await updateOrderItems(order.id, editItems, editTotal);
       const hasNewItems = isDoneEdit && editItems.length > originalItemCount;
       let updatedOrder = {
         ...order,
@@ -298,7 +300,7 @@ export const OrderDetailSheet = ({
       if (hasNewItems) {
         const newStatus: OrderStatus = "preparing";
         if (isDemo) {
-          await advanceDemoOrder(order.id, newStatus);
+          if (!isLocalDemoOrder(order)) await advanceDemoOrder(order.id, newStatus);
         } else {
           await updateOrderStatus(order.id, newStatus);
         }
@@ -322,17 +324,29 @@ export const OrderDetailSheet = ({
     return cats;
   }, [menuItems]);
 
+  const previousFocus = useRef<HTMLElement | null>(null);
   return (
+    <DialogPrimitive.Root open onOpenChange={open => { if (!open) onClose(); }}>
+    <DialogPrimitive.Portal>
+    <DialogPrimitive.Content asChild aria-describedby={undefined}
+      onOpenAutoFocus={() => { previousFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; }}
+      onCloseAutoFocus={event => {
+        event.preventDefault();
+        if (document.activeElement?.closest('[role="dialog"][data-state="open"]')) return;
+        const target = previousFocus.current?.isConnected ? previousFocus.current : document.querySelector<HTMLElement>('[data-dashboard-nav] button');
+        target?.focus();
+      }}>
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 30 }}
-      className="fixed inset-0 z-[70] bg-background flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[70] bg-background flex flex-col pt-[env(safe-area-inset-top)] outline-none"
     >
+      <DialogPrimitive.Title className="sr-only">{formatDisplayNumber(order)}</DialogPrimitive.Title>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <button onClick={onClose} className="p-2 -ms-2 rounded-xl hover:bg-secondary active:bg-secondary/80 transition-colors">
+          <button onClick={onClose} aria-label={t("common.close")} className="min-h-11 min-w-11 p-2 -ms-2 rounded-xl hover:bg-secondary active:bg-secondary/80 transition-colors">
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
           <div>
@@ -367,7 +381,7 @@ export const OrderDetailSheet = ({
       </div>
 
       {/* Content - scrollable */}
-      <div className="flex-1 overflow-y-auto px-4 pb-40">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-40">
         {/* Customer info */}
         <div className="py-4 border-b border-border">
           <div className="flex items-center justify-between mb-2">
@@ -796,7 +810,7 @@ export const OrderDetailSheet = ({
 
       {/* Bottom action buttons - sticky */}
       {!editing && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-[71] safe-area-bottom">
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-[71] [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
           <div className="max-w-2xl mx-auto flex gap-3">
             {/* Revert button - all statuses except "new" */}
             {previousStatus[status] && (
@@ -853,5 +867,8 @@ export const OrderDetailSheet = ({
         </div>
       )}
     </motion.div>
+    </DialogPrimitive.Content>
+    </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 };

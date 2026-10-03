@@ -257,7 +257,7 @@ export const POSSimple = ({ restaurantId, restaurantSlug, menuItems, primaryColo
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="fixed bottom-[56px] lg:bottom-0 left-0 right-0 lg:left-60 z-40 mx-3 lg:mx-auto lg:max-w-6xl rounded-xl p-3 flex items-center justify-between shadow-lg text-white"
+          className="fixed dashboard-cart-bar left-0 right-0 lg:left-60 z-40 mx-3 lg:mx-auto lg:max-w-6xl rounded-xl p-3 flex items-center justify-between shadow-lg text-white"
           style={{ backgroundColor: primaryColor }}
         >
           <div className="flex items-center gap-2">

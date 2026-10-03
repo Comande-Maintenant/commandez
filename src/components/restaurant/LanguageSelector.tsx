@@ -24,10 +24,11 @@ export const LanguageSelector = () => {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-medium hover:bg-secondary transition-colors"
+        aria-label={current.name}
+        className="flex items-center gap-1.5 min-h-11 min-w-11 px-2.5 py-2 rounded-xl text-xs font-medium hover:bg-secondary transition-colors"
       >
         <Globe className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="text-foreground">{current.flag}</span>
+        <span className="text-foreground">{current.code.toUpperCase()}</span>
       </button>
 
       {open && (
@@ -45,7 +46,7 @@ export const LanguageSelector = () => {
                   : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
               }`}
             >
-              <span className="text-base">{lang.flag}</span>
+              <span className="w-7 text-xs font-semibold">{lang.code.toUpperCase()}</span>
               <span>{lang.name}</span>
             </button>
           ))}

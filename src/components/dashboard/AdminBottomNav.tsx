@@ -20,7 +20,7 @@ const NAV_ITEMS: { id: DashboardView; labelKey: string; icon: typeof Flame }[] =
 export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Props) => {
   const { t } = useLanguage();
   return (
-    <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-background border-t border-border">
+    <nav data-dashboard-nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 safe-area-bottom bg-background border-t border-border">
       <div className="flex">
         {NAV_ITEMS.map((item) => {
           const isActive = item.id === activeView || (item.id === "gerer" && adminViews.has(activeView));

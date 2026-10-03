@@ -1,3 +1,4 @@
+import { MenuItemImage } from "@/components/MenuItemImage";
 import { randomUuid } from '@/lib/uuid';
 import { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -86,14 +87,7 @@ function SortableItemRow({
       <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1 shrink-0">
         <GripVertical className="h-4 w-4 text-muted-foreground" />
       </button>
-      {item.image && (
-        <img src={item.image} alt={item.name} className="h-10 w-10 rounded-lg object-cover shrink-0" loading="lazy" />
-      )}
-      {!item.image && (
-        <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-          <ImageIcon className="h-4 w-4 text-muted-foreground" />
-        </div>
-      )}
+      <MenuItemImage item={item} className="h-12 w-12 rounded-lg shrink-0" />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-foreground truncate">{item.name}</p>
         {item.description && <p className="text-xs text-muted-foreground truncate">{item.description}</p>}

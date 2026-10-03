@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "Schritt {current} von {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "Erhalten Sie Hinweise auch bei gesperrtem Bildschirm.",
   "native.push.enable": "Aktivieren",
   "native.push.denied": "Erlauben Sie CommandeIci unter Einstellungen > Mitteilungen.",
-  "native.push.error": "Benachrichtigungen konnten nicht verbunden werden. Versuchen Sie es erneut."
+  "native.push.error": "Benachrichtigungen konnten nicht verbunden werden. Versuchen Sie es erneut.",
+  "native.push.enabled": "Benachrichtigungen sind aktiviert. Neue Bestellungen werden auch auf dem Sperrbildschirm angezeigt.",
+  "native.push.settings": "Einstellungen öffnen",
+  "demo.try.title": "Ihre erste Bestellung in Sekunden",
+  "demo.try.description": "Erhalten Sie eine Beispielbestellung, bereiten Sie sie zu und schließen Sie sie ab. Es wird nichts berechnet.",
+  "demo.try.receive": "Bestellung empfangen",
+  "demo.try.ios": "iOS-Mitteilung testen",
+  "demo.try.scheduled": "Demo-Mitteilung geplant",
+  "demo.try.instructions": "Sperren Sie Ihr iPhone: In 10 Sekunden erhalten Sie eine Demo-Mitteilung.",
+  "demo.try.notification_title": "CommandeIci · Demo",
+  "demo.try.notification_body": "Neue Beispielbestellung. Öffnen Sie die Demo, um sie zuzubereiten.",
+  "demo.try.customer": "Demo-Kunde",
+  "demo.try.notes": "Beispielbestellung zum Testen",
+  "menu.illustration": "Symbolfoto"
 }

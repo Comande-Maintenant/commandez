@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "Bước {current} trên {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "Nhận thông báo ngay cả khi màn hình bị khóa.",
   "native.push.enable": "Bật",
   "native.push.denied": "Cho phép thông báo CommandeIci trong Cài đặt > Thông báo.",
-  "native.push.error": "Không thể kết nối thông báo. Vui lòng thử lại."
+  "native.push.error": "Không thể kết nối thông báo. Vui lòng thử lại.",
+  "native.push.enabled": "Đã bật thông báo. Bạn vẫn nhận thông báo đơn hàng mới khi màn hình bị khóa.",
+  "native.push.settings": "Mở cài đặt",
+  "demo.try.title": "Đơn hàng đầu tiên trong vài giây",
+  "demo.try.description": "Nhận đơn hàng mẫu, chuẩn bị và hoàn tất. Không tính phí.",
+  "demo.try.receive": "Nhận đơn hàng mẫu",
+  "demo.try.ios": "Thử thông báo iOS",
+  "demo.try.scheduled": "Đã lên lịch thông báo demo",
+  "demo.try.instructions": "Khóa iPhone: thông báo demo sẽ đến sau 10 giây.",
+  "demo.try.notification_title": "CommandeIci · Demo",
+  "demo.try.notification_body": "Đơn hàng mẫu mới. Mở demo để chuẩn bị.",
+  "demo.try.customer": "Khách hàng demo",
+  "demo.try.notes": "Đơn hàng mẫu để thử demo",
+  "menu.illustration": "Ảnh minh họa"
 }

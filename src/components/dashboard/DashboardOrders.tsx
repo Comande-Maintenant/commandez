@@ -1,3 +1,5 @@
+import { NewOrderAlert } from './NewOrderAlert';
+import { isLocalDemoOrder } from '@/lib/demo-order';
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
@@ -281,7 +283,7 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
     try {
       const estimatedMinutes = next === "preparing" ? getDefaultPrepMinutes(order) : undefined;
       if (isDemo) {
-        await advanceDemoOrder(order.id, next);
+        if (!isLocalDemoOrder(order)) await advanceDemoOrder(order.id, next);
         if (next === "preparing") {
           const estAt = new Date(Date.now() + (estimatedMinutes || 15) * 60000).toISOString();
           setOrders((prev) => prev.map((o) => o.id === order.id ? { ...o, estimated_ready_at: estAt } : o));
@@ -649,52 +651,7 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
         />
       )}
 
-      {/* New order popup (central, auto-dismiss 12s) */}
-      <AnimatePresence>
-        {popupOrder && (() => {
-          const po = popupOrder;
-          const poItems = (po.items as any[]) || [];
-          const poItemCount = poItems.reduce((s, i) => s + (i.quantity || 1), 0);
-          return (
-            <motion.div
-              key={po.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => { setPopupOrder(null); setFilter("active"); }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 cursor-pointer"
-            >
-              <motion.div
-                initial={{ scale: 0.85, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-card rounded-3xl border-2 border-amber-400 shadow-2xl p-6 mx-4 max-w-sm w-full text-center"
-              >
-                <div className="text-4xl mb-3">🔔</div>
-                <p className="text-2xl font-bold text-foreground mb-1">{t("dashboard.orders.new_order_popup")}</p>
-                <p className="text-3xl font-extrabold text-amber-600 mb-3">{formatDisplayNumber(po)}</p>
-                <div className="text-sm text-muted-foreground mb-1">
-                  <span className="font-semibold text-foreground">{po.customer_name}</span>
-                  {po.order_type === "sur_place" && <span className="ms-2">{t("dashboard.orders.dine_in")}</span>}
-                  {(po.order_type === "collect" || po.order_type === "a_emporter") && <span className="ms-2">{t("dashboard.orders.takeaway")}</span>}
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {poItemCount} {t("dashboard.orders.articles_label")} — {po.total.toFixed(2)} €
-                </p>
-                <button
-                  onClick={() => { setPopupOrder(null); setFilter("active"); }}
-                  className="w-full px-4 py-3 rounded-2xl bg-amber-500 text-white font-semibold text-sm"
-                >
-                  OK
-                </button>
-              </motion.div>
-            </motion.div>
-          );
-        })()}
-      </AnimatePresence>
+      <NewOrderAlert order={popupOrder} onClose={() => setPopupOrder(null)} onOpenOrder={order => { setPopupOrder(null); setFilter("active"); setSelectedOrder(order); }} />
 
       {/* Ruptures drawer */}
       <Sheet open={rupturesOpen} onOpenChange={setRupturesOpen}>

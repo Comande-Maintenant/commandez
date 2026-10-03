@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { fetchOrders, fetchDemoOrders, subscribeToOrders } from '@/lib/api';
+import { readDemoOrders, storeDemoOrders } from '@/lib/demo-order-store';
+import { isLocalDemoOrder } from '@/lib/demo-order';
 import type { DbOrder } from '@/types/database';
 
 type Options = { isDemo?: boolean; onNewOrder?: (order: DbOrder) => void };
-type Session = { fetching: boolean; overlay: Map<string, DbOrder | null>; controller: AbortController };
+type Session = { restaurantId: string | null; isDemo: boolean; fetching: boolean; overlay: Map<string, DbOrder | null>; controller: AbortController };
 
 // Kitchen and caisse use the same recovery rules. Realtime is the fast path;
 // a visible-screen snapshot catches missed messages without loading the archive.
@@ -15,11 +17,17 @@ export function useRestaurantOrders(restaurantId: string | null, { isDemo = fals
   const ordersRef = useRef<DbOrder[]>([]);
   const callbackRef = useRef(onNewOrder);
   callbackRef.current = onNewOrder;
+  const demoOverlay = useRef(new Map<string, DbOrder>());
   const sessionRef = useRef<Session | null>(null);
 
   const setOrders = useCallback((update: React.SetStateAction<DbOrder[]>) => {
     const previous = ordersRef.current;
     const next = typeof update === 'function' ? update(previous) : update;
+    if (isDemo) {
+      demoOverlay.current.clear();
+      for (const order of next) if (isLocalDemoOrder(order)) demoOverlay.current.set(order.id, order);
+      if (sessionRef.current?.restaurantId) storeDemoOrders(sessionRef.current.restaurantId, next);
+    }
     const session = sessionRef.current;
     if (session?.fetching) {
       const previousById = new Map(previous.map(order => [order.id, order]));
@@ -31,15 +39,17 @@ export function useRestaurantOrders(restaurantId: string | null, { isDemo = fals
     }
     ordersRef.current = next;
     publish(next);
-  }, []);
+  }, [isDemo]);
 
   useEffect(() => {
     let disposed = false;
     const seen = new Set<string>();
-    const session: Session = { fetching: false, overlay: new Map(), controller: new AbortController() };
+    const session: Session = { restaurantId, isDemo, fetching: false, overlay: new Map(), controller: new AbortController() };
     sessionRef.current = session;
-    ordersRef.current = [];
-    publish([]);
+    const restored=isDemo && restaurantId ? readDemoOrders(restaurantId) : [];
+    demoOverlay.current=new Map(restored.map(order=>[order.id,order]));
+    ordersRef.current = restored;
+    publish(restored);
     setLoading(true);
     setDisconnected(false);
     setNotification(null);
@@ -69,6 +79,7 @@ export function useRestaurantOrders(restaurantId: string | null, { isDemo = fals
         for (const [id, order] of session.overlay) {
           if (order) snapshot.set(id, order); else snapshot.delete(id);
         }
+        if (isDemo) for (const [id, order] of demoOverlay.current) snapshot.set(id, order);
         const next = [...snapshot.values()].map(order => {
           if (!isDemo || order.estimated_ready_at) return order;
           const local = ordersRef.current.find(previous => previous.id === order.id);
@@ -76,7 +87,7 @@ export function useRestaurantOrders(restaurantId: string | null, { isDemo = fals
         });
         // One alert per recovered batch, including pending orders at startup.
         // Reopening the app must not silently hide orders received while closed.
-        const pendingOrder = next.find(order => order.status === 'new' && !seen.has(order.id));
+        const pendingOrder = next.find(order => order.status === 'new' && !seen.has(order.id) && !isLocalDemoOrder(order));
         if (pendingOrder) announce(pendingOrder);
         for (const order of next) seen.add(order.id);
         ordersRef.current = next;
@@ -121,5 +132,12 @@ export function useRestaurantOrders(restaurantId: string | null, { isDemo = fals
     };
   }, [restaurantId, isDemo, setOrders]);
 
-  return { orders, setOrders, loading, disconnected, notification };
+  const receiveDemoOrder = useCallback((order: DbOrder) => {
+    if (!isDemo || !restaurantId || sessionRef.current?.restaurantId !== restaurantId || !sessionRef.current?.isDemo || order.restaurant_id !== restaurantId || !isLocalDemoOrder(order) || demoOverlay.current.has(order.id)) return;
+    setOrders(previous => [order, ...previous]);
+    setNotification({ order, receivedAt: Date.now() });
+    callbackRef.current?.(order);
+  }, [isDemo, restaurantId, setOrders]);
+
+  return { orders, setOrders, loading, disconnected, notification, receiveDemoOrder };
 }

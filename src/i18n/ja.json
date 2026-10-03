@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "ステップ {current} / {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "画面のロック中も通知を受け取れます。",
   "native.push.enable": "有効にする",
   "native.push.denied": "設定 > 通知で CommandeIci の通知を許可してください。",
-  "native.push.error": "通知に接続できませんでした。再試行してください。"
+  "native.push.error": "通知に接続できませんでした。再試行してください。",
+  "native.push.enabled": "通知が有効です。画面がロックされていても新しい注文をお知らせします。",
+  "native.push.settings": "設定を開く",
+  "demo.try.title": "数秒で最初の注文を体験",
+  "demo.try.description": "サンプル注文を受け取り、調理して完了できます。料金は発生しません。",
+  "demo.try.receive": "サンプル注文を受け取る",
+  "demo.try.ios": "iOS通知をテスト",
+  "demo.try.scheduled": "デモ通知を予約しました",
+  "demo.try.instructions": "iPhoneをロックしてください。10秒後にデモ通知が届きます。",
+  "demo.try.notification_title": "CommandeIci · デモ",
+  "demo.try.notification_body": "新しいサンプル注文です。デモを開いて調理してください。",
+  "demo.try.customer": "デモのお客様",
+  "demo.try.notes": "デモを試すためのサンプル注文",
+  "menu.illustration": "イメージ画像"
 }

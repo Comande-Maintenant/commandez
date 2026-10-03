@@ -1300,7 +1300,7 @@
   "time.months_ago": "{m} month(s) ago",
   "time.yesterday_at": "Yesterday at {time}",
   "auth.reset.resend_countdown": "Resend in {seconds}s",
-  "auth.signup.step_counter": "Step {current} of {total}",
+  "auth.signup.step_counter": "Stap {current} van {total}",
   "dashboard.ban.success": "Customer blocked successfully",
   "dashboard.demand.tip_afternoon_busy": "Afternoon rush, prep your ingredients!",
   "dashboard.demand.tip_afternoon_calm": "Calm afternoon, good time to prep",
@@ -1418,5 +1418,18 @@
   "native.push.description": "Ontvang meldingen, ook als uw scherm is vergrendeld.",
   "native.push.enable": "Inschakelen",
   "native.push.denied": "Sta CommandeIci toe via Instellingen > Meldingen.",
-  "native.push.error": "Meldingen konden niet worden verbonden. Probeer opnieuw."
+  "native.push.error": "Meldingen konden niet worden verbonden. Probeer opnieuw.",
+  "native.push.enabled": "Meldingen zijn ingeschakeld. Nieuwe bestellingen verschijnen ook op het vergrendelscherm.",
+  "native.push.settings": "Instellingen openen",
+  "demo.try.title": "Je eerste bestelling, in seconden",
+  "demo.try.description": "Ontvang een voorbeeldbestelling, bereid deze en rond deze af. Er wordt niets in rekening gebracht.",
+  "demo.try.receive": "Bestelling ontvangen",
+  "demo.try.ios": "iOS-melding testen",
+  "demo.try.scheduled": "Demomelding gepland",
+  "demo.try.instructions": "Vergrendel je iPhone: over 10 seconden ontvang je een demomelding.",
+  "demo.try.notification_title": "CommandeIci · Demo",
+  "demo.try.notification_body": "Nieuwe voorbeeldbestelling. Open de demo om deze te bereiden.",
+  "demo.try.customer": "Demoklant",
+  "demo.try.notes": "Voorbeeldbestelling om de demo te proberen",
+  "menu.illustration": "Voorbeeldfoto"
 }
