@@ -1,0 +1,43 @@
+{
+  "source": "User supplied approved logo; built-in imagegen clean transparent extraction; Sharp size/format exports",
+  "reference": "logo commade ici.png (user supplied)",
+  "assets": [
+    {
+      "file": "commandeici-app-icon.png",
+      "sha256": "8bc5b6fe0ee4b1e5e9dd6bfdee0e1c404f34ece031d1ebe755a855702af2e592"
+    },
+    {
+      "file": "commandeici-mark.png",
+      "sha256": "21619293dfb0fb571e0b041acf6b31340f48f6963fe6c16acfed4eb061b20c09"
+    },
+    {
+      "file": "icon-16.png",
+      "sha256": "a44243a43fd908f2ed799014977b270d92295c6120dafc825cfd074b77c05607"
+    },
+    {
+      "file": "icon-180.png",
+      "sha256": "360194364f460f8b033f67991f0ed952e64e136893da8a9dace7e82b240a2e19"
+    },
+    {
+      "file": "icon-192.png",
+      "sha256": "db0e526b5e55b297045c90e6fb3ae0c755b686642c0d7194f7c771e2970efc08"
+    },
+    {
+      "file": "icon-32.png",
+      "sha256": "2ff0b7b8711a8da0b64be546d3e2e92d7a3214b16bd997644baa0f9193c69d8f"
+    },
+    {
+      "file": "icon-48.png",
+      "sha256": "d55a57bbc6003a776ccea26965435d34a7e045824b4b985f1d445955c577bf5c"
+    },
+    {
+      "file": "icon-512.png",
+      "sha256": "e7fb981026fcaf796de5e6287fcac35ad930c68c3bd8f94226b34711aac8737c"
+    },
+    {
+      "file": "icon-64.png",
+      "sha256": "283e4f1e7ec1b6d5a64d87e021158850f393e8c539f4b63c368fa6377b9af75b"
+    }
+  ],
+  "masterSha256": "32f8ce8277b51410eba936efa500b22a0ecfe061b5013cbd068deeaa9d603ed8"
+}

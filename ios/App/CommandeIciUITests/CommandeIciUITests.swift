@@ -1,5 +1,39 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+    func testNativeFirstLaunchInvitesDemo() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = []
+        app.launch()
+        let demo = app.buttons["Tester sans créer de compte"].firstMatch
+        XCTAssertTrue(demo.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(demo.isHittable, "Primary demo action must be available on first launch")
+        demo.tap()
+        let receive = app.buttons["Recevoir une commande"].firstMatch
+        XCTAssertTrue(receive.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(receive.isHittable, "The inline guide must leave its first action accessible")
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Découverte et guide démo iOS"; shot.lifetime = .keepAlways; add(shot)
+    }
+
+    func testNativeMenuSearchAndClear() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
+        app.launchArguments = []
+        app.launch()
+        let field = app.webViews.searchFields.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        if !field.isHittable { app.swipeUp() }
+        field.tap(); field.typeText("zzzz-no-product")
+        XCTAssertTrue(app.staticTexts["Aucun plat trouvé. Essayez un autre mot."].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        let clear = app.buttons["Effacer la recherche"].firstMatch
+        XCTAssertTrue(clear.isHittable, app.debugDescription)
+        clear.tap()
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Recherche carte iOS"; shot.lifetime = .keepAlways; add(shot)
+    }
+
     func testNativeStartupAndRegistration() {
         continueAfterFailure = false
         let app = XCUIApplication()

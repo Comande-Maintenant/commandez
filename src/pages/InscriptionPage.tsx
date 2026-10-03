@@ -1,3 +1,4 @@
+import {BrandLogo} from '@/components/BrandLogo';
 import { randomUuid } from '@/lib/uuid';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -324,9 +325,8 @@ const InscriptionPage = () => {
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="https://commandeici.com" className="flex items-center gap-2 text-foreground hover:opacity-80">
-            <ArrowLeft className="h-4 w-4" />
-            <span className="font-semibold text-lg">commandeici</span>
+          <a href="https://commandeici.com" aria-label="commandeici" className="flex items-center gap-2 text-foreground hover:opacity-80">
+            <BrandLogo compact/>
           </a>
           <div className="flex items-center gap-3">
             {step < 6 && (
@@ -344,12 +344,12 @@ const InscriptionPage = () => {
       <main className="max-w-lg mx-auto px-4 py-6">
         {/* Demo link */}
         {step === 1 && (
-          <div className="text-center mb-4">
+          <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4">
             <Link
               to="/admin/demo"
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
+              className="flex min-h-11 items-center justify-center text-sm font-semibold text-primary underline underline-offset-4"
             >
-              {t('demo.cta_try')}
+              {t('journey.home_demo')}
             </Link>
           </div>
         )}

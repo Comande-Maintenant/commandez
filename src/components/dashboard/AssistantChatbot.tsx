@@ -133,8 +133,8 @@ export const AssistantChatbot = ({ activeView, onNavigate }: Props) => {
       const pathParts = window.location.pathname.split("/");
       const adminIdx = pathParts.indexOf("admin");
       const slug = adminIdx >= 0 ? pathParts[adminIdx + 1] : null;
-      if (slug) localStorage.removeItem(`cm_onboarding_done_${slug}`);
-      window.location.reload();
+      if (slug) { try { localStorage.removeItem(`cm_onboarding_done_${slug}`); } catch { /* A requested tour remains available without storage. */ } }
+      const url=new URL(window.location.href);url.searchParams.set('tour','1');window.location.assign(url.toString());
       return;
     }
     onNavigate(view);

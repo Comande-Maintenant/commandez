@@ -1,8 +1,8 @@
 import { MenuItemImage } from "./MenuItemImage";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { X, ChevronLeft, Check, Minus, Plus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import type { DbMenuItem } from "@/types/database";
 import type {
   UniversalCustomizationData,
@@ -212,6 +212,7 @@ export const ProductCustomizer = ({
 }: Props) => {
   const { addItem } = useCart();
   const { t, tMenu, language } = useLanguage();
+  const reducedMotion = useReducedMotion();
   const accent = primaryColor || "#10B981";
   const translated = tMenu(item);
   const productType = item.product_type || "simple";
@@ -740,29 +741,35 @@ export const ProductCustomizer = ({
     onClose();
   };
 
+  const triggerRef=useRef<HTMLElement|null>(null);
   if (!open) return null;
 
   const currentResolved = resolvedSteps[stepIndex] ?? null;
 
-  return createPortal(
+  return (
+    <Dialog.Root open={open} onOpenChange={next=>{if(!next)handleClose();}}>
+    <Dialog.Portal forceMount>
     <AnimatePresence>
       {open && (
         <>
           {/* Backdrop */}
+          <Dialog.Overlay asChild>
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={reducedMotion ? { duration: 0 } : undefined}
             className="fixed inset-0 bg-black/40 z-50"
-            onClick={handleClose}
           />
+          </Dialog.Overlay>
 
           {/* Drawer */}
+          <Dialog.Content asChild aria-describedby={undefined} onOpenAutoFocus={()=>{triggerRef.current=document.activeElement instanceof HTMLElement?document.activeElement:null;}} onCloseAutoFocus={event=>{event.preventDefault();if(triggerRef.current?.isConnected)triggerRef.current.focus({preventScroll:true});}}>
           <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            initial={reducedMotion ? false : { y: "100%" }}
+            animate={reducedMotion ? { opacity: 1 } : { y: 0 }}
+            exit={reducedMotion ? { opacity: 0 } : { y: "100%" }}
+            transition={reducedMotion ? { duration: 0 } : { type: "spring", damping: 28, stiffness: 300 }}
             className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] flex flex-col rounded-t-3xl overflow-hidden"
             style={{
               background: "rgba(255,255,255,0.92)",
@@ -776,12 +783,12 @@ export const ProductCustomizer = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
                   {stepIndex > 0 && currentStep?.step_type !== "recap" && (
-                    <button onClick={goBack} className="p-1.5 rounded-full hover:bg-gray-100">
+                    <button onClick={goBack} className="min-h-11 min-w-11 flex items-center justify-center rounded-full hover:bg-gray-100" aria-label={t("common.previous")}>
                       <ChevronLeft className="h-5 w-5 text-gray-600" />
                     </button>
                   )}
                   <div className="min-w-0">
-                    <h3 className="text-base font-bold text-gray-900 truncate">{translated.name}</h3>
+                    <Dialog.Title asChild><h3 className="text-base font-bold text-gray-900 truncate">{translated.name}</h3></Dialog.Title>
                     <p
                       className="text-xs text-gray-500"
                       data-testid="customizer-progress"
@@ -796,7 +803,7 @@ export const ProductCustomizer = ({
                   <span className="text-base font-bold" style={{ color: accent }}>
                     {totalPrice.toFixed(2)} €
                   </span>
-                  <button onClick={handleClose} className="p-2 rounded-full hover:bg-gray-100">
+                  <button onClick={handleClose} className="min-h-11 min-w-11 flex items-center justify-center rounded-full hover:bg-gray-100" aria-label={t("common.close")}>
                     <X className="h-5 w-5 text-gray-500" />
                   </button>
                 </div>
@@ -813,15 +820,14 @@ export const ProductCustomizer = ({
               </div>
             </div>
 
+            {currentStep&&currentStep.step_type!=='recap'&&<div className="flex items-center justify-between gap-3 px-4 pt-3 text-xs"><span className="font-semibold text-slate-600">{t(currentStep.label_i18n)}</span><span className={`shrink-0 rounded-full px-2.5 py-1 ${currentStep.required?'bg-emerald-50 text-emerald-800':'bg-slate-100 text-slate-600'}`}>{t(currentStep.required?'custom.required':'custom.optional')}</span></div>}
             {/* Scrollable content */}
-            <div className="flex-1 overflow-y-auto px-4 py-4">
-              <AnimatePresence mode="wait">
+            <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4">
                 <motion.div
                   key={currentStep?.step_key}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.15 }}
+                  initial={reducedMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: reducedMotion ? 0 : 0.12 }}
                 >
                   {currentStep && currentResolved && (
                     <>
@@ -1382,12 +1388,12 @@ export const ProductCustomizer = ({
                     </>
                   )}
                 </motion.div>
-              </AnimatePresence>
             </div>
 
             {/* Sticky footer */}
             <div className="flex-shrink-0 px-4 py-3 pb-6 border-t border-gray-100"
               style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
+              {!canProceed&&currentStep?.required&&<p role="status" className="mb-2 text-xs text-slate-600">{t('journey.choose_required')}</p>}
               {currentStep?.step_type === "recap" ? (
                 <button
                   data-testid="customizer-add"
@@ -1410,10 +1416,12 @@ export const ProductCustomizer = ({
               )}
             </div>
           </motion.div>
+          </Dialog.Content>
         </>
       )}
-    </AnimatePresence>,
-    document.body
+    </AnimatePresence>
+    </Dialog.Portal>
+    </Dialog.Root>
   );
 };
 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { Loader2, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/context/LanguageContext";
+import {BrandLogo} from '@/components/BrandLogo';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -33,87 +33,33 @@ const Index = () => {
   }, [navigate, t]);
 
   if (checking) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" aria-label={t('common.loading')}/></div>;
   }
-
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="https://commandeici.com" className="font-semibold text-lg text-foreground hover:opacity-80">
-            commande<span className="text-muted-foreground">ici</span>
-          </a>
-          <Button
-            size="sm"
-            className="rounded-xl text-xs font-semibold"
-            onClick={() => navigate("/inscription")}
-          >
-            {t('home.create_page')}
-          </Button>
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="border-b border-slate-100 bg-white">
+        <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+          <a href="https://commandeici.com" aria-label="commandeici"><BrandLogo/></a>
+          <Button variant="ghost" className="min-h-11 rounded-xl text-sm px-2" onClick={() => navigate("/connexion")}>{t('home.login')}</Button>
         </div>
       </header>
-
-      {/* Main content */}
-      <div className="flex-1 flex items-center justify-center px-4">
-        <motion.div
-          className="w-full max-w-sm text-center space-y-6 py-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{t('home.title')}</h1>
-            <p className="text-sm text-muted-foreground mt-2">
-              {t('home.description')}
-            </p>
+      <main className="flex-1 w-full max-w-5xl mx-auto px-5 pt-6 pb-8 sm:py-12 grid md:grid-cols-2 md:items-center gap-6 sm:gap-10">
+        <div className="order-2 md:order-1">
+          <h1 className="text-[30px] sm:text-4xl leading-tight font-bold tracking-tight text-slate-900 max-w-lg">{t('journey.home_title')}</h1>
+          <p className="mt-3 text-base leading-relaxed text-slate-600 max-w-md">{t('journey.home_description')}</p>
+          <div className="mt-6 space-y-3">
+            <Button data-primary-action="demo" onClick={() => navigate("/admin/demo")} className="w-full h-auto min-h-12 py-3 whitespace-normal text-start rounded-2xl bg-primary hover:bg-primary/90 text-base font-semibold justify-between px-5">{t('journey.home_demo')}<ArrowRight className="h-5 w-5 shrink-0 rtl:rotate-180" aria-hidden="true"/></Button>
+            <Button variant="outline" onClick={() => navigate("/inscription")} className="w-full h-auto min-h-12 py-3 whitespace-normal rounded-2xl text-base font-semibold border-slate-200">{t('home.create_free')}</Button>
           </div>
-
-          <div className="space-y-3">
-            <Button
-              onClick={() => navigate("/connexion")}
-              className="w-full h-12 rounded-xl text-base font-semibold"
-            >
-              {t('home.login')}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => navigate("/inscription")}
-              className="w-full h-12 rounded-xl text-base"
-            >
-              {t('home.create_free')}
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/admin/demo")}
-              className="w-full h-10 rounded-xl text-sm text-muted-foreground hover:text-foreground"
-            >
-              {t('demo.cta_discover')} &rarr;
-            </Button>
-          </div>
-
-          <div className="space-y-2 pt-2">
-            <a
-              href="mailto:contact@commandeici.com"
-              className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              contact@commandeici.com
-            </a>
-            <a
-              href="https://commandeici.com"
-              className="block text-sm text-muted-foreground hover:text-foreground transition-colors underline"
-            >
-              {t('home.back_to_site')}
-            </a>
-          </div>
-        </motion.div>
-      </div>
+          <p className="mt-4 flex items-start gap-2 text-sm leading-relaxed text-slate-600"><Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" aria-hidden="true"/>{t('journey.home_free')}</p>
+        </div>
+        <div className="order-1 md:order-2 relative overflow-hidden rounded-3xl bg-slate-100">
+          <img src="/images/menu/kebab.webp" alt={t('journey.home_photo')} width="480" height="480" loading="eager" className="w-full h-[180px] sm:h-[280px] md:h-[430px] object-cover"/>
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-5 pt-10 pb-4 text-white"><p className="text-sm font-semibold">{t('demo.page_title')}</p><p className="text-xs mt-1 text-white/90">{t('menu.illustration')}</p></div>
+        </div>
+      </main>
+      <footer className="w-full max-w-5xl mx-auto flex flex-wrap justify-between gap-3 px-5 pb-6 text-xs text-slate-500"><a className="min-h-11 flex items-center underline underline-offset-4" href="mailto:contact@commandeici.com">contact@commandeici.com</a><a className="min-h-11 flex items-center underline underline-offset-4" href="https://commandeici.com">{t('home.back_to_site')}</a></footer>
     </div>
   );
 };
-
 export default Index;

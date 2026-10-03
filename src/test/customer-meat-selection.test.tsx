@@ -6,7 +6,7 @@ import fr from '@/i18n/fr.json';
 const cart=vi.hoisted(()=>({addItem:vi.fn()}));
 vi.mock('@/context/CartContext',()=>({useCart:()=>cart}));
 vi.mock('@/context/LanguageContext',()=>({useLanguage:()=>({language:'fr',tMenu:(item:DbMenuItem)=>item,t:(key:string,params:Record<string,string>={})=>Object.entries(params).reduce((value,[key,replacement])=>value.split(`{${key}}`).join(replacement),(fr as Record<string,string>)[key]??key)})}));
-vi.mock('framer-motion',async()=>{const {forwardRef}=await import('react');return {AnimatePresence:({children}:{children:React.ReactNode})=>children,motion:{div:forwardRef<HTMLDivElement,React.HTMLAttributes<HTMLDivElement>&{initial?:unknown;animate?:unknown;exit?:unknown;transition?:unknown;variants?:unknown}>(({children,initial,animate,exit,transition,variants,...props},ref)=><div {...props} ref={ref}>{children}</div>)}};});
+vi.mock('framer-motion',async()=>{const {forwardRef}=await import('react');return {useReducedMotion:()=>false,AnimatePresence:({children}:{children:React.ReactNode})=>children,motion:{div:forwardRef<HTMLDivElement,React.HTMLAttributes<HTMLDivElement>&{initial?:unknown;animate?:unknown;exit?:unknown;transition?:unknown;variants?:unknown}>(({children,initial,animate,exit,transition,variants,...props},ref)=><div {...props} ref={ref}>{children}</div>)}};});
 import {ProductCustomizer} from '@/components/ProductCustomizer';
 afterEach(()=>{cleanup();cart.addItem.mockClear();});
 function setup(type:'tacos'|'assiette',name=type==='tacos'?'Tacos':'Assiette'){
