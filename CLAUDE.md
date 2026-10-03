@@ -123,8 +123,9 @@
 - **referrals** : referrer_id, referee_id, status, bonus_weeks_granted
 
 ## Demo
-- **Antalya Kebab** : slug `moneteau-antalya-kebab`, id `c236aa92-cab3-4aa1-a337-7767770cb764`, referral `58379E`
-- 10 categories, 35 items, CustomOrderBuilder 5 etapes
+- **Antalya Kebab Monéteau** : slug `antalya-kebab-moneteau`, id `769f54f9-09a6-40a9-a490-26597a717646`, 15 articles au contrôle du 3 octobre 2026.
+- L'alias `demo` doit résoudre cette même fiche dans les RPC publiques et du dashboard (migration 20261003019000). Aucun choix de démo selon la dernière commande.
+- Les démos restent exclues des APNs réels. Les exemples interactifs iOS sont locaux et explicitement simulés.
 
 ## Migrations Supabase (CLI)
 

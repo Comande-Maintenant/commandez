@@ -63,7 +63,10 @@ export function createPushHandler(config: PushConfig, deps: Dependencies) {
       let claimed = 0;
       let lastBatchFull = false;
       const results: Record<string, number> = {};
-      while (claimed < 100 && Date.now() - started < 20000) {
+      // Stop reserving early enough to finish a claimed batch: each production
+      // claim/authorize/APNs/receipt RPC is bounded to 5s, including a failed
+      // receipt's retry. Four concurrent jobs leave at most 25s after claim start.
+      while (claimed < 100 && Date.now() - started < 5000) {
       const jobs = await deps.store.claim(Math.min(4, 100 - claimed));
       claimed += jobs.length;
       lastBatchFull = jobs.length === 4;
@@ -71,7 +74,8 @@ export function createPushHandler(config: PushConfig, deps: Dependencies) {
       let cursor = 0;
       const consume = async () => {
         while (cursor < jobs.length) {
-          if (Date.now() - started >= 20000) break;
+          // A durable lease already exists. Finish every reserved job even when
+          // claim crossed the reservation deadline, rather than parking it 120s.
           const job = jobs[cursor++];
           let result: string;
           try {
@@ -109,7 +113,8 @@ export function createPushHandler(config: PushConfig, deps: Dependencies) {
       if (!lastBatchFull) break;
       }
       // Coalesced database dispatch continues a full queue without waiting for five cron cycles.
-      if (lastBatchFull && deps.store.wake) await deps.store.wake().catch(() => {});
+      // Leave 5s for the continuation RPC; cron is the fallback beyond this.
+      if (lastBatchFull && Date.now() - started < 25000 && deps.store.wake) await deps.store.wake().catch(() => {});
       return json(200, { claimed, results });
     } catch { return json(503, { error: 'push_worker_unavailable' }); }
   };

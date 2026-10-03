@@ -21,7 +21,7 @@ const store: PushStore = {
     if (error) throw new Error('receipt_failed'); return data === true;
   },
   async wake() {
-    const { error } = await client.rpc('dispatch_order_push');
+    const { error } = await client.rpc('dispatch_order_push', { p_continue: true });
     if (error) throw new Error('dispatch_failed');
   },
 };

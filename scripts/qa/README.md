@@ -6,6 +6,8 @@ Use the project lockfile (`npm ci`). Restore the declared PostgreSQL/Supabase sc
 
 Run each `supabase/tests/*.sql` with `psql -v ON_ERROR_STOP=1`. Check both exit status and TAP output: `not ok` and `Looks like` are failures even when psql exits zero. Every suite rolls back. Run `scripts/qa/order-push.sql` separately; it checks the APNs database contract without configuring a provider or sending notifications.
 
+`scripts/tests/canonical_demo.sql` verifies the canonical owner/public demo alias and ordinary tenant lookups in a rollback transaction. `scripts/qa/order-push-continuation.sql` verifies initial dispatch coalescing, immediate worker continuation, roles and durable retries with a fake HTTP function. That test requires the isolated container, no installed `net.http_post`, and `PGOPTIONS='-c commandeici.qa_isolated=true'`; its temporary Vault/view/table replacements roll back. It neither inserts orders/devices nor sends an external request. Apply migrations 190 and 200 locally before the GREEN run.
+
 Load sequence:
 
 1. Apply `scale-seed.sql` to the isolated container.

@@ -85,4 +85,62 @@ describe('APNs production worker, fully simulated network', () => {
    expect((await response.json()).claimed).toBe(4); expect(f.store.claim).toHaveBeenCalledTimes(1);
    expect(wake).toHaveBeenCalledTimes(1); vi.restoreAllMocks();
  });
+ it('finishes every reserved job when the claim itself crosses the reservation budget', async () => {
+   const f = fixture(); const wake = vi.fn().mockResolvedValue(undefined);
+   let now = 0; vi.spyOn(Date, 'now').mockImplementation(() => now);
+   const jobs = Array.from({ length: 4 }, (_, index) => ({ ...job, id: `d1800000-0000-4000-8000-${String(index + 1).padStart(12, '0')}` }));
+   f.store.claim.mockImplementationOnce(async () => { now = 20001; return jobs; });
+   const handler = createPushHandler(config, { ...f, store: { ...f.store, wake } });
+   try {
+     expect(await (await handler(request())).json()).toMatchObject({ claimed: 4, results: { sent: 4 } });
+     expect(f.store.claim).toHaveBeenCalledOnce(); expect(f.store.authorize).toHaveBeenCalledTimes(4);
+     for (const reserved of jobs) expect(f.store.finish).toHaveBeenCalledWith(reserved, 'sent', null, 60);
+     expect(f.fetcher).toHaveBeenCalledTimes(4);
+   } finally { vi.restoreAllMocks(); }
+ });
+ it('stops claiming after five seconds while completing the current batch', async () => {
+   const f = fixture(); const wake = vi.fn().mockResolvedValue(undefined);
+   let now = 0; vi.spyOn(Date, 'now').mockImplementation(() => now);
+   f.store.claim.mockResolvedValue(Array.from({ length: 4 }, () => job));
+   f.store.authorize.mockImplementation(async () => { now += 1000; return true; });
+   f.store.finish.mockImplementation(async () => { now += 1000; return true; });
+   const handler = createPushHandler(config, { ...f, store: { ...f.store, wake } });
+   try {
+     expect(await (await handler(request())).json()).toMatchObject({ claimed: 4, results: { sent: 4 } });
+     expect(f.store.claim).toHaveBeenCalledOnce(); expect(f.store.finish).toHaveBeenCalledTimes(4);
+     expect(wake).toHaveBeenCalledOnce();
+   } finally { vi.restoreAllMocks(); }
+ });
+ it('records each late reserved job independently across send, cancellation, rejection and retry', async () => {
+   const f = fixture();
+   let now = 0; vi.spyOn(Date, 'now').mockImplementation(() => now);
+   const jobs = Array.from({ length: 4 }, (_, index) => ({ ...job,
+     id: `d1800000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
+     token: index === 0 ? 'invalid-token' : job.token,
+   }));
+   f.store.claim.mockImplementationOnce(async () => { now = 20001; return jobs; });
+   f.store.authorize.mockImplementation(async reserved => reserved.id !== jobs[1].id);
+   f.fetcher.mockImplementation(async (_url, options) => options.headers['apns-id'] === jobs[2].id
+     ? new Response('{}', { status: 503 }) : new Response('', { status: 200 }));
+   try {
+     expect(await (await f.handler(request())).json()).toMatchObject({ claimed: 4,
+       results: { invalid_token: 1, cancelled: 1, retry: 1, sent: 1 } });
+     expect(f.store.finish).toHaveBeenCalledTimes(4);
+     expect(f.store.finish).toHaveBeenCalledWith(jobs[0], 'invalid_token', 'invalid_token_shape', 60);
+     expect(f.store.finish).toHaveBeenCalledWith(jobs[1], 'cancelled', 'recipient_changed', 60);
+     expect(f.store.finish).toHaveBeenCalledWith(jobs[2], 'retry', 'APNs_503', 60);
+     expect(f.store.finish).toHaveBeenCalledWith(jobs[3], 'sent', null, 60);
+   } finally { vi.restoreAllMocks(); }
+ });
+ it('leaves continuation to cron when a final receipt exhausted the wake time reserve', async () => {
+   const f = fixture(); const wake = vi.fn().mockResolvedValue(undefined);
+   let now = 0; vi.spyOn(Date, 'now').mockImplementation(() => now);
+   f.store.claim.mockImplementationOnce(async () => { now = 20001; return Array.from({ length: 4 }, () => job); });
+   f.store.finish.mockImplementation(async () => { now += 1500; return true; });
+   const handler = createPushHandler(config, { ...f, store: { ...f.store, wake } });
+   try {
+     expect(await (await handler(request())).json()).toMatchObject({ claimed: 4, results: { sent: 4 } });
+     expect(wake).not.toHaveBeenCalled(); expect(f.store.claim).toHaveBeenCalledOnce();
+   } finally { vi.restoreAllMocks(); }
+ });
 });
