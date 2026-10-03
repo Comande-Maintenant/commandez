@@ -54,29 +54,37 @@ export function createNativePush(options: Options) {
   const serial = <T>(run: () => Promise<T>): Promise<T> => {
     const result = queue.then(run, run); queue = result; return result;
   };
+  const isCurrent = (current: number, identity: string | null) => current === generation && identity === desiredUser;
   const requestRegistration = async () => {
     clearTimer(); authorizedGeneration = null;
-    registrationTimer = setTimeout(() => { if (user && !suspended && state === 'enabling') set('error'); }, 20000);
     const current = generation;
+    const identityUser = user;
+    registrationTimer = setTimeout(() => { if (isCurrent(current, identityUser) && user && !suspended && state === 'enabling') set('error'); }, 20000);
     const identity = await bounded(() => options.installation(true));
+    if (!isCurrent(current, identityUser) || suspended || !user) return;
     if (!identity) throw new Error('Device identity unavailable');
     await bounded(signal => options.initialize(identity, signal));
-    if (current !== generation || suspended || !user) return;
+    if (!isCurrent(current, identityUser) || suspended || !user) return;
     authorizedGeneration = current;
     await bounded(() => options.sdk.register());
   };
-  const saveToken = (value: string) => serial(async () => {
-    if (!user || suspended || !allowed || authorizedGeneration !== generation || !validToken(value)) return;
+  const saveToken = (value: string) => {
     const current = generation;
-    clearTimer();
-    try {
-      const installation = await bounded(() => options.installation(true));
-      if (!installation) throw new Error('Device identity unavailable');
-      await bounded(() => options.storage.setItem(tokenKey, value));
-      await bounded(signal => options.register(value, options.environment, installation, signal));
-      if (user && !suspended && current === generation) set('enabled');
-    } catch { if (current === generation && !suspended) set('error'); }
-  });
+    const identityUser = user;
+    return serial(async () => {
+      if (!isCurrent(current, identityUser) || !user || suspended || !allowed || authorizedGeneration !== generation || !validToken(value)) return;
+      clearTimer();
+      try {
+        const installation = await bounded(() => options.installation(true));
+        if (!isCurrent(current, identityUser) || suspended) return;
+        if (!installation) throw new Error('Device identity unavailable');
+        await bounded(() => options.storage.setItem(tokenKey, value));
+        if (!isCurrent(current, identityUser) || suspended) return;
+        await bounded(signal => options.register(value, options.environment, installation, signal));
+        if (isCurrent(current, identityUser) && user && !suspended) set('enabled');
+      } catch { if (isCurrent(current, identityUser) && !suspended) set('error'); }
+    });
+  };
   const init = async () => {
     if (initialized) return;
     const registration = await bounded(() => options.sdk.addListener('registration', event => saveToken(event.value)));
@@ -108,48 +116,67 @@ export function createNativePush(options: Options) {
   };
   const suspend = () => {
     suspended = true; allowed = false; generation++; clearTimer(); set('idle');
+    const current = generation;
     return serial(async () => {
       if (!options.native) return;
       try { await cleanup(); user = null; }
-      catch (error) { suspended = false; set('error'); throw error; }
+      catch (error) { if (current === generation) { suspended = false; set('error'); } throw error; }
     });
   };
   return {
     status: () => state,
     sync: (nextUser: string | null) => {
       if (nextUser && !validUser(nextUser)) return Promise.resolve();
+      // Identity changes invalidate in-flight work before it can complete. The
+      // queue still revokes the previous installation before starting the next.
+      if (nextUser !== desiredUser || !nextUser) {
+        suspended = true; allowed = false; authorizedGeneration = null;
+        needsCleanup = true;
+        generation++; clearTimer();
+        if (options.native) set('idle');
+      }
       desiredUser = nextUser;
-      if (!nextUser) { suspended = true; allowed = false; generation++; clearTimer(); }
+      const current = generation;
       return serial(async () => {
-        if (!options.native || (nextUser && !validUser(nextUser))) return;
+        if (!options.native || !isCurrent(current, nextUser)) return;
         try {
           if (!nextUser) { await cleanup(); user = null; set('idle'); return; }
-          if (user !== nextUser || needsCleanup) {
-            generation++;
+          if (user !== nextUser || needsCleanup || suspended) {
             await cleanup();
+            if (!isCurrent(current, nextUser)) return;
             user = nextUser; suspended = false; allowed = false;
           }
           await init();
+          if (!isCurrent(current, nextUser)) return;
           const permission = await bounded(() => options.sdk.checkPermissions());
+          if (!isCurrent(current, nextUser)) return;
           allowed = permission.receive === 'granted';
           if (allowed && !suspended) { set('enabling'); await requestRegistration(); }
           else set(permission.receive === 'denied' ? 'denied' : 'prompt');
-        } catch { suspended = false; set('error'); }
+        } catch { if (isCurrent(current, nextUser)) { suspended = false; set('error'); } }
       });
     },
-    enable: () => serial(async () => {
-      if (!options.native || !desiredUser || suspended) return;
-      try {
-        if (needsCleanup || user !== desiredUser) {
-          generation++; await cleanup(); user = desiredUser; allowed = false;
-        }
-        await init(); set('enabling');
-        const permission = await options.sdk.requestPermissions();
-        if (suspended || !user) return;
-        allowed = permission.receive === 'granted';
-        if (allowed) await requestRegistration(); else set('denied');
-      } catch { set('error'); }
-    }),
+    enable: () => {
+      const current = generation;
+      const identityUser = desiredUser;
+      return serial(async () => {
+        if (!options.native || !identityUser || suspended || !isCurrent(current, identityUser)) return;
+        try {
+          if (needsCleanup || user !== identityUser) {
+            await cleanup();
+            if (!isCurrent(current, identityUser)) return;
+            user = identityUser; allowed = false;
+          }
+          await init();
+          if (!isCurrent(current, identityUser)) return;
+          set('enabling');
+          const permission = await options.sdk.requestPermissions();
+          if (!isCurrent(current, identityUser) || suspended || !user) return;
+          allowed = permission.receive === 'granted';
+          if (allowed) await requestRegistration(); else set('denied');
+        } catch { if (isCurrent(current, identityUser) && !suspended) set('error'); }
+      });
+    },
     suspend,
     dispose: () => serial(async () => { clearTimer(); for (const handle of handles.splice(0)) await handle.remove(); initialized = false; }),
   };

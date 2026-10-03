@@ -10,11 +10,23 @@ vi.mock('@/integrations/supabase/client', () => ({ supabase: { auth: { setSessio
 import { NativeLifecycle } from '@/components/NativeLifecycle';
 const flush = async () => { await act(async () => { await Promise.resolve(); await Promise.resolve(); }); };
 beforeEach(() => {
-  vi.clearAllMocks(); mocks.app.mockResolvedValue({ remove: vi.fn() }); mocks.launch.mockResolvedValue(null);
+  vi.clearAllMocks(); mocks.navigate = vi.fn(); mocks.app.mockResolvedValue({ remove: vi.fn() }); mocks.launch.mockResolvedValue(null);
   mocks.session.mockResolvedValue({ error: null }); mocks.exchange.mockResolvedValue({ error: null });
 });
 afterEach(cleanup);
 describe('independent native callback characterization', () => {
+  it('keeps launch listeners stable across navigation and uses the latest router callback', async () => {
+    mocks.launch.mockResolvedValue({ url: 'https://app.commandeici.com/cafe-auxerre' });
+    const { rerender } = render(<NativeLifecycle />); await flush();
+    expect(mocks.launch).toHaveBeenCalledOnce();
+    const latestNavigate = vi.fn(); mocks.navigate = latestNavigate;
+    rerender(<NativeLifecycle />); await flush();
+    expect(mocks.launch).toHaveBeenCalledOnce();
+    expect(mocks.app).toHaveBeenCalledTimes(2);
+    expect(latestNavigate).not.toHaveBeenCalled();
+    await act(async () => mocks.app.mock.calls.find(call => call[0] === 'appUrlOpen')![1]({ url: 'https://app.commandeici.com/autre-cafe-paris' }));
+    expect(latestNavigate).toHaveBeenLastCalledWith('/autre-cafe-paris', { replace: true });
+  });
   it('refuses implicit tokens from a public restaurant URL', async () => {
     render(<NativeLifecycle />); await flush();
     await act(async () => mocks.app.mock.calls.find(call => call[0] === 'appUrlOpen')![1]({ url: 'https://app.commandeici.com/public-restaurant#access_token=foreign-access&refresh_token=foreign-refresh' }));

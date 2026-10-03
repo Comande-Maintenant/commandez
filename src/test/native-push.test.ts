@@ -13,8 +13,9 @@ function fixture(native = true, persisted = false) {
   let created = persisted; let number = persisted ? 1 : 0; let currentIdentity = identity;
   const installation = vi.fn(async (create: boolean) => { if (create && !created) { created = true; number++; currentIdentity = number === 1 ? identity : { id: '620191e5-1b13-4b56-8c69-ae36ac03df1b', secret: 'c'.repeat(64) }; } return created ? currentIdentity : null; });
   const resetInstallation = vi.fn(async () => { created = false; });
-  const push = createNativePush({ native, sdk, register, revoke, storage, installation, initialize, resetInstallation, environment: 'production', onChange: vi.fn() });
-  return { push, sdk, register, revoke, listeners, storage, initialize, installation, resetInstallation };
+  const onChange = vi.fn();
+  const push = createNativePush({ native, sdk, register, revoke, storage, installation, initialize, resetInstallation, environment: 'production', onChange });
+  return { push, sdk, register, revoke, listeners, storage, initialize, installation, resetInstallation, onChange };
 }
 describe('native order push', () => {
   it('never asks for OS permission automatically or for a guest', async () => {
@@ -57,6 +58,97 @@ describe('native order push', () => {
     await f.push.sync(user); const enabling = f.push.enable(); await vi.waitFor(() => expect(resolve).toBeDefined());
     const logout = f.push.suspend(); resolve(); await enabling; await logout;
     expect(f.sdk.register).not.toHaveBeenCalled(); expect(f.revoke).toHaveBeenCalledOnce(); expect(f.resetInstallation).toHaveBeenCalled();
+  });
+  it('invalidates the old account immediately while installation initialization is in flight', async () => {
+    const f = fixture(); f.sdk.checkPermissions.mockResolvedValue({ receive: 'granted' });
+    let release!: () => void;
+    f.initialize.mockImplementationOnce(() => new Promise<void>(done => { release = done; }));
+    const first = f.push.sync(user); await vi.waitFor(() => expect(release).toBeDefined());
+    const second = f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b');
+    expect(f.push.status()).toBe('idle');
+    release(); await first; await second;
+    expect(f.sdk.register).toHaveBeenCalledOnce();
+    expect(f.revoke).toHaveBeenCalledOnce();
+    await f.push.dispose();
+  });
+  it('does not announce the old account enabled after a switch overtakes token registration', async () => {
+    const f = fixture(); await f.push.sync(user); await f.push.enable();
+    let release!: () => void;
+    f.register.mockImplementationOnce(() => new Promise<void>(done => { release = done; }));
+    const tokenRegistration = f.listeners.registration({ value: token });
+    await vi.waitFor(() => expect(release).toBeDefined());
+    const switched = f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b');
+    expect(f.push.status()).toBe('idle');
+    release(); await tokenRegistration; await switched;
+    expect(f.onChange).not.toHaveBeenCalledWith('enabled');
+    expect(f.revoke).toHaveBeenCalledOnce();
+    await f.push.dispose();
+  });
+  it('skips an intermediate queued account when A to B to C overtakes bootstrap', async () => {
+    const f = fixture(); f.sdk.checkPermissions.mockResolvedValue({ receive: 'granted' });
+    let release!: () => void;
+    f.initialize.mockImplementationOnce(() => new Promise<void>(done => { release = done; }));
+    const first = f.push.sync(user); await vi.waitFor(() => expect(release).toBeDefined());
+    const second = f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b');
+    const third = f.push.sync('720191e5-1b13-4b56-8c69-ae36ac03df1b');
+    release(); await first; await second; await third;
+    expect(f.sdk.register).toHaveBeenCalledOnce();
+    expect(f.initialize).toHaveBeenCalledTimes(2);
+    expect(f.revoke).toHaveBeenCalledOnce();
+    await f.listeners.registration({ value: 'c'.repeat(64) });
+    expect(f.register).toHaveBeenCalledOnce(); expect(f.push.status()).toBe('enabled');
+    await f.push.dispose();
+  });
+  it('cleans up before returning to A when a queued B has already become stale', async () => {
+    const f = fixture(); f.sdk.checkPermissions.mockResolvedValue({ receive: 'granted' });
+    await f.push.sync(user); await f.listeners.registration({ value: token });
+    const second = f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b');
+    const returned = f.push.sync(user);
+    await second; await returned;
+    expect(f.revoke).toHaveBeenCalledOnce();
+    expect(f.sdk.register).toHaveBeenCalledTimes(2);
+    expect(f.push.status()).toBe('enabling');
+    await f.push.dispose();
+  });
+  it('resumes A even when superseded B already started revoking the old installation', async () => {
+    const f = fixture(); f.sdk.checkPermissions.mockResolvedValue({ receive: 'granted' });
+    await f.push.sync(user); await f.listeners.registration({ value: token });
+    let release!: () => void;
+    f.revoke.mockImplementationOnce(() => new Promise<void>(done => { release = done; }));
+    const second = f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b');
+    await vi.waitFor(() => expect(release).toBeDefined());
+    const returned = f.push.sync(user);
+    release(); await second; await returned;
+    expect(f.sdk.register).toHaveBeenCalledTimes(2);
+    expect(f.push.status()).toBe('enabling');
+    await f.push.dispose();
+  });
+  it('does not bootstrap an old account after its permission lookup resolves', async () => {
+    const f = fixture(); f.sdk.checkPermissions.mockResolvedValue({ receive: 'granted' });
+    let release!: (value: { receive: string }) => void;
+    f.sdk.checkPermissions.mockImplementationOnce(() => new Promise(done => { release = done; }));
+    const first = f.push.sync(user); await vi.waitFor(() => expect(release).toBeDefined());
+    const second = f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b');
+    release({ receive: 'granted' }); await first; await second;
+    expect(f.initialize).toHaveBeenCalledOnce(); expect(f.sdk.register).toHaveBeenCalledOnce();
+    await f.push.dispose();
+  });
+  it('retries unconfirmed cleanup for the latest queued identity without publishing stale errors', async () => {
+    const f = fixture(); f.sdk.checkPermissions.mockResolvedValue({ receive: 'granted' });
+    await f.push.sync(user); await f.listeners.registration({ value: token });
+    f.onChange.mockClear();
+    let reject!: (error: Error) => void;
+    f.revoke.mockImplementationOnce(() => new Promise<void>((_done, fail) => { reject = fail; }));
+    const second = f.push.sync('620191e5-1b13-4b56-8c69-ae36ac03df1b');
+    await vi.waitFor(() => expect(reject).toBeDefined());
+    const third = f.push.sync('720191e5-1b13-4b56-8c69-ae36ac03df1b');
+    reject(new Error('offline')); await second; await third;
+    expect(f.revoke).toHaveBeenCalledTimes(2);
+    expect(f.sdk.register).toHaveBeenCalledTimes(2);
+    expect(f.onChange).not.toHaveBeenCalledWith('error');
+    await f.listeners.registration({ value: 'c'.repeat(64) });
+    expect(f.push.status()).toBe('enabled');
+    await f.push.dispose();
   });
   it('rotates installation credentials after revocation before another account', async () => {
     const f = fixture(); await f.push.sync(user); await f.push.enable(); await f.listeners.registration({ value: token });

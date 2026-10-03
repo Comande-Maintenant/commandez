@@ -8,6 +8,8 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export function NativeLifecycle() {
   const navigate = useNavigate();
+  const navigateRef = useRef(navigate);
+  useEffect(() => { navigateRef.current = navigate; }, [navigate]);
   const { t } = useLanguage();
   const [offline, setOffline] = useState(!navigator.onLine);
   const handledCodesRef = useRef(new Set<string>());
@@ -30,13 +32,13 @@ export function NativeLifecycle() {
         handledCodes.add(code);
         try {
           const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (error) { if (!disposed) navigate('/connexion'); return; }
+          if (error) { if (!disposed) navigateRef.current('/connexion'); return; }
         } catch {
-          if (!disposed) navigate('/connexion');
+          if (!disposed) navigateRef.current('/connexion');
           return;
         }
       }
-      if (!disposed) navigate(code ? parsed.pathname : route, { replace: true });
+      if (!disposed) navigateRef.current(code ? parsed.pathname : route, { replace: true });
     };
     void keep(App.addListener('appUrlOpen', event => { void open(event.url); }));
     void App.getLaunchUrl().then(link => { if (link && !disposed) void open(link.url); });
@@ -52,6 +54,6 @@ export function NativeLifecycle() {
       if (connected) { supabase.auth.startAutoRefresh(); window.dispatchEvent(new Event('online')); }
     }));
     return () => { disposed = true; for (const handle of handles) void handle.remove(); };
-  }, [navigate]);
+  }, []);
   return isNative() && offline ? <div role="status" className="fixed bottom-0 inset-x-0 z-[100] bg-amber-100 text-amber-950 p-3 text-center text-sm native-offline">{t('native.offline')}</div> : null;
 }

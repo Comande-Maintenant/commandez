@@ -46,16 +46,43 @@ INSERT INTO orders(id,restaurant_id,customer_name,customer_phone,order_type,item
  ('c1800000-0000-4000-8000-000000000002','b1800000-0000-4000-8000-000000000002','QA','', 'collect','[]',0,0,'web','new'),
  ('c1800000-0000-4000-8000-000000000003','b1800000-0000-4000-8000-000000000003','QA','', 'collect','[]',0,0,'demo','new');
 DO $$ BEGIN IF (SELECT count(*) FROM order_push_outbox WHERE order_id::text LIKE 'c180%')<>1 THEN RAISE EXCEPTION 'tenant/demo isolation failed'; END IF; END; $$;
+-- Resume/widget sync must renew the installation without invalidating a live token or pending order.
+UPDATE order_push_devices SET expires_at=now()+interval '1 day',updated_at=now()-interval '1 day' WHERE token=repeat('a',64);
+CREATE TEMP TABLE qa_push_before_sync AS SELECT id,token,enabled,generation FROM order_push_devices WHERE token=repeat('a',64);
+SET LOCAL ROLE authenticated;
+SELECT initialize_order_push_installation('f1800000-0000-4000-8000-000000000001',repeat('1',64));
+SELECT initialize_order_push_installation('f1800000-0000-4000-8000-000000000001',repeat('1',64));
+RESET ROLE;
+DO $$ BEGIN
+ IF NOT EXISTS(SELECT 1 FROM order_push_devices d JOIN qa_push_before_sync s ON d.id=s.id
+   WHERE d.token=s.token AND d.enabled=s.enabled AND d.generation=s.generation
+     AND d.expires_at>=now()+interval '29 days' AND d.updated_at>=now()) THEN RAISE EXCEPTION 'same-owner initialize changed recipient or failed to renew'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM order_push_outbox WHERE order_id='c1800000-0000-4000-8000-000000000001' AND status='pending') THEN RAISE EXCEPTION 'same-owner initialize cancelled pending notification'; END IF;
+END; $$;
+SET LOCAL ROLE authenticated;
+SELECT register_order_push_device(repeat('a',64),'production','f1800000-0000-4000-8000-000000000001',repeat('1',64));
+RESET ROLE;
+DO $$ BEGIN
+ IF NOT EXISTS(SELECT 1 FROM order_push_devices d JOIN qa_push_before_sync s ON d.id=s.id
+   WHERE d.token=s.token AND d.enabled=s.enabled AND d.generation=s.generation) THEN RAISE EXCEPTION 'same-token register changed generation'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM order_push_outbox WHERE order_id='c1800000-0000-4000-8000-000000000001' AND status='pending') THEN RAISE EXCEPTION 'same-token register cancelled pending notification'; END IF;
+END; $$;
 SAVEPOINT rollback_order;
 INSERT INTO orders(restaurant_id,customer_name,customer_phone,order_type,items,subtotal,total,status) VALUES
  ('b1800000-0000-4000-8000-000000000001','rollback','', 'collect','[]',0,0,'new');
 ROLLBACK TO rollback_order;
 DO $$ BEGIN IF (SELECT count(*) FROM order_push_outbox WHERE restaurant_id='b1800000-0000-4000-8000-000000000001')<>1 THEN RAISE EXCEPTION 'outbox escaped order rollback'; END IF; END; $$;
 CREATE TEMP TABLE qa_push_claim AS SELECT * FROM claim_order_push(1);
+SET LOCAL ROLE authenticated;
+SELECT initialize_order_push_installation('f1800000-0000-4000-8000-000000000001',repeat('1',64));
+SELECT register_order_push_device(repeat('a',64),'production','f1800000-0000-4000-8000-000000000001',repeat('1',64));
+RESET ROLE;
 DO $$ BEGIN
  IF NOT EXISTS(SELECT 1 FROM qa_push_claim) THEN RAISE EXCEPTION 'claim missing'; END IF;
  IF EXISTS(SELECT 1 FROM claim_order_push(100)) THEN RAISE EXCEPTION 'active lease claimed twice'; END IF;
  IF NOT authorize_order_push((SELECT id FROM qa_push_claim),(SELECT lease FROM qa_push_claim)) THEN RAISE EXCEPTION 'legitimate delivery rejected'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM order_push_outbox o JOIN qa_push_claim c ON o.id=c.id
+   WHERE o.status='processing' AND o.lease=c.lease) THEN RAISE EXCEPTION 'same-owner sync cancelled active lease'; END IF;
 END; $$;
 SELECT set_config('request.jwt.claim.sub','a1800000-0000-4000-8000-000000000002',true);
 SET LOCAL ROLE authenticated;

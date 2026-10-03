@@ -70,6 +70,15 @@ CREATE OR REPLACE FUNCTION public.sync_customer_display_identity() RETURNS TRIGG
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE identity RECORD;
 BEGIN
+ IF TG_OP='UPDATE' AND OLD.customer_user_id IS NOT NULL AND NEW.customer_user_id IS NULL
+  AND NOT EXISTS(SELECT 1 FROM auth.users WHERE id=OLD.customer_user_id) THEN
+  -- The FK clears a deleted account after delete_own_account anonymizes orders.
+  -- Do not restore that vanished UID or move its ban to another phone sharer.
+  -- An existing account still takes the frozen snapshot branch below.
+  NEW.customer_name:='Compte supprime';
+  NEW.customer_email:='';
+  RETURN NEW;
+ END IF;
  IF TG_OP='UPDATE' AND OLD.is_banned AND (OLD.ban_expires_at IS NULL OR OLD.ban_expires_at>now()) THEN
   -- A pre-ban order can finish its contact upsert after the merchant's ban.
   -- Keep the displayed/banned snapshot stable until the ban is lifted.

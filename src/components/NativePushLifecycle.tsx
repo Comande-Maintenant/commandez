@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { App } from '@capacitor/app';
 import { PushNotifications } from '@capacitor/push-notifications';
@@ -9,10 +9,13 @@ import { notificationRoute } from '@/services/native-push';
 
 export function NativePushLifecycle() {
   const navigate = useNavigate();
+  const navigateRef = useRef(navigate);
+  useEffect(() => { navigateRef.current = navigate; }, [navigate]);
   useEffect(() => {
     if (!isNative()) return;
     let disposed = false;
     let revision = 0;
+    let sessionUser: string | null = null;
     const handles: Array<{ remove(): Promise<void> }> = [];
     const keep = async (pending: Promise<{ remove(): Promise<void> }>) => {
       const handle = await pending;
@@ -34,9 +37,13 @@ export function NativePushLifecycle() {
     };
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       revision++;
-      if (!session) void nativePush.sync(null);
+      const nextUser = session?.user.id ?? null;
+      // A new identity cannot keep the old merchant's installation enabled
+      // while its ownership query is pending or offline.
+      if (!nextUser || nextUser !== sessionUser) void nativePush.sync(null);
+      sessionUser = nextUser;
       // Supabase auth callbacks must return before using authenticated queries.
-      else queueMicrotask(() => { if (!disposed) void refresh(); });
+      if (session) queueMicrotask(() => { if (!disposed) void refresh(); });
     });
     void refresh();
     void keep(App.addListener('appStateChange', ({ isActive }) => { if (isActive) void refresh(); }));
@@ -44,7 +51,7 @@ export function NativePushLifecycle() {
       try {
         const owned = await ownedRestaurants();
         const route = notificationRoute(notification.data ?? {}, owned?.slugs ?? []);
-        if (route && !disposed) { navigate(route); window.dispatchEvent(new Event('commandeici:refresh-orders')); }
+        if (route && !disposed) { navigateRef.current(route); window.dispatchEvent(new Event('commandeici:refresh-orders')); }
       } catch { /* A notification never bypasses merchant authorization. */ }
     }));
     window.addEventListener('online', refresh);
@@ -54,6 +61,6 @@ export function NativePushLifecycle() {
       for (const handle of handles) void handle.remove();
       void nativePush.dispose();
     };
-  }, [navigate]);
+  }, []);
   return null;
 }

@@ -73,6 +73,9 @@ BEGIN
        WHERE id=existing.id;
      UPDATE order_push_outbox SET status='cancelled',lease=NULL,leased_until=NULL,last_reason='installation_owner_changed'
        WHERE device_id=existing.id AND status IN ('pending','processing');
+   ELSE
+     -- Repeated resume/widget sync renews only the lease; keep recipient and queued notifications intact.
+     UPDATE order_push_devices SET updated_at=now(),expires_at=now()+interval '30 days' WHERE id=existing.id;
    END IF;
    RETURN;
  END IF;
