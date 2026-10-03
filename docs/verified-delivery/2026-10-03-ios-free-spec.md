@@ -69,3 +69,36 @@ Enregistrer dans Fichiers vérifiés via XCTest signé (xctest-qr-isolated.log).
 La première erreur Keychain provenait de CODE_SIGNING_ALLOWED=NO sur simulateur.
 Les tests natifs finaux doivent être signés ad hoc, sans remplacer Keychain.
 RevenueCat 04:20 : deux clés validées format/permissions, aucune offre créée.
+
+### Assemblage final et build 2
+
+Runtime web embarqué : commit 32ad9ccc13aeb2fa0e5b4e876f3b5bacc1ee656d.
+305 tests unitaires, 42 E2E desktop/mobile et typecheck/build ont passé sur cet
+assemblage. Revue indépendante : gardes identité/logout/deletion et navigation
+native relus, aucun point Critical/Important ouvert. RevenueCat : deux credentials
+validés, SDK intégré, aucun achat/produit/offering activé.
+
+Le build 1 Apple VALID est resté hors groupe TestFlight. Le build 2 le remplace
+avant distribution : lancement blanc avec marque commandeici, suppression des
+assets Capacitor inutilisés, numéro natif 2. Les tests restent signés ad hoc. Le
+seed DEBUG reste identique au build 1 ; aucune instrumentation diagnostic ne
+reste dans Release. La suite Build2Diagnostic (3 tests) a entièrement passé. Des
+répétitions sur iOS 26.2 et 26.3 ont aussi produit des crashs système WebKit SIGBUS,
+avec traces dyld/JSC conservées. Le seed atDocumentStart exploré n’a pas résolu
+ces crashs et a été retiré ; aucun contournement JavaScript de production. Le
+contrôle sur iPhone reste nécessaire, aucune garantie universelle de stabilité.
+
+Serveur sous responsabilité fonctionnelle : migrations 110-180, workers gratuits,
+APNs avec JWT et job vide vérifiés ; SMTP clé existante authentifiée AUTH235 et
+NOOP250, domaine expéditeur VERIFIED, configuration alignée sans envoi d'e-mail.
+La réception d'un e-mail de confirmation et d'une notification sur l'iPhone
+reste à observer pendant l'essai réel. Benchmark 100 SQL/HTTP local réussi ;
+100 connexions realtime simultanées non validées (OOM local). Lint : zéro erreur,
+294 avertissements existants. npm audit : 12 high, dont 5 avec omit=dev ; refonte
+Tailwind non comprise dans cette livraison. Ces limites restent déclarées.
+
+Preuves finales de signature/export, empreinte IPA, traitement Apple, groupe
+interne et invitation : dossier externe
+/Users/lestoilettesdeminette/reports/commandeici-ios-free-2026-10-03.
+Rollback : retirer seulement ce build du groupe interne ou l'expirer si une
+régression est observée. Ne pas activer un abonnement pour tester le mode gratuit.

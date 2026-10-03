@@ -14,7 +14,9 @@ Deno.serve(async req => {
   }
   const slug = url.searchParams.get('slug');
   if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length>170) return new Response('Invalid slug',{ status:400 });
-  const { data: restaurant, error } = await supabase.rpc('get_public_restaurant_by_slug', { p_slug: slug });
+  // Match the application's /demo route rather than the legacy demo row.
+  const lookupSlug = slug === 'demo' ? 'antalya-kebab-moneteau' : slug;
+  const { data: restaurant, error } = await supabase.rpc('get_public_restaurant_by_slug', { p_slug: lookupSlug });
   if (error) return new Response('Unavailable', { status: 503 });
   if (!restaurant || restaurant.deactivated_at || (!restaurant.is_demo && restaurant.account_status !== 'active')) return new Response('Not found', { status: 404 });
   const { data: items, error: menuError } = await supabase.from('menu_items').select('name,category,description,price').eq('restaurant_id',restaurant.id).eq('enabled',true).order('sort_order').limit(500);

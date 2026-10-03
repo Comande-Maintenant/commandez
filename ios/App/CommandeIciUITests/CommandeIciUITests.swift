@@ -24,7 +24,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 15))
         let png = app.buttons["PNG"].firstMatch
-        XCTAssertTrue(png.waitForExistence(timeout: 10))
+        XCTAssertTrue(png.waitForExistence(timeout: 10), app.debugDescription)
         png.tap()
         XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.otherElements.matching(NSPredicate(format: "label CONTAINS 'Image PNG'")).firstMatch.exists)
@@ -33,4 +33,19 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "QR PNG partage iOS"; shot.lifetime = .keepAlways; add(shot)
     }
+    func testNativeDemoPublicLinkCopy() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment["COMMANDEICI_QA_QR"] = "1"
+        app.launch()
+        let copy = app.buttons["Copier"].firstMatch
+        let ready = copy.waitForExistence(timeout: 15)
+        if !ready {
+            let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "QR test route failure"; shot.lifetime = .keepAlways; add(shot)
+        }
+        XCTAssertTrue(ready, app.debugDescription)
+        copy.tap()
+        XCTAssertTrue(app.buttons["Copie !"].firstMatch.waitForExistence(timeout: 3), app.debugDescription)
+    }
+
 }
