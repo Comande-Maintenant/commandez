@@ -2,6 +2,7 @@ import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { nativeSessionStorage } from '@/lib/native';
 import { supabase } from '@/integrations/supabase/client';
+import { randomUuid } from '@/lib/uuid';
 import { createNativePush, type PushStatus, type PushInstallation } from './native-push';
 
 let status: PushStatus = 'idle';
@@ -15,7 +16,7 @@ async function installation(create: boolean): Promise<PushInstallation | null> {
   const secret = await nativeSessionStorage.getItem(installationSecretKey);
   if (id && secret) return { id, secret };
   if (!create) return null;
-  const next = { id: crypto.randomUUID(), secret: Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join('') };
+  const next = { id: randomUuid(), secret: Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join('') };
   await nativeSessionStorage.setItem(installationIdKey, next.id);
   await nativeSessionStorage.setItem(installationSecretKey, next.secret);
   return next;

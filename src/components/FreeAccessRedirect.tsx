@@ -6,7 +6,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 
 // Old billing URLs stay usable on web and iOS while merchant access is free.
-export function FreeAccessRedirect() {
+export function FreeAccessRedirect({ title = 'commerce.free_title', description = 'commerce.free_desc' }: { title?: string; description?: string }) {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [failed, setFailed] = useState(false);
@@ -36,8 +36,8 @@ export function FreeAccessRedirect() {
 
   return <main className="min-h-screen bg-background flex items-center justify-center p-6">
     <div className="max-w-sm text-center space-y-4">
-      <h1 className="text-xl font-semibold text-foreground">{t('commerce.free_title')}</h1>
-      <p className="text-sm text-muted-foreground">{t('commerce.free_desc')}</p>
+      <h1 className="text-xl font-semibold text-foreground">{t(title)}</h1>
+      <p className="text-sm text-muted-foreground">{t(description)}</p>
       {failed ? <>
         <p role="alert" className="text-sm text-destructive">{t('commerce.load_error')}</p>
         <Button onClick={() => setAttempt((value) => value + 1)}>{t('common.retry')}</Button>

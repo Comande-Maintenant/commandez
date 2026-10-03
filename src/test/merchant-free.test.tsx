@@ -91,8 +91,8 @@ describe('Current merchant access is free', () => {
     mocks.native = true;
     const select = vi.fn();
     render(<PricingCards onSelect={select} />);
-    fireEvent.click(screen.getByRole('button', { name: 'commerce.publish' }));
-    expect(select).toHaveBeenCalledWith('monthly');
+    fireEvent.click(screen.getByRole('button', { name: 'native.free.publish' }));
+    expect(select).toHaveBeenCalledWith('none');
     expect(screen.queryByText('native.subscription')).not.toBeInTheDocument();
     expect(mocks.invoke).not.toHaveBeenCalled();
   });

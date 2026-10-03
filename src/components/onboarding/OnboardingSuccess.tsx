@@ -67,7 +67,7 @@ export function OnboardingSuccess({ restaurantName, slug }: OnboardingSuccessPro
         </Button>
       </Link>
 
-      <p className="text-sm text-muted-foreground">{t(isNative() ? 'native.free.description' : 'commerce.free_title')}</p>
+      {!isNative() && <p className="text-sm text-muted-foreground">{t('commerce.free_title')}</p>}
     </div>
   );
 }
