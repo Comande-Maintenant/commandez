@@ -63,6 +63,7 @@ export interface DbRestaurant {
   restaurant_phone: string;
   availability_mode: string;
   schedule: any;
+  time_zone?: string;
   order_mode: string;
   dine_in_capacity: number | null;
   notification_sound: string;
@@ -151,6 +152,7 @@ export interface DbOrder {
 
 export interface DbCustomer {
   id: string;
+  customer_user_id?: string | null;
   restaurant_id: string;
   customer_phone: string;
   customer_name: string;

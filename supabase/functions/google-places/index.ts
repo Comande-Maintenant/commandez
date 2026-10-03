@@ -11,6 +11,17 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+async function fetchPlaces(url: string) {
+  if (!GOOGLE_PLACES_API_KEY) throw new Error("Google Places is not configured");
+  const response = await fetch(url, { signal: AbortSignal.timeout(20_000) });
+  if (!response.ok) throw new Error("Google Places is temporarily unavailable");
+  const data = await response.json();
+  if (data.status !== "OK" && data.status !== "ZERO_RESULTS") {
+    throw new Error("Google Places is temporarily unavailable");
+  }
+  return data;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -51,18 +62,26 @@ serve(async (req) => {
       // share.google links use a JS challenge, but the fallback HTML contains
       // a /search?q=Business+Name link we can extract the name from
       try {
-        const target = new URL(inputUrl);
-        const allowedHosts = new Set(["share.google", "maps.app.goo.gl", "www.google.com", "google.com"]);
-        if (target.protocol !== "https:" || !allowedHosts.has(target.hostname)) {
-          return new Response(JSON.stringify({ error: "Unsupported URL" }), {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        let target = new URL(inputUrl);
+        const allowedHosts = new Set(["share.google", "maps.app.goo.gl", "www.google.com", "google.com", "maps.google.com", "www.google.fr", "google.fr", "maps.google.fr"]);
+        let res: Response | undefined;
+        for (let redirects = 0; redirects < 5; redirects++) {
+          if (target.protocol !== "https:" || target.username || target.password
+            || (target.port && target.port !== "443") || !allowedHosts.has(target.hostname)) {
+            return new Response(JSON.stringify({ error: "Unsupported URL" }), {
+              status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          res = await fetch(target.href, {
+            redirect: "manual", signal: AbortSignal.timeout(20_000),
+            headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36" },
           });
+          if (![301, 302, 303, 307, 308].includes(res.status)) break;
+          const location = res.headers.get("location");
+          if (!location) throw new Error("Shared Google link is unavailable");
+          target = new URL(location, target);
         }
-        const res = await fetch(inputUrl, {
-          redirect: "follow",
-          headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36" },
-        });
+        if (!res?.ok) throw new Error("Shared Google link is unavailable");
         const html = await res.text();
         // Extract business name from fallback link: /search?q=Le+M%C3%A9sopotamie&...
         const searchMatch = html.match(/\/search\?q=([^&"]+)/);
@@ -73,7 +92,7 @@ serve(async (req) => {
           });
         }
         // Fallback: return the final URL
-        return new Response(JSON.stringify({ resolved_url: res.url }), {
+        return new Response(JSON.stringify({ resolved_url: target.href }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       } catch (e: any) {
@@ -88,19 +107,28 @@ serve(async (req) => {
       if (typeof query !== "string" || query.trim().length < 2 || query.length > 200) {
         return new Response(JSON.stringify({ error: "Invalid query" }), { status: 400, headers: corsHeaders });
       }
-      const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&type=restaurant&key=${GOOGLE_PLACES_API_KEY}`;
-      const res = await fetch(url);
-      const data = await res.json();
+      const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&type=restaurant&language=fr&key=${GOOGLE_PLACES_API_KEY}`;
+      const data = await fetchPlaces(url);
       return new Response(JSON.stringify({ results: data.results ?? [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    if (action === "details" || action === "photos") {
+      if (typeof placeId !== "string" || !/^[a-zA-Z0-9_-]{1,255}$/.test(placeId)) {
+        return new Response(JSON.stringify({ error: "Invalid place ID" }), { status: 400, headers: corsHeaders });
+      }
+    }
+
     if (action === "details") {
-      const fields = "place_id,name,formatted_address,formatted_phone_number,rating,types,opening_hours,photos,website,geometry";
-      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&key=${GOOGLE_PLACES_API_KEY}`;
-      const res = await fetch(url);
-      const data = await res.json();
+      const fields = "place_id,name,address_components,formatted_address,formatted_phone_number,rating,types,opening_hours,photos,website,geometry";
+      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&language=fr&key=${GOOGLE_PLACES_API_KEY}`;
+      const data = await fetchPlaces(url);
+      if (data.result) {
+        const city = data.result.address_components?.find((component: any) => component.types?.includes("locality"))
+          ?? data.result.address_components?.find((component: any) => component.types?.includes("postal_town"));
+        data.result.city = city?.long_name ?? "";
+      }
       // Enrich photos with full URLs (key is server-side only)
       if (data.result?.photos) {
         data.result.photo_urls = await Promise.all(data.result.photos.slice(0, 15).map(async (p: any) => {
@@ -110,6 +138,7 @@ serve(async (req) => {
           return {
             url: `${SUPABASE_URL}/functions/v1/google-places?action=photo&token=${encodeURIComponent(token)}`,
             urlHigh: `${SUPABASE_URL}/functions/v1/google-places?action=photo&token=${encodeURIComponent(highToken)}`,
+            attribution: p.html_attributions?.[0] ?? "",
             width: p.width,
             height: p.height,
           };
@@ -124,9 +153,8 @@ serve(async (req) => {
       // Return photo URLs for a place (up to maxPhotos)
       const maxPhotos = 15;
       const fields = "photos";
-      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&key=${GOOGLE_PLACES_API_KEY}`;
-      const res = await fetch(url);
-      const data = await res.json();
+      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&language=fr&key=${GOOGLE_PLACES_API_KEY}`;
+      const data = await fetchPlaces(url);
       const photos = (data.result?.photos ?? []).slice(0, maxPhotos);
       const photoUrls = await Promise.all(photos.map(async (p: any) => {
         const expires = Date.now() + 60 * 60 * 1000;
@@ -146,13 +174,12 @@ serve(async (req) => {
     }
 
     if (action === "nearby") {
-      if (!Number.isFinite(Number(lat)) || !Number.isFinite(Number(lng))
+      if (typeof lat !== "number" || typeof lng !== "number" || !Number.isFinite(lat) || !Number.isFinite(lng)
         || Math.abs(Number(lat)) > 90 || Math.abs(Number(lng)) > 180) {
         return new Response(JSON.stringify({ error: "Invalid coordinates" }), { status: 400, headers: corsHeaders });
       }
-      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1000&type=restaurant&key=${GOOGLE_PLACES_API_KEY}`;
-      const res = await fetch(url);
-      const data = await res.json();
+      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1000&type=restaurant&language=fr&key=${GOOGLE_PLACES_API_KEY}`;
+      const data = await fetchPlaces(url);
       return new Response(JSON.stringify({ results: data.results ?? [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -164,7 +191,7 @@ serve(async (req) => {
     });
   } catch (err) {
     return new Response(JSON.stringify({ error: (err as Error).message }), {
-      status: 500,
+      status: 502,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

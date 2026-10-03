@@ -1,3 +1,4 @@
+import { randomUuid } from '@/lib/uuid';
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer, DbOwner, DbSubscription, DbPromoCode, DbTablet } from "@/types/database";
@@ -82,6 +83,7 @@ export async function fetchAllMenuItems(restaurantId: string): Promise<DbMenuIte
 }
 
 export async function createOrder(order: {
+  request_id?: string;
   restaurant_id: string;
   customer_name: string;
   customer_phone: string;
@@ -99,29 +101,44 @@ export async function createOrder(order: {
   estimated_ready_at?: string;
   is_test?: boolean;
 }): Promise<DbOrder> {
-  const { data, error } = await supabase.rpc("place_order", {
-    p_restaurant_id: order.restaurant_id,
-    p_customer_name: order.customer_name,
-    p_customer_phone: order.customer_phone,
-    p_customer_email: order.customer_email ?? "",
-    p_order_type: order.order_type,
-    p_source: order.source ?? "web",
-    p_covers: order.covers ?? null,
-    p_items: order.items,
-    p_subtotal: order.subtotal,
-    p_total: order.total,
-    p_notes: order.notes ?? "",
-    p_client_ip: null,
-    p_pickup_time: order.pickup_time ?? null,
-    p_payment_method: order.payment_method ?? "",
-    p_estimated_ready_at: order.estimated_ready_at ?? null,
-    p_is_test: order.is_test ?? false,
-  });
+  const { request_id, ...payload } = order;
+  const { data, error } = await supabase.rpc("place_order_once" as never, {
+    p_request_id: request_id || randomUuid(),
+    p_order: { ...payload, client_ip: null },
+  } as never);
   if (error) throw error;
   return data as unknown as DbOrder;
 }
 
-export async function fetchOrders(restaurantId: string): Promise<DbOrder[]> {
+export async function fetchOrders(restaurantId: string, options?: { operational?: boolean; signal?: AbortSignal }): Promise<DbOrder[]> {
+  if (options?.operational) {
+    // Keep every unfinished order, including those from yesterday. Archive/statistics
+    // callers retain the unfiltered query below.
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const orders: DbOrder[] = [];
+    const pageSize = 500;
+    for (let offset = 0; ; offset += pageSize) {
+      const controller = new AbortController();
+      const abort = () => controller.abort();
+      if (options.signal?.aborted) abort();
+      options.signal?.addEventListener('abort', abort, { once: true });
+      const timeout = setTimeout(abort, 15000);
+      try {
+        const { data, error } = await supabase.from("orders").select("*")
+          .eq("restaurant_id", restaurantId)
+          .or(`status.in.(new,preparing,ready),created_at.gte.${today.toISOString()}`)
+          .order("created_at", { ascending: false }).order("id", { ascending: false })
+          .abortSignal(controller.signal).range(offset, offset + pageSize - 1);
+        if (error) throw error;
+        orders.push(...(data ?? []) as unknown as DbOrder[]);
+        if (!data || data.length < pageSize) return orders;
+      } finally {
+        clearTimeout(timeout);
+        options.signal?.removeEventListener('abort', abort);
+      }
+    }
+  }
   const { data, error } = await supabase
     .from("orders")
     .select("*")
@@ -351,21 +368,53 @@ export async function fetchOrderById(orderId: string): Promise<(DbOrder & { rest
 }
 
 export function subscribeToOrderStatus(orderId: string, callback: (order: DbOrder) => void): () => void {
-  // Poll via RPC every 3s (orders SELECT is owner-only, anonymous can't use Realtime)
-  let lastStatus: string | null = null;
+  // Tracking RPC preserves owner-only SELECT. Serialize reads, suspend hidden
+  // screens and stop at completion; active screens receive updates within 5s.
+  let lastSnapshot: string | null = null;
+  let stopped = false;
+  let completed = false;
+  let pending = false;
+  let delay = 5000;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
   const poll = async () => {
-    const { data } = await supabase.rpc("get_order_for_tracking", { p_order_id: orderId });
-    if (data) {
-      const order = data as any;
-      if (order.status !== lastStatus) {
-        lastStatus = order.status;
-        callback(order as unknown as DbOrder);
+    if (stopped || completed || pending || document.hidden) return;
+    if (timeout) clearTimeout(timeout);
+    pending = true;
+    try {
+      const { data, error } = await supabase.rpc("get_order_for_tracking", { p_order_id: orderId });
+      if (error || !data) delay = Math.min(delay * 2, 30000);
+      else if (!stopped) {
+        delay = 5000;
+        const snapshot = JSON.stringify(data);
+        const order = data as unknown as DbOrder;
+        completed = order.status === "done";
+        if (snapshot !== lastSnapshot) {
+          lastSnapshot = snapshot;
+          callback(order);
+        }
       }
+    } catch { delay = Math.min(delay * 2, 30000); }
+    finally {
+      pending = false;
+      if (!stopped && !completed && !document.hidden) timeout = setTimeout(() => { void poll(); }, delay);
     }
   };
-  poll(); // initial fetch
-  const interval = setInterval(poll, 3000);
-  return () => clearInterval(interval);
+  const resume = () => { void poll(); };
+  const visible = () => {
+    if (document.hidden) { if (timeout) clearTimeout(timeout); }
+    else resume();
+  };
+  resume();
+  window.addEventListener("online", resume);
+  window.addEventListener("commandeici:resume", resume);
+  document.addEventListener("visibilitychange", visible);
+  return () => {
+    stopped = true;
+    if (timeout) clearTimeout(timeout);
+    window.removeEventListener("online", resume);
+    window.removeEventListener("commandeici:resume", resume);
+    document.removeEventListener("visibilitychange", visible);
+  };
 }
 
 export async function incrementDeactivationVisits(restaurantId: string) {
@@ -382,9 +431,13 @@ export async function fetchActiveOrderCount(restaurantId: string): Promise<numbe
   return data ?? 0;
 }
 
-export function subscribeToOrders(restaurantId: string, callback: (order: DbOrder) => void) {
+let orderSubscriptionId = 0;
+
+export function subscribeToOrders(restaurantId: string, callback: (order: DbOrder) => void, onStatus?: (status: string) => void) {
+  let stopped = false;
+  const receive = (payload: { new: unknown }) => { if (!stopped) callback(payload.new as DbOrder); };
   const channel = supabase
-    .channel(`orders-${restaurantId}`)
+    .channel(`orders-${restaurantId}-${++orderSubscriptionId}`)
     .on(
       "postgres_changes",
       {
@@ -393,14 +446,14 @@ export function subscribeToOrders(restaurantId: string, callback: (order: DbOrde
         table: "orders",
         filter: `restaurant_id=eq.${restaurantId}`,
       },
-      (payload) => {
-        callback(payload.new as unknown as DbOrder);
-      }
+      receive
     )
-    .subscribe();
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: `restaurant_id=eq.${restaurantId}` }, receive)
+    .subscribe((status) => { if (!stopped) onStatus?.(status); });
 
   return () => {
-    supabase.removeChannel(channel);
+    stopped = true;
+    void supabase.removeChannel(channel);
   };
 }
 
@@ -442,88 +495,33 @@ export async function upsertCustomer(customer: {
   return data as unknown as DbCustomer;
 }
 
-export async function updateCustomerStats(
-  customerId: string,
-  orderTotal: number,
-  items: { name: string; quantity: number }[]
-) {
-  // Fetch current customer data
-  const { data: current, error: fetchErr } = await supabase
-    .from("restaurant_customers")
-    .select("total_orders, total_spent, favorite_items, last_items, first_order_at")
-    .eq("id", customerId)
-    .single();
-  if (fetchErr) throw fetchErr;
-
-  const c = current as any;
-  const newTotalOrders = (c.total_orders || 0) + 1;
-  const newTotalSpent = Number(c.total_spent || 0) + orderTotal;
-  const newAverage = newTotalSpent / newTotalOrders;
-
-  // Calculate favorite items (top 3 by frequency)
-  const itemCounts: Record<string, number> = {};
-  const prevFavorites: string[] = c.favorite_items || [];
-  for (const f of prevFavorites) itemCounts[f] = (itemCounts[f] || 0) + 5;
-  for (const item of items) itemCounts[item.name] = (itemCounts[item.name] || 0) + item.quantity;
-  const favorites = Object.entries(itemCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([name]) => name);
-
-  const lastItems = items.map((i) => i.name).slice(0, 5);
-
-  const updates: Record<string, any> = {
-    total_orders: newTotalOrders,
-    total_spent: newTotalSpent.toFixed(2),
-    average_basket: newAverage.toFixed(2),
-    favorite_items: favorites,
-    last_items: lastItems,
-    last_order_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
-  if (!c.first_order_at) {
-    updates.first_order_at = new Date().toISOString();
-  }
-
-  const { error } = await supabase
-    .from("restaurant_customers")
-    .update(updates)
-    .eq("id", customerId);
-  if (error) throw error;
-}
-
 export async function banCustomer(
   customerId: string,
   reason: string,
   expiresAt: string | null,
-  ip?: string
+  ip?: string,
+  expectedUserId: string | null = null
 ) {
-  const { error } = await supabase
-    .from("restaurant_customers")
-    .update({
-      is_banned: true,
-      banned_at: new Date().toISOString(),
-      banned_reason: reason,
-      ban_expires_at: expiresAt,
-      banned_ip: ip || "",
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
+  const { error } = await supabase.rpc("set_restaurant_customer_ban" as never, {
+    p_customer_id: customerId,
+    p_expected_user_id: expectedUserId,
+    p_banned: true,
+    p_reason: reason,
+    p_expires_at: expiresAt,
+    p_ip: ip || null,
+  } as never);
   if (error) throw error;
 }
 
-export async function unbanCustomer(customerId: string) {
-  const { error } = await supabase
-    .from("restaurant_customers")
-    .update({
-      is_banned: false,
-      banned_at: null,
-      banned_reason: "",
-      ban_expires_at: null,
-      banned_ip: "",
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
+export async function unbanCustomer(customerId: string, expectedUserId: string | null = null) {
+  const { error } = await supabase.rpc("set_restaurant_customer_ban" as never, {
+    p_customer_id: customerId,
+    p_expected_user_id: expectedUserId,
+    p_banned: false,
+    p_reason: "",
+    p_expires_at: null,
+    p_ip: null,
+  } as never);
   if (error) throw error;
 }
 
@@ -716,25 +714,6 @@ export async function linkOrdersToUser(userId: string, email: string, phone?: st
     p_email: email || "",
     p_phone: phone || "",
   });
-}
-
-export async function incrementCustomerStats(userId: string, orderTotal: number): Promise<void> {
-  const { data, error: fetchErr } = await supabase
-    .from("customer_profiles")
-    .select("total_orders, total_spent")
-    .eq("id", userId)
-    .single();
-  if (fetchErr || !data) return;
-  const c = data as any;
-  const { error } = await supabase
-    .from("customer_profiles")
-    .update({
-      total_orders: (c.total_orders || 0) + 1,
-      total_spent: (Number(c.total_spent) || 0) + orderTotal,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", userId);
-  if (error) throw error;
 }
 
 // ── Super Admin KPIs ──

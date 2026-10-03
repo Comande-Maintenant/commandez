@@ -94,6 +94,16 @@ function prettyCategory(normalized: string, original: string): string {
   return map[normalized] || original;
 }
 
+function validCategories(categories: any): boolean {
+  const validOption = (option: any) => option && typeof option.name === "string" && option.name.trim()
+    && typeof option.price === "number" && Number.isFinite(option.price) && option.price >= 0;
+  return Array.isArray(categories) && categories.every((category: any) => category && typeof category.name === "string" && category.name.trim()
+    && Array.isArray(category.items) && category.items.every((item: any) => validOption(item)
+      && (item.description === undefined || typeof item.description === "string")
+      && ["variants", "supplements"].every((key) => item[key] === undefined || (Array.isArray(item[key]) && item[key].every(validOption)))
+      && (item.tags === undefined || (Array.isArray(item.tags) && item.tags.every((tag: any) => typeof tag === "string")))));
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -111,18 +121,22 @@ serve(async (req) => {
 
     const storagePrefix = `${Deno.env.get("SUPABASE_URL")}/storage/v1/object/sign/menu-uploads/${user.id}/`;
     if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0 || imageUrls.length > 5
-      || imageUrls.some((url) => typeof url !== "string" || !url.startsWith(storagePrefix))) {
+      || imageUrls.some((url) => typeof url !== "string" || !url.startsWith(storagePrefix) || (() => {
+        try { return !new URL(url).href.startsWith(storagePrefix) || decodeURIComponent(new URL(url).pathname).split("/").some((part) => part === ".." || part === "."); }
+        catch { return true; }
+      })())) {
       return new Response(JSON.stringify({ error: "imageUrls array required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    if (!ANTHROPIC_API_KEY) throw new Error("Menu analysis is not configured");
     const allCategories: any[] = [];
 
     // Analyze each image separately (reliable, works with all formats)
     for (const url of imageUrls) {
-      const isPdf = url.toLowerCase().endsWith('.pdf');
+      const isPdf = new URL(url).pathname.toLowerCase().endsWith('.pdf');
       const contentBlock = isPdf
         ? { type: "document" as const, source: { type: "url" as const, url } }
         : { type: "image" as const, source: { type: "url" as const, url } };
@@ -147,9 +161,8 @@ serve(async (req) => {
       });
 
       if (!response.ok) {
-        const errText = await response.text();
-        console.error("Anthropic API error:", errText);
-        continue;
+        console.error("Anthropic API error:", response.status);
+        throw new Error("Une page n’a pas pu être lue. Réessayez l’analyse de la carte.");
       }
 
       const data = await response.json();
@@ -159,13 +172,18 @@ serve(async (req) => {
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
-          if (parsed.categories) {
-            allCategories.push(...parsed.categories);
-          }
+          if (!validCategories(parsed.categories) || !parsed.categories.some((category: any) => category.items.length > 0)) throw new Error("Invalid menu response");
+          allCategories.push(...parsed.categories);
+        } else {
+          throw new Error("Unreadable menu response");
         }
       } catch (parseErr) {
-        console.error("JSON parse error:", parseErr);
+        throw new Error("La carte n’a pas pu être lue. Essayez une photo plus nette.");
       }
+    }
+
+    if (allCategories.every((category) => category.items.length === 0)) {
+      throw new Error("Aucun article lisible. Essayez une photo plus nette.");
     }
 
     // ── Smart merge: group by normalized category name ──
@@ -286,7 +304,7 @@ Retourne le menu final corrige. UNIQUEMENT du JSON valide :
         const jsonMatch = crossRefText.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           const finalMenu = JSON.parse(jsonMatch[0]);
-          if (finalMenu.categories && finalMenu.categories.length > 0) {
+          if (validCategories(finalMenu.categories) && finalMenu.categories.some((category: any) => category.items.length > 0)) {
             console.log(`Cross-reference done: ${finalMenu.categories.length} categories`);
             return new Response(
               JSON.stringify({ categories: finalMenu.categories }),
@@ -298,7 +316,7 @@ Retourne le menu final corrige. UNIQUEMENT du JSON valide :
         console.error("Cross-reference JSON parse error:", parseErr);
       }
     } else {
-      console.error("Cross-reference API error:", await crossRefResponse.text());
+      console.error("Cross-reference API error:", crossRefResponse.status);
     }
 
     // Fallback: return the basic merged data if cross-reference fails
@@ -309,7 +327,7 @@ Retourne le menu final corrige. UNIQUEMENT du JSON valide :
     );
   } catch (err) {
     return new Response(JSON.stringify({ error: (err as Error).message }), {
-      status: 500,
+      status: 502,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

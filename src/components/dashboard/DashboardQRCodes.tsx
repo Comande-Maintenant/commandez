@@ -1,4 +1,5 @@
-import { publicAppUrl } from '@/lib/native';
+import { readableQrColor } from '@/lib/qr';
+import { publicAppUrl, exportPublicFile } from '@/lib/native';
 import { useState, useEffect, useCallback } from "react";
 import {
   QrCode,
@@ -33,15 +34,19 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
   const [packQrSvg, setPackQrSvg] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const primaryColor = restaurant.primary_color || "#000000";
-  const pageUrl = typeof window !== "undefined" ? `${publicAppUrl}/${restaurant.slug}` : "";
-  const posUrl = typeof window !== "undefined" ? `${publicAppUrl}/admin/${restaurant.slug}?tab=caisse` : "";
+  const primaryColor = readableQrColor(restaurant.primary_color || "#000000");
+  const pageUrl = typeof window !== "undefined" ? `${publicAppUrl}/${encodeURIComponent(restaurant.slug)}` : "";
+  const posUrl = typeof window !== "undefined" ? `${publicAppUrl}/admin/${encodeURIComponent(restaurant.slug)}?tab=caisse` : "";
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(pageUrl);
-    setCopied(true);
-    toast.success(t('common.toast.link_copied'));
-    setTimeout(() => setCopied(false), 2000);
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      setCopied(true);
+      toast.success(t('common.toast.link_copied'));
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(t('common.toast.copy_error'));
+    }
   };
 
   const generateQR = useCallback(async () => {
@@ -52,7 +57,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       const dataUrl = await QRCode.toDataURL(pageUrl, {
         errorCorrectionLevel: ecLevel,
         width: 512,
-        margin: 2,
+        margin: 4,
         color: { dark: primaryColor, light: "#ffffff" },
       });
       setQrDataUrl(dataUrl);
@@ -61,7 +66,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       const hdDataUrl = await QRCode.toDataURL(pageUrl, {
         errorCorrectionLevel: ecLevel,
         width: 1024,
-        margin: 2,
+        margin: 4,
         color: { dark: primaryColor, light: "#ffffff" },
       });
       setQrHdDataUrl(hdDataUrl);
@@ -70,7 +75,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
         errorCorrectionLevel: ecLevel,
         type: "svg",
         width: 512,
-        margin: 2,
+        margin: 4,
         color: { dark: primaryColor, light: "#ffffff" },
       });
       setQrSvg(svg);
@@ -79,7 +84,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       const posDataUrl = await QRCode.toDataURL(posUrl, {
         errorCorrectionLevel: ecLevel,
         width: 512,
-        margin: 2,
+        margin: 4,
         color: { dark: "#1d4ed8", light: "#ffffff" },
       });
       setPosQrDataUrl(posDataUrl);
@@ -87,7 +92,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
         errorCorrectionLevel: ecLevel,
         type: "svg",
         width: 512,
-        margin: 2,
+        margin: 4,
         color: { dark: "#1d4ed8", light: "#ffffff" },
       });
       setPosQrSvg(posSvgStr);
@@ -96,7 +101,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       const packDataUrl = await QRCode.toDataURL(pageUrl, {
         errorCorrectionLevel: ecLevel,
         width: 300,
-        margin: 1,
+        margin: 4,
         color: { dark: "#000000", light: "#ffffff" },
       });
       setPackQrDataUrl(packDataUrl);
@@ -104,7 +109,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
         errorCorrectionLevel: ecLevel,
         type: "svg",
         width: 300,
-        margin: 1,
+        margin: 4,
         color: { dark: "#000000", light: "#ffffff" },
       });
       setPackQrSvg(packSvgStr);
@@ -117,22 +122,18 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
     generateQR();
   }, [generateQR]);
 
-  const downloadPng = (dataUrl: string, filename: string) => {
-    if (!dataUrl) return;
-    const link = document.createElement("a");
-    link.download = filename;
-    link.href = dataUrl;
-    link.click();
+  const exportAsset = async (data: string, filename: string, mimeType: string) => {
+    if (!data) return false;
+    try {
+      return await exportPublicFile(data, filename, mimeType);
+    } catch {
+      toast.error(t('common.error'));
+      return false;
+    }
   };
 
-  const downloadSvg = (svgStr: string, filename: string) => {
-    if (!svgStr) return;
-    const blob = new Blob([svgStr], { type: "image/svg+xml" });
-    const link = document.createElement("a");
-    link.download = filename;
-    link.href = URL.createObjectURL(blob);
-    link.click();
-  };
+  const downloadPng = (dataUrl: string, filename: string) => exportAsset(dataUrl, filename, 'image/png');
+  const downloadSvg = (svg: string, filename: string) => exportAsset(svg, filename, 'image/svg+xml');
 
   const loadImageAsDataUrl = async (src: string): Promise<string | null> => {
     try {
@@ -200,8 +201,9 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
       }
     }
 
-    doc.save(`qr-fiche-a4-${restaurant.slug}.pdf`);
-    toast.success(t('dashboard.qr.a4_downloaded'));
+    if (await exportAsset(doc.output('datauristring'), `qr-fiche-a4-${restaurant.slug}.pdf`, 'application/pdf')) {
+      toast.success(t('dashboard.qr.a4_downloaded'));
+    }
   };
 
   // PDF A3 - Vitrine/Affiche grand format
@@ -253,8 +255,9 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
     doc.setTextColor(120, 120, 120);
     doc.text(pageUrl, pw / 2, qrY + qrSize + 35, { align: "center" });
 
-    doc.save(`qr-vitrine-a3-${restaurant.slug}.pdf`);
-    toast.success(t('dashboard.qr.poster_downloaded'));
+    if (await exportAsset(doc.output('datauristring'), `qr-vitrine-a3-${restaurant.slug}.pdf`, 'application/pdf')) {
+      toast.success(t('dashboard.qr.poster_downloaded'));
+    }
   };
 
   // PNG HD for vitrine
@@ -333,7 +336,7 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
           </div>
         </div>
 
-        <Button variant="outline" className="w-full rounded-xl gap-1.5" onClick={generateA4Pdf}>
+        <Button variant="outline" className="w-full rounded-xl gap-1.5" onClick={generateA4Pdf} disabled={!qrDataUrl}>
           <FileDown className="h-4 w-4" />{t('dashboard.qr.download_a4')}
         </Button>
       </section>
@@ -380,10 +383,10 @@ export const DashboardQRCodes = ({ restaurant }: Props) => {
         </p>
 
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" className="rounded-xl gap-1.5" onClick={generateVitrinePdf}>
+          <Button variant="outline" className="rounded-xl gap-1.5" onClick={generateVitrinePdf} disabled={!qrHdDataUrl}>
             <FileDown className="h-4 w-4" />PDF A3
           </Button>
-          <Button variant="outline" className="rounded-xl gap-1.5" onClick={downloadVitrineHdPng}>
+          <Button variant="outline" className="rounded-xl gap-1.5" onClick={downloadVitrineHdPng} disabled={!qrHdDataUrl}>
             <FileDown className="h-4 w-4" />PNG HD (1024px)
           </Button>
         </div>

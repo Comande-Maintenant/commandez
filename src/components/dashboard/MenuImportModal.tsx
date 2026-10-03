@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { MenuReviewEditor } from "@/components/onboarding/MenuReviewEditor";
 import { analyzeMenuImages } from "@/services/menu-analysis";
-import { convertFilesForAnalysis, translateError } from "@/utils/file-converter";
+import { convertFilesForAnalysis } from "@/utils/file-converter";
 import { insertMenuItem, updateRestaurantCategories, fetchAllMenuItems } from "@/lib/api";
 import type { AnalyzedCategory } from "@/types/onboarding";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
@@ -21,7 +21,7 @@ interface Props {
 
 type Step = "upload" | "analyzing" | "review" | "saving";
 
-export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems, onImportComplete }: Props) => {
+export const MenuImportModal = ({ open, onOpenChange, restaurant, onImportComplete }: Props) => {
   const { t } = useLanguage();
   const [step, setStep] = useState<Step>("upload");
   const [files, setFiles] = useState<File[]>([]);
@@ -29,6 +29,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const operationPending = useRef(false);
 
   const reset = () => {
     setStep("upload");
@@ -38,23 +39,34 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
   };
 
   const handleClose = (open: boolean) => {
+    if (operationPending.current) return;
     if (!open) reset();
     onOpenChange(open);
   };
 
   const handleFiles = async (newFiles: FileList | null) => {
-    if (!newFiles || newFiles.length === 0) return;
-    const { converted, errors } = await convertFilesForAnalysis(Array.from(newFiles));
-    if (errors.length > 0) {
-      toast.error(t('dashboard.import.conversion_error', { count: errors.length }));
+    if (!newFiles || newFiles.length === 0 || operationPending.current) return;
+    operationPending.current = true;
+    setStep("analyzing");
+    try {
+      const { converted, errors } = await convertFilesForAnalysis(Array.from(newFiles));
+      if (errors.length > 0) {
+        toast.error(t('dashboard.import.conversion_error', { count: errors.length }));
+      }
+      if (converted.length === 0) {
+        toast.error(t('dashboard.import.no_usable_files'));
+        setStep("upload");
+        return;
+      }
+      const allFiles = [...files, ...converted];
+      setFiles(allFiles);
+      await startAnalysis(allFiles);
+    } catch {
+      setError(t('dashboard.import.analysis_error'));
+      setStep("upload");
+    } finally {
+      operationPending.current = false;
     }
-    if (converted.length === 0) {
-      toast.error(t('dashboard.import.no_usable_files'));
-      return;
-    }
-    const allFiles = [...files, ...converted];
-    setFiles(allFiles);
-    await startAnalysis(allFiles);
   };
 
   const startAnalysis = async (filesToAnalyze: File[]) => {
@@ -72,11 +84,15 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
   };
 
   const handleConfirm = async (categories: AnalyzedCategory[]) => {
+    if (operationPending.current) return;
+    operationPending.current = true;
     setStep("saving");
     try {
+      // A previous interrupted import may already have saved some items.
+      const currentItems = await fetchAllMenuItems(restaurant.id);
       // Build a set of existing item keys (name lowercase + category lowercase) for dedup
       const existingKeys = new Set(
-        existingItems.map((i) => `${i.name.toLowerCase().trim()}::${i.category.toLowerCase().trim()}`)
+        currentItems.map((i) => `${i.name.toLowerCase().trim()}::${i.category.toLowerCase().trim()}`)
       );
 
       const existingCategories = new Set((restaurant.categories ?? []).map((c) => c.toLowerCase().trim()));
@@ -85,7 +101,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
       let skipped = 0;
 
       // Get current max sort_order
-      const maxSort = existingItems.reduce((max, i) => Math.max(max, i.sort_order ?? 0), 0);
+      const maxSort = currentItems.reduce((max, i) => Math.max(max, i.sort_order ?? 0), 0);
       let sortOrder = maxSort + 1;
 
       for (const category of categories) {
@@ -119,6 +135,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
             name: itemName,
             description: item.description || "",
             price: item.price,
+            variants: item.variants,
             category: catName,
             enabled: true,
             popular: false,
@@ -144,11 +161,14 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, existingItems,
 
       toast.success(parts.length > 0 ? parts.join(", ") : t('dashboard.import.import_done'));
       onImportComplete();
-      handleClose(false);
+      reset();
+      onOpenChange(false);
     } catch (e: any) {
       console.error("Import error:", e);
       toast.error(t('dashboard.import.import_error'));
       setStep("review");
+    } finally {
+      operationPending.current = false;
     }
   };
 

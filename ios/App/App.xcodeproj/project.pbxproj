@@ -327,6 +327,8 @@ C3C3C3C30000000000000006 = {isa=PBXSourcesBuildPhase;buildActionMask=2147483647;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+                CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
+                DEVELOPMENT_TEAM = 889YAF54QV;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -348,7 +350,11 @@ C3C3C3C30000000000000006 = {isa=PBXSourcesBuildPhase;buildActionMask=2147483647;
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "CommandeIci App Store Push";
+                CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
+                DEVELOPMENT_TEAM = 889YAF54QV;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;

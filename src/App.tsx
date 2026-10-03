@@ -13,6 +13,8 @@ import { usePageTracking } from "@/hooks/usePageTracking";
 import { NativeLifecycle } from '@/components/NativeLifecycle';
 import { isNative } from '@/lib/native';
 import { NativeSubscription } from '@/components/NativeSubscription';
+import { NativePushLifecycle } from '@/components/NativePushLifecycle';
+import { NativeBillingLifecycle } from '@/components/NativeBillingLifecycle';
 
 // Every route is split so visitors only download the surface they open.
 const Index = lazy(() => import("./pages/Index"));
@@ -74,6 +76,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <NativeLifecycle />
+          <NativeBillingLifecycle />
+          <NativePushLifecycle />
           <ScrollToTop />
           <PageTracker />
           <Suspense fallback={<PageLoader />}>

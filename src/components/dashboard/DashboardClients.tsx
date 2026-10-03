@@ -95,7 +95,7 @@ export const DashboardClients = ({ restaurant, isDemo }: Props) => {
       return;
     }
     try {
-      await unbanCustomer(customer.id);
+      await unbanCustomer(customer.id, customer.customer_user_id ?? null);
       setCustomers((prev) =>
         prev.map((c) => (c.id === customer.id ? { ...c, is_banned: false, banned_at: null, banned_reason: "", ban_expires_at: null } : c))
       );

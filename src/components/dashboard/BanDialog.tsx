@@ -33,7 +33,8 @@ export const BanDialog = ({ customer, open, onClose, onBanned, restaurantId }: P
       } else if (duration === "30d") {
         expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
       }
-      await banCustomer(customer.id, reason, expiresAt);
+      await banCustomer(customer.id, reason, expiresAt, undefined,
+        "customer_user_id" in customer ? customer.customer_user_id ?? null : null);
       toast.success(t('dashboard.ban.success', { name: customer.customer_name || customer.customer_phone }));
       onBanned();
       onClose();

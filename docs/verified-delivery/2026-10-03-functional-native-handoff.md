@@ -1,0 +1,65 @@
+# CommandeIci functional and native handoff, 3 October 2026
+
+## Ownership and release boundary
+
+Functional source: branch `codex/commandeici-functional-20261003`, based on `origin/main` c5c0279. The functional coordinator owns backend, order reliability, Google/menu import and QR integration. The separate iOS branch `codex/commandeici-ios-free-20261003` owns Apple signing, archive and TestFlight. Each owner edits only its own worktree. Shared client deltas are exchanged by commit after review.
+
+Current business rule: access is free without a card, trial expiry or automatic billing transition. iOS wording is “gratuit jusqu’en 2027”, with no programmed cutoff. RevenueCat is integrated for future use; purchases remain disabled. Backend migration 120 removes application expiry without contacting Stripe or deleting billing history. Native/client source remains `32ad9ccc13aeb2fa0e5b4e876f3b5bacc1ee656d`. The subsequent server-only delta protects legacy Stripe/Shopify callbacks, prospect conversion, promotions and financial email templates. It does not alter the archived native application. No backend/web deployment has occurred at this preparation checkpoint; the exact native checkout auth redirect was appended separately and verified.
+
+## Backend integration order
+
+Apply the tracked migrations in timestamp order, preserving already applied migration history. Important interfaces:
+
+- 110: real orders require confirmed authentication; `place_order_once(UUID, JSONB)` implements request idempotency and prices are recalculated server side.
+- 120: current free access, null trial end dates, free onboarding; matching Edge handlers short circuit checkout, portal and trial reminders before external calls.
+- 130: collision-safe name/city slug publication, including overlapping candidates under concurrency.
+- 140–150: POS owner authorization, canonical configurable pricing and normalization independent of option order.
+- 160: durable UID bans without assigning a ban to another observed account; historical contact restrictions remain. Account deletion permits FK anonymization without restoring the deleted UID.
+- 170: restaurant time zone, overnight hours and DST; direct legacy order RPC permission is revoked in favor of the idempotent wrapper.
+- 180: private capability-based device installation and APNs outbox; repeated owner sync renews the device lease without cancelling pending or processing notifications.
+
+Push install bootstrap must precede token registration. Logout and account deletion must await device revocation before clearing authentication. The native factory must ignore late callbacks from an earlier account. Private device and outbox tables are not readable through anonymous/customer REST.
+
+## Deployment conditions
+
+No production deployment is performed by this handoff. Before deploying, capture current app version, migration ledger and a verified backend backup. Deploy compatible schema/functions before distributing a native build using the new RPCs. Migration 170 revokes the legacy direct order RPC: coordinate web rollout and old-client refresh before that revocation, or old cached clients will receive a permission error. Do not claim zero-downtime rollout without verifying this transition. Coordinate the free app production signal with the separate website publisher.
+
+APNs additionally requires the minimal private provider configuration and Vault worker configuration, `pg_net`/`pg_cron` availability, Edge worker deployment and a real authorized device canary. The worker uses a separate constant-time cron secret check; JWT gateway verification is disabled only for this worker. An empty worker configuration remains inert. Never commit provider keys, runtime credentials or Vault values.
+
+Recovery is coordinated through the private release driver. A pre-publication SQL recovery was rehearsed against a local copy: 26 original functions and ACLs, 26 table owners/ACLs/RLS flags, and both complete demo records matched the captured live state. The SQL acquires locks and refuses any current account, owner, order, subscription or restaurant customer, or any restaurant outside the two exact demos. A negative local test preserved its account and refused recovery before mutations. Private new tables and order data are never dropped. The driver persistently closes this recovery window before public web/TestFlight distribution; that closure was tested without external calls. After publication, keep the compatible client/RPC contracts and use targeted forward fixes or disable APNs dispatch. Never restore the old web artifact alone after migration170, delete received orders, or re-enable trial billing.
+
+## Verification boundaries
+
+Reproducible load scripts are in `scripts/qa/`. They use fictitious owners/customers and an isolated local PostgreSQL instance. HTTP and Realtime scripts target fixed localhost addresses. No public merchant, production slug, real order or indexable test page is created.
+
+The local PostgreSQL test produced 100 unique slugs and 100 orders for 100 concurrent merchants with zero failed transactions; replay did not create orders or increment totals twice. HTTP additionally passed 100 requests and their retries. These results prove those local paths. They do not certify production throughput or 100 simultaneous websocket deliveries.
+
+The local Realtime reception experiment did not pass: the shared Docker VM exhausted memory. A separate isolated runner choice was requested; no other project containers were stopped and global Docker resources were not changed. Do not describe subscriptions alone as delivery success.
+
+Google Places lookup/import is distinct from linking a merchant’s Google Business account. OAuth account linking is not verified/configured. Actual Google/OCR provider success, merchant email confirmation and physical-device APNs reception still require explicit canaries. QR links and local exports can be verified without writing production.
+
+Native simulator/XCTest archive evidence belongs to the iOS owner. Local React/browser tests must not be presented as a signed iOS build or a delivered TestFlight release. TestFlight distribution waits for compatible production backend readiness.
+
+## Final assembled evidence
+
+Native history integrated through `f3caf41` (Apple Release signing configuration and identical opaque icon pixels). Functional core is present via iOS integration `56700c3`; root original core `b9d943c` has equivalent functional changes. No duplicated native import commit is required.
+
+Fresh local checks at 04:54–04:55 Europe/Paris on the assembled client:
+
+- `npm test -- --reporter=dot`: 305 tests in 48 files passed.
+- `npm run typecheck`: exit 0.
+- `npm run lint`: exit 0, 294 warnings, no errors.
+- `npm run build`: exit 0; large bundle warnings remain.
+- `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4282 npm run test:e2e`: 42 desktop/mobile cases passed. Auth/REST writes are intercepted in browser tests.
+- Three affected SQL suites independently rerun on the isolated container: customer account bans, account deletion and APNs outbox passed. The earlier core run covered all 12 SQL suites; no production fixtures were written.
+- Push factory/lifecycle regression set: 33 tests passed, including A→B→A while cleanup is pending and A→B→C while bootstrap is pending.
+
+Production auth configuration originally read at 04:48:52 allowed inscription/profil/reset callbacks but omitted checkout. The coordinator subsequently appended the exact `commandeici://auth/order` callback and reread the live configuration: every previous allowlist entry and site URL was preserved. Signup is enabled, email confirmation required, Google OAuth disabled. Custom SMTP is configured at smtp.resend.com:465, with the CommandeIci sender and a configured password; its value was not exposed. Configuration is not a successful email/physical-device authentication canary. Endpoint reference: https://supabase.com/docs/reference/api/v1-get-auth-service-config.
+
+Detailed logs and independent reviews are retained outside Git in `~/reports/commandeici-functional-2026-10-03/`; reports contain no provider private keys or authentication tokens. Signed native build and TestFlight evidence are owned and delivered by the iOS thread.
+
+Navigation regression review reproduced subscription recreation under a real MemoryRouter. Both native lifecycles now keep their OS/auth listeners stable and use the current router callback through a ref. Ordinary page navigation no longer revokes the current push installation or replays the launch URL.
+
+Independent review closed all identified Critical/Important findings at 04:55: native callback/resume/SDK/factory/lifecycle/widget set 43/43 passed, including a real router navigation reproduction. Minor remaining findings are 294 lint warnings and large generated web chunks. None was hidden by disabling a check. The checkout native redirect configuration prerequisite is now satisfied; actual device/email canaries remain separate.
+
+Server-only final checks: 335 tests in 50 files passed, typecheck passed, lint reported zero errors and the existing294warnings, and all five changed Edge handlers passed Deno check. An independent server review found no new Critical/Important findings. Auth, HMAC and service-role checks remain enforced on mutation paths; Stripe free-mode acknowledgement is intentionally public and has no DB/provider/email side effects. No production fixtures were created.

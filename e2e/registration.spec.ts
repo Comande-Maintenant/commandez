@@ -64,7 +64,7 @@ test('verified owner resumes the full restaurant journey without overwriting the
   await page.reload(); await expect(page.getByText('Etape 4 sur 6')).toBeVisible(); await expect(page.locator('textarea')).toHaveValue('Pizzas maison');
   await page.getByRole('button',{name:'Continuer',exact:true}).click();
   await expect(page.getByText('Etape 5 sur 6')).toBeVisible();
-  await page.getByRole('button',{name:/essai gratuit/i}).click();
+  await page.getByRole('button',{name:/Publier mon établissement/i}).click();
   await expect(page.getByText('https://app.commandeici.com/chez-alice-paris',{exact:true})).toBeVisible();
   expect(publishes).toBe(1);expect(ownerWrites).toBe(0);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);

@@ -1,5 +1,6 @@
 import Capacitor
 import Security
+import UIKit
 
 @objc(SecureSessionPlugin)
 public class SecureSessionPlugin: CAPPlugin, CAPBridgedPlugin {
@@ -16,7 +17,7 @@ public class SecureSessionPlugin: CAPPlugin, CAPBridgedPlugin {
                 kSecAttrService as String: service, kSecAttrAccount as String: key]
     }
     private func key(_ call: CAPPluginCall) -> String? {
-        guard let value = call.getString("key"), value == "commandeici_auth" || value.hasPrefix("commandeici_auth-") else {
+        guard let value = call.getString("key"), value == "commandeici_auth" || value.hasPrefix("commandeici_auth-") || ["commandeici_push_token", "commandeici_push_installation_id", "commandeici_push_installation_secret"].contains(value) else {
             call.reject("Invalid session key"); return nil
         }
         return value
@@ -53,5 +54,81 @@ public class SecureSessionPlugin: CAPPlugin, CAPBridgedPlugin {
         let status = SecItemDelete(query(key) as CFDictionary)
         guard status == errSecSuccess || status == errSecItemNotFound else { call.reject("Session removal failed", String(status)); return }
         call.resolve()
+    }
+}
+
+// Public QR/PDF exports use a share sheet because WKWebView does not support
+// the web application's anchor downloads. Files are isolated and removed when
+// the sheet closes, including cancellation and export failures.
+@objc(FileExportPlugin)
+public class FileExportPlugin: CAPPlugin, CAPBridgedPlugin {
+    private var exportInProgress = false
+    public let identifier = "FileExportPlugin"
+    public let jsName = "FileExport"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "share", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openExternalUrl", returnType: CAPPluginReturnPromise)
+    ]
+
+    @objc func openExternalUrl(_ call: CAPPluginCall) {
+        guard let input = call.getString("url"), let parts = URLComponents(string: input),
+              parts.scheme?.lowercased() == "https", let host = parts.host, !host.isEmpty,
+              parts.user == nil, parts.password == nil, parts.port == nil || parts.port == 443,
+              let url = parts.url else {
+            call.reject("Invalid external URL"); return
+        }
+        DispatchQueue.main.async {
+            UIApplication.shared.open(url, options: [:]) { opened in
+                if opened { call.resolve() }
+                else { call.reject("External browser unavailable") }
+            }
+        }
+    }
+
+    @objc func share(_ call: CAPPluginCall) {
+        let extensions = ["image/png": ".png", "image/svg+xml": ".svg", "application/pdf": ".pdf"]
+        guard let filename = call.getString("filename"),
+              filename.range(of: "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,199}$", options: .regularExpression) != nil,
+              let mimeType = call.getString("mimeType"), let suffix = extensions[mimeType], filename.hasSuffix(suffix),
+              let base64 = call.getString("base64"), base64.utf8.count <= 28 * 1024 * 1024,
+              let data = Data(base64Encoded: base64), !data.isEmpty, data.count <= 20 * 1024 * 1024 else {
+            call.reject("Invalid export file"); return
+        }
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("commandeici-exports", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let url = directory.appendingPathComponent(filename, isDirectory: false)
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try data.write(to: url, options: .atomic)
+        } catch {
+            try? FileManager.default.removeItem(at: directory)
+            call.reject("File export failed"); return
+        }
+        DispatchQueue.main.async { [weak self] in
+            guard let controller = self?.bridge?.viewController, controller.viewIfLoaded?.window != nil else {
+                try? FileManager.default.removeItem(at: directory)
+                call.reject("File export unavailable"); return
+            }
+            guard self?.exportInProgress == false else {
+                try? FileManager.default.removeItem(at: directory)
+                call.reject("File export already in progress"); return
+            }
+            self?.exportInProgress = true
+            let presenter = controller.presentedViewController ?? controller
+            let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            activity.completionWithItemsHandler = { _, completed, _, error in
+                self?.exportInProgress = false
+                try? FileManager.default.removeItem(at: directory)
+                if error != nil { call.reject("File export failed") }
+                else { call.resolve(["completed": completed]) }
+            }
+            if let popover = activity.popoverPresentationController {
+                popover.sourceView = presenter.view
+                popover.sourceRect = CGRect(x: presenter.view.bounds.midX, y: presenter.view.bounds.midY, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+            presenter.present(activity, animated: true)
+        }
     }
 }

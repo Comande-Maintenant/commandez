@@ -89,6 +89,10 @@ function parseLine(line: string): ParsedScheduleDay | null {
     return { day, enabled: false, slots: [] };
   }
 
+  if (/open 24 hours|ouvert 24\s*h|24\s*heures\s*sur\s*24/i.test(rest)) {
+    return { day, enabled: true, slots: [{ open: '00:00', close: '24:00' }] };
+  }
+
   // Split by comma to get individual time ranges
   // "11:00 AM - 2:30 PM, 5:30 - 10:30 PM" -> 2 slots
   // "11:00-14:30, 17:30-22:30" -> 2 slots
@@ -96,8 +100,8 @@ function parseLine(line: string): ParsedScheduleDay | null {
   const slots: ScheduleSlot[] = [];
 
   for (const range of ranges) {
-    // Split by en-dash/em-dash (always), or hyphen only with spaces
-    const parts = range.split(/\s*[\u2013\u2014]\s*|\s+-\s+|\s+to\s+/i);
+    // Google can return ranges with compact hyphens or Unicode dashes.
+    const parts = range.split(/\s*[-\u2013\u2014]\s*|\s+to\s+/i);
     if (parts.length < 2) continue;
 
     const rawOpen = parts[0].trim();
@@ -110,10 +114,11 @@ function parseLine(line: string): ParsedScheduleDay | null {
       fixedOpen = rawOpen + ' ' + ampmMatch[1];
     }
 
-    slots.push({
-      open: to24h(fixedOpen),
-      close: to24h(rawClose),
-    });
+    const open = to24h(fixedOpen);
+    const close = to24h(rawClose);
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(open)
+      || !/^(([01]\d|2[0-3]):[0-5]\d|24:00)$/.test(close)) continue;
+    slots.push({ open, close });
   }
 
   if (slots.length === 0) return null;

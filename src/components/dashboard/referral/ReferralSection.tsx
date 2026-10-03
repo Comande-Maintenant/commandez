@@ -52,7 +52,7 @@ export function ReferralSection({ restaurantId }: Props) {
 
   const handleWhatsApp = () => {
     const msg = encodeURIComponent(
-      t('dashboard.referral.whatsapp_message', { url: referralLink })
+      t('dashboard.referral.whatsapp_message', { code: stats?.referralCode || '', link: referralLink })
     );
     window.open(`https://wa.me/?text=${msg}`, "_blank");
   };
@@ -60,7 +60,7 @@ export function ReferralSection({ restaurantId }: Props) {
   const handleEmail = () => {
     const subject = encodeURIComponent(t('dashboard.referral.email_subject'));
     const body = encodeURIComponent(
-      t('dashboard.referral.email_body', { url: referralLink })
+      t('dashboard.referral.email_body', { code: stats?.referralCode || '', link: referralLink })
     );
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };
@@ -114,7 +114,7 @@ export function ReferralSection({ restaurantId }: Props) {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="text-center p-3 bg-muted rounded-xl">
           <div className="text-lg font-bold text-foreground">{stats.totalReferrals}</div>
           <div className="text-xs text-muted-foreground">{t('dashboard.referral.referrals')}</div>
@@ -122,10 +122,6 @@ export function ReferralSection({ restaurantId }: Props) {
         <div className="text-center p-3 bg-muted rounded-xl">
           <div className="text-lg font-bold text-emerald-600">{stats.completedReferrals}</div>
           <div className="text-xs text-muted-foreground">{t('dashboard.referral.confirmed')}</div>
-        </div>
-        <div className="text-center p-3 bg-muted rounded-xl">
-          <div className="text-lg font-bold text-emerald-600">+{stats.totalBonusWeeks} {t('dashboard.referral.weeks_unit')}</div>
-          <div className="text-xs text-muted-foreground">{t('dashboard.referral.earned')}</div>
         </div>
       </div>
 

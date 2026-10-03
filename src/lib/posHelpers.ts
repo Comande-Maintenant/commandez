@@ -96,6 +96,19 @@ export function formatPOSItemForOrder(person: POSPersonOrder) {
     summary: formatPOSOrderSummary(c),
     price: person.itemPrice,
     quantity: 1,
+    customization_selection: {
+      base_id: c.baseId,
+      viande_ids: c.viandeIds,
+      garnitures: c.garnitures.map(garniture => ({ option_id: garniture.optionId, level: garniture.level })),
+      sauce_ids: c.sauceIds,
+      accompagnement: c.accompagnement ? {
+        option_id: c.accompagnement.optionId,
+        portion: c.accompagnement.portion,
+        sub_sauce_id: c.accompagnement.subSauceId || null,
+      } : null,
+      supplements: c.supplements.filter(supplement => supplement.quantity > 0)
+        .map(supplement => ({ option_id: supplement.optionId, quantity: supplement.quantity })),
+    },
     customization: {
       base: c.baseName,
       viande: c.viandeNames,
@@ -204,6 +217,7 @@ export function buildOrderItems(
   for (const drink of drinks) {
     items.push({
       type: "drink",
+      menu_item_id: drink.menuItemId,
       personLabel: "Boissons",
       name: drink.name,
       price: drink.price,
@@ -214,6 +228,7 @@ export function buildOrderItems(
   for (const dessert of desserts) {
     items.push({
       type: "dessert",
+      menu_item_id: dessert.menuItemId,
       personLabel: "Desserts",
       name: dessert.name,
       price: dessert.price,

@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
-import { fetchOrders, fetchDemoOrders, fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, subscribeToOrders, upsertCustomer, updateCustomerStats, advanceDemoOrder, fetchCustomers, fetchDemoCustomers, fetchRestaurantHours } from "@/lib/api";
+import { fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, advanceDemoOrder, fetchCustomers, fetchDemoCustomers, fetchRestaurantHours } from "@/lib/api";
+import { useRestaurantOrderFeed } from "@/context/RestaurantOrdersContext";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { formatOrderTime } from "@/lib/formatOrderTime";
 import { useLanguage } from "@/context/LanguageContext";
@@ -38,11 +39,10 @@ type KitchenFilter = "active" | "new" | "preparing" | "done";
 
 interface Props {
   restaurant: DbRestaurant;
-  onNewOrderSound?: () => void;
   isDemo?: boolean;
 }
 
-export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) => {
+export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
   const { t, language } = useLanguage();
 
   const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES", de: "de-DE", it: "it-IT", pt: "pt-PT", nl: "nl-NL", ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN" };
@@ -61,13 +61,10 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     { id: "preparing", label: t("dashboard.orders.filter_in_progress") },
     { id: "done", label: t("dashboard.orders.filter_done") },
   ];
-  const [orders, setOrders] = useState<DbOrder[]>([]);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [allMenuItems, setAllMenuItems] = useState<DbMenuItem[]>([]);
   const [outOfStockIngredients, setOutOfStockIngredients] = useState<string[]>(restaurant.out_of_stock_ingredients ?? []);
   const [filter, setFilter] = useState<KitchenFilter>("active");
-  const [loading, setLoading] = useState(true);
-  const [disconnected, setDisconnected] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<DbOrder | null>(null);
   const [rupturesOpen, setRupturesOpen] = useState(false);
   const [banTarget, setBanTarget] = useState<{ customer_name: string; customer_phone: string; restaurant_id: string; id?: string } | null>(null);
@@ -84,130 +81,45 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
     return () => clearInterval(iv);
   }, []);
 
-  // Demo auto-orders
-  const demoIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const prevOrderIdsRef = useRef<Set<string>>(new Set());
-
-  const loadOrders = useCallback(async () => {
-    const data = isDemo
-      ? await fetchDemoOrders(restaurant.id)
-      : await fetchOrders(restaurant.id);
-    if (isDemo) {
-      // Detect new orders for sound notification
-      const newNewOrders = data.filter(
-        (o) => o.status === "new" && !prevOrderIdsRef.current.has(o.id)
-      );
-      if (newNewOrders.length > 0 && prevOrderIdsRef.current.size > 0) {
-        if (onNewOrderSound) onNewOrderSound();
-        setPopupOrder(newNewOrders[0]);
-        if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
-        popupTimerRef.current = setTimeout(() => setPopupOrder(null), 12000);
-      }
-      prevOrderIdsRef.current = new Set(data.map((o) => o.id));
-
-      // Preserve locally-set estimated_ready_at (not stored server-side for demo)
-      setOrders((prev) => {
-        const localEstimates = new Map<string, string>();
-        prev.forEach((o) => {
-          if (o.estimated_ready_at) localEstimates.set(o.id, o.estimated_ready_at);
-        });
-        return data.map((o) => {
-          const localEst = localEstimates.get(o.id);
-          if (!o.estimated_ready_at && localEst) {
-            return { ...o, estimated_ready_at: localEst };
-          }
-          return o;
-        });
-      });
-    } else {
-      setOrders(data);
-    }
-    setLoading(false);
-  }, [restaurant.id, isDemo, onNewOrderSound]);
-
-  const loadCustomers = useCallback(async () => {
-    try {
-      const data = isDemo ? await fetchDemoCustomers(restaurant.id) : await fetchCustomers(restaurant.id);
-      const map = new Map<string, DbCustomer>();
-      data.forEach((c) => map.set(c.customer_phone, c));
-      setCustomersMap(map);
-    } catch {}
-  }, [restaurant.id, isDemo]);
+  const { orders, setOrders, loading, disconnected, notification } = useRestaurantOrderFeed();
+  useEffect(() => {
+    if (!notification) { setPopupOrder(null); return; }
+    const remaining = 12000 - (Date.now() - notification.receivedAt);
+    if (remaining <= 0) return;
+    setPopupOrder(notification.order);
+    if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+    popupTimerRef.current = setTimeout(() => setPopupOrder(null), remaining);
+  }, [notification]);
+  useEffect(() => () => { if (popupTimerRef.current) clearTimeout(popupTimerRef.current); }, []);
+  useEffect(() => {
+    setSelectedOrder(previous => previous ? orders.find(order => order.id === previous.id) ?? null : null);
+  }, [orders]);
 
   useEffect(() => {
-    fetchMenuItems(restaurant.id).then(setMenuItems);
-    fetchAllMenuItems(restaurant.id).then(setAllMenuItems);
-    loadCustomers();
-    fetchRestaurantHours(restaurant.id).then((h) => {
+    let disposed = false;
+    fetchMenuItems(restaurant.id).then(data => { if (!disposed) setMenuItems(data); }).catch(() => {});
+    fetchAllMenuItems(restaurant.id).then(data => { if (!disposed) setAllMenuItems(data); }).catch(() => {});
+    const customers = isDemo ? fetchDemoCustomers(restaurant.id) : fetchCustomers(restaurant.id);
+    customers.then(data => {
+      if (!disposed) setCustomersMap(new Map(data.map(customer => [customer.customer_phone, customer])));
+    }).catch(() => {});
+    fetchRestaurantHours(restaurant.id).then(h => {
+      if (disposed) return;
       if (h.length > 0) {
-        setRestaurantHours(h.map((r: any) => ({ day_of_week: r.day_of_week, is_open: r.is_open, open_time: r.open_time, close_time: r.close_time })));
+        setRestaurantHours(h.map(r => ({ day_of_week: r.day_of_week, is_open: r.is_open, open_time: r.open_time, close_time: r.close_time })));
       } else if (isDemo) {
-        // Default kebab hours for demo: Mon-Sat 11:00-14:30 + 18:00-22:30, closed Sunday
         const demoHours = [
           { day_of_week: 0, is_open: false, open_time: "", close_time: "" },
-          ...([1, 2, 3, 4, 5, 6].map((d) => ({ day_of_week: d, is_open: true, open_time: "11:00", close_time: "22:30" }))),
+          ...([1, 2, 3, 4, 5, 6].map(d => ({ day_of_week: d, is_open: true, open_time: "11:00", close_time: "22:30" }))),
         ];
         setRestaurantHours(demoHours);
       }
     }).catch(() => {});
-  }, [restaurant.id, loadCustomers]);
+    return () => { disposed = true; };
+  }, [restaurant.id, isDemo]);
 
-  useEffect(() => {
-    loadOrders();
-    if (isDemo) {
-      const demoPoll = setInterval(() => {
-        loadOrders().catch(() => {});
-      }, 5000);
-      return () => clearInterval(demoPoll);
-    }
-    const unsub = subscribeToOrders(restaurant.id, (newOrder) => {
-      setOrders((prev) => {
-        const exists = prev.find((o) => o.id === newOrder.id);
-        if (exists) {
-          return prev.map((o) => (o.id === newOrder.id ? newOrder : o));
-        }
-        if (newOrder.status === "new") {
-          if (onNewOrderSound) onNewOrderSound();
-          // Show popup
-          setPopupOrder(newOrder);
-          if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
-          popupTimerRef.current = setTimeout(() => setPopupOrder(null), 12000);
-        }
-        return [newOrder, ...prev];
-      });
-      setDisconnected(false);
-    });
-
-    const healthCheck = setInterval(() => {
-      loadOrders().catch(() => setDisconnected(true));
-    }, 60000);
-
-    return () => {
-      unsub();
-      clearInterval(healthCheck);
-    };
-  }, [restaurant.id, loadOrders]);
-
-  // Auto-cancel stale pending orders for "always open" mode
-  useEffect(() => {
-    if (restaurant.availability_mode !== "always") return;
-    const interval = setInterval(() => {
-      const now = Date.now();
-      setOrders((prev) =>
-        prev.map((o) => {
-          if (o.status !== "new") return o;
-          const elapsed = now - new Date(o.created_at).getTime();
-          if (elapsed > 15 * 60 * 1000) {
-            updateOrderStatus(o.id, "done").catch(() => {});
-            return { ...o, status: "done" as const };
-          }
-          return o;
-        })
-      );
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [restaurant.availability_mode]);
+  // An unacknowledged order must stay visible until the merchant acts.
+  // Elapsed time is shown on cards; it never silently completes an order.
 
   // Get customer from map, or build a minimal fallback from order data
   const getCustomerForOrder = (order: DbOrder): DbCustomer | null => {
@@ -321,24 +233,8 @@ export const DashboardOrders = ({ restaurant, onNewOrderSound, isDemo }: Props) 
   const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));
 
-    // Update customer stats when completing
-    if (newStatus === "done" && !isDemo) {
-      const order = orders.find((o) => o.id === orderId);
-      if (order) {
-        upsertCustomer({
-          restaurant_id: restaurant.id,
-          customer_phone: order.customer_phone,
-          customer_name: order.customer_name,
-          customer_email: (order as any).customer_email || undefined,
-        }).then((customer) => {
-          const orderItems = ((order.items as any[]) || []).map((i: any) => ({
-            name: i.name,
-            quantity: i.quantity || 1,
-          }));
-          updateCustomerStats(customer.id, Number(order.total), orderItems).catch(console.error);
-        }).catch(console.error);
-      }
-    }
+    // place_order records customer totals once at creation. Completing or
+    // reopening an order must never increment those server-owned totals again.
 
     // Auto-advance to next kitchen order or close detail
     // In kitchen: "ready" means the order leaves the kitchen → move to next

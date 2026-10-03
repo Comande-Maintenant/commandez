@@ -9,6 +9,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { requireSuperAdmin } from "../_shared/auth.ts";
+import { FREE_ACCESS } from '../_shared/access-policy.ts';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -146,7 +147,7 @@ Deno.serve(async (req: Request) => {
     <ul style="padding-left:20px;font-size:14px;color:#374151;">
       <li style="margin-bottom:6px;">Regarde ta page et vérifie que tout est bon</li>
       <li style="margin-bottom:6px;">Si tu veux activer le système de commande, réponds à cet email</li>
-      <li style="margin-bottom:6px;">On active ton compte, tu testes gratuitement pendant 4 semaines</li>
+      <li style="margin-bottom:6px;">${FREE_ACCESS ? 'On active ton compte, le service est gratuit actuellement' : 'On active ton compte, tu testes gratuitement pendant 4 semaines'}</li>
     </ul>
 
     <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:16px;margin:24px 0;">
@@ -206,8 +207,8 @@ Deno.serve(async (req: Request) => {
       .update({
         owner_id: userId,
         account_status: "active",
-        subscription_status: "trial",
-        trial_end_date: new Date(Date.now() + (freeMonths ? freeMonths * 30 : 28) * 24 * 60 * 60 * 1000).toISOString(),
+        subscription_status: FREE_ACCESS ? 'free' : 'trial',
+        trial_end_date: FREE_ACCESS ? null : new Date(Date.now() + (freeMonths ? freeMonths * 30 : 28) * 24 * 60 * 60 * 1000).toISOString(),
       })
       .eq("id", restaurantId);
     if (updateErr) {
@@ -285,7 +286,7 @@ Deno.serve(async (req: Request) => {
     </table>
 
     <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:12px;padding:16px;margin:24px 0;">
-      <p style="font-size:14px;color:#92400E;margin:0;"><strong>Essai gratuit 4 semaines</strong> - Aucun engagement, aucun prélèvement pendant l'essai.</p>
+      <p style="font-size:14px;color:#92400E;margin:0;">${FREE_ACCESS ? '<strong>Le service est gratuit actuellement.</strong> Aucune carte bancaire requise. Des offres payantes pourront être proposées plus tard.' : '<strong>Essai gratuit 4 semaines</strong> - Aucun engagement, aucun prélèvement pendant l\'essai.'}</p>
     </div>
 
     <p style="font-size:14px;">Une question ? Réponds directement à cet email.</p>

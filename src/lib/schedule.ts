@@ -11,6 +11,33 @@ interface ScheduleDay {
   slots: ScheduleSlot[];
 }
 
+function minutes(value: string, closing = false): number | null {
+  if (typeof value !== 'string' || !/^\d{2}:\d{2}$/.test(value)) return null;
+  const [hours, mins] = value.split(':').map(Number);
+  if (closing && hours === 24 && mins === 0) return 1440;
+  return hours >= 0 && hours < 24 && mins >= 0 && mins < 60 ? hours * 60 + mins : null;
+}
+
+function slotsFor(schedule: ScheduleDay[], day: number): ScheduleSlot[] {
+  const entry = schedule.find(s => s?.day === day);
+  if (!entry?.enabled || !Array.isArray(entry.slots)) return [];
+  return entry.slots.filter(slot => {
+    if (!slot) return false;
+    const open = minutes(slot.open), close = minutes(slot.close, true);
+    return open !== null && close !== null && open !== close;
+  }).slice().sort((a, b) => minutes(a.open)! - minutes(b.open)!);
+}
+
+function localClock(timeZone: string): { day: number; time: number } {
+  const now = new Date();
+  const options: Intl.DateTimeFormatOptions = { timeZone, weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' };
+  let parts: Intl.DateTimeFormatPart[];
+  try { parts = new Intl.DateTimeFormat('en-US', options).formatToParts(now); }
+  catch { parts = new Intl.DateTimeFormat('en-US', { ...options, timeZone: 'Europe/Paris' }).formatToParts(now); }
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find(part => part.type === type)!.value;
+  return { day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(value('weekday')), time: Number(value('hour')) * 60 + Number(value('minute')) };
+}
+
 /**
  * Check if restaurant is currently open based on availability mode and schedule.
  * Returns { isOpen, nextOpenInfo, currentCloseTime, todaySlots } where:
@@ -40,38 +67,39 @@ export function checkRestaurantAvailability(restaurant: DbRestaurant): {
     return { isOpen: restaurant.is_open, nextOpenInfo: null, currentCloseTime: null, todaySlots: [] };
   }
 
-  const now = new Date();
-  const currentDay = now.getDay(); // 0=sunday
-  const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-
-  const todaySchedule = schedule.find((s) => s.day === currentDay);
-  const todaySlots = todaySchedule?.enabled ? todaySchedule.slots : [];
+  const timeZone = (restaurant as DbRestaurant & { time_zone?: string }).time_zone || 'Europe/Paris';
+  const { day: currentDay, time: currentTime } = localClock(timeZone);
+  const todaySlots = slotsFor(schedule, currentDay);
 
   // Check if currently open
-  if (todaySchedule?.enabled) {
-    for (const slot of todaySchedule.slots) {
-      if (currentTime >= slot.open && currentTime < slot.close) {
+  for (const slot of todaySlots) {
+      const open = minutes(slot.open)!, close = minutes(slot.close, true)!;
+      if (currentTime >= open && (close < open || currentTime < close)) {
         return { isOpen: true, nextOpenInfo: null, currentCloseTime: slot.close, todaySlots };
       }
+  }
+  // A service starting yesterday remains open after midnight, even if today is disabled.
+  for (const slot of slotsFor(schedule, (currentDay + 6) % 7)) {
+    const open = minutes(slot.open)!, close = minutes(slot.close, true)!;
+    if (close < open && currentTime < close) {
+      return { isOpen: true, nextOpenInfo: null, currentCloseTime: slot.close, todaySlots };
     }
   }
 
   // Not currently open - find next opening
   // Check remaining slots today
-  if (todaySchedule?.enabled) {
-    for (const slot of todaySchedule.slots) {
-      if (currentTime < slot.open) {
+  for (const slot of todaySlots) {
+      if (currentTime < minutes(slot.open)!) {
         return { isOpen: false, nextOpenInfo: { isToday: true, time: slot.open }, currentCloseTime: null, todaySlots };
       }
-    }
   }
 
   // Check next 7 days
   for (let offset = 1; offset <= 7; offset++) {
     const checkDay = (currentDay + offset) % 7;
-    const daySchedule = schedule.find((s) => s.day === checkDay);
-    if (daySchedule?.enabled && daySchedule.slots.length > 0) {
-      const firstSlot = daySchedule.slots[0];
+    const daySlots = slotsFor(schedule, checkDay);
+    if (daySlots.length > 0) {
+      const firstSlot = daySlots[0];
       return { isOpen: false, nextOpenInfo: { isToday: false, dayIndex: checkDay, time: firstSlot.open }, currentCloseTime: null, todaySlots };
     }
   }

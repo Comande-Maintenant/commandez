@@ -1,3 +1,4 @@
+import { suspendNativePushBeforeSignOut } from '@/services/native-push-client';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,15 +17,37 @@ export function DeleteAccountButton() {
   async function remove() {
     if (confirmation !== 'DELETE' || busy) return;
     setBusy(true); setError('');
-    const { error } = await supabase.rpc('delete_own_account' as never, { p_confirmation: confirmation } as never);
-    if (error) {
-      setError(error.message.includes('cancel_subscription') ? t('account.cancel_first') : t('client.delete_error'));
-      setBusy(false); return;
+    try {
+      const { data: before, error: beforeError } = await supabase.auth.getUser();
+      if (beforeError || !before.user) throw new Error('Session unavailable');
+      const leavingUserId = before.user.id;
+      await suspendNativePushBeforeSignOut();
+      const { data: current, error: currentError } = await supabase.auth.getUser();
+      if (currentError || current.user?.id !== leavingUserId) {
+        setConfirmation(''); throw new Error('Account changed');
+      }
+      const { data, error: deletionError } = await supabase.rpc('delete_own_account' as never, { p_confirmation: confirmation } as never);
+      if (deletionError) {
+        setError(deletionError.message.includes('cancel_subscription') ? t('account.cancel_first') : t('client.delete_error'));
+        return;
+      }
+      if (!(data as { deleted?: boolean })?.deleted) throw new Error('Deletion unconfirmed');
+      const { data: after, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) throw sessionError;
+      if (after.session?.user.id && after.session.user.id !== leavingUserId) {
+        setConfirmation(''); throw new Error('Account changed');
+      }
+      await supabase.auth.signOut();
+      for (const key of ['cm_customer','commandeici_onboarding_draft','commandeici_creation_key']) {
+        try { localStorage.removeItem(key); } catch { /* deletion does not depend on preferences */ }
+      }
+      toast.success(t('account.deleted'));
+      navigate('/', { replace: true });
+    } catch {
+      setError(t('client.delete_error'));
+    } finally {
+      setBusy(false);
     }
-    await supabase.auth.signOut();
-    for (const key of ['cm_customer','commandeici_onboarding_draft','commandeici_creation_key']) localStorage.removeItem(key);
-    toast.success(t('account.deleted'));
-    navigate('/', { replace: true });
   }
   return <AlertDialog>
     <AlertDialogTrigger asChild><Button variant="outline" className="w-full text-destructive">{t('account.delete')}</Button></AlertDialogTrigger>

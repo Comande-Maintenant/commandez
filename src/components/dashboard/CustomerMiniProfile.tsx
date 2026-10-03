@@ -53,7 +53,7 @@ export const CustomerMiniProfile = ({ customer, restaurantId, onClose, onUpdated
 
   const handleUnban = async () => {
     try {
-      await unbanCustomer(customer.id);
+      await unbanCustomer(customer.id, customer.customer_user_id ?? null);
       onUpdated({ ...customer, is_banned: false, banned_at: null, banned_reason: "" });
       toast.success(t("customer.ban.unbanned"));
     } catch {

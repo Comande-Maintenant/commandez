@@ -30,7 +30,8 @@ export async function searchPlaces(query: string): Promise<GooglePlaceResult[]> 
 
 export async function getPlaceDetails(placeId: string): Promise<GooglePlaceResult> {
   const data = await invokeGooglePlaces({ action: 'details', placeId });
-  return data?.result;
+  if (!data?.result?.place_id || !data.result.name) throw new Error('Établissement introuvable. Réessayez la recherche.');
+  return data.result;
 }
 
 export async function searchNearby(lat: number, lng: number): Promise<GooglePlaceResult[]> {
@@ -58,7 +59,7 @@ export async function getPlacePhotos(placeId: string): Promise<GooglePlacePhoto[
   return photoUrls.map((p: any) => ({
     url: p.url,
     urlHigh: p.urlHigh,
-    attribution: "",
+    attribution: p.attribution ?? "",
     width: p.width ?? 800,
     height: p.height ?? 600,
   }));

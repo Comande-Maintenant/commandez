@@ -1,0 +1,35 @@
+\set ON_ERROR_STOP on
+BEGIN;
+CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA extensions;
+SELECT extensions.plan(13);
+INSERT INTO auth.users(id,email,email_confirmed_at) VALUES('17000000-0000-4000-8000-000000000001','schedule-owner@example.test',now());
+INSERT INTO owners(id,email,phone) VALUES('17000000-0000-4000-8000-000000000001','schedule-owner@example.test','');
+INSERT INTO restaurants(id,slug,name,owner_id,is_open,is_accepting_orders,availability_mode,schedule)
+VALUES('17000000-0000-4000-8000-000000000002','qa-schedule-paris','QA Schedule','17000000-0000-4000-8000-000000000001',true,true,'auto','[{"day":0,"enabled":false,"slots":[]}]');
+INSERT INTO menu_items(id,restaurant_id,name,price,category,product_type,enabled,is_alcohol) VALUES('17000000-0000-4000-8000-000000000003','17000000-0000-4000-8000-000000000002','Pizza',12,'Pizzas','simple',true,false);
+SELECT set_config('request.jwt.claim.sub','17000000-0000-4000-8000-000000000001',true),set_config('request.jwt.claims','{"sub":"17000000-0000-4000-8000-000000000001","role":"authenticated"}',true);
+CREATE TEMP TABLE schedule_payload AS SELECT '{"restaurant_id":"17000000-0000-4000-8000-000000000002","customer_name":"Schedule Client","customer_phone":"","order_type":"collect","items":[{"menu_item_id":"17000000-0000-4000-8000-000000000003","quantity":1}],"total":12,"subtotal":12}'::jsonb payload;
+SELECT extensions.throws_ok($$SELECT place_order_once('17000000-0000-4000-8000-000000000004',(SELECT payload FROM schedule_payload))$$,'P0001','restaurant_unavailable','closed automatic schedule is enforced by server');
+UPDATE restaurants SET availability_mode='always',is_open=false WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.lives_ok($$SELECT place_order_once('17000000-0000-4000-8000-000000000005',(SELECT payload FROM schedule_payload))$$,'always-open ignores the manual toggle consistently with frontend');
+UPDATE restaurants SET availability_mode='manual' WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-03 00:30+00'),false,'manual toggle remains authoritative in manual mode');
+UPDATE restaurants SET availability_mode='auto',schedule='[{"day":5,"enabled":true,"slots":[{"open":"22:00","close":"02:00"}]},{"day":6,"enabled":false,"slots":[]}]' WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-02 23:30+00'),true,'Friday night stays open into disabled Saturday');
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-03 00:00+00'),false,'overnight closing boundary is exclusive');
+UPDATE restaurants SET schedule='[{"day":0,"enabled":true,"slots":[{"open":"22:00","close":"02:00"}]}]' WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-04 23:00+00'),true,'Sunday night crosses week boundary');
+UPDATE restaurants SET schedule='[{"day":6,"enabled":true,"slots":[{"open":"13:00","close":"15:00"}]}]' WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-03 12:00+00'),true,'restaurant Paris zone is used instead of server UTC');
+UPDATE restaurants SET time_zone='Asia/Tokyo',schedule='[{"day":6,"enabled":true,"slots":[{"open":"09:00","close":"11:00"}]}]' WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-03 01:00+00'),true,'configured restaurant zone overrides Paris');
+UPDATE restaurants SET time_zone='Europe/Paris',schedule='[{"day":0,"enabled":true,"slots":[{"open":"01:00","close":"03:00"}]}]' WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.ok(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-25 00:30+00') AND restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-25 01:30+00'),'both repeated local hours during DST change stay open');
+UPDATE restaurants SET schedule='[{"day":6,"enabled":true,"slots":[{"open":"00:00","close":"24:00"}]}]' WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-03 21:59+00'),true,'24:00 is end of local day');
+UPDATE restaurants SET schedule='[]',is_open=true WHERE id='17000000-0000-4000-8000-000000000002';
+SELECT extensions.is(restaurant_is_open_at('17000000-0000-4000-8000-000000000002','2026-10-03 12:00+00'),true,'empty automatic schedule keeps manual fallback');
+SELECT extensions.is((SELECT public_restaurant_payload(r)->>'time_zone' FROM restaurants r WHERE id='17000000-0000-4000-8000-000000000002'),'Europe/Paris','public payload includes the same restaurant zone');
+SELECT extensions.ok(NOT (SELECT public_restaurant_payload(r) ? 'owner_id' FROM restaurants r WHERE id='17000000-0000-4000-8000-000000000002'),'public payload still hides private owner identity');
+SELECT * FROM extensions.finish();
+ROLLBACK;

@@ -1,3 +1,4 @@
+import { setRestaurantHead } from '@/lib/restaurant-head';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer, Maximize } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
@@ -127,67 +128,6 @@ const DAY_KEYS = [
 
 const DEMO_SLUG = "antalya-kebab-moneteau";
 
-function setDemoMeta(isDemo: boolean) {
-  // Helper to set or remove a meta tag
-  const setMeta = (name: string, content: string, attr = "name") => {
-    let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-    if (!el) {
-      el = document.createElement("meta");
-      el.setAttribute(attr, name);
-      document.head.appendChild(el);
-    }
-    el.setAttribute("content", content);
-  };
-  // Kiosk URLs must never be indexed (duplicate of the public restaurant page)
-  if (new URLSearchParams(window.location.search).get("kiosk") === "true") {
-    setMeta("robots", "noindex, nofollow");
-    // Canonical points to the clean public URL
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute("href", `${window.location.origin}${window.location.pathname}`);
-  }
-  if (isDemo) {
-    setMeta("description", "Page de demonstration de commandeici, application de commande en ligne pour restaurants. Decouvrez comment vos clients passeront commande. Essayez gratuitement.");
-    setMeta("robots", "noindex, nofollow");
-    setMeta("og:title", "Demo - Application de commande en ligne pour restaurants", "property");
-    setMeta("og:description", "Decouvrez notre application de commande en ligne. Cette page est une demonstration avec un menu exemple.", "property");
-    setMeta("og:type", "website", "property");
-    // Remove any Restaurant schema.org JSON-LD
-    document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => {
-      try {
-        const data = JSON.parse(el.textContent || "");
-        if (data["@type"] === "Restaurant" || data["@type"] === "FoodEstablishment" || data["@type"] === "LocalBusiness") {
-          el.remove();
-        }
-      } catch { /* ignore */ }
-    });
-    // Add SoftwareApplication schema
-    let ldEl = document.getElementById("demo-ld-json");
-    if (!ldEl) {
-      ldEl = document.createElement("script");
-      ldEl.id = "demo-ld-json";
-      ldEl.setAttribute("type", "application/ld+json");
-      ldEl.textContent = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        name: "commandeici",
-        applicationCategory: "BusinessApplication",
-        description: "Application de commande en ligne pour restaurants",
-        url: "https://commandeici.com",
-      });
-      document.head.appendChild(ldEl);
-    }
-  } else {
-    // Clean up demo meta if navigating away
-    const robotsMeta = document.querySelector('meta[name="robots"]');
-    if (robotsMeta?.getAttribute("content") === "noindex, nofollow") robotsMeta.remove();
-    document.getElementById("demo-ld-json")?.remove();
-  }
-}
 
 const RestaurantPage = () => {
   const { slug: paramSlug } = useParams<{ slug: string }>();
@@ -199,6 +139,8 @@ const RestaurantPage = () => {
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [requestAttempt, setRequestAttempt] = useState(0);
   const [activeOrderCount, setActiveOrderCount] = useState(0);
   const [lastOrderItems, setLastOrderItems] = useState<any[] | null>(null);
   const [customerName, setCustomerName] = useState<string | null>(null);
@@ -250,19 +192,13 @@ const RestaurantPage = () => {
 
   useEffect(() => {
     if (!slug) return;
+    let cancelled = false;
     setLoading(true);
+    setLoadError(false);
+    setRestaurant(null);
+    setMenuItems([]);
     fetchRestaurantBySlug(slug).then(async (r) => {
-      if (r) {
-        // Real-time trial check: if trial_end_date is past, treat as expired
-        if (r.subscription_status === "trial" && r.trial_end_date) {
-          const trialEnd = new Date(r.trial_end_date);
-          // Add bonus_weeks
-          if (r.bonus_weeks) trialEnd.setDate(trialEnd.getDate() + r.bonus_weeks * 7);
-          if (trialEnd < new Date()) {
-            r = { ...r, subscription_status: "expired" };
-          }
-        }
-      }
+      if (cancelled) return;
       setRestaurant(r);
       if (r) {
         // If deactivated, increment visit count and skip menu fetch
@@ -277,37 +213,9 @@ const RestaurantPage = () => {
           return;
         }
         const items = await fetchMenuItems(r.id);
+        if (cancelled) return;
         setMenuItems(items);
-        // SEO: demo/prospect pages get noindex, real restaurants get their name
-        if ((r as any).is_demo) {
-          document.title = "Demonstration - Application de commande en ligne pour restaurants | commandeici";
-          setDemoMeta(true);
-        } else if ((r as any).account_status === "prospect") {
-          document.title = `${r.name} - ${r.city || ""}`;
-          setDemoMeta(true); // noindex for prospects
-        } else {
-          document.title = `${r.name} - ${r.city || ""}`;
-          setDemoMeta(false);
-        }
-        // OG meta tags for social sharing (client-side, works for Google + pre-rendered previews)
-        if (!(r as any).is_demo) {
-          const setMeta = (name: string, content: string, attr = "name") => {
-            let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-            if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-            el.setAttribute("content", content);
-          };
-          const ogTitle = `${r.name} - Commandez en ligne`;
-          const ogDesc = r.city ? `Decouvrez la carte de ${r.name} a ${r.city} et commandez en ligne.` : `Decouvrez la carte de ${r.name} et commandez en ligne.`;
-          const ogImage = r.image || r.cover_image || `/images/covers/${getDefaultCoverImage((r as any).cuisine).split("/").pop()}`;
-          setMeta("og:title", ogTitle, "property");
-          setMeta("og:description", ogDesc, "property");
-          setMeta("og:type", "website", "property");
-          setMeta("og:url", window.location.href, "property");
-          if (ogImage.startsWith("http")) setMeta("og:image", ogImage, "property");
-          setMeta("twitter:title", ogTitle);
-          setMeta("twitter:description", ogDesc);
-          setMeta("description", ogDesc);
-        }
+        setRestaurantHead(r, items, isKiosk);
         // Inject reorder from profile page
         try {
           const reorderRaw = localStorage.getItem("cm_reorder");
@@ -356,8 +264,13 @@ const RestaurantPage = () => {
         } catch { /* ignore */ }
       }
       setLoading(false);
+    }).catch(() => {
+      if (cancelled) return;
+      setLoadError(true);
+      setLoading(false);
     });
-  }, [slug]);
+    return () => { cancelled = true; };
+  }, [slug, isKiosk, isDemoRoute, requestAttempt]);
 
   // Read customer identity from localStorage
   useEffect(() => {
@@ -469,7 +382,6 @@ const RestaurantPage = () => {
   }, []);
 
   const isDemo = !!(restaurant as any)?.is_demo;
-  const isProspect = (restaurant as any)?.account_status === "prospect";
   const primary = useMemo(() => softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color]);
   const bg = UNIVERSAL_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
@@ -505,6 +417,19 @@ const RestaurantPage = () => {
     );
   }
 
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <div role="alert" className="text-center max-w-sm space-y-4">
+          <p className="text-foreground">{t("restaurant.load_error")}</p>
+          <button type="button" className="rounded-xl bg-primary px-5 py-3 font-medium text-primary-foreground" onClick={() => setRequestAttempt(attempt => attempt + 1)}>
+            {t("common.retry")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (!restaurant) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -528,48 +453,6 @@ const RestaurantPage = () => {
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
           <p className="text-muted-foreground text-sm">{t("restaurant.deactivated")}</p>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            {t("nav.back")}
-          </a>
-        </div>
-      </div>
-    );
-  }
-
-  // Subscription pending_payment - page not yet activated (skip for demo/prospect)
-  if (restaurant.subscription_status === "pending_payment" && !isDemo && !isProspect) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center max-w-sm mx-auto px-4">
-          {restaurant.image && (
-            <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
-          )}
-          <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
-          <p className="text-muted-foreground text-sm">{t("restaurant.activating")}</p>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            {t("nav.back")}
-          </a>
-        </div>
-      </div>
-    );
-  }
-
-  // Subscription expired/cancelled/past_due - public page unavailable (skip for demo/prospect)
-  if (
-    !isDemo && !isProspect && (
-      restaurant.subscription_status === "expired" ||
-      restaurant.subscription_status === "cancelled" ||
-      restaurant.subscription_status === "past_due"
-    )
-  ) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center max-w-sm mx-auto px-4">
-          {restaurant.image && (
-            <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
-          )}
-          <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
-          <p className="text-muted-foreground text-sm">{t("restaurant.unavailable")}</p>
           <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
             {t("nav.back")}
           </a>

@@ -11,7 +11,7 @@
 - Supabase : DB + Auth + Storage + Realtime + Edge Functions
 - Framer Motion (animations), React Query (data fetching)
 - React Router (routing)
-- Stripe Billing (paiements recurrents via Edge Functions)
+- Accès actuellement gratuit, sans carte bancaire, expiration automatique ni achats natifs actifs. RevenueCat est intégré pour un usage futur ; les achats restent désactivés.
 
 ## Backend Supabase
 - **Projet actif** : `tgtvkzmokypztdudwzne` (`CommandeIci`, region Paris `eu-west-3`)
@@ -19,7 +19,7 @@
 - **Configuration active** : variables d'environnement locales/de déploiement, jamais dans le repo
 - **Secrets** : gestionnaire de secrets Supabase et environnement CI uniquement
 - **Edge functions deployees** : 15 fonctions dans `supabase/functions/`, inventaire pilote par `supabase/config.toml`
-- **Cron** : nettoyage demo toutes les 4h et trial-reminders chaque jour a 3h UTC, secrets chiffres dans Vault
+- **Cron historique** : nettoyage demo toutes les 4h et trial-reminders chaque jour à 3h UTC. Le handler trial-reminders devient inactif après déploiement du lot gratuit ; aucun e-mail ni changement de statut quand FREE_ACCESS est actif.
 - **Secrets** : gestionnaire Supabase + trousseau macOS ; aucun secret dans Git
 
 ## Theme Shopify historique (ne plus deployer sur commandeici.com)
@@ -59,9 +59,9 @@
 - `src/pages/RestaurantPage.tsx` : menu publique (`/:slug`)
 - `src/pages/AdminPage.tsx` : dashboard admin (`/admin/:slug`)
 - `src/pages/InscriptionPage.tsx` : onboarding + capture `?ref=CODE`
-- `src/pages/ChoisirPlanPage.tsx` : selection plan + redirect checkout Stripe (`/choisir-plan`)
-- `src/pages/AbonnementConfirmePage.tsx` : polling post-checkout (`/abonnement-confirme`)
-- `src/pages/AbonnementPage.tsx` : page reactivation post-expiration (`/abonnement`)
+- `src/pages/ChoisirPlanPage.tsx` : ancienne URL de facturation, redirection vers accès gratuit (`/choisir-plan`)
+- `src/pages/AbonnementConfirmePage.tsx` : ancienne URL de facturation, redirection gratuite (`/abonnement-confirme`)
+- `src/pages/AbonnementPage.tsx` : ancienne URL de facturation, redirection gratuite (`/abonnement`)
 
 ### Data / Auth
 - `src/lib/api.ts` : fonctions Supabase CRUD
@@ -71,7 +71,7 @@
 - `src/hooks/useCrossDomainAuth.ts` : gestion cookie `commandeici_user`
 
 ### Fonctionnalites
-- `src/components/auth/SubscriptionGate.tsx` : gate abonnement (dual table: subscriptions + legacy restaurants)
+- `src/components/auth/SubscriptionGate.tsx` : accès gratuit, avec maintien des contrôles d’authentification et de propriété
 - `src/services/shopify-checkout.ts` : integration Shopify historique, non utilisee par le parcours actif
 - `src/services/referral.ts` : logique parrainage
 - `src/components/dashboard/referral/ReferralSection.tsx` : UI parrainage
@@ -99,20 +99,17 @@
 ## Parrainage
 - Colonnes restaurants : referral_code (unique, auto-gen 6 chars), referred_by, bonus_weeks, trial_end_date, subscription_status
 - Table referrals : referrer_id, referee_id, status (pending/completed/expired), bonus_weeks_granted
-- Inscription avec `?ref=CODE` : filleul 8 semaines, parrain +4 semaines
-- Trigger DB : auto-genere code + set trial 4 semaines a l'INSERT
+- Identifiants de parrainage conservés ; aucun bonus fictif de durée pendant l’accès gratuit.
+- Trigger DB du lot gratuit : génère le code, statut free et trial_end_date NULL à l’INSERT.
 
-## Abonnement (paywall Stripe)
-- **Plan vendu dans l'interface** : mensuel 29.99 EUR/mois
-- **Offre de lancement** : 1 EUR/mois pendant 3 mois via coupon Stripe
-- **Trial applicatif** : 30 jours sans CB avant passage au checkout
-- **Checkout** : Stripe Checkout cree par `stripe-checkout`, metadata restaurant et plan cote serveur
-- **Lifecycle** : pending_payment -> trial -> active -> past_due/cancelled/expired
-- **Webhooks actifs** : checkout, abonnement et factures traites par `stripe-webhooks`
-- **Shopify** : colonnes et fonction webhook conservees uniquement pour compatibilite historique
-- **Codes promo** : LANCEMENT (30j gratuits), BIENVENUE (+14j trial), MOITIE (50% 1er cycle)
-- **SubscriptionGate** : check table subscriptions, fallback restaurants (legacy), banniere trial, ecran past_due
-- **Cron trial-reminders** : daily 3AM UTC, J+7, J+21, J+28, expiration J+30 et relances post-expiration
+## Accès gratuit et compatibilité facturation
+- Offre actuelle web : accès gratuit sans carte bancaire ni expiration automatique.
+- Texte iOS autorisé : gratuit jusqu’en 2027 ; aucune date de bascule ou facturation automatique.
+- Migration 20261003012000 : restaurants/subscriptions en statut free, dates de fin d’essai NULL ; historique Stripe conservé.
+- Politique Edge `_shared/access-policy.ts` : FREE_ACCESS=true ; checkout, portail et relances d’essai désactivés avant tout appel externe.
+- RevenueCat est intégré sur iOS avec achats désactivés. Aucun produit ou achat proposé.
+- Les anciennes URL de facturation redirigent vers le dashboard du propriétaire ou l’inscription.
+- Livraison locale et déploiement production sont des états distincts : vérifier les migrations/fonctions déployées avant d’annoncer le backend gratuit actif.
 
 ## Tables Supabase principales
 - **restaurants** : slug, name, categories, primary_color, customization_config, referral_code, referred_by, bonus_weeks, trial_end_date, subscription_status, owner_id

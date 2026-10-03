@@ -8,7 +8,9 @@ const REPEAT_KEY = "dashboard-notification-repeat";
 function getStored<T>(key: string, fallback: T): T {
   try {
     const v = localStorage.getItem(key);
-    return v !== null ? (typeof fallback === "number" ? Number(v) as unknown as T : typeof fallback === "boolean" ? (v === "true") as unknown as T : v as unknown as T) : fallback;
+    if (v === null) return fallback;
+    if (typeof fallback === "number") return (Number.isFinite(Number(v)) ? Math.min(100, Math.max(0, Number(v))) : fallback) as T;
+    return typeof fallback === "boolean" ? (v === "true") as unknown as T : v as unknown as T;
   } catch { return fallback; }
 }
 
@@ -29,19 +31,22 @@ function isFullyKiosk(): boolean {
 
 // ── Visual fallback: title blink ──
 let titleBlinkInterval: ReturnType<typeof setInterval> | null = null;
-const originalTitle = typeof document !== "undefined" ? document.title : "";
+let titleBlinkTimeout: ReturnType<typeof setTimeout> | null = null;
+let originalTitle = "";
 
 function startTitleBlink(message: string) {
   stopTitleBlink();
+  originalTitle = document.title;
   let on = true;
   titleBlinkInterval = setInterval(() => {
     document.title = on ? message : originalTitle;
     on = !on;
   }, 1000);
-  setTimeout(stopTitleBlink, 30000);
+  titleBlinkTimeout = setTimeout(stopTitleBlink, 30000);
 }
 
 function stopTitleBlink() {
+  if (titleBlinkTimeout) { clearTimeout(titleBlinkTimeout); titleBlinkTimeout = null; }
   if (titleBlinkInterval) {
     clearInterval(titleBlinkInterval);
     titleBlinkInterval = null;
@@ -169,6 +174,7 @@ export function useNotificationSound(): SoundControls {
   const play = useCallback(() => {
     if (mutedRef.current) return;
 
+    stopRepeat();
     playOnce();
 
     // Title blink if tab not focused
@@ -177,7 +183,6 @@ export function useNotificationSound(): SoundControls {
     }
 
     // Repeat logic: ring again every 30s if no interaction
-    stopRepeat();
     if (repeatEnabledRef.current) {
       setIsRepeating(true);
       repeatCountRef.current = 0;
@@ -191,6 +196,10 @@ export function useNotificationSound(): SoundControls {
       }, REPEAT_INTERVAL_MS);
     }
   }, [playOnce, stopRepeat]);
+
+  useEffect(() => {
+    if (muted || !repeatEnabled) stopRepeat();
+  }, [muted, repeatEnabled, stopRepeat]);
 
   // Stop repeat on any user interaction
   useEffect(() => {
@@ -215,30 +224,30 @@ export function useNotificationSound(): SoundControls {
   }, []);
 
   const setVolume = useCallback((v: number) => {
-    setVolumeState(v);
-    localStorage.setItem(VOLUME_KEY, String(v));
+    const next = Number.isFinite(v) ? Math.min(100, Math.max(0, v)) : 70;
+    volumeRef.current = next;
+    setVolumeState(next);
+    try { localStorage.setItem(VOLUME_KEY, String(next)); } catch { /* keep the in-memory setting */ }
   }, []);
 
   const setMuted = useCallback((m: boolean) => {
+    mutedRef.current = m;
     setMutedState(m);
-    localStorage.setItem(MUTED_KEY, String(m));
+    try { localStorage.setItem(MUTED_KEY, String(m)); } catch { /* keep the in-memory setting */ }
   }, []);
 
   const toggleMuted = useCallback(() => {
-    setMutedState((prev) => {
-      const next = !prev;
-      localStorage.setItem(MUTED_KEY, String(next));
-      return next;
-    });
-  }, []);
+    setMuted(!mutedRef.current);
+  }, [setMuted]);
 
   const setSoundType = useCallback((t: SoundType) => {
     setSoundTypeState(t);
   }, []);
 
   const setRepeatEnabled = useCallback((r: boolean) => {
+    repeatEnabledRef.current = r;
     setRepeatEnabledState(r);
-    localStorage.setItem(REPEAT_KEY, String(r));
+    try { localStorage.setItem(REPEAT_KEY, String(r)); } catch { /* keep the in-memory setting */ }
   }, []);
 
   return {

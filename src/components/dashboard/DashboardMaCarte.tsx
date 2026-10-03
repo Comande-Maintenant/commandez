@@ -1,3 +1,4 @@
+import { randomUuid } from '@/lib/uuid';
 import { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -232,7 +233,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
   const handleDuplicateItem = async (item: DbMenuItem) => {
     if (isDemo) {
-      const demoId = crypto.randomUUID();
+      const demoId = randomUuid();
       const copy = { ...item, id: demoId, name: item.name + t('dashboard.menu.copy_suffix') };
       setItems((prev) => [...prev, copy]);
       toast.success(t('dashboard.menu.item_duplicated'));
@@ -273,7 +274,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
   const handleAddItem = async () => {
     if (!newItem.name || !newItem.price) return;
     if (isDemo) {
-      const demoId = crypto.randomUUID();
+      const demoId = randomUuid();
       setItems((prev) => [...prev, {
         id: demoId,
         restaurant_id: restaurant.id,
@@ -830,7 +831,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
                   <button
                     onClick={() => setEditItem({
                       ...editItem,
-                      supplements: [...(editItem.supplements ?? []), { id: crypto.randomUUID(), name: "", price: 0 }],
+                      supplements: [...(editItem.supplements ?? []), { id: randomUuid(), name: "", price: 0 }],
                     })}
                     className="text-xs font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
                   >

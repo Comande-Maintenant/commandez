@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14?target=deno";
+import { FREE_ACCESS, freeAccessResponse } from '../_shared/access-policy.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,6 +15,12 @@ const PRICE_TO_PLAN: Record<string, string> = {
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
+  }
+  // Acknowledge legacy callbacks while the offer is free; no billing, DB or email side effects.
+  if (FREE_ACCESS) {
+    return new Response(JSON.stringify({ received: true, ...freeAccessResponse() }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 
   const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");

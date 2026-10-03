@@ -38,9 +38,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Photographier votre menu pour l importer dans votre restaurant.</string>
+	<string>Photographier votre menu pour l’importer dans votre restaurant.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Trouver votre restaurant a proximite pour faciliter son inscription.</string>
+	<string>Trouver votre restaurant à proximité pour faciliter son inscription.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
