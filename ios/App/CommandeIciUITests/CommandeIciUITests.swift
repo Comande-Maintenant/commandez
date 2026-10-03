@@ -33,4 +33,15 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "QR PNG partage iOS"; shot.lifetime = .keepAlways; add(shot)
     }
+    func testNativeDemoPublicLinkCopy() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment["COMMANDEICI_QA_QR"] = "1"
+        app.launch()
+        let copy = app.buttons["Copier"].firstMatch
+        XCTAssertTrue(copy.waitForExistence(timeout: 15))
+        copy.tap()
+        XCTAssertTrue(app.buttons["Copie !"].firstMatch.waitForExistence(timeout: 3), app.debugDescription)
+    }
+
 }
