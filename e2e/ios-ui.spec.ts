@@ -74,3 +74,22 @@ for(const view of ['page','stats']){
   if(view==='stats')await expect(page.getByRole('tab',{name:'Ce mois',exact:true})).toBeVisible();
  });
 }
+for(const product of [{name:'Tacos',base:'Tacos Normal',price:8},{name:'Assiette',base:'Grande assiette',price:11}])for(const count of [1,2,3]){
+ test(`${product.name} permits ${count} meats with the corresponding price on the public demo`,async({page})=>{
+  await page.goto('/demo?lang=fr',{waitUntil:'networkidle'});
+  await page.getByRole('button',{name:new RegExp('^'+product.name)}).first().click();
+  await page.getByRole('button',{name:new RegExp('^'+product.base)}).click();
+  const next=page.getByTestId('customizer-next');await expect(next).toBeDisabled();
+  const meats=['Kebab','Poulet','Steak'];
+  for(const meat of meats.slice(0,count))await page.getByRole('button',{name:meat,exact:true}).click();
+  await expect(next).toBeEnabled();await next.click();
+  for(let step=0;step<10&&await page.getByTestId('customizer-add').count()===0;step++){
+   const full=page.getByRole('button',{name:'Complet',exact:true});
+   if(await full.isVisible())await full.click();
+   else {await expect(next).toBeEnabled();await next.click();}
+  }
+  const add=page.getByTestId('customizer-add');await expect(add).toHaveText(new RegExp(`${(product.price+(count-1)*2).toFixed(2).replace('.','\\.')} €`));await add.click();
+  const cart=page.getByRole('button',{name:/Voir la commande/});await expect(cart).toBeVisible();await cart.click();
+  await expect(page.getByRole('button',{name:new RegExp('^Commander - '+(product.price+(count-1)*2).toFixed(2).replace('.','\\.'))})).toBeVisible();
+ });
+}

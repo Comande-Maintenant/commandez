@@ -457,12 +457,14 @@ export const ProductCustomizer = ({
     if (!currentStep.required) return true;
     if (currentStep.step_type === "recap") return true;
     const sel = getStepSelections(currentStep.step_key);
-    // For viande step with a specific count, require exactly that many
-    if (currentStep.step_key === "viande" && maxViandes > 1 && maxViandes < 99) {
-      return sel.length === maxViandes;
+    if (currentStep.step_key === "viande") {
+      // A base's maximum is a ceiling. Explicitly named meat counts stay exact.
+      const fixedCount = item.name.match(/(\d+)\s*viandes?/i);
+      if (fixedCount) return sel.length >= 1 && sel.length === Number(fixedCount[1]) && sel.length <= maxViandes;
+      return sel.length >= 1 && sel.length <= maxViandes;
     }
     return sel.length > 0;
-  }, [currentStep, getStepSelections, maxViandes]);
+  }, [currentStep, getStepSelections, maxViandes, item.name]);
 
   const tName = (nameTranslations: Record<string, string> | undefined, fallback: string) => {
     return nameTranslations?.[language] || fallback;

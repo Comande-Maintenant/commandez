@@ -151,4 +151,46 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(app.staticTexts["Votre commande"].firstMatch.frame.minY, 50)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Panier client iOS"; shot.lifetime = .keepAlways; add(shot)
     }
+
+    func testNativeTacosWithOneMeat() {
+        checkNativeMeatSelection(product: "Tacos", base: "Tacos Normal", meats: ["Kebab"], price: "8.00")
+    }
+
+    func testNativeAssietteWithTwoMeats() {
+        checkNativeMeatSelection(product: "Assiette", base: "Grande assiette", meats: ["Kebab", "Poulet"], price: "13.00")
+    }
+
+    private func checkNativeMeatSelection(product: String, base: String, meats: [String], price: String) {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
+        app.launchArguments = []
+        app.launch()
+        let card = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS 'Illustration'", product)).firstMatch
+        XCTAssertTrue(card.waitForExistence(timeout: 15), app.debugDescription)
+        for _ in 0..<6 { if card.isHittable { break }; app.swipeUp() }
+        card.tap()
+        let size = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", base)).firstMatch
+        XCTAssertTrue(size.waitForExistence(timeout: 5), app.debugDescription)
+        size.tap()
+        let next = app.buttons["Suivant"].firstMatch
+        XCTAssertTrue(next.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertFalse(next.isEnabled)
+        for meat in meats {
+            app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND NOT label CONTAINS 'Illustration'", meat)).firstMatch.tap()
+        }
+        XCTAssertTrue(next.isEnabled)
+        next.tap()
+        let addButton = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Ajouter à la commande'")).firstMatch
+        for _ in 0..<10 {
+            if addButton.exists { break }
+            let full = app.buttons["Complet"].firstMatch
+            if full.exists { full.tap() } else { XCTAssertTrue(next.isEnabled, app.debugDescription); next.tap() }
+        }
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(addButton.label.contains(price + " €"), addButton.label)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = product + " prix et viandes iOS"; shot.lifetime = .keepAlways; add(shot)
+        addButton.tap()
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+    }
 }
