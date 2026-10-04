@@ -1,4 +1,5 @@
 import { useDashboardAuth } from '@/hooks/useDashboardAuth';
+import { PageExit } from '@/components/PageExit';
 import { isNative } from '@/lib/native';
 import { navigateBack } from '@/lib/navigation';
 import { nativePushStatus } from '@/services/native-push-client';
@@ -169,9 +170,17 @@ const AdminPage = () => {
     }
   };
 
+  const recoveryClassName = "relative min-h-screen flex items-center justify-center bg-background px-4 pt-[calc(4rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))]";
+  const recoveryExit = (
+    <div className="absolute inset-x-0 top-0 px-4 pt-[calc(0.5rem+env(safe-area-inset-top,0px))] pb-2">
+      <PageExit fallback={isDemo ? '/decouvrir' : '/'} />
+    </div>
+  );
+
   if (loading || !authChecked) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div dir={isRTL ? 'rtl' : 'ltr'} className={recoveryClassName}>
+        {recoveryExit}
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
@@ -179,7 +188,8 @@ const AdminPage = () => {
 
   if (!isDemo && authError === 'unavailable') {
     return (
-      <div role="alert" className="min-h-screen flex flex-col gap-4 items-center justify-center bg-background">
+      <div dir={isRTL ? 'rtl' : 'ltr'} role="alert" className={`${recoveryClassName} flex-col gap-4`}>
+        {recoveryExit}
         <p>{t('auth.generic_error')}</p>
         <Button onClick={() => window.location.reload()}>{t('common.retry')}</Button>
       </div>
@@ -189,7 +199,8 @@ const AdminPage = () => {
   // Auth gate - skip for demo
   if (!isDemo && authError === "not_logged_in") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div dir={isRTL ? 'rtl' : 'ltr'} className={recoveryClassName}>
+        {recoveryExit}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">{t("dashboard.admin.login_required")}</h1>
           <p className="text-muted-foreground mb-4">{t("dashboard.admin.login_required_desc")}</p>
@@ -201,7 +212,8 @@ const AdminPage = () => {
 
   if (restaurantError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div dir={isRTL ? 'rtl' : 'ltr'} className={recoveryClassName}>
+        {recoveryExit}
         <div role="alert" className="text-center space-y-4">
           <p>{t('auth.generic_error')}</p>
           <Button onClick={retryRestaurant}>{t('common.retry')}</Button>
@@ -212,7 +224,8 @@ const AdminPage = () => {
 
   if (!restaurant) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div dir={isRTL ? 'rtl' : 'ltr'} className={recoveryClassName}>
+        {recoveryExit}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">{t("dashboard.admin.not_found")}</h1>
           <Link to="/connexion" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">{t("dashboard.admin.back")}</Link>
@@ -224,7 +237,8 @@ const AdminPage = () => {
   // Owner check - skip for demo
   if (!isDemo && (!restaurant.owner_id || !authUserId || authUserId !== restaurant.owner_id)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div dir={isRTL ? 'rtl' : 'ltr'} className={recoveryClassName}>
+        {recoveryExit}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">{t("dashboard.admin.access_denied")}</h1>
           <p className="text-muted-foreground mb-4">{t("dashboard.admin.not_owner")}</p>
