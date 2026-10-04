@@ -72,7 +72,13 @@ final class CommandeIciUITests: XCTestCase {
         if keyboardGuide.waitForExistence(timeout: 1) { keyboardGuide.tap() }
         field.typeText("zzzz-no-product")
         XCTAssertTrue(app.staticTexts["Aucun plat trouvé. Essayez un autre mot."].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
-        let clear = app.buttons["Effacer la recherche"].firstMatch
+        // There is also a reset action below the empty-result text. With
+        // the keyboard open, AX can order that covered action first. Select
+        // the clear control on the input row instead.
+        let clearActions = app.buttons.matching(identifier: "Effacer la recherche").allElementsBoundByIndex
+        guard let clear = clearActions.first(where: { abs($0.frame.midY - field.frame.midY) < 4 }) else {
+            XCTFail("The search row must expose its clear action"); return
+        }
         XCTAssertTrue(clear.isHittable, app.debugDescription)
         clear.tap()
         // WK exposes a truncated placeholder as AX value when a field is empty.
