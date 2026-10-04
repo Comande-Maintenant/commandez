@@ -75,6 +75,9 @@ test("a customer can configure a kebab and add it to the order", async ({
   await expect(page).toHaveURL(/\/order$/);
   await page.getByPlaceholder("Your name").fill("Browser Test");
   await page.getByPlaceholder("Phone number").fill("0612345678");
+  await expect(page.getByPlaceholder("Your name")).toHaveValue("Browser Test");
+  await expect(page.getByPlaceholder("Phone number")).toHaveValue("0612345678");
+  await expect(page.getByRole("button", { name: /^Confirm -/ })).toBeEnabled();
   await page.getByRole("button", { name: /^Confirm -/ }).click();
 
   await expect(page).toHaveURL(/\/suivi\/[0-9a-f-]{36}$/);

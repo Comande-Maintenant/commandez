@@ -68,8 +68,12 @@ export function usePageTracking() {
     if (fullPath === lastPath.current) return;
     lastPath.current = fullPath;
 
-    // Don't track super-admin views (that's us, not real traffic)
-    if (fullPath === "/super-admin") return;
+    let demoPath = fullPath;
+    try { demoPath = decodeURI(demoPath); } catch { /* Malformed paths remain outside the local demo. */ }
+    demoPath = demoPath.toLowerCase().replace(/\/+$/, "");
+
+    // Don't track super-admin views or local-only commerce demonstrations.
+    if (fullPath === "/super-admin" || ["/decouvrir", "/demo/epicerie", "/demo/fleuriste"].includes(demoPath)) return;
 
     const { page_type, side } = classifyPage(fullPath);
     const utms = getUtmParams();

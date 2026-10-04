@@ -2,6 +2,7 @@ import { useDashboardAuth } from '@/hooks/useDashboardAuth';
 import { isNative } from '@/lib/native';
 import { nativePushStatus } from '@/services/native-push-client';
 import { DemoOrderControls } from '@/components/DemoOrderControls';
+import {MerchantSetup} from '@/components/dashboard/MerchantSetup';
 import { NativeOrderNotifications } from '@/components/NativeOrderNotifications';
 import { lazy, Suspense, useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
@@ -104,15 +105,15 @@ const AdminPage = () => {
   };
   const [historyOpen, setHistoryOpen] = useState(false);
 
-  // Show the tour only after a successful load, and cancel it on navigation.
+  // The actionable guide is inline. The legacy tour is opt-in from help only.
   useEffect(() => {
-    if (!restaurant?.slug) return;
+    if (!restaurant?.slug || isDemo || new URLSearchParams(window.location.search).get('tour')!=='1') return;
     let completed = false;
     try { completed = Boolean(localStorage.getItem(`cm_onboarding_done_${restaurant.slug}`)); } catch { /* show the tour if preferences cannot be read */ }
     if (completed) return;
     const timeout = setTimeout(() => setShowOnboarding(true), 1000);
     return () => clearTimeout(timeout);
-  }, [restaurant?.slug]);
+  }, [restaurant?.slug,isDemo]);
 
   // PWA install prompt
   useEffect(() => {
@@ -363,7 +364,8 @@ const AdminPage = () => {
 
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-          {isDemo && activeView === "cuisine" && <DemoOrderControls restaurantId={restaurant.id} />}
+          {isDemo && (activeView === "cuisine" || activeView === "caisse") && <DemoOrderControls restaurantId={restaurant.id} onNavigate={handleViewChange} compact={activeView==='caisse'} />}
+          {!isDemo && authUserId===restaurant.owner_id && (activeView==='cuisine'||activeView==='gerer') && <MerchantSetup key={`${authUserId}_${restaurant.id}`} restaurant={restaurant} ownerUserId={authUserId} onNavigate={handleViewChange}/>}
           {!isDemo && <NativeOrderNotifications ownerUserId={restaurant.owner_id} />}
           {/* Audio unlock banner for mobile */}
           {isOpsView(activeView) && !sound.audioUnlocked && (

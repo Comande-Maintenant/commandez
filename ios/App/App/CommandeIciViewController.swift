@@ -1,7 +1,93 @@
 import Capacitor
 import WebKit
+import UIKit
 
 class CommandeIciViewController: CAPBridgeViewController {
+    private let openingMinimumDuration: TimeInterval = 2.0
+    private var openingCover: UIView?
+    private var openingLogo: UIImageView?
+    private var openingStarted: CFTimeInterval?
+    private var openingObservation: NSKeyValueObservation?
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let cover = UIView()
+        cover.backgroundColor = .white
+        cover.isAccessibilityElement = true
+        cover.accessibilityLabel = "Commandeici"
+        cover.accessibilityIdentifier = "commandeici-opening"
+        cover.accessibilityViewIsModal = true
+        cover.translatesAutoresizingMaskIntoConstraints = false
+        let logo = UIImageView(image: UIImage(named: "LaunchMark"))
+        logo.contentMode = .scaleAspectFit
+        logo.translatesAutoresizingMaskIntoConstraints = false
+        let wordmark = UILabel()
+        wordmark.font = .systemFont(ofSize: 32, weight: .heavy)
+        wordmark.textAlignment = .center
+        wordmark.translatesAutoresizingMaskIntoConstraints = false
+        let name = NSMutableAttributedString(string: "Commandeici", attributes: [.foregroundColor: UIColor(red: 0, green: 45/255, blue: 25/255, alpha: 1)])
+        name.addAttribute(.foregroundColor, value: UIColor(red: 36/255, green: 133/255, blue: 30/255, alpha: 1), range: NSRange(location: 8, length: 3))
+        wordmark.attributedText = name
+        cover.addSubview(logo)
+        cover.addSubview(wordmark)
+        view.addSubview(cover)
+        NSLayoutConstraint.activate([
+            cover.leadingAnchor.constraint(equalTo: view.leadingAnchor), cover.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            cover.topAnchor.constraint(equalTo: view.topAnchor), cover.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            logo.centerXAnchor.constraint(equalTo: cover.centerXAnchor), logo.centerYAnchor.constraint(equalTo: cover.centerYAnchor, constant: -34),
+            logo.widthAnchor.constraint(equalToConstant: 176), logo.heightAnchor.constraint(equalToConstant: 176),
+            wordmark.centerXAnchor.constraint(equalTo: cover.centerXAnchor), wordmark.centerYAnchor.constraint(equalTo: cover.centerYAnchor, constant: 86),
+            wordmark.leadingAnchor.constraint(greaterThanOrEqualTo: cover.leadingAnchor, constant: 24),
+            wordmark.trailingAnchor.constraint(lessThanOrEqualTo: cover.trailingAnchor, constant: -24)
+        ])
+        openingCover = cover
+        openingLogo = logo
+        webView?.accessibilityElementsHidden = true
+        openingObservation = webView?.observe(\.isLoading, options: [.new]) { [weak self] _, _ in
+            DispatchQueue.main.async { self?.dismissOpeningWhenReady() }
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard openingStarted == nil, openingCover != nil else { return }
+        // Start after the first native presentation, while WK loads underneath.
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let logo = self.openingLogo else { return }
+            self.openingStarted = CACurrentMediaTime()
+            if !UIAccessibility.isReduceMotionEnabled {
+                UIView.animateKeyframes(withDuration: 1.8, delay: 0, options: [.calculationModeCubic]) {
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45) { logo.transform = CGAffineTransform(scaleX: 1.025, y: 1.025) }
+                    UIView.addKeyframe(withRelativeStartTime: 0.45, relativeDuration: 0.55) { logo.transform = .identity }
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.openingMinimumDuration) { [weak self] in self?.dismissOpeningWhenReady() }
+            // Let the normal application show its recovery state if WK stalls.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 8) { [weak self] in self?.dismissOpeningWhenReady(force: true) }
+        }
+    }
+
+    private func dismissOpeningWhenReady(force: Bool = false) {
+        guard let cover = openingCover, let started = openingStarted,
+              CACurrentMediaTime() - started >= openingMinimumDuration,
+              force || webView?.isLoading != true else { return }
+        openingCover = nil
+        openingObservation = nil
+        #if DEBUG
+        // Simulator evidence records actual cover visibility, never user data.
+        let evidence: [String: Any] = ["visibleSeconds": CACurrentMediaTime() - started, "reduceMotion": UIAccessibility.isReduceMotionEnabled, "forcedRecovery": force]
+        if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
+           let data = try? JSONSerialization.data(withJSONObject: evidence) {
+            try? data.write(to: directory.appendingPathComponent("opening-evidence.json"), options: .atomic)
+        }
+        #endif
+        UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.24, animations: { cover.alpha = 0 }) { [weak self] _ in
+            cover.removeFromSuperview()
+            self?.webView?.accessibilityElementsHidden = false
+            UIAccessibility.post(notification: .screenChanged, argument: nil)
+        }
+    }
+
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(SecureSessionPlugin())
         bridge?.registerPluginInstance(FileExportPlugin())

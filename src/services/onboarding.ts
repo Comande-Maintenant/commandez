@@ -94,7 +94,7 @@ function slugify(name: string): string {
 // Reserve collisions atomically in complete_onboarding, never via a client-side
 // read of other merchants' private records. Keep candidates stable across retries.
 const RESERVED_SLUGS = new Set([
-  'demo', 'inscription', 'connexion', 'signup', 'order', 'profil', 'admin',
+  'demo', 'decouvrir', 'inscription', 'connexion', 'signup', 'order', 'profil', 'admin',
   'abonnement', 'choisir-plan', 'abonnement-confirme', 'suivi', 'super-admin',
   'unsubscribe', 'upload', 'mot-de-passe-oublie', 'reinitialiser-mot-de-passe',
 ]);

@@ -1,5 +1,95 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+    func testNativeGroceryDemo() { checkCommerceDemo(name: "Épicerie", product: "Panier de saison") }
+    func testNativeFloristDemo() { checkCommerceDemo(name: "Fleuriste", product: "Bouquet de saison") }
+    private func checkCommerceDemo(name: String, product: String) {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = []
+        app.launch()
+        let discover = app.buttons["Tester sans créer de compte"].firstMatch
+        XCTAssertTrue(discover.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertFalse(app.otherElements["commandeici-opening"].exists, "Opening must leave the application accessible")
+        discover.tap()
+        let sector = app.links.matching(NSPredicate(format: "label CONTAINS %@", name)).firstMatch
+        XCTAssertTrue(sector.waitForExistence(timeout: 10), app.debugDescription)
+        sector.tap()
+        let addButton = app.buttons["Ajouter " + product].firstMatch
+        XCTAssertTrue(addButton.waitForExistence(timeout: 10), app.debugDescription)
+        for _ in 0..<5 { if addButton.isHittable { break }; app.swipeUp() }
+        addButton.tap()
+        let basket = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Voir mon panier'")).firstMatch
+        XCTAssertTrue(basket.waitForExistence(timeout: 5), app.debugDescription)
+        basket.tap()
+        let simulate = app.buttons["Simuler la commande"].firstMatch
+        XCTAssertTrue(simulate.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertLessThanOrEqual(simulate.frame.maxY, app.frame.height - 34)
+        simulate.tap()
+        for label in ["Préparer la commande", "Marquer comme prête", "Commande retirée"] {
+            let action = app.buttons[label].firstMatch
+            XCTAssertTrue(action.waitForExistence(timeout: 5), app.debugDescription)
+            for _ in 0..<4 { if action.isHittable { break }; app.swipeUp() }
+            action.tap()
+        }
+        let signup = app.links["Créer ma page gratuitement"].firstMatch
+        XCTAssertTrue(signup.waitForExistence(timeout: 5), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = name + " commande locale retirée"; shot.lifetime = .keepAlways; add(shot)
+    }
+
+    func testNativeFirstLaunchInvitesDemo() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = []
+        app.launch()
+        let demo = app.buttons["Tester sans créer de compte"].firstMatch
+        XCTAssertTrue(demo.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(demo.isHittable, "Primary demo action must be available on first launch")
+        demo.tap()
+        let restaurant = app.links.matching(NSPredicate(format: "label CONTAINS 'Restauration'")).firstMatch
+        XCTAssertTrue(restaurant.waitForExistence(timeout: 10), app.debugDescription)
+        restaurant.tap()
+        let receive = app.buttons["Recevoir une commande"].firstMatch
+        XCTAssertTrue(receive.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(receive.isHittable, "The inline guide must leave its first action accessible")
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Découverte et guide démo iOS"; shot.lifetime = .keepAlways; add(shot)
+    }
+
+    func testNativeMenuSearchAndClear() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
+        app.launchArguments = []
+        app.launch()
+        let field = app.webViews.searchFields.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        if !field.isHittable { app.swipeUp() }
+        field.tap()
+        // iOS may present its own first-use bilingual keyboard guide. Its
+        // modal consumes the first outside tap, including a tap on Clear.
+        let keyboardGuide = app.buttons.matching(NSPredicate(format: "label == 'Continue' OR label == 'Continuer'")).firstMatch
+        if keyboardGuide.waitForExistence(timeout: 1) { keyboardGuide.tap() }
+        field.typeText("zzzz-no-product")
+        XCTAssertTrue(app.staticTexts["Aucun plat trouvé. Essayez un autre mot."].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        // There is also a reset action below the empty-result text. With
+        // the keyboard open, AX can order that covered action first. Select
+        // the clear control on the input row instead.
+        let clearActions = app.buttons.matching(identifier: "Effacer la recherche").allElementsBoundByIndex
+        guard let clear = clearActions.first(where: { abs($0.frame.midY - field.frame.midY) < 4 }) else {
+            XCTFail("The search row must expose its clear action"); return
+        }
+        XCTAssertTrue(clear.isHittable, app.debugDescription)
+        clear.tap()
+        // WK exposes a truncated placeholder as AX value when a field is empty.
+        // The cleared state removes its action and restores the actual products.
+        let cleared = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: clear)
+        XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 3), .completed, "Clear must leave an empty search")
+        XCTAssertFalse((field.value as? String ?? "").contains("zzzz-no-product"))
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Recherche carte iOS"; shot.lifetime = .keepAlways; add(shot)
+    }
+
     func testNativeStartupAndRegistration() {
         continueAfterFailure = false
         let app = XCUIApplication()

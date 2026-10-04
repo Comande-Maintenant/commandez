@@ -6,15 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DbMenuItem } from "@/types/database";
+import { MenuItemImage } from '@/components/MenuItemImage';
 
 interface CartSheetProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   menuItems?: DbMenuItem[];
+  showPhotos?: boolean;
   onScrollToCategory?: (category: string) => void;
 }
 
-export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }: CartSheetProps) => {
+export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory, showPhotos = true }: CartSheetProps) => {
   const { items, totalItems, subtotal, updateQuantity, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
   const { t, tMenu, tText } = useLanguage();
@@ -48,7 +50,7 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
       {/* Only render trigger when used standalone (not controlled) */}
       {open === undefined && (
         <SheetTrigger asChild>
-          <button className="relative p-2">
+          <button className="relative min-h-11 min-w-11 p-2" aria-label={t('cart.your_cart')}>
             <ShoppingBag className="h-6 w-6 text-foreground" />
             <AnimatePresence>
               {totalItems > 0 && (
@@ -81,7 +83,8 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
           <>
             <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3">
               {items.map((item) => (
-                <div key={item.id} className="flex gap-3 p-3 bg-secondary/50 rounded-xl">
+                <div key={item.id} className="flex flex-wrap gap-3 p-3 bg-white border border-border rounded-2xl">
+                  {showPhotos && <MenuItemImage item={item.menuItem} className="h-14 w-14 shrink-0 rounded-xl" />}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium text-foreground">{tMenu(item.menuItem).name}</h4>
                     {item.viandeChoice && (
@@ -151,14 +154,14 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
                       {(item.totalPrice * item.quantity).toFixed(2)} €
                     </p>
                   </div>
-                  <div className="flex flex-col items-end justify-between">
-                    <button onClick={() => removeItem(item.id)} className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors" aria-label={t("cart.remove")}>
+                  <div className="w-full flex items-center justify-between">
+                    <button onClick={() => removeItem(item.id)} className="p-2 min-h-11 min-w-11 flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors" aria-label={t("cart.remove")}>
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-full bg-background"
+                        className="p-2 min-h-11 min-w-11 flex items-center justify-center rounded-full bg-background"
                         aria-label={t("cart.decrease")}
                       >
                         <Minus className="h-3 w-3" />
@@ -166,7 +169,7 @@ export const CartSheet = ({ open, onOpenChange, menuItems, onScrollToCategory }:
                       <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-full bg-background"
+                        className="p-2 min-h-11 min-w-11 flex items-center justify-center rounded-full bg-background"
                         aria-label={t("cart.increase")}
                       >
                         <Plus className="h-3 w-3" />

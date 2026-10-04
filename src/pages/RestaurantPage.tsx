@@ -7,6 +7,8 @@ import { fetchRestaurantBySlug, fetchMenuItems, incrementDeactivationVisits, fet
 import { checkRestaurantAvailability, canPlaceOrder } from "@/lib/schedule";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
 import type { UniversalCustomizationData } from "@/types/customization";
+import { MenuSearch } from '@/components/restaurant/MenuSearch';
+import { matchesMenuSearch } from '@/lib/menu-search';
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { isItemUnavailable, getItemRuptureReason } from "@/lib/baseIngredients";
 import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
@@ -24,7 +26,7 @@ import { KioskSplashScreen } from "@/components/kiosk/KioskSplashScreen";
 import { KioskConfirmation } from "@/components/kiosk/KioskConfirmation";
 import { KioskInactivityTimer } from "@/components/kiosk/KioskInactivityTimer";
 
-const DEFAULT_PRIMARY = "#10B981";
+const DEFAULT_PRIMARY = "#187A26";
 const UNIVERSAL_BG = "#FFF8F0";
 
 function parseHexToHSL(hex: string): { h: number; s: number; l: number } {
@@ -146,6 +148,7 @@ const RestaurantPage = () => {
   const [customerName, setCustomerName] = useState<string | null>(null);
   const [customerBanned, setCustomerBanned] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("");
+  const [searchQuery,setSearchQuery] = useState('');
   const [customizationData, setCustomizationData] = useState<UniversalCustomizationData | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [itemModalOpen, setItemModalOpen] = useState(false);
@@ -156,7 +159,7 @@ const RestaurantPage = () => {
   const [scrolled, setScrolled] = useState(false);
   const heroSentinelRef = useRef<HTMLDivElement>(null);
   const { totalItems, subtotal, addItem, clearCart } = useCart();
-  const { t, tCategory, isRTL } = useLanguage();
+  const { t, tCategory, tMenu, isRTL } = useLanguage();
   const { updateSection } = useVisitorTracking(restaurant?.id ?? null);
   const { isKiosk, config: kioskConfig } = useKioskMode();
   const [kioskSplash, setKioskSplash] = useState(true);
@@ -337,7 +340,7 @@ const RestaurantPage = () => {
 
     sections.forEach(([, el]) => { if (el) observer.observe(el); });
     return () => observer.disconnect();
-  }, [loading, restaurant, menuItems]);
+  }, [loading, restaurant, menuItems,searchQuery]);
 
   // Scroll sentinel: detect when hero is out of view
   useEffect(() => {
@@ -369,7 +372,8 @@ const RestaurantPage = () => {
     const el = sectionRefs.current[cat];
     if (el) {
       // Manual scroll with offset for sticky header (works on all WebViews)
-      const headerOffset = 80;
+      const nav = document.querySelector('.menu-category-nav');
+      const headerOffset = nav ? (parseFloat(getComputedStyle(nav).top) || 0) + nav.getBoundingClientRect().height + 12 : 80;
       const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
       try {
         window.scrollTo({ top: y, behavior: "smooth" });
@@ -382,7 +386,7 @@ const RestaurantPage = () => {
   }, []);
 
   const isDemo = !!(restaurant as any)?.is_demo;
-  const primary = useMemo(() => isDemo ? "#10B981" : softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color, isDemo]);
+  const primary = useMemo(() => isDemo ? "#187A26" : softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color, isDemo]);
   const bg = UNIVERSAL_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
   const primaryDark = useMemo(() => darken(primary, 0.15), [primary]);
@@ -485,15 +489,17 @@ const RestaurantPage = () => {
   }
 
   const categories = restaurant.categories ?? [];
-  const currentCategory = activeCategory || categories[0];
   const catTranslations = restaurant.category_translations;
   const availability = checkRestaurantAvailability(restaurant);
   const orderCheck = canPlaceOrder(restaurant);
   const payments = restaurant.payment_methods ?? [];
 
+  const visibleItems = menuItems.filter(item => item.product_type !== 'supplement' && matchesMenuSearch(searchQuery,{...tMenu(item),category:tCategory(item.category,catTranslations)}));
   const activeCategories = categories.filter((cat) =>
-    cat !== "Personnalisation" && menuItems.some((m) => m.category === cat)
+    cat !== "Personnalisation" && visibleItems.some((m) => m.category === cat)
   );
+
+  const currentCategory = activeCategories.includes(activeCategory)?activeCategory:activeCategories[0];
 
   const initial = restaurant.name?.charAt(0)?.toUpperCase() || "R";
 
@@ -893,6 +899,8 @@ const RestaurantPage = () => {
           </div>
         ) : (
           <>
+            <MenuSearch value={searchQuery} onChange={setSearchQuery} count={visibleItems.length}/>
+            {visibleItems.length===0&&searchQuery.trim()&&<div className="py-8 text-center"><p className="text-sm text-slate-600">{t('journey.no_results')}</p><button className="mt-3 min-h-11 rounded-xl px-4 font-medium text-emerald-800" onClick={()=>setSearchQuery('')}>{t('journey.clear_search')}</button></div>}
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
               <div
@@ -928,7 +936,7 @@ const RestaurantPage = () => {
             {/* Menu Sections */}
             <div className="mt-6 space-y-8">
               {activeCategories.map((cat) => {
-                const catItems = menuItems.filter((m) => m.category === cat && m.product_type !== "supplement");
+                const catItems = visibleItems.filter((m) => m.category === cat);
                 if (catItems.length === 0) return null;
                 return (
                   <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} data-category={cat} className="scroll-mt-20">
@@ -1105,7 +1113,7 @@ const RestaurantPage = () => {
       )}
 
       {/* Cart sheet (hidden trigger, opened programmatically) */}
-      <CartSheet open={cartOpen} onOpenChange={setCartOpen} menuItems={menuItems} onScrollToCategory={scrollToCategory} />
+      <CartSheet open={cartOpen} onOpenChange={setCartOpen} menuItems={menuItems} showPhotos={(restaurant as DbRestaurant & {show_menu_photos?:boolean}).show_menu_photos !== false} onScrollToCategory={scrollToCategory} />
     </div>
   );
 };
