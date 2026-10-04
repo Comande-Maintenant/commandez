@@ -75,8 +75,11 @@ final class CommandeIciUITests: XCTestCase {
         let clear = app.buttons["Effacer la recherche"].firstMatch
         XCTAssertTrue(clear.isHittable, app.debugDescription)
         clear.tap()
-        let value = field.value as? String
-        XCTAssertTrue(value == "" || value == "Rechercher un plat, une boisson…", "The search must be empty after clearing")
+        // WK exposes a truncated placeholder as AX value when a field is empty.
+        // The cleared state removes its action and restores the actual products.
+        let cleared = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: clear)
+        XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 3), .completed, "Clear must leave an empty search")
+        XCTAssertFalse((field.value as? String ?? "").contains("zzzz-no-product"))
         XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Recherche carte iOS"; shot.lifetime = .keepAlways; add(shot)
     }
