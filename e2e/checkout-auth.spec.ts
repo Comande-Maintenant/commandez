@@ -1,5 +1,30 @@
 import { test, expect } from '@playwright/test';
 const restaurantId = '12000000-0000-4000-8000-000000000001';
+test('late demo defaults respect a focused phone before the customer types', async ({ page }) => {
+  let release!: () => void;
+  const metadata = new Promise<void>(resolve => { release = resolve; });
+  await page.addInitScript(({ restaurantId }) => {
+    localStorage.setItem('cm_language', 'fr');
+    localStorage.setItem('resto-order-cart', JSON.stringify({ restaurantId, restaurantSlug: 'demo', items: [{ id: 'cart-kebab', menuItem: { id: 'kebab', name: 'Kebab', price: 6.5 }, quantity: 1, totalPrice: 6.5, selectedSauces: [], selectedSupplements: [] }] }));
+  }, { restaurantId });
+  await page.route(url => /\/(rest|auth|functions)\/v1\//.test(url.pathname), async route => {
+    if (new URL(route.request().url()).pathname.endsWith('/rpc/get_public_restaurant_by_id')) {
+      await metadata;
+      await route.fulfill({ json: { id: restaurantId, name: 'Demo', slug: 'demo', is_demo: true, is_open: true, is_accepting_orders: true } });
+    } else await route.fulfill({ json: [] });
+  });
+  try {
+    await page.goto('/order');
+    const phone = page.getByPlaceholder('Téléphone');
+    await phone.focus();
+    release();
+    await expect(page.getByPlaceholder('Votre nom')).not.toHaveValue('');
+    await expect(phone).toHaveValue('');
+    await phone.fill('0612345678');
+    await expect(phone).toHaveValue('0612345678');
+    await expect(page.getByRole('button', { name: /Confirmer/ })).toBeEnabled();
+  } finally { release(); }
+});
 test('checkout keeps the cart and asks for an account before creating a real order', async ({ page }) => {
   let submitted = 0;
   await page.addInitScript(({ restaurantId }) => {
