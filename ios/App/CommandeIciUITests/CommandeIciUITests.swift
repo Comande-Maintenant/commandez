@@ -74,11 +74,17 @@ final class CommandeIciUITests: XCTestCase {
         let history = app.buttons["Historique (24h)"].firstMatch
         XCTAssertTrue(history.waitForExistence(timeout: 15), app.debugDescription)
         history.tap()
+        // The dashboard already exposes Retour and Fermer. Establish the
+        // history sheet before selecting its controls, otherwise an early AX
+        // lookup can tap the dashboard's own return action during mounting.
+        let title = app.staticTexts["Historique (24h)"].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 5), app.debugDescription)
         let back = app.buttons["Retour"].firstMatch
         let close = app.buttons["Fermer"].firstMatch
         XCTAssertTrue(back.waitForExistence(timeout: 5), app.debugDescription)
         XCTAssertTrue(back.isHittable && close.isHittable, app.debugDescription)
         XCTAssertGreaterThanOrEqual(back.frame.height, 44)
+        XCTAssertLessThanOrEqual(back.frame.maxY, title.frame.minY, "Return must belong to the history header")
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Historique avec sorties permanentes"; shot.lifetime = .keepAlways; add(shot)
         back.tap()
         XCTAssertTrue(app.buttons["Recevoir une commande"].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
