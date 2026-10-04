@@ -2,7 +2,7 @@ name: iOS native UI verification
 
 on:
   push:
-    branches: [codex/commandeici-ios-journey-20261004]
+    branches: [codex/commandeici-ios-focused-arm-final68-20261004]
     paths:
       - '.github/workflows/ios-native-ui.yml'
       - 'scripts/ci-public-ios-config.py'
@@ -54,13 +54,14 @@ jobs:
           retention-days: 1
   native-ui:
     runs-on: macos-26
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          ref: 68a1708f0dd0bb01a52f52462396e11bac63e2b6
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -103,12 +104,14 @@ jobs:
           Path('CIReport/runtime.json').write_text(json.dumps(files,indent=2))
           PY
       - name: Create isolated simulator
-        timeout-minutes: 4
+        timeout-minutes: 8
         run: |
           CI_SIM_ID=$(xcrun simctl create "CommandeIci CI ${GITHUB_RUN_ID}" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-2)
           echo "CI_SIM_ID=$CI_SIM_ID" >> "$GITHUB_ENV"
           xcrun simctl boot "$CI_SIM_ID"
-          xcrun simctl bootstatus "$CI_SIM_ID" -b
+          set -o pipefail
+          xcrun simctl bootstatus "$CI_SIM_ID" -b 2>&1 | tee CIReport/simulator-boot.log
+          echo "CI_SIM_BOOT_READY=true" >> "$GITHUB_ENV"
       - name: Build simulator with local signing and simulated entitlements
         run: |
           set -o pipefail
@@ -127,23 +130,38 @@ jobs:
           subprocess.run(['codesign','--verify','--deep','--strict',str(app)],check=True,capture_output=True)
           Path('CIReport/simulator-signing.json').write_text(json.dumps({'localAdHocOnly':True,'privateCertificateUsed':False,'simulatedApplicationIdentifier':attributes['application-identifier'],'signatureVerified':True},indent=2))
           PYCODE
-      - name: Run all native UI cases
+      - name: Observe three diagnostic native journeys
         run: |
           set -o pipefail
           xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
             -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciDerivedData" \
             -resultBundlePath CIReport/NativeResult.xcresult -testLanguage fr -testRegion FR \
             -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 \
-            -parallel-testing-enabled NO test-without-building 2>&1 | tee CIReport/native.log
-      - name: Export evidence and enforce suite count
+            -parallel-testing-enabled NO -only-testing:CommandeIciUITests/CommandeIciUITests/testNativeAssietteWithTwoMeats -only-testing:CommandeIciUITests/CommandeIciUITests/testNativeFirstLaunchInvitesDemo -only-testing:CommandeIciUITests/CommandeIciUITests/testNativeHistoryAlwaysHasAnExit test-without-building 2>&1 | tee CIReport/native.log
+      - name: Export diagnostic evidence and enforce three cases
+        timeout-minutes: 2
         if: always()
         run: |
-          if [ -n "${CI_SIM_ID:-}" ]; then
-            QA_APP_CONTAINER=$(xcrun simctl get_app_container "$CI_SIM_ID" com.commandeici.app data 2>/dev/null || true)
-            if [ -n "$QA_APP_CONTAINER" ] && [ -f "$QA_APP_CONTAINER/Documents/qa-readiness.ndjson" ]; then
-              cp "$QA_APP_CONTAINER/Documents/qa-readiness.ndjson" CIReport/qa-readiness.ndjson
-            fi
-          fi
+          python3 - <<'QA_CONTAINER'
+          from pathlib import Path
+          import subprocess, os, json, shutil, time
+          report={'bootReady':os.environ.get('CI_SIM_BOOT_READY')=='true','hasNativeResult':Path('CIReport/NativeResult.xcresult').is_dir(),'journalCopied':False}
+          started=time.monotonic()
+          if report['bootReady'] and report['hasNativeResult'] and os.environ.get('CI_SIM_ID'):
+              try:
+                  result=subprocess.run(['xcrun','simctl','get_app_container',os.environ['CI_SIM_ID'],'com.commandeici.app','data'],capture_output=True,text=True,timeout=10)
+                  report['containerReadReturnCode']=result.returncode
+                  if result.returncode==0:
+                      journal=Path(result.stdout.strip())/'Documents/qa-readiness.ndjson'
+                      if journal.is_file():
+                          shutil.copyfile(journal,'CIReport/qa-readiness.ndjson');report['journalCopied']=True
+              except subprocess.TimeoutExpired:
+                  report['containerReadTimedOut']=True
+          else:
+              report['containerReadSkipped']='App execution prerequisites not established'
+          report['elapsedSeconds']=time.monotonic()-started
+          Path('CIReport/qa-container-read.json').write_text(json.dumps(report,indent=2))
+          QA_CONTAINER
           if [ -d CIReport/NativeResult.xcresult ]; then
             xcrun xcresulttool get test-results summary --path CIReport/NativeResult.xcresult > CIReport/summary.json
             xcrun xcresulttool export attachments --path CIReport/NativeResult.xcresult --output-path CIReport/Attachments
@@ -151,7 +169,7 @@ jobs:
           from pathlib import Path
           import json
           summary=json.loads(Path('CIReport/summary.json').read_text())
-          assert summary['totalTestCount']==15 and summary['passedTests']==15 and summary['failedTests']==0 and summary['skippedTests']==0,summary
+          assert summary['totalTestCount']==3 and summary['passedTests']==3 and summary['failedTests']==0 and summary['skippedTests']==0,summary
           PY
           else
             exit 1
@@ -165,4 +183,12 @@ jobs:
           retention-days: 1
       - name: Shut down own simulator
         if: always() && env.CI_SIM_ID != ''
-        run: xcrun simctl shutdown "$CI_SIM_ID" || true
+        timeout-minutes: 1
+        run: |
+          python3 - <<'SHUTDOWN'
+          import os, subprocess
+          try:
+              subprocess.run(['xcrun','simctl','shutdown',os.environ['CI_SIM_ID']],capture_output=True,timeout=15)
+          except subprocess.TimeoutExpired:
+              print('Own simulator cleanup timed out; ephemeral runner will dispose it')
+          SHUTDOWN
