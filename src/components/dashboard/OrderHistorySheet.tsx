@@ -98,6 +98,7 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent
+        showClose={false}
         aria-describedby={undefined}
         className="flex h-dvh w-full flex-col overflow-hidden p-0 sm:max-w-md [&>button]:hidden"
         onOpenAutoFocus={() => { previousFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; }}

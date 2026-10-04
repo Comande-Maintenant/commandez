@@ -55,7 +55,7 @@ export const BanDialog = ({ customer, open, onClose, onBanned, restaurantId }: P
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
+        <div className="min-h-0 space-y-4 overflow-y-auto overscroll-contain py-2">
           <div className="p-3 bg-secondary/50 rounded-xl">
             <p className="text-sm font-medium text-foreground">{customer.customer_name || t('dashboard.ban.unknown_client')}</p>
             <p className="text-xs text-muted-foreground">{customer.customer_phone}</p>

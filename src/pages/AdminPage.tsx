@@ -1,5 +1,6 @@
 import { useDashboardAuth } from '@/hooks/useDashboardAuth';
 import { isNative } from '@/lib/native';
+import { navigateBack } from '@/lib/navigation';
 import { nativePushStatus } from '@/services/native-push-client';
 import { DemoOrderControls } from '@/components/DemoOrderControls';
 import {MerchantSetup} from '@/components/dashboard/MerchantSetup';
@@ -136,7 +137,7 @@ const AdminPage = () => {
     const url = new URL(window.location.href);
     url.searchParams.delete("tab");
     url.searchParams.set("view", activeView);
-    window.history.replaceState({}, "", url.toString());
+    window.history.replaceState(window.history.state, "", url.toString());
   }, [activeView]);
 
   const handleViewChange = (view: DashboardView) => {
@@ -277,7 +278,7 @@ const AdminPage = () => {
           <header className="bg-background border-b border-border">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 min-h-14 py-2 flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-3 gap-y-1">
             <div className="flex items-center gap-3 min-w-0 basis-full sm:basis-auto">
-              <button onClick={() => navigate(-1)} className="min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+              <button onClick={() => navigateBack(navigate,isDemo?'/decouvrir':'/')} aria-label={t('nav.back')} className="min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </button>
               <div className="min-w-0">

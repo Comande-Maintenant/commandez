@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { navigateBack } from '@/lib/navigation';
 import { ArrowLeft, User, Mail, Phone, Edit2, LogOut, Trash2, ShoppingBag, RefreshCw, ChevronRight, Loader2, KeyRound } from "lucide-react";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -134,7 +135,7 @@ const CustomerProfilePage = () => {
       {/* Header */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2" aria-label={t("client.back")}>
+          <button onClick={() => navigateBack(navigate)} className="flex min-h-11 min-w-11 items-center justify-center p-2" aria-label={t("client.back")}>
             <ArrowLeft className="h-5 w-5 text-gray-700" />
           </button>
           <h1 className="text-lg font-semibold text-gray-900">{t("client.title")}</h1>

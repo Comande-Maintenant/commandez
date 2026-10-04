@@ -39,8 +39,8 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, onImportComple
   };
 
   const handleClose = (open: boolean) => {
-    if (operationPending.current) return;
-    if (!open) reset();
+    // Leaving the panel does not cancel or duplicate an operation already running.
+    if (!open && !operationPending.current) reset();
     onOpenChange(open);
   };
 
@@ -174,14 +174,14 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, onImportComple
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="flex max-h-[calc(100dvh-2rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px))] flex-col overflow-hidden sm:max-w-lg">
+        <DialogHeader className="shrink-0 pe-12">
           <DialogTitle className="flex items-center gap-2">
             <Camera className="h-5 w-5" />
             {t('dashboard.import.title')}
           </DialogTitle>
         </DialogHeader>
-
+        <div className="min-h-0 overflow-y-auto overscroll-contain">
         {step === "upload" && (
           <div className="space-y-4 mt-2">
             <p className="text-sm text-muted-foreground">
@@ -263,6 +263,7 @@ export const MenuImportModal = ({ open, onOpenChange, restaurant, onImportComple
             <p className="text-sm text-muted-foreground">{t('dashboard.import.adding_items')}</p>
           </div>
         )}
+        </div>
       </DialogContent>
     </Dialog>
   );

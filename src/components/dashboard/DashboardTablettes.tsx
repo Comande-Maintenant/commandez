@@ -307,7 +307,7 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
               {editingTablet ? t("dashboard.tablets.edit_tablet") : t("dashboard.tablets.add_title")}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 mt-2">
+          <div className="min-h-0 space-y-4 overflow-y-auto overscroll-contain mt-2">
             <div>
               <Label htmlFor="serial">{t("dashboard.tablets.serial_label")}</Label>
               <Input
@@ -373,4 +373,3 @@ export const DashboardTablettes = ({ restaurant }: Props) => {
     </div>
   );
 };
-

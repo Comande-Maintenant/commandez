@@ -1,4 +1,5 @@
 import { setRestaurantHead } from '@/lib/restaurant-head';
+import { navigateBack } from '@/lib/navigation';
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer, Maximize } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
@@ -172,7 +173,7 @@ const RestaurantPage = () => {
       setKioskOrder(state.kioskOrder);
       setKioskSplash(false);
       // Clean navigation state
-      window.history.replaceState({}, "", window.location.href);
+      window.history.replaceState({...window.history.state,usr:{...window.history.state?.usr,kioskOrder:undefined}}, "", window.location.href);
     }
   }, [location.state]);
 
@@ -576,8 +577,8 @@ const RestaurantPage = () => {
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
           {!isKiosk ? (
             <button
-              onClick={() => window.history.length > 1 ? navigate(-1) : window.location.href = "https://commandeici.com"}
-              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
+              onClick={() => navigateBack(navigate,'/decouvrir')}
+              className="flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
               aria-label={t("nav.back")}
             >
               <ArrowLeft className="h-5 w-5 text-white" />

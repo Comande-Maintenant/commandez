@@ -13,6 +13,7 @@ import { PickupTimePicker } from "@/components/PickupTimePicker";
 import { toast } from "sonner";
 import { useKioskMode } from "@/hooks/useKioskMode";
 import { CustomerAuthModal } from "@/components/CustomerAuthModal";
+import { navigateBack } from '@/lib/navigation';
 import { checkoutRequestId, clearCheckoutRequest } from "@/services/order-request";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 
@@ -279,7 +280,7 @@ const OrderPage = () => {
         {restaurantSlug ? (
           <Link to={`/${restaurantSlug}`} className="text-sm text-foreground underline">{t("order.back_home")}</Link>
         ) : (
-          <a href="https://commandeici.com" className="text-sm text-foreground underline">{t("order.back_home")}</a>
+          <Link to="/" className="inline-flex min-h-11 items-center text-sm text-foreground underline">{t("order.back_home")}</Link>
         )}
       </div>
     );
@@ -290,7 +291,7 @@ const OrderPage = () => {
       <CustomerAuthModal open={authOpen} onClose={() => setAuthOpen(false)} redirectPath="/order" />
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2" aria-label={t("nav.back")}>
+          <button onClick={() => navigateBack(navigate,restaurantSlug?`/${restaurantSlug}`:'/')} className="flex min-h-11 min-w-11 items-center justify-center p-2" aria-label={t("nav.back")}>
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
           <h1 className={`font-semibold text-foreground ${isKiosk ? "text-xl" : "text-lg"}`}>{t("order.place_order")}</h1>
