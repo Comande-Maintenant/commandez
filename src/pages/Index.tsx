@@ -13,15 +13,18 @@ const Index = () => {
 
   // Auto-redirect if restaurateur is already logged in
   useEffect(() => {
+    let disposed = false;
     document.title = t('home.page_title');
 
     supabase.auth.getUser().then(async ({ data }) => {
+      if (disposed) return;
       if (data.user) {
         const { data: restaurants } = await supabase
           .from("restaurants")
           .select("slug")
           .eq("owner_id", data.user.id)
           .limit(1);
+        if (disposed) return;
 
         if (restaurants && restaurants.length > 0) {
           navigate(`/admin/${restaurants[0].slug}`, { replace: true });
@@ -29,11 +32,18 @@ const Index = () => {
         }
       }
       setChecking(false);
-    }).catch(() => setChecking(false));
+    }).catch(() => { if (!disposed) setChecking(false); });
+    return () => { disposed = true; };
   }, [navigate, t]);
 
   if (checking) {
-    return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" aria-label={t('common.loading')}/></div>;
+    return <main className="min-h-screen flex flex-col items-center justify-center gap-6 px-5 bg-background">
+      <BrandLogo />
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" aria-label={t('common.loading')}/>
+      <Button data-primary-action="demo" onClick={() => navigate('/decouvrir')} className="w-full max-w-sm h-auto min-h-12 py-3 whitespace-normal rounded-2xl text-base font-semibold">
+        {t('journey.home_demo')}
+      </Button>
+    </main>;
   }
   return (
     <div className="min-h-screen bg-white flex flex-col">
