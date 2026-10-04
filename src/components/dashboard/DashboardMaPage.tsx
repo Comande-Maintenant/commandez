@@ -310,7 +310,7 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
       <section className="bg-card rounded-2xl border border-border p-5">
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
           <h3 className="min-w-0 text-base font-semibold text-foreground break-words">{t('dashboard.page.page_preview')}</h3>
-          <Button variant="outline" size="sm" className="max-w-full rounded-xl gap-1.5 whitespace-normal break-words text-start" asChild>
+          <Button variant="outline" size="sm" className="h-auto max-w-full rounded-xl gap-1.5 whitespace-normal break-words text-start" asChild>
             <a href={`/${restaurant.slug}`} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-4 w-4" />{t('dashboard.page.view_page')}
             </a>

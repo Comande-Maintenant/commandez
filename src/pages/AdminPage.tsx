@@ -259,7 +259,7 @@ const AdminPage = () => {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="min-h-11 w-24 rounded-lg whitespace-normal break-words px-2 py-2 text-xs font-semibold leading-snug bg-white text-primary hover:bg-secondary"
+                    className="h-auto min-h-11 w-24 rounded-lg whitespace-normal break-words px-2 py-2 text-xs font-semibold leading-snug bg-white text-primary hover:bg-secondary"
                     onClick={() => navigate("/inscription")}
                   >
                     {t("demo.banner_cta")}

@@ -28,6 +28,7 @@ test('demo banner and new-order badge stay legible and touchable',async({page})=
  await expect(copy).toBeVisible();
  expect(await copy.evaluate(el=>el.scrollWidth<=el.clientWidth&&el.scrollHeight<=el.clientHeight),'Full demo qualification must fit').toBe(true);
  const create=page.getByRole('button',{name:fr['demo.banner_cta'],exact:true});expect((await create.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+ const contained=await create.evaluate(el=>{const range=document.createRange();range.selectNodeContents(el);const text=range.getBoundingClientRect(),button=el.getBoundingClientRect();return text.top>=button.top+2&&text.bottom<=button.bottom-2;});expect(contained,'Every CTA line must fit inside its button').toBe(true);
  await page.getByRole('button',{name:'Recevoir une commande',exact:true}).click();
  const alert=page.getByRole('dialog',{name:'Nouvelle commande !'});await expect(alert).toBeVisible();await alert.getByRole('button',{name:'Fermer',exact:true}).click();await expect(alert).toBeHidden();
  const badge=page.locator('[data-tour="cuisine"]:visible span').filter({hasText:/^[1-9]\d*$/}).last();await expect(badge).toBeVisible();
