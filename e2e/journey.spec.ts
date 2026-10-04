@@ -44,7 +44,9 @@ test('demo guidance follows preparation and cashing after a refresh with no serv
  let writes=0;await page.route(url=>/\/rpc\/(advance_demo_order|update_order_status|update_order_items)$/.test(url.pathname),async route=>{writes++;await route.fulfill({status:400,json:{message:'Local sample must not write'}});});
  await page.goto('/admin/demo?lang=fr',{waitUntil:'networkidle'});
  const progress=page.getByRole('progressbar',{name:/première commande/});
- await page.getByRole('button',{name:'Recevoir une commande',exact:true}).click();await page.keyboard.press('Escape');
+ await page.getByRole('button',{name:'Recevoir une commande',exact:true}).click();
+ const arrival=page.getByRole('dialog',{name:'Nouvelle commande !'});await expect(arrival).toBeVisible();
+ await page.keyboard.press('Escape');await expect(arrival).toBeHidden();
  await expect(progress).toHaveAttribute('aria-valuenow','1');
  await page.getByRole('button',{name:'Accepter',exact:true}).last().click();await expect(progress).toHaveAttribute('aria-valuenow','2');
  await page.reload({waitUntil:'networkidle'});await expect(progress).toHaveAttribute('aria-valuenow','2');
