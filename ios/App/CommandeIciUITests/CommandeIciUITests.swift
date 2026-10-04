@@ -219,7 +219,8 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(png.waitForExistence(timeout: 10), app.debugDescription)
         png.tap()
         XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.otherElements.matching(NSPredicate(format: "label CONTAINS 'Image PNG'")).firstMatch.exists)
+        let file = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS 'qr-antalya-kebab-moneteau.png'")).firstMatch
+        XCTAssertTrue(file.waitForExistence(timeout: 10), app.debugDescription)
         let save = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'Fichiers' OR label CONTAINS[c] 'Save to Files'")).firstMatch
         if !save.isHittable { app.otherElements["ActivityListView"].swipeUp() }
         XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
@@ -291,6 +292,16 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(image.waitForExistence(timeout: 15), app.debugDescription)
         if !image.isHittable { app.swipeUp() }
         XCTAssertTrue(image.isHittable, app.debugDescription)
+        // A cart persisted by a previous journey must remain fully reachable.
+        let cart = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch
+        if cart.exists {
+            let settled = NSPredicate { _, _ in
+                cart.isHittable && cart.frame.maxY <= app.frame.height - 34
+            }
+            expectation(for: settled, evaluatedWith: cart)
+            waitForExpectations(timeout: 5)
+            XCTAssertGreaterThanOrEqual(cart.frame.height, 44)
+        }
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "Carte visuelle native iOS"
         shot.lifetime = .keepAlways
@@ -327,6 +338,12 @@ final class CommandeIciUITests: XCTestCase {
         let settled = expectation(for: clear, evaluatedWith: cart)
         let result = XCTWaiter.wait(for: [settled], timeout: 3)
         XCTAssertEqual(result, .completed, "Cart action must stay above the 34-point home indicator")
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(cart.waitForExistence(timeout: 15), "The customer's cart must survive reopening the menu")
+        let restored = expectation(for: clear, evaluatedWith: cart)
+        XCTAssertEqual(XCTWaiter.wait(for: [restored], timeout: 5), .completed)
+        XCTAssertTrue(cart.isHittable)
         cart.tap()
         let checkout = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Commander'")).firstMatch
         XCTAssertTrue(checkout.waitForExistence(timeout: 5), app.debugDescription)

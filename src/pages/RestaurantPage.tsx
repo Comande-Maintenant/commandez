@@ -1,5 +1,6 @@
 import { setRestaurantHead } from '@/lib/restaurant-head';
 import { navigateBack } from '@/lib/navigation';
+import { PageExit } from '@/components/PageExit';
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer, Maximize } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
@@ -404,6 +405,7 @@ const RestaurantPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
+        <div className="px-4 pt-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <Skeleton className="h-52 sm:h-64 w-full" />
         <div className="max-w-3xl mx-auto px-4 -mt-16 relative z-10 space-y-4">
           <Skeleton className="h-56 rounded-2xl" />
@@ -424,7 +426,8 @@ const RestaurantPage = () => {
 
   if (loadError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="min-h-screen relative flex items-center justify-center bg-background px-4 pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div role="alert" className="text-center max-w-sm space-y-4">
           <p className="text-foreground">{t("restaurant.load_error")}</p>
           <button type="button" className="rounded-xl bg-primary px-5 py-3 font-medium text-primary-foreground" onClick={() => setRequestAttempt(attempt => attempt + 1)}>
@@ -437,12 +440,10 @@ const RestaurantPage = () => {
 
   if (!restaurant) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen relative flex items-center justify-center bg-background px-4 pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">{t("restaurant.not_found")}</h1>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">
-            {t("nav.back_home")}
-          </a>
         </div>
       </div>
     );
@@ -451,16 +452,14 @@ const RestaurantPage = () => {
   // Deactivated restaurant
   if (restaurant.deactivated_at) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen relative flex items-center justify-center bg-background pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div className="text-center max-w-sm mx-auto px-4">
           {restaurant.image && (
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
           <p className="text-muted-foreground text-sm">{t("restaurant.deactivated")}</p>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            {t("nav.back")}
-          </a>
         </div>
       </div>
     );
@@ -469,7 +468,8 @@ const RestaurantPage = () => {
   // Banned customer
   if (customerBanned) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen relative flex items-center justify-center bg-background pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div className="text-center max-w-sm mx-auto px-4">
           {restaurant.image && (
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
@@ -481,9 +481,6 @@ const RestaurantPage = () => {
               <> {t("order.banned_contact", { phone: restaurant.restaurant_phone })}</>
             )}
           </p>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            {t("nav.back")}
-          </a>
         </div>
       </div>
     );

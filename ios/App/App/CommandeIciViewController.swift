@@ -92,6 +92,27 @@ class CommandeIciViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(SecureSessionPlugin())
         bridge?.registerPluginInstance(FileExportPlugin())
         #if DEBUG
+        if ProcessInfo.processInfo.environment["COMMANDEICI_QA_MENU"] == "1" {
+            // Status-only boundary evidence for cold simulator starts. No URLs,
+            // query strings, headers, response bodies or session values are saved.
+            webView?.configuration.userContentController.add(QAReadinessHandler(), name: "qaReadiness")
+            let diagnostic = """
+            (() => {
+              const original = window.fetch;
+              const allowed = ['/rest/v1/rpc/get_public_restaurant_by_slug', '/rest/v1/menu_items'];
+              window.fetch = function(...args) {
+                let path;
+                try { path = new URL(typeof args[0] === 'string' ? args[0] : args[0].url).pathname; } catch {}
+                if (!allowed.includes(path)) return original.apply(this, args);
+                const started = performance.now();
+                const record = (event, status = 0) => window.webkit.messageHandlers.qaReadiness.postMessage({path,event,status,milliseconds:performance.now()-started});
+                record('start');
+                return original.apply(this, args).then(response => {record('finish',response.status); return response;}, error => {record('error'); throw error;});
+              };
+            })();
+            """
+            webView?.configuration.userContentController.addUserScript(WKUserScript(source: diagnostic, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        }
         // The UI test isolates the native export from the first-run guide.
         if ProcessInfo.processInfo.environment["COMMANDEICI_QA_QR"] == "1" {
             let script = "localStorage.setItem('cm_onboarding_done_demo', 'true'); localStorage.setItem('cm_onboarding_done_antalya-kebab-moneteau', 'true'); history.replaceState(null, '', '/admin/demo?view=qrcodes&lang=fr'); window.dispatchEvent(new PopStateEvent('popstate'));"
@@ -108,3 +129,35 @@ class CommandeIciViewController: CAPBridgeViewController {
         #endif
     }
 }
+
+#if DEBUG
+private final class QAReadinessHandler: NSObject, WKScriptMessageHandler {
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let record = message.body as? [String: Any],
+              let path = record["path"] as? String,
+              ["/rest/v1/rpc/get_public_restaurant_by_slug", "/rest/v1/menu_items"].contains(path),
+              let event = record["event"] as? String, ["start", "finish", "error"].contains(event),
+              let status = record["status"] as? Int, let duration = record["milliseconds"] as? Double else { return }
+        NativeQAReadiness.record(["boundary": path, "event": event, "status": status, "milliseconds": duration])
+    }
+}
+
+enum NativeQAReadiness {
+    private static let lock = NSLock()
+    static func record(_ fields: [String: Any]) {
+        guard ProcessInfo.processInfo.environment["COMMANDEICI_QA_MENU"] == "1",
+              let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        lock.lock()
+        defer { lock.unlock() }
+        var entry = fields
+        entry["uptime"] = ProcessInfo.processInfo.systemUptime
+        guard var bytes = try? JSONSerialization.data(withJSONObject: entry) else { return }
+        bytes.append(10)
+        let file = directory.appendingPathComponent("qa-readiness.ndjson")
+        if !FileManager.default.fileExists(atPath: file.path) { FileManager.default.createFile(atPath: file.path, contents: nil) }
+        guard let handle = try? FileHandle(forWritingTo: file) else { return }
+        defer { try? handle.close() }
+        do { try handle.seekToEnd(); try handle.write(contentsOf: bytes) } catch {}
+    }
+}
+#endif
