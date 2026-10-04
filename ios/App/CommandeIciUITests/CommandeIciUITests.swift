@@ -20,7 +20,11 @@ final class CommandeIciUITests: XCTestCase {
         let submit = app.buttons["Créer mon compte"].firstMatch
         for _ in 0..<4 {
             if submit.isHittable && (!keyboard.exists || submit.frame.maxY <= keyboard.frame.minY) { break }
-            app.webViews.firstMatch.swipeUp()
+            let screen = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+            let bottom = keyboard.exists ? keyboard.frame.minY - 24 : app.frame.maxY - 80
+            let start = screen.withOffset(CGVector(dx: app.frame.midX, dy: bottom))
+            let end = screen.withOffset(CGVector(dx: app.frame.midX, dy: max(120, bottom - 280)))
+            start.press(forDuration: 0.05, thenDragTo: end)
         }
         XCTAssertTrue(submit.isHittable, app.debugDescription)
         if keyboard.exists { XCTAssertLessThanOrEqual(submit.frame.maxY, keyboard.frame.minY) }
@@ -37,7 +41,7 @@ final class CommandeIciUITests: XCTestCase {
         receive.tap()
         let view = app.buttons["Voir la commande"].firstMatch
         XCTAssertTrue(view.waitForExistence(timeout: 5), app.debugDescription); view.tap()
-        let accept = app.buttons["Accepter"].firstMatch
+        let accept = app.buttons["Accepter la commande"].firstMatch
         XCTAssertTrue(accept.waitForExistence(timeout: 5), app.debugDescription); accept.tap()
         let close = app.buttons["Fermer"].firstMatch
         if close.waitForExistence(timeout: 2) { close.tap() }
