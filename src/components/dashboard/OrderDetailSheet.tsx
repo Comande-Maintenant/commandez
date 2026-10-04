@@ -537,11 +537,11 @@ export const OrderDetailSheet = ({
         {/* Items - read only or edit mode */}
         {!editing ? (
           <div className="py-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <h3 className="text-base font-semibold text-foreground">{t("dashboard.orders.articles")}</h3>
               <button
                 onClick={startEdit}
-                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-xl hover:bg-secondary"
+                className="flex min-h-11 min-w-11 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-xl hover:bg-secondary"
               >
                 {status === "done" ? <Plus className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
                 {status === "done" ? t("dashboard.orders.add_items") : t("common.edit")}
@@ -637,11 +637,11 @@ export const OrderDetailSheet = ({
         ) : (
           /* EDIT MODE */
           <div className="py-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <h3 className="text-base font-semibold text-foreground">{t("dashboard.orders.edit_order")}</h3>
               <button
                 onClick={() => setEditing(false)}
-                className="text-sm text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-xl hover:bg-secondary"
+                className="min-h-11 min-w-11 text-sm text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-xl hover:bg-secondary"
               >
                 {t("common.cancel")}
               </button>
@@ -651,8 +651,8 @@ export const OrderDetailSheet = ({
               {editItems.map((item: any, i: number) => {
                 const isLocked = isDoneEdit && i < originalItemCount;
                 return (
-                  <div key={i} className={`flex items-start gap-3 p-3 rounded-xl ${isLocked ? "bg-muted/30 opacity-70" : "bg-secondary/50"}`}>
-                    <div className="flex-1 min-w-0">
+                  <div key={i} className={`flex flex-col sm:flex-row items-start gap-3 p-3 rounded-xl ${isLocked ? "bg-muted/30 opacity-70" : "bg-secondary/50"}`}>
+                    <div className="w-full sm:w-auto flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         {isLocked && <Lock className="h-3 w-3 text-muted-foreground flex-shrink-0" />}
                         <p className="text-sm font-semibold text-foreground">{item.name}</p>
@@ -682,23 +682,26 @@ export const OrderDetailSheet = ({
                       )}
                     </div>
                     {!isLocked && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex shrink-0 items-center gap-2 self-end sm:self-start">
                         <button
                           onClick={() => updateEditItemQty(i, -1)}
-                          className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                          aria-label={`${t('cart.decrease')} : ${item.name}`}
+                          className="min-w-11 min-h-11 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
                         >
                           <Minus className="h-3.5 w-3.5" />
                         </button>
                         <span className="w-6 text-center text-sm font-bold">{item.quantity || 1}</span>
                         <button
                           onClick={() => updateEditItemQty(i, 1)}
-                          className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                          aria-label={`${t('cart.increase')} : ${item.name}`}
+                          className="min-w-11 min-h-11 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
                         >
                           <Plus className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={() => removeEditItem(i)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-destructive hover:bg-destructive/10 active:bg-destructive/20"
+                          aria-label={`${t('cart.remove')} : ${item.name}`}
+                          className="min-w-11 min-h-11 rounded-lg flex items-center justify-center text-destructive hover:bg-destructive/10 active:bg-destructive/20"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>

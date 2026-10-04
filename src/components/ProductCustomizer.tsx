@@ -1117,12 +1117,12 @@ export const ProductCustomizer = ({
                       {/* TOGGLE GROUP (garnitures) */}
                       {currentStep.step_type === "toggle_group" && (
                         <div>
-                          <div className="flex items-center justify-between mb-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                             <h4 className="text-sm font-semibold text-gray-900">{t(currentStep.label_i18n)}</h4>
                             <div className="flex gap-2">
                               <button
                                 onClick={handleGarnitureComplet}
-                                className="text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
+                                className="min-h-11 min-w-11 text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
                                 style={
                                   allGarnituresSelected
                                     ? { backgroundColor: accent, color: "#fff" }
@@ -1133,7 +1133,7 @@ export const ProductCustomizer = ({
                               </button>
                               <button
                                 onClick={handleGarnitureNature}
-                                className="text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
+                                className="min-h-11 min-w-11 text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
                                 style={
                                   !allGarnituresSelected && garnitures.every((g) => !garnitureState[g.id])
                                     ? { backgroundColor: accent, color: "#fff" }

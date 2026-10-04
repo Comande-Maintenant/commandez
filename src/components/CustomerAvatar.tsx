@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { CustomerAuthModal } from "@/components/CustomerAuthModal";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function CustomerAvatar() {
+  const { t, language } = useLanguage();
   const { isLoggedIn, profile, signOut } = useCustomerAuth();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
@@ -20,9 +22,9 @@ export function CustomerAvatar() {
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu dir={language === 'ar' ? 'rtl' : 'ltr'}>
         <DropdownMenuTrigger asChild>
-          <button className="rounded-full focus:outline-none" aria-label="Menu profil">
+          <button type="button" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" aria-label={t('client.title')}>
             {isLoggedIn ? (
               <Avatar className="h-9 w-9 cursor-pointer">
                 <AvatarFallback className="bg-white/20 backdrop-blur-md text-white text-sm font-semibold">
@@ -39,19 +41,19 @@ export function CustomerAvatar() {
         <DropdownMenuContent align="end" className="w-48">
           {isLoggedIn ? (
             <>
-              <DropdownMenuItem onClick={() => navigate("/profil")} className="cursor-pointer">
-                <UserCircle className="h-4 w-4 mr-2" />
-                Mon profil
+              <DropdownMenuItem onClick={() => navigate("/profil")} className="min-h-11 cursor-pointer">
+                <UserCircle className="h-4 w-4 me-2 shrink-0" />
+                {t('client.title')}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-600 focus:text-red-600">
-                <LogOut className="h-4 w-4 mr-2" />
-                Se deconnecter
+              <DropdownMenuItem onClick={() => signOut()} className="min-h-11 cursor-pointer text-red-600 focus:text-red-600">
+                <LogOut className="h-4 w-4 me-2 shrink-0" />
+                {t('client.logout')}
               </DropdownMenuItem>
             </>
           ) : (
-            <DropdownMenuItem onClick={() => setModalOpen(true)} className="cursor-pointer">
-              <User className="h-4 w-4 mr-2" />
-              Se connecter
+            <DropdownMenuItem onClick={() => setModalOpen(true)} className="min-h-11 cursor-pointer">
+              <User className="h-4 w-4 me-2 shrink-0" />
+              {t('auth.login')}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

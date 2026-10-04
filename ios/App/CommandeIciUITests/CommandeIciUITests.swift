@@ -16,18 +16,21 @@ final class CommandeIciUITests: XCTestCase {
         email.typeText("audit@example.invalid")
         let keyboard = app.keyboards.firstMatch
         XCTAssertTrue(keyboard.waitForExistence(timeout: 5), app.debugDescription)
-        XCTAssertLessThanOrEqual(email.frame.maxY, keyboard.frame.minY)
+        let assistant = app.otherElements["SystemInputAssistantView"].firstMatch
+        func keyboardTop() -> CGFloat { assistant.exists ? min(assistant.frame.minY, keyboard.frame.minY) : keyboard.frame.minY }
+        XCTAssertLessThanOrEqual(email.frame.maxY, keyboardTop())
         let submit = app.buttons["Créer mon compte"].firstMatch
         for _ in 0..<4 {
-            if submit.isHittable && (!keyboard.exists || submit.frame.maxY <= keyboard.frame.minY) { break }
+            if submit.isHittable && (!keyboard.exists || submit.frame.maxY <= keyboardTop()) { break }
             let screen = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
-            let bottom = keyboard.exists ? keyboard.frame.minY - 24 : app.frame.maxY - 80
+            let bottom = keyboard.exists ? keyboardTop() - 24 : app.frame.maxY - 80
             let start = screen.withOffset(CGVector(dx: app.frame.midX, dy: bottom))
             let end = screen.withOffset(CGVector(dx: app.frame.midX, dy: max(120, bottom - 280)))
             start.press(forDuration: 0.05, thenDragTo: end)
         }
         XCTAssertTrue(submit.isHittable, app.debugDescription)
-        if keyboard.exists { XCTAssertLessThanOrEqual(submit.frame.maxY, keyboard.frame.minY) }
+        XCTAssertTrue(keyboard.exists, "Keyboard-open layout must be verified before capture")
+        XCTAssertLessThanOrEqual(submit.frame.maxY, keyboardTop())
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Inscription clavier et action accessibles"; shot.lifetime = .keepAlways; add(shot)
     }
     func testNativeReadyOrderKeepsCashierActionClearOfNavigation() {

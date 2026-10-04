@@ -1,0 +1,103 @@
+name: iOS native UI verification
+
+on:
+  push:
+    branches: [codex/commandeici-ios-journey-20261004]
+    paths:
+      - '.github/workflows/ios-native-ui.yml'
+      - 'scripts/ci-public-ios-config.py'
+      - 'src/**'
+      - 'ios/**'
+      - 'public/**'
+      - 'package*.json'
+      - 'capacitor.config.ts'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-native-ui-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-ui:
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.13.0
+          cache: npm
+      - name: Restore locked dependencies
+        run: npm ci
+      - name: Load published public client configuration
+        run: python3 scripts/ci-public-ios-config.py
+      - name: Build and sync iOS resources
+        run: npm run ios:sync
+      - name: Record exact source, runtime and tools
+        run: |
+          mkdir -p CIReport
+          git rev-parse HEAD > CIReport/source.txt
+          git diff --exit-code
+          xcodebuild -version > CIReport/xcode.txt
+          test "$(xcodebuild -version)" = "$(printf 'Xcode 26.2\nBuild version 17C52')"
+          sw_vers > CIReport/macos.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          root=Path('.')
+          files=[]
+          for file in sorted((root/'dist').rglob('*')):
+            if file.is_file():
+              relative=file.relative_to(root/'dist').as_posix()
+              assert file.read_bytes()==(root/'ios/App/App/public'/relative).read_bytes(),relative
+              files.append({'path':relative,'sha256':hashlib.sha256(file.read_bytes()).hexdigest()})
+          assert files
+          Path('CIReport/runtime.json').write_text(json.dumps(files,indent=2))
+          PY
+      - name: Create isolated simulator
+        timeout-minutes: 4
+        run: |
+          CI_SIM_ID=$(xcrun simctl create "CommandeIci CI ${GITHUB_RUN_ID}" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-2)
+          echo "CI_SIM_ID=$CI_SIM_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$CI_SIM_ID"
+          xcrun simctl bootstatus "$CI_SIM_ID" -b
+      - name: Run all native UI cases
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+            -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciDerivedData" \
+            -resultBundlePath CIReport/NativeResult.xcresult -testLanguage fr -testRegion FR \
+            -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 \
+            -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test 2>&1 | tee CIReport/native.log
+      - name: Export evidence and enforce suite count
+        if: always()
+        run: |
+          if [ -d CIReport/NativeResult.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path CIReport/NativeResult.xcresult > CIReport/summary.json
+            xcrun xcresulttool export attachments --path CIReport/NativeResult.xcresult --output-path CIReport/Attachments
+            python3 - <<'PY'
+          from pathlib import Path
+          import json
+          summary=json.loads(Path('CIReport/summary.json').read_text())
+          assert summary['totalTestCount']==15 and summary['passedTests']==15 and summary['failedTests']==0 and summary['skippedTests']==0,summary
+          PY
+          else
+            exit 1
+          fi
+      - name: Preserve native evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: commandeici-native-${{ github.sha }}
+          path: CIReport
+          retention-days: 1
+      - name: Shut down own simulator
+        if: always() && env.CI_SIM_ID != ''
+        run: xcrun simctl shutdown "$CI_SIM_ID" || true
