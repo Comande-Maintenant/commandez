@@ -219,8 +219,11 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(png.waitForExistence(timeout: 10), app.debugDescription)
         png.tap()
         XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10))
-        let file = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS 'qr-antalya-kebab-moneteau.png'")).firstMatch
+        // Link Presentation may hide the extension while keeping the PNG type.
+        let file = app.descendants(matching: .any).matching(NSPredicate(format: "label == 'qr-antalya-kebab-moneteau.png' OR label == 'qr-antalya-kebab-moneteau'")).firstMatch
         XCTAssertTrue(file.waitForExistence(timeout: 10), app.debugDescription)
+        let pngType = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'PNG' AND (label CONTAINS[c] 'KB' OR label CONTAINS[c] 'Ko')")).firstMatch
+        XCTAssertTrue(pngType.waitForExistence(timeout: 10), "The shared file must be identified as a PNG with a file size: " + app.debugDescription)
         let save = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'Fichiers' OR label CONTAINS[c] 'Save to Files'")).firstMatch
         if !save.isHittable { app.otherElements["ActivityListView"].swipeUp() }
         XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
@@ -331,18 +334,33 @@ final class CommandeIciUITests: XCTestCase {
         addButton.tap()
         let cart = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch
         XCTAssertTrue(cart.waitForExistence(timeout: 5), app.debugDescription)
+        var cartMeasurements: [[String: Double]] = []
         let clear = NSPredicate { object, _ in
             guard let button = object as? XCUIElement else { return false }
-            return button.frame.maxY <= app.frame.height - 34
+            let started = ProcessInfo.processInfo.systemUptime
+            let buttonFrame = button.frame
+            let applicationFrame = app.frame
+            cartMeasurements.append(["uptime": started, "querySeconds": ProcessInfo.processInfo.systemUptime - started,
+                "buttonY": buttonFrame.minY, "buttonBottom": buttonFrame.maxY, "buttonHeight": buttonFrame.height,
+                "applicationHeight": applicationFrame.height, "requiredBottom": applicationFrame.height - 34])
+            return buttonFrame.maxY <= applicationFrame.height - 34
+        }
+        func attachCartMeasurements(_ name: String) {
+            let data = try! JSONSerialization.data(withJSONObject: cartMeasurements, options: .sortedKeys)
+            let evidence = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+            evidence.name = name; evidence.lifetime = .keepAlways; add(evidence)
         }
         let settled = expectation(for: clear, evaluatedWith: cart)
         let result = XCTWaiter.wait(for: [settled], timeout: 3)
+        attachCartMeasurements("Cart initial measured bounds")
         XCTAssertEqual(result, .completed, "Cart action must stay above the 34-point home indicator")
         app.terminate()
         app.launch()
         XCTAssertTrue(cart.waitForExistence(timeout: 15), "The customer's cart must survive reopening the menu")
         let restored = expectation(for: clear, evaluatedWith: cart)
-        XCTAssertEqual(XCTWaiter.wait(for: [restored], timeout: 5), .completed)
+        let restoredResult = XCTWaiter.wait(for: [restored], timeout: 5)
+        attachCartMeasurements("Cart restored measured bounds")
+        XCTAssertEqual(restoredResult, .completed)
         XCTAssertTrue(cart.isHittable)
         cart.tap()
         let checkout = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Commander'")).firstMatch
