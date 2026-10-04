@@ -16,6 +16,9 @@ describe('restaurant slug candidate', () => {
       expect(await generateSlug(name)).toBe(`restaurant-${name}`);
     }
   });
+  it.each(['Découvrir', 'decouvrir', 'DECOUVRIR'])('keeps the discovery route available for %s', async (name) => {
+    expect(await generateSlug(name)).toBe('restaurant-decouvrir');
+  });
   it('bounds long names and ignores a whitespace-only city', async () => {
     expect((await generateSlug('Restaurant '.repeat(30), 'Paris')).length).toBeLessThanOrEqual(140);
     expect(await generateSlug('Chez Alice', '  ')).toBe('chez-alice');
