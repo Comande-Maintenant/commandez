@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { PageExit } from '@/components/PageExit';
+import { useLanguage } from '@/context/LanguageContext';
 import { Camera, Upload, Check, Loader2, Image as ImageIcon } from "lucide-react";
 
 const endpoint = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/photo-upload`;
@@ -10,6 +11,7 @@ const publicHeaders = {
 };
 
 const PhotoUploadPage = () => {
+  const { t } = useLanguage();
   const { restaurantId } = useParams<{ restaurantId: string }>();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") ?? "";
@@ -19,6 +21,7 @@ const PhotoUploadPage = () => {
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -40,26 +43,40 @@ const PhotoUploadPage = () => {
   }, [restaurantId, token]);
 
   const handleUpload = async (files: FileList | null) => {
-    if (!files || !restaurantId) return;
+    if (!files?.length || !restaurantId || uploading) return;
     setUploading(true);
+    setUploadError(false);
 
     const newUrls: string[] = [];
-    for (let i = 0; i < files.length; i++) {
-      const form = new FormData();
-      form.append("file", files[i]);
-      const response = await fetch(`${endpoint}?token=${encodeURIComponent(token)}`, {
-        method: "POST",
-        headers: publicHeaders,
-        body: form,
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.url) newUrls.push(data.url);
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const form = new FormData();
+        form.append("file", files[i]);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 60_000);
+        try {
+          const response = await fetch(`${endpoint}?token=${encodeURIComponent(token)}`, {
+            method: "POST",
+            headers: publicHeaders,
+            body: form,
+            signal: controller.signal,
+          });
+          if (!response.ok) throw new Error("upload_failed");
+          const data = await response.json();
+          if (typeof data.url !== "string" || !data.url) throw new Error("upload_unconfirmed");
+          newUrls.push(data.url);
+        } finally {
+          clearTimeout(timeout);
+        }
       }
+    } catch {
+      // Do not automatically replay an upload whose server result is unknown.
+      setUploadError(true);
+    } finally {
+      setUploaded((prev) => [...prev, ...newUrls]);
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
-
-    setUploaded((prev) => [...prev, ...newUrls]);
-    setUploading(false);
   };
 
   if (error) {
@@ -142,6 +159,8 @@ const PhotoUploadPage = () => {
             <p className="text-sm text-gray-600">Envoi en cours...</p>
           </div>
         )}
+
+        {uploadError && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">{t('common.toast.upload_error')}</p>}
 
         {/* Uploaded photos */}
         {uploaded.length > 0 && (
