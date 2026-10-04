@@ -390,7 +390,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
         app.launchArguments = []
         app.launch()
-        let card = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS 'Illustration'", product)).firstMatch
+        let card = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS 'Ajouter à la commande'", product)).firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 15), app.debugDescription)
         for _ in 0..<6 { if card.isHittable { break }; app.swipeUp() }
         card.tap()
@@ -401,7 +401,7 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(next.waitForExistence(timeout: 5), app.debugDescription)
         XCTAssertFalse(next.isEnabled)
         for meat in meats {
-            app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND NOT label CONTAINS 'Illustration'", meat)).firstMatch.tap()
+            app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND NOT label CONTAINS 'Ajouter à la commande'", meat)).firstMatch.tap()
         }
         XCTAssertTrue(next.isEnabled)
         next.tap()
