@@ -1,4 +1,5 @@
 import { setRestaurantHead } from '@/lib/restaurant-head';
+import { withReadableWhiteText } from '@/lib/color-contrast';
 import { navigateBack } from '@/lib/navigation';
 import { PageExit } from '@/components/PageExit';
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
@@ -77,7 +78,7 @@ function softenColor(hex: string): string {
   const { h, s, l } = parseHexToHSL(hex);
   const softS = s > 70 ? 60 : s;
   const softL = l < 35 ? 40 : l > 55 ? 50 : l;
-  return hslToHex(h, softS, softL);
+  return withReadableWhiteText(hslToHex(h, softS, softL));
 }
 
 function lighten(hex: string, amount: number): string {
@@ -575,10 +576,10 @@ const RestaurantPage = () => {
           {!isKiosk ? (
             <button
               onClick={() => navigateBack(navigate,'/decouvrir')}
-              className="flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
+              className="flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full bg-white text-slate-900 shadow-sm hover:bg-slate-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               aria-label={t("nav.back")}
             >
-              <ArrowLeft className="h-5 w-5 text-white" />
+              <ArrowLeft className="h-5 w-5" />
             </button>
           ) : <div />}
           <div className="flex items-center gap-2">
@@ -626,11 +627,11 @@ const RestaurantPage = () => {
                     {isDemo ? t("demo.page_title") : restaurant.name}
                   </h1>
                   {restaurant.is_accepting_orders && availability.isOpen ? (
-                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-emerald-500">
+                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-emerald-700">
                       {t("status.open")}
                     </span>
                   ) : (
-                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-red-500">
+                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-red-700">
                       {t("status.closed")}
                     </span>
                   )}
@@ -664,7 +665,7 @@ const RestaurantPage = () => {
                     </div>
                     <span className="text-sm font-bold text-gray-900">{restaurant.rating}</span>
                     {restaurant.review_count > 0 && (
-                      <span className="text-sm text-gray-400">({restaurant.review_count})</span>
+                      <span className="text-sm text-gray-500">({restaurant.review_count})</span>
                     )}
                   </div>
                 )}
@@ -817,7 +818,7 @@ const RestaurantPage = () => {
         {isDemo && !isKiosk && (
           <div className="mt-3 px-3 py-2.5 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-between gap-3">
             <div className="min-w-0"><p className="text-xs font-semibold text-emerald-900">{t("demo.seo_banner_title")}</p><p className="text-xs text-emerald-700 mt-1 hidden sm:block">{t("demo.seo_banner_text")}</p></div>
-            <Link to="/admin/demo" className="shrink-0 inline-flex items-center min-h-11 px-3 rounded-xl text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700">{t("demo.suivi_cta")}</Link>
+            <Link to="/admin/demo" className="shrink-0 inline-flex items-center min-h-11 px-3 rounded-xl text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800">{t("demo.suivi_cta")}</Link>
           </div>
         )}
 
@@ -977,7 +978,7 @@ const RestaurantPage = () => {
 
             {/* Alcohol notice */}
             {!isKiosk && (
-              <p className="mt-6 text-center text-xs text-gray-400 italic">
+              <p className="mt-6 text-center text-xs text-gray-500 italic">
                 {t("menu.alcohol_counter_notice")}
               </p>
             )}
@@ -1041,7 +1042,7 @@ const RestaurantPage = () => {
             <div className="flex flex-wrap justify-center gap-3 mt-3">
               <a
                 href="/inscription"
-                className="px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 transition-colors"
               >
                 {t("demo.footer_cta_signup")}
               </a>
@@ -1057,7 +1058,7 @@ const RestaurantPage = () => {
           </div>
         ) : (
           <div className="mt-8 mb-4 text-center">
-            <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+            <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-gray-600 transition-colors">
               {t("footer.powered_by")}
             </a>
           </div>

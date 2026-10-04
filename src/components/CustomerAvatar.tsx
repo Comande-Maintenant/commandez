@@ -24,16 +24,16 @@ export function CustomerAvatar() {
     <>
       <DropdownMenu dir={language === 'ar' ? 'rtl' : 'ltr'}>
         <DropdownMenuTrigger asChild>
-          <button type="button" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" aria-label={t('client.title')}>
+          <button type="button" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-white text-slate-900 shadow-sm hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" aria-label={t('client.title')}>
             {isLoggedIn ? (
               <Avatar className="h-9 w-9 cursor-pointer">
-                <AvatarFallback className="bg-white/20 backdrop-blur-md text-white text-sm font-semibold">
+                <AvatarFallback className="bg-transparent text-slate-900 text-sm font-semibold">
                   {initial}
                 </AvatarFallback>
               </Avatar>
             ) : (
-              <div className="h-9 w-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center cursor-pointer">
-                <User className="h-4 w-4 text-white/80" />
+              <div className="h-9 w-9 rounded-full flex items-center justify-center cursor-pointer">
+                <User className="h-4 w-4" />
               </div>
             )}
           </button>

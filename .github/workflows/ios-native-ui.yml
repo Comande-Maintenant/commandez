@@ -17,6 +17,11 @@ on:
       - 'package*.json'
       - 'capacitor.config.ts'
   workflow_dispatch:
+    inputs:
+      cold_reference:
+        description: 'Also observe the separate diagnostic WebKit reference (never warms the app)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -27,6 +32,7 @@ concurrency:
 
 jobs:
   cold-reference:
+    if: github.event_name == 'workflow_dispatch' && inputs.cold_reference
     runs-on: macos-15
     timeout-minutes: 10
     env:

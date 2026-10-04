@@ -344,7 +344,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
                 </div>
                 <Button
                   onClick={() => markAsDone(order.id)}
-                  className="h-12 rounded-xl gap-2 text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white min-w-[140px]"
+                  className="h-12 rounded-xl gap-2 text-sm font-semibold bg-emerald-700 hover:bg-emerald-800 text-white min-w-[140px]"
                 >
                   <Check className="h-4 w-4" />
                   {t("pos.cash_out")}
@@ -588,7 +588,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
             <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center ${
               activeTab === "encaissement"
                 ? "bg-primary-foreground text-foreground"
-                : "bg-emerald-500 text-white"
+                : "bg-emerald-700 text-white"
             }`}>
               {readyOrders.length}
             </span>

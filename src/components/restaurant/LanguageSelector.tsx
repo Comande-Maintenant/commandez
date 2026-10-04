@@ -53,10 +53,10 @@ export const LanguageSelector = () => {
         onClick={() => setOpen(!open)}
         aria-label={current.name}
         aria-expanded={open}
-        className="flex items-center gap-1.5 min-h-11 min-w-11 px-2.5 py-2 rounded-xl text-xs font-medium hover:bg-secondary transition-colors"
+        className="flex items-center gap-1.5 min-h-11 min-w-11 px-2.5 py-2 rounded-xl bg-white text-slate-900 shadow-sm text-xs font-medium hover:bg-slate-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <Globe className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="text-foreground">{current.code.toUpperCase()}</span>
+        <Globe className="h-3.5 w-3.5" />
+        <span>{current.code.toUpperCase()}</span>
       </button>
 
       {open && (

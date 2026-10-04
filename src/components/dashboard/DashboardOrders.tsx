@@ -379,10 +379,10 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
           >
             {tab.label}
             {tab.id === "new" && newCount > 0 && (
-              <span className="ms-1.5 bg-amber-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{newCount}</span>
+              <span className="ms-1.5 bg-amber-700 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{newCount}</span>
             )}
             {tab.id === "preparing" && preparingCount > 0 && (
-              <span className="ms-1.5 bg-blue-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{preparingCount}</span>
+              <span className="ms-1.5 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{preparingCount}</span>
             )}
           </button>
         ))}
@@ -596,7 +596,7 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
                     size="sm"
                     onClick={(e) => quickAdvance(e, order)}
                     className={`rounded-xl gap-1 min-h-[40px] text-sm font-semibold ${
-                      st === "new" ? "bg-emerald-600 hover:bg-emerald-700 text-white" :
+                      st === "new" ? "bg-emerald-700 hover:bg-emerald-800 text-white" :
                       st === "preparing" ? "bg-blue-600 hover:bg-blue-700 text-white" :
                       "bg-foreground hover:bg-foreground/90 text-primary-foreground"
                     }`}

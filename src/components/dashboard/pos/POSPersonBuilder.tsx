@@ -135,7 +135,7 @@ export const POSPersonBuilder = ({
       case "oui":
         return "bg-foreground text-primary-foreground border-foreground";
       case "x2":
-        return "bg-emerald-600 text-white border-emerald-600";
+        return "bg-emerald-700 text-white border-emerald-700";
     }
   };
 
@@ -257,7 +257,7 @@ export const POSPersonBuilder = ({
               onClick={handleGarnitureComplet}
               className={`w-full mb-3 min-h-[48px] rounded-xl border-2 text-sm font-bold transition-all active:scale-[0.97] ${
                 allGarnituresOui
-                  ? "bg-green-600 text-white border-green-600"
+                  ? "bg-green-700 text-white border-green-700"
                   : "bg-card text-foreground border-border hover:border-green-600/50"
               }`}
             >
