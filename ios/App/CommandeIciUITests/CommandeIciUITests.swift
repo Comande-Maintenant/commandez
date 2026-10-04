@@ -185,7 +185,7 @@ final class CommandeIciUITests: XCTestCase {
         let cleared = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: clear)
         XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 3), .completed, "Clear must leave an empty search")
         XCTAssertFalse((field.value as? String ?? "").contains("zzzz-no-product"))
-        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Ajouter à la commande'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Recherche carte iOS"; shot.lifetime = .keepAlways; add(shot)
     }
 
@@ -297,7 +297,7 @@ final class CommandeIciUITests: XCTestCase {
         let create = app.links.matching(NSPredicate(format: "label CONTAINS[c] 'page restaurant'")).firstMatch
         XCTAssertTrue(create.waitForExistence(timeout: 15), app.debugDescription)
         XCTAssertGreaterThanOrEqual(create.frame.minY, 50, "Demo banner must clear the iPhone status bar")
-        let image = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch
+        let image = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Ajouter à la commande'")).firstMatch
         XCTAssertTrue(image.waitForExistence(timeout: 15), app.debugDescription)
         if !image.isHittable { app.swipeUp() }
         XCTAssertTrue(image.isHittable, app.debugDescription)
@@ -323,7 +323,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
         app.launchArguments = []
         app.launch()
-        let kebab = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch
+        let kebab = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Ajouter à la commande'")).firstMatch
         XCTAssertTrue(kebab.waitForExistence(timeout: 15), app.debugDescription)
         if !kebab.isHittable { app.swipeUp() }
         kebab.tap()
