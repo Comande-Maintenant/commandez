@@ -3,7 +3,7 @@ import WebKit
 
 @main
 final class ColdReference: UIResponder, UIApplicationDelegate, WKNavigationDelegate, WKScriptMessageHandler {
-    private var window: UIWindow?
+    var window: UIWindow?
     private var webView: WKWebView?
     private let started = ProcessInfo.processInfo.systemUptime
     private var observations: [[String: Any]] = []
