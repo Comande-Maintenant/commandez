@@ -8,14 +8,16 @@ beforeEach(() => { vi.clearAllMocks(); vi.useFakeTimers(); });
 afterEach(() => { vi.useRealTimers(); });
 
 describe('operational snapshots', () => {
-  it('keeps unfinished orders and today, with pagination beyond 500 orders', async () => {
+  it('keeps unfinished, created-today and completed-today orders, with pagination beyond 500', async () => {
+    vi.setSystemTime(new Date(2026, 9, 5, 0, 18));
     const firstPage = Array.from({ length: 500 }, (_, index) => ({ id: `order-${index}` }));
     const query = { select: vi.fn(() => query), eq: vi.fn(() => query), or: vi.fn(() => query), order: vi.fn(() => query), abortSignal: vi.fn(() => query), range: vi.fn().mockResolvedValueOnce({ data: firstPage, error: null }).mockResolvedValueOnce({ data: [{ id: 'last-order' }], error: null }) };
     mocks.from.mockReturnValue(query);
     const result = await fetchOrders('restaurant-a', { operational: true });
     expect(result).toHaveLength(501);
     expect(query.eq).toHaveBeenCalledWith('restaurant_id', 'restaurant-a');
-    expect(query.or).toHaveBeenCalledWith(expect.stringMatching(/^status.in.\(new,preparing,ready\),created_at.gte./));
+    const midnight = new Date(2026, 9, 5).toISOString();
+    expect(query.or).toHaveBeenCalledWith(`status.in.(new,preparing,ready),created_at.gte.${midnight},completed_at.gte.${midnight}`);
     expect(query.range.mock.calls).toEqual([[0, 499], [500, 999]]);
     expect(query.order).toHaveBeenCalledWith('id', { ascending: false });
   });

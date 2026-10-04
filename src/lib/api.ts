@@ -121,8 +121,8 @@ export async function createOrder(order: {
 
 export async function fetchOrders(restaurantId: string, options?: { operational?: boolean; signal?: AbortSignal }): Promise<DbOrder[]> {
   if (options?.operational) {
-    // Keep every unfinished order, including those from yesterday. Archive/statistics
-    // callers retain the unfiltered query below.
+    // Keep unfinished orders and orders created or completed today, including
+    // overnight collections. Archive/statistics retain the unfiltered query below.
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const orders: DbOrder[] = [];
@@ -136,7 +136,7 @@ export async function fetchOrders(restaurantId: string, options?: { operational?
       try {
         const { data, error } = await supabase.from("orders").select("*")
           .eq("restaurant_id", restaurantId)
-          .or(`status.in.(new,preparing,ready),created_at.gte.${today.toISOString()}`)
+          .or(`status.in.(new,preparing,ready),created_at.gte.${today.toISOString()},completed_at.gte.${today.toISOString()}`)
           .order("created_at", { ascending: false }).order("id", { ascending: false })
           .abortSignal(controller.signal).range(offset, offset + pageSize - 1);
         if (error) throw error;

@@ -23,7 +23,7 @@ function Dashboard({ tab }: { tab: string }) {
   const feed = useRestaurantOrders(restaurant.id, { onNewOrder: mocks.ring });
   return <RestaurantOrdersContext.Provider value={feed}>{tab === 'cuisine' ? <DashboardOrders restaurant={restaurant} /> : tab === 'caisse' ? <DashboardPOS restaurant={restaurant} /> : <div>settings</div>}</RestaurantOrdersContext.Provider>;
 }
-beforeEach(() => { vi.clearAllMocks(); vi.useFakeTimers(); mocks.subscribe.mockReturnValue(mocks.stop); mocks.fetch.mockResolvedValue([]); });
+beforeEach(() => { vi.clearAllMocks(); vi.useFakeTimers(); vi.setSystemTime(new Date(2026, 9, 4, 13, 0)); mocks.subscribe.mockReturnValue(mocks.stop); mocks.fetch.mockResolvedValue([]); });
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 describe('merchant screen integration', () => {

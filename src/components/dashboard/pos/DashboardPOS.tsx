@@ -68,7 +68,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const { orders, setOrders, disconnected, loading = false } = useRestaurantOrderFeed();
   const readyOrders = orders.filter(order => order.status === "ready");
   const today = new Date().toDateString();
-  const doneOrders = orders.filter(order => order.status === "done" && new Date(order.created_at).toDateString() === today)
+  const doneOrders = orders.filter(order => order.status === "done" && new Date(order.completed_at || order.created_at).toDateString() === today)
     .sort((a, b) => new Date(b.completed_at || b.created_at).getTime() - new Date(a.completed_at || a.created_at).getTime());
   const [activeTab, setActiveTab] = useState<CaisseTab>(() => readyOrders.length ? "encaissement" : "commande");
   const initialTabResolved = useRef(!loading);

@@ -12,7 +12,7 @@ import {AdminSidebar} from '@/components/dashboard/AdminSidebar';
 import {DashboardPOS} from '@/components/dashboard/pos/DashboardPOS';
 const restaurant={id:'r',owner_id:'o',slug:'r',name:'Demo',cuisine_type:'kebab',customization_config:{enabled:true,base_price:0,steps:[]}} as DbRestaurant;
 const ready=()=>({id:'ready-order',restaurant_id:'r',order_number:1,status:'ready',items:[],total:10,created_at:new Date().toISOString(),customer_name:'Commande prête'} as DbOrder);
-afterEach(()=>{cleanup();f.orders=[];f.loading=false;vi.clearAllMocks();});
+afterEach(()=>{cleanup();vi.useRealTimers();f.orders=[];f.loading=false;vi.clearAllMocks();});
 for(const Nav of [AdminBottomNav,AdminSidebar])it(`${Nav.name} shows ready count on caisse and removes it after cashing`,()=>{
  const props={activeView:'cuisine' as const,onViewChange:vi.fn(),newOrderCount:0,readyOrderCount:2};
  const {rerender}=render(<Nav {...props}/>);expect(within(screen.getByRole('button',{name:/Caisse/})).getByText('2')).toBeVisible();
@@ -35,4 +35,17 @@ it('never switches a deliberately chosen order-taking screen when loading finish
 it('keeps order taking when caisse is empty and does not interrupt it for a later ready order',async()=>{
  const {rerender}=render(<DashboardPOS restaurant={restaurant}/>);await act(async()=>{});expect(screen.getByText('Nouvelle vente')).toBeVisible();
  f.orders=[ready()];rerender(<DashboardPOS restaurant={restaurant}/>);expect(screen.getByText('Nouvelle vente')).toBeVisible();expect(screen.getByRole('button',{name:/A encaisser/})).toHaveTextContent('1');
+});
+
+for(const scenario of [
+ {name:'keeps a previous-day order collected after midnight in today’s completed list',created:new Date(2026,9,4,23,58),completed:new Date(2026,9,5,0,10),visible:true},
+ {name:'excludes orders completed the previous day from today’s completed list',created:new Date(2026,9,4,23,40),completed:new Date(2026,9,4,23,58),visible:false},
+ {name:'retains the creation-date fallback for legacy orders without completion timestamps',created:new Date(2026,9,5,0,8),completed:null,visible:true},
+])it(scenario.name,async()=>{
+ vi.useFakeTimers();vi.setSystemTime(new Date(2026,9,5,0,18));
+ f.orders=[{...ready(),status:'done',created_at:scenario.created.toISOString(),completed_at:scenario.completed?.toISOString()??null}];
+ render(<DashboardPOS restaurant={restaurant}/>);await act(async()=>{});
+ fireEvent.click(screen.getByRole('button',{name:/A encaisser/}));
+ if(scenario.visible)expect(screen.getByText(/^Commande prête/)).toBeVisible();
+ else expect(screen.queryByText(/^Commande prête/)).toBeNull();
 });
