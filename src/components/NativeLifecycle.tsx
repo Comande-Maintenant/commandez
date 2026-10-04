@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { isEmbeddedDemoPath } from '@/lib/embedded-demo';
+import { useCart } from '@/context/CartContext';
 import { App } from '@capacitor/app';
 import { Network } from '@capacitor/network';
 import { isNative, nativeRoute } from '@/lib/native';
@@ -8,6 +10,8 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export function NativeLifecycle() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { restaurantId } = useCart();
   const navigateRef = useRef(navigate);
   useEffect(() => { navigateRef.current = navigate; }, [navigate]);
   const { t } = useLanguage();
@@ -55,5 +59,5 @@ export function NativeLifecycle() {
     }));
     return () => { disposed = true; for (const handle of handles) void handle.remove(); };
   }, []);
-  return isNative() && offline ? <div role="status" className="fixed bottom-0 inset-x-0 z-[100] bg-amber-100 text-amber-950 p-3 text-center text-sm native-offline">{t('native.offline')}</div> : null;
+  return isNative() && offline && !isEmbeddedDemoPath(pathname, restaurantId) ? <div role="status" className="fixed bottom-0 inset-x-0 z-[100] bg-amber-100 text-amber-950 p-3 text-center text-sm native-offline">{t('native.offline')}</div> : null;
 }

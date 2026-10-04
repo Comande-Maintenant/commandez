@@ -1,3 +1,4 @@
+import { isEmbeddedDemo } from '@/lib/embedded-demo';
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle, CreditCard, Banknote, UtensilsCrossed } from "lucide-react";
@@ -153,7 +154,7 @@ const OrderPage = () => {
   };
 
   const handleConfirm = async () => {
-    if (!restaurantId || submittingRef.current || authLoading) return;
+    if (!restaurantId || submittingRef.current || (authLoading && !isEmbeddedDemo(restaurantId))) return;
     // Browsing and cart editing stay public. Real validation requires a session;
     // the server enforces this independently from the client/demo hints.
     if (!isDemo && !user?.email_confirmed_at) {
@@ -445,7 +446,7 @@ const OrderPage = () => {
 
           <Button
             onClick={handleConfirm}
-            disabled={(!isKiosk && (!name || !phone || !isPhoneValid(phone))) || submitting || authLoading}
+            disabled={(!isKiosk && (!name || !phone || !isPhoneValid(phone))) || submitting || (authLoading && !isEmbeddedDemo(restaurantId))}
             className="w-full h-14 text-base font-semibold rounded-2xl"
             size="lg"
           >

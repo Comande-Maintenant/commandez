@@ -1,9 +1,10 @@
+vi.mock('@/context/CartContext', () => ({useCart:()=>({restaurantId:null})}));
 import { act, cleanup, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({ app: vi.fn(), start: vi.fn(), stop: vi.fn(), remove: vi.fn() }));
 vi.mock('@/lib/native', () => ({ isNative: () => true, nativeRoute: () => null }));
 vi.mock('@/context/LanguageContext', () => ({ useLanguage: () => ({ t: (key: string) => key }) }));
-vi.mock('react-router-dom', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('react-router-dom', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({pathname:'/'}) }));
 vi.mock('@capacitor/app', () => ({ App: { addListener: mocks.app, getLaunchUrl: vi.fn().mockResolvedValue(null) } }));
 vi.mock('@capacitor/network', () => ({ Network: { getStatus: vi.fn().mockResolvedValue({ connected: true }), addListener: vi.fn().mockResolvedValue({ remove: mocks.remove }) } }));
 vi.mock('@/integrations/supabase/client', () => ({ supabase: { auth: { startAutoRefresh: mocks.start, stopAutoRefresh: mocks.stop } } }));

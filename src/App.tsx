@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { CartProvider } from "@/context/CartContext";
+import { CartProvider, useCart } from "@/context/CartContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -65,7 +65,8 @@ function AuthSync() {
 }
 
 function PageTracker() {
-  usePageTracking();
+  const { restaurantId } = useCart();
+  usePageTracking(restaurantId);
   return null;
 }
 

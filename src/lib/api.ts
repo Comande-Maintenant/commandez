@@ -1,3 +1,4 @@
+import { isEmbeddedDemo, isEmbeddedDemoSlug, isEmbeddedDemoOrder, embeddedRestaurant, embeddedMenu, embeddedOrders, createEmbeddedOrder, embeddedTrackedOrder } from './embedded-demo';
 import { randomUuid } from '@/lib/uuid';
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
@@ -7,6 +8,7 @@ const PLAN_PRICES = { monthly: 29.99 } as const;
 // ── Demo mode RPCs ──
 
 export async function fetchDemoRestaurant(slug: string): Promise<DbRestaurant | null> {
+  if (isEmbeddedDemoSlug(slug)) return embeddedRestaurant();
   const { data, error } = await supabase.rpc("get_demo_restaurant", { p_slug: slug });
   if (error) throw error;
   const rows = data as unknown as DbRestaurant[];
@@ -14,12 +16,14 @@ export async function fetchDemoRestaurant(slug: string): Promise<DbRestaurant | 
 }
 
 export async function fetchDemoOrders(restaurantId: string): Promise<DbOrder[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedOrders();
   const { data, error } = await supabase.rpc("get_demo_orders", { p_restaurant_id: restaurantId });
   if (error) throw error;
   return (data ?? []) as unknown as DbOrder[];
 }
 
 export async function fetchDemoCustomers(restaurantId: string): Promise<DbCustomer[]> {
+  if (isEmbeddedDemo(restaurantId)) return [];
   const { data, error } = await supabase.rpc("get_demo_customers", { p_restaurant_id: restaurantId });
   if (error) throw error;
   return (data ?? []) as unknown as DbCustomer[];
@@ -45,6 +49,7 @@ export async function fetchRestaurants(): Promise<DbRestaurant[]> {
 }
 
 export async function fetchRestaurantById(id: string): Promise<DbRestaurant | null> {
+  if (isEmbeddedDemo(id)) return embeddedRestaurant();
   const { data, error } = await supabase.rpc("get_public_restaurant_by_id", {
     p_id: id,
   });
@@ -53,6 +58,7 @@ export async function fetchRestaurantById(id: string): Promise<DbRestaurant | nu
 }
 
 export async function fetchRestaurantBySlug(slug: string): Promise<DbRestaurant | null> {
+  if (isEmbeddedDemoSlug(slug)) return embeddedRestaurant();
   const { data, error } = await supabase.rpc("get_public_restaurant_by_slug", {
     p_slug: slug,
   });
@@ -61,6 +67,7 @@ export async function fetchRestaurantBySlug(slug: string): Promise<DbRestaurant 
 }
 
 export async function fetchMenuItems(restaurantId: string): Promise<DbMenuItem[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedMenu().filter(item => item.enabled && !item.is_alcohol);
   const { data, error } = await supabase
     .from("menu_items")
     .select("*")
@@ -73,6 +80,7 @@ export async function fetchMenuItems(restaurantId: string): Promise<DbMenuItem[]
 }
 
 export async function fetchAllMenuItems(restaurantId: string): Promise<DbMenuItem[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedMenu();
   const { data, error } = await supabase
     .from("menu_items")
     .select("*")
@@ -101,6 +109,7 @@ export async function createOrder(order: {
   estimated_ready_at?: string;
   is_test?: boolean;
 }): Promise<DbOrder> {
+  if (isEmbeddedDemo(order.restaurant_id)) return createEmbeddedOrder(order);
   const { request_id, ...payload } = order;
   const { data, error } = await supabase.rpc("place_order_once" as never, {
     p_request_id: request_id || randomUuid(),
@@ -238,6 +247,7 @@ export async function updateRestaurant(id: string, updates: Partial<DbRestaurant
 }
 
 export async function fetchRestaurantHours(restaurantId: string) {
+  if (isEmbeddedDemo(restaurantId)) return [];
   const { data, error } = await supabase
     .from("restaurant_hours")
     .select("*")
@@ -356,6 +366,7 @@ export async function uploadRestaurantImage(restaurantId: string, file: File, ty
 }
 
 export async function fetchOrderById(orderId: string): Promise<(DbOrder & { restaurant: Pick<DbRestaurant, 'name' | 'slug' | 'primary_color'> & { phone: string; is_demo?: boolean } }) | null> {
+  if (isEmbeddedDemoOrder(orderId)) return embeddedTrackedOrder(orderId);
   const { data, error } = await supabase.rpc("get_order_for_tracking", { p_order_id: orderId });
   if (error) throw error;
   if (!data) return null;
@@ -368,6 +379,7 @@ export async function fetchOrderById(orderId: string): Promise<(DbOrder & { rest
 }
 
 export function subscribeToOrderStatus(orderId: string, callback: (order: DbOrder) => void): () => void {
+  if (isEmbeddedDemoOrder(orderId)) return () => {};
   // Tracking RPC preserves owner-only SELECT. Serialize reads, suspend hidden
   // screens and stop at completion; active screens receive updates within 5s.
   let lastSnapshot: string | null = null;
@@ -424,6 +436,7 @@ export async function incrementDeactivationVisits(restaurantId: string) {
 }
 
 export async function fetchActiveOrderCount(restaurantId: string): Promise<number> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedOrders().filter(order => order.status !== 'done').length;
   const { data, error } = await supabase.rpc("get_active_order_count", {
     p_restaurant_id: restaurantId,
   });
@@ -547,6 +560,7 @@ export async function isCustomerBanned(
   email?: string,
   ip?: string
 ): Promise<{ banned: boolean; reason?: string; expires?: string | null }> {
+  if (isEmbeddedDemo(restaurantId)) return { banned: false };
   const { data, error } = await supabase
     .rpc("check_customer_ban", {
       p_restaurant_id: restaurantId,
@@ -633,6 +647,7 @@ export async function fetchAllRestaurantsWithStats(): Promise<
 }
 
 export async function fetchOrdersByPeriod(restaurantId: string, since: Date): Promise<DbOrder[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedOrders().filter(order => Date.parse(order.created_at) >= since.getTime());
   const { data, error } = await supabase
     .from("orders")
     .select("*")

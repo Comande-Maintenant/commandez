@@ -1,0 +1,933 @@
+{
+  "restaurant": {
+    "id": "demo-restaurant-antalya",
+    "city": "Monéteau",
+    "name": "Antalya Kebab",
+    "slug": "antalya-kebab-moneteau",
+    "hours": "11h00 - 23h00",
+    "image": "/images/covers/kebab.jpg",
+    "rating": 4.5,
+    "address": "Adresse de démonstration",
+    "cuisine": "Kebab",
+    "is_demo": true,
+    "is_open": true,
+    "website": "",
+    "bg_color": "#ffffff",
+    "schedule": null,
+    "time_zone": "Europe/Paris",
+    "categories": [
+      "SANDWICHS",
+      "ASSIETTES",
+      "DIVERS"
+    ],
+    "order_mode": "on_site_pickup",
+    "bonus_weeks": 0,
+    "cover_image": "/images/covers/kebab.jpg",
+    "description": "Restaurant de démonstration CommandeIci",
+    "cuisine_type": "kebab",
+    "review_count": 0,
+    "business_type": "restaurant",
+    "minimum_order": 10.0,
+    "primary_color": "#000000",
+    "account_status": "active",
+    "deactivated_at": null,
+    "estimated_time": "15-25 min",
+    "trial_end_date": null,
+    "payment_methods": [],
+    "dine_in_capacity": 15,
+    "prep_time_config": {
+      "max_minutes": 90,
+      "default_minutes": 20,
+      "per_item_minutes": 3
+    },
+    "restaurant_phone": "",
+    "availability_mode": "manual",
+    "notification_sound": "default",
+    "is_accepting_orders": true,
+    "subscription_status": "free",
+    "customization_config": null,
+    "category_translations": {},
+    "scheduled_deletion_at": null,
+    "out_of_stock_ingredients": [],
+    "owner_id": null,
+    "referral_code": null,
+    "referred_by": null
+  },
+  "menu": [
+    {
+      "id": "demo-6bdc8f02-4eee-4fbd-a240-320fcfc11610",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Kebab",
+      "description": "Pain, viande kebab, crudites, sauce",
+      "price": 6.5,
+      "image": "/images/menu/kebab.webp",
+      "category": "SANDWICHS",
+      "popular": true,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 0,
+      "variants": [],
+      "translations": {},
+      "product_type": "sandwich",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-a7e59bd2-0eac-4e1a-9599-dcc7ea631e2a",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Sandwich",
+      "description": "Pain, viande au choix, crudites, sauce",
+      "price": 7.0,
+      "image": "/images/menu/kebab.webp",
+      "category": "SANDWICHS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 1,
+      "variants": [],
+      "translations": {},
+      "product_type": "sandwich",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-774579c0-d851-4c9f-a904-07e69b316c94",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Galette",
+      "description": "Galette garnie, viande au choix, crudites, sauce",
+      "price": 0.0,
+      "image": "/images/menu/wrap.webp",
+      "category": "SANDWICHS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 2,
+      "variants": [],
+      "translations": {},
+      "product_type": "galette",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-fc135020-3f24-44ae-a1c8-e3d2797c198e",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Tacos",
+      "description": "Tacos garni, viande(s) au choix, fromage, sauce",
+      "price": 0.0,
+      "image": "/images/menu/tacos.webp",
+      "category": "SANDWICHS",
+      "popular": true,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 3,
+      "variants": [],
+      "translations": {},
+      "product_type": "tacos",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-7daacb62-5ab9-4268-bd79-bbdc819da06a",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Hamburger",
+      "description": "Pain burger, steak, crudites, sauce",
+      "price": 5.5,
+      "image": "/images/menu/burger.webp",
+      "category": "SANDWICHS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 4,
+      "variants": [],
+      "translations": {},
+      "product_type": "hamburger",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-8903e173-dd38-4273-9d5c-db23cc8c3cd6",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Panini 3 fromages",
+      "description": "",
+      "price": 5.5,
+      "image": "/images/menu/panini.webp",
+      "category": "SANDWICHS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 5,
+      "variants": [],
+      "translations": {},
+      "product_type": "simple",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-c3b245ea-ae98-4fd5-b954-b80a1fe53c3c",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Panini Poulet fromage",
+      "description": "",
+      "price": 5.5,
+      "image": "/images/menu/panini.webp",
+      "category": "SANDWICHS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 6,
+      "variants": [],
+      "translations": {},
+      "product_type": "simple",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-0b1b470f-3e51-42a2-bdf8-6418a4b04f9c",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Panini Nutella / Speculos",
+      "description": "",
+      "price": 4.0,
+      "image": "/images/menu/panini.webp",
+      "category": "SANDWICHS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 7,
+      "variants": [],
+      "translations": {},
+      "product_type": "simple",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-ca09b74b-e1de-49f0-8c52-61dd7c6e4459",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Assiette",
+      "description": "Choisissez la taille, viande(s), sauce et accompagnement",
+      "price": 0.0,
+      "image": "/images/menu/plate.webp",
+      "category": "ASSIETTES",
+      "popular": true,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 0,
+      "variants": [],
+      "translations": {},
+      "product_type": "assiette",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-68044a5a-b4b5-44a0-ac1d-dcb57c002926",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Fromage",
+      "description": "Supplement fromage",
+      "price": 1.0,
+      "image": "/images/menu/kebab.webp",
+      "category": "SUPPLEMENTS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 90,
+      "variants": [],
+      "translations": {},
+      "product_type": "supplement",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-3629f114-e46f-4e00-9e17-d0e630278a2d",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Oeuf",
+      "description": "Supplement oeuf",
+      "price": 1.0,
+      "image": "/images/menu/kebab.webp",
+      "category": "SUPPLEMENTS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 91,
+      "variants": [],
+      "translations": {},
+      "product_type": "supplement",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-be68528a-6084-4dc9-8033-26472c28dc56",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Barquette Viande",
+      "description": "",
+      "price": 5.0,
+      "image": "/images/menu/panini.webp",
+      "category": "DIVERS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 28,
+      "variants": [
+        {
+          "name": "Petite",
+          "price": 5
+        },
+        {
+          "name": "Moyenne",
+          "price": 7
+        },
+        {
+          "name": "Grande",
+          "price": 9
+        },
+        {
+          "name": "Longue",
+          "price": 12
+        }
+      ],
+      "translations": {},
+      "product_type": "simple",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-cd1be34e-a229-40ab-9282-3d7c2326eb9b",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Barquette Frites",
+      "description": "",
+      "price": 3.0,
+      "image": "/images/menu/panini.webp",
+      "category": "DIVERS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 29,
+      "variants": [
+        {
+          "name": "Petite",
+          "price": 3
+        },
+        {
+          "name": "Moyenne",
+          "price": 3.5
+        },
+        {
+          "name": "Grande",
+          "price": 4
+        },
+        {
+          "name": "Longue",
+          "price": 5
+        }
+      ],
+      "translations": {},
+      "product_type": "simple",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-1b2adc6e-e6f9-4a44-bd04-d1bc23ad2111",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Barquette Viande + Frites",
+      "description": "",
+      "price": 5.0,
+      "image": "/images/menu/panini.webp",
+      "category": "DIVERS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 30,
+      "variants": [
+        {
+          "name": "Petite",
+          "price": 5
+        },
+        {
+          "name": "Moyenne",
+          "price": 6
+        },
+        {
+          "name": "Grande",
+          "price": 7
+        },
+        {
+          "name": "Longue",
+          "price": 8
+        }
+      ],
+      "translations": {},
+      "product_type": "simple",
+      "is_alcohol": false
+    },
+    {
+      "id": "demo-291ae589-54c7-4568-b008-5f75b9636d8f",
+      "restaurant_id": "demo-restaurant-antalya",
+      "name": "Hamburger Double Steak",
+      "description": "Pain burger, double steak, crudites, sauce",
+      "price": 8.0,
+      "image": "/images/menu/burger.webp",
+      "category": "SANDWICHS",
+      "popular": false,
+      "enabled": true,
+      "supplements": [],
+      "sauces": [],
+      "sort_order": 5,
+      "variants": [],
+      "translations": {},
+      "product_type": "hamburger",
+      "is_alcohol": false
+    }
+  ],
+  "customization": {
+    "bases": [
+      {
+        "id": "demo-f671de4b-12cb-4705-8250-db0e0b2cb716",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Galette",
+        "name_translations": {
+          "de": "Galette",
+          "en": "Galette",
+          "es": "Galette"
+        },
+        "price": 7.0,
+        "max_viandes": 1,
+        "image": "/images/menu/wrap.webp",
+        "sort_order": 1,
+        "enabled": true,
+        "group": "galette"
+      },
+      {
+        "id": "demo-64d0b3e8-9dc1-4703-8be0-90b0db104833",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Galette Geante",
+        "name_translations": {
+          "de": "Riesen-Galette",
+          "en": "Giant Galette",
+          "es": "Galette Gigante"
+        },
+        "price": 10.0,
+        "max_viandes": 1,
+        "image": "/images/menu/wrap.webp",
+        "sort_order": 2,
+        "enabled": true,
+        "group": "galette"
+      },
+      {
+        "id": "demo-bb682b08-fdd2-4328-914c-0bcf9925ba57",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Tacos Normal",
+        "name_translations": {
+          "de": "Normaler Tacos",
+          "en": "Regular Tacos",
+          "es": "Tacos Normal"
+        },
+        "price": 8.0,
+        "max_viandes": 3,
+        "image": "/images/menu/tacos.webp",
+        "sort_order": 3,
+        "enabled": true,
+        "group": "tacos"
+      },
+      {
+        "id": "demo-ed2f827e-1d73-47b4-933a-8ef837aa3ab9",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Tacos Geant",
+        "name_translations": {
+          "de": "Riesen-Tacos",
+          "en": "Giant Tacos",
+          "es": "Tacos Gigante"
+        },
+        "price": 13.0,
+        "max_viandes": 3,
+        "image": "/images/menu/tacos.webp",
+        "sort_order": 4,
+        "enabled": true,
+        "group": "tacos"
+      },
+      {
+        "id": "demo-df2b2d62-519c-4a1e-aac6-3c43156c3d20",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Petite assiette",
+        "name_translations": {
+          "de": "Kleiner Teller",
+          "en": "Small plate",
+          "es": "Plato pequeno"
+        },
+        "price": 8.0,
+        "max_viandes": 1,
+        "image": "/images/menu/plate.webp",
+        "sort_order": 5,
+        "enabled": true,
+        "group": "assiette"
+      },
+      {
+        "id": "demo-7490a31e-5f7b-4a1b-bab7-bb0bbf6faff8",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Grande assiette",
+        "name_translations": {
+          "de": "Grosser Teller",
+          "en": "Large plate",
+          "es": "Plato grande"
+        },
+        "price": 11.0,
+        "max_viandes": 3,
+        "image": "/images/menu/plate.webp",
+        "sort_order": 6,
+        "enabled": true,
+        "group": "assiette"
+      }
+    ],
+    "viandes": [
+      {
+        "id": "demo-37c18d39-57f7-45c0-9ea4-d79892685e2c",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Kebab",
+        "name_translations": {
+          "de": "Kebab",
+          "en": "Kebab",
+          "es": "Kebab"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 1,
+        "enabled": true
+      },
+      {
+        "id": "demo-d177d7dc-6ccd-4c1a-8b2d-ff71f9ce098c",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Poulet",
+        "name_translations": {
+          "de": "Huhn",
+          "en": "Chicken",
+          "es": "Pollo"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 2,
+        "enabled": true
+      },
+      {
+        "id": "demo-69c0497f-a56a-439d-aee0-10817da473c3",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Merguez",
+        "name_translations": {
+          "de": "Merguez",
+          "en": "Merguez",
+          "es": "Merguez"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 3,
+        "enabled": true
+      },
+      {
+        "id": "demo-89db6521-925c-49b9-942b-305f1968b3d5",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Kefta",
+        "name_translations": {
+          "de": "Kefta",
+          "en": "Kefta",
+          "es": "Kefta"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 4,
+        "enabled": true
+      },
+      {
+        "id": "demo-fef00268-b470-4d61-b75a-4a9ec3bb105e",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Steak",
+        "name_translations": {
+          "de": "Steak",
+          "en": "Steak",
+          "es": "Filete"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 5,
+        "enabled": true
+      },
+      {
+        "id": "demo-1d64265d-8232-4efb-bfd5-666647c1c789",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Chicken tikka",
+        "name_translations": {
+          "de": "Chicken tikka",
+          "en": "Chicken tikka",
+          "es": "Chicken tikka"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 6,
+        "enabled": true
+      },
+      {
+        "id": "demo-f6e4c1b6-a02b-471f-bada-1428d2f652fe",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Poulet creme",
+        "name_translations": {
+          "de": "Sahnehuhn",
+          "en": "Cream chicken",
+          "es": "Pollo crema"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 7,
+        "enabled": true
+      },
+      {
+        "id": "demo-615c4427-f986-49a2-85a9-e08cc37b94de",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Kofte",
+        "name_translations": {
+          "de": "Kofte",
+          "en": "Kofte",
+          "es": "Kofte"
+        },
+        "supplement": 0.0,
+        "image": "/images/menu/meat.webp",
+        "sort_order": 8,
+        "enabled": true
+      }
+    ],
+    "garnitures": [
+      {
+        "id": "demo-4f877093-ee0c-4017-b8dc-6f153c793d3d",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Salade",
+        "name_translations": {
+          "de": "Salat",
+          "en": "Lettuce",
+          "es": "Lechuga"
+        },
+        "is_default": true,
+        "price_x2": 0.0,
+        "sort_order": 1,
+        "enabled": true
+      },
+      {
+        "id": "demo-677978f1-5237-469d-b67d-666f796a4fee",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Tomates",
+        "name_translations": {
+          "de": "Tomaten",
+          "en": "Tomatoes",
+          "es": "Tomates"
+        },
+        "is_default": true,
+        "price_x2": 0.0,
+        "sort_order": 2,
+        "enabled": true
+      },
+      {
+        "id": "demo-5f3d6480-6bca-4110-a518-fbaf149fec70",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Oignons",
+        "name_translations": {
+          "de": "Zwiebeln",
+          "en": "Onions",
+          "es": "Cebollas"
+        },
+        "is_default": true,
+        "price_x2": 0.0,
+        "sort_order": 3,
+        "enabled": true
+      }
+    ],
+    "sauces": [
+      {
+        "id": "demo-ae946408-ca7d-49ae-a8a0-97ddbcac3351",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Algerienne",
+        "name_translations": {
+          "de": "Algerische",
+          "en": "Algerian",
+          "es": "Argelina"
+        },
+        "is_for_sandwich": true,
+        "is_for_frites": true,
+        "sort_order": 1,
+        "enabled": true
+      },
+      {
+        "id": "demo-64066804-41cd-4e2b-be26-f10163ba3c30",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Blanche",
+        "name_translations": {
+          "de": "Weisse Sosse",
+          "en": "White sauce",
+          "es": "Salsa blanca"
+        },
+        "is_for_sandwich": true,
+        "is_for_frites": true,
+        "sort_order": 2,
+        "enabled": true
+      },
+      {
+        "id": "demo-e21a1f63-4167-4221-9e9c-ac3667a256d3",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Samourai",
+        "name_translations": {
+          "de": "Samurai",
+          "en": "Samurai",
+          "es": "Samurai"
+        },
+        "is_for_sandwich": true,
+        "is_for_frites": true,
+        "sort_order": 3,
+        "enabled": true
+      },
+      {
+        "id": "demo-36769059-535a-4312-8838-0c6d7e6ef241",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Ketchup",
+        "name_translations": {
+          "de": "Ketchup",
+          "en": "Ketchup",
+          "es": "Ketchup"
+        },
+        "is_for_sandwich": true,
+        "is_for_frites": true,
+        "sort_order": 4,
+        "enabled": true
+      },
+      {
+        "id": "demo-9f6a74b3-18d6-4794-b5bf-dbd07bad747e",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Harissa",
+        "name_translations": {
+          "de": "Harissa",
+          "en": "Harissa",
+          "es": "Harissa"
+        },
+        "is_for_sandwich": true,
+        "is_for_frites": true,
+        "sort_order": 5,
+        "enabled": true
+      },
+      {
+        "id": "demo-67557681-8186-448b-97a2-75e57eb0ed46",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Mayonnaise",
+        "name_translations": {
+          "de": "Mayonnaise",
+          "en": "Mayonnaise",
+          "es": "Mayonesa"
+        },
+        "is_for_sandwich": true,
+        "is_for_frites": true,
+        "sort_order": 6,
+        "enabled": true
+      },
+      {
+        "id": "demo-6f36c6ea-53ba-4259-98dc-9b58a142f018",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Barbecue",
+        "name_translations": {
+          "de": "BBQ",
+          "en": "BBQ",
+          "es": "Barbacoa"
+        },
+        "is_for_sandwich": true,
+        "is_for_frites": true,
+        "sort_order": 7,
+        "enabled": true
+      }
+    ],
+    "accompagnements": [
+      {
+        "id": "demo-d17ee561-5b7c-4122-8acf-7148a7529489",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Frites",
+        "name_translations": {
+          "de": "Pommes",
+          "en": "Fries",
+          "es": "Patatas fritas"
+        },
+        "has_sizes": false,
+        "price_small": null,
+        "price_medium": null,
+        "price_large": null,
+        "price_default": 0.0,
+        "has_sauce_option": true,
+        "sort_order": 1,
+        "enabled": true
+      },
+      {
+        "id": "demo-059d3a47-ca81-421b-9a26-432307045123",
+        "restaurant_id": "demo-restaurant-antalya",
+        "name": "Ble",
+        "name_translations": {
+          "de": "Weizen",
+          "en": "Wheat",
+          "es": "Trigo"
+        },
+        "has_sizes": false,
+        "price_small": null,
+        "price_medium": null,
+        "price_large": null,
+        "price_default": 0.0,
+        "has_sauce_option": false,
+        "sort_order": 2,
+        "enabled": true
+      }
+    ],
+    "config": {
+      "id": "demo-45974806-d230-4acd-807a-edf21671b441",
+      "restaurant_id": "demo-restaurant-antalya",
+      "free_sauces_sandwich": 3,
+      "free_sauces_frites": 2,
+      "extra_sauce_price": 0.5,
+      "suggest_sauce_from_sandwich": true,
+      "enable_boisson_upsell": false,
+      "enable_dessert_upsell": false,
+      "pain_supplement_price": 0.5,
+      "free_accompagnements": 2,
+      "extra_accompagnement_price": 1.0
+    },
+    "stepTemplates": [
+      {
+        "id": "demo-7e18a18a-55cf-4b1d-a306-99da0d1786bc",
+        "cuisine_type": "kebab",
+        "step_key": "base",
+        "label_i18n": "custom.choose_base",
+        "data_source": "restaurant_bases",
+        "step_type": "single_select",
+        "sort_order": 1,
+        "required": true,
+        "config": {}
+      },
+      {
+        "id": "demo-07f945d5-566f-47ae-b8d8-79cd293bf40b",
+        "cuisine_type": "kebab",
+        "step_key": "viande",
+        "label_i18n": "custom.choose_meat",
+        "data_source": "restaurant_viandes",
+        "step_type": "multi_select",
+        "sort_order": 2,
+        "required": true,
+        "config": {
+          "max_from_base": true,
+          "extra_viande_price": 2
+        }
+      },
+      {
+        "id": "demo-d5ccc1ea-e3a5-4ef9-b2ae-18268ae6f68d",
+        "cuisine_type": "kebab",
+        "step_key": "garniture",
+        "label_i18n": "custom.toppings",
+        "data_source": "restaurant_garnitures",
+        "step_type": "toggle_group",
+        "sort_order": 3,
+        "required": false,
+        "config": {}
+      },
+      {
+        "id": "demo-6b9915dd-8bb2-47cb-8382-09c66b157f5b",
+        "cuisine_type": "kebab",
+        "step_key": "sauce",
+        "label_i18n": "custom.sauces",
+        "data_source": "restaurant_sauces",
+        "step_type": "chip_select",
+        "sort_order": 4,
+        "required": false,
+        "config": {
+          "filter_field": "is_for_sandwich",
+          "free_count_config": "free_sauces_sandwich"
+        }
+      },
+      {
+        "id": "demo-ee5bbfca-a053-466d-a497-5a24b2396790",
+        "cuisine_type": "kebab",
+        "step_key": "frites",
+        "label_i18n": "custom.frites_option",
+        "data_source": "none",
+        "step_type": "single_select",
+        "sort_order": 5,
+        "required": false,
+        "config": {
+          "options": [
+            {
+              "id": "sans_frites",
+              "name": "Sans frites",
+              "price": 0
+            },
+            {
+              "id": "avec_frites",
+              "name": "Avec frites +1€",
+              "price": 1
+            }
+          ]
+        }
+      },
+      {
+        "id": "demo-3fe569d5-a926-4868-8a27-a409d5cbbe88",
+        "cuisine_type": "kebab",
+        "step_key": "supplement",
+        "label_i18n": "custom.choose_supplements",
+        "data_source": "menu_items_filter",
+        "step_type": "multi_select",
+        "sort_order": 6,
+        "required": false,
+        "config": {
+          "filter_field": "product_type",
+          "filter_value": "supplement"
+        }
+      },
+      {
+        "id": "demo-a301ef3e-10e5-436e-a214-c1b0df45e190",
+        "cuisine_type": "kebab",
+        "step_key": "accompagnement",
+        "label_i18n": "custom.side",
+        "data_source": "restaurant_accompagnements",
+        "step_type": "single_select",
+        "sort_order": 7,
+        "required": false,
+        "config": {
+          "enable_config": "enable_accompagnement"
+        }
+      },
+      {
+        "id": "demo-d6b54dcf-a667-49fd-a433-0093c025a6a1",
+        "cuisine_type": "kebab",
+        "step_key": "boisson",
+        "label_i18n": "custom.drink_upsell",
+        "data_source": "menu_items_filter",
+        "step_type": "upsell",
+        "sort_order": 8,
+        "required": false,
+        "config": {
+          "filter_field": "product_type",
+          "filter_value": "boisson",
+          "enable_config": "enable_boisson_upsell"
+        }
+      },
+      {
+        "id": "demo-3937a30a-7354-4b4c-9198-a9d555b93aed",
+        "cuisine_type": "kebab",
+        "step_key": "dessert",
+        "label_i18n": "custom.dessert_upsell",
+        "data_source": "menu_items_filter",
+        "step_type": "upsell",
+        "sort_order": 9,
+        "required": false,
+        "config": {
+          "filter_field": "product_type",
+          "filter_value": "dessert",
+          "enable_config": "enable_dessert_upsell"
+        }
+      },
+      {
+        "id": "demo-ff0da8bb-d750-4d2f-8509-6596e5ef4891",
+        "cuisine_type": "kebab",
+        "step_key": "recap",
+        "label_i18n": "custom.recap",
+        "data_source": "none",
+        "step_type": "recap",
+        "sort_order": 10,
+        "required": true,
+        "config": {}
+      }
+    ],
+    "cuisine_type": "kebab"
+  }
+}
