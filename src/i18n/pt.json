@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "A sua atividade simulada",
   "commerce.demo_error": "Não foi possível concluir esta ação. Tente novamente.",
   "commerce.explore_client": "Escolha um produto, adicione as opções e simule o levantamento.",
-  "commerce.explore_merchant": "Receba uma encomenda de demonstração ou continue a que foi criada na vista do cliente."
+  "commerce.explore_merchant": "Receba uma encomenda de demonstração ou continue a que foi criada na vista do cliente.",
+  "commerce.choose_short": "Escolher"
 }

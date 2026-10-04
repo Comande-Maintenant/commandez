@@ -1,5 +1,5 @@
 import {beforeEach,expect,it} from 'vitest';
-import {demoCatalog,loadCommerceDemo,saveCommerceDemo,createCommerceDemoOrder,advanceCommerceDemoOrder} from '@/lib/demo-commerce';
+import {demoCatalog,loadCommerceDemo,saveCommerceDemo,createCommerceDemoOrder,advanceCommerceDemoOrder,initialCommerceDemoState,configureCommerceLine} from '@/lib/demo-commerce';
 beforeEach(()=>sessionStorage.clear());
 it('uses separate grocery and florist catalogues and rejects an unknown commerce',()=>{
  expect(demoCatalog('epicerie').products.some(product=>product.id==='basket')).toBe(true);
@@ -16,8 +16,8 @@ it('derives prices from trusted products and advances only one actual step',()=>
 });
 it('persists each local demo separately and refuses malformed or foreign state',()=>{
  const order=createCommerceDemoOrder('fleuriste',{bouquet:1},1);
- saveCommerceDemo('fleuriste',{cart:{bouquet:1},orders:[order]});
- expect(loadCommerceDemo('fleuriste').orders).toEqual([order]);expect(loadCommerceDemo('epicerie')).toEqual({cart:{},orders:[]});
+ saveCommerceDemo('fleuriste',{...initialCommerceDemoState('fleuriste'),cart:[configureCommerceLine('fleuriste','bouquet')],orders:[order]});
+ expect(loadCommerceDemo('fleuriste').orders).toEqual([order]);expect(loadCommerceDemo('epicerie')).toEqual(initialCommerceDemoState('epicerie'));
  sessionStorage.setItem('commandeici:commerce-demo:epicerie',JSON.stringify({cart:{basket:-10},orders:[order]}));
- expect(loadCommerceDemo('epicerie')).toEqual({cart:{},orders:[]});
+ expect(loadCommerceDemo('epicerie')).toEqual(initialCommerceDemoState('epicerie'));
 });

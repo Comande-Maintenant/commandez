@@ -14,12 +14,12 @@ for(const sector of ['epicerie','fleuriste'])test(`${sector} customer and mercha
  let writes=0;await page.route('**/rest/v1/**',async route=>{if(route.request().method()!=='GET'){writes++;await route.fulfill({status:400,json:{message:'Demo must remain local'}});}else await route.continue();});
  await page.addInitScript(()=>localStorage.setItem('resto-order-cart',JSON.stringify({items:[],restaurantSlug:'actual-owner',restaurantId:'actual-owner'})));
  await page.goto(`/demo/${sector}?lang=fr`,{waitUntil:'networkidle'});
- await page.getByRole('button',{name:/^Ajouter /}).first().click();await page.getByRole('button',{name:/Voir mon panier/}).click();
+ await page.getByRole('button',{name:/^(Ajouter|Choisir) /}).first().click();await page.getByRole('dialog').getByRole('button',{name:/Ajouter au panier/}).click();await page.getByRole('button',{name:/Voir mon panier/}).click();
  await page.getByRole('button',{name:'Simuler la commande'}).click();
  const progress=page.getByRole('progressbar');await expect(progress).toHaveAttribute('aria-valuenow','1');
  await page.getByRole('button',{name:'Préparer la commande',exact:true}).first().click();await expect(progress).toHaveAttribute('aria-valuenow','2');
  await page.reload({waitUntil:'networkidle'});await expect(progress).toHaveAttribute('aria-valuenow','2');
- await page.getByRole('button',{name:'Marquer comme prête',exact:true}).first().click();await page.getByRole('button',{name:'Commande retirée',exact:true}).first().click();await expect(progress).toHaveAttribute('aria-valuenow','4');
+ await page.getByRole('button',{name:'Marquer comme prête',exact:true}).first().click();await page.locator('#commerce-tab-cash').click();await page.getByRole('button',{name:'Commande retirée',exact:true}).first().click();await expect(progress).toHaveAttribute('aria-valuenow','4');
  expect(writes).toBe(0);expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('resto-order-cart')!).restaurantId)).toBe('actual-owner');
 });
 

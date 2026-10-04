@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "Tu actividad simulada",
   "commerce.demo_error": "No se ha podido completar la acción. Inténtalo de nuevo.",
   "commerce.explore_client": "Elige un producto, añade tus opciones y simula la recogida.",
-  "commerce.explore_merchant": "Recibe un pedido de demostración o continúa el creado en la vista del cliente."
+  "commerce.explore_merchant": "Recibe un pedido de demostración o continúa el creado en la vista del cliente.",
+  "commerce.choose_short": "Elegir"
 }

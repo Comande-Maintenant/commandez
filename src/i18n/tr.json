@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "Demo faaliyetiniz",
   "commerce.demo_error": "Bu işlem tamamlanamadı. Tekrar deneyin.",
   "commerce.explore_client": "Bir ürün seçin, seçeneklerinizi ekleyin ve teslim almayı canlandırın.",
-  "commerce.explore_merchant": "Bir demo sipariş alın veya müşteri tarafında oluşturduğunuz siparişe devam edin."
+  "commerce.explore_merchant": "Bir demo sipariş alın veya müşteri tarafında oluşturduğunuz siparişe devam edin.",
+  "commerce.choose_short": "Seç"
 }

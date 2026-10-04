@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "Uw gesimuleerde activiteit",
   "commerce.demo_error": "Deze actie is niet gelukt. Probeer het opnieuw.",
   "commerce.explore_client": "Kies een product, voeg uw opties toe en simuleer het ophalen.",
-  "commerce.explore_merchant": "Ontvang een demobestelling of ga verder met de bestelling uit de klantweergave."
+  "commerce.explore_merchant": "Ontvang een demobestelling of ga verder met de bestelling uit de klantweergave.",
+  "commerce.choose_short": "Kiezen"
 }

@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "Ihre simulierten Aktivitäten",
   "commerce.demo_error": "Diese Aktion konnte nicht abgeschlossen werden. Versuchen Sie es erneut.",
   "commerce.explore_client": "Wählen Sie ein Produkt, ergänzen Sie Ihre Optionen und simulieren Sie die Abholung.",
-  "commerce.explore_merchant": "Erhalten Sie eine Demobestellung oder bearbeiten Sie die in der Kundensicht erstellte Bestellung weiter."
+  "commerce.explore_merchant": "Erhalten Sie eine Demobestellung oder bearbeiten Sie die in der Kundensicht erstellte Bestellung weiter.",
+  "commerce.choose_short": "Auswählen"
 }

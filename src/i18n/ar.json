@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "نشاطك التجريبي",
   "commerce.demo_error": "لم تكتمل هذه العملية. حاول مرة أخرى.",
   "commerce.explore_client": "اختر منتجًا، وأضف الخيارات، ثم جرّب محاكاة الاستلام.",
-  "commerce.explore_merchant": "استقبل طلبًا تجريبيًا أو تابع الطلب الذي أنشأته في واجهة العميل."
+  "commerce.explore_merchant": "استقبل طلبًا تجريبيًا أو تابع الطلب الذي أنشأته في واجهة العميل.",
+  "commerce.choose_short": "اختر"
 }

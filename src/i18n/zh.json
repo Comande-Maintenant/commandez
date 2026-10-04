@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "您的模拟经营记录",
   "commerce.demo_error": "操作未能完成。请重试。",
   "commerce.explore_client": "选择商品，添加选项，然后模拟取货。",
-  "commerce.explore_merchant": "接收演示订单，或继续处理在顾客视角创建的订单。"
+  "commerce.explore_merchant": "接收演示订单，或继续处理在顾客视角创建的订单。",
+  "commerce.choose_short": "选择"
 }

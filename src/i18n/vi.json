@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "Hoạt động mô phỏng của bạn",
   "commerce.demo_error": "Không thể hoàn tất thao tác này. Vui lòng thử lại.",
   "commerce.explore_client": "Chọn sản phẩm, thêm tùy chọn rồi mô phỏng việc nhận hàng.",
-  "commerce.explore_merchant": "Nhận một đơn hàng demo hoặc xử lý tiếp đơn đã tạo ở phía khách hàng."
+  "commerce.explore_merchant": "Nhận một đơn hàng demo hoặc xử lý tiếp đơn đã tạo ở phía khách hàng.",
+  "commerce.choose_short": "Chọn"
 }

@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "Your simulated activity",
   "commerce.demo_error": "This action could not be completed. Try again.",
   "commerce.explore_client": "Choose a product, add your options, then simulate collection.",
-  "commerce.explore_merchant": "Receive a demo order or continue the one created in the customer view."
+  "commerce.explore_merchant": "Receive a demo order or continue the one created in the customer view.",
+  "commerce.choose_short": "Choose"
 }

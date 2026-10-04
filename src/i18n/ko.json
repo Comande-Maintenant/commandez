@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "내 데모 운영 현황",
   "commerce.demo_error": "작업을 완료하지 못했습니다. 다시 시도해 주세요.",
   "commerce.explore_client": "상품을 선택하고 옵션을 추가한 후 픽업을 시뮬레이션하세요.",
-  "commerce.explore_merchant": "데모 주문을 받거나 고객 화면에서 만든 주문을 이어서 처리하세요."
+  "commerce.explore_merchant": "데모 주문을 받거나 고객 화면에서 만든 주문을 이어서 처리하세요.",
+  "commerce.choose_short": "선택"
 }

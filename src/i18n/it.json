@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "La tua attività simulata",
   "commerce.demo_error": "L'azione non è riuscita. Riprova.",
   "commerce.explore_client": "Scegli un prodotto, aggiungi le opzioni e simula il ritiro.",
-  "commerce.explore_merchant": "Ricevi un ordine dimostrativo o prosegui con quello creato nella vista cliente."
+  "commerce.explore_merchant": "Ricevi un ordine dimostrativo o prosegui con quello creato nella vista cliente.",
+  "commerce.choose_short": "Scegli"
 }

@@ -1629,5 +1629,6 @@
   "commerce.demo_activity": "デモの営業状況",
   "commerce.demo_error": "操作を完了できませんでした。もう一度お試しください。",
   "commerce.explore_client": "商品を選び、オプションを追加して、受け取りをシミュレーションしてください。",
-  "commerce.explore_merchant": "デモ注文を受け取るか、お客様側で作成した注文の処理を続けてください。"
+  "commerce.explore_merchant": "デモ注文を受け取るか、お客様側で作成した注文の処理を続けてください。",
+  "commerce.choose_short": "選ぶ"
 }
