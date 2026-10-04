@@ -381,7 +381,7 @@ export const OrderDetailSheet = ({
       </div>
 
       {/* Content - scrollable */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-40">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 [padding-bottom:max(2rem,env(safe-area-inset-bottom))]">
         {/* Customer info */}
         <div className="py-4 border-b border-border">
           <div className="flex items-center justify-between mb-2">
@@ -771,7 +771,7 @@ export const OrderDetailSheet = ({
             {/* Total */}
             <div className="mt-4 pt-3 border-t border-border">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-foreground">Total</span>
+                <span className="text-sm font-semibold text-foreground">{t("cart.total")}</span>
                 <div className="flex items-center gap-2">
                   <Input
                     type="number"
@@ -803,7 +803,7 @@ export const OrderDetailSheet = ({
             <Button
               onClick={saveEdit}
               disabled={advancing}
-              className="w-full mt-4 h-14 rounded-xl text-base font-semibold"
+              className="w-full mt-4 h-auto min-h-14 rounded-xl text-base font-semibold whitespace-normal break-words"
             >
               {advancing ? "..." : t("dashboard.orders.validate_changes")}
             </Button>
@@ -813,7 +813,7 @@ export const OrderDetailSheet = ({
 
       {/* Bottom action buttons - sticky */}
       {!editing && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-[71] [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
+        <div className="shrink-0 bg-background border-t border-border p-4 z-[71] [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
           <div className="max-w-2xl mx-auto flex gap-3">
             {/* Revert button - all statuses except "new" */}
             {previousStatus[status] && (
@@ -821,10 +821,10 @@ export const OrderDetailSheet = ({
                 variant="outline"
                 onClick={handleRevert}
                 disabled={advancing}
-                className="h-14 rounded-xl text-sm font-semibold flex-shrink-0 gap-1.5"
+                className="h-auto min-h-14 min-w-0 max-w-[45%] rounded-xl text-sm font-semibold gap-1.5"
               >
                 <Undo2 className="h-4 w-4" />
-                {t("dashboard.orders.revert")}
+                <span className="min-w-0 whitespace-normal break-words">{t("dashboard.orders.revert")}</span>
               </Button>
             )}
             {/* Reject button for new orders */}
@@ -833,10 +833,10 @@ export const OrderDetailSheet = ({
                 variant="outline"
                 onClick={handleReject}
                 disabled={advancing}
-                className="h-14 rounded-xl text-base font-semibold flex-shrink-0 min-w-[120px] border-destructive text-destructive hover:bg-destructive/10"
+                className="h-auto min-h-14 min-w-0 basis-[35%] rounded-xl text-base font-semibold border-destructive text-destructive hover:bg-destructive/10"
               >
                 <X className="h-5 w-5 me-1" />
-                {t("dashboard.orders.reject")}
+                <span className="min-w-0 whitespace-normal break-words">{t("dashboard.orders.reject")}</span>
               </Button>
             )}
             {/* Advance button */}
@@ -844,14 +844,14 @@ export const OrderDetailSheet = ({
               <Button
                 onClick={handleAdvance}
                 disabled={advancing}
-                className={`flex-1 h-14 rounded-xl text-base font-semibold text-white ${action.color}`}
+                className={`flex-1 h-auto min-h-14 min-w-0 rounded-xl text-base font-semibold text-white ${action.color}`}
               >
                 {advancing ? (
                   "..."
                 ) : (
                   <>
                     <Check className="h-5 w-5 me-2" />
-                    {action.label}
+                    <span className="min-w-0 whitespace-normal break-words">{action.label}</span>
                   </>
                 )}
               </Button>
@@ -861,9 +861,9 @@ export const OrderDetailSheet = ({
               <Button
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 h-14 rounded-xl text-base font-semibold"
+                className="flex-1 h-auto min-h-14 min-w-0 rounded-xl text-base font-semibold"
               >
-                {t("common.close")}
+                <span className="min-w-0 whitespace-normal break-words">{t("common.close")}</span>
               </Button>
             )}
           </div>

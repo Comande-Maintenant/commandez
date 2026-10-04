@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/ios-native-ui.yml'
       - 'scripts/ci-public-ios-config.py'
+      - 'scripts/test-ci-public-ios-config.py'
       - 'src/**'
       - 'ios/**'
       - 'public/**'
@@ -36,7 +37,13 @@ jobs:
           cache: npm
       - name: Restore locked dependencies
         run: npm ci
-      - name: Load published public client configuration
+      - name: Check public configuration rejection rules
+        run: python3 scripts/test-ci-public-ios-config.py
+      - name: Validate published public client configuration
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_REVENUECAT_IOS_API_KEY: ${{ vars.VITE_REVENUECAT_IOS_API_KEY }}
         run: python3 scripts/ci-public-ios-config.py
       - name: Build and sync iOS resources
         run: npm run ios:sync

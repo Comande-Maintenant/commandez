@@ -1027,7 +1027,7 @@ export const ProductCustomizer = ({
                           <h4 className="text-sm font-semibold text-gray-900 mb-1">{t(currentStep.label_i18n)}</h4>
                           {stepMax > 1 && stepMax < 99 && (
                             <p className="text-xs text-gray-500 mb-3">
-                              {getStepSelections(currentStep.step_key).length}/{stepMax} {t("custom.max_selections", { max: String(stepMax) })}
+                              <span dir="ltr">{getStepSelections(currentStep.step_key).length}/{stepMax}</span> {t("custom.max_selections", { max: String(stepMax) })}
                             </p>
                           )}
                           <div className="grid grid-cols-2 gap-2">
