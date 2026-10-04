@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Globe } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { LANGUAGES } from "@/i18n";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export const LanguageSelector = () => {
   const { language, changeLanguage } = useLanguage();
@@ -10,16 +11,6 @@ export const LanguageSelector = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   const current = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -48,9 +39,10 @@ export const LanguageSelector = () => {
 
   return (
     <div ref={ref} className="relative">
+      <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
       <button
         type="button"
-        onClick={() => setOpen(!open)}
         aria-label={current.name}
         aria-expanded={open}
         className="flex items-center gap-1.5 min-h-11 min-w-11 px-2.5 py-2 rounded-xl bg-white text-slate-900 shadow-sm text-xs font-medium hover:bg-slate-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
@@ -58,9 +50,9 @@ export const LanguageSelector = () => {
         <Globe className="h-3.5 w-3.5" />
         <span>{current.code.toUpperCase()}</span>
       </button>
+      </PopoverTrigger>
 
-      {open && (
-        <div className="absolute top-full end-0 mt-1 w-44 bg-card border border-border rounded-xl shadow-lg overflow-y-auto overscroll-contain z-50 animate-in fade-in slide-in-from-top-2 duration-150" style={{maxHeight:`max(44px, min(24rem, calc(${availableHeight}px - env(safe-area-inset-bottom, 0px))))`}}>
+        <PopoverContent align="end" collisionPadding={12} dir={language === 'ar' ? 'rtl' : 'ltr'} aria-label={current.name} className="w-44 bg-card border border-border rounded-xl p-0 shadow-lg overflow-y-auto overscroll-contain" style={{maxHeight:`max(44px, min(24rem, calc(${availableHeight}px - env(safe-area-inset-bottom, 0px))))`}}>
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}
@@ -79,8 +71,8 @@ export const LanguageSelector = () => {
               <span>{lang.name}</span>
             </button>
           ))}
-        </div>
-      )}
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };

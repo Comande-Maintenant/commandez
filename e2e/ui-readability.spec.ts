@@ -46,7 +46,7 @@ test('signup fields and submit support44px touch targets',async({page})=>{
 });
 for(const language of ['fr','ar'])test(`all languages are reachable in ${language} on a short screen`,async({page})=>{
  await page.setViewportSize({width:320,height:390});await page.goto(`/admin/demo?lang=${language}`,{waitUntil:'networkidle'});
- await page.getByRole('button',{name:language==='ar'?'العربية':'Francais',exact:true}).click();
+ await page.getByRole('button',{name:language==='ar'?'العربية':'Français',exact:true}).click();
  const last=page.getByRole('button',{name:'VI Tiếng Việt',exact:true});await last.scrollIntoViewIfNeeded();
  const box=(await last.boundingBox())!;expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(320);expect(box.y+box.height).toBeLessThanOrEqual(390);expect(box.height).toBeGreaterThanOrEqual(44);
  await last.click();await expect(page.getByRole('button',{name:'Tiếng Việt',exact:true})).toBeVisible();

@@ -2,6 +2,7 @@ import {expect, test, type Locator, type Page} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 
 const dictionary = (language:string) => JSON.parse(readFileSync(new URL(`../src/i18n/${language}.json`, import.meta.url), 'utf8')) as Record<string,string>;
+const merchantName='La Boutique des Saveurs de Monéteau';
 
 async function contrast(locator:Locator, text=false) {
   return locator.evaluate((element, isText) => {
@@ -30,7 +31,7 @@ async function publicMenu(page:Page, {cover='bright',language='fr',open=true,pri
   await page.route(url=>['/rest/v1/','/functions/v1/','/auth/v1/'].some(prefix=>url.pathname.startsWith(prefix)), async route => {
     const path=new URL(route.request().url()).pathname;
     expect(route.request().method()).toMatch(/^(GET|POST)$/);
-    const restaurant={id:'contrast-fixture',slug:'contrast-shop',name:'Boutique test',city:'Paris',categories:['Plats'],image:null,cover_image:'/contrast-cover.svg',is_open:open,is_accepting_orders:open,availability_mode:'manual',account_status:'active',primary_color:primary,payment_methods:['cash'],prep_time_config:{default_minutes:15},out_of_stock_ingredients:[]};
+    const restaurant={id:'contrast-fixture',slug:'contrast-shop',name:merchantName,city:'Paris',categories:['Plats'],image:null,cover_image:'/contrast-cover.svg',is_open:open,is_accepting_orders:open,availability_mode:'manual',account_status:'active',primary_color:primary,payment_methods:['cash'],prep_time_config:{default_minutes:15},out_of_stock_ingredients:[]};
     if(path.endsWith('/customer_profiles')) {
       expect(route.request().method()).toBe('GET');
       await route.fulfill({json:{id:user.id,name:'Alice',email:user.email,phone:null,default_order_type:'collect'}});return;
@@ -53,6 +54,7 @@ for(const cover of ['bright','dark']) for(const language of ['fr','ar']) {
     await page.screenshot({path:info.outputPath('signed-in-hero.png')});
     await profile.click();await expect(page.getByRole('menuitem',{name:t['client.title'],exact:true})).toBeVisible();
     await expect(page.getByRole('menuitem',{name:t['client.logout'],exact:true})).toBeVisible();
+    await expect.poll(()=>page.getByRole('menu').evaluate(el=>el.contains(document.activeElement))).toBe(true);
     await page.keyboard.press('Escape');await expect(profile).toBeFocused();
   });
 }
@@ -61,7 +63,8 @@ for(const cover of ['bright','dark']) for(const language of ['fr','ar']) for(con
   test(`menu controls and ${open?'open':'closed'} status contrast on ${cover} cover in ${language}`,async({page},info)=>{
     const t=dictionary(language);await publicMenu(page,{cover,language,open});
     await page.screenshot({path:info.outputPath('hero.png')});
-    for(const label of [t['nav.back'],t['client.title'],language==='ar'?'العربية':'Francais']) {
+    expect(await page.getByRole('heading',{name:merchantName,exact:true}).evaluate(el=>el.scrollWidth<=el.clientWidth&&el.scrollHeight<=el.clientHeight),'The complete merchant name must be readable').toBe(true);
+    for(const label of [t['nav.back'],t['client.title'],language==='ar'?'العربية':'Français']) {
       const control=page.getByRole('button',{name:label,exact:true});
       await expect(control).toBeVisible();
       const bounds=(await control.boundingBox())!;
@@ -69,13 +72,23 @@ for(const cover of ['bright','dark']) for(const language of ['fr','ar']) for(con
       expect(bounds.x).toBeGreaterThanOrEqual(0);expect(bounds.x+bounds.width).toBeLessThanOrEqual(320);
       expect(await control.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})).toBe(true);
       const pair=await contrast(control);expect(pair.opaque,`Stable background for ${label}`).toBe(true);expect(pair.ratio,`Icon contrast for ${label}`).toBeGreaterThanOrEqual(3);
-      if(label===(language==='ar'?'العربية':'Francais'))expect((await contrast(control.locator('span'),true)).ratio).toBeGreaterThanOrEqual(4.5);
+      if(label===(language==='ar'?'العربية':'Français'))expect((await contrast(control.locator('span'),true)).ratio).toBeGreaterThanOrEqual(4.5);
       await control.focus();expect(await control.evaluate(el=>el===document.activeElement)).toBe(true);
     }
     expect((await contrast(page.getByText(t[open?'status.open':'status.closed'],{exact:true}),true)).ratio).toBeGreaterThanOrEqual(4.5);
     await page.getByRole('button',{name:t['client.title'],exact:true}).click();
-    await expect(page.getByRole('menuitem',{name:t['auth.login'],exact:true})).toBeVisible();await page.keyboard.press('Escape');
-    await page.getByRole('button',{name:t['nav.back'],exact:true}).click();await expect(page).toHaveURL(/\/decouvrir(?:\?|$)/);
+    await expect(page.getByRole('menuitem',{name:t['auth.login'],exact:true})).toBeVisible();
+    const accountMenu=page.getByRole('menu');await expect.poll(()=>accountMenu.evaluate(el=>el.contains(document.activeElement))).toBe(true);
+    await page.keyboard.press('Escape');await expect(accountMenu).toBeHidden();
+    await page.getByRole('button',{name:language==='ar'?'العربية':'Français',exact:true}).click();
+    const spanish=page.getByRole('button',{name:'ES Español',exact:true});await expect(spanish).toBeVisible();
+    await expect.poll(()=>spanish.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),{message:'The language option must be above the restaurant card'}).toBe(true);
+    await page.screenshot({path:info.outputPath('language-menu.png')});
+    if(info.project.name==='desktop-chrome') await spanish.click();
+    else {const bounds=(await spanish.boundingBox())!;await page.touchscreen.tap(bounds.x+bounds.width/2,bounds.y+bounds.height/2);}
+    await expect(page.getByRole('button',{name:'Español',exact:true})).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('lang','es');await expect(page.locator('html')).toHaveAttribute('dir','ltr');
+    await page.getByRole('button',{name:dictionary('es')['nav.back'],exact:true}).click();await expect(page).toHaveURL(/\/decouvrir(?:\?|$)/);
   });
 }
 
