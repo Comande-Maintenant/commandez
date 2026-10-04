@@ -1,5 +1,23 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+    func testNativeHistoryAlwaysHasAnExit() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = []
+        app.launchEnvironment = ["COMMANDEICI_QA_DEMO": "1"]
+        app.launch()
+        let history = app.buttons["Historique (24h)"].firstMatch
+        XCTAssertTrue(history.waitForExistence(timeout: 15), app.debugDescription)
+        history.tap()
+        let back = app.buttons["Retour"].firstMatch
+        let close = app.buttons["Fermer"].firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(back.isHittable && close.isHittable, app.debugDescription)
+        XCTAssertGreaterThanOrEqual(back.frame.height, 44)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Historique avec sorties permanentes"; shot.lifetime = .keepAlways; add(shot)
+        back.tap()
+        XCTAssertTrue(app.buttons["Recevoir une commande"].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+    }
     func testNativeGroceryDemo() { checkCommerceDemo(name: "Épicerie", product: "Panier de saison") }
     func testNativeFloristDemo() { checkCommerceDemo(name: "Fleuriste", product: "Bouquet de saison") }
     private func checkCommerceDemo(name: String, product: String) {
@@ -15,23 +33,33 @@ final class CommandeIciUITests: XCTestCase {
         let sector = app.links.matching(NSPredicate(format: "label CONTAINS %@", name)).firstMatch
         XCTAssertTrue(sector.waitForExistence(timeout: 10), app.debugDescription)
         sector.tap()
-        let addButton = app.buttons["Ajouter " + product].firstMatch
+        let addButton = app.buttons.matching(NSPredicate(format: "label == %@ OR label == %@", "Ajouter " + product, "Choisir " + product)).firstMatch
         XCTAssertTrue(addButton.waitForExistence(timeout: 10), app.debugDescription)
         for _ in 0..<5 { if addButton.isHittable { break }; app.swipeUp() }
         addButton.tap()
+        let confirmProduct = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Ajouter au panier'")).firstMatch
+        XCTAssertTrue(confirmProduct.waitForExistence(timeout: 5), app.debugDescription)
+        confirmProduct.tap()
         let basket = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Voir mon panier'")).firstMatch
         XCTAssertTrue(basket.waitForExistence(timeout: 5), app.debugDescription)
         basket.tap()
-        let simulate = app.buttons["Simuler la commande"].firstMatch
+        let simulate = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Simuler la commande'")).firstMatch
         XCTAssertTrue(simulate.waitForExistence(timeout: 5), app.debugDescription)
         XCTAssertLessThanOrEqual(simulate.frame.maxY, app.frame.height - 34)
         simulate.tap()
-        for label in ["Préparer la commande", "Marquer comme prête", "Commande retirée"] {
+        for label in ["Préparer la commande", "Marquer comme prête"] {
             let action = app.buttons[label].firstMatch
             XCTAssertTrue(action.waitForExistence(timeout: 5), app.debugDescription)
             for _ in 0..<4 { if action.isHittable { break }; app.swipeUp() }
             action.tap()
         }
+        let cash = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Caisse'")).firstMatch
+        XCTAssertTrue(cash.waitForExistence(timeout: 5), app.debugDescription)
+        cash.tap()
+        let collect = app.buttons["Commande retirée"].firstMatch
+        XCTAssertTrue(collect.waitForExistence(timeout: 5), app.debugDescription)
+        for _ in 0..<4 { if collect.isHittable { break }; app.swipeUp() }
+        collect.tap()
         let signup = app.links["Créer ma page gratuitement"].firstMatch
         XCTAssertTrue(signup.waitForExistence(timeout: 5), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = name + " commande locale retirée"; shot.lifetime = .keepAlways; add(shot)
