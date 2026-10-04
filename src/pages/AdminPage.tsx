@@ -204,7 +204,7 @@ const AdminPage = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">{t("dashboard.admin.login_required")}</h1>
           <p className="text-muted-foreground mb-4">{t("dashboard.admin.login_required_desc")}</p>
-          <Link to="/connexion" className="text-sm text-foreground underline">{t("dashboard.admin.login")}</Link>
+          <Link to="/connexion" className="inline-flex min-h-11 min-w-11 items-center justify-center text-sm text-foreground underline">{t("dashboard.admin.login")}</Link>
         </div>
       </div>
     );
@@ -228,7 +228,7 @@ const AdminPage = () => {
         {recoveryExit}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">{t("dashboard.admin.not_found")}</h1>
-          <Link to="/connexion" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">{t("dashboard.admin.back")}</Link>
+          <Link to="/connexion" className="text-muted-foreground hover:text-foreground mt-4 inline-flex min-h-11 min-w-11 items-center justify-center text-sm underline">{t("dashboard.admin.back")}</Link>
         </div>
       </div>
     );
@@ -242,7 +242,7 @@ const AdminPage = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">{t("dashboard.admin.access_denied")}</h1>
           <p className="text-muted-foreground mb-4">{t("dashboard.admin.not_owner")}</p>
-          <Link to="/connexion" className="text-sm text-foreground underline">{t("dashboard.admin.back")}</Link>
+          <Link to="/connexion" className="inline-flex min-h-11 min-w-11 items-center justify-center text-sm text-foreground underline">{t("dashboard.admin.back")}</Link>
         </div>
       </div>
     );
