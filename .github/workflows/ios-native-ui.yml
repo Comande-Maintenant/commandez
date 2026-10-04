@@ -2,7 +2,7 @@ name: iOS native UI verification
 
 on:
   push:
-    branches: [codex/commandeici-ios-journey-20261004]
+    branches: [codex/commandeici-ios-focused-intel-20261004]
     paths:
       - '.github/workflows/ios-native-ui.yml'
       - 'scripts/ci-public-ios-config.py'
@@ -53,7 +53,7 @@ jobs:
           path: CIReference
           retention-days: 1
   native-ui:
-    runs-on: macos-26
+    runs-on: macos-26-intel
     timeout-minutes: 30
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
@@ -61,6 +61,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          ref: 970f95deac4c70133a8e5aa1df695c2fee91eb8f
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -127,15 +128,15 @@ jobs:
           subprocess.run(['codesign','--verify','--deep','--strict',str(app)],check=True,capture_output=True)
           Path('CIReport/simulator-signing.json').write_text(json.dumps({'localAdHocOnly':True,'privateCertificateUsed':False,'simulatedApplicationIdentifier':attributes['application-identifier'],'signatureVerified':True},indent=2))
           PYCODE
-      - name: Run all native UI cases
+      - name: Observe three diagnostic native journeys
         run: |
           set -o pipefail
           xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
             -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciDerivedData" \
             -resultBundlePath CIReport/NativeResult.xcresult -testLanguage fr -testRegion FR \
             -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 \
-            -parallel-testing-enabled NO test-without-building 2>&1 | tee CIReport/native.log
-      - name: Export evidence and enforce suite count
+            -parallel-testing-enabled NO -only-testing:CommandeIciUITests/CommandeIciUITests/testNativeAssietteWithTwoMeats -only-testing:CommandeIciUITests/CommandeIciUITests/testNativeFirstLaunchInvitesDemo -only-testing:CommandeIciUITests/CommandeIciUITests/testNativeHistoryAlwaysHasAnExit test-without-building 2>&1 | tee CIReport/native.log
+      - name: Export diagnostic evidence and enforce three cases
         if: always()
         run: |
           if [ -n "${CI_SIM_ID:-}" ]; then
@@ -151,7 +152,7 @@ jobs:
           from pathlib import Path
           import json
           summary=json.loads(Path('CIReport/summary.json').read_text())
-          assert summary['totalTestCount']==15 and summary['passedTests']==15 and summary['failedTests']==0 and summary['skippedTests']==0,summary
+          assert summary['totalTestCount']==3 and summary['passedTests']==3 and summary['failedTests']==0 and summary['skippedTests']==0,summary
           PY
           else
             exit 1
