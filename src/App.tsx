@@ -15,6 +15,7 @@ import { isNative } from '@/lib/native';
 import { NativeSubscription } from '@/components/NativeSubscription';
 import { NativePushLifecycle } from '@/components/NativePushLifecycle';
 import { NativeBillingLifecycle } from '@/components/NativeBillingLifecycle';
+import { PageExit } from '@/components/PageExit';
 
 // Every route is split so visitors only download the surface they open.
 const Index = lazy(() => import("./pages/Index"));
@@ -39,7 +40,8 @@ const PhotoUploadPage = lazy(() => import("./pages/PhotoUploadPage"));
 
 function PageLoader() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+    <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+      <div className="absolute inset-x-0 top-0 px-4 py-2"><PageExit/></div>
       <div
         style={{
           width: 36,

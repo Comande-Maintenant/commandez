@@ -19,7 +19,7 @@ test('sample order alert fits iPhone and its state survives polling without a se
  await expect(page.getByText("Client de démonstration",{exact:true}).first()).toBeVisible();
  await expect(page.getByRole("button",{name:/Prêt|Prête|Terminer/}).last()).toBeVisible();
  await page.getByRole('button',{name:/Prêt|Prête|Terminer/}).last().click();
- await page.getByRole('button',{name:'Caisse',exact:true}).click();
+ await page.locator('[data-tour="caisse"]:visible').click();
  await page.getByRole('button',{name:/A encaisser/}).click();
  await expect(page.getByText('Client de démonstration',{exact:true}).first()).toBeVisible();
  await page.getByRole('button',{name:'Encaisse',exact:true}).last().click();

@@ -8,7 +8,7 @@ const NotFound = () => {
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold text-foreground">404</h1>
         <p className="mb-4 text-xl text-muted-foreground">{t("errors.not_found_title")}</p>
-        <Link to="/" className="text-sm text-foreground underline hover:opacity-80">
+        <Link to="/" className="inline-flex min-h-11 items-center text-sm text-foreground underline hover:opacity-80">
           {t("errors.back_home")}
         </Link>
       </div>

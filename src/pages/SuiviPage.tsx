@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { PageExit } from '@/components/PageExit';
 import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
@@ -238,7 +239,8 @@ const SuiviPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="relative min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="absolute inset-x-0 top-0 px-4 py-2"><PageExit/></div>
         <div className="animate-pulse text-gray-400">{t("suivi.loading")}</div>
       </div>
     );
@@ -248,7 +250,7 @@ const SuiviPage = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-4 p-4">
         <p className="text-gray-500">{t("suivi.not_found")}</p>
-        <button onClick={() => navigate("/")} className="text-sm underline text-gray-700">{t("suivi.back")}</button>
+        <PageExit/>
       </div>
     );
   }
@@ -264,7 +266,7 @@ const SuiviPage = () => {
 
       {/* Header */}
       <div className="px-4 pt-6 pb-4 flex items-center gap-3">
-        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors" aria-label={t("suivi.back_to_restaurant")}>
+        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full bg-white/80 hover:bg-white transition-colors" aria-label={t("suivi.back_to_restaurant")}>
           <ArrowLeft className="h-5 w-5 text-gray-700" />
         </button>
         <div>

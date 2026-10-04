@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { PageExit } from '@/components/PageExit';
 import { Camera, Upload, Check, Loader2, Image as ImageIcon } from "lucide-react";
 
 const endpoint = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/photo-upload`;
@@ -63,7 +64,8 @@ const PhotoUploadPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="relative min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="absolute inset-x-0 top-0 px-4 py-2"><PageExit/></div>
         <div className="text-center">
           <p className="text-lg font-semibold text-gray-900">{error}</p>
           <p className="text-sm text-gray-500 mt-2">Ce lien n'est pas valide.</p>
@@ -74,7 +76,8 @@ const PhotoUploadPage = () => {
 
   if (!authorized) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="relative min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="absolute inset-x-0 top-0 px-4 py-2"><PageExit/></div>
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
       </div>
     );
@@ -84,6 +87,7 @@ const PhotoUploadPage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b px-4 py-3 sticky top-0 z-10">
+        <PageExit/>
         <p className="text-sm font-semibold text-gray-900 truncate">
           {restaurantName || "Chargement..."}
         </p>
