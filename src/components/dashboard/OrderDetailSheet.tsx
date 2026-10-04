@@ -344,7 +344,7 @@ export const OrderDetailSheet = ({
     >
       <DialogPrimitive.Title className="sr-only">{formatDisplayNumber(order)}</DialogPrimitive.Title>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background sticky top-0 z-10">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-border bg-background sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <button onClick={onClose} aria-label={t("common.close")} className="min-h-11 min-w-11 p-2 -ms-2 rounded-xl hover:bg-secondary active:bg-secondary/80 transition-colors">
             <ArrowLeft className="h-5 w-5 text-foreground" />
@@ -362,16 +362,18 @@ export const OrderDetailSheet = ({
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <button
                 onClick={onPrev}
+                aria-label={t("common.previous")}
                 disabled={orderIndex === 0}
-                className="p-1.5 rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
+                className="min-h-11 min-w-11 p-1.5 flex items-center justify-center rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <span className="font-medium min-w-[3rem] text-center">{orderIndex + 1}/{totalOrders}</span>
               <button
                 onClick={onNext}
+                aria-label={t("common.next")}
                 disabled={orderIndex === totalOrders - 1}
-                className="p-1.5 rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
+                className="min-h-11 min-w-11 p-1.5 flex items-center justify-center rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -833,9 +835,8 @@ export const OrderDetailSheet = ({
                 variant="outline"
                 onClick={handleReject}
                 disabled={advancing}
-                className="h-auto min-h-14 min-w-0 basis-[35%] rounded-xl text-base font-semibold border-destructive text-destructive hover:bg-destructive/10"
+                className="h-auto min-h-14 min-w-0 basis-[40%] px-3 rounded-xl text-base font-semibold border-destructive text-destructive hover:bg-destructive/10"
               >
-                <X className="h-5 w-5 me-1" />
                 <span className="min-w-0 whitespace-normal break-words">{t("dashboard.orders.reject")}</span>
               </Button>
             )}

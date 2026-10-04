@@ -791,6 +791,7 @@ export const ProductCustomizer = ({
                     <Dialog.Title asChild><h3 className="text-base font-bold text-gray-900 truncate">{translated.name}</h3></Dialog.Title>
                     <p
                       className="text-xs text-gray-500"
+                      dir="ltr"
                       data-testid="customizer-progress"
                       data-current={stepIndex + 1}
                       data-total={steps.length}
