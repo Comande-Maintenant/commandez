@@ -6,6 +6,7 @@ import { createOrder, fetchDemoRestaurant, fetchDemoOrders, fetchRestaurantBySlu
 import { fetchUniversalCustomizationData } from '@/lib/customizationApi';
 import { createDemoOrder } from '@/lib/demo-order';
 import { storeDemoOrders } from '@/lib/demo-order-store';
+import { menuMediaCandidates } from '@/lib/menu-media';
 const localId = 'demo-restaurant-antalya';
 beforeEach(() => {
   vi.restoreAllMocks();
@@ -26,11 +27,18 @@ describe('embedded iOS demonstration without business network access', () => {
     const menu = await fetchMenuItems(localId);
     const options = await fetchUniversalCustomizationData(localId);
     expect(menu).toHaveLength(15);
-    expect(menu.every(item => item.image.startsWith('/images/') && item.restaurant_id === localId)).toBe(true);
+    expect(menu.every(item => (item.product_type === 'supplement' || item.image.startsWith('/images/')) && item.restaurant_id === localId)).toBe(true);
     expect(options.bases).toHaveLength(6); expect(options.viandes).toHaveLength(8);
     expect(options.sauces).toHaveLength(7); expect(options.stepTemplates).toHaveLength(10);
     expect(options.bases.some(base => base.name.toLowerCase() === 'grande assiette' && base.price === 11)).toBe(true);
     expect(f.rpc).not.toHaveBeenCalled(); expect(f.from).not.toHaveBeenCalled();
+  });
+  it('uses the established dish illustrations and avoids inventing photos for supplements', async () => {
+    const menu=await fetchMenuItems(localId);
+    for(const item of menu) {
+      const expected=menuMediaCandidates({...item,image:''})[0]?.src || '';
+      expect(item.image,item.name).toBe(expected);
+    }
   });
   it('creates a local order once, restores it for kitchen and tracking without writing remotely', async () => {
     const estimate = new Date(Date.now() + 15 * 60000).toISOString();
