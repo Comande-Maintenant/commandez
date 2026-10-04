@@ -9,6 +9,8 @@ on:
       - 'scripts/test-ci-public-ios-config.py'
       - 'scripts/ci-public-ios-readiness.py'
       - 'scripts/test-ci-public-ios-readiness.py'
+      - 'scripts/ci-cold-webkit-reference.py'
+      - 'scripts/native-cold-reference.swift'
       - 'src/**'
       - 'ios/**'
       - 'public/**'
@@ -24,6 +26,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  cold-reference:
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Observe WebKit on a separate fresh host
+        run: |
+          test "$(xcodebuild -version)" = "$(printf 'Xcode 26.2\nBuild version 17C52')"
+          python3 scripts/ci-cold-webkit-reference.py
+      - name: Preserve separate reference evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: commandeici-cold-reference-${{ github.sha }}
+          path: CIReference
+          retention-days: 1
   native-ui:
     runs-on: macos-15
     timeout-minutes: 30

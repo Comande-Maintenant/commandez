@@ -10,6 +10,9 @@ class CommandeIciViewController: CAPBridgeViewController {
     private var openingObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
+        #if DEBUG
+        NativeQAReadiness.record(["boundary": "native-view", "event": "start"])
+        #endif
         super.viewDidLoad()
         let cover = UIView()
         cover.backgroundColor = .white
@@ -55,6 +58,9 @@ class CommandeIciViewController: CAPBridgeViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self, let logo = self.openingLogo else { return }
             self.openingStarted = CACurrentMediaTime()
+            #if DEBUG
+            NativeQAReadiness.record(["boundary": "opening", "event": "start", "accessibilityHidden": self.webView?.accessibilityElementsHidden ?? false])
+            #endif
             if !UIAccessibility.isReduceMotionEnabled {
                 UIView.animateKeyframes(withDuration: 1.8, delay: 0, options: [.calculationModeCubic]) {
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45) { logo.transform = CGAffineTransform(scaleX: 1.025, y: 1.025) }
@@ -74,6 +80,7 @@ class CommandeIciViewController: CAPBridgeViewController {
         openingCover = nil
         openingObservation = nil
         #if DEBUG
+        NativeQAReadiness.record(["boundary": "opening", "event": "dismiss", "forcedRecovery": force, "accessibilityHidden": webView?.accessibilityElementsHidden ?? false, "milliseconds": (CACurrentMediaTime() - started) * 1000])
         // Simulator evidence records actual cover visibility, never user data.
         let evidence: [String: Any] = ["visibleSeconds": CACurrentMediaTime() - started, "reduceMotion": UIAccessibility.isReduceMotionEnabled, "forcedRecovery": force]
         if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
@@ -84,6 +91,9 @@ class CommandeIciViewController: CAPBridgeViewController {
         UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.24, animations: { cover.alpha = 0 }) { [weak self] _ in
             cover.removeFromSuperview()
             self?.webView?.accessibilityElementsHidden = false
+            #if DEBUG
+            NativeQAReadiness.record(["boundary": "opening", "event": "finish", "accessibilityHidden": self?.webView?.accessibilityElementsHidden ?? false])
+            #endif
             UIAccessibility.post(notification: .screenChanged, argument: nil)
         }
     }
@@ -92,12 +102,22 @@ class CommandeIciViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(SecureSessionPlugin())
         bridge?.registerPluginInstance(FileExportPlugin())
         #if DEBUG
+        NativeQAReadiness.record(["boundary": "native-bridge", "event": "ready"])
         if ProcessInfo.processInfo.environment["COMMANDEICI_QA_MENU"] == "1" {
             // Status-only boundary evidence for cold simulator starts. No URLs,
             // query strings, headers, response bodies or session values are saved.
             webView?.configuration.userContentController.add(QAReadinessHandler(), name: "qaReadiness")
             let diagnostic = """
             (() => {
+              const report = (path, event, status = 0) => window.webkit.messageHandlers.qaReadiness.postMessage({path,event,status,milliseconds:performance.now()});
+              report('/qa/document', 'start');
+              document.addEventListener('DOMContentLoaded', () => report('/qa/document', 'finish'), {once:true});
+              const observer = new MutationObserver(() => {
+                if (document.getElementById('root')?.childElementCount > 0) {
+                  report('/qa/root-content', 'finish'); observer.disconnect();
+                }
+              });
+              observer.observe(document, {childList:true,subtree:true});
               const original = window.fetch;
               const allowed = ['/rest/v1/rpc/get_public_restaurant_by_slug', '/rest/v1/menu_items'];
               window.fetch = function(...args) {
@@ -135,7 +155,7 @@ private final class QAReadinessHandler: NSObject, WKScriptMessageHandler {
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let record = message.body as? [String: Any],
               let path = record["path"] as? String,
-              ["/rest/v1/rpc/get_public_restaurant_by_slug", "/rest/v1/menu_items"].contains(path),
+              ["/rest/v1/rpc/get_public_restaurant_by_slug", "/rest/v1/menu_items", "/qa/document", "/qa/root-content"].contains(path),
               let event = record["event"] as? String, ["start", "finish", "error"].contains(event),
               let status = record["status"] as? Int, let duration = record["milliseconds"] as? Double else { return }
         NativeQAReadiness.record(["boundary": path, "event": event, "status": status, "milliseconds": duration])
@@ -151,6 +171,8 @@ enum NativeQAReadiness {
         defer { lock.unlock() }
         var entry = fields
         entry["uptime"] = ProcessInfo.processInfo.systemUptime
+        entry["pid"] = ProcessInfo.processInfo.processIdentifier
+        entry["utc"] = ISO8601DateFormatter().string(from: Date())
         guard var bytes = try? JSONSerialization.data(withJSONObject: entry) else { return }
         bytes.append(10)
         let file = directory.appendingPathComponent("qa-readiness.ndjson")

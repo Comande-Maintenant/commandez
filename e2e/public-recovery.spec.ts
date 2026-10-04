@@ -5,8 +5,11 @@ for (const state of ['loading', 'error', 'missing', 'deactivated', 'banned']) {
     await page.setViewportSize({width:320,height:568});
     let release!: () => void;
     const pending = new Promise<void>(resolve => {release = resolve;});
+    let markRestaurantRequested!: () => void;
+    const restaurantRequested = new Promise<void>(resolve => {markRestaurantRequested = resolve;});
     if (state === 'banned') await page.addInitScript(() => localStorage.setItem('cm_customer', JSON.stringify({phone:'0000000000'})));
     await page.route(url => url.pathname.startsWith('/rest/v1/'), async route => {
+      if (new URL(route.request().url()).pathname.endsWith('/rpc/get_public_restaurant_by_slug')) markRestaurantRequested();
       if (state === 'loading') await pending;
       if (state === 'error') {await route.fulfill({status:503,json:{message:'Unavailable'}});return;}
       const restaurant = ['deactivated','banned'].includes(state) ? {id:'fixture',slug:'closed-shop',name:'Boutique fermée',deactivated_at:state === 'deactivated' ? '2026-01-01' : null} : null;
@@ -15,6 +18,8 @@ for (const state of ['loading', 'error', 'missing', 'deactivated', 'banned']) {
     });
     try {
       await page.goto('/closed-shop?lang=fr',{waitUntil:'domcontentloaded'});
+      // Measure the mounted public page, rather than its transient lazy-route loader.
+      if (state === 'loading') await restaurantRequested;
       if (state === 'error') await expect(page.getByRole('button',{name:'Réessayer'})).toBeVisible();
       if (state === 'missing') await expect(page.getByRole('heading')).toBeVisible();
       if (state === 'deactivated') await expect(page.getByRole('heading',{name:'Boutique fermée'})).toBeVisible();
