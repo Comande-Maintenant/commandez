@@ -6,6 +6,7 @@ interface Props {
   activeView: DashboardView;
   onViewChange: (view: DashboardView) => void;
   newOrderCount: number;
+  readyOrderCount?: number;
 }
 
 const adminViews = new Set(["carte", "page", "qrcodes", "borne", "parametres", "stats", "clients"]);
@@ -17,12 +18,13 @@ const NAV_ITEMS: { id: DashboardView; labelKey: string; icon: typeof Flame }[] =
   { id: "gerer", labelKey: "dashboard.nav.manage", icon: Settings },
 ];
 
-export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Props) => {
+export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount, readyOrderCount = 0 }: Props) => {
   const { t } = useLanguage();
   return (
     <nav data-dashboard-nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 safe-area-bottom bg-background border-t border-border">
       <div className="flex">
         {NAV_ITEMS.map((item) => {
+          const count = item.id === "cuisine" ? newOrderCount : item.id === "caisse" ? readyOrderCount : 0;
           const isActive = item.id === activeView || (item.id === "gerer" && adminViews.has(activeView));
           return (
             <button
@@ -35,9 +37,9 @@ export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount }: Prop
             >
               <div className="relative">
                 <item.icon className="h-5 w-5" />
-                {item.id === "cuisine" && newOrderCount > 0 && (
+                {count > 0 && (
                   <span className="absolute -top-1.5 -end-2.5 bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
-                    {newOrderCount}
+                    {count}
                   </span>
                 )}
               </div>

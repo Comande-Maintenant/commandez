@@ -102,6 +102,7 @@ const AdminPage = () => {
   const orderCounts = {
     newCount: orderFeed.orders.filter(order => order.status === 'new').length,
     preparingCount: orderFeed.orders.filter(order => order.status === 'preparing').length,
+    readyCount: orderFeed.orders.filter(order => order.status === 'ready').length,
   };
   const [historyOpen, setHistoryOpen] = useState(false);
 
@@ -241,6 +242,7 @@ const AdminPage = () => {
         activeView={activeView}
         onViewChange={handleViewChange}
         newOrderCount={orderCounts.newCount}
+        readyOrderCount={orderCounts.readyCount}
       />
 
       <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
@@ -469,6 +471,7 @@ const AdminPage = () => {
         activeView={activeView}
         onViewChange={handleViewChange}
         newOrderCount={orderCounts.newCount}
+        readyOrderCount={orderCounts.readyCount}
       />
 
       {/* PWA install banner - not in demo */}

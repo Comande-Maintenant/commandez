@@ -65,12 +65,22 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   const [menuItems, setMenuItems] = useState<DbMenuItem[]>([]);
   const [state, setState] = useState(initialState);
   const submittingRef = useRef(false);
-  const { orders, setOrders, disconnected } = useRestaurantOrderFeed();
+  const { orders, setOrders, disconnected, loading = false } = useRestaurantOrderFeed();
   const readyOrders = orders.filter(order => order.status === "ready");
   const today = new Date().toDateString();
   const doneOrders = orders.filter(order => order.status === "done" && new Date(order.created_at).toDateString() === today)
     .sort((a, b) => new Date(b.completed_at || b.created_at).getTime() - new Date(a.completed_at || a.created_at).getTime());
-  const [activeTab, setActiveTab] = useState<CaisseTab>("commande");
+  const [activeTab, setActiveTab] = useState<CaisseTab>(() => readyOrders.length ? "encaissement" : "commande");
+  const initialTabResolved = useRef(!loading);
+  useEffect(() => {
+    if (initialTabResolved.current || loading) return;
+    initialTabResolved.current = true;
+    if (readyOrders.length) setActiveTab("encaissement");
+  }, [loading, readyOrders.length]);
+  const chooseTab = (tab: CaisseTab) => {
+    initialTabResolved.current = true;
+    setActiveTab(tab);
+  };
   const [expandedDoneId, setExpandedDoneId] = useState<string | null>(null);
   const { t, language } = useLanguage();
 
@@ -542,7 +552,7 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" onPointerDownCapture={() => { initialTabResolved.current = true; }} onKeyDownCapture={() => { initialTabResolved.current = true; }}>
       {disconnected && (
         <div role="status" className="mb-4 p-3 bg-destructive/10 rounded-xl flex items-center gap-2 text-sm text-destructive">
           <WifiOff className="h-4 w-4 flex-shrink-0" />
@@ -552,7 +562,8 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
       {/* Tabs: Prise de commande / A encaisser */}
       <div className="flex gap-2 mb-4">
         <button
-          onClick={() => setActiveTab("commande")}
+          aria-pressed={activeTab === "commande"}
+          onClick={() => chooseTab("commande")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all min-h-[48px] ${
             activeTab === "commande"
               ? "bg-foreground text-primary-foreground"
@@ -563,7 +574,8 @@ export const DashboardPOS = ({ restaurant, isDemo }: Props) => {
           {t("pos.take_order")}
         </button>
         <button
-          onClick={() => setActiveTab("encaissement")}
+          aria-pressed={activeTab === "encaissement"}
+          onClick={() => chooseTab("encaissement")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all min-h-[48px] relative ${
             activeTab === "encaissement"
               ? "bg-foreground text-primary-foreground"

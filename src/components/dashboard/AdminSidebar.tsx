@@ -7,6 +7,7 @@ interface Props {
   activeView: DashboardView;
   onViewChange: (view: DashboardView) => void;
   newOrderCount: number;
+  readyOrderCount?: number;
 }
 
 const opsItemsDef: { id: DashboardView; tKey: string; icon: typeof Flame }[] = [
@@ -27,7 +28,7 @@ const adminItemsDef: { id: DashboardView; tKey: string; icon: typeof Flame }[] =
 
 const isAdminView = (v: DashboardView) => ["carte", "page", "qrcodes", "borne", "parametres", "stats", "clients"].includes(v);
 
-export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props) => {
+export const AdminSidebar = ({ activeView, onViewChange, newOrderCount, readyOrderCount = 0 }: Props) => {
   const { t } = useLanguage();
   const [gererExpanded, setGererExpanded] = useState(() => isAdminView(activeView));
 
@@ -53,9 +54,9 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
           >
             <item.icon className="h-5 w-5 flex-shrink-0" />
             <span className="text-sm font-medium">{t(item.tKey)}</span>
-            {item.id === "cuisine" && newOrderCount > 0 && (
+            {((item.id === "cuisine" && newOrderCount > 0) || (item.id === "caisse" && readyOrderCount > 0)) && (
               <span className="ms-auto bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {newOrderCount}
+                {item.id === "cuisine" ? newOrderCount : readyOrderCount}
               </span>
             )}
           </button>
