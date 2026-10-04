@@ -1,5 +1,63 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+    func testNativeRegistrationKeyboardKeepsActionsReachable() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = []
+        app.launch()
+        let create = app.buttons["Créer ma page gratuitement"].firstMatch
+        XCTAssertTrue(create.waitForExistence(timeout: 15), app.debugDescription)
+        create.tap()
+        let email = app.webViews.textFields.firstMatch
+        XCTAssertTrue(email.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertGreaterThanOrEqual(email.frame.height, 44)
+        email.tap()
+        email.typeText("audit@example.invalid")
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertLessThanOrEqual(email.frame.maxY, keyboard.frame.minY)
+        let submit = app.buttons["Créer mon compte"].firstMatch
+        for _ in 0..<4 {
+            if submit.isHittable && (!keyboard.exists || submit.frame.maxY <= keyboard.frame.minY) { break }
+            app.webViews.firstMatch.swipeUp()
+        }
+        XCTAssertTrue(submit.isHittable, app.debugDescription)
+        if keyboard.exists { XCTAssertLessThanOrEqual(submit.frame.maxY, keyboard.frame.minY) }
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Inscription clavier et action accessibles"; shot.lifetime = .keepAlways; add(shot)
+    }
+    func testNativeReadyOrderKeepsCashierActionClearOfNavigation() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["COMMANDEICI_QA_DEMO": "1"]
+        app.launchArguments = []
+        app.launch()
+        let receive = app.buttons["Recevoir une commande"].firstMatch
+        XCTAssertTrue(receive.waitForExistence(timeout: 15), app.debugDescription)
+        receive.tap()
+        let view = app.buttons["Voir la commande"].firstMatch
+        XCTAssertTrue(view.waitForExistence(timeout: 5), app.debugDescription); view.tap()
+        let accept = app.buttons["Accepter"].firstMatch
+        XCTAssertTrue(accept.waitForExistence(timeout: 5), app.debugDescription); accept.tap()
+        let close = app.buttons["Fermer"].firstMatch
+        if close.waitForExistence(timeout: 2) { close.tap() }
+        let ready = app.buttons["Prête"].firstMatch
+        XCTAssertTrue(ready.waitForExistence(timeout: 5), app.debugDescription)
+        for _ in 0..<4 { if ready.isHittable { break }; app.webViews.firstMatch.swipeUp() }
+        ready.tap()
+        let cash = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Caisse'")).firstMatch
+        XCTAssertTrue(cash.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(cash.label.contains("1"), cash.label); cash.tap()
+        let collect = app.buttons["Encaisse"].firstMatch
+        XCTAssertTrue(collect.waitForExistence(timeout: 5), app.debugDescription)
+        for _ in 0..<4 { if collect.isHittable && collect.frame.maxY <= cash.frame.minY { break }; app.webViews.firstMatch.swipeUp() }
+        XCTAssertTrue(collect.isHittable, app.debugDescription)
+        XCTAssertLessThanOrEqual(collect.frame.maxY, cash.frame.minY)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Caisse action au-dessus de navigation"; shot.lifetime = .keepAlways; add(shot)
+        collect.tap()
+        XCTAssertFalse(cash.label.contains("1"), cash.label)
+    }
+
     func testNativeHistoryAlwaysHasAnExit() {
         continueAfterFailure = false
         let app = XCUIApplication()

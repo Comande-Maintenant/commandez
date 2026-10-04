@@ -55,7 +55,7 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount, readyOrd
             <item.icon className="h-5 w-5 flex-shrink-0" />
             <span className="text-sm font-medium">{t(item.tKey)}</span>
             {((item.id === "cuisine" && newOrderCount > 0) || (item.id === "caisse" && readyOrderCount > 0)) && (
-              <span className="ms-auto bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="ms-auto bg-primary text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 {item.id === "cuisine" ? newOrderCount : readyOrderCount}
               </span>
             )}

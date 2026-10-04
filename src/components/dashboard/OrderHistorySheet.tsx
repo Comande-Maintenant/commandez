@@ -113,7 +113,7 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
           target?.focus();
         }}
       >
-        <SheetHeader className="shrink-0 border-b border-border bg-background px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))]">
+        <SheetHeader className="shrink-0 border-b border-border bg-background px-4 pb-4 pt-[calc(1rem+env(safe-area-inset-top,0px))]">
           <div className="flex items-center justify-between gap-2">
             <SheetClose asChild>
               <button type="button" className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">

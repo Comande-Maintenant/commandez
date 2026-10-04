@@ -38,7 +38,7 @@ export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount, readyO
               <div className="relative">
                 <item.icon className="h-5 w-5" />
                 {count > 0 && (
-                  <span className="absolute -top-1.5 -end-2.5 bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                  <span className="absolute -top-1.5 -end-2.5 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                     {count}
                   </span>
                 )}

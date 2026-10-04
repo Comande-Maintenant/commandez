@@ -772,7 +772,7 @@ export const ProductCustomizer = ({
             transition={reducedMotion ? { duration: 0 } : { type: "spring", damping: 28, stiffness: 300 }}
             className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] flex flex-col rounded-t-3xl overflow-hidden"
             style={{
-              background: "rgba(255,255,255,0.92)",
+              background: "#ffffff",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
             }}

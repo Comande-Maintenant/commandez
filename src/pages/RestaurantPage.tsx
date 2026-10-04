@@ -535,14 +535,14 @@ const RestaurantPage = () => {
 
       {/* Sticky demo banner - always visible, not dismissable */}
       {isDemo && !isKiosk && (
-        <div className="sticky top-0 z-50 bg-emerald-600 text-white px-4 py-2 flex items-center justify-between gap-3">
+        <div className="sticky top-0 z-50 bg-primary text-white px-4 py-2 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-sm font-semibold whitespace-nowrap">MODE DEMO</span>
+            <span className="text-sm font-semibold break-words">{t("demo.seo_banner_title")}</span>
             <span className="text-xs opacity-90 hidden sm:inline truncate">{t("demo.sticky_text")}</span>
           </div>
           <a
             href="/inscription"
-            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-white text-emerald-700 hover:bg-emerald-50 transition-colors"
+            className="inline-flex min-h-11 max-w-[45%] shrink-0 items-center justify-center rounded-xl px-3 py-2 text-center text-xs font-semibold leading-snug break-words bg-white text-primary hover:bg-secondary transition-colors"
           >
             {t("demo.seo_banner_cta")}
           </a>

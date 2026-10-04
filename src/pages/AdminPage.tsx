@@ -246,27 +246,27 @@ const AdminPage = () => {
         readyOrderCount={orderCounts.readyCount}
       />
 
-      <div className="flex-1 lg:ms-60 pb-20 lg:pb-0">
+      <div className="flex-1 lg:ms-60 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
         {/* Header (+ demo banner) - single sticky block */}
         <div data-dashboard-header className="sticky top-0 z-40">
           {isDemo && !demoBannerDismissed && (
-            <div className="bg-emerald-500 text-white">
-              <div className="max-w-6xl mx-auto px-4 h-8 flex items-center justify-between">
-                <p className="text-[11px] font-medium truncate">
+            <div className="bg-primary text-white">
+              <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between gap-2">
+                <p className="min-w-0 flex-1 text-xs font-medium leading-relaxed break-words">
                   {t("demo.banner_text")}
                 </p>
                 <div className="flex items-center gap-1 flex-shrink-0 ms-2">
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="rounded-lg text-[11px] font-semibold h-6 px-2 bg-white text-emerald-700 hover:bg-emerald-50"
+                    className="min-h-11 w-24 rounded-lg whitespace-normal break-words px-2 py-2 text-xs font-semibold leading-snug bg-white text-primary hover:bg-secondary"
                     onClick={() => navigate("/inscription")}
                   >
                     {t("demo.banner_cta")}
                   </Button>
                   <button
                     onClick={() => { setDemoBannerDismissed(true); sessionStorage.setItem("demo_banner_dismissed", "1"); }}
-                    className="p-1 rounded hover:bg-emerald-600 transition-colors"
+                    className="flex min-h-11 min-w-11 items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
                     aria-label={t("dashboard.admin.close")}
                   >
                     <X className="h-3.5 w-3.5" />
@@ -301,7 +301,7 @@ const AdminPage = () => {
                     }
                     sound.toggleMuted();
                   }}
-                  className={`p-2 rounded-xl hover:bg-secondary transition-colors ${sound.isRepeating ? "animate-pulse" : ""}`}
+                  className={`min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors ${sound.isRepeating ? "animate-pulse" : ""}`}
                   title={sound.isRepeating ? t("dashboard.admin.stop_alert") : sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
                   aria-label={sound.isRepeating ? t("dashboard.admin.stop_alert") : sound.muted ? t("dashboard.admin.enable_sound") : t("dashboard.admin.mute_sound")}
                 >
@@ -325,7 +325,7 @@ const AdminPage = () => {
                 >
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   {orderCounts.newCount + orderCounts.preparingCount > 0 && (
-                    <span className="absolute -top-0.5 -end-0.5 h-4 min-w-4 px-0.5 flex items-center justify-center rounded-full bg-emerald-500 text-white text-[9px] font-bold">
+                    <span className="absolute -top-0.5 -end-0.5 h-4 min-w-4 px-0.5 flex items-center justify-center rounded-full bg-primary text-white text-[9px] font-bold">
                       {orderCounts.newCount + orderCounts.preparingCount}
                     </span>
                   )}
@@ -354,11 +354,9 @@ const AdminPage = () => {
                 <span className={`text-xs font-medium hidden md:inline ${restaurant.is_accepting_orders ? "text-[hsl(var(--success))]" : "text-destructive"}`}>
                   {restaurant.is_accepting_orders ? t("dashboard.admin.available") : t("dashboard.admin.unavailable")}
                 </span>
-                <Switch
-                  checked={restaurant.is_accepting_orders}
-                  onCheckedChange={toggleAccepting}
-                  className="scale-90"
-                />
+                <label htmlFor="dashboard-accepting-orders" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center">
+                  <Switch id="dashboard-accepting-orders" aria-label={t(restaurant.is_accepting_orders ? "dashboard.admin.available" : "dashboard.admin.unavailable")} checked={restaurant.is_accepting_orders} onCheckedChange={toggleAccepting} />
+                </label>
               </div>
             </div>
           </div>

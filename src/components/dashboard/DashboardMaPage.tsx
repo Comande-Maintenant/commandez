@@ -177,12 +177,14 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
               {primarySwatches.map((c) => (
                 <button
                   key={c}
+                  aria-label={`${t('dashboard.page.primary_color')} ${c}`}
+                  aria-pressed={primaryColor === c}
                   onClick={() => setPrimaryColor(c)}
-                  className={`w-8 h-8 rounded-full border-2 transition-all ${primaryColor === c ? "border-foreground scale-110" : "border-border"}`}
+                  className={`h-11 w-11 shrink-0 rounded-full border-2 transition-all ${primaryColor === c ? "border-foreground scale-110" : "border-border"}`}
                   style={{ backgroundColor: c }}
                 />
               ))}
-              <label className="relative w-8 h-8 rounded-full border-2 border-border cursor-pointer overflow-hidden">
+              <label className="relative h-11 w-11 shrink-0 rounded-full border-2 border-border cursor-pointer overflow-hidden">
                 <input type="color" aria-label={t('dashboard.page.primary_color')} value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="absolute inset-0 w-full h-full cursor-pointer opacity-0" />
                 <div className="w-full h-full bg-gradient-to-br from-red-500 via-green-500 to-blue-500 rounded-full" />
               </label>
@@ -195,12 +197,14 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
               {bgSwatches.map((c) => (
                 <button
                   key={c}
+                  aria-label={`${t('dashboard.page.background_color')} ${c}`}
+                  aria-pressed={bgColor === c}
                   onClick={() => setBgColor(c)}
-                  className={`w-8 h-8 rounded-full border-2 transition-all ${bgColor === c ? "border-foreground scale-110" : "border-border"}`}
+                  className={`h-11 w-11 shrink-0 rounded-full border-2 transition-all ${bgColor === c ? "border-foreground scale-110" : "border-border"}`}
                   style={{ backgroundColor: c }}
                 />
               ))}
-              <label className="relative w-8 h-8 rounded-full border-2 border-border cursor-pointer overflow-hidden">
+              <label className="relative h-11 w-11 shrink-0 rounded-full border-2 border-border cursor-pointer overflow-hidden">
                 <input type="color" aria-label={t('dashboard.page.background_color')} value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="absolute inset-0 w-full h-full cursor-pointer opacity-0" />
                 <div className="w-full h-full bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 rounded-full" />
               </label>
@@ -304,9 +308,9 @@ export const DashboardMaPage = ({ restaurant, isDemo }: Props) => {
 
       {/* Preview page */}
       <section className="bg-card rounded-2xl border border-border p-5">
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-foreground">{t('dashboard.page.page_preview')}</h3>
-          <Button variant="outline" size="sm" className="rounded-xl gap-1.5" asChild>
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+          <h3 className="min-w-0 text-base font-semibold text-foreground break-words">{t('dashboard.page.page_preview')}</h3>
+          <Button variant="outline" size="sm" className="max-w-full rounded-xl gap-1.5 whitespace-normal break-words text-start" asChild>
             <a href={`/${restaurant.slug}`} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-4 w-4" />{t('dashboard.page.view_page')}
             </a>
