@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: 099762a4f3d96aa77991e943cff8b1e146593ef9
-          fetch-depth: 2
+          ref: b57f0a148c5acce658e154a820e4921f506a39f1
+          fetch-depth: 3
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -45,7 +45,7 @@ jobs:
           import subprocess,json,hashlib,os
           out=Path(os.environ['RUNNER_TEMP'])/'CIQA33'
           app='11f552440ce8553de555a313947b7b64da8ac35f'
-          qa='099762a4f3d96aa77991e943cff8b1e146593ef9'
+          qa='b57f0a148c5acce658e154a820e4921f506a39f1'
           allowed=['e2e/stock-navigation.spec.ts','e2e/ui-readability.spec.ts']
           assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==qa
           assert subprocess.check_output(['git','diff','--name-only',app,qa],text=True).splitlines()==allowed
@@ -56,7 +56,7 @@ jobs:
           digest=hashlib.sha256(('\n'.join(current)+'\n').encode()).hexdigest()
           assert digest=='ebbe49d3e18a31a7c162cc71876b19c83a788bcf999018b3b71b71337d7169f6'
           testhashes={name:hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in allowed}
-          assert testhashes=={'e2e/stock-navigation.spec.ts':'b05930210eddfca5386c488f808360a65524975688cbc9922edc3760b76516a4','e2e/ui-readability.spec.ts':'002710581e96ef26a7c14fabb961cd69b62d1964f9a5c28b96d3c8c4e5c5bebe'}
+          assert testhashes=={'e2e/stock-navigation.spec.ts':'b05930210eddfca5386c488f808360a65524975688cbc9922edc3760b76516a4','e2e/ui-readability.spec.ts':'5335d86c1f8ec01007cfd4c08621964fdc4b0fd943b13a989a3a4dea2ffa7125'}
           (out/'source.txt').write_text(qa+'\n');(out/'app-source.txt').write_text(app+'\n')
           (out/'source-equivalence.json').write_text(json.dumps({'appSource':app,'qaCommit':qa,'changedPaths':allowed,'allOtherTrackedFilesByteIdentical':True,'unchangedTrackedEntries':641,'unchangedTreeSHA256':digest,'testFileSHA256':testhashes},indent=2))
           PROOF
@@ -107,7 +107,7 @@ jobs:
                   assert actual==expected and len(actual)==len(set(actual))==33
                   assert all(passed(suite) for suite in report['suites']) and report['stats']['expected']==33 and not any(report['stats'][key] for key in ['unexpected','skipped','flaky'])
                   assert result.returncode==0 and not subprocess.check_output(['git','status','--porcelain'],text=True)
-                  (out/'verification33.json').write_text(json.dumps({'appSource':'11f552440ce8553de555a313947b7b64da8ac35f','qaCommit':'099762a4f3d96aa77991e943cff8b1e146593ef9','collected':33,'executed':33,'passed':33,'failed':0,'skipped':0,'flaky':0,'retries':0,'allIdentitiesMatchSinglePass':True,'identities':actual},indent=2))
+                  (out/'verification33.json').write_text(json.dumps({'appSource':'11f552440ce8553de555a313947b7b64da8ac35f','qaCommit':'b57f0a148c5acce658e154a820e4921f506a39f1','collected':33,'executed':33,'passed':33,'failed':0,'skipped':0,'flaky':0,'retries':0,'allIdentitiesMatchSinglePass':True,'identities':actual},indent=2))
               finally:
                   if server.poll() is None:
                       os.killpg(server.pid,signal.SIGTERM)
