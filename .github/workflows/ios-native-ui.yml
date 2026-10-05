@@ -61,7 +61,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: c5e10d810d401fe60c1bb642c58b54c5eead5c68
+          ref: 6e7deaee9a99603dd3a295139d705567d40e2bd9
+          fetch-depth: 2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -87,7 +88,8 @@ jobs:
       - name: Record exact source, runtime and tools
         run: |
           mkdir -p CIReport
-          git rev-parse HEAD > CIReport/source.txt
+          git rev-parse c5e10d810d401fe60c1bb642c58b54c5eead5c68 > CIReport/source.txt
+          git rev-parse HEAD > CIReport/test-source.txt
           git diff --exit-code
           xcodebuild -version > CIReport/xcode.txt
           test "$(xcodebuild -version)" = "$(printf 'Xcode 26.2\nBuild version 17C52')"
@@ -112,13 +114,26 @@ jobs:
           import hashlib,json,subprocess,os
           target=Path('ios/App/CommandeIciUITests/CommandeIciUITests.swift')
           sha=hashlib.sha256(target.read_bytes()).hexdigest()
-          assert sha=='1e4734b3c84ba211cf41955cee61b7f35fb605cbcb87919e8298e8f2921b95f7'
-          appSource=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          assert appSource=='c5e10d810d401fe60c1bb642c58b54c5eead5c68'
+          assert sha=='3eba6cf26be3c753720229110f99b62cbcaae9db7178ba2e65a14b7d1fe1515c'
+          appSource='c5e10d810d401fe60c1bb642c58b54c5eead5c68'
+          testSource=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert testSource=='6e7deaee9a99603dd3a295139d705567d40e2bd9'
+          changed=subprocess.check_output(['git','diff','--name-only',appSource,testSource],text=True).splitlines()
+          assert changed==[str(target)],changed
+          def productionTree(ref):
+              lines=subprocess.check_output(['git','ls-tree','-r',ref],text=True).splitlines()
+              return [line for line in lines if line.split('\t',1)[1]!=str(target)]
+          originalTree=productionTree(appSource)
+          actualTree=productionTree(testSource)
+          assert originalTree==actualTree
+          productionTreeSHA256=hashlib.sha256(('\n'.join(actualTree)+'\n').encode()).hexdigest()
+          assert productionTreeSHA256=='a2362dad98547855207fd27461d9b2bb04d9bc19f43ea71d79366bcc472561e4'
+          assert len(actualTree)==624
+          Path('CIReport/qa-only-source-equivalence.json').write_text(json.dumps({'appSource':appSource,'qaCommit':testSource,'changedPaths':changed,'appTrackedFilesByteIdentical':True,'productionTreeSHA256':productionTreeSHA256,'productionTrackedEntries':len(actualTree),'qaSHA256':sha},indent=2))
           subprocess.run(['git','diff','--exit-code'],check=True)
           # CIReport contains only the owned outputs created by preceding steps.
           assert not subprocess.check_output(['git','status','--porcelain','--untracked-files=all','--','.',':(exclude)CIReport'],text=True).strip()
-          Path('CIReport/qa-source.json').write_text(json.dumps({'appSource':appSource,'qaPath':str(target),'qaSHA256':sha,'workflowCommit':os.environ['GITHUB_SHA'],'allTrackedFilesUnchanged':True,'noInstrumentation':True,'integratedModalAcknowledgement':True},indent=2))
+          Path('CIReport/qa-source.json').write_text(json.dumps({'appSource':appSource,'testSource':testSource,'appCodeEquivalentToC5':True,'productionTreeSHA256':productionTreeSHA256,'nativeContentProtocol':True,'qaPath':str(target),'qaSHA256':sha,'workflowCommit':os.environ['GITHUB_SHA'],'allTrackedFilesUnchanged':True,'noInstrumentation':True,'integratedModalAcknowledgement':True},indent=2))
           QA_SOURCE
       - name: Create isolated simulator
         timeout-minutes: 8
