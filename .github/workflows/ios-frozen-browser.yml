@@ -33,19 +33,23 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
           VITE_REVENUECAT_IOS_API_KEY: ${{ vars.VITE_REVENUECAT_IOS_API_KEY }}
-        run: python3 scripts/ci-public-ios-config.py
+        run: |
+          mkdir -p "$RUNNER_TEMP/CIWeb/config"
+          cd "$RUNNER_TEMP/CIWeb/config"
+          python3 "$GITHUB_WORKSPACE/scripts/ci-public-ios-config.py"
       - name: Execute every collected scenario once on all three engines
         run: |
-          mkdir -p CIWeb
-          git rev-parse HEAD > CIWeb/source.txt
+          mkdir -p "$RUNNER_TEMP/CIWeb"
+          git rev-parse HEAD > "$RUNNER_TEMP/CIWeb/source.txt"
           git diff --exit-code
-          npx playwright --version > CIWeb/playwright.txt
-          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --version > CIWeb/chrome.txt
+          npx playwright --version > "$RUNNER_TEMP/CIWeb/playwright.txt"
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --version > "$RUNNER_TEMP/CIWeb/chrome.txt"
           python3 - <<'BROWSER'
           from pathlib import Path
           import os, subprocess, time, urllib.request, signal
           env=dict(os.environ, PLAYWRIGHT_BASE_URL='http://127.0.0.1:4391')
-          with Path('CIWeb/vite.log').open('w') as log:
+          report=Path(os.environ['RUNNER_TEMP'])/'CIWeb'
+          with (report/'vite.log').open('w') as log:
               server=subprocess.Popen(['node','node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','4391','--strictPort'],env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
               try:
                   deadline=time.monotonic()+20
@@ -58,7 +62,7 @@ jobs:
                           pass
                       assert time.monotonic()<deadline, 'Owned local Vite server did not become ready'
                       time.sleep(0.2)
-                  result=subprocess.run(['python3','scripts/run-e2e-isolated.py','CIWeb/integration'],env=env)
+                  result=subprocess.run(['python3','scripts/run-e2e-isolated.py',str(report/'integration')],env=env)
                   assert result.returncode==0, 'Complete browser suite failed; preserve all raw results'
               finally:
                   if server.poll() is None:
@@ -72,5 +76,5 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: commandeici-browser-${{ github.sha }}
-          path: CIWeb
+          path: ${{ runner.temp }}/CIWeb
           retention-days: 1
