@@ -1,4 +1,4 @@
-name: Focused account-menu Escape verification
+name: Frozen iOS browser integration
 on:
   push:
     branches: [codex/commandeici-ios-frozen-browser-20261005]
@@ -37,7 +37,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/CIWeb/config"
           cd "$RUNNER_TEMP/CIWeb/config"
           python3 "$GITHUB_WORKSPACE/scripts/ci-public-ios-config.py"
-      - name: Execute all 63 account-menu cases once on all three engines
+      - name: Execute every collected scenario once on all three engines
         run: |
           mkdir -p "$RUNNER_TEMP/CIWeb"
           git rev-parse HEAD > "$RUNNER_TEMP/CIWeb/source.txt"
@@ -62,24 +62,8 @@ jobs:
                           pass
                       assert time.monotonic()<deadline, 'Owned local Vite server did not become ready'
                       time.sleep(0.2)
-                  import runpy,sys,json
-                  sys.dont_write_bytecode=True
-                  helpers=runpy.run_path('scripts/run-e2e-isolated.py')
-                  env['PLAYWRIGHT_JSON_OUTPUT_FILE']=str(report/'focused-collection.json')
-                  with (report/'collection.log').open('w') as listing:
-                      subprocess.run(['npx','playwright','test','menu-contrast.spec.ts','--list','--reporter=json'],env=env,stdout=listing,stderr=subprocess.STDOUT,check=True)
-                  collection=json.loads((report/'focused-collection.json').read_text())
-                  expected=helpers['identities'](collection)
-                  assert len(expected)==63 and len(set(expected))==63
-                  env['PLAYWRIGHT_JSON_OUTPUT_FILE']=str(report/'focused-results.json')
-                  with (report/'focused.log').open('w') as output:
-                      result=subprocess.run(['npx','playwright','test','menu-contrast.spec.ts','--workers=1','--retries=0','--reporter=list,json','--output='+str(report/'focused-results')],env=env,stdout=output,stderr=subprocess.STDOUT)
-                  actual=json.loads((report/'focused-results.json').read_text())
-                  identities=helpers['identities'](actual)
-                  proof={'source':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'focusedOnlyNotFull426':True,'collected':len(expected),'executed':len(identities),'allUniqueAndExactlyOnce':len(identities)==len(set(identities)) and sorted(expected)==sorted(identities),'allSinglePassNoRetry':helpers['results_are_single_passes'](actual),'stats':actual['stats'],'actualExitCode':result.returncode}
-                  (report/'focused-summary.json').write_text(json.dumps(proof,indent=2))
-                  assert not subprocess.check_output(['git','status','--porcelain'],text=True)
-                  assert result.returncode==0 and proof['allUniqueAndExactlyOnce'] and proof['allSinglePassNoRetry'] and proof['stats']['expected']==63 and not any(proof['stats'][key] for key in ['unexpected','skipped','flaky']), 'Focused menu case failed; preserve all raw results'
+                  result=subprocess.run(['python3','scripts/run-e2e-isolated.py',str(report/'integration')],env=env)
+                  assert result.returncode==0, 'Complete browser suite failed; preserve all raw results'
               finally:
                   if server.poll() is None:
                       os.killpg(server.pid,signal.SIGTERM)
