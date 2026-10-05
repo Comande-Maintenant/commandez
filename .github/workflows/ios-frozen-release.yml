@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: c5e10d810d401fe60c1bb642c58b54c5eead5c68
+          ref: c0d2fee94ede9384bda19b1db69cc6f273a895a8
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -42,14 +42,14 @@ jobs:
           xcodebuild -version > "$RUNNER_TEMP/CIRelease/xcode.txt"
           test "$(xcodebuild -version)" = "$(printf 'Xcode 26.2\nBuild version 17C52')"
           set -o pipefail
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release             -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/CommandeIciReleaseData"             -archivePath "$RUNNER_TEMP/CIRelease/CommandeIci-1.0-7.xcarchive" CODE_SIGNING_ALLOWED=NO archive             2>&1 | tee "$RUNNER_TEMP/CIRelease/archive.log"
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release             -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/CommandeIciReleaseData"             -archivePath "$RUNNER_TEMP/CIRelease/CommandeIci-1.0-8.xcarchive" CODE_SIGNING_ALLOWED=NO CURRENT_PROJECT_VERSION=8 archive             2>&1 | tee "$RUNNER_TEMP/CIRelease/archive.log"
           python3 - <<'RELEASE'
           from pathlib import Path
           import json,hashlib,plistlib,subprocess,os
           report=Path(os.environ['RUNNER_TEMP'])/'CIRelease'
-          app=report/'CommandeIci-1.0-7.xcarchive/Products/Applications/App.app'
+          app=report/'CommandeIci-1.0-8.xcarchive/Products/Applications/App.app'
           info=plistlib.loads((app/'Info.plist').read_bytes())
-          assert info['CFBundleIdentifier']=='com.commandeici.app' and info['CFBundleVersion']=='7' and info['CFBundleShortVersionString']=='1.0'
+          assert info['CFBundleIdentifier']=='com.commandeici.app' and info['CFBundleVersion']=='8' and info['CFBundleShortVersionString']=='1.0'
           files=[]
           for f in sorted(Path('dist').rglob('*')):
               if f.is_file():
@@ -58,8 +58,8 @@ jobs:
                   files.append({'path':name,'sha256':hashlib.sha256(f.read_bytes()).hexdigest()})
           assert files
           (report/'runtime.json').write_text(json.dumps(files,indent=2))
-          (report/'unsigned-archive.json').write_text(json.dumps({'source':(report/'source.txt').read_text().strip(),'version':'1.0','build':'7','bundle':'com.commandeici.app','unsigned':True,'privateSigningMaterialProvidedToCI':False,'runtimeFileCount':len(files),'executableSHA256':hashlib.sha256((app/'App').read_bytes()).hexdigest()},indent=2))
-          subprocess.run(['ditto','-c','-k','--keepParent',str(report/'CommandeIci-1.0-7.xcarchive'),str(report/'unsigned-release.zip')],check=True)
+          (report/'unsigned-archive.json').write_text(json.dumps({'source':(report/'source.txt').read_text().strip(),'version':'1.0','build':'8','bundle':'com.commandeici.app','unsigned':True,'privateSigningMaterialProvidedToCI':False,'runtimeFileCount':len(files),'executableSHA256':hashlib.sha256((app/'App').read_bytes()).hexdigest()},indent=2))
+          subprocess.run(['ditto','-c','-k','--keepParent',str(report/'CommandeIci-1.0-8.xcarchive'),str(report/'unsigned-release.zip')],check=True)
           RELEASE
       - name: Preserve unsigned archive and full build evidence
         if: always()
