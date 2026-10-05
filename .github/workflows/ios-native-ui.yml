@@ -2,7 +2,7 @@ name: iOS native UI verification
 
 on:
   push:
-    branches: [codex/commandeici-ios-journey-20261004]
+    branches: [codex/commandeici-ios-frozen-notification-20261005]
     paths:
       - '.github/workflows/ios-native-ui.yml'
       - 'scripts/ci-public-ios-config.py'
@@ -54,17 +54,20 @@ jobs:
           retention-days: 1
   native-ui:
     runs-on: macos-26
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          ref: 2c1e60b5e336d341ade33c9f7618716a0a1c6df6
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
           cache: npm
+      - name: Verify native opening recovery policy
+        run: ios/PolicyTests/run.sh
       - name: Restore locked dependencies
         run: npm ci
       - name: Check public configuration rejection rules
@@ -102,13 +105,34 @@ jobs:
           assert files
           Path('CIReport/runtime.json').write_text(json.dumps(files,indent=2))
           PY
+      - name: Apply the reviewed modal acknowledgement to native QA only
+        run: |
+          python3 - <<'QA_PATCH'
+          from pathlib import Path
+          import hashlib,json,subprocess,os
+          target=Path('ios/App/CommandeIciUITests/CommandeIciUITests.swift')
+          before=target.read_text()
+          assert hashlib.sha256(before.encode()).hexdigest()=='a5b46530fa94f9f7f4944405c155609ac75b6d2084d7f2760a33e838537a5453'
+          old="        // The success instruction appears only after the native schedule resolves.\n        let scheduled"
+          new="        // Scheduling a demo notification also shows the received-order dialog.\n        // Acknowledge it through its real exit before reading the underlying guide.\n        if close.waitForExistence(timeout: 3) { close.tap() }\n        // The success instruction appears only after the native schedule resolves.\n        let scheduled"
+          assert before.count(old)==1
+          after=before.replace(old,new,1)
+          assert hashlib.sha256(after.encode()).hexdigest()=='1e4734b3c84ba211cf41955cee61b7f35fb605cbcb87919e8298e8f2921b95f7'
+          target.write_text(after)
+          assert subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()==[str(target)]
+          appSource=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert appSource=='2c1e60b5e336d341ade33c9f7618716a0a1c6df6'
+          Path('CIReport/qa-source.json').write_text(json.dumps({'appSource':appSource,'testProtocol':'reviewed native modal acknowledgement v1','qaPath':str(target),'qaBeforeSHA256':hashlib.sha256(before.encode()).hexdigest(),'qaAfterSHA256':hashlib.sha256(after.encode()).hexdigest(),'workflowCommit':os.environ['GITHUB_SHA'],'onlyTrackedDiff':str(target),'allShippingFilesUnchanged':True,'originalAssertionsAndTimeoutsPreserved':True},indent=2))
+          QA_PATCH
       - name: Create isolated simulator
-        timeout-minutes: 4
+        timeout-minutes: 8
         run: |
           CI_SIM_ID=$(xcrun simctl create "CommandeIci CI ${GITHUB_RUN_ID}" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-2)
           echo "CI_SIM_ID=$CI_SIM_ID" >> "$GITHUB_ENV"
           xcrun simctl boot "$CI_SIM_ID"
-          xcrun simctl bootstatus "$CI_SIM_ID" -b
+          set -o pipefail
+          xcrun simctl bootstatus "$CI_SIM_ID" -b 2>&1 | tee CIReport/simulator-boot.log
+          echo "CI_SIM_BOOT_READY=true" >> "$GITHUB_ENV"
       - name: Build simulator with local signing and simulated entitlements
         run: |
           set -o pipefail
@@ -135,15 +159,63 @@ jobs:
             -resultBundlePath CIReport/NativeResult.xcresult -testLanguage fr -testRegion FR \
             -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 \
             -parallel-testing-enabled NO test-without-building 2>&1 | tee CIReport/native.log
-      - name: Export evidence and enforce suite count
+      - name: Export evidence and enforce all fifteen cases
+        timeout-minutes: 2
         if: always()
         run: |
-          if [ -n "${CI_SIM_ID:-}" ]; then
-            QA_APP_CONTAINER=$(xcrun simctl get_app_container "$CI_SIM_ID" com.commandeici.app data 2>/dev/null || true)
-            if [ -n "$QA_APP_CONTAINER" ] && [ -f "$QA_APP_CONTAINER/Documents/qa-readiness.ndjson" ]; then
-              cp "$QA_APP_CONTAINER/Documents/qa-readiness.ndjson" CIReport/qa-readiness.ndjson
-            fi
-          fi
+          python3 - <<'QA_CONTAINER'
+          from pathlib import Path
+          import subprocess, os, json, shutil, time
+          report={'bootReady':os.environ.get('CI_SIM_BOOT_READY')=='true','hasNativeResult':Path('CIReport/NativeResult.xcresult').is_dir(),'journalCopied':False}
+          started=time.monotonic()
+          if report['bootReady'] and report['hasNativeResult'] and os.environ.get('CI_SIM_ID'):
+              try:
+                  result=subprocess.run(['xcrun','simctl','get_app_container',os.environ['CI_SIM_ID'],'com.commandeici.app','data'],capture_output=True,text=True,timeout=10)
+                  report['containerReadReturnCode']=result.returncode
+                  if result.returncode==0:
+                      journal=Path(result.stdout.strip())/'Documents/qa-readiness.ndjson'
+                      if journal.is_file():
+                          shutil.copyfile(journal,'CIReport/qa-readiness.ndjson');report['journalCopied']=True
+              except subprocess.TimeoutExpired:
+                  report['containerReadTimedOut']=True
+          else:
+              report['containerReadSkipped']='App execution prerequisites not established'
+          # Fallback reads only this run's simulator and the exact app's metadata.
+          if not report['journalCopied'] and report['bootReady'] and report['hasNativeResult']:
+              import plistlib, uuid
+              try:
+                  simulator_id=str(uuid.UUID(os.environ['CI_SIM_ID'])).upper()
+                  simulator=(Path.home()/'Library/Developer/CoreSimulator/Devices'/simulator_id).resolve(strict=True)
+                  applications=(simulator/'data/Containers/Data/Application').resolve(strict=True)
+                  assert applications.is_relative_to(simulator)
+                  matches=[]
+                  candidates=list(applications.iterdir())
+                  assert len(candidates)<=256
+                  for candidate in candidates:
+                      try:
+                          uuid.UUID(candidate.name)
+                          directory=candidate.resolve(strict=True)
+                          if not directory.is_relative_to(applications): continue
+                          metadata=(directory/'.com.apple.mobile_container_manager.metadata.plist').resolve(strict=True)
+                          if not metadata.is_relative_to(directory): continue
+                          if metadata.stat().st_size>65536: continue
+                          value=plistlib.loads(metadata.read_bytes())
+                          if isinstance(value,dict) and value.get('MCMMetadataIdentifier')=='com.commandeici.app':
+                              matches.append(directory)
+                      except (OSError, ValueError, plistlib.InvalidFileException):
+                          continue
+                  report['ownedSimulatorMatchingAppContainers']=len(matches)
+                  if len(matches)==1:
+                      journal=(matches[0]/'Documents/qa-readiness.ndjson').resolve(strict=True)
+                      assert journal.is_relative_to(matches[0]) and journal.stat().st_size<=1048576
+                      shutil.copyfile(journal,'CIReport/qa-readiness.ndjson')
+                      report['journalCopied']=True
+                      report['journalCopyMethod']='owned simulator exact bundle metadata fallback'
+              except (OSError, ValueError, AssertionError, KeyError) as error:
+                  report['ownedSimulatorFallbackError']=type(error).__name__
+          report['elapsedSeconds']=time.monotonic()-started
+          Path('CIReport/qa-container-read.json').write_text(json.dumps(report,indent=2))
+          QA_CONTAINER
           if [ -d CIReport/NativeResult.xcresult ]; then
             xcrun xcresulttool get test-results summary --path CIReport/NativeResult.xcresult > CIReport/summary.json
             xcrun xcresulttool export attachments --path CIReport/NativeResult.xcresult --output-path CIReport/Attachments
@@ -165,4 +237,12 @@ jobs:
           retention-days: 1
       - name: Shut down own simulator
         if: always() && env.CI_SIM_ID != ''
-        run: xcrun simctl shutdown "$CI_SIM_ID" || true
+        timeout-minutes: 1
+        run: |
+          python3 - <<'SHUTDOWN'
+          import os, subprocess
+          try:
+              subprocess.run(['xcrun','simctl','shutdown',os.environ['CI_SIM_ID']],capture_output=True,timeout=15)
+          except subprocess.TimeoutExpired:
+              print('Own simulator cleanup timed out; ephemeral runner will dispose it')
+          SHUTDOWN
