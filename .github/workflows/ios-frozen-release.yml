@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: c0d2fee94ede9384bda19b1db69cc6f273a895a8
+          ref: 11f552440ce8553de555a313947b7b64da8ac35f
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
