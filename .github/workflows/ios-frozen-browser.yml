@@ -1,0 +1,76 @@
+name: Frozen iOS browser integration
+on:
+  push:
+    branches: [codex/commandeici-ios-frozen-browser-20261005]
+    paths: ['.github/workflows/ios-frozen-browser.yml']
+permissions:
+  contents: read
+concurrency:
+  group: frozen-browser-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser-integration:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          ref: 2c1e60b5e336d341ade33c9f7618716a0a1c6df6
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.13.0
+          cache: npm
+      - name: Restore locked dependencies and browser tools
+        run: |
+          npm ci
+          npx playwright install webkit
+          if [ ! -x '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' ]; then
+            npx playwright install chrome
+          fi
+      - name: Validate published public client configuration
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_REVENUECAT_IOS_API_KEY: ${{ vars.VITE_REVENUECAT_IOS_API_KEY }}
+        run: python3 scripts/ci-public-ios-config.py
+      - name: Execute every collected scenario once on all three engines
+        run: |
+          mkdir -p CIWeb
+          git rev-parse HEAD > CIWeb/source.txt
+          git diff --exit-code
+          npx playwright --version > CIWeb/playwright.txt
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --version > CIWeb/chrome.txt
+          python3 - <<'BROWSER'
+          from pathlib import Path
+          import os, subprocess, time, urllib.request, signal
+          env=dict(os.environ, PLAYWRIGHT_BASE_URL='http://127.0.0.1:4391')
+          with Path('CIWeb/vite.log').open('w') as log:
+              server=subprocess.Popen(['node','node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','4391','--strictPort'],env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+              try:
+                  deadline=time.monotonic()+20
+                  while True:
+                      assert server.poll() is None, 'Owned Vite server exited before readiness'
+                      try:
+                          with urllib.request.urlopen(env['PLAYWRIGHT_BASE_URL'],timeout=2) as response:
+                              if response.status==200: break
+                      except OSError:
+                          pass
+                      assert time.monotonic()<deadline, 'Owned local Vite server did not become ready'
+                      time.sleep(0.2)
+                  result=subprocess.run(['python3','scripts/run-e2e-isolated.py','CIWeb/integration'],env=env)
+                  assert result.returncode==0, 'Complete browser suite failed; preserve all raw results'
+              finally:
+                  if server.poll() is None:
+                      os.killpg(server.pid,signal.SIGTERM)
+                      try: server.wait(timeout=5)
+                      except subprocess.TimeoutExpired:
+                          os.killpg(server.pid,signal.SIGKILL);server.wait(timeout=5)
+          BROWSER
+      - name: Preserve all raw browser results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: commandeici-browser-${{ github.sha }}
+          path: CIWeb
+          retention-days: 1
