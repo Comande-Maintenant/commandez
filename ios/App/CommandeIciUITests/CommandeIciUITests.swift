@@ -290,7 +290,22 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(scheduled.waitForExistence(timeout: 5), app.debugDescription)
         XCUIDevice.shared.press(.home)
         let banner = springboard.buttons.matching(NSPredicate(format: "identifier == 'ShortLook.Platter.Content.Seamless' AND label CONTAINS 'CommandeIci · Démonstration' AND label CONTAINS 'Nouvelle commande fictive.'")).firstMatch
-        XCTAssertTrue(banner.waitForExistence(timeout: 15), springboard.debugDescription)
+        if !banner.waitForExistence(timeout: 15) {
+            // The notification persists after its temporary banner disappears.
+            // Open the system notification list from the upper-left screen edge.
+            let screen = springboard.windows.firstMatch
+            let top = screen.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.001))
+            let bottom = screen.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.75))
+            top.press(forDuration: 0.05, thenDragTo: bottom)
+        }
+        let nativeTitle = springboard.staticTexts.matching(NSPredicate(format: "label == %@", "CommandeIci · Démonstration")).firstMatch
+        let nativeBody = springboard.staticTexts.matching(NSPredicate(format: "label == %@", "Nouvelle commande fictive. Ouvrez la démo pour la préparer.")).firstMatch
+        XCTAssertTrue(nativeTitle.waitForExistence(timeout: 5), springboard.debugDescription)
+        XCTAssertTrue(nativeBody.exists, springboard.debugDescription)
+        let systemAX = XCTAttachment(string: springboard.debugDescription)
+        systemAX.name = "Actual native notification accessibility"
+        systemAX.lifetime = .keepAlways
+        add(systemAX)
         let shot = XCTAttachment(screenshot: springboard.screenshot())
         shot.name = "Notification iOS locale de demonstration"
         shot.lifetime = .keepAlways
