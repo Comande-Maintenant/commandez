@@ -1,119 +1,42 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useLanguage } from "@/context/LanguageContext";
+import { useEffect } from 'react';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { ShoppingBag, Store, ArrowRight } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
+import { LanguageSelector } from '@/components/restaurant/LanguageSelector';
+import { useLanguage } from '@/context/LanguageContext';
+import { readEntryPreference, rememberEntryRole, type EntryRole } from '@/lib/entry-preferences';
+import '@/components/entry/entry.css';
+import { useNativeLaunchReady } from '@/context/NativeLaunchContext';
 
-const Index = () => {
+export default function Index() {
   const navigate = useNavigate();
+  const launchReady = useNativeLaunchReady();
   const { t } = useLanguage();
-  const [checking, setChecking] = useState(true);
-
-  // Auto-redirect if restaurateur is already logged in
-  useEffect(() => {
-    document.title = t('home.page_title');
-
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (data.user) {
-        const { data: restaurants } = await supabase
-          .from("restaurants")
-          .select("slug")
-          .eq("owner_id", data.user.id)
-          .limit(1);
-
-        if (restaurants && restaurants.length > 0) {
-          navigate(`/admin/${restaurants[0].slug}`, { replace: true });
-          return;
-        }
-      }
-      setChecking(false);
-    }).catch(() => setChecking(false));
-  }, [navigate, t]);
-
-  if (checking) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+  const location = useLocation();
+  const preference = location.state?.chooseRole ? { role: null } : readEntryPreference();
+  useEffect(() => { document.title = t('home.page_title'); }, [t]);
+  if (preference.role && launchReady) return <Navigate to={preference.role === 'client' ? '/espace/client' : '/espace/commercant'} replace />;
+  const choose = (role: EntryRole) => {
+    rememberEntryRole(role);
+    navigate(role === 'client' ? '/espace/client' : '/espace/commercant');
+  };
+  return <div className="entry-page">
+    <header className="entry-header"><BrandLogo /><LanguageSelector /></header>
+    <main className="entry-welcome">
+      <div className="entry-photo-fan" aria-hidden="true">
+        <img src="/images/menu/kebab.webp" alt="" width="180" height="130" />
+        <img src="/images/commerce/grocery-basket.webp" alt="" width="180" height="130" />
+        <img src="/images/commerce/seasonal-bouquet.webp" alt="" width="180" height="130" />
       </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="https://commandeici.com" className="font-semibold text-lg text-foreground hover:opacity-80">
-            commande<span className="text-muted-foreground">ici</span>
-          </a>
-          <Button
-            size="sm"
-            className="rounded-xl text-xs font-semibold"
-            onClick={() => navigate("/inscription")}
-          >
-            {t('home.create_page')}
-          </Button>
-        </div>
-      </header>
-
-      {/* Main content */}
-      <div className="flex-1 flex items-center justify-center px-4">
-        <motion.div
-          className="w-full max-w-sm text-center space-y-6 py-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{t('home.title')}</h1>
-            <p className="text-sm text-muted-foreground mt-2">
-              {t('home.description')}
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <Button
-              onClick={() => navigate("/connexion")}
-              className="w-full h-12 rounded-xl text-base font-semibold"
-            >
-              {t('home.login')}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => navigate("/inscription")}
-              className="w-full h-12 rounded-xl text-base"
-            >
-              {t('home.create_free')}
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/admin/demo")}
-              className="w-full h-10 rounded-xl text-sm text-muted-foreground hover:text-foreground"
-            >
-              {t('demo.cta_discover')} &rarr;
-            </Button>
-          </div>
-
-          <div className="space-y-2 pt-2">
-            <a
-              href="mailto:contact@commandeici.com"
-              className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              contact@commandeici.com
-            </a>
-            <a
-              href="https://commandeici.com"
-              className="block text-sm text-muted-foreground hover:text-foreground transition-colors underline"
-            >
-              {t('home.back_to_site')}
-            </a>
-          </div>
-        </motion.div>
+      <div className="entry-intro"><h1>{t('entry.home_title')}</h1><p>{t('entry.home_description')}</p></div>
+      <div className="entry-choices">
+        <button type="button" data-primary-action="client" className="entry-choice entry-choice-client" aria-labelledby="entry-client-title" aria-describedby="entry-client-hint" onClick={() => choose('client')}>
+          <ShoppingBag aria-hidden="true" /><span><strong id="entry-client-title">{t('entry.client_action')}</strong><small id="entry-client-hint">{t('entry.client_hint')}</small></span><ArrowRight aria-hidden="true" className="rtl:rotate-180" />
+        </button>
+        <button type="button" className="entry-choice entry-choice-merchant" aria-labelledby="entry-merchant-title" aria-describedby="entry-merchant-hint" onClick={() => choose('merchant')}>
+          <Store aria-hidden="true" /><span><strong id="entry-merchant-title">{t('entry.merchant_action')}</strong><small id="entry-merchant-hint">{t('entry.merchant_hint')}</small></span><ArrowRight aria-hidden="true" className="rtl:rotate-180" />
+        </button>
       </div>
-    </div>
-  );
-};
-
-export default Index;
+    </main>
+  </div>;
+}

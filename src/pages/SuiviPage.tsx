@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { withReadableWhiteText } from '@/lib/color-contrast';
+import { PageExit } from '@/components/PageExit';
 import { Inbox, ChefHat, Timer, CheckCircle, Phone, ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchOrderById, subscribeToOrderStatus } from "@/lib/api";
@@ -201,7 +203,7 @@ const SuiviPage = () => {
     return () => clearTimeout(timer);
   }, [order?.status]);
 
-  const primary = order?.restaurant?.primary_color || "#10B981";
+  const primary = withReadableWhiteText(order?.restaurant?.primary_color || "#187A26");
 
   // Calculate progress
   const getEstimatedMinutes = useCallback(() => {
@@ -238,8 +240,9 @@ const SuiviPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-pulse text-gray-400">{t("suivi.loading")}</div>
+      <div className="relative min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="absolute inset-x-0 top-0 px-4 py-2"><PageExit/></div>
+        <div className="animate-pulse text-gray-500">{t("suivi.loading")}</div>
       </div>
     );
   }
@@ -248,7 +251,7 @@ const SuiviPage = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-4 p-4">
         <p className="text-gray-500">{t("suivi.not_found")}</p>
-        <button onClick={() => navigate("/")} className="text-sm underline text-gray-700">{t("suivi.back")}</button>
+        <PageExit/>
       </div>
     );
   }
@@ -264,7 +267,7 @@ const SuiviPage = () => {
 
       {/* Header */}
       <div className="px-4 pt-6 pb-4 flex items-center gap-3">
-        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors" aria-label={t("suivi.back_to_restaurant")}>
+        <button onClick={() => navigate(`/${order.restaurant.slug}`)} className="flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full bg-white/80 hover:bg-white transition-colors" aria-label={t("suivi.back_to_restaurant")}>
           <ArrowLeft className="h-5 w-5 text-gray-700" />
         </button>
         <div>
@@ -276,7 +279,7 @@ const SuiviPage = () => {
       <div className="max-w-lg mx-auto px-4 pb-8">
         {/* Order number hero */}
         <div className="text-center mb-6">
-          <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">{t("suivi.your_order")}</p>
+          <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">{t("suivi.your_order")}</p>
           <p className="text-4xl font-black tracking-wider" style={{ color: primary }}>
             {formatDisplayNumber(order)}
           </p>
@@ -284,13 +287,13 @@ const SuiviPage = () => {
 
         {/* Demo CTA banner */}
         {order.restaurant?.is_demo && (
-          <div className="mb-6 flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200">
-            <p className="text-sm font-medium text-emerald-800">{t("demo.suivi_banner")}</p>
+          <div className="mb-6 flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200">
+            <p className="min-w-0 text-sm font-medium text-emerald-800">{t("demo.suivi_banner")}</p>
             <a
               href="/admin/demo?view=cuisine"
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors flex-shrink-0"
+              className="inline-flex min-h-11 max-w-[45%] items-center justify-center px-3 py-2 rounded-xl text-center text-xs font-semibold leading-snug text-white bg-emerald-700 hover:bg-emerald-800 transition-colors flex-shrink-0"
             >
               {t("demo.suivi_cta")}
             </a>
@@ -395,7 +398,7 @@ const SuiviPage = () => {
                   </div>
                   {/* Label */}
                   <div className="pt-2">
-                    <p className={`text-sm font-medium ${isComplete ? "text-gray-900" : "text-gray-400"}`}>
+                    <p className={`text-sm font-medium ${isComplete ? "text-gray-900" : "text-gray-500"}`}>
                       {t(step.label)}
                     </p>
                   </div>

@@ -279,7 +279,7 @@ export const POSRecap = ({
           <span className="text-2xl font-bold text-foreground">{grandTotal.toFixed(2)} €</span>
         </div>
         <Button
-          className="w-full rounded-xl min-h-[56px] text-lg font-bold bg-green-600 hover:bg-green-700 text-white"
+          className="w-full rounded-xl min-h-[56px] text-lg font-bold bg-green-700 hover:bg-green-800 text-white"
           onClick={onSubmit}
           disabled={submitting || personCount === 0}
         >

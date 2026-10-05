@@ -1,3 +1,4 @@
+import { isEmbeddedDemo } from '@/lib/embedded-demo';
 import { useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/context/CartContext";
@@ -18,7 +19,7 @@ export function useVisitorTracking(restaurantId: string | null) {
   const debouncedTrackRef = useRef<ReturnType<typeof debounce> | null>(null);
 
   useEffect(() => {
-    if (!restaurantId) return;
+    if (!restaurantId || isEmbeddedDemo(restaurantId)) return;
 
     const visitorId = getOrCreateVisitorId();
     const arrivedAt = new Date().toISOString();

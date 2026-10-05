@@ -1,3 +1,4 @@
+import { isEmbeddedDemoPath } from '@/lib/embedded-demo';
 import { randomUuid } from '@/lib/uuid';
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
@@ -58,7 +59,7 @@ function getReferrer(): string | null {
  * Tracks page views by inserting into page_views table on each navigation.
  * Must be rendered inside BrowserRouter and LanguageProvider.
  */
-export function usePageTracking() {
+export function usePageTracking(cartRestaurantId?: string | null) {
   const location = useLocation();
   const lastPath = useRef<string>("");
 
@@ -68,8 +69,14 @@ export function usePageTracking() {
     if (fullPath === lastPath.current) return;
     lastPath.current = fullPath;
 
-    // Don't track super-admin views (that's us, not real traffic)
-    if (fullPath === "/super-admin") return;
+    let demoPath = fullPath;
+    try { demoPath = decodeURI(demoPath); } catch { /* Malformed paths remain outside the local demo. */ }
+    demoPath = demoPath.toLowerCase().replace(/\/+$/, "");
+
+    // Don't track super-admin views or local-only commerce demonstrations.
+    if (fullPath === "/super-admin" || ["/decouvrir", "/demo/epicerie", "/demo/fleuriste"].includes(demoPath)) return;
+
+    if (isEmbeddedDemoPath(demoPath, cartRestaurantId)) return;
 
     const { page_type, side } = classifyPage(fullPath);
     const utms = getUtmParams();
@@ -93,5 +100,5 @@ export function usePageTracking() {
     }).then(({ error }) => {
       if (error) console.warn("[page-tracking] insert error:", error.message);
     });
-  }, [location.pathname]);
+  }, [location.pathname, cartRestaurantId]);
 }

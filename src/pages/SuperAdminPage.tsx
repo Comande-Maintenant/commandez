@@ -625,7 +625,7 @@ const SuperAdminPage = () => {
                             <div className="w-32 sm:w-40 text-xs text-muted-foreground truncate flex-shrink-0">{step.label}</div>
                             <div className="flex-1 h-7 bg-secondary rounded-lg overflow-hidden">
                               <div
-                                className={`h-full rounded-lg flex items-center px-2 text-xs font-semibold text-white ${step.isChurn ? "bg-red-400" : "bg-[hsl(var(--primary))]"}`}
+                                className={`h-full rounded-lg flex items-center px-2 text-xs font-semibold text-white ${step.isChurn ? "bg-red-700" : "bg-[hsl(var(--primary))]"}`}
                                 style={{ width: `${Math.max((step.value / maxVal) * 100, 4)}%`, minWidth: "2rem" }}
                               >
                                 {step.value}

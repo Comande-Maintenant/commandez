@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { navigateBack } from '@/lib/navigation';
+import { PageExit } from '@/components/PageExit';
 import { ArrowLeft, User, Mail, Phone, Edit2, LogOut, Trash2, ShoppingBag, RefreshCw, ChevronRight, Loader2, KeyRound } from "lucide-react";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -117,15 +119,16 @@ const CustomerProfilePage = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="relative min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="absolute inset-x-0 top-0 px-4 py-2"><PageExit/></div>
         <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
       </div>
     );
   }
 
-  if (!isLoggedIn || !profile) return null;
+  if (!profile) return <div className="min-h-screen bg-gray-50 p-4"><PageExit/><p role="alert" className="mt-4 text-sm text-slate-600">{t('common.error')}</p></div>;
 
   const initial = profile.name?.charAt(0)?.toUpperCase() || "?";
 
@@ -134,7 +137,7 @@ const CustomerProfilePage = () => {
       {/* Header */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2" aria-label={t("client.back")}>
+          <button onClick={() => navigateBack(navigate)} className="flex min-h-11 min-w-11 items-center justify-center p-2" aria-label={t("client.back")}>
             <ArrowLeft className="h-5 w-5 text-gray-700" />
           </button>
           <h1 className="text-lg font-semibold text-gray-900">{t("client.title")}</h1>

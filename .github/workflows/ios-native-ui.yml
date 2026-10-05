@@ -1,0 +1,168 @@
+name: iOS native UI verification
+
+on:
+  push:
+    branches: [codex/commandeici-ios-journey-20261004]
+    paths:
+      - '.github/workflows/ios-native-ui.yml'
+      - 'scripts/ci-public-ios-config.py'
+      - 'scripts/test-ci-public-ios-config.py'
+      - 'scripts/ci-public-ios-readiness.py'
+      - 'scripts/test-ci-public-ios-readiness.py'
+      - 'scripts/ci-cold-webkit-reference.py'
+      - 'scripts/native-cold-reference.swift'
+      - 'src/**'
+      - 'ios/**'
+      - 'public/**'
+      - 'package*.json'
+      - 'capacitor.config.ts'
+  workflow_dispatch:
+    inputs:
+      cold_reference:
+        description: 'Also observe the separate diagnostic WebKit reference (never warms the app)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-native-ui-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cold-reference:
+    if: github.event_name == 'workflow_dispatch' && inputs.cold_reference
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Observe WebKit on a separate fresh host
+        run: |
+          test "$(xcodebuild -version)" = "$(printf 'Xcode 26.2\nBuild version 17C52')"
+          python3 scripts/ci-cold-webkit-reference.py
+      - name: Preserve separate reference evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: commandeici-cold-reference-${{ github.sha }}
+          path: CIReference
+          retention-days: 1
+  native-ui:
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.13.0
+          cache: npm
+      - name: Restore locked dependencies
+        run: npm ci
+      - name: Check public configuration rejection rules
+        run: python3 scripts/test-ci-public-ios-config.py
+      - name: Validate published public client configuration
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_REVENUECAT_IOS_API_KEY: ${{ vars.VITE_REVENUECAT_IOS_API_KEY }}
+        run: python3 scripts/ci-public-ios-config.py
+      - name: Check public readiness rejection rules
+        run: python3 scripts/test-ci-public-ios-readiness.py
+      - name: Check anonymous public demo readiness
+        run: python3 scripts/ci-public-ios-readiness.py
+      - name: Build and sync iOS resources
+        run: npm run ios:sync
+      - name: Record exact source, runtime and tools
+        run: |
+          mkdir -p CIReport
+          git rev-parse HEAD > CIReport/source.txt
+          git diff --exit-code
+          xcodebuild -version > CIReport/xcode.txt
+          test "$(xcodebuild -version)" = "$(printf 'Xcode 26.2\nBuild version 17C52')"
+          sw_vers > CIReport/macos.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          root=Path('.')
+          files=[]
+          for file in sorted((root/'dist').rglob('*')):
+            if file.is_file():
+              relative=file.relative_to(root/'dist').as_posix()
+              assert file.read_bytes()==(root/'ios/App/App/public'/relative).read_bytes(),relative
+              files.append({'path':relative,'sha256':hashlib.sha256(file.read_bytes()).hexdigest()})
+          assert files
+          Path('CIReport/runtime.json').write_text(json.dumps(files,indent=2))
+          PY
+      - name: Create isolated simulator
+        timeout-minutes: 4
+        run: |
+          CI_SIM_ID=$(xcrun simctl create "CommandeIci CI ${GITHUB_RUN_ID}" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-2)
+          echo "CI_SIM_ID=$CI_SIM_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$CI_SIM_ID"
+          xcrun simctl bootstatus "$CI_SIM_ID" -b
+      - name: Build simulator with local signing and simulated entitlements
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+            -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciDerivedData" \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=889YAF54QV \
+            build-for-testing 2>&1 | tee CIReport/native-build.log
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          import json,os,plistlib,subprocess
+          derived=Path(os.environ['RUNNER_TEMP'])/'CommandeIciDerivedData'
+          app=derived/'Build/Products/Debug-iphonesimulator/App.app'
+          ent=derived/'Build/Intermediates.noindex/App.build/Debug-iphonesimulator/App.build/App.app-Simulated.xcent'
+          attributes=plistlib.loads(ent.read_bytes())
+          assert attributes['application-identifier']=='889YAF54QV.com.commandeici.app', 'Simulator secure storage requires its application identifier'
+          subprocess.run(['codesign','--verify','--deep','--strict',str(app)],check=True,capture_output=True)
+          Path('CIReport/simulator-signing.json').write_text(json.dumps({'localAdHocOnly':True,'privateCertificateUsed':False,'simulatedApplicationIdentifier':attributes['application-identifier'],'signatureVerified':True},indent=2))
+          PYCODE
+      - name: Run all native UI cases
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+            -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciDerivedData" \
+            -resultBundlePath CIReport/NativeResult.xcresult -testLanguage fr -testRegion FR \
+            -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 \
+            -parallel-testing-enabled NO test-without-building 2>&1 | tee CIReport/native.log
+      - name: Export evidence and enforce suite count
+        if: always()
+        run: |
+          if [ -n "${CI_SIM_ID:-}" ]; then
+            QA_APP_CONTAINER=$(xcrun simctl get_app_container "$CI_SIM_ID" com.commandeici.app data 2>/dev/null || true)
+            if [ -n "$QA_APP_CONTAINER" ] && [ -f "$QA_APP_CONTAINER/Documents/qa-readiness.ndjson" ]; then
+              cp "$QA_APP_CONTAINER/Documents/qa-readiness.ndjson" CIReport/qa-readiness.ndjson
+            fi
+          fi
+          if [ -d CIReport/NativeResult.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path CIReport/NativeResult.xcresult > CIReport/summary.json
+            xcrun xcresulttool export attachments --path CIReport/NativeResult.xcresult --output-path CIReport/Attachments
+            python3 - <<'PY'
+          from pathlib import Path
+          import json
+          summary=json.loads(Path('CIReport/summary.json').read_text())
+          assert summary['totalTestCount']==19 and summary['passedTests']==19 and summary['failedTests']==0 and summary['skippedTests']==0,summary
+          PY
+          else
+            exit 1
+          fi
+      - name: Preserve native evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: commandeici-native-${{ github.sha }}
+          path: CIReport
+          retention-days: 1
+      - name: Shut down own simulator
+        if: always() && env.CI_SIM_ID != ''
+        run: xcrun simctl shutdown "$CI_SIM_ID" || true

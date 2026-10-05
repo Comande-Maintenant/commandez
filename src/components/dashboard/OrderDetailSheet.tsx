@@ -344,7 +344,7 @@ export const OrderDetailSheet = ({
     >
       <DialogPrimitive.Title className="sr-only">{formatDisplayNumber(order)}</DialogPrimitive.Title>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background sticky top-0 z-10">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-border bg-background sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <button onClick={onClose} aria-label={t("common.close")} className="min-h-11 min-w-11 p-2 -ms-2 rounded-xl hover:bg-secondary active:bg-secondary/80 transition-colors">
             <ArrowLeft className="h-5 w-5 text-foreground" />
@@ -362,16 +362,18 @@ export const OrderDetailSheet = ({
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <button
                 onClick={onPrev}
+                aria-label={t("common.previous")}
                 disabled={orderIndex === 0}
-                className="p-1.5 rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
+                className="min-h-11 min-w-11 p-1.5 flex items-center justify-center rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <span className="font-medium min-w-[3rem] text-center">{orderIndex + 1}/{totalOrders}</span>
               <button
                 onClick={onNext}
+                aria-label={t("common.next")}
                 disabled={orderIndex === totalOrders - 1}
-                className="p-1.5 rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
+                className="min-h-11 min-w-11 p-1.5 flex items-center justify-center rounded-lg hover:bg-secondary disabled:opacity-30 transition-colors"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -381,7 +383,7 @@ export const OrderDetailSheet = ({
       </div>
 
       {/* Content - scrollable */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-40">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 [padding-bottom:max(2rem,env(safe-area-inset-bottom))]">
         {/* Customer info */}
         <div className="py-4 border-b border-border">
           <div className="flex items-center justify-between mb-2">
@@ -537,11 +539,11 @@ export const OrderDetailSheet = ({
         {/* Items - read only or edit mode */}
         {!editing ? (
           <div className="py-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <h3 className="text-base font-semibold text-foreground">{t("dashboard.orders.articles")}</h3>
               <button
                 onClick={startEdit}
-                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-xl hover:bg-secondary"
+                className="flex min-h-11 min-w-11 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-xl hover:bg-secondary"
               >
                 {status === "done" ? <Plus className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
                 {status === "done" ? t("dashboard.orders.add_items") : t("common.edit")}
@@ -637,11 +639,11 @@ export const OrderDetailSheet = ({
         ) : (
           /* EDIT MODE */
           <div className="py-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <h3 className="text-base font-semibold text-foreground">{t("dashboard.orders.edit_order")}</h3>
               <button
                 onClick={() => setEditing(false)}
-                className="text-sm text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-xl hover:bg-secondary"
+                className="min-h-11 min-w-11 text-sm text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-xl hover:bg-secondary"
               >
                 {t("common.cancel")}
               </button>
@@ -651,8 +653,8 @@ export const OrderDetailSheet = ({
               {editItems.map((item: any, i: number) => {
                 const isLocked = isDoneEdit && i < originalItemCount;
                 return (
-                  <div key={i} className={`flex items-start gap-3 p-3 rounded-xl ${isLocked ? "bg-muted/30 opacity-70" : "bg-secondary/50"}`}>
-                    <div className="flex-1 min-w-0">
+                  <div key={i} className={`flex flex-col sm:flex-row items-start gap-3 p-3 rounded-xl ${isLocked ? "bg-muted/30 opacity-70" : "bg-secondary/50"}`}>
+                    <div className="w-full sm:w-auto flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         {isLocked && <Lock className="h-3 w-3 text-muted-foreground flex-shrink-0" />}
                         <p className="text-sm font-semibold text-foreground">{item.name}</p>
@@ -682,23 +684,26 @@ export const OrderDetailSheet = ({
                       )}
                     </div>
                     {!isLocked && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex shrink-0 items-center gap-2 self-end sm:self-start">
                         <button
                           onClick={() => updateEditItemQty(i, -1)}
-                          className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                          aria-label={`${t('cart.decrease')} : ${item.name}`}
+                          className="min-w-11 min-h-11 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
                         >
                           <Minus className="h-3.5 w-3.5" />
                         </button>
                         <span className="w-6 text-center text-sm font-bold">{item.quantity || 1}</span>
                         <button
                           onClick={() => updateEditItemQty(i, 1)}
-                          className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
+                          aria-label={`${t('cart.increase')} : ${item.name}`}
+                          className="min-w-11 min-h-11 rounded-lg border border-border flex items-center justify-center hover:bg-secondary active:bg-secondary/80"
                         >
                           <Plus className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={() => removeEditItem(i)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-destructive hover:bg-destructive/10 active:bg-destructive/20"
+                          aria-label={`${t('cart.remove')} : ${item.name}`}
+                          className="min-w-11 min-h-11 rounded-lg flex items-center justify-center text-destructive hover:bg-destructive/10 active:bg-destructive/20"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
@@ -768,7 +773,7 @@ export const OrderDetailSheet = ({
             {/* Total */}
             <div className="mt-4 pt-3 border-t border-border">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-foreground">Total</span>
+                <span className="text-sm font-semibold text-foreground">{t("cart.total")}</span>
                 <div className="flex items-center gap-2">
                   <Input
                     type="number"
@@ -800,7 +805,7 @@ export const OrderDetailSheet = ({
             <Button
               onClick={saveEdit}
               disabled={advancing}
-              className="w-full mt-4 h-14 rounded-xl text-base font-semibold"
+              className="w-full mt-4 h-auto min-h-14 rounded-xl text-base font-semibold whitespace-normal break-words"
             >
               {advancing ? "..." : t("dashboard.orders.validate_changes")}
             </Button>
@@ -810,7 +815,7 @@ export const OrderDetailSheet = ({
 
       {/* Bottom action buttons - sticky */}
       {!editing && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-[71] [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
+        <div className="shrink-0 bg-background border-t border-border p-4 z-[71] [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
           <div className="max-w-2xl mx-auto flex gap-3">
             {/* Revert button - all statuses except "new" */}
             {previousStatus[status] && (
@@ -818,10 +823,10 @@ export const OrderDetailSheet = ({
                 variant="outline"
                 onClick={handleRevert}
                 disabled={advancing}
-                className="h-14 rounded-xl text-sm font-semibold flex-shrink-0 gap-1.5"
+                className="h-auto min-h-14 min-w-0 max-w-[45%] rounded-xl text-sm font-semibold gap-1.5"
               >
                 <Undo2 className="h-4 w-4" />
-                {t("dashboard.orders.revert")}
+                <span className="min-w-0 whitespace-normal break-words">{t("dashboard.orders.revert")}</span>
               </Button>
             )}
             {/* Reject button for new orders */}
@@ -830,10 +835,9 @@ export const OrderDetailSheet = ({
                 variant="outline"
                 onClick={handleReject}
                 disabled={advancing}
-                className="h-14 rounded-xl text-base font-semibold flex-shrink-0 min-w-[120px] border-destructive text-destructive hover:bg-destructive/10"
+                className="h-auto min-h-14 min-w-0 basis-[40%] px-3 rounded-xl text-base font-semibold border-destructive text-destructive hover:bg-destructive/10"
               >
-                <X className="h-5 w-5 me-1" />
-                {t("dashboard.orders.reject")}
+                <span className="min-w-0 whitespace-normal break-words">{t("dashboard.orders.reject")}</span>
               </Button>
             )}
             {/* Advance button */}
@@ -841,14 +845,14 @@ export const OrderDetailSheet = ({
               <Button
                 onClick={handleAdvance}
                 disabled={advancing}
-                className={`flex-1 h-14 rounded-xl text-base font-semibold text-white ${action.color}`}
+                className={`flex-1 h-auto min-h-14 min-w-0 rounded-xl text-base font-semibold text-white ${action.color}`}
               >
                 {advancing ? (
                   "..."
                 ) : (
                   <>
                     <Check className="h-5 w-5 me-2" />
-                    {action.label}
+                    <span className="min-w-0 whitespace-normal break-words">{action.label}</span>
                   </>
                 )}
               </Button>
@@ -858,9 +862,9 @@ export const OrderDetailSheet = ({
               <Button
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 h-14 rounded-xl text-base font-semibold"
+                className="flex-1 h-auto min-h-14 min-w-0 rounded-xl text-base font-semibold"
               >
-                {t("common.close")}
+                <span className="min-w-0 whitespace-normal break-words">{t("common.close")}</span>
               </Button>
             )}
           </div>

@@ -28,7 +28,14 @@ public class SecureSessionPlugin: CAPPlugin, CAPBridgedPlugin {
         request[kSecReturnData as String] = true
         request[kSecMatchLimit as String] = kSecMatchLimitOne
         var result: CFTypeRef?
+        #if DEBUG
+        let started = ProcessInfo.processInfo.systemUptime
+        NativeQAReadiness.record(["boundary": "secure-session-read", "event": "start"])
+        #endif
         let status = SecItemCopyMatching(request as CFDictionary, &result)
+        #if DEBUG
+        NativeQAReadiness.record(["boundary": "secure-session-read", "event": "finish", "status": Int(status), "milliseconds": (ProcessInfo.processInfo.systemUptime - started) * 1000])
+        #endif
         if status == errSecItemNotFound { call.resolve(["value": NSNull()]); return }
         guard status == errSecSuccess, let data = result as? Data, let value = String(data: data, encoding: .utf8) else {
             call.reject("Session read failed", String(status)); return

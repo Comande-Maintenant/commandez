@@ -18,6 +18,13 @@ describe('public restaurant HTML and application preservation', () => {
     const response = await worker.fetch(new Request('https://app.commandeici.com/admin/demo'), env());
     expect(response.headers.get('x-robots-tag')).toContain('noindex'); expect(fetch).not.toHaveBeenCalled();
   });
+  it.each(['GET', 'HEAD'].flatMap(method => ['/decouvrir', '/decouvrir/', '/DECOUVRIR', '/de%63ouvrir', '/demo/epicerie', '/demo/fleuriste', '/demo/epicerie/', '/demo/%66leuriste'].map(path => [method, path])))('serves local demo %s %s without a merchant lookup', async (method, path) => {
+    const fetch = vi.fn(); vi.stubGlobal('fetch', fetch);
+    const response = await worker.fetch(new Request('https://app.commandeici.com' + path, { method }), env());
+    expect(response.status).toBe(200); expect(response.headers.get('x-robots-tag')).toContain('noindex');
+    if (method === 'HEAD') expect(await response.text()).toBe(''); else expect(await response.text()).toContain('/assets/app.js');
+    expect(fetch).not.toHaveBeenCalled();
+  });
   it('returns a real 404 with the SPA for unknown slugs', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 404 })));
     const response = await worker.fetch(new Request('https://app.commandeici.com/unknown'), env());

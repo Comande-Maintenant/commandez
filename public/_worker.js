@@ -1,5 +1,5 @@
 const FUNCTIONS = 'https://tgtvkzmokypztdudwzne.supabase.co/functions/v1';
-const RESERVED = new Set(['abonnement','abonnement-confirme','admin','choisir-plan','connexion','inscription','mot-de-passe-oublie','order','profil','reinitialiser-mot-de-passe','signup','suivi','super-admin','unsubscribe','upload']);
+const RESERVED = new Set(['abonnement','abonnement-confirme','admin','choisir-plan','connexion','decouvrir','inscription','mot-de-passe-oublie','order','profil','reinitialiser-mot-de-passe','signup','suivi','super-admin','unsubscribe','upload']);
 
 export default {
   async fetch(request, env) {
@@ -12,12 +12,15 @@ export default {
         return new Response(request.method === 'HEAD' ? null : result.body, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=300', 'x-content-type-options': 'nosniff' } });
       } catch { return new Response('Sitemap temporarily unavailable', { status: 503 }); }
     }
+    let localDemoPath = url.pathname;
+    try { localDemoPath = decodeURI(localDemoPath); } catch { /* Keep malformed paths unchanged. */ }
+    const localDemo = ['/decouvrir', '/demo/epicerie', '/demo/fleuriste'].includes(localDemoPath.toLowerCase().replace(/\/+$/, ''));
     const segments = url.pathname.split('/').filter(Boolean);
-    if (segments.length !== 1 || RESERVED.has(segments[0]) || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(segments[0])) {
+    if (localDemo || segments.length !== 1 || RESERVED.has(segments[0]) || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(segments[0])) {
       const asset = await env.ASSETS.fetch(request);
-      if (segments[0] && RESERVED.has(segments[0])) {
+      if (localDemo || (segments[0] && RESERVED.has(segments[0]))) {
         const headers = new Headers(asset.headers); headers.set('x-robots-tag','noindex, follow');
-        return new Response(asset.body, { status: asset.status, headers });
+        return new Response(request.method === 'HEAD' ? null : asset.body, { status: asset.status, headers });
       }
       return asset;
     }

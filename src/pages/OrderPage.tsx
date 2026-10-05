@@ -1,3 +1,4 @@
+import { isEmbeddedDemo } from '@/lib/embedded-demo';
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, ShoppingBag, Loader2, AlertTriangle, CreditCard, Banknote, UtensilsCrossed } from "lucide-react";
@@ -13,6 +14,7 @@ import { PickupTimePicker } from "@/components/PickupTimePicker";
 import { toast } from "sonner";
 import { useKioskMode } from "@/hooks/useKioskMode";
 import { CustomerAuthModal } from "@/components/CustomerAuthModal";
+import { navigateBack } from '@/lib/navigation';
 import { checkoutRequestId, clearCheckoutRequest } from "@/services/order-request";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 
@@ -23,6 +25,8 @@ const OrderPage = () => {
   const { user, isLoggedIn, profile, isLoading: authLoading } = useCustomerAuth();
   const [authOpen, setAuthOpen] = useState(false);
   const submittingRef = useRef(false);
+  // A metadata response can arrive between focusing a field and its first input.
+  const demoAutofillTouched = useRef({ name: false, phone: false, email: false });
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -95,9 +99,9 @@ const OrderPage = () => {
         const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
         const demoName = pick(demoNames);
         const demoEmail = demoName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", ".") + "@demo.com";
-        setName((prev) => prev || demoName);
-        setPhone((prev) => prev || pick(demoPhones));
-        setEmail((prev) => prev || demoEmail);
+        setName((prev) => demoAutofillTouched.current.name ? prev : prev || demoName);
+        setPhone((prev) => demoAutofillTouched.current.phone ? prev : prev || pick(demoPhones));
+        setEmail((prev) => demoAutofillTouched.current.email ? prev : prev || demoEmail);
         return; // Skip ban check for demo
       }
     });
@@ -139,6 +143,7 @@ const OrderPage = () => {
   };
 
   const handlePhoneChange = (value: string) => {
+    demoAutofillTouched.current.phone = true;
     setPhone(value);
     if (phoneError && value.length > 0) {
       const cleaned = value.replace(/[\s.\-()]/g, "");
@@ -149,7 +154,7 @@ const OrderPage = () => {
   };
 
   const handleConfirm = async () => {
-    if (!restaurantId || submittingRef.current || authLoading) return;
+    if (!restaurantId || submittingRef.current || (authLoading && !isEmbeddedDemo(restaurantId))) return;
     // Browsing and cart editing stay public. Real validation requires a session;
     // the server enforces this independently from the client/demo hints.
     if (!isDemo && !user?.email_confirmed_at) {
@@ -279,7 +284,7 @@ const OrderPage = () => {
         {restaurantSlug ? (
           <Link to={`/${restaurantSlug}`} className="text-sm text-foreground underline">{t("order.back_home")}</Link>
         ) : (
-          <a href="https://commandeici.com" className="text-sm text-foreground underline">{t("order.back_home")}</a>
+          <Link to="/" className="inline-flex min-h-11 items-center text-sm text-foreground underline">{t("order.back_home")}</Link>
         )}
       </div>
     );
@@ -290,7 +295,7 @@ const OrderPage = () => {
       <CustomerAuthModal open={authOpen} onClose={() => setAuthOpen(false)} redirectPath="/order" />
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2" aria-label={t("nav.back")}>
+          <button onClick={() => navigateBack(navigate,restaurantSlug?`/${restaurantSlug}`:'/')} className="flex min-h-11 min-w-11 items-center justify-center p-2" aria-label={t("nav.back")}>
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
           <h1 className={`font-semibold text-foreground ${isKiosk ? "text-xl" : "text-lg"}`}>{t("order.place_order")}</h1>
@@ -333,12 +338,12 @@ const OrderPage = () => {
             <>
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.your_info")}</h2>
               <div className="space-y-3">
-                <Input placeholder={t("order.your_name")} value={name} onChange={(e) => setName(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+                <Input placeholder={t("order.your_name")} value={name} onFocus={() => { demoAutofillTouched.current.name = true; }} onChange={(e) => { demoAutofillTouched.current.name = true; setName(e.target.value); }} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
                 <div>
-                  <Input placeholder={t("order.phone")} type="tel" value={phone} onChange={(e) => handlePhoneChange(e.target.value)} className={`h-14 rounded-2xl bg-secondary border-0 text-base ${phoneError ? "ring-2 ring-red-400" : ""}`} />
+                  <Input placeholder={t("order.phone")} type="tel" value={phone} onFocus={() => { demoAutofillTouched.current.phone = true; }} onChange={(e) => handlePhoneChange(e.target.value)} className={`h-14 rounded-2xl bg-secondary border-0 text-base ${phoneError ? "ring-2 ring-red-400" : ""}`} />
                   {phoneError && <p className="text-xs text-red-500 mt-1 ml-1">{phoneError}</p>}
                 </div>
-                <Input placeholder={t("order.email_optional")} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
+                <Input placeholder={t("order.email_optional")} type="email" value={email} onFocus={() => { demoAutofillTouched.current.email = true; }} onChange={(e) => { demoAutofillTouched.current.email = true; setEmail(e.target.value); }} className="h-14 rounded-2xl bg-secondary border-0 text-base" />
               </div>
             </>
           )}
@@ -441,7 +446,7 @@ const OrderPage = () => {
 
           <Button
             onClick={handleConfirm}
-            disabled={(!isKiosk && (!name || !phone || !isPhoneValid(phone))) || submitting || authLoading}
+            disabled={(!isKiosk && (!name || !phone || !isPhoneValid(phone))) || submitting || (authLoading && !isEmbeddedDemo(restaurantId))}
             className="w-full h-14 text-base font-semibold rounded-2xl"
             size="lg"
           >

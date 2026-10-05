@@ -138,11 +138,11 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="flex max-w-lg max-h-[calc(100dvh-2rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px))] flex-col overflow-hidden">
+        <DialogHeader className="shrink-0 pe-12">
           <DialogTitle>{t("pos.add_to_order")} {formatDisplayNumber(order)}</DialogTitle>
         </DialogHeader>
-
+        <div className="min-h-0 overflow-y-auto overscroll-contain">
         {/* Mode tabs */}
         <div className="flex gap-2 mb-4">
           <button
@@ -261,6 +261,7 @@ export const POSAddItemModal = ({ open, onClose, order, menuItems, config, onUpd
         >
           {submitting ? t("pos.adding") : t("pos.confirm_add")}
         </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

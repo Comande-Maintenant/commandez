@@ -1,3 +1,4 @@
+import { isEmbeddedDemo, embeddedOrders } from '@/lib/embedded-demo';
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { classifyActivity, isWithin30Min } from "@/lib/visitorUtils";
@@ -51,7 +52,7 @@ export function useLiveVisitors(restaurantId: string | null) {
   }, []);
 
   useEffect(() => {
-    if (!restaurantId) return;
+    if (!restaurantId || isEmbeddedDemo(restaurantId)) return;
 
     const channel = supabase.channel(`visitors-${restaurantId}`);
     channelRef.current = channel;
@@ -81,6 +82,12 @@ export function useLiveOrderCounts(restaurantId: string | null, isDemo = false) 
 
   const loadCounts = useCallback(async () => {
     if (!restaurantId) return;
+    if (isEmbeddedDemo(restaurantId)) {
+      const orders = embeddedOrders();
+      setNewCount(orders.filter(order => order.status === 'new').length);
+      setPreparingCount(orders.filter(order => order.status === 'preparing').length);
+      return;
+    }
     if (isDemo) {
       const { data, error } = await supabase.rpc("get_demo_orders", {
         p_restaurant_id: restaurantId,
@@ -111,7 +118,7 @@ export function useLiveOrderCounts(restaurantId: string | null, isDemo = false) 
 
   useEffect(() => {
     loadCounts();
-    if (!restaurantId) return;
+    if (!restaurantId || isEmbeddedDemo(restaurantId)) return;
 
     if (isDemo) {
       const interval = setInterval(loadCounts, 5000);

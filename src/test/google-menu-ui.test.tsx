@@ -28,6 +28,17 @@ describe('Google onboarding', () => {
   });
 });
 describe('Dashboard menu import', () => {
+  it('lets the user leave while conversion is pending without starting a second operation', async () => {
+    mocks.convertFilesForAnalysis.mockReturnValue(new Promise(() => {}));
+    const onOpenChange=vi.fn();
+    render(<MenuImportModal open onOpenChange={onOpenChange} restaurant={{id:'owner-restaurant',categories:[]} as unknown as DbRestaurant} existingItems={[]} onImportComplete={vi.fn()}/>);
+    fireEvent.change(document.querySelector('input[multiple]')!,{target:{files:[new File(['image'],'menu.jpg',{type:'image/jpeg'})]}});
+    await screen.findByText('dashboard.import.analyzing');
+    fireEvent.click(screen.getByRole('button',{name:'common.close'}));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(mocks.convertFilesForAnalysis).toHaveBeenCalledTimes(1);
+    expect(mocks.insertMenuItem).not.toHaveBeenCalled();
+  });
   it('preserves variants and rereads saved items on a retry after partial failure', async () => {
     const menu = [{ name: 'Pizza', items: [{ name: 'Margherita', price: 9, variants: [{ name: 'Grande', price: 12 }] }, { name: 'Calzone', price: 10 }] }];
     mocks.convertFilesForAnalysis.mockResolvedValue({ converted: [new File(['image'], 'menu.jpg', { type: 'image/jpeg' })], errors: [] });

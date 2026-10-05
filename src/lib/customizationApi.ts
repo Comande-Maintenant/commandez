@@ -1,3 +1,4 @@
+import { isEmbeddedDemo, embeddedCustomization } from './embedded-demo';
 import { supabase } from "@/integrations/supabase/client";
 import type {
   DbBase,
@@ -17,6 +18,7 @@ import type {
 // ============================================================
 
 export async function fetchCustomizationData(restaurantId: string): Promise<CustomizationData> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization();
   const [basesRes, viandesRes, garnituresRes, saucesRes, accompRes, configRes] = await Promise.all([
     supabase.from("restaurant_bases").select("*").eq("restaurant_id", restaurantId).eq("enabled", true).order("sort_order"),
     supabase.from("restaurant_viandes").select("*").eq("restaurant_id", restaurantId).eq("enabled", true).order("sort_order"),
@@ -41,31 +43,37 @@ export async function fetchCustomizationData(restaurantId: string): Promise<Cust
 // ============================================================
 
 export async function fetchAllBases(restaurantId: string): Promise<DbBase[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization().bases;
   const { data } = await supabase.from("restaurant_bases").select("*").eq("restaurant_id", restaurantId).order("sort_order");
   return (data ?? []) as unknown as DbBase[];
 }
 
 export async function fetchAllViandes(restaurantId: string): Promise<DbViande[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization().viandes;
   const { data } = await supabase.from("restaurant_viandes").select("*").eq("restaurant_id", restaurantId).order("sort_order");
   return (data ?? []) as unknown as DbViande[];
 }
 
 export async function fetchAllGarnitures(restaurantId: string): Promise<DbGarniture[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization().garnitures;
   const { data } = await supabase.from("restaurant_garnitures").select("*").eq("restaurant_id", restaurantId).order("sort_order");
   return (data ?? []) as unknown as DbGarniture[];
 }
 
 export async function fetchAllSauces(restaurantId: string): Promise<DbSauce[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization().sauces;
   const { data } = await supabase.from("restaurant_sauces").select("*").eq("restaurant_id", restaurantId).order("sort_order");
   return (data ?? []) as unknown as DbSauce[];
 }
 
 export async function fetchAllAccompagnements(restaurantId: string): Promise<DbAccompagnement[]> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization().accompagnements;
   const { data } = await supabase.from("restaurant_accompagnements").select("*").eq("restaurant_id", restaurantId).order("sort_order");
   return (data ?? []) as unknown as DbAccompagnement[];
 }
 
 export async function fetchOrderConfig(restaurantId: string): Promise<DbOrderConfig | null> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization().config;
   const { data } = await supabase.from("restaurant_order_config").select("*").eq("restaurant_id", restaurantId).maybeSingle();
   return (data as unknown as DbOrderConfig) ?? null;
 }
@@ -190,6 +198,7 @@ export async function fetchCuisineStepTemplates(cuisineType: string): Promise<Db
 }
 
 export async function fetchRestaurantCuisineType(restaurantId: string): Promise<CuisineType> {
+  if (isEmbeddedDemo(restaurantId)) return 'kebab';
   const { data } = await supabase.rpc("get_public_restaurant_by_id", {
     p_id: restaurantId,
   });
@@ -197,6 +206,7 @@ export async function fetchRestaurantCuisineType(restaurantId: string): Promise<
 }
 
 export async function fetchUniversalCustomizationData(restaurantId: string): Promise<UniversalCustomizationData> {
+  if (isEmbeddedDemo(restaurantId)) return embeddedCustomization();
   const [baseData, cuisineType] = await Promise.all([
     fetchCustomizationData(restaurantId),
     fetchRestaurantCuisineType(restaurantId),

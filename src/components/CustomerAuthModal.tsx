@@ -107,7 +107,7 @@ export function CustomerAuthModal({ open, onClose, defaultView = "login", prefil
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 pt-2">
+        <div className="min-h-0 space-y-4 overflow-y-auto overscroll-contain pt-2">
           {confirmation ? <EmailConfirmation email={email} redirect={authRedirectUrl(redirectPath)} onChangeEmail={() => setConfirmation(false)} /> : <>
           {googleSignInEnabled && view !== 'reset' && <Button variant="outline" className="w-full h-12" disabled={loading} onClick={async () => {
             setLoading(true);

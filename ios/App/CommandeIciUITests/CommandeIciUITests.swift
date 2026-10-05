@@ -1,5 +1,197 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+    func testNativeRegistrationKeyboardKeepsActionsReachable() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = []
+        app.launch()
+        enterMerchant(app)
+        let create = app.buttons["Créer ma page gratuitement"].firstMatch
+        XCTAssertTrue(create.waitForExistence(timeout: 15), app.debugDescription)
+        create.tap()
+        let email = app.webViews.textFields.firstMatch
+        XCTAssertTrue(email.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertGreaterThanOrEqual(email.frame.height, 44)
+        email.tap()
+        email.typeText("audit@example.invalid")
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), app.debugDescription)
+        let assistant = app.otherElements["SystemInputAssistantView"].firstMatch
+        func keyboardTop() -> CGFloat { assistant.exists ? min(assistant.frame.minY, keyboard.frame.minY) : keyboard.frame.minY }
+        XCTAssertLessThanOrEqual(email.frame.maxY, keyboardTop())
+        let submit = app.buttons["Créer mon compte"].firstMatch
+        for _ in 0..<4 {
+            if submit.isHittable && (!keyboard.exists || submit.frame.maxY <= keyboardTop()) { break }
+            let screen = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+            let bottom = keyboard.exists ? keyboardTop() - 24 : app.frame.maxY - 80
+            let start = screen.withOffset(CGVector(dx: app.frame.midX, dy: bottom))
+            let end = screen.withOffset(CGVector(dx: app.frame.midX, dy: max(120, bottom - 280)))
+            start.press(forDuration: 0.05, thenDragTo: end)
+        }
+        XCTAssertTrue(submit.isHittable, app.debugDescription)
+        XCTAssertTrue(keyboard.exists, "Keyboard-open layout must be verified before capture")
+        XCTAssertLessThanOrEqual(submit.frame.maxY, keyboardTop())
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Inscription clavier et action accessibles"; shot.lifetime = .keepAlways; add(shot)
+    }
+    func testNativeReadyOrderKeepsCashierActionClearOfNavigation() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["COMMANDEICI_QA_DEMO": "1"]
+        app.launchArguments = []
+        app.launch()
+        let receive = app.buttons["Recevoir une commande"].firstMatch
+        XCTAssertTrue(receive.waitForExistence(timeout: 15), app.debugDescription)
+        receive.tap()
+        let view = app.buttons["Voir la commande"].firstMatch
+        XCTAssertTrue(view.waitForExistence(timeout: 5), app.debugDescription); view.tap()
+        let accept = app.buttons["Accepter la commande"].firstMatch
+        XCTAssertTrue(accept.waitForExistence(timeout: 5), app.debugDescription); accept.tap()
+        let close = app.buttons["Fermer"].firstMatch
+        if close.waitForExistence(timeout: 2) { close.tap() }
+        let ready = app.buttons["Prête"].firstMatch
+        XCTAssertTrue(ready.waitForExistence(timeout: 5), app.debugDescription)
+        for _ in 0..<4 { if ready.isHittable { break }; app.webViews.firstMatch.swipeUp() }
+        ready.tap()
+        let cash = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Caisse'")).firstMatch
+        XCTAssertTrue(cash.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(cash.label.contains("1"), cash.label); cash.tap()
+        let collect = app.buttons["Encaisse"].firstMatch
+        XCTAssertTrue(collect.waitForExistence(timeout: 5), app.debugDescription)
+        for _ in 0..<4 { if collect.isHittable && collect.frame.maxY <= cash.frame.minY { break }; app.webViews.firstMatch.swipeUp() }
+        XCTAssertTrue(collect.isHittable, app.debugDescription)
+        XCTAssertLessThanOrEqual(collect.frame.maxY, cash.frame.minY)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Caisse action au-dessus de navigation"; shot.lifetime = .keepAlways; add(shot)
+        collect.tap()
+        XCTAssertFalse(cash.label.contains("1"), cash.label)
+    }
+
+    func testNativeHistoryAlwaysHasAnExit() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = []
+        app.launchEnvironment = ["COMMANDEICI_QA_DEMO": "1"]
+        app.launch()
+        let history = app.buttons["Historique (24h)"].firstMatch
+        XCTAssertTrue(history.waitForExistence(timeout: 15), app.debugDescription)
+        history.tap()
+        // The dashboard already exposes Retour and Fermer. Establish the
+        // history sheet before selecting its controls, otherwise an early AX
+        // lookup can tap the dashboard's own return action during mounting.
+        let title = app.staticTexts["Historique (24h)"].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 5), app.debugDescription)
+        let back = app.buttons["Retour"].firstMatch
+        let close = app.buttons["Fermer"].firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(back.isHittable && close.isHittable, app.debugDescription)
+        XCTAssertGreaterThanOrEqual(back.frame.height, 44)
+        XCTAssertLessThanOrEqual(back.frame.maxY, title.frame.minY, "Return must belong to the history header")
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Historique avec sorties permanentes"; shot.lifetime = .keepAlways; add(shot)
+        back.tap()
+        XCTAssertTrue(app.buttons["Recevoir une commande"].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+    }
+    func testNativeGroceryDemo() { checkCommerceDemo(name: "Épicerie", product: "Panier de saison") }
+    func testNativeFloristDemo() { checkCommerceDemo(name: "Fleuriste", product: "Bouquet de saison") }
+    private func checkCommerceDemo(name: String, product: String) {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = []
+        app.launch()
+        enterMerchant(app)
+        let discover = app.buttons["Tester sans créer de compte"].firstMatch
+        XCTAssertTrue(discover.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertFalse(app.otherElements["commandeici-opening"].exists, "Opening must leave the application accessible")
+        discover.tap()
+        let sector = app.links.matching(NSPredicate(format: "label CONTAINS %@", name)).firstMatch
+        XCTAssertTrue(sector.waitForExistence(timeout: 10), app.debugDescription)
+        sector.tap()
+        let addButton = app.buttons.matching(NSPredicate(format: "label == %@ OR label == %@", "Ajouter " + product, "Choisir " + product)).firstMatch
+        XCTAssertTrue(addButton.waitForExistence(timeout: 10), app.debugDescription)
+        for _ in 0..<5 { if addButton.isHittable { break }; app.swipeUp() }
+        addButton.tap()
+        let confirmProduct = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Ajouter au panier'")).firstMatch
+        XCTAssertTrue(confirmProduct.waitForExistence(timeout: 5), app.debugDescription)
+        confirmProduct.tap()
+        let basket = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Voir mon panier'")).firstMatch
+        XCTAssertTrue(basket.waitForExistence(timeout: 5), app.debugDescription)
+        basket.tap()
+        let simulate = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Simuler la commande'")).firstMatch
+        XCTAssertTrue(simulate.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertLessThanOrEqual(simulate.frame.maxY, app.frame.height - 34)
+        simulate.tap()
+        for label in ["Préparer la commande", "Marquer comme prête"] {
+            let action = app.buttons[label].firstMatch
+            XCTAssertTrue(action.waitForExistence(timeout: 5), app.debugDescription)
+            for _ in 0..<4 { if action.isHittable { break }; app.swipeUp() }
+            action.tap()
+        }
+        let cash = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Caisse'")).firstMatch
+        XCTAssertTrue(cash.waitForExistence(timeout: 5), app.debugDescription)
+        cash.tap()
+        let collect = app.buttons["Commande retirée"].firstMatch
+        XCTAssertTrue(collect.waitForExistence(timeout: 5), app.debugDescription)
+        for _ in 0..<4 { if collect.isHittable { break }; app.swipeUp() }
+        collect.tap()
+        let signup = app.links["Créer ma page gratuitement"].firstMatch
+        XCTAssertTrue(signup.waitForExistence(timeout: 5), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = name + " commande locale retirée"; shot.lifetime = .keepAlways; add(shot)
+    }
+
+    func testNativeFirstLaunchInvitesDemo() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = []
+        app.launch()
+        enterMerchant(app)
+        let demo = app.buttons["Tester sans créer de compte"].firstMatch
+        XCTAssertTrue(demo.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(demo.isHittable, "Primary demo action must be available on first launch")
+        demo.tap()
+        let restaurant = app.links.matching(NSPredicate(format: "label CONTAINS 'Restauration'")).firstMatch
+        XCTAssertTrue(restaurant.waitForExistence(timeout: 10), app.debugDescription)
+        restaurant.tap()
+        let receive = app.buttons["Recevoir une commande"].firstMatch
+        XCTAssertTrue(receive.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(receive.isHittable, "The inline guide must leave its first action accessible")
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Découverte et guide démo iOS"; shot.lifetime = .keepAlways; add(shot)
+    }
+
+    func testNativeMenuSearchAndClear() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
+        app.launchArguments = []
+        app.launch()
+        let field = app.webViews.searchFields.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        if !field.isHittable { app.swipeUp() }
+        field.tap()
+        // iOS may present its own first-use bilingual keyboard guide. Its
+        // modal consumes the first outside tap, including a tap on Clear.
+        let keyboardGuide = app.buttons.matching(NSPredicate(format: "label == 'Continue' OR label == 'Continuer'")).firstMatch
+        if keyboardGuide.waitForExistence(timeout: 1) { keyboardGuide.tap() }
+        field.typeText("zzzz-no-product")
+        XCTAssertTrue(app.staticTexts["Aucun plat trouvé. Essayez un autre mot."].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        // There is also a reset action below the empty-result text. With
+        // the keyboard open, AX can order that covered action first. Select
+        // the clear control on the input row instead.
+        let clearActions = app.buttons.matching(identifier: "Effacer la recherche").allElementsBoundByIndex
+        guard let clear = clearActions.first(where: { abs($0.frame.midY - field.frame.midY) < 4 }) else {
+            XCTFail("The search row must expose its clear action"); return
+        }
+        XCTAssertTrue(clear.isHittable, app.debugDescription)
+        clear.tap()
+        // WK exposes a truncated placeholder as AX value when a field is empty.
+        // The cleared state removes its action and restores the actual products.
+        let cleared = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: clear)
+        XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 3), .completed, "Clear must leave an empty search")
+        XCTAssertFalse((field.value as? String ?? "").contains("zzzz-no-product"))
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Ajouter à la commande'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Recherche carte iOS"; shot.lifetime = .keepAlways; add(shot)
+    }
+
     func testNativeStartupAndRegistration() {
         continueAfterFailure = false
         let app = XCUIApplication()
@@ -11,6 +203,7 @@ final class CommandeIciUITests: XCTestCase {
             if springboard.buttons[name].exists { springboard.buttons[name].tap(); break }
         }
         XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 15))
+        enterMerchant(app)
         let create = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'page'")).firstMatch
         XCTAssertTrue(create.waitForExistence(timeout: 15))
         XCTAssertGreaterThanOrEqual(create.frame.minY, 50, "Header must clear the iPhone status bar")
@@ -36,9 +229,18 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(png.waitForExistence(timeout: 10), app.debugDescription)
         png.tap()
         XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.otherElements.matching(NSPredicate(format: "label CONTAINS 'Image PNG'")).firstMatch.exists)
+        // Link Presentation may hide the extension while keeping the PNG type.
+        let file = app.descendants(matching: .any).matching(NSPredicate(format: "label == 'qr-antalya-kebab-moneteau.png' OR label == 'qr-antalya-kebab-moneteau'")).firstMatch
+        XCTAssertTrue(file.waitForExistence(timeout: 10), app.debugDescription)
+        let pngType = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'PNG' AND (label CONTAINS[c] 'KB' OR label CONTAINS[c] 'Ko')")).firstMatch
+        XCTAssertTrue(pngType.waitForExistence(timeout: 10), "The shared file must be identified as a PNG with a file size: " + app.debugDescription)
         let save = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'Fichiers' OR label CONTAINS[c] 'Save to Files'")).firstMatch
-        if !save.isHittable { app.otherElements["ActivityListView"].swipeUp() }
+        if !save.isHittable {
+            // iOS presents additional file actions behind the action-row More cell.
+            let moreActions = app.cells.matching(NSPredicate(format: "identifier == 'actionGroupCell' AND (label == 'More' OR label == 'Plus')")).firstMatch
+            if moreActions.isHittable { moreActions.tap() }
+            else { app.otherElements["ActivityListView"].swipeUp() }
+        }
         XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "QR PNG partage iOS"; shot.lifetime = .keepAlways; add(shot)
     }
@@ -84,9 +286,30 @@ final class CommandeIciUITests: XCTestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allow = springboard.buttons.matching(NSPredicate(format: "label == 'Autoriser' OR label == 'Allow'")).firstMatch
         if allow.waitForExistence(timeout: 3) { allow.tap() }
+        // Scheduling a demo notification also shows the received-order dialog.
+        // Acknowledge it through its real exit before reading the underlying guide.
+        if close.waitForExistence(timeout: 3) { close.tap() }
+        // The success instruction appears only after the native schedule resolves.
+        let scheduled = app.descendants(matching: .any).matching(NSPredicate(format: "label == 'Verrouillez votre iPhone : une notification de démonstration arrivera dans 10 secondes.'")).firstMatch
+        XCTAssertTrue(scheduled.waitForExistence(timeout: 5), app.debugDescription)
         XCUIDevice.shared.press(.home)
-        let banner = springboard.staticTexts["CommandeIci · Démonstration"].firstMatch
-        XCTAssertTrue(banner.waitForExistence(timeout: 15), springboard.debugDescription)
+        let banner = springboard.buttons.matching(NSPredicate(format: "identifier == 'ShortLook.Platter.Content.Seamless' AND label CONTAINS 'CommandeIci · Démonstration' AND label CONTAINS 'Nouvelle commande fictive.'")).firstMatch
+        if !banner.waitForExistence(timeout: 15) {
+            // The notification persists after its temporary banner disappears.
+            // Open the system notification list from the upper-left screen edge.
+            let screen = springboard.windows.firstMatch
+            let top = screen.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.001))
+            let bottom = screen.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.75))
+            top.press(forDuration: 0.05, thenDragTo: bottom)
+        }
+        let nativeTitle = springboard.staticTexts.matching(NSPredicate(format: "label == %@", "CommandeIci · Démonstration")).firstMatch
+        let nativeBody = springboard.staticTexts.matching(NSPredicate(format: "label == %@", "Nouvelle commande fictive. Ouvrez la démo pour la préparer.")).firstMatch
+        XCTAssertTrue(nativeTitle.waitForExistence(timeout: 5), springboard.debugDescription)
+        XCTAssertTrue(nativeBody.exists, springboard.debugDescription)
+        let systemAX = XCTAttachment(string: springboard.debugDescription)
+        systemAX.name = "Actual native notification accessibility"
+        systemAX.lifetime = .keepAlways
+        add(systemAX)
         let shot = XCTAttachment(screenshot: springboard.screenshot())
         shot.name = "Notification iOS locale de demonstration"
         shot.lifetime = .keepAlways
@@ -104,10 +327,20 @@ final class CommandeIciUITests: XCTestCase {
         let create = app.links.matching(NSPredicate(format: "label CONTAINS[c] 'page restaurant'")).firstMatch
         XCTAssertTrue(create.waitForExistence(timeout: 15), app.debugDescription)
         XCTAssertGreaterThanOrEqual(create.frame.minY, 50, "Demo banner must clear the iPhone status bar")
-        let image = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch
+        let image = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Ajouter à la commande'")).firstMatch
         XCTAssertTrue(image.waitForExistence(timeout: 15), app.debugDescription)
         if !image.isHittable { app.swipeUp() }
         XCTAssertTrue(image.isHittable, app.debugDescription)
+        // A cart persisted by a previous journey must remain fully reachable.
+        let cart = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch
+        if cart.exists {
+            let settled = NSPredicate { _, _ in
+                cart.isHittable && cart.frame.maxY <= app.frame.height - 34
+            }
+            expectation(for: settled, evaluatedWith: cart)
+            waitForExpectations(timeout: 5)
+            XCTAssertGreaterThanOrEqual(cart.frame.height, 44)
+        }
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "Carte visuelle native iOS"
         shot.lifetime = .keepAlways
@@ -120,7 +353,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
         app.launchArguments = []
         app.launch()
-        let kebab = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Illustration'")).firstMatch
+        let kebab = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Kebab' AND label CONTAINS 'Ajouter à la commande'")).firstMatch
         XCTAssertTrue(kebab.waitForExistence(timeout: 15), app.debugDescription)
         if !kebab.isHittable { app.swipeUp() }
         kebab.tap()
@@ -137,13 +370,34 @@ final class CommandeIciUITests: XCTestCase {
         addButton.tap()
         let cart = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch
         XCTAssertTrue(cart.waitForExistence(timeout: 5), app.debugDescription)
+        var cartMeasurements: [[String: Double]] = []
         let clear = NSPredicate { object, _ in
             guard let button = object as? XCUIElement else { return false }
-            return button.frame.maxY <= app.frame.height - 34
+            let started = ProcessInfo.processInfo.systemUptime
+            let buttonFrame = button.frame
+            let applicationFrame = app.frame
+            cartMeasurements.append(["uptime": started, "querySeconds": ProcessInfo.processInfo.systemUptime - started,
+                "buttonY": buttonFrame.minY, "buttonBottom": buttonFrame.maxY, "buttonHeight": buttonFrame.height,
+                "applicationHeight": applicationFrame.height, "requiredBottom": applicationFrame.height - 34])
+            return buttonFrame.maxY <= applicationFrame.height - 34
+        }
+        func attachCartMeasurements(_ name: String) {
+            let data = try! JSONSerialization.data(withJSONObject: cartMeasurements, options: .sortedKeys)
+            let evidence = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+            evidence.name = name; evidence.lifetime = .keepAlways; add(evidence)
         }
         let settled = expectation(for: clear, evaluatedWith: cart)
         let result = XCTWaiter.wait(for: [settled], timeout: 3)
+        attachCartMeasurements("Cart initial measured bounds")
         XCTAssertEqual(result, .completed, "Cart action must stay above the 34-point home indicator")
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(cart.waitForExistence(timeout: 15), "The customer's cart must survive reopening the menu")
+        let restored = expectation(for: clear, evaluatedWith: cart)
+        let restoredResult = XCTWaiter.wait(for: [restored], timeout: 5)
+        attachCartMeasurements("Cart restored measured bounds")
+        XCTAssertEqual(restoredResult, .completed)
+        XCTAssertTrue(cart.isHittable)
         cart.tap()
         let checkout = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Commander'")).firstMatch
         XCTAssertTrue(checkout.waitForExistence(timeout: 5), app.debugDescription)
@@ -166,7 +420,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launchEnvironment = ["COMMANDEICI_QA_MENU": "1"]
         app.launchArguments = []
         app.launch()
-        let card = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS 'Illustration'", product)).firstMatch
+        let card = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS 'Ajouter à la commande'", product)).firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 15), app.debugDescription)
         for _ in 0..<6 { if card.isHittable { break }; app.swipeUp() }
         card.tap()
@@ -177,7 +431,7 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(next.waitForExistence(timeout: 5), app.debugDescription)
         XCTAssertFalse(next.isEnabled)
         for meat in meats {
-            app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND NOT label CONTAINS 'Illustration'", meat)).firstMatch.tap()
+            app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND NOT label CONTAINS 'Ajouter à la commande'", meat)).firstMatch.tap()
         }
         XCTAssertTrue(next.isEnabled)
         next.tap()
@@ -193,4 +447,95 @@ final class CommandeIciUITests: XCTestCase {
         addButton.tap()
         XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
     }
+    // Only navigate through the real UI; no new injection or observer patches.
+    private func enterMerchant(_ app: XCUIApplication) {
+        let choice = app.buttons["Je suis commerçant"].firstMatch
+        if choice.waitForExistence(timeout: 4) { choice.tap() }
+        else {
+            let switchMode = app.buttons["Espace commerçant"].firstMatch
+            if switchMode.exists { switchMode.tap() }
+        }
+    }
+    private func enterClient(_ app: XCUIApplication) {
+        let choice = app.buttons["Trouver un commerce et commander"].firstMatch
+        if choice.waitForExistence(timeout: 4) { choice.tap() }
+        else {
+            let switchMode = app.buttons["Espace client"].firstMatch
+            if switchMode.waitForExistence(timeout: 10) { switchMode.tap() }
+        }
+        let change = app.buttons["Changer de ville"].firstMatch
+        if change.waitForExistence(timeout: 2) { change.tap() }
+    }
+    func testNativeClientCityKeyboardAndReturn() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = [:]; app.launchArguments = []; app.launch()
+        enterClient(app)
+        let field = app.webViews.textFields["Ville"].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertGreaterThanOrEqual(field.frame.height, 48)
+        field.tap(); field.typeText("Auxerre")
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), app.debugDescription)
+        let submit = app.buttons["Voir les commerces"].firstMatch
+        XCTAssertTrue(submit.isHittable, app.debugDescription)
+        XCTAssertLessThanOrEqual(submit.frame.maxY, keyboard.frame.minY)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Ville clavier iOS et action accessibles"; shot.lifetime = .keepAlways; add(shot)
+        let back = app.buttons["Changer de parcours"].firstMatch
+        XCTAssertTrue(back.isHittable, app.debugDescription); back.tap()
+        XCTAssertTrue(app.buttons["Je suis commerçant"].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.buttons["Trouver un commerce et commander"].firstMatch.isHittable, app.debugDescription)
+    }
+    func testNativeClientEmptyCityAndModeSwitch() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = [:]; app.launchArguments = []; app.launch()
+        enterClient(app)
+        let field = app.webViews.textFields["Ville"].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        field.tap(); field.typeText("Auxerre")
+        app.buttons["Voir les commerces"].firstMatch.tap()
+        let empty = app.staticTexts["Oups, pas encore de commerce à Auxerre."].firstMatch
+        XCTAssertTrue(empty.waitForExistence(timeout: 20), app.debugDescription)
+        let share = app.buttons["Faire découvrir CommandeIci"].firstMatch
+        for _ in 0..<4 { if share.isHittable { break }; app.webViews.firstMatch.swipeUp() }
+        XCTAssertTrue(share.isHittable, app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Ville réellement vide iOS et partage manuel"; shot.lifetime = .keepAlways; add(shot)
+        let change = app.buttons["Changer de ville"].firstMatch
+        for _ in 0..<4 { if change.isHittable { break }; app.webViews.firstMatch.swipeDown() }
+        XCTAssertTrue(change.isHittable); change.tap()
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        let merchant = app.buttons["Espace commerçant"].firstMatch
+        XCTAssertTrue(merchant.isHittable); merchant.tap()
+        XCTAssertTrue(app.staticTexts["CommandeIci n’organise pas de livraison."].firstMatch.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertTrue(app.buttons["Espace client"].firstMatch.isHittable, app.debugDescription)
+    }
+    func testNativeClientPublicShareSheet() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = [:]; app.launchArguments = []; app.launch()
+        enterClient(app)
+        let field = app.webViews.textFields["Ville"].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        field.tap(); field.typeText("Auxerre")
+        app.buttons["Voir les commerces"].firstMatch.tap()
+        let share = app.buttons["Faire découvrir CommandeIci"].firstMatch
+        XCTAssertTrue(share.waitForExistence(timeout: 20), app.debugDescription)
+        for _ in 0..<4 { if share.isHittable { break }; app.webViews.firstMatch.swipeUp() }
+        share.tap()
+        XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10), app.debugDescription)
+        let publicLink = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'commandeici.com'")).firstMatch
+        XCTAssertTrue(publicLink.waitForExistence(timeout: 10), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Feuille native partage découverte CommandeIci"; shot.lifetime = .keepAlways; add(shot)
+        // Do not choose a recipient or send anything.
+    }
+    func testNativeMerchantCanLeaveForCustomerBrowsing() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = ["COMMANDEICI_QA_DEMO": "1"]; app.launchArguments = []; app.launch()
+        let client = app.buttons["Espace client"].firstMatch
+        XCTAssertTrue(client.waitForExistence(timeout: 15), app.debugDescription); client.tap()
+        let change = app.buttons["Changer de ville"].firstMatch
+        if change.waitForExistence(timeout: 3) { change.tap() }
+        XCTAssertTrue(app.webViews.textFields["Ville"].firstMatch.waitForExistence(timeout: 10), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Bascule espace client depuis tableau de bord"; shot.lifetime = .keepAlways; add(shot)
+        app.buttons["Changer de parcours"].firstMatch.tap()
+    }
+
 }

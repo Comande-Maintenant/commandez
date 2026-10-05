@@ -2,7 +2,7 @@ import { NewOrderAlert } from './NewOrderAlert';
 import { isLocalDemoOrder } from '@/lib/demo-order';
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
+import { ArrowLeft, Phone, ShoppingBag, ChevronRight, Package, WifiOff, UtensilsCrossed, Plus, Clock, Timer, AlertTriangle, ShieldBan, Volume2 } from "lucide-react";
 import { fetchMenuItems, fetchAllMenuItems, updateOrderStatus, updateMenuItem, updateRestaurant, advanceDemoOrder, fetchCustomers, fetchDemoCustomers, fetchRestaurantHours } from "@/lib/api";
 import { useRestaurantOrderFeed } from "@/context/RestaurantOrdersContext";
 import { formatDisplayNumber } from "@/lib/orderNumber";
@@ -12,7 +12,7 @@ import type { DbRestaurant, DbMenuItem, DbOrder, DbCustomer } from "@/types/data
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { OrderDetailSheet } from "./OrderDetailSheet";
 import { BanDialog } from "./BanDialog";
 import { PrepSummaryBoard } from "./PrepSummaryBoard";
@@ -379,10 +379,10 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
           >
             {tab.label}
             {tab.id === "new" && newCount > 0 && (
-              <span className="ms-1.5 bg-amber-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{newCount}</span>
+              <span className="ms-1.5 bg-amber-700 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{newCount}</span>
             )}
             {tab.id === "preparing" && preparingCount > 0 && (
-              <span className="ms-1.5 bg-blue-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{preparingCount}</span>
+              <span className="ms-1.5 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{preparingCount}</span>
             )}
           </button>
         ))}
@@ -596,7 +596,7 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
                     size="sm"
                     onClick={(e) => quickAdvance(e, order)}
                     className={`rounded-xl gap-1 min-h-[40px] text-sm font-semibold ${
-                      st === "new" ? "bg-emerald-600 hover:bg-emerald-700 text-white" :
+                      st === "new" ? "bg-emerald-700 hover:bg-emerald-800 text-white" :
                       st === "preparing" ? "bg-blue-600 hover:bg-blue-700 text-white" :
                       "bg-foreground hover:bg-foreground/90 text-primary-foreground"
                     }`}
@@ -655,11 +655,12 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
 
       {/* Ruptures drawer */}
       <Sheet open={rupturesOpen} onOpenChange={setRupturesOpen}>
-        <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-          <SheetHeader>
+        <SheetContent className="flex h-dvh w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-md [&>button]:top-[calc(1rem+env(safe-area-inset-top,0px))]" aria-describedby={undefined}>
+          <SheetHeader className="shrink-0 border-b border-border px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] text-start">
+            <SheetClose asChild><button type="button" className="mb-2 inline-flex min-h-11 w-fit items-center gap-2 rounded-lg px-3 text-sm font-medium"><ArrowLeft className="h-5 w-5 rtl:rotate-180" aria-hidden="true"/>{t('nav.back')}</button></SheetClose>
             <SheetTitle>{t("dashboard.orders.stock_management")}</SheetTitle>
           </SheetHeader>
-          <div className="mt-4 space-y-5">
+          <div data-stock-scroll className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
             {/* Section: Base ingredients (pain, poulet, viande, etc.) */}
             {(() => {
               const baseIngredients = getBaseIngredients(restaurant.cuisine_type);

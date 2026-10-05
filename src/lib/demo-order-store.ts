@@ -4,6 +4,7 @@ const prefix='commandeici:demo-orders:';
 const ttl=6*60*60*1000;
 const maxOrders=20;
 const maxBytes=120000;
+const memory = new Map<string, { json: string; fallback: boolean }>();
 function validOrder(value: unknown, restaurantId: string): value is DbOrder {
   if(!value || typeof value!=='object')return false;
   const order=value as DbOrder;
@@ -21,8 +22,11 @@ function validOrder(value: unknown, restaurantId: string): value is DbOrder {
     && order.items.every(item=>item && typeof item.name==='string' && item.name.length<=160 && Number.isInteger(item.quantity) && item.quantity>0 && item.quantity<=100);
 }
 export function readDemoOrders(restaurantId: string): DbOrder[] {
+  let raw: string | null;
   try {
-    const raw=sessionStorage.getItem(prefix+restaurantId);
+    raw=memory.get(restaurantId)?.fallback ? memory.get(restaurantId)!.json : sessionStorage.getItem(prefix+restaurantId);
+  } catch { raw=memory.get(restaurantId)?.json ?? null; }
+  try {
     if(!raw || raw.length>maxBytes)return [];
     const parsed:unknown=JSON.parse(raw);
     if(!Array.isArray(parsed))return [];
@@ -33,6 +37,11 @@ export function storeDemoOrders(restaurantId: string, orders: DbOrder[]): void {
   try {
     const local=orders.filter(order=>validOrder(order,restaurantId)).slice(0,maxOrders).map(order=>({...order,customer_phone:'',customer_email:'',client_ip:null}));
     const json=JSON.stringify(local);
-    if(json.length<=maxBytes)sessionStorage.setItem(prefix+restaurantId,json);
+    if(json.length<=maxBytes) {
+      let fallback=false;
+      try {sessionStorage.setItem(prefix+restaurantId,json);} catch {fallback=true;}
+      memory.delete(restaurantId);memory.set(restaurantId,{json,fallback});
+      while(memory.size>5)memory.delete(memory.keys().next().value!);
+    }
   } catch { /* A blocked/full storage must not break the live demo. */ }
 }

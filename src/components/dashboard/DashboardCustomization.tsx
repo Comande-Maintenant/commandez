@@ -540,7 +540,7 @@ export const DashboardCustomization = ({ restaurant }: Props) => {
           <DialogHeader>
             <DialogTitle>{editId ? t('common.edit') : t('common.add')}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-3 mt-2">
+          <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain mt-2">
             <Input placeholder={t('dashboard.customization.name')} value={formName} onChange={(e) => setFormName(e.target.value)} />
 
             {activeTab === "bases" && (

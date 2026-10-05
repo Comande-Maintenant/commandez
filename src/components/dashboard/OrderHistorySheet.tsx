@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { Clock, ShoppingBag, UtensilsCrossed, Phone, Package, ChevronDown, ChevronUp } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useState, useEffect, useRef } from "react";
+import { ArrowLeft, X, Clock, ShoppingBag, UtensilsCrossed, Phone, Package, ChevronDown, ChevronUp } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { fetchOrders, fetchDemoOrders, fetchCustomers, fetchDemoCustomers } from "@/lib/api";
 import { formatDisplayNumber } from "@/lib/orderNumber";
 import { useLanguage } from "@/context/LanguageContext";
@@ -33,13 +33,16 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [customersMap, setCustomersMap] = useState<Map<string, DbCustomer>>(new Map());
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
 
   // Only fetch when opened (lazy load)
   useEffect(() => {
     if (!open || loaded) return;
     setLoading(true);
+    setLoadError(false);
 
     const fetchFn = isDemo ? fetchDemoOrders(restaurantId) : fetchOrders(restaurantId);
     fetchFn.then((data) => {
@@ -53,6 +56,8 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
       setLoaded(true);
     }).catch(() => {
       setLoading(false);
+      setLoadError(true);
+      setLoaded(true);
     });
 
     // Load customers for badges
@@ -92,29 +97,64 @@ export const OrderHistorySheet = ({ restaurantId, isDemo, open, onClose }: Props
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+      <SheetContent
+        showClose={false}
+        aria-describedby={undefined}
+        className="flex h-dvh w-full flex-col overflow-hidden p-0 sm:max-w-md [&>button]:hidden"
+        onOpenAutoFocus={() => { previousFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          if (document.activeElement?.closest('[role="dialog"][data-state="open"]')) return;
+          const target = previousFocus.current?.isConnected && previousFocus.current !== document.body
+            ? previousFocus.current
+            : Array.from(document.querySelectorAll<HTMLButtonElement>('button[aria-label]'))
+                .find(button => button.getAttribute('aria-label') === t('dashboard.history.title'))
+                ?? document.querySelector<HTMLElement>('[data-dashboard-nav] button');
+          target?.focus();
+        }}
+      >
+        <SheetHeader className="shrink-0 border-b border-border bg-background px-4 pb-4 pt-[calc(1rem+env(safe-area-inset-top,0px))]">
+          <div className="flex items-center justify-between gap-2">
+            <SheetClose asChild>
+              <button type="button" className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                <ArrowLeft className="h-5 w-5 rtl:rotate-180" aria-hidden="true" />
+                {t("nav.back")}
+              </button>
+            </SheetClose>
+            <SheetClose asChild>
+              <button type="button" aria-label={t("common.close")} className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-lg text-foreground hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </SheetClose>
+          </div>
+          <SheetTitle className="flex min-w-0 items-center gap-2 text-start">
+            <Clock className="h-5 w-5 shrink-0" aria-hidden="true" />
             {t("dashboard.history.title")}
           </SheetTitle>
         </SheetHeader>
 
-        <div className="mt-4 space-y-2">
+        <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           {loading && (
-            <div className="space-y-3">
+            <div role="status" aria-label={t("common.loading")} className="space-y-3">
               {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
             </div>
           )}
 
-          {!loading && orders.length === 0 && (
+          {!loading && loadError && (
+            <div className="py-10 text-center">
+              <p role="alert" className="text-sm text-muted-foreground">{t("common.error")}</p>
+              <button type="button" onClick={() => setLoaded(false)} className="mt-3 min-h-11 rounded-lg px-4 text-sm font-medium text-foreground underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">{t("common.retry")}</button>
+            </div>
+          )}
+
+          {!loading && !loadError && orders.length === 0 && (
             <div className="text-center py-16">
               <Package className="h-10 w-10 mx-auto mb-3 text-muted-foreground opacity-40" />
               <p className="text-sm text-muted-foreground">{t("dashboard.history.empty")}</p>
             </div>
           )}
 
-          {!loading && orders.map((order) => {
+          {!loading && !loadError && orders.map((order) => {
             const st = order.status as OrderStatus;
             const cfg = statusConfig[st] || statusConfig.done;
             const items = (order.items as any[]) || [];

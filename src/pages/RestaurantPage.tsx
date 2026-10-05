@@ -1,4 +1,7 @@
 import { setRestaurantHead } from '@/lib/restaurant-head';
+import { withReadableWhiteText } from '@/lib/color-contrast';
+import { navigateBack } from '@/lib/navigation';
+import { PageExit } from '@/components/PageExit';
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Phone, Shield, ShoppingBag, CreditCard, Banknote, Ticket, AlertCircle, Lock, Smartphone, Timer, Maximize } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
@@ -7,6 +10,8 @@ import { fetchRestaurantBySlug, fetchMenuItems, incrementDeactivationVisits, fet
 import { checkRestaurantAvailability, canPlaceOrder } from "@/lib/schedule";
 import type { DbRestaurant, DbMenuItem } from "@/types/database";
 import type { UniversalCustomizationData } from "@/types/customization";
+import { MenuSearch } from '@/components/restaurant/MenuSearch';
+import { matchesMenuSearch } from '@/lib/menu-search';
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { isItemUnavailable, getItemRuptureReason } from "@/lib/baseIngredients";
 import { fetchUniversalCustomizationData } from "@/lib/customizationApi";
@@ -24,7 +29,7 @@ import { KioskSplashScreen } from "@/components/kiosk/KioskSplashScreen";
 import { KioskConfirmation } from "@/components/kiosk/KioskConfirmation";
 import { KioskInactivityTimer } from "@/components/kiosk/KioskInactivityTimer";
 
-const DEFAULT_PRIMARY = "#10B981";
+const DEFAULT_PRIMARY = "#187A26";
 const UNIVERSAL_BG = "#FFF8F0";
 
 function parseHexToHSL(hex: string): { h: number; s: number; l: number } {
@@ -73,7 +78,7 @@ function softenColor(hex: string): string {
   const { h, s, l } = parseHexToHSL(hex);
   const softS = s > 70 ? 60 : s;
   const softL = l < 35 ? 40 : l > 55 ? 50 : l;
-  return hslToHex(h, softS, softL);
+  return withReadableWhiteText(hslToHex(h, softS, softL));
 }
 
 function lighten(hex: string, amount: number): string {
@@ -146,6 +151,7 @@ const RestaurantPage = () => {
   const [customerName, setCustomerName] = useState<string | null>(null);
   const [customerBanned, setCustomerBanned] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("");
+  const [searchQuery,setSearchQuery] = useState('');
   const [customizationData, setCustomizationData] = useState<UniversalCustomizationData | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [itemModalOpen, setItemModalOpen] = useState(false);
@@ -156,7 +162,7 @@ const RestaurantPage = () => {
   const [scrolled, setScrolled] = useState(false);
   const heroSentinelRef = useRef<HTMLDivElement>(null);
   const { totalItems, subtotal, addItem, clearCart } = useCart();
-  const { t, tCategory, isRTL } = useLanguage();
+  const { t, tCategory, tMenu, isRTL } = useLanguage();
   const { updateSection } = useVisitorTracking(restaurant?.id ?? null);
   const { isKiosk, config: kioskConfig } = useKioskMode();
   const [kioskSplash, setKioskSplash] = useState(true);
@@ -169,7 +175,7 @@ const RestaurantPage = () => {
       setKioskOrder(state.kioskOrder);
       setKioskSplash(false);
       // Clean navigation state
-      window.history.replaceState({}, "", window.location.href);
+      window.history.replaceState({...window.history.state,usr:{...window.history.state?.usr,kioskOrder:undefined}}, "", window.location.href);
     }
   }, [location.state]);
 
@@ -337,7 +343,7 @@ const RestaurantPage = () => {
 
     sections.forEach(([, el]) => { if (el) observer.observe(el); });
     return () => observer.disconnect();
-  }, [loading, restaurant, menuItems]);
+  }, [loading, restaurant, menuItems,searchQuery]);
 
   // Scroll sentinel: detect when hero is out of view
   useEffect(() => {
@@ -369,7 +375,8 @@ const RestaurantPage = () => {
     const el = sectionRefs.current[cat];
     if (el) {
       // Manual scroll with offset for sticky header (works on all WebViews)
-      const headerOffset = 80;
+      const nav = document.querySelector('.menu-category-nav');
+      const headerOffset = nav ? (parseFloat(getComputedStyle(nav).top) || 0) + nav.getBoundingClientRect().height + 12 : 80;
       const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
       try {
         window.scrollTo({ top: y, behavior: "smooth" });
@@ -382,7 +389,7 @@ const RestaurantPage = () => {
   }, []);
 
   const isDemo = !!(restaurant as any)?.is_demo;
-  const primary = useMemo(() => isDemo ? "#10B981" : softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color, isDemo]);
+  const primary = useMemo(() => isDemo ? "#187A26" : softenColor(restaurant?.primary_color || DEFAULT_PRIMARY), [restaurant?.primary_color, isDemo]);
   const bg = UNIVERSAL_BG;
   const primaryLight = useMemo(() => lighten(primary, 0.85), [primary]);
   const primaryDark = useMemo(() => darken(primary, 0.15), [primary]);
@@ -399,6 +406,7 @@ const RestaurantPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
+        <div className="px-4 pt-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <Skeleton className="h-52 sm:h-64 w-full" />
         <div className="max-w-3xl mx-auto px-4 -mt-16 relative z-10 space-y-4">
           <Skeleton className="h-56 rounded-2xl" />
@@ -419,7 +427,8 @@ const RestaurantPage = () => {
 
   if (loadError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="min-h-screen relative flex items-center justify-center bg-background px-4 pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div role="alert" className="text-center max-w-sm space-y-4">
           <p className="text-foreground">{t("restaurant.load_error")}</p>
           <button type="button" className="rounded-xl bg-primary px-5 py-3 font-medium text-primary-foreground" onClick={() => setRequestAttempt(attempt => attempt + 1)}>
@@ -432,12 +441,10 @@ const RestaurantPage = () => {
 
   if (!restaurant) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen relative flex items-center justify-center bg-background px-4 pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">{t("restaurant.not_found")}</h1>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-4 inline-block text-sm underline">
-            {t("nav.back_home")}
-          </a>
         </div>
       </div>
     );
@@ -446,16 +453,14 @@ const RestaurantPage = () => {
   // Deactivated restaurant
   if (restaurant.deactivated_at) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen relative flex items-center justify-center bg-background pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div className="text-center max-w-sm mx-auto px-4">
           {restaurant.image && (
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
           )}
           <h1 className="text-xl font-bold text-foreground mb-2">{restaurant.name}</h1>
           <p className="text-muted-foreground text-sm">{t("restaurant.deactivated")}</p>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            {t("nav.back")}
-          </a>
         </div>
       </div>
     );
@@ -464,7 +469,8 @@ const RestaurantPage = () => {
   // Banned customer
   if (customerBanned) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen relative flex items-center justify-center bg-background pt-20">
+        <div className="absolute left-4 right-4 top-[max(1rem,env(safe-area-inset-top,0px))]"><PageExit fallback="/decouvrir" /></div>
         <div className="text-center max-w-sm mx-auto px-4">
           {restaurant.image && (
             <img src={restaurant.image} alt={restaurant.name} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
@@ -476,24 +482,23 @@ const RestaurantPage = () => {
               <> {t("order.banned_contact", { phone: restaurant.restaurant_phone })}</>
             )}
           </p>
-          <a href="https://commandeici.com" className="text-muted-foreground hover:text-foreground mt-6 inline-block text-sm underline">
-            {t("nav.back")}
-          </a>
         </div>
       </div>
     );
   }
 
   const categories = restaurant.categories ?? [];
-  const currentCategory = activeCategory || categories[0];
   const catTranslations = restaurant.category_translations;
   const availability = checkRestaurantAvailability(restaurant);
   const orderCheck = canPlaceOrder(restaurant);
   const payments = restaurant.payment_methods ?? [];
 
+  const visibleItems = menuItems.filter(item => item.product_type !== 'supplement' && matchesMenuSearch(searchQuery,{...tMenu(item),category:tCategory(item.category,catTranslations)}));
   const activeCategories = categories.filter((cat) =>
-    cat !== "Personnalisation" && menuItems.some((m) => m.category === cat)
+    cat !== "Personnalisation" && visibleItems.some((m) => m.category === cat)
   );
+
+  const currentCategory = activeCategories.includes(activeCategory)?activeCategory:activeCategories[0];
 
   const initial = restaurant.name?.charAt(0)?.toUpperCase() || "R";
 
@@ -528,14 +533,14 @@ const RestaurantPage = () => {
 
       {/* Sticky demo banner - always visible, not dismissable */}
       {isDemo && !isKiosk && (
-        <div className="sticky top-0 z-50 bg-emerald-600 text-white px-4 py-2 flex items-center justify-between gap-3">
+        <div className="sticky top-0 z-50 bg-primary text-white px-4 py-2 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-sm font-semibold whitespace-nowrap">MODE DEMO</span>
+            <span className="text-sm font-semibold break-words">{t("demo.seo_banner_title")}</span>
             <span className="text-xs opacity-90 hidden sm:inline truncate">{t("demo.sticky_text")}</span>
           </div>
           <a
             href="/inscription"
-            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-white text-emerald-700 hover:bg-emerald-50 transition-colors"
+            className="inline-flex min-h-11 max-w-[45%] shrink-0 items-center justify-center rounded-xl px-3 py-2 text-center text-xs font-semibold leading-snug break-words bg-white text-primary hover:bg-secondary transition-colors"
           >
             {t("demo.seo_banner_cta")}
           </a>
@@ -570,11 +575,11 @@ const RestaurantPage = () => {
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
           {!isKiosk ? (
             <button
-              onClick={() => window.history.length > 1 ? navigate(-1) : window.location.href = "https://commandeici.com"}
-              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors"
+              onClick={() => navigateBack(navigate,'/decouvrir')}
+              className="flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full bg-white text-slate-900 shadow-sm hover:bg-slate-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               aria-label={t("nav.back")}
             >
-              <ArrowLeft className="h-5 w-5 text-white" />
+              <ArrowLeft className="h-5 w-5" />
             </button>
           ) : <div />}
           <div className="flex items-center gap-2">
@@ -617,16 +622,16 @@ const RestaurantPage = () => {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+                <div className="flex items-start justify-between gap-2">
+                  <h1 className="min-w-0 flex-1 text-xl sm:text-2xl font-bold text-gray-900 break-words">
                     {isDemo ? t("demo.page_title") : restaurant.name}
                   </h1>
                   {restaurant.is_accepting_orders && availability.isOpen ? (
-                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-emerald-500">
+                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-emerald-700">
                       {t("status.open")}
                     </span>
                   ) : (
-                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-red-500">
+                    <span className="text-xs font-semibold text-white px-2.5 py-1 rounded-full whitespace-nowrap bg-red-700">
                       {t("status.closed")}
                     </span>
                   )}
@@ -660,7 +665,7 @@ const RestaurantPage = () => {
                     </div>
                     <span className="text-sm font-bold text-gray-900">{restaurant.rating}</span>
                     {restaurant.review_count > 0 && (
-                      <span className="text-sm text-gray-400">({restaurant.review_count})</span>
+                      <span className="text-sm text-gray-500">({restaurant.review_count})</span>
                     )}
                   </div>
                 )}
@@ -813,7 +818,7 @@ const RestaurantPage = () => {
         {isDemo && !isKiosk && (
           <div className="mt-3 px-3 py-2.5 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-between gap-3">
             <div className="min-w-0"><p className="text-xs font-semibold text-emerald-900">{t("demo.seo_banner_title")}</p><p className="text-xs text-emerald-700 mt-1 hidden sm:block">{t("demo.seo_banner_text")}</p></div>
-            <Link to="/admin/demo" className="shrink-0 inline-flex items-center min-h-11 px-3 rounded-xl text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700">{t("demo.suivi_cta")}</Link>
+            <Link to="/admin/demo" className="shrink-0 inline-flex items-center min-h-11 px-3 rounded-xl text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800">{t("demo.suivi_cta")}</Link>
           </div>
         )}
 
@@ -893,6 +898,8 @@ const RestaurantPage = () => {
           </div>
         ) : (
           <>
+            <MenuSearch value={searchQuery} onChange={setSearchQuery} count={visibleItems.length}/>
+            {visibleItems.length===0&&searchQuery.trim()&&<div className="py-8 text-center"><p className="text-sm text-slate-600">{t('journey.no_results')}</p><button className="mt-3 min-h-11 rounded-xl px-4 font-medium text-emerald-800" onClick={()=>setSearchQuery('')}>{t('journey.clear_search')}</button></div>}
             {/* Category Tabs - sticky */}
             {activeCategories.length > 0 && (
               <div
@@ -928,7 +935,7 @@ const RestaurantPage = () => {
             {/* Menu Sections */}
             <div className="mt-6 space-y-8">
               {activeCategories.map((cat) => {
-                const catItems = menuItems.filter((m) => m.category === cat && m.product_type !== "supplement");
+                const catItems = visibleItems.filter((m) => m.category === cat);
                 if (catItems.length === 0) return null;
                 return (
                   <div key={cat} ref={(el) => { sectionRefs.current[cat] = el; }} data-category={cat} className="scroll-mt-20">
@@ -971,7 +978,7 @@ const RestaurantPage = () => {
 
             {/* Alcohol notice */}
             {!isKiosk && (
-              <p className="mt-6 text-center text-xs text-gray-400 italic">
+              <p className="mt-6 text-center text-xs text-gray-500 italic">
                 {t("menu.alcohol_counter_notice")}
               </p>
             )}
@@ -1035,7 +1042,7 @@ const RestaurantPage = () => {
             <div className="flex flex-wrap justify-center gap-3 mt-3">
               <a
                 href="/inscription"
-                className="px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 transition-colors"
               >
                 {t("demo.footer_cta_signup")}
               </a>
@@ -1051,7 +1058,7 @@ const RestaurantPage = () => {
           </div>
         ) : (
           <div className="mt-8 mb-4 text-center">
-            <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+            <a href="https://commandeici.com" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-gray-600 transition-colors">
               {t("footer.powered_by")}
             </a>
           </div>
@@ -1105,7 +1112,7 @@ const RestaurantPage = () => {
       )}
 
       {/* Cart sheet (hidden trigger, opened programmatically) */}
-      <CartSheet open={cartOpen} onOpenChange={setCartOpen} menuItems={menuItems} onScrollToCategory={scrollToCategory} />
+      <CartSheet open={cartOpen} onOpenChange={setCartOpen} menuItems={menuItems} showPhotos={(restaurant as DbRestaurant & {show_menu_photos?:boolean}).show_menu_photos !== false} onScrollToCategory={scrollToCategory} />
     </div>
   );
 };

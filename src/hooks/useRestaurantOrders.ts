@@ -1,3 +1,4 @@
+import { isEmbeddedDemo } from '@/lib/embedded-demo';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { fetchOrders, fetchDemoOrders, subscribeToOrders } from '@/lib/api';
 import { readDemoOrders, storeDemoOrders } from '@/lib/demo-order-store';
@@ -101,7 +102,7 @@ export function useRestaurantOrders(restaurantId: string | null, { isDemo = fals
       }
     };
     const resume = () => { if (!document.hidden) void load(); };
-    const offline = () => { if (!disposed) setDisconnected(true); };
+    const offline = () => { if (!disposed && !isEmbeddedDemo(restaurantId)) setDisconnected(true); };
     const receive = (order: DbOrder) => {
       if (disposed || order.restaurant_id !== restaurantId) return;
       announce(order);

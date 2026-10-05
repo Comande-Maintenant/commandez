@@ -10,11 +10,13 @@ export function NewOrderAlert({order,onClose,onOpenOrder}: {order:DbOrder|null;o
   const previousFocus=useRef<HTMLElement|null>(null);
   const openingOrder=useRef(false);
   return <Dialog open={!!order} onOpenChange={open=>{if(!open)onClose();}}>
-    {order&&<DialogContent onOpenAutoFocus={() => { previousFocus.current=document.activeElement instanceof HTMLElement ? document.activeElement : null; openingOrder.current=false; }} onCloseAutoFocus={event => { event.preventDefault(); if (!openingOrder.current && previousFocus.current?.isConnected) previousFocus.current.focus(); }} className="z-[100] w-[calc(100%-2rem)] max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-3xl border-emerald-200 text-center gap-3 [&>button]:min-h-11 [&>button]:min-w-11">
-      <div className="mx-auto rounded-2xl bg-emerald-50 p-4 text-emerald-700"><Bell className="h-7 w-7" aria-hidden="true" /></div>
-      <DialogTitle className="text-xl font-bold">{t('dashboard.orders.new_order_popup')}</DialogTitle>
+    {order&&<DialogContent onOpenAutoFocus={() => { previousFocus.current=document.activeElement instanceof HTMLElement ? document.activeElement : null; openingOrder.current=false; }} onCloseAutoFocus={event => { event.preventDefault(); if (!openingOrder.current && previousFocus.current?.isConnected) previousFocus.current.focus(); }} className="z-[100] w-[calc(100%-2rem)] max-w-sm rounded-3xl border-emerald-200 text-center gap-3 [&>button]:min-h-11 [&>button]:min-w-11">
+      <DialogTitle className="shrink-0 pe-12 text-start text-xl font-bold">{t('dashboard.orders.new_order_popup')}</DialogTitle>
+      <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain">
+      <div className="mx-auto w-fit rounded-2xl bg-emerald-50 p-4 text-emerald-700"><Bell className="h-7 w-7" aria-hidden="true" /></div>
       <p className="text-4xl font-extrabold tracking-tight text-emerald-700">{formatDisplayNumber(order)}</p>
       <DialogDescription className="text-sm">{order.customer_name}<br />{order.order_type==='sur_place'?t('dashboard.orders.dine_in'):t('dashboard.orders.takeaway')} · {order.total.toFixed(2)} €</DialogDescription>
+      </div>
       <Button className="min-h-12 rounded-xl mt-2" onClick={()=>{ openingOrder.current=true; onOpenOrder(order); }}>{t('cart.view')}</Button>
     </DialogContent>}
   </Dialog>;

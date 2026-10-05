@@ -9,12 +9,12 @@ export function isRtlLanguage(language: Language): boolean {
 }
 
 export const LANGUAGES = [
-  { code: "fr" as const, name: "Francais", flag: "\ud83c\uddeb\ud83c\uddf7" },
+  { code: "fr" as const, name: "Français", flag: "\ud83c\uddeb\ud83c\uddf7" },
   { code: "en" as const, name: "English", flag: "\ud83c\uddec\ud83c\udde7" },
-  { code: "es" as const, name: "Espanol", flag: "\ud83c\uddea\ud83c\uddf8" },
+  { code: "es" as const, name: "Español", flag: "\ud83c\uddea\ud83c\uddf8" },
   { code: "de" as const, name: "Deutsch", flag: "\ud83c\udde9\ud83c\uddea" },
   { code: "it" as const, name: "Italiano", flag: "\ud83c\uddee\ud83c\uddf9" },
-  { code: "pt" as const, name: "Portugues", flag: "\ud83c\udde7\ud83c\uddf7" },
+  { code: "pt" as const, name: "Português", flag: "\ud83c\udde7\ud83c\uddf7" },
   { code: "nl" as const, name: "Nederlands", flag: "\ud83c\uddf3\ud83c\uddf1" },
   { code: "ar" as const, name: "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", flag: "\ud83c\uddf8\ud83c\udde6" },
   { code: "zh" as const, name: "\u4e2d\u6587", flag: "\ud83c\udde8\ud83c\uddf3" },

@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { CartProvider } from "@/context/CartContext";
+import { CartProvider, useCart } from "@/context/CartContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -15,9 +15,14 @@ import { isNative } from '@/lib/native';
 import { NativeSubscription } from '@/components/NativeSubscription';
 import { NativePushLifecycle } from '@/components/NativePushLifecycle';
 import { NativeBillingLifecycle } from '@/components/NativeBillingLifecycle';
+import { PageExit } from '@/components/PageExit';
 
 // Every route is split so visitors only download the surface they open.
 const Index = lazy(() => import("./pages/Index"));
+const ClientDiscoveryPage = lazy(() => import("./pages/ClientDiscoveryPage"));
+const MerchantEntryPage = lazy(() => import("./pages/MerchantEntryPage"));
+const DemoDiscoveryPage = lazy(() => import("./pages/DemoDiscoveryPage"));
+const CommerceDemoPage = lazy(() => import("./pages/CommerceDemoPage"));
 const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const OrderPage = lazy(() => import("./pages/OrderPage"));
@@ -37,7 +42,8 @@ const PhotoUploadPage = lazy(() => import("./pages/PhotoUploadPage"));
 
 function PageLoader() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+    <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+      <div className="absolute inset-x-0 top-0 px-4 py-2"><PageExit/></div>
       <div
         style={{
           width: 36,
@@ -61,7 +67,8 @@ function AuthSync() {
 }
 
 function PageTracker() {
-  usePageTracking();
+  const { restaurantId } = useCart();
+  usePageTracking(restaurantId);
   return null;
 }
 
@@ -75,7 +82,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <NativeLifecycle />
+          <NativeLifecycle>
           <NativeBillingLifecycle />
           <NativePushLifecycle />
           <ScrollToTop />
@@ -83,6 +90,10 @@ const App = () => (
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/espace/client" element={<ClientDiscoveryPage />} />
+              <Route path="/espace/commercant" element={<MerchantEntryPage />} />
+              <Route path="/decouvrir" element={<DemoDiscoveryPage />} />
+              <Route path="/demo/:sector" element={<CommerceDemoPage />} />
               <Route path="/inscription" element={<InscriptionPage />} />
               <Route path="/connexion" element={<ConnexionPage />} />
               <Route path="/mot-de-passe-oublie" element={<MotDePasseOubliePage />} />
@@ -103,6 +114,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </NativeLifecycle>
         </BrowserRouter>
       </CustomerAuthProvider>
       </CartProvider>

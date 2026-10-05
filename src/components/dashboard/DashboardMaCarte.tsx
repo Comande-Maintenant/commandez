@@ -592,7 +592,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       <Dialog open={showAddCategory} onOpenChange={setShowAddCategory}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader><DialogTitle>{t('dashboard.menu.add_category')}</DialogTitle></DialogHeader>
-          <div className="space-y-3 mt-2">
+          <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain mt-2">
             <Input
               placeholder={t('dashboard.menu.category_name')}
               value={newCategoryName}
@@ -608,7 +608,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
       <Dialog open={showAddItem} onOpenChange={setShowAddItem}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader><DialogTitle>{t('dashboard.menu.add_product')}</DialogTitle></DialogHeader>
-          <div className="space-y-3 mt-2">
+          <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain mt-2">
             <select
               value={newItem.category}
               onChange={(e) => setNewItem((n) => ({ ...n, category: e.target.value }))}
@@ -629,8 +629,9 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
 
       {/* Edit item dialog */}
       <Dialog open={!!editItem} onOpenChange={(open) => !open && setEditItem(null)}>
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{t('dashboard.menu.edit_product')}</DialogTitle></DialogHeader>
+        <DialogContent className="flex max-h-[calc(100dvh-2rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px))] flex-col overflow-hidden sm:max-w-md">
+          <DialogHeader className="shrink-0 pe-12"><DialogTitle>{t('dashboard.menu.edit_product')}</DialogTitle></DialogHeader>
+          <div className="min-h-0 overflow-y-auto overscroll-contain">
           {editItem && (
             <div className="space-y-4 mt-2">
               <Input value={editItem.name} onChange={(e) => {
@@ -876,6 +877,7 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
               <Button onClick={handleEditSave} className="w-full rounded-xl">{t('common.save')}</Button>
             </div>
           )}
+          </div>
         </DialogContent>
       </Dialog>
 
