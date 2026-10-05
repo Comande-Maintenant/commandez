@@ -1393,6 +1393,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      list_public_commerces_by_city: {
+        Args: { p_city: string }
+        Returns: Json
+      }
       advance_demo_order: {
         Args: { p_new_status: string; p_order_id: string }
         Returns: {

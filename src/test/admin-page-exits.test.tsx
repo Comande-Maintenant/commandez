@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import type { DbRestaurant } from '@/types/database';
 import fr from '@/i18n/fr.json';
 import ar from '@/i18n/ar.json';
@@ -45,10 +46,12 @@ vi.mock('@/components/dashboard/LiveSummaryBanner', () => ({ LiveSummaryBanner: 
 vi.mock('@/components/dashboard/AssistantChatbot', () => ({ AssistantChatbot: () => null }));
 vi.mock('@/components/dashboard/OnboardingTour', () => ({ OnboardingTour: () => null }));
 vi.mock('@/components/dashboard/OrderHistorySheet', () => ({ OrderHistorySheet: () => null }));
-vi.mock('@/components/auth/SubscriptionGate', () => ({ SubscriptionGate: () => null }));
+vi.mock('@/components/auth/SubscriptionGate', () => ({ SubscriptionGate: ({ children }: { children: ReactNode }) => <>{children}</> }));
+vi.mock('@/components/dashboard/DashboardOrders', () => ({ DashboardOrders: () => null }));
 vi.mock('@/components/restaurant/LanguageSelector', () => ({ LanguageSelector: () => null }));
 
 import AdminPage from '@/pages/AdminPage';
+import Index from '@/pages/Index';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -96,3 +99,28 @@ for (const state of ['loading', 'auth unavailable', 'login required', 'restauran
     expect(mocks.retry).not.toHaveBeenCalled();
   });
 }
+
+it('lets a signed-in merchant switch to browsing without modifying their account or orders', () => {
+ mocks.restaurant = { id: 'restaurant-a', slug: 'chez-alice', name: 'Alice', owner_id: 'owner-a', is_accepting_orders: false } as DbRestaurant;
+ render(<MemoryRouter initialEntries={['/admin/chez-alice']}><Routes>
+   <Route path='/admin/:slug' element={<AdminPage />} />
+   <Route path='/espace/client' element={<p>Recherche client</p>} />
+ </Routes></MemoryRouter>);
+ fireEvent.click(screen.getByRole('button', { name: 'Espace client' }));
+ expect(screen.getByText('Recherche client')).toBeVisible();
+ expect(JSON.parse(localStorage.getItem('commandeici.entry.v1')!)).toMatchObject({ role: 'client' });
+ expect(mocks.updateRestaurant).not.toHaveBeenCalled();
+});
+
+it('returns to role choices without looping back to an authenticated merchant preference', () => {
+ localStorage.setItem('commandeici.entry.v1', JSON.stringify({ role: 'merchant', city: 'Auxerre' }));
+ mocks.restaurantError = true;
+ render(<MemoryRouter initialEntries={['/admin/chez-alice']}><Routes>
+  <Route path='/admin/:slug' element={<AdminPage />} />
+  <Route path='/' element={<Index />} />
+  <Route path='/espace/commercant' element={<p>Retour bloqué dans le même parcours</p>} />
+ </Routes></MemoryRouter>);
+ fireEvent.click(screen.getByRole('button', { name: 'Retour' }));
+ expect(screen.getByRole('button', { name: 'Je suis commerçant' })).toBeVisible();
+ expect(screen.getByRole('button', { name: 'Trouver un commerce et commander' })).toBeVisible();
+});

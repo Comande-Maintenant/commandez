@@ -19,6 +19,8 @@ import { PageExit } from '@/components/PageExit';
 
 // Every route is split so visitors only download the surface they open.
 const Index = lazy(() => import("./pages/Index"));
+const ClientDiscoveryPage = lazy(() => import("./pages/ClientDiscoveryPage"));
+const MerchantEntryPage = lazy(() => import("./pages/MerchantEntryPage"));
 const DemoDiscoveryPage = lazy(() => import("./pages/DemoDiscoveryPage"));
 const CommerceDemoPage = lazy(() => import("./pages/CommerceDemoPage"));
 const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
@@ -80,7 +82,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <NativeLifecycle />
+          <NativeLifecycle>
           <NativeBillingLifecycle />
           <NativePushLifecycle />
           <ScrollToTop />
@@ -88,6 +90,8 @@ const App = () => (
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/espace/client" element={<ClientDiscoveryPage />} />
+              <Route path="/espace/commercant" element={<MerchantEntryPage />} />
               <Route path="/decouvrir" element={<DemoDiscoveryPage />} />
               <Route path="/demo/:sector" element={<CommerceDemoPage />} />
               <Route path="/inscription" element={<InscriptionPage />} />
@@ -110,6 +114,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </NativeLifecycle>
         </BrowserRouter>
       </CustomerAuthProvider>
       </CartProvider>

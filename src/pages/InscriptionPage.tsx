@@ -1,3 +1,5 @@
+import { PageExit } from '@/components/PageExit';
+import { EntryRoleSwitch } from '@/components/EntryRoleSwitch';
 import {BrandLogo} from '@/components/BrandLogo';
 import { randomUuid } from '@/lib/uuid';
 import { useState, useMemo, useEffect, useRef } from 'react';
@@ -342,6 +344,8 @@ const InscriptionPage = () => {
       )}
 
       <main className="max-w-lg mx-auto px-4 py-6">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><PageExit fallback="/espace/commercant" /><EntryRoleSwitch to="client" /></div>
+        {step === 1 && <div className="mb-4 space-y-2 text-sm leading-relaxed text-muted-foreground"><p>{t('entry.pro_pickup')}</p><p>{t('entry.no_delivery')}</p></div>}
         {/* Demo link */}
         {step === 1 && (
           <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4">

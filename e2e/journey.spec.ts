@@ -33,6 +33,7 @@ test('a reduced-motion customizer opens without a sliding transform',async({page
 });
 test('first launch invites an account-free demo without a blocking tour',async({page})=>{
  await page.goto('/?lang=fr',{waitUntil:'networkidle'});
+ await page.getByRole('button',{name:'Je suis commerçant',exact:true}).click();
  const demo=page.getByRole('button',{name:'Tester sans créer de compte'});await expect(demo).toBeVisible();
  await expect(demo).toHaveAttribute('data-primary-action','demo');await demo.click();
  await expect(page).toHaveURL(/\/decouvrir/);await page.getByRole('link',{name:/Restauration/}).click();
@@ -73,13 +74,13 @@ test('customizer is a labelled modal with a trapped keyboard focus and restores 
 for(const viewport of [{width:320,height:568},{width:390,height:844},{width:430,height:932},{width:844,height:390}])test(`welcome and demo guidance fit ${viewport.width}x${viewport.height}`,async({page})=>{
  await page.setViewportSize(viewport);await page.goto('/?lang=fr',{waitUntil:'networkidle'});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- await page.getByRole('button',{name:'Tester sans créer de compte'}).click();await page.getByRole('link',{name:/Restauration/}).click();
+ await page.getByRole('button',{name:'Je suis commerçant',exact:true}).click();await page.getByRole('button',{name:'Tester sans créer de compte'}).click();await page.getByRole('link',{name:/Restauration/}).click();
  await expect(page.getByRole('button',{name:'Recevoir une commande',exact:true})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 test('Arabic discovery and search keep right-to-left direction without overflow',async({page})=>{
  await page.setViewportSize({width:390,height:844});await page.goto('/?lang=ar',{waitUntil:'networkidle'});await expect(page.locator('html')).toHaveAttribute('dir','rtl');
- await page.locator('[data-primary-action="demo"]').click();await page.getByRole('link',{name:/مطعم/}).click();await expect(page.locator('html')).toHaveAttribute('dir','rtl');
+ await page.getByRole('button',{name:'أنا تاجر',exact:true}).click();await page.locator('[data-primary-action="demo"]').click();await page.getByRole('link',{name:/مطعم/}).click();await expect(page.locator('html')).toHaveAttribute('dir','rtl');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.goto('/demo?lang=ar',{waitUntil:'networkidle'});await page.getByRole('searchbox').fill('zzzz-no-product');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);

@@ -151,7 +151,7 @@ jobs:
           from pathlib import Path
           import json
           summary=json.loads(Path('CIReport/summary.json').read_text())
-          assert summary['totalTestCount']==15 and summary['passedTests']==15 and summary['failedTests']==0 and summary['skippedTests']==0,summary
+          assert summary['totalTestCount']==19 and summary['passedTests']==19 and summary['failedTests']==0 and summary['skippedTests']==0,summary
           PY
           else
             exit 1

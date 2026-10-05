@@ -6,6 +6,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launchEnvironment = [:]
         app.launchArguments = []
         app.launch()
+        enterMerchant(app)
         let create = app.buttons["Créer ma page gratuitement"].firstMatch
         XCTAssertTrue(create.waitForExistence(timeout: 15), app.debugDescription)
         create.tap()
@@ -97,6 +98,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launchEnvironment = [:]
         app.launchArguments = []
         app.launch()
+        enterMerchant(app)
         let discover = app.buttons["Tester sans créer de compte"].firstMatch
         XCTAssertTrue(discover.waitForExistence(timeout: 15), app.debugDescription)
         XCTAssertFalse(app.otherElements["commandeici-opening"].exists, "Opening must leave the application accessible")
@@ -142,6 +144,7 @@ final class CommandeIciUITests: XCTestCase {
         app.launchEnvironment = [:]
         app.launchArguments = []
         app.launch()
+        enterMerchant(app)
         let demo = app.buttons["Tester sans créer de compte"].firstMatch
         XCTAssertTrue(demo.waitForExistence(timeout: 15), app.debugDescription)
         XCTAssertTrue(demo.isHittable, "Primary demo action must be available on first launch")
@@ -200,6 +203,7 @@ final class CommandeIciUITests: XCTestCase {
             if springboard.buttons[name].exists { springboard.buttons[name].tap(); break }
         }
         XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 15))
+        enterMerchant(app)
         let create = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'page'")).firstMatch
         XCTAssertTrue(create.waitForExistence(timeout: 15))
         XCTAssertGreaterThanOrEqual(create.frame.minY, 50, "Header must clear the iPhone status bar")
@@ -443,4 +447,95 @@ final class CommandeIciUITests: XCTestCase {
         addButton.tap()
         XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS 'Voir la commande'")).firstMatch.waitForExistence(timeout: 5), app.debugDescription)
     }
+    // Only navigate through the real UI; no new injection or observer patches.
+    private func enterMerchant(_ app: XCUIApplication) {
+        let choice = app.buttons["Je suis commerçant"].firstMatch
+        if choice.waitForExistence(timeout: 4) { choice.tap() }
+        else {
+            let switchMode = app.buttons["Espace commerçant"].firstMatch
+            if switchMode.exists { switchMode.tap() }
+        }
+    }
+    private func enterClient(_ app: XCUIApplication) {
+        let choice = app.buttons["Trouver un commerce et commander"].firstMatch
+        if choice.waitForExistence(timeout: 4) { choice.tap() }
+        else {
+            let switchMode = app.buttons["Espace client"].firstMatch
+            if switchMode.waitForExistence(timeout: 10) { switchMode.tap() }
+        }
+        let change = app.buttons["Changer de ville"].firstMatch
+        if change.waitForExistence(timeout: 2) { change.tap() }
+    }
+    func testNativeClientCityKeyboardAndReturn() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = [:]; app.launchArguments = []; app.launch()
+        enterClient(app)
+        let field = app.webViews.textFields["Ville"].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertGreaterThanOrEqual(field.frame.height, 48)
+        field.tap(); field.typeText("Auxerre")
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), app.debugDescription)
+        let submit = app.buttons["Voir les commerces"].firstMatch
+        XCTAssertTrue(submit.isHittable, app.debugDescription)
+        XCTAssertLessThanOrEqual(submit.frame.maxY, keyboard.frame.minY)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Ville clavier iOS et action accessibles"; shot.lifetime = .keepAlways; add(shot)
+        let back = app.buttons["Changer de parcours"].firstMatch
+        XCTAssertTrue(back.isHittable, app.debugDescription); back.tap()
+        XCTAssertTrue(app.buttons["Je suis commerçant"].firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.buttons["Trouver un commerce et commander"].firstMatch.isHittable, app.debugDescription)
+    }
+    func testNativeClientEmptyCityAndModeSwitch() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = [:]; app.launchArguments = []; app.launch()
+        enterClient(app)
+        let field = app.webViews.textFields["Ville"].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        field.tap(); field.typeText("Auxerre")
+        app.buttons["Voir les commerces"].firstMatch.tap()
+        let empty = app.staticTexts["Oups, pas encore de commerce à Auxerre."].firstMatch
+        XCTAssertTrue(empty.waitForExistence(timeout: 20), app.debugDescription)
+        let share = app.buttons["Faire découvrir CommandeIci"].firstMatch
+        for _ in 0..<4 { if share.isHittable { break }; app.webViews.firstMatch.swipeUp() }
+        XCTAssertTrue(share.isHittable, app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Ville réellement vide iOS et partage manuel"; shot.lifetime = .keepAlways; add(shot)
+        let change = app.buttons["Changer de ville"].firstMatch
+        for _ in 0..<4 { if change.isHittable { break }; app.webViews.firstMatch.swipeDown() }
+        XCTAssertTrue(change.isHittable); change.tap()
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        let merchant = app.buttons["Espace commerçant"].firstMatch
+        XCTAssertTrue(merchant.isHittable); merchant.tap()
+        XCTAssertTrue(app.staticTexts["CommandeIci n’organise pas de livraison."].firstMatch.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertTrue(app.buttons["Espace client"].firstMatch.isHittable, app.debugDescription)
+    }
+    func testNativeClientPublicShareSheet() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = [:]; app.launchArguments = []; app.launch()
+        enterClient(app)
+        let field = app.webViews.textFields["Ville"].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 15), app.debugDescription)
+        field.tap(); field.typeText("Auxerre")
+        app.buttons["Voir les commerces"].firstMatch.tap()
+        let share = app.buttons["Faire découvrir CommandeIci"].firstMatch
+        XCTAssertTrue(share.waitForExistence(timeout: 20), app.debugDescription)
+        for _ in 0..<4 { if share.isHittable { break }; app.webViews.firstMatch.swipeUp() }
+        share.tap()
+        XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10), app.debugDescription)
+        let publicLink = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'commandeici.com'")).firstMatch
+        XCTAssertTrue(publicLink.waitForExistence(timeout: 10), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Feuille native partage découverte CommandeIci"; shot.lifetime = .keepAlways; add(shot)
+        // Do not choose a recipient or send anything.
+    }
+    func testNativeMerchantCanLeaveForCustomerBrowsing() {
+        continueAfterFailure = false
+        let app = XCUIApplication(); app.launchEnvironment = ["COMMANDEICI_QA_DEMO": "1"]; app.launchArguments = []; app.launch()
+        let client = app.buttons["Espace client"].firstMatch
+        XCTAssertTrue(client.waitForExistence(timeout: 15), app.debugDescription); client.tap()
+        let change = app.buttons["Changer de ville"].firstMatch
+        if change.waitForExistence(timeout: 3) { change.tap() }
+        XCTAssertTrue(app.webViews.textFields["Ville"].firstMatch.waitForExistence(timeout: 10), app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Bascule espace client depuis tableau de bord"; shot.lifetime = .keepAlways; add(shot)
+        app.buttons["Changer de parcours"].firstMatch.tap()
+    }
+
 }

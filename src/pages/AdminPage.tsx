@@ -1,4 +1,5 @@
 import { useDashboardAuth } from '@/hooks/useDashboardAuth';
+import { EntryRoleSwitch } from '@/components/EntryRoleSwitch';
 import { PageExit } from '@/components/PageExit';
 import { isNative } from '@/lib/native';
 import { navigateBack } from '@/lib/navigation';
@@ -173,7 +174,7 @@ const AdminPage = () => {
   const recoveryClassName = "relative min-h-screen flex items-center justify-center bg-background px-4 pt-[calc(4rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))]";
   const recoveryExit = (
     <div className="absolute inset-x-0 top-0 px-4 pt-[calc(0.5rem+env(safe-area-inset-top,0px))] pb-2">
-      <PageExit fallback={isDemo ? '/decouvrir' : '/'} />
+      <div className="flex items-center justify-between gap-2">{isDemo ? <PageExit fallback="/decouvrir" /> : <button type="button" aria-label={t('nav.back')} className="inline-flex min-h-12 min-w-12 items-center gap-2 rounded-xl px-2 text-sm" onClick={() => navigate('/', { state: { chooseRole: true } })}><ArrowLeft className="h-5 w-5 rtl:rotate-180" aria-hidden="true" />{t('nav.back')}</button>}<EntryRoleSwitch to="client" compact /></div>
     </div>
   );
 
@@ -292,13 +293,14 @@ const AdminPage = () => {
           <header className="bg-background border-b border-border">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 min-h-14 py-2 flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-3 gap-y-1">
             <div className="flex items-center gap-3 min-w-0 basis-full sm:basis-auto">
-              <button onClick={() => navigateBack(navigate,isDemo?'/decouvrir':'/')} aria-label={t('nav.back')} className="min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
+              <button onClick={() => isDemo ? navigateBack(navigate, '/decouvrir') : navigate('/', { state: { chooseRole: true } })} aria-label={t('nav.back')} className="min-h-11 min-w-11 p-2 rounded-xl hover:bg-secondary transition-colors flex-shrink-0">
                 <ArrowLeft className={`h-5 w-5 text-foreground ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </button>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <h1 className="text-sm sm:text-base font-semibold text-foreground truncate">{restaurant.name}</h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">{t("dashboard.admin.dashboard_subtitle")}</p>
               </div>
+              <EntryRoleSwitch to="client" compact />
             </div>
             <div className="flex items-center justify-end w-full sm:w-auto gap-1.5 sm:gap-3 flex-shrink-0">
               {/* Sound toggle (cuisine view) */}
