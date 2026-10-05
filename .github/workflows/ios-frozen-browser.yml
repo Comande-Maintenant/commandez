@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: c5e10d810d401fe60c1bb642c58b54c5eead5c68
+          ref: c0d2fee94ede9384bda19b1db69cc6f273a895a8
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -62,8 +62,17 @@ jobs:
                           pass
                       assert time.monotonic()<deadline, 'Owned local Vite server did not become ready'
                       time.sleep(0.2)
+                  import json
+                  focus_env=dict(env, PLAYWRIGHT_JSON_OUTPUT_FILE=str(report/'focused69.json'))
+                  with (report/'focused69.log').open('w') as focus_log:
+                      focused=subprocess.run(['npx','playwright','test','e2e/client-entry.spec.ts','--workers=1','--retries=0','--reporter=list,json','--output='+str(report/'focused69-results')],env=focus_env,stdout=focus_log,stderr=subprocess.STDOUT)
+                  assert focused.returncode==0, 'Focused new-entry scenarios failed; preserve raw results'
+                  focused_report=json.loads((report/'focused69.json').read_text())
+                  assert focused_report['stats']['expected']==69 and not any(focused_report['stats'][key] for key in ['unexpected','skipped','flaky']),focused_report['stats']
                   result=subprocess.run(['python3','scripts/run-e2e-isolated.py',str(report/'integration')],env=env)
                   assert result.returncode==0, 'Complete browser suite failed; preserve all raw results'
+                  integrated=json.loads((report/'integration'/'report.json').read_text())
+                  assert integrated['source']=='c0d2fee94ede9384bda19b1db69cc6f273a895a8' and integrated['collected']==495 and integrated['executed']==495 and integrated['stats']['expected']==495, integrated['stats']
               finally:
                   if server.poll() is None:
                       os.killpg(server.pid,signal.SIGTERM)
