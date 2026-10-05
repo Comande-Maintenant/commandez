@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: c0d2fee94ede9384bda19b1db69cc6f273a895a8
+          ref: 11f552440ce8553de555a313947b7b64da8ac35f
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -72,7 +72,7 @@ jobs:
                   result=subprocess.run(['python3','scripts/run-e2e-isolated.py',str(report/'integration')],env=env)
                   assert result.returncode==0, 'Complete browser suite failed; preserve all raw results'
                   integrated=json.loads((report/'integration'/'report.json').read_text())
-                  assert integrated['source']=='c0d2fee94ede9384bda19b1db69cc6f273a895a8' and integrated['collected']==495 and integrated['executed']==495 and integrated['stats']['expected']==495, integrated['stats']
+                  assert integrated['source']=='11f552440ce8553de555a313947b7b64da8ac35f' and integrated['collected']==495 and integrated['executed']==495 and integrated['stats']['expected']==495, integrated['stats']
               finally:
                   if server.poll() is None:
                       os.killpg(server.pid,signal.SIGTERM)
