@@ -1,4 +1,4 @@
-name: Frozen iOS browser integration
+name: Frozen iOS browser geometry verification
 on:
   push:
     branches: [codex/commandeici-ios-frozen-browser-20261005]
@@ -9,14 +9,15 @@ concurrency:
   group: frozen-browser-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  browser-integration:
+  geometry33:
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: 11f552440ce8553de555a313947b7b64da8ac35f
+          ref: 099762a4f3d96aa77991e943cff8b1e146593ef9
+          fetch-depth: 2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -34,56 +35,89 @@ jobs:
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
           VITE_REVENUECAT_IOS_API_KEY: ${{ vars.VITE_REVENUECAT_IOS_API_KEY }}
         run: |
-          mkdir -p "$RUNNER_TEMP/CIWeb/config"
-          cd "$RUNNER_TEMP/CIWeb/config"
+          mkdir -p "$RUNNER_TEMP/CIQA33/config"
+          cd "$RUNNER_TEMP/CIQA33/config"
           python3 "$GITHUB_WORKSPACE/scripts/ci-public-ios-config.py"
-      - name: Execute every collected scenario once on all three engines
+      - name: Verify exact app and test source equivalence
         run: |
-          mkdir -p "$RUNNER_TEMP/CIWeb"
-          git rev-parse HEAD > "$RUNNER_TEMP/CIWeb/source.txt"
-          git diff --exit-code
-          npx playwright --version > "$RUNNER_TEMP/CIWeb/playwright.txt"
-          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --version > "$RUNNER_TEMP/CIWeb/chrome.txt"
+          python3 - <<'PROOF'
+          from pathlib import Path
+          import subprocess,json,hashlib,os
+          out=Path(os.environ['RUNNER_TEMP'])/'CIQA33'
+          app='11f552440ce8553de555a313947b7b64da8ac35f'
+          qa='099762a4f3d96aa77991e943cff8b1e146593ef9'
+          allowed=['e2e/stock-navigation.spec.ts','e2e/ui-readability.spec.ts']
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==qa
+          assert subprocess.check_output(['git','diff','--name-only',app,qa],text=True).splitlines()==allowed
+          assert not subprocess.check_output(['git','status','--porcelain'],text=True)
+          def tree(ref):
+              return [x for x in subprocess.check_output(['git','ls-tree','-r',ref],text=True).splitlines() if x.split('\t')[1] not in allowed]
+          original=tree(app);current=tree(qa);assert original==current and len(current)==641
+          digest=hashlib.sha256(('\n'.join(current)+'\n').encode()).hexdigest()
+          assert digest=='ebbe49d3e18a31a7c162cc71876b19c83a788bcf999018b3b71b71337d7169f6'
+          testhashes={name:hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in allowed}
+          assert testhashes=={'e2e/stock-navigation.spec.ts':'b05930210eddfca5386c488f808360a65524975688cbc9922edc3760b76516a4','e2e/ui-readability.spec.ts':'002710581e96ef26a7c14fabb961cd69b62d1964f9a5c28b96d3c8c4e5c5bebe'}
+          (out/'source.txt').write_text(qa+'\n');(out/'app-source.txt').write_text(app+'\n')
+          (out/'source-equivalence.json').write_text(json.dumps({'appSource':app,'qaCommit':qa,'changedPaths':allowed,'allOtherTrackedFilesByteIdentical':True,'unchangedTrackedEntries':641,'unchangedTreeSHA256':digest,'testFileSHA256':testhashes},indent=2))
+          PROOF
+      - name: Execute all 33 corrected-file cases once on all three engines
+        run: |
+          npx playwright --version > "$RUNNER_TEMP/CIQA33/playwright.txt"
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --version > "$RUNNER_TEMP/CIQA33/chrome.txt"
           python3 - <<'BROWSER'
           from pathlib import Path
-          import os, subprocess, time, urllib.request, signal
-          env=dict(os.environ, PLAYWRIGHT_BASE_URL='http://127.0.0.1:4391')
-          report=Path(os.environ['RUNNER_TEMP'])/'CIWeb'
-          with (report/'vite.log').open('w') as log:
+          import os,subprocess,time,urllib.request,signal,json
+          out=Path(os.environ['RUNNER_TEMP'])/'CIQA33'
+          env=dict(os.environ,PLAYWRIGHT_BASE_URL='http://127.0.0.1:4391')
+          files=['e2e/stock-navigation.spec.ts','e2e/ui-readability.spec.ts']
+          collect=dict(env,PLAYWRIGHT_JSON_OUTPUT_FILE=str(out/'collection33.json'))
+          with (out/'collection33.log').open('w') as log:
+              subprocess.run(['npx','playwright','test',*files,'--list','--reporter=json'],env=collect,stdout=log,stderr=subprocess.STDOUT,check=True)
+          with (out/'vite.log').open('w') as log:
               server=subprocess.Popen(['node','node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','4391','--strictPort'],env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
               try:
                   deadline=time.monotonic()+20
                   while True:
-                      assert server.poll() is None, 'Owned Vite server exited before readiness'
+                      assert server.poll() is None
                       try:
                           with urllib.request.urlopen(env['PLAYWRIGHT_BASE_URL'],timeout=2) as response:
-                              if response.status==200: break
-                      except OSError:
-                          pass
-                      assert time.monotonic()<deadline, 'Owned local Vite server did not become ready'
-                      time.sleep(0.2)
-                  import json
-                  focus_env=dict(env, PLAYWRIGHT_JSON_OUTPUT_FILE=str(report/'focused69.json'))
-                  with (report/'focused69.log').open('w') as focus_log:
-                      focused=subprocess.run(['npx','playwright','test','e2e/client-entry.spec.ts','--workers=1','--retries=0','--reporter=list,json','--output='+str(report/'focused69-results')],env=focus_env,stdout=focus_log,stderr=subprocess.STDOUT)
-                  assert focused.returncode==0, 'Focused new-entry scenarios failed; preserve raw results'
-                  focused_report=json.loads((report/'focused69.json').read_text())
-                  assert focused_report['stats']['expected']==69 and not any(focused_report['stats'][key] for key in ['unexpected','skipped','flaky']),focused_report['stats']
-                  result=subprocess.run(['python3','scripts/run-e2e-isolated.py',str(report/'integration')],env=env)
-                  assert result.returncode==0, 'Complete browser suite failed; preserve all raw results'
-                  integrated=json.loads((report/'integration'/'report.json').read_text())
-                  assert integrated['source']=='11f552440ce8553de555a313947b7b64da8ac35f' and integrated['collected']==495 and integrated['executed']==495 and integrated['stats']['expected']==495, integrated['stats']
+                              if response.status==200:break
+                      except OSError:pass
+                      assert time.monotonic()<deadline
+                      time.sleep(.2)
+                  testenv=dict(env,PLAYWRIGHT_JSON_OUTPUT_FILE=str(out/'report33.json'))
+                  with (out/'test33.log').open('w') as log:
+                      result=subprocess.run(['npx','playwright','test',*files,'--workers=1','--retries=0','--reporter=list,json','--output='+str(out/'results')],env=testenv,stdout=log,stderr=subprocess.STDOUT)
+                  report=json.loads((out/'report33.json').read_text());collection=json.loads((out/'collection33.json').read_text())
+                  def identities(report):
+                      values=[]
+                      def walk(suite):
+                          for spec in suite.get('specs',[]):
+                              for test in spec['tests']:values.append((spec['id'],test['projectName']))
+                          for child in suite.get('suites',[]):walk(child)
+                      for suite in report['suites']:walk(suite)
+                      return sorted(values)
+                  def passed(suite):
+                      for spec in suite.get('specs',[]):
+                          for test in spec['tests']:
+                              rows=test.get('results',[])
+                              if test['expectedStatus']!='passed' or len(rows)!=1 or rows[0]['status']!='passed' or rows[0]['retry']!=0:return False
+                      return all(passed(child) for child in suite.get('suites',[]))
+                  actual=identities(report);expected=identities(collection)
+                  assert actual==expected and len(actual)==len(set(actual))==33
+                  assert all(passed(suite) for suite in report['suites']) and report['stats']['expected']==33 and not any(report['stats'][key] for key in ['unexpected','skipped','flaky'])
+                  assert result.returncode==0 and not subprocess.check_output(['git','status','--porcelain'],text=True)
+                  (out/'verification33.json').write_text(json.dumps({'appSource':'11f552440ce8553de555a313947b7b64da8ac35f','qaCommit':'099762a4f3d96aa77991e943cff8b1e146593ef9','collected':33,'executed':33,'passed':33,'failed':0,'skipped':0,'flaky':0,'retries':0,'allIdentitiesMatchSinglePass':True,'identities':actual},indent=2))
               finally:
                   if server.poll() is None:
                       os.killpg(server.pid,signal.SIGTERM)
-                      try: server.wait(timeout=5)
-                      except subprocess.TimeoutExpired:
-                          os.killpg(server.pid,signal.SIGKILL);server.wait(timeout=5)
+                      try:server.wait(timeout=5)
+                      except subprocess.TimeoutExpired:os.killpg(server.pid,signal.SIGKILL);server.wait(timeout=5)
           BROWSER
-      - name: Preserve all raw browser results
+      - name: Preserve all raw corrected-file browser evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: commandeici-browser-${{ github.sha }}
-          path: ${{ runner.temp }}/CIWeb
+          name: commandeici-geometry33-${{ github.sha }}
+          path: ${{ runner.temp }}/CIQA33
           retention-days: 1
