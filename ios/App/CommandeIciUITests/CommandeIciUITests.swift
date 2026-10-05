@@ -282,6 +282,9 @@ final class CommandeIciUITests: XCTestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allow = springboard.buttons.matching(NSPredicate(format: "label == 'Autoriser' OR label == 'Allow'")).firstMatch
         if allow.waitForExistence(timeout: 3) { allow.tap() }
+        // Scheduling a demo notification also shows the received-order dialog.
+        // Acknowledge it through its real exit before reading the underlying guide.
+        if close.waitForExistence(timeout: 3) { close.tap() }
         // The success instruction appears only after the native schedule resolves.
         let scheduled = app.descendants(matching: .any).matching(NSPredicate(format: "label == 'Verrouillez votre iPhone : une notification de démonstration arrivera dans 10 secondes.'")).firstMatch
         XCTAssertTrue(scheduled.waitForExistence(timeout: 5), app.debugDescription)

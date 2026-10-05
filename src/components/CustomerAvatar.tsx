@@ -17,12 +17,13 @@ export function CustomerAvatar() {
   const { isLoggedIn, profile, signOut } = useCustomerAuth();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const initial = profile?.name?.charAt(0)?.toUpperCase() || "?";
 
   return (
     <>
-      <DropdownMenu dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen} dir={language === 'ar' ? 'rtl' : 'ltr'}>
         <DropdownMenuTrigger asChild>
           <button type="button" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-white text-slate-900 shadow-sm hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" aria-label={t('client.title')}>
             {isLoggedIn ? (
@@ -38,7 +39,14 @@ export function CustomerAvatar() {
             )}
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuContent align="end" className="w-48" onKeyDownCapture={(event) => {
+          // The menu takes focus before Radix's document dismissal effect is ready.
+          // Handle an immediate Escape here; normal dismissal restores trigger focus.
+          if (event.key === 'Escape' && !event.defaultPrevented) {
+            event.preventDefault();
+            setMenuOpen(false);
+          }
+        }}>
           {isLoggedIn ? (
             <>
               <DropdownMenuItem onClick={() => navigate("/profil")} className="min-h-11 cursor-pointer">
