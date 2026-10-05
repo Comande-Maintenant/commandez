@@ -2,7 +2,7 @@ name: iOS native UI verification
 
 on:
   push:
-    branches: [codex/commandeici-ios-frozen-notification-20261005]
+    branches: [codex/commandeici-ios-notification-diagnostic-20261005]
     paths:
       - '.github/workflows/ios-native-ui.yml'
       - 'scripts/ci-public-ios-config.py'
@@ -124,6 +124,20 @@ jobs:
           assert appSource=='2c1e60b5e336d341ade33c9f7618716a0a1c6df6'
           Path('CIReport/qa-source.json').write_text(json.dumps({'appSource':appSource,'testProtocol':'reviewed native modal acknowledgement v1','qaPath':str(target),'qaBeforeSHA256':hashlib.sha256(before.encode()).hexdigest(),'qaAfterSHA256':hashlib.sha256(after.encode()).hexdigest(),'workflowCommit':os.environ['GITHUB_SHA'],'onlyTrackedDiff':str(target),'allShippingFilesUnchanged':True,'originalAssertionsAndTimeoutsPreserved':True},indent=2))
           QA_PATCH
+      - name: Apply reviewed DEBUG-only notification observer
+        run: |
+          python3 - <<'DIAGNOSTIC'
+          from pathlib import Path
+          import hashlib,json,subprocess
+          path=Path('ios/App/App/AppDelegate.swift')
+          before=path.read_bytes()
+          assert hashlib.sha256(before).hexdigest()=='f2ea9e63a9c0f9f4b54eea7c0e73e215f2ace39fcfa317d11c39b0e74be772d2'
+          after='import UIKit\nimport Capacitor\n\n@UIApplicationMain\nclass AppDelegate: UIResponder, UIApplicationDelegate {\n\n    var window: UIWindow?\n\n    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {\n        NotificationCenter.default.post(name: .capacitorDidRegisterForRemoteNotifications, object: deviceToken)\n    }\n\n    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {\n        NotificationCenter.default.post(name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)\n    }\n\n    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {\n        #if DEBUG\n        NotificationDiagnostic.start()\n        #endif\n        // Override point for customization after application launch.\n        return true\n    }\n\n    func applicationWillResignActive(_ application: UIApplication) {\n        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.\n        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.\n    }\n\n    func applicationDidEnterBackground(_ application: UIApplication) {\n        #if DEBUG\n        NotificationDiagnostic.sample("background")\n        #endif\n        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.\n        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.\n    }\n\n    func applicationWillEnterForeground(_ application: UIApplication) {\n        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.\n    }\n\n    func applicationDidBecomeActive(_ application: UIApplication) {\n        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.\n    }\n\n    func applicationWillTerminate(_ application: UIApplication) {\n        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.\n    }\n\n    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {\n        // Called when the app was launched with a url. Feel free to add additional processing here,\n        // but if you want the App API to support tracking app url opens, make sure to keep this call\n        return ApplicationDelegateProxy.shared.application(app, open: url, options: options)\n    }\n\n    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {\n        // Called when the app was launched with an activity, including Universal Links.\n        // Feel free to add additional processing here, but if you want the App API to support\n        // tracking app url opens, make sure to keep this call\n        return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)\n    }\n\n}\n\n#if DEBUG\nimport UserNotifications\n\n// CI-only read-only observer. Never included in the shipped Release source.\nprivate enum NotificationDiagnostic {\n    private static let lock = NSLock()\n    private static var timer: Timer?\n    static func start() {\n        guard ProcessInfo.processInfo.environment["COMMANDEICI_QA_DEMO"] == "1" else { return }\n        sample("launch")\n        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in sample("foreground") }\n    }\n    static func sample(_ boundary: String) {\n        guard ProcessInfo.processInfo.environment["COMMANDEICI_QA_DEMO"] == "1" else { return }\n        let center = UNUserNotificationCenter.current()\n        center.getNotificationSettings { settings in\n            center.getPendingNotificationRequests { requests in\n                center.getDeliveredNotifications { delivered in\n                    // Only metadata of our one known fictitious notification.\n                    let pending = requests.filter { $0.identifier == "1701003" }.map { request -> [String: Any] in\n                        let trigger = request.trigger\n                        return ["interval": (trigger as? UNTimeIntervalNotificationTrigger)?.timeInterval ?? -1,\n                                "nextSeconds": (trigger as? UNTimeIntervalNotificationTrigger)?.nextTriggerDate()?.timeIntervalSinceNow ?? -1,\n                                "repeats": trigger?.repeats ?? false,\n                                "expectedTitle": request.content.title == "CommandeIci · Démonstration",\n                                "expectedBody": request.content.body == "Nouvelle commande fictive. Ouvrez la démo pour la préparer."]\n                    }\n                    let entry: [String: Any] = ["boundary": boundary, "utc": ISO8601DateFormatter().string(from: Date()),\n                        "uptime": ProcessInfo.processInfo.systemUptime,\n                        "authorization": settings.authorizationStatus.rawValue,\n                        "alert": settings.alertSetting.rawValue, "alertStyle": settings.alertStyle.rawValue,\n                        "sound": settings.soundSetting.rawValue, "lockScreen": settings.lockScreenSetting.rawValue,\n                        "notificationCenter": settings.notificationCenterSetting.rawValue,\n                        "pending": pending, "deliveredDemoCount": delivered.filter { $0.request.identifier == "1701003" }.count]\n                    guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,\n                          var bytes = try? JSONSerialization.data(withJSONObject: entry) else { return }\n                    bytes.append(10)\n                    lock.lock()\n                    defer { lock.unlock() }\n                    let file = directory.appendingPathComponent("native-notification-diagnostic.ndjson")\n                    if !FileManager.default.fileExists(atPath: file.path) { FileManager.default.createFile(atPath: file.path, contents: nil) }\n                    guard let handle = try? FileHandle(forWritingTo: file) else { return }\n                    defer { try? handle.close() }\n                    do { try handle.seekToEnd(); try handle.write(contentsOf: bytes) } catch {}\n                }\n            }\n        }\n    }\n}\n#endif\n'.encode()
+          assert hashlib.sha256(after).hexdigest()=='fe3aa46d3cc0fee936a3fec690f36c33708d0dc9202fe9d889b59a294e89d1f9'
+          path.write_bytes(after)
+          assert subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()==['ios/App/App/AppDelegate.swift','ios/App/CommandeIciUITests/CommandeIciUITests.swift']
+          Path('CIReport/diagnostic-source.json').write_text(json.dumps({'appSource':'2c1e60b5e336d341ade33c9f7618716a0a1c6df6','observerBeforeSHA256':'f2ea9e63a9c0f9f4b54eea7c0e73e215f2ace39fcfa317d11c39b0e74be772d2','observerAfterSHA256':'fe3aa46d3cc0fee936a3fec690f36c33708d0dc9202fe9d889b59a294e89d1f9','debugOnly':True,'diagnosisOnlyNotShippingEvidence':True},indent=2))
+          DIAGNOSTIC
       - name: Create isolated simulator
         timeout-minutes: 8
         run: |
@@ -151,37 +165,43 @@ jobs:
           subprocess.run(['codesign','--verify','--deep','--strict',str(app)],check=True,capture_output=True)
           Path('CIReport/simulator-signing.json').write_text(json.dumps({'localAdHocOnly':True,'privateCertificateUsed':False,'simulatedApplicationIdentifier':attributes['application-identifier'],'signatureVerified':True},indent=2))
           PYCODE
-      - name: Run all native UI cases
+      - name: Observe the one failing notification case without altering its assertions
         run: |
           set -o pipefail
           xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
             -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciDerivedData" \
             -resultBundlePath CIReport/NativeResult.xcresult -testLanguage fr -testRegion FR \
             -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 \
-            -parallel-testing-enabled NO test-without-building 2>&1 | tee CIReport/native.log
-      - name: Export evidence and enforce all fifteen cases
+            -parallel-testing-enabled NO -only-testing:CommandeIciUITests/CommandeIciUITests/testNativeDemoOrderAndNotification test-without-building 2>&1 | tee CIReport/native.log
+      - name: Export diagnostic evidence and actual one-case outcome
         timeout-minutes: 2
         if: always()
         run: |
           python3 - <<'QA_CONTAINER'
           from pathlib import Path
           import subprocess, os, json, shutil, time
-          report={'bootReady':os.environ.get('CI_SIM_BOOT_READY')=='true','hasNativeResult':Path('CIReport/NativeResult.xcresult').is_dir(),'journalCopied':False}
+          report={'bootReady':os.environ.get('CI_SIM_BOOT_READY')=='true','hasNativeResult':Path('CIReport/NativeResult.xcresult').is_dir(),'journalCopied':False,'diagnosticCopied':False}
           started=time.monotonic()
           if report['bootReady'] and report['hasNativeResult'] and os.environ.get('CI_SIM_ID'):
               try:
                   result=subprocess.run(['xcrun','simctl','get_app_container',os.environ['CI_SIM_ID'],'com.commandeici.app','data'],capture_output=True,text=True,timeout=10)
                   report['containerReadReturnCode']=result.returncode
                   if result.returncode==0:
+                      diagnostic=Path(result.stdout.strip())/'Documents/native-notification-diagnostic.ndjson'
+                      if diagnostic.is_file():
+                          assert diagnostic.resolve(strict=True).is_relative_to(Path(result.stdout.strip()).resolve(strict=True)) and 0 < diagnostic.stat().st_size <= 1048576
+                          shutil.copyfile(diagnostic,'CIReport/native-notification-diagnostic.ndjson');report['diagnosticCopied']=True
                       journal=Path(result.stdout.strip())/'Documents/qa-readiness.ndjson'
                       if journal.is_file():
                           shutil.copyfile(journal,'CIReport/qa-readiness.ndjson');report['journalCopied']=True
               except subprocess.TimeoutExpired:
                   report['containerReadTimedOut']=True
+              except (OSError, ValueError, AssertionError) as error:
+                  report['containerEvidenceCopyError']=type(error).__name__
           else:
               report['containerReadSkipped']='App execution prerequisites not established'
           # Fallback reads only this run's simulator and the exact app's metadata.
-          if not report['journalCopied'] and report['bootReady'] and report['hasNativeResult']:
+          if (not report['journalCopied'] or not report['diagnosticCopied']) and report['bootReady'] and report['hasNativeResult']:
               import plistlib, uuid
               try:
                   simulator_id=str(uuid.UUID(os.environ['CI_SIM_ID'])).upper()
@@ -206,15 +226,21 @@ jobs:
                           continue
                   report['ownedSimulatorMatchingAppContainers']=len(matches)
                   if len(matches)==1:
-                      journal=(matches[0]/'Documents/qa-readiness.ndjson').resolve(strict=True)
-                      assert journal.is_relative_to(matches[0]) and journal.stat().st_size<=1048576
-                      shutil.copyfile(journal,'CIReport/qa-readiness.ndjson')
-                      report['journalCopied']=True
-                      report['journalCopyMethod']='owned simulator exact bundle metadata fallback'
+                      for name, flag in [('qa-readiness.ndjson','journalCopied'),('native-notification-diagnostic.ndjson','diagnosticCopied')]:
+                          if report[flag]: continue
+                          try:
+                              evidence=(matches[0]/'Documents'/name).resolve(strict=True)
+                              assert evidence.is_relative_to(matches[0]) and 0 < evidence.stat().st_size<=1048576
+                              shutil.copyfile(evidence,Path('CIReport')/name)
+                              report[flag]=True
+                              report[flag+'Method']='owned simulator exact bundle metadata fallback'
+                          except (OSError, ValueError, AssertionError) as error:
+                              report[flag+'Error']=type(error).__name__
               except (OSError, ValueError, AssertionError, KeyError) as error:
                   report['ownedSimulatorFallbackError']=type(error).__name__
           report['elapsedSeconds']=time.monotonic()-started
           Path('CIReport/qa-container-read.json').write_text(json.dumps(report,indent=2))
+          assert report['diagnosticCopied'] and Path('CIReport/native-notification-diagnostic.ndjson').stat().st_size>0, 'Read-only notification observation is required; this diagnostic is incomplete without it'
           QA_CONTAINER
           if [ -d CIReport/NativeResult.xcresult ]; then
             xcrun xcresulttool get test-results summary --path CIReport/NativeResult.xcresult > CIReport/summary.json
@@ -223,7 +249,7 @@ jobs:
           from pathlib import Path
           import json
           summary=json.loads(Path('CIReport/summary.json').read_text())
-          assert summary['totalTestCount']==15 and summary['passedTests']==15 and summary['failedTests']==0 and summary['skippedTests']==0,summary
+          assert summary['totalTestCount']==1 and summary['passedTests']==1 and summary['failedTests']==0 and summary['skippedTests']==0,summary
           PY
           else
             exit 1
