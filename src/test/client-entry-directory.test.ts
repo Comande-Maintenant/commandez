@@ -58,3 +58,11 @@ it('matches an accented published city when the user omits accents, and folds cu
  api.abort.mockResolvedValue({ data: { items: [{ ...fixture, city: "L’Haÿ-les-Roses" }], has_more: false }, error: null });
  await expect(findPublicCommerces("L'Hay-les-Roses")).resolves.toMatchObject({ items: [{ city: "L’Haÿ-les-Roses" }] });
 });
+
+it('accepts real Arabic, Thai and Tamil city spellings containing non-composable marks', async () => {
+ for (const city of ['القَاهِرَة', 'دُبَيّ', 'เชียงใหม่', 'กรุงเทพฯ', 'மதுரை']) {
+   expect(validateCity(city)).toBe(city);
+   api.abort.mockResolvedValue({ data: { items: [{ ...fixture, city }], has_more: false }, error: null });
+   await expect(findPublicCommerces(city)).resolves.toMatchObject({ items: [{ city }] });
+ }
+});

@@ -1,6 +1,6 @@
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA extensions;
-SELECT extensions.plan(30);
+SELECT extensions.plan(37);
 -- These fixtures must run only against an isolated PostgreSQL test database.
 INSERT INTO auth.users(id,email,email_confirmed_at) VALUES
 ('95000000-0000-0000-0000-000000000001','city-directory@example.test',now());
@@ -65,5 +65,23 @@ SELECT extensions.is((public.list_public_commerces_by_city('Directory Bound')->>
 SELECT extensions.is(public.list_public_commerces_by_city('Directory Bound')->'items'->0->>'name','Bound 001','results sort by name');
 SELECT extensions.is(public.list_public_commerces_by_city('Directory Bound')->'items'->99->>'name','Bound 100','deterministic page boundary');
 SELECT extensions.ok(NOT EXISTS(SELECT FROM jsonb_array_elements(public.list_public_commerces_by_city('Directory Bound')->'items') row WHERE row ?| ARRAY['owner_id','restaurant_phone','customization_config','email']),'entire bounded response has no private fields');
+-- Non-composable Unicode marks occur in real city spellings, including Arabic.
+DO $$
+DECLARE chosen TEXT; n INT:=0;
+BEGIN
+  FOREACH chosen IN ARRAY ARRAY['القَاهِرَة','دُبَيّ','เชียงใหม่','กรุงเทพฯ','மதுரை'] LOOP
+    n:=n+1;
+    PERFORM public.complete_onboarding(('95000000-0000-0000-0000-' || lpad((20000+n)::text,12,'0'))::uuid,
+      jsonb_build_object('name','Unicode city ' || n,'slug','directory-unicode-' || n,'city',chosen),
+      '[{"name":"Test item","category":"Test","price":12}]'::jsonb,'{}');
+  END LOOP;
+END $$;
+SELECT extensions.is(jsonb_array_length(public.list_public_commerces_by_city('القَاهِرَة')->'items'),1,'Arabic Cairo with vowel marks accepted');
+SELECT extensions.is(jsonb_array_length(public.list_public_commerces_by_city('دُبَيّ')->'items'),1,'Arabic Dubai with vowel marks accepted');
+SELECT extensions.is(jsonb_array_length(public.list_public_commerces_by_city('เชียงใหม่')->'items'),1,'Thai Chiang Mai accepted');
+SELECT extensions.is(jsonb_array_length(public.list_public_commerces_by_city('กรุงเทพฯ')->'items'),1,'Thai Bangkok accepted');
+SELECT extensions.is(jsonb_array_length(public.list_public_commerces_by_city('மதுரை')->'items'),1,'Tamil Madurai accepted');
+SELECT extensions.throws_ok($$SELECT public.list_public_commerces_by_city(U&'\0301\0300')$$,'22023','invalid_city','marks without a city letter are rejected');
+SELECT extensions.throws_ok($$SELECT public.list_public_commerces_by_city('Paris😀')$$,'22023','invalid_city','emoji do not become a valid city name');
 SELECT * FROM extensions.finish();
 ROLLBACK;
