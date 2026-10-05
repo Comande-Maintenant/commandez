@@ -3,11 +3,14 @@ import WebKit
 import UIKit
 
 class CommandeIciViewController: CAPBridgeViewController {
-    private let openingMinimumDuration: TimeInterval = 2.0
     private var openingCover: UIView?
     private var openingLogo: UIImageView?
     private var openingStarted: CFTimeInterval?
     private var openingObservation: NSKeyValueObservation?
+    private var openingPolicy = OpeningRecoveryPolicy()
+    private var openingContentReady = false
+    private var openingTimer: Timer?
+    private var openingRecovery: UIAlertController?
 
     override func viewDidLoad() {
         #if DEBUG
@@ -47,7 +50,7 @@ class CommandeIciViewController: CAPBridgeViewController {
         openingLogo = logo
         webView?.accessibilityElementsHidden = true
         openingObservation = webView?.observe(\.isLoading, options: [.new]) { [weak self] _, _ in
-            DispatchQueue.main.async { self?.dismissOpeningWhenReady() }
+            DispatchQueue.main.async { self?.checkOpeningContent() }
         }
     }
 
@@ -67,22 +70,102 @@ class CommandeIciViewController: CAPBridgeViewController {
                     UIView.addKeyframe(withRelativeStartTime: 0.45, relativeDuration: 0.55) { logo.transform = .identity }
                 }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.openingMinimumDuration) { [weak self] in self?.dismissOpeningWhenReady() }
-            // Let the normal application show its recovery state if WK stalls.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 8) { [weak self] in self?.dismissOpeningWhenReady(force: true) }
+            self.startOpeningTimer()
+            self.checkOpeningContent()
         }
     }
 
-    private func dismissOpeningWhenReady(force: Bool = false) {
-        guard let cover = openingCover, let started = openingStarted,
-              CACurrentMediaTime() - started >= openingMinimumDuration,
-              force || webView?.isLoading != true else { return }
+    private func checkOpeningContent() {
+        guard openingCover != nil, !openingContentReady, webView?.isLoading != true,
+              let expected = bridge?.config.localURL, let actual = webView?.url,
+              actual.scheme == expected.scheme, actual.host == expected.host,
+              actual.port == expected.port else { return }
+        webView?.evaluateJavaScript("Boolean(document.getElementById('root')?.childElementCount)") { [weak self] result, _ in
+            guard result as? Bool == true else { return }
+            self?.openingContentReady = true
+            self?.advanceOpening()
+        }
+    }
+
+    fileprivate func receiveOpeningReady(_ message: WKScriptMessage) {
+        guard message.frameInfo.isMainFrame, message.body as? String == "ready",
+              let expected = bridge?.config.localURL, let actual = message.frameInfo.request.url,
+              actual.scheme == expected.scheme, actual.host == expected.host,
+              actual.port == expected.port else { return }
+        openingContentReady = true
+        #if DEBUG
+        NativeQAReadiness.record(["boundary": "opening-content", "event": "ready"])
+        #endif
+        advanceOpening()
+    }
+
+    private func advanceOpening() {
+        guard openingCover != nil, let started = openingStarted else { return }
+        let elapsed = CACurrentMediaTime() - started
+        let action = openingPolicy.advance(elapsed: elapsed, contentReady: openingContentReady)
+        switch action {
+        case .wait: break
+        case .dismiss: dismissOpening()
+        case .reload: reloadOpening()
+        case .recover: showOpeningRecovery()
+        }
+    }
+
+    private func startOpeningTimer() {
+        openingTimer?.invalidate()
+        openingTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
+            self?.advanceOpening()
+        }
+    }
+
+    private func reloadOpening() {
+        openingRecovery = nil
+        startOpeningTimer()
+        #if DEBUG
+        NativeQAReadiness.record(["boundary": "opening", "event": "reload"])
+        #endif
+        // Capacitor retains its delegate, local origin and persisted session.
+        loadWebView()
+    }
+
+    private func showOpeningRecovery() {
+        guard openingCover != nil else { return }
+        openingTimer?.invalidate()
+        openingTimer = nil
+        let french = Locale.preferredLanguages.first?.hasPrefix("fr") == true
+        let recovery = UIAlertController(
+            title: "Commandeici",
+            message: french ? "L’ouverture prend plus de temps que prévu." : "Opening is taking longer than expected.",
+            preferredStyle: .alert
+        )
+        recovery.addAction(UIAlertAction(title: french ? "Réessayer" : "Try again", style: .default) { [weak self] _ in
+            self?.retryOpening()
+        })
+        openingRecovery = recovery
+        present(recovery, animated: !UIAccessibility.isReduceMotionEnabled)
+        #if DEBUG
+        NativeQAReadiness.record(["boundary": "opening", "event": "recover"])
+        #endif
+    }
+
+    @objc private func retryOpening() {
+        guard let started = openingStarted,
+              openingPolicy.retry(elapsed: CACurrentMediaTime() - started) == .reload else { return }
+        reloadOpening()
+    }
+
+    private func dismissOpening() {
+        guard let cover = openingCover, let started = openingStarted else { return }
+        openingTimer?.invalidate()
+        openingTimer = nil
+        openingRecovery?.dismiss(animated: false)
+        openingRecovery = nil
         openingCover = nil
         openingObservation = nil
         #if DEBUG
-        NativeQAReadiness.record(["boundary": "opening", "event": "dismiss", "forcedRecovery": force, "accessibilityHidden": webView?.accessibilityElementsHidden ?? false, "milliseconds": (CACurrentMediaTime() - started) * 1000])
+        NativeQAReadiness.record(["boundary": "opening", "event": "dismiss", "forcedRecovery": false, "accessibilityHidden": webView?.accessibilityElementsHidden ?? false, "milliseconds": (CACurrentMediaTime() - started) * 1000])
         // Simulator evidence records actual cover visibility, never user data.
-        let evidence: [String: Any] = ["visibleSeconds": CACurrentMediaTime() - started, "reduceMotion": UIAccessibility.isReduceMotionEnabled, "forcedRecovery": force]
+        let evidence: [String: Any] = ["visibleSeconds": CACurrentMediaTime() - started, "reduceMotion": UIAccessibility.isReduceMotionEnabled, "forcedRecovery": false]
         if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
            let data = try? JSONSerialization.data(withJSONObject: evidence) {
             try? data.write(to: directory.appendingPathComponent("opening-evidence.json"), options: .atomic)
@@ -101,6 +184,22 @@ class CommandeIciViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(SecureSessionPlugin())
         bridge?.registerPluginInstance(FileExportPlugin())
+        let content = webView?.configuration.userContentController
+        content?.add(OpeningReadinessHandler(owner: self), name: "openingReadiness")
+        let readiness = """
+        (() => {
+          const observer = new MutationObserver(report);
+          function report() {
+            if (document.getElementById('root')?.childElementCount > 0) {
+              window.webkit.messageHandlers.openingReadiness.postMessage('ready');
+              observer.disconnect();
+            }
+          }
+          observer.observe(document, {childList:true,subtree:true});
+          report();
+        })();
+        """
+        content?.addUserScript(WKUserScript(source: readiness, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         #if DEBUG
         NativeQAReadiness.record(["boundary": "native-bridge", "event": "ready"])
         if ProcessInfo.processInfo.environment["COMMANDEICI_QA_MENU"] == "1" {
@@ -147,6 +246,14 @@ class CommandeIciViewController: CAPBridgeViewController {
             webView?.configuration.userContentController.addUserScript(WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
         }
         #endif
+    }
+}
+
+private final class OpeningReadinessHandler: NSObject, WKScriptMessageHandler {
+    private weak var owner: CommandeIciViewController?
+    init(owner: CommandeIciViewController) { self.owner = owner }
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        owner?.receiveOpeningReady(message)
     }
 }
 

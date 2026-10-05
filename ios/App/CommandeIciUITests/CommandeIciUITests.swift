@@ -231,7 +231,12 @@ final class CommandeIciUITests: XCTestCase {
         let pngType = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'PNG' AND (label CONTAINS[c] 'KB' OR label CONTAINS[c] 'Ko')")).firstMatch
         XCTAssertTrue(pngType.waitForExistence(timeout: 10), "The shared file must be identified as a PNG with a file size: " + app.debugDescription)
         let save = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] 'Fichiers' OR label CONTAINS[c] 'Save to Files'")).firstMatch
-        if !save.isHittable { app.otherElements["ActivityListView"].swipeUp() }
+        if !save.isHittable {
+            // iOS presents additional file actions behind the action-row More cell.
+            let moreActions = app.cells.matching(NSPredicate(format: "identifier == 'actionGroupCell' AND (label == 'More' OR label == 'Plus')")).firstMatch
+            if moreActions.isHittable { moreActions.tap() }
+            else { app.otherElements["ActivityListView"].swipeUp() }
+        }
         XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "QR PNG partage iOS"; shot.lifetime = .keepAlways; add(shot)
     }
@@ -277,8 +282,11 @@ final class CommandeIciUITests: XCTestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allow = springboard.buttons.matching(NSPredicate(format: "label == 'Autoriser' OR label == 'Allow'")).firstMatch
         if allow.waitForExistence(timeout: 3) { allow.tap() }
+        // The success instruction appears only after the native schedule resolves.
+        let scheduled = app.descendants(matching: .any).matching(NSPredicate(format: "label == 'Verrouillez votre iPhone : une notification de démonstration arrivera dans 10 secondes.'")).firstMatch
+        XCTAssertTrue(scheduled.waitForExistence(timeout: 5), app.debugDescription)
         XCUIDevice.shared.press(.home)
-        let banner = springboard.staticTexts["CommandeIci · Démonstration"].firstMatch
+        let banner = springboard.buttons.matching(NSPredicate(format: "identifier == 'ShortLook.Platter.Content.Seamless' AND label CONTAINS 'CommandeIci · Démonstration' AND label CONTAINS 'Nouvelle commande fictive.'")).firstMatch
         XCTAssertTrue(banner.waitForExistence(timeout: 15), springboard.debugDescription)
         let shot = XCTAttachment(screenshot: springboard.screenshot())
         shot.name = "Notification iOS locale de demonstration"

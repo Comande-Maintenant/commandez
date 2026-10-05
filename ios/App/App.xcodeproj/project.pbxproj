@@ -19,6 +19,7 @@
 		C2C2C2C20000000000000001 /* CommandeIciViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C1C1C10000000000000001; };
 C3C3C3C30000000000000004 = {isa=PBXBuildFile;fileRef=C3C3C3C30000000000000003;};
 C4C4C4C40000000000000002 = {isa=PBXBuildFile;fileRef=C4C4C4C40000000000000001;};
+		C5C5C5C50000000000000002 /* OpeningRecoveryPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C5C5C50000000000000001; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@ C4C4C4C40000000000000002 = {isa=PBXBuildFile;fileRef=C4C4C4C40000000000000001;};
 C3C3C3C30000000000000003 = {isa=PBXFileReference;lastKnownFileType=sourcecode.swift;path=CommandeIciUITests.swift;sourceTree="<group>";};
 C3C3C3C30000000000000002 = {isa=PBXFileReference;explicitFileType=wrapper.cfbundle;path=CommandeIciUITests.xctest;sourceTree=BUILT_PRODUCTS_DIR;};
 C4C4C4C40000000000000001 = {isa=PBXFileReference;lastKnownFileType=text.xml;path=PrivacyInfo.xcprivacy;sourceTree="<group>";};
+		C5C5C5C50000000000000001 /* OpeningRecoveryPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpeningRecoveryPolicy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@ C3C3C3C30000000000000002,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 C4C4C4C40000000000000001,
 				C1C1C1C10000000000000001 /* CommandeIciViewController.swift */,
+				C5C5C5C50000000000000001 /* OpeningRecoveryPolicy.swift */,
 				C1C1C1C10000000000000000 /* SecureSessionPlugin.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
@@ -185,6 +188,7 @@ C3C3C3C30000000000000008 = {isa=PBXResourcesBuildPhase;buildActionMask=214748364
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				C2C2C2C20000000000000001 /* CommandeIciViewController.swift in Sources */,
+				C5C5C5C50000000000000002 /* OpeningRecoveryPolicy.swift in Sources */,
 				C2C2C2C20000000000000000 /* SecureSessionPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
