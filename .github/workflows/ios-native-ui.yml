@@ -61,7 +61,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-          ref: 2c1e60b5e336d341ade33c9f7618716a0a1c6df6
+          ref: c5e10d810d401fe60c1bb642c58b54c5eead5c68
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24.13.0
@@ -105,25 +105,21 @@ jobs:
           assert files
           Path('CIReport/runtime.json').write_text(json.dumps(files,indent=2))
           PY
-      - name: Apply the reviewed modal acknowledgement to native QA only
+      - name: Verify integrated native QA source without patches
         run: |
-          python3 - <<'QA_PATCH'
+          python3 - <<'QA_SOURCE'
           from pathlib import Path
           import hashlib,json,subprocess,os
           target=Path('ios/App/CommandeIciUITests/CommandeIciUITests.swift')
-          before=target.read_text()
-          assert hashlib.sha256(before.encode()).hexdigest()=='a5b46530fa94f9f7f4944405c155609ac75b6d2084d7f2760a33e838537a5453'
-          old="        // The success instruction appears only after the native schedule resolves.\n        let scheduled"
-          new="        // Scheduling a demo notification also shows the received-order dialog.\n        // Acknowledge it through its real exit before reading the underlying guide.\n        if close.waitForExistence(timeout: 3) { close.tap() }\n        // The success instruction appears only after the native schedule resolves.\n        let scheduled"
-          assert before.count(old)==1
-          after=before.replace(old,new,1)
-          assert hashlib.sha256(after.encode()).hexdigest()=='1e4734b3c84ba211cf41955cee61b7f35fb605cbcb87919e8298e8f2921b95f7'
-          target.write_text(after)
-          assert subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()==[str(target)]
+          sha=hashlib.sha256(target.read_bytes()).hexdigest()
+          assert sha=='1e4734b3c84ba211cf41955cee61b7f35fb605cbcb87919e8298e8f2921b95f7'
           appSource=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          assert appSource=='2c1e60b5e336d341ade33c9f7618716a0a1c6df6'
-          Path('CIReport/qa-source.json').write_text(json.dumps({'appSource':appSource,'testProtocol':'reviewed native modal acknowledgement v1','qaPath':str(target),'qaBeforeSHA256':hashlib.sha256(before.encode()).hexdigest(),'qaAfterSHA256':hashlib.sha256(after.encode()).hexdigest(),'workflowCommit':os.environ['GITHUB_SHA'],'onlyTrackedDiff':str(target),'allShippingFilesUnchanged':True,'originalAssertionsAndTimeoutsPreserved':True},indent=2))
-          QA_PATCH
+          assert appSource=='c5e10d810d401fe60c1bb642c58b54c5eead5c68'
+          subprocess.run(['git','diff','--exit-code'],check=True)
+          # CIReport contains only the owned outputs created by preceding steps.
+          assert not subprocess.check_output(['git','status','--porcelain','--untracked-files=all','--','.',':(exclude)CIReport'],text=True).strip()
+          Path('CIReport/qa-source.json').write_text(json.dumps({'appSource':appSource,'qaPath':str(target),'qaSHA256':sha,'workflowCommit':os.environ['GITHUB_SHA'],'allTrackedFilesUnchanged':True,'noInstrumentation':True,'integratedModalAcknowledgement':True},indent=2))
+          QA_SOURCE
       - name: Create isolated simulator
         timeout-minutes: 8
         run: |
