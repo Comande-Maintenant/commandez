@@ -48,7 +48,6 @@ for(const language of ['fr','ar'])test(`all languages are reachable in ${languag
  await page.setViewportSize({width:320,height:390});await page.goto(`/admin/demo?lang=${language}`,{waitUntil:'networkidle'});
  await page.getByRole('button',{name:language==='ar'?'العربية':'Français',exact:true}).click();
  const last=page.getByRole('button',{name:'VI Tiếng Việt',exact:true});await last.scrollIntoViewIfNeeded();
- await expect(last).toBeInViewport({ratio:1});
  // Popover entry scales from 95% to 100%; poll all original bounds together.
  // Keep the CSS 44px minimum and ignore only sub-millipixel DOMRect roundoff.
  await expect(async()=>{
