@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchDemoRestaurant, fetchRestaurantBySlug } from '@/lib/api';
+import { fetchDemoRestaurant, fetchMerchantRestaurantBySlug } from '@/lib/api';
 import type { DbRestaurant } from '@/types/database';
 
 export function useDashboardRestaurant(slug: string | undefined, isDemo: boolean) {
@@ -11,7 +11,7 @@ export function useDashboardRestaurant(slug: string | undefined, isDemo: boolean
     let disposed = false;
     setRestaurant(null); setLoading(Boolean(slug)); setError(false);
     if (!slug) return;
-    void (isDemo ? fetchDemoRestaurant(slug) : fetchRestaurantBySlug(slug)).then(result => {
+    void (isDemo ? fetchDemoRestaurant(slug) : fetchMerchantRestaurantBySlug(slug)).then(result => {
       if (!disposed) { setRestaurant(result); setLoading(false); }
     }).catch(() => {
       if (!disposed) { setError(true); setLoading(false); }

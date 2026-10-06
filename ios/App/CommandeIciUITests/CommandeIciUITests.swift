@@ -1,5 +1,65 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+ func testStoreRestaurantDiagnostic() {
+  continueAfterFailure = false
+  let app = XCUIApplication(); app.launchEnvironment=[:];app.launchArguments=["-AppleLanguages","(fr)"];app.launch()
+  enterMerchant(app)
+  let discover=app.buttons["Tester sans créer de compte"].firstMatch
+  XCTAssertTrue(discover.waitForExistence(timeout: 20));discover.tap()
+  let link=app.links.matching(NSPredicate(format:"label CONTAINS 'Restauration'")).firstMatch
+  XCTAssertTrue(link.waitForExistence(timeout: 10));link.tap()
+  let receive=app.buttons["Recevoir une commande"].firstMatch
+  let exists=receive.waitForExistence(timeout: 20)
+  let a=XCTAttachment(screenshot:app.screenshot());a.name="diagnostic-restaurant-native";a.lifetime = .keepAlways;add(a)
+  XCTAssertTrue(exists,app.debugDescription)
+ }
+
+    func testStoreFrenchCaptures() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_FR"]
+        app.launch()
+        XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 20))
+        func capture(_ name: String) {
+            Thread.sleep(forTimeInterval: 1.5)
+            let a = XCTAttachment(screenshot: app.screenshot())
+            a.name = "store-fr-" + name; a.lifetime = .keepAlways; add(a)
+        }
+        func tapButton(_ label: String) {
+            let b = app.buttons[label].firstMatch
+            XCTAssertTrue(b.waitForExistence(timeout: 12), app.debugDescription)
+            for _ in 0..<5 { if b.isHittable { break }; app.swipeUp() }
+            b.tap()
+        }
+        func tapLink(_ contains: String) {
+            let l = app.links.matching(NSPredicate(format: "label CONTAINS %@", contains)).firstMatch
+            XCTAssertTrue(l.waitForExistence(timeout: 12), app.debugDescription)
+            for _ in 0..<5 { if l.isHittable { break }; app.swipeUp() }
+            l.tap()
+        }
+        XCTAssertTrue(app.buttons["Je suis commerçant"].firstMatch.waitForExistence(timeout: 15), app.debugDescription)
+        capture("01-welcome")
+        tapButton("Je suis commerçant")
+        tapButton("Tester sans créer de compte")
+        capture("02-demos")
+        tapLink("Épicerie")
+        capture("03-grocery")
+        tapButton("Ajouter Panier de saison")
+        capture("04-options")
+        tapButton("Fermer")
+        tapLink("Changer de démo")
+        tapLink("Fleuriste")
+        capture("05-florist")
+        tapLink("Changer de démo")
+        tapLink("Restauration")
+        let receive = app.buttons["Recevoir une commande"].firstMatch
+        XCTAssertTrue(receive.waitForExistence(timeout: 15), app.debugDescription)
+        receive.tap()
+        XCTAssertTrue(app.buttons["Voir la commande"].firstMatch.waitForExistence(timeout: 15), app.debugDescription)
+        capture("06-orders")
+    }
+
     func testNativeRegistrationKeyboardKeepsActionsReachable() {
         continueAfterFailure = false
         let app = XCUIApplication()

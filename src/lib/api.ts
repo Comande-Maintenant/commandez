@@ -66,6 +66,20 @@ export async function fetchRestaurantBySlug(slug: string): Promise<DbRestaurant 
   return data as unknown as DbRestaurant | null;
 }
 
+export async function fetchMerchantRestaurantBySlug(slug: string): Promise<DbRestaurant | null> {
+  const { data: auth, error: authError } = await supabase.auth.getUser();
+  if (authError) throw authError;
+  if (!auth.user) return null;
+  const { data, error } = await supabase
+    .from("restaurants")
+    .select("*")
+    .eq("slug", slug)
+    .eq("owner_id", auth.user.id)
+    .maybeSingle();
+  if (error) throw error;
+  return data as unknown as DbRestaurant | null;
+}
+
 export async function fetchMenuItems(restaurantId: string): Promise<DbMenuItem[]> {
   if (isEmbeddedDemo(restaurantId)) return embeddedMenu().filter(item => item.enabled && !item.is_alcohol);
   const { data, error } = await supabase

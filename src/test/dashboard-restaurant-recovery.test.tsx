@@ -2,7 +2,7 @@ import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DbRestaurant } from '@/types/database';
 const mocks = vi.hoisted(() => ({ fetch: vi.fn(), demo: vi.fn() }));
-vi.mock('@/lib/api', () => ({ fetchRestaurantBySlug: mocks.fetch, fetchDemoRestaurant: mocks.demo }));
+vi.mock('@/lib/api', () => ({ fetchMerchantRestaurantBySlug: mocks.fetch, fetchDemoRestaurant: mocks.demo }));
 import { useDashboardRestaurant } from '@/hooks/useDashboardRestaurant';
 beforeEach(() => { vi.clearAllMocks(); });
 afterEach(cleanup);
