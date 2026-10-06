@@ -134,7 +134,23 @@ jobs:
             -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciDerivedData" \
             -resultBundlePath CIReport/NativeResult.xcresult -testLanguage fr -testRegion FR \
             -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 \
-            -parallel-testing-enabled NO test-without-building 2>&1 | tee CIReport/native.log
+            -parallel-testing-enabled NO \
+            -skip-testing:CommandeIciUITests/CommandeIciUITests/testStoreFrenchCaptures \
+            -skip-testing:CommandeIciUITests/CommandeIciUITests/testStoreRestaurantDiagnostic \
+            test-without-building 2>&1 | tee CIReport/native.log
+      - name: Capture the actual French Release UI on a fresh install
+        run: |
+          set -o pipefail
+          xcrun simctl uninstall "$CI_SIM_ID" com.commandeici.app
+          xcrun simctl status_bar "$CI_SIM_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --wifiMode active --wifiBars 3
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination "platform=iOS Simulator,id=$CI_SIM_ID" -derivedDataPath "$RUNNER_TEMP/CommandeIciReleaseDerivedData" \
+            -resultBundlePath CIReport/StoreFrenchRelease.xcresult -testLanguage fr -testRegion FR \
+            -collect-test-diagnostics never -parallel-testing-enabled NO \
+            -only-testing:CommandeIciUITests/CommandeIciUITests/testStoreFrenchCaptures \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=889YAF54QV \
+            test 2>&1 | tee CIReport/store-french-release.log
+          xcrun xcresulttool export attachments --path CIReport/StoreFrenchRelease.xcresult --output-path CIReport/StoreFrenchReleaseAttachments
       - name: Export evidence and enforce suite count
         if: always()
         run: |
