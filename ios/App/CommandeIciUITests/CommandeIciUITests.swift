@@ -1,5 +1,49 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+    func testNativeSceneLaunchAndResume() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_FR"]
+        app.launch()
+        enterMerchant(app)
+        let demo = app.buttons["Tester sans créer de compte"].firstMatch
+        XCTAssertTrue(demo.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(demo.isHittable)
+        XCTAssertFalse(app.otherElements["commandeici-opening"].exists)
+        XCUIDevice.shared.press(.home)
+        app.activate()
+        XCTAssertTrue(demo.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertTrue(demo.isHittable)
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = "iOS27-scene-launch-and-resume"
+        shot.lifetime = .keepAlways
+        add(shot)
+    }
+
+    @available(iOS 16.4, *)
+    func testNativeSceneColdAndWarmAuthLinks() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [:]
+        app.launchArguments = ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_FR"]
+        app.launch()
+        enterMerchant(app)
+        XCTAssertTrue(app.buttons["Tester sans créer de compte"].firstMatch.waitForExistence(timeout: 15))
+        let url = URL(string: "commandeici://auth/connexion")!
+        app.open(url)
+        XCTAssertTrue(app.secureTextFields.firstMatch.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label == 'Se connecter →'")).firstMatch.isHittable, app.debugDescription)
+        app.terminate()
+        app.open(url)
+        XCTAssertTrue(app.secureTextFields.firstMatch.waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label == 'Se connecter →'")).firstMatch.isHittable, app.debugDescription)
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = "iOS27-cold-auth-link"
+        shot.lifetime = .keepAlways
+        add(shot)
+    }
+
  func testStoreRestaurantDiagnostic() {
   continueAfterFailure = false
   let app = XCUIApplication(); app.launchEnvironment=[:];app.launchArguments=["-AppleLanguages","(fr)"];app.launch()
@@ -510,11 +554,16 @@ final class CommandeIciUITests: XCTestCase {
     // Only navigate through the real UI; no new injection or observer patches.
     private func enterMerchant(_ app: XCUIApplication) {
         let choice = app.buttons["Je suis commerçant"].firstMatch
-        if choice.waitForExistence(timeout: 4) { choice.tap() }
-        else {
-            let switchMode = app.buttons["Espace commerçant"].firstMatch
-            if switchMode.exists { switchMode.tap() }
-        }
+        let demo = app.buttons["Tester sans créer de compte"].firstMatch
+        let switchMode = app.buttons["Espace commerçant"].firstMatch
+        // The entry can remember the merchant mode. Wait for an actual usable
+        // entry state instead of silently skipping the role choice after 4s.
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            choice.exists || demo.exists || switchMode.exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 15), .completed, app.debugDescription)
+        if choice.exists { choice.tap() }
+        else if switchMode.exists { switchMode.tap() }
     }
     private func enterClient(_ app: XCUIApplication) {
         let choice = app.buttons["Trouver un commerce et commander"].firstMatch
