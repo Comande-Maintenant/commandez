@@ -1660,5 +1660,20 @@
   "entry.try_demo": "가상 데모 체험",
   "entry.error": "매장을 불러올 수 없습니다. 다시 시도하세요.",
   "entry.retry": "다시 시도",
-  "entry.partial": "첫 100개 매장을 표시합니다."
+  "entry.partial": "첫 100개 매장을 표시합니다.",
+  "commerce.setup_activity": "업종",
+  "commerce.setup_business": "매장 정보",
+  "commerce.setup_name": "매장 이름",
+  "commerce.setup_products": "상품",
+  "commerce.setup_help": "고정 가격 상품을 추가하세요. 고객은 매장에서 결제합니다.",
+  "commerce.setup_add_product": "상품 추가",
+  "commerce.setup_product_name": "상품명",
+  "commerce.setup_price": "가격 (€)",
+  "commerce.setup_category": "카테고리",
+  "commerce.setup_description": "설명 (선택)",
+  "commerce.setup_remove": "상품 삭제",
+  "commerce.setup_confirm": "카탈로그 확인",
+  "commerce.setup_later": "상품 나중에 추가",
+  "commerce.setup_online": "매장이 공개되었습니다",
+  "commerce.free_offer": "2028년 12월 31일까지 모든 사업자에게 무료입니다. CommandeIci 구독료와 수수료가 없으며 카드 등록도 필요하지 않습니다."
 }

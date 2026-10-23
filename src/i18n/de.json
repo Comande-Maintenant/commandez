@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Fiktive Demo testen",
   "entry.error": "Geschäfte können nicht geladen werden. Versuche es erneut.",
   "entry.retry": "Erneut versuchen",
-  "entry.partial": "Die ersten 100 Geschäfte werden angezeigt."
+  "entry.partial": "Die ersten 100 Geschäfte werden angezeigt.",
+  "commerce.setup_activity": "Deine Branche",
+  "commerce.setup_business": "Dein Geschäft",
+  "commerce.setup_name": "Name des Geschäfts",
+  "commerce.setup_products": "Deine Produkte",
+  "commerce.setup_help": "Füge Produkte mit Festpreisen hinzu. Kunden bezahlen im Geschäft.",
+  "commerce.setup_add_product": "Produkt hinzufügen",
+  "commerce.setup_product_name": "Produktname",
+  "commerce.setup_price": "Preis (€)",
+  "commerce.setup_category": "Kategorie",
+  "commerce.setup_description": "Beschreibung (optional)",
+  "commerce.setup_remove": "Produkt entfernen",
+  "commerce.setup_confirm": "Katalog bestätigen",
+  "commerce.setup_later": "Produkte später hinzufügen",
+  "commerce.setup_online": "Dein Geschäft ist online",
+  "commerce.free_offer": "Bis einschließlich 31. Dezember 2028 für alle kostenlos. Kein CommandeIci-Abonnement, keine CommandeIci-Provision und keine Kreditkarte erforderlich."
 }

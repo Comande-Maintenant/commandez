@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Thử demo giả lập",
   "entry.error": "Không thể tải cửa hàng. Hãy thử lại.",
   "entry.retry": "Thử lại",
-  "entry.partial": "Hiển thị 100 cửa hàng đầu tiên."
+  "entry.partial": "Hiển thị 100 cửa hàng đầu tiên.",
+  "commerce.setup_activity": "Loại hình kinh doanh",
+  "commerce.setup_business": "Cửa hàng của bạn",
+  "commerce.setup_name": "Tên cửa hàng",
+  "commerce.setup_products": "Sản phẩm của bạn",
+  "commerce.setup_help": "Thêm sản phẩm có giá cố định. Khách thanh toán tại cửa hàng.",
+  "commerce.setup_add_product": "Thêm sản phẩm",
+  "commerce.setup_product_name": "Tên sản phẩm",
+  "commerce.setup_price": "Giá (€)",
+  "commerce.setup_category": "Danh mục",
+  "commerce.setup_description": "Mô tả (không bắt buộc)",
+  "commerce.setup_remove": "Xóa sản phẩm",
+  "commerce.setup_confirm": "Xác nhận danh mục",
+  "commerce.setup_later": "Thêm sản phẩm sau",
+  "commerce.setup_online": "Cửa hàng của bạn đã được đăng",
+  "commerce.free_offer": "Miễn phí cho mọi cơ sở đến hết ngày 31 tháng 12 năm 2028. Không có phí thuê bao hay hoa hồng CommandeIci, không cần thẻ ngân hàng."
 }

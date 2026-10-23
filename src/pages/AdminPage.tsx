@@ -21,6 +21,7 @@ import type { DbRestaurant } from "@/types/database";
 import { GererMenu } from "@/components/dashboard/GererMenu";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
 import { AdminBottomNav } from "@/components/dashboard/AdminBottomNav";
+import { businessTypeHint } from '@/lib/business-type';
 import { LiveSummaryBanner } from "@/components/dashboard/LiveSummaryBanner";
 import { AssistantChatbot } from "@/components/dashboard/AssistantChatbot";
 import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
@@ -255,6 +256,7 @@ const AdminPage = () => {
       <style>{`[data-blurred="true"] .blur-sensitive { filter: blur(8px); user-select: none; }`}</style>
 
       <AdminSidebar
+        businessType={businessTypeHint(restaurant.business_type)}
         activeView={activeView}
         onViewChange={handleViewChange}
         newOrderCount={orderCounts.newCount}
@@ -483,6 +485,7 @@ const AdminPage = () => {
       </div>
 
       <AdminBottomNav
+        businessType={businessTypeHint(restaurant.business_type)}
         activeView={activeView}
         onViewChange={handleViewChange}
         newOrderCount={orderCounts.newCount}

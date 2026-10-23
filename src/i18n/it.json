@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Prova una demo fittizia",
   "entry.error": "Impossibile caricare i negozi. Riprova.",
   "entry.retry": "Riprova",
-  "entry.partial": "Sono mostrati i primi 100 negozi."
+  "entry.partial": "Sono mostrati i primi 100 negozi.",
+  "commerce.setup_activity": "La tua attività",
+  "commerce.setup_business": "Il tuo negozio",
+  "commerce.setup_name": "Nome del negozio",
+  "commerce.setup_products": "I tuoi prodotti",
+  "commerce.setup_help": "Aggiungi prodotti a prezzo fisso. Il cliente paga in negozio.",
+  "commerce.setup_add_product": "Aggiungi un prodotto",
+  "commerce.setup_product_name": "Nome del prodotto",
+  "commerce.setup_price": "Prezzo (€)",
+  "commerce.setup_category": "Categoria",
+  "commerce.setup_description": "Descrizione (facoltativa)",
+  "commerce.setup_remove": "Rimuovi prodotto",
+  "commerce.setup_confirm": "Conferma catalogo",
+  "commerce.setup_later": "Aggiungi i prodotti più tardi",
+  "commerce.setup_online": "Il tuo negozio è online",
+  "commerce.free_offer": "Gratis per tutti fino al 31 dicembre 2028 incluso. Nessun abbonamento o commissione CommandeIci e nessuna carta bancaria richiesta."
 }

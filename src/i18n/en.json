@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Try a fictional demo",
   "entry.error": "Unable to load shops. Please try again.",
   "entry.retry": "Try again",
-  "entry.partial": "The first 100 shops are shown."
+  "entry.partial": "The first 100 shops are shown.",
+  "commerce.setup_activity": "Your business type",
+  "commerce.setup_business": "Your business",
+  "commerce.setup_name": "Business name",
+  "commerce.setup_products": "Your products",
+  "commerce.setup_help": "Add your fixed-price products. Customers pay at the business.",
+  "commerce.setup_add_product": "Add a product",
+  "commerce.setup_product_name": "Product name",
+  "commerce.setup_price": "Price (€)",
+  "commerce.setup_category": "Category",
+  "commerce.setup_description": "Description (optional)",
+  "commerce.setup_remove": "Remove product",
+  "commerce.setup_confirm": "Confirm catalogue",
+  "commerce.setup_later": "Add my products later",
+  "commerce.setup_online": "Your business is online",
+  "commerce.free_offer": "Free for everyone through December 31, 2028. No CommandeIci subscription or commission, and no bank card required."
 }

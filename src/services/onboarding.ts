@@ -1,3 +1,4 @@
+import { isBusinessType } from '@/lib/business-type';
 import { supabase } from '@/integrations/supabase/client';
 import type { AnalyzedCategory, SubscriptionPlan } from '@/types/onboarding';
 
@@ -379,12 +380,15 @@ export async function seedCuisineDefaults(restaurantId: string, cuisineType: str
 
 // One transaction publishes a complete restaurant; retries reuse the creation key.
 export async function completeOnboarding(key: string, restaurant: Record<string, unknown>, categories: AnalyzedCategory[]) {
+  const businessType = restaurant.business_type ?? 'restaurant';
+  if (!isBusinessType(businessType)) throw new Error('Invalid business type');
+  const restaurantMode = businessType === 'restaurant';
   const cuisine = String(restaurant.cuisine_type || 'generic');
-  const defaults = CUISINE_DEFAULTS[cuisine];
+  const defaults = restaurantMode ? CUISINE_DEFAULTS[cuisine] : undefined;
   const menu = categories.flatMap(category => category.items.map(item => ({
     name: item.name, description: item.description || '', price: item.price,
     category: category.name,
-    product_type: getProductType(category.name) === 'simple' ? getProductType(item.name) : getProductType(category.name),
+    product_type: restaurantMode ? (getProductType(category.name) === 'simple' ? getProductType(item.name) : getProductType(category.name)) : 'simple',
     supplements: (item.supplements || []).map((supplement, i) => ({ id: `supp-${i}`, ...supplement })),
     variants: item.variants || [], tags: item.tags || [],
   })));
@@ -392,7 +396,7 @@ export async function completeOnboarding(key: string, restaurant: Record<string,
     menu.push(...defaults.boissons.map(item => ({ ...item, description: '', category: 'Boissons', product_type: 'boisson', supplements: [], variants: [], tags: [] })));
   }
   const { data, error } = await supabase.rpc('complete_onboarding' as never, {
-    p_key: key, p_restaurant: restaurant, p_menu: menu, p_defaults: defaults || {},
+    p_key: key, p_restaurant: { ...restaurant, business_type: businessType, cuisine_type: restaurantMode ? cuisine : 'generic' }, p_menu: menu, p_defaults: defaults || {},
   } as never);
   if (error) throw error;
   if (!data || !(data as { id?: string }).id) throw new Error('Restaurant creation failed');

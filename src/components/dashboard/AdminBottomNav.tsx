@@ -1,3 +1,4 @@
+import type { BusinessType } from '@/lib/business-type';
 import { Flame, Receipt, Eye, Settings } from "lucide-react";
 import type { DashboardView } from "@/types/dashboard";
 import { useLanguage } from "@/context/LanguageContext";
@@ -7,6 +8,7 @@ interface Props {
   onViewChange: (view: DashboardView) => void;
   newOrderCount: number;
   readyOrderCount?: number;
+  businessType?: BusinessType;
 }
 
 const adminViews = new Set(["carte", "page", "qrcodes", "borne", "parametres", "stats", "clients"]);
@@ -18,7 +20,7 @@ const NAV_ITEMS: { id: DashboardView; labelKey: string; icon: typeof Flame }[] =
   { id: "gerer", labelKey: "dashboard.nav.manage", icon: Settings },
 ];
 
-export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount, readyOrderCount = 0 }: Props) => {
+export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount, readyOrderCount = 0, businessType = 'restaurant' }: Props) => {
   const { t } = useLanguage();
   return (
     <nav data-dashboard-nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 safe-area-bottom bg-background border-t border-border">
@@ -43,7 +45,7 @@ export const AdminBottomNav = ({ activeView, onViewChange, newOrderCount, readyO
                   </span>
                 )}
               </div>
-              <span>{t(item.labelKey)}</span>
+              <span>{t(businessType !== 'restaurant' && item.id === 'cuisine' ? 'commerce.orders' : item.labelKey)}</span>
             </button>
           );
         })}

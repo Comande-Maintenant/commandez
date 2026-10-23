@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Experimentar uma demo fictícia",
   "entry.error": "Não foi possível carregar as lojas. Tente novamente.",
   "entry.retry": "Tentar novamente",
-  "entry.partial": "São mostradas as primeiras 100 lojas."
+  "entry.partial": "São mostradas as primeiras 100 lojas.",
+  "commerce.setup_activity": "A sua atividade",
+  "commerce.setup_business": "O seu comércio",
+  "commerce.setup_name": "Nome do comércio",
+  "commerce.setup_products": "Os seus produtos",
+  "commerce.setup_help": "Adicione produtos a preço fixo. O cliente paga no estabelecimento.",
+  "commerce.setup_add_product": "Adicionar um produto",
+  "commerce.setup_product_name": "Nome do produto",
+  "commerce.setup_price": "Preço (€)",
+  "commerce.setup_category": "Categoria",
+  "commerce.setup_description": "Descrição (opcional)",
+  "commerce.setup_remove": "Remover produto",
+  "commerce.setup_confirm": "Confirmar catálogo",
+  "commerce.setup_later": "Adicionar os produtos mais tarde",
+  "commerce.setup_online": "O seu comércio está online",
+  "commerce.free_offer": "Grátis para todos até 31 de dezembro de 2028, inclusive. Sem subscrição nem comissão CommandeIci e sem cartão bancário."
 }
