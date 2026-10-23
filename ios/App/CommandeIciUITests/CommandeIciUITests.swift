@@ -1,5 +1,12 @@
 import XCTest
 final class CommandeIciUITests: XCTestCase {
+    private func confirmNativeLinkIfRequested() {
+        // A new iOS simulator asks before opening a custom URL scheme.
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let open = springboard.alerts.buttons.matching(NSPredicate(format: "label IN %@", ["Ouvrir", "Open"])).firstMatch
+        if open.waitForExistence(timeout: 3) { open.tap() }
+    }
+
     func testNativeSceneLaunchAndResume() {
         continueAfterFailure = false
         let app = XCUIApplication()
@@ -32,10 +39,12 @@ final class CommandeIciUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Tester sans créer de compte"].firstMatch.waitForExistence(timeout: 15))
         let url = URL(string: "commandeici://auth/connexion")!
         app.open(url)
+        confirmNativeLinkIfRequested()
         XCTAssertTrue(app.secureTextFields.firstMatch.waitForExistence(timeout: 10), app.debugDescription)
         XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label == 'Se connecter →'")).firstMatch.isHittable, app.debugDescription)
         app.terminate()
         app.open(url)
+        confirmNativeLinkIfRequested()
         XCTAssertTrue(app.secureTextFields.firstMatch.waitForExistence(timeout: 15), app.debugDescription)
         XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label == 'Se connecter →'")).firstMatch.isHittable, app.debugDescription)
         let shot = XCTAttachment(screenshot: app.screenshot())
@@ -81,6 +90,12 @@ final class CommandeIciUITests: XCTestCase {
             XCTAssertTrue(l.waitForExistence(timeout: 12), app.debugDescription)
             for _ in 0..<5 { if l.isHittable { break }; app.swipeUp() }
             l.tap()
+        }
+        // Captures can follow another native test with a remembered entry role.
+        // Use the real navigation control to return to the role chooser.
+        if !app.buttons["Je suis commerçant"].firstMatch.exists {
+            let changeRole = app.buttons["Changer de parcours"].firstMatch
+            if changeRole.waitForExistence(timeout: 5) { changeRole.tap() }
         }
         XCTAssertTrue(app.buttons["Je suis commerçant"].firstMatch.waitForExistence(timeout: 15), app.debugDescription)
         capture("01-welcome")
