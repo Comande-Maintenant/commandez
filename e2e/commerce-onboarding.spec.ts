@@ -8,6 +8,9 @@ for (const [type, label, product] of [['epicerie','Épicerie','Panier de fruits'
     await page.addInitScript(({user,jwt}) => {
       localStorage.setItem('cm_language','fr');
       localStorage.setItem('commandeici_auth',JSON.stringify({access_token:jwt,refresh_token:'fixture-only',expires_at:Math.floor(Date.now()/1000)+3600,expires_in:3600,token_type:'bearer',user}));
+      if (location.hostname === 'commandeici.com' || location.hostname.endsWith('.commandeici.com')) {
+        document.cookie = 'commandeici_auth=' + encodeURIComponent(localStorage.getItem('commandeici_auth')!) + '; path=/; secure; samesite=lax';
+      }
     },{user,jwt});
     const creation: Array<Record<string, any>> = []; const billing: string[] = [];
     await page.route(url => ['/auth/v1/','/rest/v1/','/functions/v1/'].some(prefix => url.pathname.startsWith(prefix)), async route => {
