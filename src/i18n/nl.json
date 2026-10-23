@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Probeer een fictieve demo",
   "entry.error": "Winkels laden lukt niet. Probeer het opnieuw.",
   "entry.retry": "Opnieuw proberen",
-  "entry.partial": "De eerste 100 winkels worden getoond."
+  "entry.partial": "De eerste 100 winkels worden getoond.",
+  "commerce.setup_activity": "Je activiteit",
+  "commerce.setup_business": "Je winkel",
+  "commerce.setup_name": "Winkelnaam",
+  "commerce.setup_products": "Je producten",
+  "commerce.setup_help": "Voeg producten met vaste prijzen toe. De klant betaalt in de winkel.",
+  "commerce.setup_add_product": "Product toevoegen",
+  "commerce.setup_product_name": "Productnaam",
+  "commerce.setup_price": "Prijs (€)",
+  "commerce.setup_category": "Categorie",
+  "commerce.setup_description": "Beschrijving (optioneel)",
+  "commerce.setup_remove": "Product verwijderen",
+  "commerce.setup_confirm": "Catalogus bevestigen",
+  "commerce.setup_later": "Producten later toevoegen",
+  "commerce.setup_online": "Je winkel staat online",
+  "commerce.free_offer": "Gratis voor iedereen tot en met 31 december 2028. Geen CommandeIci-abonnement of commissie en geen bankkaart nodig."
 }

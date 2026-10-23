@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Kurgusal demoyu dene",
   "entry.error": "Mağazalar yüklenemedi. Tekrar deneyin.",
   "entry.retry": "Tekrar dene",
-  "entry.partial": "İlk 100 mağaza gösteriliyor."
+  "entry.partial": "İlk 100 mağaza gösteriliyor.",
+  "commerce.setup_activity": "İşletme türünüz",
+  "commerce.setup_business": "İşletmeniz",
+  "commerce.setup_name": "İşletme adı",
+  "commerce.setup_products": "Ürünleriniz",
+  "commerce.setup_help": "Sabit fiyatlı ürünlerinizi ekleyin. Müşteri işletmede ödeme yapar.",
+  "commerce.setup_add_product": "Ürün ekle",
+  "commerce.setup_product_name": "Ürün adı",
+  "commerce.setup_price": "Fiyat (€)",
+  "commerce.setup_category": "Kategori",
+  "commerce.setup_description": "Açıklama (isteğe bağlı)",
+  "commerce.setup_remove": "Ürünü kaldır",
+  "commerce.setup_confirm": "Kataloğu onayla",
+  "commerce.setup_later": "Ürünleri daha sonra ekle",
+  "commerce.setup_online": "İşletmeniz yayında",
+  "commerce.free_offer": "31 Aralık 2028 sonuna kadar herkes için ücretsiz. CommandeIci abonelik ücreti veya komisyonu yok; banka kartı gerekmez."
 }

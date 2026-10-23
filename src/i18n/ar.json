@@ -1660,5 +1660,20 @@
   "entry.try_demo": "تجربة عرض تجريبي خيالي",
   "entry.error": "تعذر تحميل المتاجر. حاول مجددًا.",
   "entry.retry": "المحاولة مجددًا",
-  "entry.partial": "تُعرض أول 100 متجر."
+  "entry.partial": "تُعرض أول 100 متجر.",
+  "commerce.setup_activity": "نوع نشاطك",
+  "commerce.setup_business": "متجرك",
+  "commerce.setup_name": "اسم المتجر",
+  "commerce.setup_products": "منتجاتك",
+  "commerce.setup_help": "أضف منتجات بأسعار ثابتة. يدفع العميل في المتجر.",
+  "commerce.setup_add_product": "إضافة منتج",
+  "commerce.setup_product_name": "اسم المنتج",
+  "commerce.setup_price": "السعر (€)",
+  "commerce.setup_category": "الفئة",
+  "commerce.setup_description": "الوصف (اختياري)",
+  "commerce.setup_remove": "حذف المنتج",
+  "commerce.setup_confirm": "تأكيد الكتالوج",
+  "commerce.setup_later": "إضافة المنتجات لاحقًا",
+  "commerce.setup_online": "متجرك متاح الآن",
+  "commerce.free_offer": "مجاني للجميع حتى 31 ديسمبر 2028 شاملًا. لا اشتراك ولا عمولة من CommandeIci، ولا حاجة إلى بطاقة بنكية."
 }

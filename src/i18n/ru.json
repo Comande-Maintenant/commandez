@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Попробовать вымышленное демо",
   "entry.error": "Не удалось загрузить магазины. Попробуйте снова.",
   "entry.retry": "Повторить",
-  "entry.partial": "Показаны первые 100 магазинов."
+  "entry.partial": "Показаны первые 100 магазинов.",
+  "commerce.setup_activity": "Вид деятельности",
+  "commerce.setup_business": "Ваш магазин",
+  "commerce.setup_name": "Название магазина",
+  "commerce.setup_products": "Ваши товары",
+  "commerce.setup_help": "Добавьте товары с фиксированной ценой. Покупатель платит в магазине.",
+  "commerce.setup_add_product": "Добавить товар",
+  "commerce.setup_product_name": "Название товара",
+  "commerce.setup_price": "Цена (€)",
+  "commerce.setup_category": "Категория",
+  "commerce.setup_description": "Описание (необязательно)",
+  "commerce.setup_remove": "Удалить товар",
+  "commerce.setup_confirm": "Подтвердить каталог",
+  "commerce.setup_later": "Добавить товары позже",
+  "commerce.setup_online": "Ваш магазин опубликован",
+  "commerce.free_offer": "Бесплатно для всех по 31 декабря 2028 года включительно. Без подписки и комиссии CommandeIci, банковская карта не требуется."
 }

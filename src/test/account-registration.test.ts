@@ -29,3 +29,10 @@ describe('registration with mandatory email confirmation', () => {
     expect(mocks.owner).not.toHaveBeenCalled();
   });
 });
+
+it('retains the chosen shop type as a non-privileged confirmation hint', async () => {
+  mocks.signUp.mockResolvedValue({ data: { user, session: null }, error: null });
+  await registerOwner(user.email, 'password', '', '/inscription', 'fleuriste');
+  expect(mocks.signUp).toHaveBeenCalledWith(expect.objectContaining({options:expect.objectContaining({data:{role:'owner',phone:'',business_type_hint:'fleuriste'}})}));
+  expect(mocks.owner).not.toHaveBeenCalled();
+});

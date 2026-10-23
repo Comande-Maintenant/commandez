@@ -1660,5 +1660,20 @@
   "entry.try_demo": "架空のデモを試す",
   "entry.error": "店舗を読み込めません。もう一度お試しください。",
   "entry.retry": "再試行",
-  "entry.partial": "最初の100店舗を表示しています。"
+  "entry.partial": "最初の100店舗を表示しています。",
+  "commerce.setup_activity": "業種",
+  "commerce.setup_business": "お店の情報",
+  "commerce.setup_name": "店名",
+  "commerce.setup_products": "商品",
+  "commerce.setup_help": "固定価格の商品を追加してください。お支払いは店頭で行います。",
+  "commerce.setup_add_product": "商品を追加",
+  "commerce.setup_product_name": "商品名",
+  "commerce.setup_price": "価格 (€)",
+  "commerce.setup_category": "カテゴリー",
+  "commerce.setup_description": "説明（任意）",
+  "commerce.setup_remove": "商品を削除",
+  "commerce.setup_confirm": "カタログを確定",
+  "commerce.setup_later": "商品は後で追加",
+  "commerce.setup_online": "お店のページを公開しました",
+  "commerce.free_offer": "2028年12月31日まで、すべての事業者が無料で利用できます。CommandeIciの月額料金・手数料はなく、カード登録も不要です。"
 }

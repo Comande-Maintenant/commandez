@@ -1660,5 +1660,20 @@
   "entry.try_demo": "体验虚构演示",
   "entry.error": "无法加载商店，请重试。",
   "entry.retry": "重试",
-  "entry.partial": "显示前 100 家商店。"
+  "entry.partial": "显示前 100 家商店。",
+  "commerce.setup_activity": "经营类型",
+  "commerce.setup_business": "你的商店",
+  "commerce.setup_name": "商店名称",
+  "commerce.setup_products": "你的商品",
+  "commerce.setup_help": "添加固定价格的商品。顾客在商家处付款。",
+  "commerce.setup_add_product": "添加商品",
+  "commerce.setup_product_name": "商品名称",
+  "commerce.setup_price": "价格 (€)",
+  "commerce.setup_category": "分类",
+  "commerce.setup_description": "描述（选填）",
+  "commerce.setup_remove": "删除商品",
+  "commerce.setup_confirm": "确认目录",
+  "commerce.setup_later": "稍后添加商品",
+  "commerce.setup_online": "你的商店已上线",
+  "commerce.free_offer": "截至2028年12月31日（含当日）面向所有商家免费。无需支付CommandeIci订阅费或佣金，也无需绑定银行卡。"
 }

@@ -474,7 +474,7 @@ export const DashboardParametres = ({ restaurant, sound, isDemo }: Props) => {
           <h3 className="text-base font-semibold text-foreground">{t('commerce.access_title')}</h3>
         </div>
         <p className="text-sm font-medium text-foreground">{t('commerce.free_title')}</p>
-        <p className="text-sm text-muted-foreground mt-2">{t('commerce.free_desc')}</p>
+        <p className="text-sm text-muted-foreground mt-2">{t('commerce.free_offer')}</p>
         <p className="text-xs text-muted-foreground mt-3">{t('commerce.free_future')}</p>
       </section>
 

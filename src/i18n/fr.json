@@ -1660,5 +1660,20 @@
   "entry.try_demo": "Tester une démo fictive",
   "entry.error": "Impossible de charger les commerces. Réessayez.",
   "entry.retry": "Réessayer",
-  "entry.partial": "Les 100 premiers commerces sont affichés."
+  "entry.partial": "Les 100 premiers commerces sont affichés.",
+  "commerce.setup_activity": "Votre activité",
+  "commerce.setup_business": "Votre commerce",
+  "commerce.setup_name": "Nom du commerce",
+  "commerce.setup_products": "Vos produits",
+  "commerce.setup_help": "Ajoutez vos produits à prix fixe. Le client paie au commerce.",
+  "commerce.setup_add_product": "Ajouter un produit",
+  "commerce.setup_product_name": "Nom du produit",
+  "commerce.setup_price": "Prix (€)",
+  "commerce.setup_category": "Catégorie",
+  "commerce.setup_description": "Description (facultative)",
+  "commerce.setup_remove": "Supprimer le produit",
+  "commerce.setup_confirm": "Valider le catalogue",
+  "commerce.setup_later": "Ajouter mes produits plus tard",
+  "commerce.setup_online": "Votre commerce est en ligne",
+  "commerce.free_offer": "Gratuit jusqu’au 31 décembre 2028 inclus pour tous : aucun abonnement ni commission commandeici, aucune carte bancaire demandée."
 }
