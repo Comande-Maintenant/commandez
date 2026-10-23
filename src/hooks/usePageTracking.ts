@@ -1,4 +1,5 @@
 import { randomUuid } from '@/lib/uuid';
+import { isLocalCommerceDemoPath } from '@/lib/commerce-demo-route';
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -69,7 +70,7 @@ export function usePageTracking() {
     lastPath.current = fullPath;
 
     // Don't track super-admin views (that's us, not real traffic)
-    if (fullPath === "/super-admin") return;
+    if (fullPath === "/super-admin" || isLocalCommerceDemoPath(fullPath)) return;
 
     const { page_type, side } = classifyPage(fullPath);
     const utms = getUtmParams();

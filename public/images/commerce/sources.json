@@ -1,0 +1,124 @@
+{
+  "assets": [
+    {
+      "file": "grocery-basket.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-6fd231bf-b89b-415b-a0ec-9424487e840a.png",
+      "masterSha256": "67fa7331f657afc800756af9c800eb46a398d8ce4e1d0a7120e585e52fd5be59",
+      "sha256": "eb501d371ae5b67e327250b35d38ee162bf4312f181a173ef01a4a42679b5cbc",
+      "bytes": 50140
+    },
+    {
+      "file": "seasonal-bouquet.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-ad259e57-7704-4bff-92db-86825c017b2b.png",
+      "masterSha256": "0753f3624fef9e2c94b0208185fe2e4a090399059012af60d7e553134f1716f0",
+      "sha256": "e42104c40813991a51fef99e1a91cdeecc0fabca839d92d946d7bea9c4918d5e",
+      "bytes": 69750
+    },
+    {
+      "file": "rose-bouquet.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-1e6d7179-7316-4d09-8eb7-0d5d69259fcc.png",
+      "masterSha256": "140cbe29f35883b8fff92e969d984a42ef5fbadef99d1fa2e7f6a29c3c7a8756",
+      "sha256": "263db46dcb411a79667fa2e895d92bb765a7c3d0137688ea5eed10610fcdda1d",
+      "bytes": 41486
+    },
+    {
+      "file": "white-orchid.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-0600dd82-0f12-4eca-8505-c50dc96fb16d.png",
+      "masterSha256": "6cef827dd1539f4d9441de0b21cea54b3da8cee929d8044da60b50eea42cb682",
+      "sha256": "8004d7b941d35d6b9e42828d1850c8fd8e4b0a1314f1492b8ef70b43a2cc547e",
+      "bytes": 28356
+    },
+    {
+      "file": "tomatoes.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-65f7cfd7-898b-4447-ad38-ebb8a5068730.png",
+      "masterSha256": "3aafca3915c1ca0c089c50f72872ca8900ecfa1d1b6d4c857c88b2769f2da279",
+      "sha256": "e0bd7e93ac50c9ae1888c0d681f73ad5bbe1919ed53813a1c33a59be4dacf4ff",
+      "bytes": 36204
+    },
+    {
+      "file": "apples.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-943bb791-2449-4615-b1f8-d56f4b95f919.png",
+      "masterSha256": "c589423b8f858937fc7e258b2f4293cd23dd2c6aef40b23854df7328bcb305f2",
+      "sha256": "8db0875280011b3978ee210b8c239e68753094e58d9cda716a698563bd81ea75",
+      "bytes": 33626
+    },
+    {
+      "file": "strawberries.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-b7a72d93-1320-4dc1-890a-4e8138f0ca5c.png",
+      "masterSha256": "3118a15b3d23bbf514ad30bf18784667909af44d01dd490f4376a21ba5e96346",
+      "sha256": "8d5f6de11a16521456f708ec1d2998c191e7d95e6ce719f568569d582f4117c7",
+      "bytes": 59622
+    },
+    {
+      "file": "bread.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-0e2f5602-394c-4083-8a85-4d2e9e04b99d.png",
+      "masterSha256": "66404f85769c34d44ef1137d91c9b3e2c70d44234510a8cc7ccf646d8fdfdc72",
+      "sha256": "ebd2a7541b4efb0d9e03b3d328dce84816102aa016580c9c28bbd2607ffee42f",
+      "bytes": 39294
+    },
+    {
+      "file": "cheese.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-aae35b05-39a5-430a-97ae-3763e4367609.png",
+      "masterSha256": "1352341c0b1327bb2fc703b98eaebb0980983844f4f3c85802b978060dc4e31d",
+      "sha256": "3a441a767ba5be68608bd96ac23d0668dc62e56324d724d1dee28cb6981411c5",
+      "bytes": 22606
+    },
+    {
+      "file": "eggs.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-6f235c23-4282-495b-81a7-5f6b67c8b394.png",
+      "masterSha256": "e63061f64427550df8ff367eea574d402028fa54214b454e6f447fea9b3eed9d",
+      "sha256": "3a24779a1f1825a60ff53b78e05d12ff8c6ac8f438755f01bcf59dbccd6f9e07",
+      "bytes": 44766
+    },
+    {
+      "file": "tulips.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-8f59cf39-8cc9-40e9-9c15-ed0455e23048.png",
+      "masterSha256": "16ee3ac7e998a2dde530a32898c1a0e0f683c846f12898d0ab5899b06d00fffc",
+      "sha256": "067eab5be46d1ddb10226eba2ac660f2aa6d25ec33116d3c7f5a43d22aab1b91",
+      "bytes": 31578
+    },
+    {
+      "file": "dried-bouquet.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-cf7667ad-8a6c-4ce3-af22-7b72ec3dc9b9.png",
+      "masterSha256": "0d896d7609f542eaf782f531147901aa85c4cb40a63e4612e9b742c8821f5399",
+      "sha256": "579bfd1b09c4277b392be6834ae7892573c9a774c7f193fa5db4b76c582394db",
+      "bytes": 59870
+    },
+    {
+      "file": "succulent.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-67e56ce7-c77c-42d2-9255-05bb95da5cc5.png",
+      "masterSha256": "74b91950ed75f434d34eb091f172f9a43f6d2b9b6b0bba06c40f305510434dd4",
+      "sha256": "560cc8363f2bbc599733899d672f28f7268dd4b188fc61386811c7947f857198",
+      "bytes": 30386
+    },
+    {
+      "file": "eucalyptus.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-743ac5bb-8adf-4df4-abcd-458287b97fb7.png",
+      "masterSha256": "e23727d1eaaf5803f929d9fee53659a831a3821f353191d7811d471b460e3ae8",
+      "sha256": "842b8735dcec97dd35973201e1bc3e22a4bcd1fb50db2cd99fd1767d6678d642",
+      "bytes": 37282
+    },
+    {
+      "file": "vase.webp",
+      "source": "Built-in imagegen, generated illustration for a fictitious commerce demo",
+      "master": "exec-0562b417-be03-4df0-ae74-a8adc4199df3.png",
+      "masterSha256": "8c163c79709bc29cdfe2bb8456056d342f28b3dfdaf33ea88d02c201903ef9a6",
+      "sha256": "3d4c1ca88e050900ab80e97bbba7035ad0b256736feeaadd2688e6f9d7eee3cb",
+      "bytes": 11750
+    }
+  ]
+}
