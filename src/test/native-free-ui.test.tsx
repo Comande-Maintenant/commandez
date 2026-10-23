@@ -15,7 +15,7 @@ afterEach(cleanup);
 describe('native free launch screens', () => {
   it('describes free access without linking to an external payment or an expiry', () => {
     const { container } = render(<MemoryRouter><NativeSubscription /></MemoryRouter>);
-    expect(screen.getByRole('heading').textContent).toBe("Gratuit jusqu'en 2027");
+    expect(screen.getByRole('heading').textContent).toBe("Gratuit jusqu'au 31 décembre 2028 inclus");
     expect(container.textContent).not.toMatch(/facturation|Stripe|29,99|essai/i);
     expect(container.querySelector('a[href*="commandeici.com"]')).toBeNull();
   });
@@ -29,7 +29,7 @@ describe('native free launch screens', () => {
   });
   it('confirms free publication and keeps the restaurant and dashboard accessible', () => {
     const { container } = render(<MemoryRouter><OnboardingSuccess restaurantName="Test" slug="test-ville" email="test@example.com" restaurantId="test" plan="none" /></MemoryRouter>);
-    expect(container.textContent).toContain("Gratuit jusqu'en 2027");
+    expect(container.textContent).toContain("Gratuit jusqu'au 31 décembre 2028 inclus");
     expect(container.textContent).not.toMatch(/30 jours|essai|carte bancaire|abonnement/i);
     expect(container.querySelector('a[href="/admin/test-ville"]')).not.toBeNull();
   });

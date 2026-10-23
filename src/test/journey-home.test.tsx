@@ -14,7 +14,7 @@ it('offers the experience before requiring a new restaurant account',async()=>{
  const demo=await screen.findByRole('button',{name:'Tester sans créer de compte'});
  expect(demo).toHaveAttribute('data-primary-action','demo');
  expect(screen.getByRole('button',{name:'Se connecter'})).toBeVisible();
- expect(screen.getByText('Gratuit jusqu’en 2027, sans carte bancaire.')).toBeVisible();
+ expect(screen.getByText('Gratuit jusqu’au 31 décembre 2028 inclus, sans carte bancaire.')).toBeVisible();
  expect(screen.getByRole('img',{name:'Un kebab et ses accompagnements'})).toBeVisible();
 });
 it('offers an immediate exit into the demonstration while account checking is pending',async()=>{

@@ -337,14 +337,14 @@ C3C3C3C30000000000000006 = {isa=PBXSourcesBuildPhase;buildActionMask=2147483647;
 				CODE_SIGN_STYLE = Automatic;
                 CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
                 DEVELOPMENT_TEAM = 889YAF54QV;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandeici.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -363,14 +363,14 @@ C3C3C3C30000000000000006 = {isa=PBXSourcesBuildPhase;buildActionMask=2147483647;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "CommandeIci App Store Push";
                 CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
                 DEVELOPMENT_TEAM = 889YAF54QV;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandeici.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
