@@ -10,6 +10,22 @@ it('keeps the checkout return route for web Google sign-in', async () => {
   expect(mocks.oauth).toHaveBeenCalledWith({ provider: 'google', options: { redirectTo: 'https://app.commandeici.com/order', skipBrowserRedirect: false } });
   expect(mocks.open).not.toHaveBeenCalled();
 });
+it('returns to the super-admin sign-in destination after Google authentication', async () => {
+  mocks.oauth.mockResolvedValue({ data: { url: 'https://accounts.google.com/auth' }, error: null });
+  await signInWithGoogle('/connexion', '/super-admin');
+  expect(mocks.oauth).toHaveBeenCalledWith({ provider: 'google', options: {
+    redirectTo: 'https://app.commandeici.com/connexion?redirect=%2Fsuper-admin', skipBrowserRedirect: false,
+  } });
+});
+it.each(['https://outside.example/', '//outside.example/', '/\\outside.example/', '/\n/outside.example/', '/..//outside.example/'])(
+  'ignores an unsafe authentication return path: %s', async (returnPath) => {
+    mocks.oauth.mockResolvedValue({ data: { url: 'https://accounts.google.com/auth' }, error: null });
+    await signInWithGoogle('/connexion', returnPath);
+    expect(mocks.oauth).toHaveBeenCalledWith(expect.objectContaining({ options: {
+      redirectTo: 'https://app.commandeici.com/connexion', skipBrowserRedirect: false,
+    } }));
+  },
+);
 it('opens the native system browser for PKCE and propagates provider failures', async () => {
   mocks.native.mockReturnValue(true);
   mocks.oauth.mockResolvedValue({ data: { url: 'https://accounts.google.com/auth' }, error: null });

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import {
   ArrowLeft, Shield, Loader2, Store, Users, Euro, TrendingUp, TrendingDown, MapPin,
   AlertTriangle, Clock, Trash2, CreditCard, UserX, Search, Mail, Send,
@@ -380,6 +380,9 @@ const SuperAdminPage = () => {
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+  if (!authUserId) {
+    return <Navigate to="/connexion?redirect=%2Fsuper-admin" replace />;
   }
   if (!authorized) {
     return (

@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useLanguage } from '@/context/LanguageContext';
-import { googleSignInEnabled, signInWithGoogle } from '@/services/google-sign-in';
+import { googleSignInEnabled, safeAuthReturnPath, signInWithGoogle } from '@/services/google-sign-in';
 import { LanguageSelector } from '@/components/restaurant/LanguageSelector';
 
 const ConnexionPage = () => {
@@ -27,7 +27,7 @@ const ConnexionPage = () => {
   const isFirstLogin =
     (location.state as any)?.firstLogin || searchParams.get('bienvenue') === '1';
   const resetSuccess = searchParams.get('reset') === '1';
-  const redirectTo = searchParams.get('redirect');
+  const redirectTo = safeAuthReturnPath(searchParams.get('redirect'));
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,7 +48,7 @@ const ConnexionPage = () => {
     const resume = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user || stopped) return;
-      if (redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//') && !redirectTo.includes('\\')) { navigate(redirectTo); return; }
+      if (redirectTo) { navigate(redirectTo); return; }
       const { data } = await supabase.from('restaurants').select('slug').eq('owner_id', user.id).limit(1);
       if (!stopped) navigate(data?.[0] ? `/admin/${data[0].slug}` : '/inscription', { replace: true });
     };
@@ -76,7 +76,7 @@ const ConnexionPage = () => {
       if (authError) throw authError;
 
       // Redirect if query param
-      if (redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//') && !redirectTo.includes('\\')) {
+      if (redirectTo) {
         navigate(redirectTo);
         return;
       }
@@ -221,7 +221,7 @@ const ConnexionPage = () => {
 
                   {googleSignInEnabled && <Button variant="outline" className="w-full h-12" disabled={loading} onClick={async () => {
                     setLoading(true);
-                    try { await signInWithGoogle('/connexion'); }
+                    try { await signInWithGoogle('/connexion', redirectTo); }
                     catch { setError(t('auth.generic_error')); }
                     finally { setLoading(false); }
                   }}>Google</Button>}
