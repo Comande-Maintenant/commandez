@@ -89,7 +89,7 @@ const Index = () => {
             </Button>
             <Button
               variant="ghost"
-              onClick={() => navigate("/admin/demo")}
+              onClick={() => navigate("/decouvrir")}
               className="w-full h-10 rounded-xl text-sm text-muted-foreground hover:text-foreground"
             >
               {t('demo.cta_discover')} &rarr;

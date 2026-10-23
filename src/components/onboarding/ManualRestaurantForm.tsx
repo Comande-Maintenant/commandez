@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CUISINE_TYPE_OPTIONS } from '@/lib/cuisineTypes';
 import { useLanguage } from '@/context/LanguageContext';
+import { businessTypeLabel, type BusinessType } from '@/lib/business-type';
 
 const schema = z.object({
   name: z.string().min(2),
@@ -22,10 +23,12 @@ type FormData = z.infer<typeof schema>;
 interface ManualRestaurantFormProps {
   onSubmit: (data: FormData) => void;
   initialData?: Partial<FormData>;
+  businessType?: BusinessType;
 }
 
-export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurantFormProps) {
+export function ManualRestaurantForm({ onSubmit, initialData, businessType = 'restaurant' }: ManualRestaurantFormProps) {
   const { t } = useLanguage();
+  const restaurantMode = businessType === 'restaurant';
   const {
     register,
     handleSubmit,
@@ -33,14 +36,14 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { ...initialData, cuisine_type: initialData?.cuisine_type || 'generic' },
+    defaultValues: { ...initialData, cuisine: restaurantMode ? initialData?.cuisine : t(businessTypeLabel[businessType]), cuisine_type: initialData?.cuisine_type || 'generic' },
   });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <Label htmlFor="name">{t('onboarding.place.name_label')}</Label>
-        <Input id="name" {...register('name')} placeholder={t('onboarding.place.name_placeholder')} />
+        <Label htmlFor="name">{t(restaurantMode ? 'onboarding.place.name_label' : 'commerce.setup_name')}</Label>
+        <Input id="name" {...register('name')} placeholder={t(restaurantMode ? 'onboarding.place.name_placeholder' : 'commerce.setup_name')} />
         {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
       </div>
 
@@ -61,13 +64,13 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
         <Input id="phone" {...register('phone')} placeholder={t('onboarding.place.manual_phone_placeholder')} />
       </div>
 
-      <div>
+      {restaurantMode && <div>
         <Label htmlFor="cuisine">{t('onboarding.place.cuisine_label')}</Label>
         <Input id="cuisine" {...register('cuisine')} placeholder={t('onboarding.place.cuisine_placeholder')} />
         {errors.cuisine && <p className="text-sm text-destructive mt-1">{errors.cuisine.message}</p>}
-      </div>
+      </div>}
 
-      <div>
+      {restaurantMode && <div>
         <Label>{t('onboarding.place.type_label')}</Label>
         <Controller
           control={control}
@@ -88,7 +91,7 @@ export function ManualRestaurantForm({ onSubmit, initialData }: ManualRestaurant
           )}
         />
         {errors.cuisine_type && <p className="text-sm text-destructive mt-1">{errors.cuisine_type.message}</p>}
-      </div>
+      </div>}
 
       <Button type="submit" className="w-full">{t('common.continue')}</Button>
     </form>

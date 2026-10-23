@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import type { SubscriptionPlan } from '@/types/onboarding';
+import type { BusinessType } from '@/lib/business-type';
 
 interface OnboardingSuccessProps {
   restaurantName: string;
@@ -13,9 +14,10 @@ interface OnboardingSuccessProps {
   email: string;
   restaurantId: string;
   plan: SubscriptionPlan;
+  businessType?: BusinessType;
 }
 
-export function OnboardingSuccess({ restaurantName, slug }: OnboardingSuccessProps) {
+export function OnboardingSuccess({ restaurantName, slug, businessType = 'restaurant' }: OnboardingSuccessProps) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
@@ -39,7 +41,7 @@ export function OnboardingSuccess({ restaurantName, slug }: OnboardingSuccessPro
 
       <div>
         <h2 className="text-2xl font-bold text-foreground">
-          {t('onboarding.success.online', { name: restaurantName })}
+          {t(businessType === 'restaurant' ? 'onboarding.success.online' : 'commerce.setup_online', { name: restaurantName })}
         </h2>
         <p className="text-muted-foreground mt-2">
           {t(isNative() ? 'native.free.title' : 'commerce.online_desc')}

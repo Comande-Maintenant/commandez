@@ -43,7 +43,7 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
         <div>
           <p className="text-sm font-semibold text-green-800">{t('commerce.free_title')}</p>
           <p className="text-xs text-green-700 mt-0.5">
-            {t('commerce.free_desc')}
+            {t('commerce.free_offer')}
           </p>
         </div>
       </div>
@@ -62,7 +62,7 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
           <div className="mt-3 flex items-baseline justify-center gap-1">
             <span className="text-4xl font-bold text-primary">0 €</span>
           </div>
-          <p className="text-sm text-muted-foreground mt-2">{t('commerce.free_desc')}</p>
+          <p className="text-sm text-muted-foreground mt-2">{t('commerce.free_offer')}</p>
 
           <Button disabled={disabled}
             className="w-full mt-5"
@@ -95,7 +95,7 @@ export function PricingCards({ onSelect, selected, disabled }: PricingCardsProps
       {/* Security footer */}
       <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground max-w-2xl mx-auto">
         <Lock className="h-3.5 w-3.5" />
-        <span>{t('commerce.free_desc')}</span>
+        <span>{t('commerce.free_offer')}</span>
       </div>
     </div>
   );

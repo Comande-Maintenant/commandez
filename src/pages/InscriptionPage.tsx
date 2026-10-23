@@ -3,6 +3,10 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { registerOwner } from '@/services/account-registration';
+import { BusinessTypeSelector } from '@/components/onboarding/BusinessTypeSelector';
+import { CommerceCatalogEditor } from '@/components/onboarding/CommerceCatalogEditor';
+import { businessTypeHint, isBusinessType, type BusinessType } from '@/lib/business-type';
+import { emptyCatalogRow, isCatalogDraft, type CatalogRow } from '@/lib/commerce-catalog';
 import { EmailConfirmation } from '@/components/auth/EmailConfirmation';
 import { authRedirectUrl } from '@/lib/native';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -64,17 +68,27 @@ const slideVariants = {
 
 const InscriptionPage = () => {
   const { t, language } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialBusiness = useRef((() => {
+    let value: unknown = searchParams.get('commerce');
+    if (!isBusinessType(value)) {
+      try { value = localStorage.getItem('commandeici_business_type'); } catch { /* Optional preference. */ }
+    }
+    return { type: businessTypeHint(value), chosen: isBusinessType(value) };
+  })());
+  const [businessType, setBusinessType] = useState<BusinessType>(initialBusiness.current.type);
+  const restaurantMode = businessType === 'restaurant';
+  const [catalogDraft, setCatalogDraft] = useState<CatalogRow[]>(() => [emptyCatalogRow(t('commerce.setup_products'))]);
 
   const STEP_LABELS = [
     t('auth.signup.step_account'),
-    t('auth.signup.step_restaurant'),
-    t('auth.signup.step_menu'),
+    t(restaurantMode ? 'auth.signup.step_restaurant' : 'commerce.setup_business'),
+    t(restaurantMode ? 'auth.signup.step_menu' : 'commerce.setup_products'),
     t('auth.signup.step_design'),
     t('auth.signup.step_plan'),
     t('auth.signup.step_done'),
   ];
 
-  const [searchParams] = useSearchParams();
   const refCode = useMemo(() => searchParams.get('ref') || '', [searchParams]);
   const [step, setStep] = useState(1);
 
@@ -91,6 +105,17 @@ const InscriptionPage = () => {
   const [selectedPlace, setSelectedPlace] = useState<GooglePlaceResult | null>(null);
   const [restaurantData, setRestaurantData] = useState<RestaurantData | null>(null);
   const [searchMode, setSearchMode] = useState<'search' | 'nearby' | 'manual'>('search');
+  const chooseBusiness = (type: BusinessType) => {
+    if (type === businessType) return;
+    initialBusiness.current.chosen = true;
+    setBusinessType(type);
+    setSelectedPlace(null); setRestaurantData(null); setMenuCategories([]);
+    setCatalogDraft([emptyCatalogRow(t('commerce.setup_products'))]);
+    setSearchParams(previous => { const next = new URLSearchParams(previous); next.set('commerce', type); return next; }, { replace: true });
+  };
+  useEffect(() => {
+    try { localStorage.setItem('commandeici_business_type', businessType); } catch { /* Optional preference. */ }
+  }, [businessType]);
 
   // Step 3: Menu
   const [menuCategories, setMenuCategories] = useState<AnalyzedCategory[]>([]);
@@ -127,6 +152,8 @@ const InscriptionPage = () => {
     const resume = async () => {
       const { data: { user }, error } = await supabase.auth.getUser();
       if (!active || error || !user) return;
+      const restoredType = initialBusiness.current.chosen ? businessType : businessTypeHint(user.user_metadata?.business_type_hint ?? businessType);
+      if (restoredType !== businessType) setBusinessType(restoredType);
       try {
         await createOwner(user.id, user.email || '', user.user_metadata?.phone || '');
         if (!active) return;
@@ -136,7 +163,8 @@ const InscriptionPage = () => {
         sessionStorage.removeItem('commandeici_pending_owner');
         try {
           const saved = JSON.parse(localStorage.getItem('commandeici_onboarding_draft') || 'null');
-          if (saved?.email === user.email && saved.restaurantData) {
+          if (saved?.email === user.email && businessTypeHint(saved.businessType) === restoredType && saved.restaurantData) {
+            if (isCatalogDraft(saved.catalogDraft)) setCatalogDraft(saved.catalogDraft);
             setRestaurantData(saved.restaurantData);
             setMenuCategories(saved.menuCategories || []);
             setPrimaryColor(saved.primaryColor || '#000000');
@@ -157,14 +185,14 @@ const InscriptionPage = () => {
       if (session) setTimeout(() => { if (active) void resume(); }, 0);
     });
     return () => { active = false; subscription.unsubscribe(); };
-  }, [t]);
+  }, [t, businessType]);
 
   useEffect(() => {
     if (step < 2 || step > 5 || !email) return;
     try {
-      localStorage.setItem('commandeici_onboarding_draft', JSON.stringify({ email, step, restaurantData, menuCategories, primaryColor, bgColor, description, logoUrl }));
+      localStorage.setItem('commandeici_onboarding_draft', JSON.stringify({ email, step, businessType, catalogDraft, restaurantData, menuCategories, primaryColor, bgColor, description, logoUrl }));
     } catch { /* Storage quota does not prevent continuing in this tab. */ }
-  }, [email, step, restaurantData, menuCategories, primaryColor, bgColor, description, logoUrl]);
+  }, [email, step, businessType, catalogDraft, restaurantData, menuCategories, primaryColor, bgColor, description, logoUrl]);
 
   // ---- Step 1: Create account ----
   const handleSignUp = async () => {
@@ -179,7 +207,7 @@ const InscriptionPage = () => {
     }
     setAccountLoading(true);
     try {
-      const result = await registerOwner(email, password, phone, authRedirectUrl('/inscription'));
+      const result = await registerOwner(email, password, phone, authRedirectUrl('/inscription'), businessType);
       setPassword('');
       if (result === 'confirmation') {
         setConfirmationEmail(email.trim());
@@ -275,6 +303,7 @@ const InscriptionPage = () => {
       if (authError || !user) throw new Error(t('auth.email_not_confirmed'));
 
       const restaurant = await completeOnboarding(creationKey, {
+        business_type: businessType,
         name: restaurantData?.name ?? '',
         slug,
         address: restaurantData?.address,
@@ -435,9 +464,11 @@ const InscriptionPage = () => {
           {step === 2 && !selectedPlace && (
             <motion.div key="step2" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6 space-y-4">
-                <h2 className="text-xl font-bold text-foreground">{t('auth.signup.find_restaurant')}</h2>
+                <BusinessTypeSelector value={businessType} onChange={chooseBusiness} />
+                <p className="text-xs text-muted-foreground">{t('commerce.free_offer')}</p>
+                <h2 className="text-xl font-bold text-foreground">{t(restaurantMode ? 'auth.signup.find_restaurant' : 'commerce.setup_business')}</h2>
 
-                <div className="flex gap-2">
+                {restaurantMode && <div className="flex gap-2">
                   <Button
                     variant={searchMode === 'search' ? 'default' : 'outline'}
                     size="sm"
@@ -459,16 +490,16 @@ const InscriptionPage = () => {
                   >
                     {t('auth.signup.manual')}
                   </Button>
-                </div>
+                </div>}
 
-                {searchMode === 'search' && (
+                {restaurantMode && searchMode === 'search' && (
                   <GooglePlaceSearch onSelect={handlePlaceSelect} />
                 )}
-                {searchMode === 'nearby' && (
+                {restaurantMode && searchMode === 'nearby' && (
                   <NearbyPlaces onSelect={handlePlaceSelect} />
                 )}
-                {searchMode === 'manual' && (
-                  <ManualRestaurantForm onSubmit={handleManualSubmit} />
+                {(!restaurantMode || searchMode === 'manual') && (
+                  <ManualRestaurantForm key={businessType} businessType={businessType} onSubmit={handleManualSubmit} />
                 )}
 
                 <Button variant="outline" onClick={() => setStep(1)} className="w-full">
@@ -493,7 +524,14 @@ const InscriptionPage = () => {
           )}
 
           {/* STEP 3: Menu */}
-          {step === 3 && menuCategories.length === 0 && (
+          {step === 3 && !restaurantMode && (
+            <motion.div key="step3commerce" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
+              <div className="bg-card rounded-xl border border-border p-6">
+                <CommerceCatalogEditor rows={catalogDraft} onChange={setCatalogDraft} onConfirm={handleMenuConfirm} onBack={() => setStep(2)} onSkip={() => { setMenuCategories([]); setStep(4); }} />
+              </div>
+            </motion.div>
+          )}
+          {step === 3 && restaurantMode && menuCategories.length === 0 && (
             <motion.div key="step3" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6">
                 <h2 className="text-xl font-bold text-foreground mb-2">{t('auth.signup.import_menu')}</h2>
@@ -512,7 +550,7 @@ const InscriptionPage = () => {
           )}
 
           {/* STEP 3b: Review menu */}
-          {step === 3 && menuCategories.length > 0 && (
+          {step === 3 && restaurantMode && menuCategories.length > 0 && (
             <motion.div key="step3b" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <div className="bg-card rounded-xl border border-border p-6">
                 <h2 className="text-xl font-bold text-foreground mb-2">{t('auth.signup.review_menu')}</h2>
@@ -611,6 +649,7 @@ const InscriptionPage = () => {
           {step === 6 && (
             <motion.div key="step6" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }}>
               <OnboardingSuccess
+                businessType={businessType}
                 restaurantName={createdName}
                 slug={createdSlug}
                 email={email}

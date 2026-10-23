@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Flame, Receipt, Eye, UtensilsCrossed, Palette, QrCode, Monitor, Settings, BarChart3, ChevronDown, Users } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import type { DashboardView } from "@/types/dashboard";
+import type { BusinessType } from '@/lib/business-type';
 
 interface Props {
   activeView: DashboardView;
   onViewChange: (view: DashboardView) => void;
   newOrderCount: number;
+  businessType?: BusinessType;
 }
 
 const opsItemsDef: { id: DashboardView; tKey: string; icon: typeof Flame }[] = [
@@ -27,7 +29,7 @@ const adminItemsDef: { id: DashboardView; tKey: string; icon: typeof Flame }[] =
 
 const isAdminView = (v: DashboardView) => ["carte", "page", "qrcodes", "borne", "parametres", "stats", "clients"].includes(v);
 
-export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props) => {
+export const AdminSidebar = ({ activeView, onViewChange, newOrderCount, businessType = 'restaurant' }: Props) => {
   const { t } = useLanguage();
   const [gererExpanded, setGererExpanded] = useState(() => isAdminView(activeView));
 
@@ -52,7 +54,7 @@ export const AdminSidebar = ({ activeView, onViewChange, newOrderCount }: Props)
             }`}
           >
             <item.icon className="h-5 w-5 flex-shrink-0" />
-            <span className="text-sm font-medium">{t(item.tKey)}</span>
+            <span className="text-sm font-medium">{t(businessType !== 'restaurant' && item.id === 'cuisine' ? 'commerce.orders' : item.tKey)}</span>
             {item.id === "cuisine" && newOrderCount > 0 && (
               <span className="ms-auto bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 {newOrderCount}
