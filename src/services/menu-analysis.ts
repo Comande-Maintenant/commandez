@@ -3,15 +3,20 @@ import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import type { AnalyzedMenu } from '@/types/onboarding';
 
+// The upstream analysis functions cap model output at 4096/8192 tokens.
+// These generous transport/collection budgets prevent disproportionate validation work.
+const MAX_MENU_RESPONSE_BYTES = 1024 * 1024;
+const MAX_MENU_COLLECTION_LENGTH = 4096;
+
 const optionSchema = z.object({ name: z.string().trim().min(1), price: z.number().finite().nonnegative() });
 const menuSchema = z.object({ categories: z.array(z.object({
   name: z.string().trim().min(1),
   items: z.array(z.object({
     name: z.string().trim().min(1), price: z.number().finite().nonnegative(),
-    description: z.string().default(''), variants: z.array(optionSchema).optional(),
-    supplements: z.array(optionSchema).optional(), tags: z.array(z.string()).optional(),
-  })).min(1),
-})).min(1) });
+    description: z.string().default(''), variants: z.array(optionSchema).max(MAX_MENU_COLLECTION_LENGTH).optional(),
+    supplements: z.array(optionSchema).max(MAX_MENU_COLLECTION_LENGTH).optional(), tags: z.array(z.string()).max(MAX_MENU_COLLECTION_LENGTH).optional(),
+  })).min(1).max(MAX_MENU_COLLECTION_LENGTH),
+})).min(1).max(MAX_MENU_COLLECTION_LENGTH) });
 
 export async function analyzeMenuImages(files: File[]): Promise<AnalyzedMenu> {
   if (files.length === 0 || files.length > 5) throw new Error('Choisissez entre 1 et 5 fichiers.');
@@ -35,6 +40,11 @@ export async function analyzeMenuImages(files: File[]): Promise<AnalyzedMenu> {
     }
     const { data, error } = await supabase.functions.invoke('analyze-menu', { body: { imageUrls } });
     if (error) throw error;
+    const serialized = JSON.stringify(data);
+    if (typeof serialized !== 'string' || serialized.length > MAX_MENU_RESPONSE_BYTES
+      || new TextEncoder().encode(serialized).byteLength > MAX_MENU_RESPONSE_BYTES) {
+      throw new Error('La carte n’a pas pu être lue. Essayez une photo plus nette.');
+    }
     if (data?.error) throw new Error(data.error);
     const parsed = menuSchema.safeParse(data);
     if (!parsed.success) throw new Error('La carte n’a pas pu être lue. Essayez une photo plus nette.');
