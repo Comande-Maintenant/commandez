@@ -1,5 +1,5 @@
 const FUNCTIONS = 'https://tgtvkzmokypztdudwzne.supabase.co/functions/v1';
-const RESERVED = new Set(['abonnement','abonnement-confirme','admin','choisir-plan','connexion','inscription','mot-de-passe-oublie','order','profil','reinitialiser-mot-de-passe','signup','suivi','super-admin','unsubscribe','upload']);
+const RESERVED = new Set(['abonnement','abonnement-confirme','admin','choisir-plan','connexion','decouvrir','inscription','legacy-billing','mot-de-passe-oublie','order','profil','reinitialiser-mot-de-passe','signup','suivi','super-admin','unsubscribe','upload']);
 
 export default {
   async fetch(request, env) {
