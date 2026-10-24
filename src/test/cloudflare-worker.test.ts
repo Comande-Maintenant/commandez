@@ -18,6 +18,14 @@ describe('public restaurant HTML and application preservation', () => {
     const response = await worker.fetch(new Request('https://app.commandeici.com/admin/demo'), env());
     expect(response.headers.get('x-robots-tag')).toContain('noindex'); expect(fetch).not.toHaveBeenCalled();
   });
+  for (const route of ['decouvrir', 'legacy-billing']) {
+    it(`serves the /${route} application route with the asset status instead of a restaurant 404`, async () => {
+      const fetch = vi.fn(); vi.stubGlobal('fetch', fetch);
+      const response = await worker.fetch(new Request(`https://app.commandeici.com/${route}`), env());
+      expect(response.status).toBe(200); expect(await response.text()).toContain('/assets/app.js');
+      expect(response.headers.get('x-robots-tag')).toContain('noindex'); expect(fetch).not.toHaveBeenCalled();
+    });
+  }
   it('returns a real 404 with the SPA for unknown slugs', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 404 })));
     const response = await worker.fetch(new Request('https://app.commandeici.com/unknown'), env());
