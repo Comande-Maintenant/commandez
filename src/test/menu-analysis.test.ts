@@ -42,3 +42,29 @@ describe('Menu upload and analysis reliability', () => {
     expect(mocks.remove).toHaveBeenCalled();
   });
 });
+
+describe('Menu analysis response resource budget', () => {
+  const item = () => ({ name: 'Fixture', price: 1, description: '' });
+  const category = () => ({ name: 'Fixture', items: [item()] });
+
+  it.each(['categories', 'items', 'variants', 'supplements', 'tags'] as const)(
+    'rejects an oversized %s collection and still removes temporary uploads', async (collection) => {
+      const data = { categories: [category()] };
+      const oversized = Array.from({ length: 4097 }, () => collection === 'categories' ? category()
+        : collection === 'items' ? item() : collection === 'tags' ? 'fixture' : { name: 'Fixture', price: 0 });
+      if (collection === 'categories') data.categories = oversized as ReturnType<typeof category>[];
+      else if (collection === 'items') data.categories[0].items = oversized as ReturnType<typeof item>[];
+      else Object.assign(data.categories[0].items[0], { [collection]: oversized });
+      mocks.invoke.mockResolvedValue({ data, error: null });
+      await expect(analyzeMenuImages([page()])).rejects.toThrow();
+      expect(mocks.remove).toHaveBeenCalledWith(['owner-1/file-id.jpg']);
+    },
+  );
+
+  it('rejects a response over one MiB before schema traversal', async () => {
+    const data = { categories: [{ name: 'Fixture', items: [{ ...item(), description: 'x'.repeat(1024 * 1024) }] }] };
+    mocks.invoke.mockResolvedValue({ data, error: null });
+    await expect(analyzeMenuImages([page()])).rejects.toThrow();
+    expect(mocks.remove).toHaveBeenCalledWith(['owner-1/file-id.jpg']);
+  });
+});
