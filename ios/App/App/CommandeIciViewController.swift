@@ -3,6 +3,8 @@ import WebKit
 import UIKit
 
 class CommandeIciViewController: CAPBridgeViewController {
+    private var protectedNavigationDelegate: CompromisedCANavigationDelegate?
+
     private var openingCover: UIView?
     private var openingLogo: UIImageView?
     private var openingStarted: CFTimeInterval?
@@ -182,6 +184,12 @@ class CommandeIciViewController: CAPBridgeViewController {
     }
 
     override func capacitorDidLoad() {
+        if let webView {
+            let delegate = CompromisedCANavigationDelegate(original: webView.navigationDelegate)
+            protectedNavigationDelegate = delegate
+            webView.navigationDelegate = delegate
+        }
+
         bridge?.registerPluginInstance(SecureSessionPlugin())
         bridge?.registerPluginInstance(FileExportPlugin())
         let content = webView?.configuration.userContentController
