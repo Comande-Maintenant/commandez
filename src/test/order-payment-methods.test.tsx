@@ -47,6 +47,7 @@ describe('order payment methods', () => {
     renderOrder(['cash']);
     await waitFor(() => expect(screen.queryByRole('button', { name: fr['order.payment_card'] })).toBeNull());
     expect(screen.getByRole('button', { name: fr['order.payment_cash'] })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Espèces (sur place)' })).toBeInTheDocument();
   });
 
   it('keeps card and cash when the commerce has no setting', async () => {
