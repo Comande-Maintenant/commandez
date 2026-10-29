@@ -671,7 +671,7 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
                     Ingredients de base
                   </p>
                   <p className="text-xs text-muted-foreground mb-3">
-                    En rupture = les plats concernes deviennent indisponibles
+                    En rupture = les plats concernés deviennent indisponibles
                   </p>
                   <div className="space-y-1.5">
                     {baseIngredients.map((bi: any) => {

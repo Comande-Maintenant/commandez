@@ -31,9 +31,15 @@ import OrderPage from '@/pages/OrderPage';
 
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
 
-function renderOrder(paymentMethods: string[] | null) {
+function renderOrder(paymentMethods: string[] | null, path = '/order') {
   mocks.fetchRestaurantById.mockResolvedValue({ id: 'restaurant', order_mode: 'pickup', payment_methods: paymentMethods });
-  return render(<MemoryRouter><OrderPage /></MemoryRouter>);
+  return render(<MemoryRouter initialEntries={[path]}><OrderPage /></MemoryRouter>);
+}
+
+function fillAndConfirm() {
+  fireEvent.change(screen.getByPlaceholderText(fr['order.your_name']), { target: { value: 'Client' } });
+  fireEvent.change(screen.getByPlaceholderText(fr['order.phone']), { target: { value: '0612345678' } });
+  fireEvent.click(screen.getByRole('button', { name: new RegExp(fr['order.confirm'].split('{')[0].trim()) }));
 }
 
 describe('order payment methods', () => {
@@ -56,6 +62,26 @@ describe('order payment methods', () => {
     await waitFor(() => expect(screen.queryByRole('button', { name: fr['order.payment_card'] })).toBeNull());
     fireEvent.change(screen.getByPlaceholderText(fr['order.your_name']), { target: { value: 'Client' } });
     fireEvent.change(screen.getByPlaceholderText(fr['order.phone']), { target: { value: '0612345678' } });
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(fr['order.confirm'].split('{')[0].trim()) }));
+    await waitFor(() => expect(mocks.createOrder).toHaveBeenCalled());
+    expect(mocks.createOrder.mock.calls[0][0].payment_method).toBe('cash');
+  });
+
+  it('never sends a method the commerce refused after the customer picked it', async () => {
+    mocks.createOrder.mockResolvedValue({ id: 'order', order_number: 1, daily_number: 1 });
+    renderOrder(null);
+    await waitFor(() => expect(mocks.fetchRestaurantById).toHaveBeenCalledTimes(1));
+    fireEvent.click(screen.getByRole('button', { name: fr['order.payment_card'] }));
+    mocks.fetchRestaurantById.mockResolvedValue({ id: 'restaurant', order_mode: 'pickup', payment_methods: ['cash'] });
+    fillAndConfirm();
+    await waitFor(() => expect(mocks.createOrder).toHaveBeenCalled());
+    expect(mocks.createOrder.mock.calls[0][0].payment_method).toBe('cash');
+  });
+
+  it('keeps pay-at-counter on a counter kiosk even for a card-only commerce', async () => {
+    mocks.createOrder.mockResolvedValue({ id: 'order', order_number: 1, daily_number: 1 });
+    renderOrder(['card'], '/order?kiosk=true');
+    await waitFor(() => expect(mocks.fetchRestaurantById).toHaveBeenCalled());
     fireEvent.click(screen.getByRole('button', { name: new RegExp(fr['order.confirm'].split('{')[0].trim()) }));
     await waitFor(() => expect(mocks.createOrder).toHaveBeenCalled());
     expect(mocks.createOrder.mock.calls[0][0].payment_method).toBe('cash');

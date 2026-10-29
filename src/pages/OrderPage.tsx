@@ -17,7 +17,7 @@ import { CustomerAuthModal } from "@/components/CustomerAuthModal";
 import { navigateBack } from '@/lib/navigation';
 import { checkoutRequestId, clearCheckoutRequest } from "@/services/order-request";
 import { formatDisplayNumber } from "@/lib/orderNumber";
-import { orderPaymentOptions, type OrderPaymentOption } from "@/lib/payment-options";
+import { allowedPaymentMethod, orderPaymentOptions, type OrderPaymentOption } from "@/lib/payment-options";
 
 const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
@@ -52,6 +52,7 @@ const OrderPage = () => {
   const { isKiosk, config: kioskConfig } = useKioskMode();
   const [paymentMethod, setPaymentMethod] = useState<string>(isKiosk && kioskConfig.defaultPayment === "counter" ? "cash" : "card");
   const [paymentOptions, setPaymentOptions] = useState<OrderPaymentOption[]>(() => orderPaymentOptions(null));
+  const isCounterKiosk = isKiosk && kioskConfig.defaultPayment === "counter";
   const [orderType, setOrderType] = useState<"collect" | "sur_place">(isKiosk ? "sur_place" : "collect");
   const [tableNumber, setTableNumber] = useState("");
   const [covers, setCovers] = useState(1);
@@ -88,7 +89,8 @@ const OrderPage = () => {
       }
       const accepted = orderPaymentOptions(r.payment_methods);
       setPaymentOptions(accepted);
-      setPaymentMethod((current) => (accepted.includes(current as OrderPaymentOption) ? current : accepted[0]));
+      // A counter kiosk always means paying at the counter; keep its own choice.
+      if (!isCounterKiosk) setPaymentMethod((current) => allowedPaymentMethod(current, accepted));
       // Detect dine-in availability
       const mode = r.order_mode || "pickup";
       if (mode.includes("on_site")) {
@@ -99,7 +101,7 @@ const OrderPage = () => {
       if ((r as any).is_demo) {
         setIsDemo(true);
         // Pre-fill with random realistic demo data
-        const demoNames = ["Marie Dupont", "Thomas Martin", "Julie Bernard", "Lucas Petit", "Emma Moreau", "Hugo Leroy", "Lea Simon", "Nathan Robert", "Camille Laurent", "Theo Durand"];
+        const demoNames = ["Marie Dupont", "Thomas Martin", "Julie Bernard", "Lucas Petit", "Emma Moreau", "Hugo Leroy", "Léa Simon", "Nathan Robert", "Camille Laurent", "Théo Durand"];
         const demoPhones = ["06 12 34 56 78", "07 65 43 21 09", "06 98 76 54 32", "07 23 45 67 89", "06 45 67 89 01"];
         const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
         const demoName = pick(demoNames);
@@ -177,6 +179,8 @@ const OrderPage = () => {
     try {
       // Check subscription (skip for demo restaurants)
       const resto = await fetchRestaurantById(restaurantId);
+      // The commerce may have loaded after the customer picked a method; never send a refused one.
+      const orderPaymentMethod = isCounterKiosk ? paymentMethod : allowedPaymentMethod(paymentMethod, orderPaymentOptions(resto?.payment_methods));
       const demoOrder = isDemo || !!(resto as any)?.is_demo;
       // Save customer info to localStorage
       if (!demoOrder) {
@@ -219,7 +223,7 @@ const OrderPage = () => {
         subtotal,
         total,
         pickup_time: pickupTime,
-        payment_method: paymentMethod,
+        payment_method: orderPaymentMethod,
       };
       // Attach customer_user_id if logged in
       if (isLoggedIn && user) {
@@ -247,7 +251,7 @@ const OrderPage = () => {
       if (isKiosk) {
         const displayNum = formatDisplayNumber(order);
         navigate(`/${restaurantSlug}?kiosk=true`, {
-          state: { kioskOrder: { number: displayNum, paymentMethod: paymentMethod } },
+          state: { kioskOrder: { number: displayNum, paymentMethod: orderPaymentMethod } },
           replace: true,
         });
         return;

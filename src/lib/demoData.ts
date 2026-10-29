@@ -223,11 +223,11 @@ const DEMO_FAVORITE_ITEMS_POOL = [
 const DEMO_NOTES_POOL = [
   "", "", "", "", "", "", "", "", "", "", "", "", // most have no notes
   "Allergie gluten, toujours sans pain",
-  "Demande toujours sauce blanche a part",
-  "Client fidele, vient depuis l'ouverture",
+  "Demande toujours sauce blanche à part",
+  "Client fidèle, vient depuis l'ouverture",
   "Passe souvent le vendredi soir",
   "Commande pour le bureau (5-6 pers.)",
-  "Prefere bien cuit",
+  "Préfère bien cuit",
   "Toujours en livraison",
   "Aime la sauce piquante",
   "Vient avec ses enfants le mercredi",

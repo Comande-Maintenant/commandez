@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { orderPaymentOptions } from '@/lib/payment-options';
+import { allowedPaymentMethod, orderPaymentOptions } from '@/lib/payment-options';
 
 describe('orderPaymentOptions', () => {
   it('offers only the methods the commerce accepts', () => {
@@ -20,5 +20,18 @@ describe('orderPaymentOptions', () => {
 
   it('ignores meal vouchers alongside a supported method', () => {
     expect(orderPaymentOptions(['cash', 'ticket_restaurant'])).toEqual(['cash']);
+  });
+
+  it('understands legacy and wallet spellings', () => {
+    expect(orderPaymentOptions(['CB', 'cash'])).toEqual(['card', 'cash']);
+    expect(orderPaymentOptions(['Carte bancaire'])).toEqual(['card']);
+    expect(orderPaymentOptions(['Especes', 'card'])).toEqual(['card', 'cash']);
+    expect(orderPaymentOptions(['Espèces'])).toEqual(['cash']);
+    expect(orderPaymentOptions(['apple_google_pay'])).toEqual(['card']);
+  });
+
+  it('keeps an allowed choice and replaces a refused one', () => {
+    expect(allowedPaymentMethod('cash', ['card', 'cash'])).toBe('cash');
+    expect(allowedPaymentMethod('card', ['cash'])).toBe('cash');
   });
 });
