@@ -70,7 +70,7 @@ describe('Super-admin access', () => {
   it('keeps a signed-in merchant outside the super-admin dashboard', async () => {
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'merchant-1' } }, error: null });
     renderPage();
-    expect(await screen.findByRole('heading', { name: 'Acces refuse' })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: 'Accès refusé' })).toBeVisible();
     expect(mocks.fetchOwner).toHaveBeenCalledWith('merchant-1');
     expect(mocks.privilegedRead).not.toHaveBeenCalled();
     expect(mocks.from).not.toHaveBeenCalled();
@@ -81,6 +81,6 @@ describe('Super-admin access', () => {
     mocks.fetchOwner.mockResolvedValue({ role: 'super_admin' });
     renderPage();
     await waitFor(() => expect(mocks.privilegedRead).toHaveBeenCalledOnce());
-    expect(screen.queryByRole('heading', { name: 'Acces refuse' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Accès refusé' })).not.toBeInTheDocument();
   });
 });

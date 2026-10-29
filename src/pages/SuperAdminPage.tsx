@@ -58,21 +58,21 @@ const STATUS_BADGES: Record<string, { label: string; className: string }> = {
   active: { label: "Actif", className: "bg-emerald-100 text-emerald-800" },
   trialing: { label: "Essai", className: "bg-blue-100 text-blue-800" },
   trial: { label: "Essai", className: "bg-blue-100 text-blue-800" },
-  past_due: { label: "Impaye", className: "bg-orange-100 text-orange-800" },
-  canceled: { label: "Annule", className: "bg-red-100 text-red-800" },
-  cancelled: { label: "Annule", className: "bg-red-100 text-red-800" },
-  expired: { label: "Expire", className: "bg-red-100 text-red-800" },
+  past_due: { label: "Impayé", className: "bg-orange-100 text-orange-800" },
+  canceled: { label: "Annulé", className: "bg-red-100 text-red-800" },
+  cancelled: { label: "Annulé", className: "bg-red-100 text-red-800" },
+  expired: { label: "Expiré", className: "bg-red-100 text-red-800" },
   pending_payment: { label: "En attente", className: "bg-amber-100 text-amber-800" },
 };
 
 const EMAIL_TYPE_LABELS: Record<string, string> = {
-  trial_expiring: "Essai expire bientot",
-  trial_expired: "Essai expire",
+  trial_expiring: "Essai expire bientôt",
+  trial_expired: "Essai expiré",
   referral_completed_referrer: "Parrainage (parrain)",
   referral_completed_referee: "Parrainage (filleul)",
-  subscription_activated: "Abonnement active",
-  payment_failed: "Paiement echoue",
-  subscription_cancelled: "Abonnement annule",
+  subscription_activated: "Abonnement activé",
+  payment_failed: "Paiement échoué",
+  subscription_cancelled: "Abonnement annulé",
   promo_applied: "Code promo",
   comeback_3days: "Comeback J+3",
   comeback_7days: "Comeback J+7",
@@ -93,7 +93,7 @@ const PLAN_PRICES = { monthly: 29.99 };
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "a l'instant";
+  if (mins < 1) return "à l'instant";
   if (mins < 60) return `il y a ${mins}min`;
   const hours = Math.floor(mins / 60);
   if (hours < 24) return `il y a ${hours}h`;
@@ -270,7 +270,7 @@ const SuperAdminPage = () => {
         const mins = Math.floor((Date.now() - new Date(o.created_at).getTime()) / 60000);
         result.push({
           type: "stale_order", severity: mins > 20 ? "danger" : "warning",
-          message: `Commande #${o.order_number} non acceptee depuis ${mins} min`,
+          message: `Commande #${o.order_number} non acceptée depuis ${mins} min`,
           detail: o.customer_name,
         });
       }
@@ -302,7 +302,7 @@ const SuperAdminPage = () => {
             result.push({
               type: "deletion_pending", severity: daysLeft <= 7 ? "danger" : "warning",
               message: `${ra.name} : suppression dans ${daysLeft} jours`,
-              detail: `Prevue le ${new Date(ra.scheduled_deletion_at).toLocaleDateString("fr-FR")}`,
+              detail: `Prévue le ${new Date(ra.scheduled_deletion_at).toLocaleDateString("fr-FR")}`,
             });
           }
         }
@@ -327,7 +327,7 @@ const SuperAdminPage = () => {
           result.push({
             type: "no_restaurant", severity: "warning",
             message: `${o.email} : compte sans restaurant`,
-            detail: "Inscrit mais n'a pas cree de restaurant",
+            detail: "Inscrit mais n'a pas créé de restaurant",
           });
         }
       }
@@ -389,8 +389,8 @@ const SuperAdminPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <Shield className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-foreground mb-2">Acces refuse</h1>
-          <p className="text-muted-foreground mb-4">Cette page est reservee aux super administrateurs.</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Accès refusé</h1>
+          <p className="text-muted-foreground mb-4">Cette page est réservée aux super administrateurs.</p>
           <Link to="/" className="text-sm text-foreground underline">Retour</Link>
         </div>
       </div>
@@ -465,7 +465,7 @@ const SuperAdminPage = () => {
               </div>
 
               <Card className="rounded-2xl">
-                <CardHeader className="pb-2"><CardTitle className="text-base font-semibold">Dernieres commandes</CardTitle></CardHeader>
+                <CardHeader className="pb-2"><CardTitle className="text-base font-semibold">Dernières commandes</CardTitle></CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     {detailOrders.slice(0, 15).map((order) => (
@@ -579,7 +579,7 @@ const SuperAdminPage = () => {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
                   { label: "Restaurants", value: kpis.realRestaurants, icon: Store },
-                  { label: "Abonnes", value: `${kpis.activeSubscribers}`, sub: kpis.trialingCount > 0 ? `+ ${kpis.trialingCount} en essai` : undefined, icon: Users },
+                  { label: "Abonnés", value: `${kpis.activeSubscribers}`, sub: kpis.trialingCount > 0 ? `+ ${kpis.trialingCount} en essai` : undefined, icon: Users },
                   { label: "MRR", value: `${kpis.mrr.toFixed(0)} EUR`, icon: Euro, accent: true },
                   { label: "ARR", value: `${kpis.arr.toFixed(0)} EUR`, icon: TrendingUp },
                 ].map((kpi) => (
@@ -611,10 +611,10 @@ const SuperAdminPage = () => {
                 <CardContent>
                   <div className="space-y-3">
                     {[
-                      { label: "Comptes crees", value: funnel.accounts },
-                      { label: "Restaurant cree", value: funnel.withRestaurant },
+                      { label: "Comptes créés", value: funnel.accounts },
+                      { label: "Restaurant créé", value: funnel.withRestaurant },
                       { label: "En essai", value: funnel.inTrial },
-                      { label: "Abonnes payants", value: funnel.paying },
+                      { label: "Abonnés payants", value: funnel.paying },
                       { label: "Churn", value: funnel.churned, isChurn: true },
                     ].map((step, i, arr) => {
                       const maxVal = Math.max(funnel.accounts, 1);
@@ -898,7 +898,7 @@ const SuperAdminPage = () => {
                     </CardHeader>
                     <CardContent>
                       {acqStats.topPages.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">Pas encore de donnees</p>
+                        <p className="text-sm text-muted-foreground">Pas encore de données</p>
                       ) : (
                         <div className="space-y-1.5">
                           {acqStats.topPages.map((p, i) => (
@@ -920,7 +920,7 @@ const SuperAdminPage = () => {
                     </CardHeader>
                     <CardContent>
                       {acqStats.topReferrers.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">Pas encore de donnees</p>
+                        <p className="text-sm text-muted-foreground">Pas encore de données</p>
                       ) : (
                         <div className="space-y-1.5">
                           {acqStats.topReferrers.map((r, i) => (
@@ -940,7 +940,7 @@ const SuperAdminPage = () => {
                     </CardHeader>
                     <CardContent>
                       {acqStats.topUtmSources.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">Pas encore de donnees</p>
+                        <p className="text-sm text-muted-foreground">Pas encore de données</p>
                       ) : (
                         <div className="space-y-1.5">
                           {acqStats.topUtmSources.map((u, i) => (
@@ -971,7 +971,7 @@ const SuperAdminPage = () => {
                       const steps = [
                         { label: "Landing", count: landing, color: "#10B981" },
                         { label: "Menu restaurant", count: menu, color: "#10B981" },
-                        { label: "Demo", count: demo, color: "#6366F1" },
+                        { label: "Démo", count: demo, color: "#6366F1" },
                         { label: "Commande", count: order, color: "#F59E0B" },
                         { label: "Inscription resto", count: inscription, color: "#3B82F6" },
                         { label: "Dashboard admin", count: admin, color: "#8B5CF6" },
@@ -1012,7 +1012,7 @@ const SuperAdminPage = () => {
               <CardHeader className="pb-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Rechercher par email, nom, telephone..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 rounded-xl" />
+                  <Input placeholder="Rechercher par email, nom, téléphone..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 rounded-xl" />
                 </div>
               </CardHeader>
               <CardContent className="p-0">
@@ -1062,7 +1062,7 @@ const SuperAdminPage = () => {
                         );
                       })}
                       {filteredProspects.length === 0 && (
-                        <tr><td colSpan={6} className="text-center py-8 text-sm text-muted-foreground">Aucun prospect trouve</td></tr>
+                        <tr><td colSpan={6} className="text-center py-8 text-sm text-muted-foreground">Aucun prospect trouvé</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -1103,8 +1103,8 @@ const SuperAdminPage = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
                 { label: "MRR total", value: kpis ? `${kpis.mrr.toFixed(0)} EUR` : "-", icon: Euro, accent: true },
-                { label: "Mensuel", value: monthlyMRR ? `${(monthlyMRR.couponMRR + monthlyMRR.fullMRR).toFixed(0)} EUR` : "-", sub: monthlyMRR ? `${monthlyMRR.couponCount} a 1EUR + ${monthlyMRR.fullCount} a 29.99EUR` : undefined, icon: CreditCard },
-                { label: "Abonnes", value: kpis ? `${kpis.activeSubscribers}` : "-", sub: kpis && kpis.trialingCount > 0 ? `+ ${kpis.trialingCount} en essai` : undefined, icon: TrendingUp },
+                { label: "Mensuel", value: monthlyMRR ? `${(monthlyMRR.couponMRR + monthlyMRR.fullMRR).toFixed(0)} EUR` : "-", sub: monthlyMRR ? `${monthlyMRR.couponCount} à 1EUR + ${monthlyMRR.fullCount} à 29.99EUR` : undefined, icon: CreditCard },
+                { label: "Abonnés", value: kpis ? `${kpis.activeSubscribers}` : "-", sub: kpis && kpis.trialingCount > 0 ? `+ ${kpis.trialingCount} en essai` : undefined, icon: TrendingUp },
                 { label: "Churn", value: funnel ? `${funnel.churned}` : "-", sub: funnel && funnel.paying > 0 ? `${Math.round((funnel.churned / (funnel.paying + funnel.churned)) * 100)}% du total` : undefined, icon: TrendingDown },
               ].map((kpi) => (
                 <Card key={kpi.label} className="rounded-2xl">
@@ -1135,8 +1135,8 @@ const SuperAdminPage = () => {
                         <tr className="border-b border-border text-left text-xs text-muted-foreground">
                           <th className="px-4 py-2">Restaurant</th>
                           <th className="px-4 py-2">Plan</th>
-                          <th className="px-4 py-2">Montant reel</th>
-                          <th className="px-4 py-2">Debut</th>
+                          <th className="px-4 py-2">Montant réel</th>
+                          <th className="px-4 py-2">Début</th>
                           <th className="px-4 py-2">Prochaine facture</th>
                         </tr>
                       </thead>
@@ -1175,10 +1175,10 @@ const SuperAdminPage = () => {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
-                { label: "Total envoyes", value: emailLogs.length, icon: Send },
+                { label: "Total envoyés", value: emailLogs.length, icon: Send },
                 { label: "Aujourd'hui", value: emailsToday, icon: Clock },
                 { label: "Cette semaine", value: emailsWeek, icon: Mail },
-                { label: "Desinscrits", value: unsubCount, icon: UserX },
+                { label: "Désinscrits", value: unsubCount, icon: UserX },
               ].map((kpi) => (
                 <Card key={kpi.label} className="rounded-2xl">
                   <CardContent className="p-4">
@@ -1197,7 +1197,7 @@ const SuperAdminPage = () => {
                 <CardHeader className="pb-3"><CardTitle className="text-sm font-semibold">Par type</CardTitle></CardHeader>
                 <CardContent>
                   {emailTypeStats.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-2">Aucun email envoye</p>
+                    <p className="text-sm text-muted-foreground text-center py-2">Aucun email envoyé</p>
                   ) : (
                     <div className="space-y-1.5">
                       {emailTypeStats.map(([type, count]) => (
@@ -1215,7 +1215,7 @@ const SuperAdminPage = () => {
                 <CardHeader className="pb-3"><CardTitle className="text-sm font-semibold">Derniers envois</CardTitle></CardHeader>
                 <CardContent>
                   {emailLogs.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-2">Aucun email envoye</p>
+                    <p className="text-sm text-muted-foreground text-center py-2">Aucun email envoyé</p>
                   ) : (
                     <div className="space-y-1.5">
                       {emailLogs.slice(0, 12).map((l) => (
@@ -1256,7 +1256,7 @@ const SuperAdminPage = () => {
               {["all", "prospect", "active", "archived"].map((s) => (
                 <button key={s} onClick={() => setProspectFilter(s)}
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${prospectFilter === s ? "bg-foreground text-background" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
-                  {s === "all" ? "Tous" : s === "prospect" ? "Prospects" : s === "active" ? "Actifs" : "Archives"}
+                  {s === "all" ? "Tous" : s === "prospect" ? "Prospects" : s === "active" ? "Actifs" : "Archivés"}
                   {" "}({prospectRows.filter((r) => s === "all" || r.account_status === s).length})
                 </button>
               ))}
@@ -1283,18 +1283,18 @@ const SuperAdminPage = () => {
                             r.account_status === "archived" ? "bg-gray-100 text-gray-500" :
                             "bg-emerald-100 text-emerald-800"
                           }`}>
-                            {r.account_status === "prospect" ? "Prospect" : r.account_status === "active" ? "Actif" : r.account_status === "archived" ? "Archive" : r.account_status}
+                            {r.account_status === "prospect" ? "Prospect" : r.account_status === "active" ? "Actif" : r.account_status === "archived" ? "Archivé" : r.account_status}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {r.city ?? "Ville non renseignee"} · {r.menuItemCount} produit{r.menuItemCount !== 1 ? "s" : ""} · {new Date(r.created_at).toLocaleDateString("fr-FR")}
+                          {r.city ?? "Ville non renseignée"} · {r.menuItemCount} produit{r.menuItemCount !== 1 ? "s" : ""} · {new Date(r.created_at).toLocaleDateString("fr-FR")}
                         </p>
                       </div>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         <a href={`https://app.commandeici.com/${r.slug}`} target="_blank" rel="noopener noreferrer nofollow">
                           <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Voir la page"><Eye className="h-3.5 w-3.5" /></Button>
                         </a>
-                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Envoyer recap par email" onClick={() => { setRecapProspect(r); setRecapEmail(""); setRecapName(""); }}>
+                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Envoyer récap par email" onClick={() => { setRecapProspect(r); setRecapEmail(""); setRecapName(""); }}>
                           <Mail className="h-3.5 w-3.5" />
                         </Button>
                         {r.account_status === "prospect" && (
@@ -1302,7 +1302,7 @@ const SuperAdminPage = () => {
                             <UserPlus className="h-3.5 w-3.5" />
                           </Button>
                         )}
-                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Editer le catalogue" onClick={async () => {
+                        <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Éditer le catalogue" onClick={async () => {
                           const { data } = await supabase.from("restaurants").select("*").eq("id", r.id).single();
                           if (data) setEditingProspect(data as unknown as DbRestaurant);
                         }}>
@@ -1318,7 +1318,7 @@ const SuperAdminPage = () => {
                           </Button>
                         )}
                         {r.account_status === "archived" && (
-                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Reactiver" onClick={async () => {
+                          <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0" title="Réactiver" onClick={async () => {
                             await supabase.from("restaurants").update({ account_status: "prospect", deactivated_at: null }).eq("id", r.id);
                             loadData();
                           }}>
@@ -1326,8 +1326,8 @@ const SuperAdminPage = () => {
                           </Button>
                         )}
                         <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0 text-destructive hover:text-destructive" title="Supprimer" onClick={async () => {
-                          if (!confirm(`Supprimer definitivement "${r.name}" et tous ses produits ?`)) return;
-                          if (!confirm("Cette action est irreversible. Confirmer ?")) return;
+                          if (!confirm(`Supprimer définitivement "${r.name}" et tous ses produits ?`)) return;
+                          if (!confirm("Cette action est irréversible. Confirmer ?")) return;
                           await supabase.from("menu_items").delete().eq("restaurant_id", r.id);
                           await supabase.from("orders").delete().eq("restaurant_id", r.id);
                           await supabase.from("restaurants").delete().eq("id", r.id);
@@ -1348,7 +1348,7 @@ const SuperAdminPage = () => {
             {showCreateProspect && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setShowCreateProspect(false); }}>
                 <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
-                  <h3 className="text-lg font-semibold">Creer un prospect</h3>
+                  <h3 className="text-lg font-semibold">Créer un prospect</h3>
 
                   {!selectedPlace ? (
                     <>
@@ -1358,7 +1358,7 @@ const SuperAdminPage = () => {
                           <Search className="h-4 w-4 mr-1" /> Recherche
                         </Button>
                         <Button variant={prospectSearchMode === "nearby" ? "default" : "outline"} size="sm" onClick={() => setProspectSearchMode("nearby")}>
-                          <MapPin className="h-4 w-4 mr-1" /> A proximite
+                          <MapPin className="h-4 w-4 mr-1" /> À proximité
                         </Button>
                         <Button variant={prospectSearchMode === "manual" ? "default" : "outline"} size="sm" onClick={() => setProspectSearchMode("manual")}>
                           Manuel
@@ -1491,7 +1491,7 @@ const SuperAdminPage = () => {
             {recapProspect && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setRecapProspect(null); }}>
                 <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-5">
-                  <h3 className="text-lg font-semibold">Envoyer un recap</h3>
+                  <h3 className="text-lg font-semibold">Envoyer un récap</h3>
 
                   <div className="rounded-xl bg-secondary/50 p-3 space-y-1">
                     <p className="text-sm font-medium">{recapProspect.name}</p>
@@ -1499,12 +1499,12 @@ const SuperAdminPage = () => {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium">Email du commercant *</label>
+                    <label className="text-sm font-medium">Email du commerçant *</label>
                     <Input value={recapEmail} onChange={(e) => setRecapEmail(e.target.value)} placeholder="email@commerce.fr" className="mt-1 rounded-xl" />
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium">Prenom du commercant</label>
+                    <label className="text-sm font-medium">Prénom du commerçant</label>
                     <Input value={recapName} onChange={(e) => setRecapName(e.target.value)} placeholder="Mohamed, Julie..." className="mt-1 rounded-xl" />
                   </div>
 
@@ -1512,9 +1512,9 @@ const SuperAdminPage = () => {
                     <p className="text-sm font-medium text-amber-900">Email informatif uniquement</p>
                     <ul className="text-xs text-amber-800 space-y-1 list-disc pl-4">
                       <li>Lien vers sa page de commande</li>
-                      <li>Recap de ce qui a ete fait (produits, horaires)</li>
-                      <li>Prochaines etapes s'il veut activer</li>
-                      <li><strong>Aucun compte cree, le prospect reste prospect</strong></li>
+                      <li>Récap de ce qui a été fait (produits, horaires)</li>
+                      <li>Prochaines étapes s'il veut activer</li>
+                      <li><strong>Aucun compte créé, le prospect reste prospect</strong></li>
                     </ul>
                   </div>
 
@@ -1560,7 +1560,7 @@ const SuperAdminPage = () => {
             {convertingProspect && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setConvertingProspect(null); }}>
                 <div className="bg-background rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-5">
-                  <h3 className="text-lg font-semibold">Transferer le compte</h3>
+                  <h3 className="text-lg font-semibold">Transférer le compte</h3>
 
                   <div className="rounded-xl bg-secondary/50 p-3 space-y-1">
                     <p className="text-sm font-medium">{convertingProspect.name}</p>
@@ -1568,23 +1568,23 @@ const SuperAdminPage = () => {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium">Email du commercant *</label>
+                    <label className="text-sm font-medium">Email du commerçant *</label>
                     <Input value={convertEmail} onChange={(e) => setConvertEmail(e.target.value)} placeholder="email@commerce.fr" className="mt-1 rounded-xl" />
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium">Prenom du commercant</label>
+                    <label className="text-sm font-medium">Prénom du commerçant</label>
                     <Input value={convertName} onChange={(e) => setConvertName(e.target.value)} placeholder="Mohamed, Julie..." className="mt-1 rounded-xl" />
                   </div>
 
                   <div className="rounded-xl bg-blue-50 border border-blue-200 p-3 space-y-2">
                     <p className="text-sm font-medium text-blue-900">L'email contiendra :</p>
                     <ul className="text-xs text-blue-800 space-y-1 list-disc pl-4">
-                      <li>Lien pour activer son compte et definir son mot de passe</li>
-                      <li>Lien vers sa page de commande a verifier</li>
+                      <li>Lien pour activer son compte et définir son mot de passe</li>
+                      <li>Lien vers sa page de commande à vérifier</li>
                       <li>Lien vers son tableau de bord (cuisine, caisse, commandes)</li>
-                      <li>Conseils de mise en place : 3 ecrans minimum (cuisine, caisse, prise de commande)</li>
-                      <li>Periode d'essai de 4 semaines incluse</li>
+                      <li>Conseils de mise en place : 3 écrans minimum (cuisine, caisse, prise de commande)</li>
+                      <li>Période d'essai de 4 semaines incluse</li>
                     </ul>
                   </div>
 
@@ -1652,17 +1652,17 @@ const SuperAdminPage = () => {
             {/* SMS templates to copy */}
             <Card className="rounded-2xl">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2"><Send className="h-4 w-4" /> Textes a copier</CardTitle>
+                <CardTitle className="text-sm font-medium flex items-center gap-2"><Send className="h-4 w-4" /> Textes à copier</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 space-y-3">
                 {[
                   {
                     label: "Page de commande",
-                    text: `Bonjour, voici la page de commande en ligne de ${editingProspect.name} : https://app.commandeici.com/${editingProspect.slug}\n\nVos clients peuvent commander directement depuis leur telephone.`,
+                    text: `Bonjour, voici la page de commande en ligne de ${editingProspect.name} : https://app.commandeici.com/${editingProspect.slug}\n\nVos clients peuvent commander directement depuis leur téléphone.`,
                   },
                   {
                     label: "Dashboard admin (cuisine)",
-                    text: `Voici votre espace cuisine pour recevoir les commandes en temps reel : https://app.commandeici.com/admin/${editingProspect.slug}?view=cuisine\n\nVous verrez les nouvelles commandes arriver avec une notification sonore.`,
+                    text: `Voici votre espace cuisine pour recevoir les commandes en temps réel : https://app.commandeici.com/admin/${editingProspect.slug}?view=cuisine\n\nVous verrez les nouvelles commandes arriver avec une notification sonore.`,
                   },
                   {
                     label: "Dashboard admin (caisse)",
@@ -1678,7 +1678,7 @@ const SuperAdminPage = () => {
                         className="h-7 px-2 text-xs rounded-lg"
                         onClick={() => {
                           navigator.clipboard.writeText(tpl.text);
-                          toast.success("Copie !");
+                          toast.success("Copié !");
                         }}
                       >
                         Copier
@@ -1709,12 +1709,12 @@ const SuperAdminPage = () => {
                         setQrCodeDataUrl(dataUrl);
                         setUploadedPhotos(data.photos ?? []);
                       }}>
-                        Generer QR Code
+                        Générer QR Code
                       </Button>
                     ) : (
                       <>
                         <img src={qrCodeDataUrl} alt="QR Code" className="w-40 h-40 rounded-lg border border-border" />
-                        <p className="text-[11px] text-muted-foreground text-center">Scannez pour envoyer des photos depuis le telephone</p>
+                        <p className="text-[11px] text-muted-foreground text-center">Scannez pour envoyer des photos depuis le téléphone</p>
                         <Button variant="ghost" size="sm" className="text-xs" onClick={async () => {
                           const { data, error } = await supabase.functions.invoke("photo-upload", {
                             body: { action: "create_link", restaurantId: editingProspect.id },
@@ -1783,18 +1783,18 @@ const SuperAdminPage = () => {
                         {analyzing && (
                           <div className="flex items-center gap-2 mt-3 py-2">
                             <Loader2 className="h-4 w-4 animate-spin text-[hsl(var(--primary))]" />
-                            <p className="text-sm text-muted-foreground">Nous sommes en train de lire votre carte, comprendre vos produits et vos prix. Ca prend quelques secondes...</p>
+                            <p className="text-sm text-muted-foreground">Nous sommes en train de lire votre carte, comprendre vos produits et vos prix. Ça prend quelques secondes...</p>
                           </div>
                         )}
                         {!analyzing && selectedUploadIndexes.size === 0 && (
-                          <p className="text-[11px] text-muted-foreground mt-2">Selectionnez les photos de carte/menu a analyser</p>
+                          <p className="text-[11px] text-muted-foreground mt-2">Sélectionnez les photos de carte/menu à analyser</p>
                         )}
                       </div>
                     ) : qrCodeDataUrl ? (
                       <div className="flex items-center justify-center h-full text-center py-8">
                         <div>
                           <p className="text-sm text-muted-foreground">En attente de photos...</p>
-                          <p className="text-xs text-muted-foreground mt-1">Scannez le QR code avec votre telephone</p>
+                          <p className="text-xs text-muted-foreground mt-1">Scannez le QR code avec votre téléphone</p>
                         </div>
                       </div>
                     ) : null}
@@ -1807,7 +1807,7 @@ const SuperAdminPage = () => {
             {analyzedCategories && analyzedCategories.length > 0 && (
               <Card className="rounded-2xl">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base font-semibold">Resultat de l'analyse - Verifiez et ajustez</CardTitle>
+                  <CardTitle className="text-base font-semibold">Résultat de l'analyse - Vérifiez et ajustez</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <MenuReviewEditor
@@ -1886,12 +1886,12 @@ const SuperAdminPage = () => {
                 </button>
                 {demoOpen && (
                   <CardContent className="pt-0 pb-4 px-4">
-                    <p className="text-[11px] text-muted-foreground mb-3 italic">Commandes de demonstration, pas du revenu commandeici.</p>
+                    <p className="text-[11px] text-muted-foreground mb-3 italic">Commandes de démonstration, pas du revenu commandeici.</p>
                     <div className="grid grid-cols-3 gap-3">
                       {[
                         { label: "Commandes", value: demoStats.totalOrders, icon: ShoppingBag },
-                        { label: "CA demo", value: `${demoStats.totalRevenue.toFixed(2)} EUR`, icon: Euro },
-                        { label: "Derniere", value: demoStats.lastOrderAt ? timeAgo(demoStats.lastOrderAt) : "Jamais", icon: Clock },
+                        { label: "CA démo", value: `${demoStats.totalRevenue.toFixed(2)} EUR`, icon: Euro },
+                        { label: "Dernière", value: demoStats.lastOrderAt ? timeAgo(demoStats.lastOrderAt) : "Jamais", icon: Clock },
                       ].map((s) => (
                         <div key={s.label} className="bg-secondary/50 rounded-xl p-3 text-center">
                           <s.icon className="h-4 w-4 text-muted-foreground mx-auto mb-1" />
@@ -2017,14 +2017,14 @@ const SuperAdminPage = () => {
               <Check className="h-8 w-8 text-emerald-600" />
             </div>
             <h3 className="text-xl font-bold text-foreground">
-              {successPopup.count === -2 ? "Recap envoye" : successPopup.count === -1 ? "Invitation envoyee" : `${successPopup.count} produit${successPopup.count > 1 ? "s" : ""} ajoute${successPopup.count > 1 ? "s" : ""}`}
+              {successPopup.count === -2 ? "Récap envoyé" : successPopup.count === -1 ? "Invitation envoyée" : `${successPopup.count} produit${successPopup.count > 1 ? "s" : ""} ajouté${successPopup.count > 1 ? "s" : ""}`}
             </h3>
             <p className="text-sm text-muted-foreground">
               {successPopup.count === -2
-                ? "Le commercant va recevoir un email avec le lien vers sa page et un recap de ce qui a ete prepare."
+                ? "Le commerçant va recevoir un email avec le lien vers sa page et un récap de ce qui a été préparé."
                 : successPopup.count === -1
-                ? "Le commercant va recevoir un email avec son lien d'activation, sa page de commande et les conseils de mise en place."
-                : "Le catalogue a ete mis a jour avec succes. Vous pouvez maintenant ajuster les details dans la carte ci-dessous."}
+                ? "Le commerçant va recevoir un email avec son lien d'activation, sa page de commande et les conseils de mise en place."
+                : "Le catalogue a été mis à jour avec succès. Vous pouvez maintenant ajuster les détails dans la carte ci-dessous."}
             </p>
             <Button className="rounded-xl w-full" onClick={() => setSuccessPopup(null)}>
               {successPopup.count < 0 ? "Compris" : "Parfait, continuer"}

@@ -15,7 +15,7 @@ interface Props {
  * - No tel: link in the HTML source
  * - Phone number only appears after user interaction (click)
  * - Call initiated via JS on second click
- * Bots see "Afficher le numero", real users click to reveal.
+ * Bots see "Afficher le numéro", real users click to reveal.
  */
 export const ProtectedPhone = ({ phone, className = "", style, iconClassName, variant = "inline" }: Props) => {
   const { t } = useLanguage();

@@ -26,7 +26,7 @@ export function setRestaurantHead(restaurant: DbRestaurant, items: DbMenuItem[],
   document.head.appendChild(template.content);
   if (kiosk) document.querySelector('meta[name="robots"]')?.setAttribute('content', 'noindex, nofollow');
   if (demo) {
-    document.title = 'Demonstration - Application de commande en ligne pour restaurants | commandeici';
+    document.title = 'Démonstration - Application de commande en ligne pour restaurants | commandeici';
     const schema = document.createElement('script');
     schema.id = 'demo-ld-json';
     schema.type = 'application/ld+json';
