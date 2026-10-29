@@ -1,0 +1,7 @@
+{
+  "confirmation": "Confirmez votre adresse e-mail CommandeIci",
+  "recovery": "Votre nouveau mot de passe CommandeIci",
+  "magic_link": "Votre lien de connexion CommandeIci",
+  "email_change": "Confirmez votre nouvelle adresse e-mail CommandeIci",
+  "reauthentication": "Votre code CommandeIci : {{ .Token }}"
+}
