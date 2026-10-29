@@ -15,6 +15,7 @@ import { useKioskMode } from "@/hooks/useKioskMode";
 import { CustomerAuthModal } from "@/components/CustomerAuthModal";
 import { checkoutRequestId, clearCheckoutRequest } from "@/services/order-request";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { orderPaymentOptions, type OrderPaymentOption } from "@/lib/payment-options";
 
 const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
@@ -46,6 +47,7 @@ const OrderPage = () => {
   });
   const { isKiosk, config: kioskConfig } = useKioskMode();
   const [paymentMethod, setPaymentMethod] = useState<string>(isKiosk && kioskConfig.defaultPayment === "counter" ? "cash" : "card");
+  const [paymentOptions, setPaymentOptions] = useState<OrderPaymentOption[]>(() => orderPaymentOptions(null));
   const [orderType, setOrderType] = useState<"collect" | "sur_place">(isKiosk ? "sur_place" : "collect");
   const [tableNumber, setTableNumber] = useState("");
   const [covers, setCovers] = useState(1);
@@ -80,6 +82,9 @@ const OrderPage = () => {
         );
         setEstimatedMinutes(est);
       }
+      const accepted = orderPaymentOptions(r.payment_methods);
+      setPaymentOptions(accepted);
+      setPaymentMethod((current) => (accepted.includes(current as OrderPaymentOption) ? current : accepted[0]));
       // Detect dine-in availability
       const mode = r.order_mode || "pickup";
       if (mode.includes("on_site")) {
@@ -401,6 +406,7 @@ const OrderPage = () => {
           <div className="p-4 bg-secondary/50 rounded-2xl space-y-3">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.payment_method")}</h2>
             <div className="flex gap-3">
+              {paymentOptions.includes("card") && (
               <button
                 onClick={() => setPaymentMethod("card")}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${paymentMethod === "card" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
@@ -408,6 +414,8 @@ const OrderPage = () => {
                 <CreditCard className="h-4 w-4" />
                 {t("order.payment_card")}
               </button>
+              )}
+              {paymentOptions.includes("cash") && (
               <button
                 onClick={() => setPaymentMethod("cash")}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${paymentMethod === "cash" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
@@ -415,6 +423,7 @@ const OrderPage = () => {
                 <Banknote className="h-4 w-4" />
                 {t("order.payment_cash")}
               </button>
+              )}
             </div>
           </div>
 
