@@ -255,7 +255,7 @@ export const POSRecap = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Timer className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-foreground">Preparation</span>
+            <span className="text-sm font-medium text-foreground">Préparation</span>
           </div>
           <div className="flex items-center gap-2">
             <button

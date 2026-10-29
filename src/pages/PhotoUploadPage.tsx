@@ -39,7 +39,7 @@ const PhotoUploadPage = () => {
         setUploaded(data.photos ?? []);
         setAuthorized(true);
       })
-      .catch(() => setError("Lien invalide ou expire"));
+      .catch(() => setError("Lien invalide ou expiré"));
   }, [restaurantId, token]);
 
   const handleUpload = async (files: FileList | null) => {
@@ -185,7 +185,7 @@ const PhotoUploadPage = () => {
           <div className="text-center py-8">
             <ImageIcon className="h-12 w-12 text-gray-300 mx-auto mb-3" />
             <p className="text-sm text-gray-500">Prenez en photo la carte, le menu ou les produits</p>
-            <p className="text-xs text-gray-400 mt-1">Les photos apparaitront sur l'ordinateur</p>
+            <p className="text-xs text-gray-400 mt-1">Les photos apparaîtront sur l'ordinateur</p>
           </div>
         )}
       </div>
