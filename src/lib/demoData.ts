@@ -224,7 +224,7 @@ const DEMO_NOTES_POOL = [
   "", "", "", "", "", "", "", "", "", "", "", "", // most have no notes
   "Allergie gluten, toujours sans pain",
   "Demande toujours sauce blanche à part",
-  "Client fidele, vient depuis l'ouverture",
+  "Client fidèle, vient depuis l'ouverture",
   "Passe souvent le vendredi soir",
   "Commande pour le bureau (5-6 pers.)",
   "Préfère bien cuit",

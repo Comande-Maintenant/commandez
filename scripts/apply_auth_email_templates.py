@@ -2,6 +2,7 @@
 """Apply the French Supabase Auth e-mail templates stored in supabase/templates/auth.
 
 Usage:
+  SUPABASE_ACCESS_TOKEN=... python3 scripts/apply_auth_email_templates.py --save-backup <file>
   SUPABASE_ACCESS_TOKEN=... python3 scripts/apply_auth_email_templates.py --dry-run
   SUPABASE_ACCESS_TOKEN=... python3 scripts/apply_auth_email_templates.py --apply --backup <file>
   SUPABASE_ACCESS_TOKEN=... python3 scripts/apply_auth_email_templates.py --restore <backup-file>
@@ -23,6 +24,7 @@ KINDS = ["confirmation", "recovery", "magic_link", "email_change", "reauthentica
 # Variables each template must keep so links and codes keep working.
 REQUIRED = {"reauthentication": ["{{ .Token }}"], "email_change": ["{{ .ConfirmationURL }}", "{{ .NewEmail }}"]}
 ALLOWED_VARIABLES = {"{{ .ConfirmationURL }}", "{{ .Token }}", "{{ .NewEmail }}"}
+MANAGED_KEYS = [key for kind in KINDS for key in (f"mailer_subjects_{kind}", f"mailer_templates_{kind}_content")]
 
 
 def call(method, payload=None):
@@ -60,13 +62,25 @@ def main():
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--apply", action="store_true")
     mode.add_argument("--restore")
+    mode.add_argument("--save-backup")
     parser.add_argument("--backup")
     args = parser.parse_args()
 
     current = call("GET")
+    if args.save_backup:
+        path = Path(args.save_backup)
+        if path.exists():
+            sys.exit("Backup file already exists; choose a new path")
+        path.write_text(json.dumps({key: current.get(key) for key in MANAGED_KEYS}, ensure_ascii=False, indent=2))
+        path.chmod(0o600)
+        print(json.dumps({"saved_keys": len(MANAGED_KEYS), "path": str(path)}))
+        return
     if args.restore:
         backup = json.loads(Path(args.restore).read_text())
-        target = {key: backup[key] for key in desired()}
+        missing = [key for key in MANAGED_KEYS if key not in backup]
+        if missing:
+            sys.exit(f"Backup is missing {missing}")
+        target = {key: backup[key] for key in MANAGED_KEYS}
     else:
         target = desired()
     changes = {key: value for key, value in target.items() if current.get(key) != value}
