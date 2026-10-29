@@ -56,7 +56,7 @@ export const BUSINESS_TYPES = [
   { value: "boulangerie", label: "Boulangerie", labelKey: "business_type.boulangerie", emoji: "🥖" },
   { value: "boucherie", label: "Boucherie", labelKey: "business_type.boucherie", emoji: "🥩" },
   { value: "fleuriste", label: "Fleuriste", labelKey: "business_type.fleuriste", emoji: "🌷" },
-  { value: "epicerie", label: "Epicerie", labelKey: "business_type.epicerie", emoji: "🛒" },
+  { value: "epicerie", label: "Épicerie", labelKey: "business_type.epicerie", emoji: "🛒" },
   { value: "traiteur", label: "Traiteur", labelKey: "business_type.traiteur", emoji: "🍽" },
   { value: "autre", label: "Autre", labelKey: "business_type.autre", emoji: "🏪" },
 ] as const;

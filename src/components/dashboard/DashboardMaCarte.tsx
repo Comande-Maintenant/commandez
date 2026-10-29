@@ -502,11 +502,11 @@ export const DashboardMaCarte = ({ restaurant, isDemo }: Props) => {
         <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 space-y-1">
           <p className="text-sm font-medium text-amber-900">Astuce photos</p>
           <p className="text-xs text-amber-800">
-            Les photos sont prises une seule fois et donnent envie de commander. Prenez de belles photos bien eclairees de vos produits.
+            Les photos sont prises une seule fois et donnent envie de commander. Prenez de belles photos bien éclairées de vos produits.
             Pas de photographe ? Contactez-nous, on peut vous aider.
           </p>
           <p className="text-xs text-amber-700 italic">
-            Vous pouvez aussi choisir de ne pas afficher de photos dans Parametres.
+            Vous pouvez aussi choisir de ne pas afficher de photos dans Paramètres.
           </p>
         </div>
       )}

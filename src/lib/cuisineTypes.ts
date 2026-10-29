@@ -9,10 +9,10 @@ export const CUISINE_TYPE_OPTIONS: { value: CuisineType; label: string; labelKey
   { value: "chinese", label: "Chinois / Asiatique", labelKey: "cuisine.chinese" },
   { value: "bakery", label: "Boulangerie / Sandwicherie", labelKey: "cuisine.bakery" },
   { value: "poke", label: "Poke Bowl", labelKey: "cuisine.poke" },
-  { value: "creperie", label: "Creperie", labelKey: "cuisine.creperie" },
-  { value: "coffee_shop", label: "Coffee Shop / Cafe", labelKey: "cuisine.coffee_shop" },
-  { value: "tacos_fr", label: "Tacos (francais)", labelKey: "cuisine.tacos_fr" },
-  { value: "generic", label: "Autre / Generique", labelKey: "cuisine.generic" },
+  { value: "creperie", label: "Crêperie", labelKey: "cuisine.creperie" },
+  { value: "coffee_shop", label: "Coffee Shop / Café", labelKey: "cuisine.coffee_shop" },
+  { value: "tacos_fr", label: "Tacos (français)", labelKey: "cuisine.tacos_fr" },
+  { value: "generic", label: "Autre / Générique", labelKey: "cuisine.generic" },
 ];
 
 // Map cuisine display names to cuisine_type for auto-detection

@@ -15,6 +15,7 @@ import { useKioskMode } from "@/hooks/useKioskMode";
 import { CustomerAuthModal } from "@/components/CustomerAuthModal";
 import { checkoutRequestId, clearCheckoutRequest } from "@/services/order-request";
 import { formatDisplayNumber } from "@/lib/orderNumber";
+import { allowedPaymentMethod, orderPaymentOptions, type OrderPaymentOption } from "@/lib/payment-options";
 
 const OrderPage = () => {
   const { items, subtotal, clearCart, restaurantId, restaurantSlug } = useCart();
@@ -46,6 +47,8 @@ const OrderPage = () => {
   });
   const { isKiosk, config: kioskConfig } = useKioskMode();
   const [paymentMethod, setPaymentMethod] = useState<string>(isKiosk && kioskConfig.defaultPayment === "counter" ? "cash" : "card");
+  const [paymentOptions, setPaymentOptions] = useState<OrderPaymentOption[]>(() => orderPaymentOptions(null));
+  const isCounterKiosk = isKiosk && kioskConfig.defaultPayment === "counter";
   const [orderType, setOrderType] = useState<"collect" | "sur_place">(isKiosk ? "sur_place" : "collect");
   const [tableNumber, setTableNumber] = useState("");
   const [covers, setCovers] = useState(1);
@@ -80,6 +83,10 @@ const OrderPage = () => {
         );
         setEstimatedMinutes(est);
       }
+      const accepted = orderPaymentOptions(r.payment_methods);
+      setPaymentOptions(accepted);
+      // A counter kiosk always means paying at the counter; keep its own choice.
+      if (!isCounterKiosk) setPaymentMethod((current) => allowedPaymentMethod(current, accepted));
       // Detect dine-in availability
       const mode = r.order_mode || "pickup";
       if (mode.includes("on_site")) {
@@ -90,7 +97,7 @@ const OrderPage = () => {
       if ((r as any).is_demo) {
         setIsDemo(true);
         // Pre-fill with random realistic demo data
-        const demoNames = ["Marie Dupont", "Thomas Martin", "Julie Bernard", "Lucas Petit", "Emma Moreau", "Hugo Leroy", "Lea Simon", "Nathan Robert", "Camille Laurent", "Theo Durand"];
+        const demoNames = ["Marie Dupont", "Thomas Martin", "Julie Bernard", "Lucas Petit", "Emma Moreau", "Hugo Leroy", "Léa Simon", "Nathan Robert", "Camille Laurent", "Théo Durand"];
         const demoPhones = ["06 12 34 56 78", "07 65 43 21 09", "06 98 76 54 32", "07 23 45 67 89", "06 45 67 89 01"];
         const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
         const demoName = pick(demoNames);
@@ -167,6 +174,8 @@ const OrderPage = () => {
     try {
       // Check subscription (skip for demo restaurants)
       const resto = await fetchRestaurantById(restaurantId);
+      // The commerce may have loaded after the customer picked a method; never send a refused one.
+      const orderPaymentMethod = isCounterKiosk ? paymentMethod : allowedPaymentMethod(paymentMethod, orderPaymentOptions(resto?.payment_methods));
       const demoOrder = isDemo || !!(resto as any)?.is_demo;
       // Save customer info to localStorage
       if (!demoOrder) {
@@ -209,7 +218,7 @@ const OrderPage = () => {
         subtotal,
         total,
         pickup_time: pickupTime,
-        payment_method: paymentMethod,
+        payment_method: orderPaymentMethod,
       };
       // Attach customer_user_id if logged in
       if (isLoggedIn && user) {
@@ -237,7 +246,7 @@ const OrderPage = () => {
       if (isKiosk) {
         const displayNum = formatDisplayNumber(order);
         navigate(`/${restaurantSlug}?kiosk=true`, {
-          state: { kioskOrder: { number: displayNum, paymentMethod: paymentMethod } },
+          state: { kioskOrder: { number: displayNum, paymentMethod: orderPaymentMethod } },
           replace: true,
         });
         return;
@@ -401,6 +410,7 @@ const OrderPage = () => {
           <div className="p-4 bg-secondary/50 rounded-2xl space-y-3">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t("order.payment_method")}</h2>
             <div className="flex gap-3">
+              {paymentOptions.includes("card") && (
               <button
                 onClick={() => setPaymentMethod("card")}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${paymentMethod === "card" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
@@ -408,6 +418,8 @@ const OrderPage = () => {
                 <CreditCard className="h-4 w-4" />
                 {t("order.payment_card")}
               </button>
+              )}
+              {paymentOptions.includes("cash") && (
               <button
                 onClick={() => setPaymentMethod("cash")}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${paymentMethod === "cash" ? "border-foreground bg-foreground text-primary-foreground" : "border-border bg-background text-muted-foreground hover:border-foreground/30"}`}
@@ -415,6 +427,7 @@ const OrderPage = () => {
                 <Banknote className="h-4 w-4" />
                 {t("order.payment_cash")}
               </button>
+              )}
             </div>
           </div>
 

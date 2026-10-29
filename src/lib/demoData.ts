@@ -223,11 +223,11 @@ const DEMO_FAVORITE_ITEMS_POOL = [
 const DEMO_NOTES_POOL = [
   "", "", "", "", "", "", "", "", "", "", "", "", // most have no notes
   "Allergie gluten, toujours sans pain",
-  "Demande toujours sauce blanche a part",
-  "Client fidele, vient depuis l'ouverture",
+  "Demande toujours sauce blanche à part",
+  "Client fidèle, vient depuis l'ouverture",
   "Passe souvent le vendredi soir",
   "Commande pour le bureau (5-6 pers.)",
-  "Prefere bien cuit",
+  "Préfère bien cuit",
   "Toujours en livraison",
   "Aime la sauce piquante",
   "Vient avec ses enfants le mercredi",
@@ -301,7 +301,7 @@ export function generateDemoCustomers(restaurantId: string): DbCustomer[] {
     { ordersMin: 2, ordersMax: 2, avgMin: 11, avgMax: 17, daysAgoFirst: 6,  daysAgoLast: 0 },
     // Banned - 2
     { ordersMin: 8, ordersMax: 14, avgMin: 10, avgMax: 16, daysAgoFirst: 90, daysAgoLast: 12, banned: true, banReason: "Comportement agressif envers le personnel" },
-    { ordersMin: 3, ordersMax: 5,  avgMin: 8,  avgMax: 12, daysAgoFirst: 45, daysAgoLast: 20, banned: true, banReason: "No-show repete (3 commandes non recuperees)" },
+    { ordersMin: 3, ordersMax: 5,  avgMin: 8,  avgMax: 12, daysAgoFirst: 45, daysAgoLast: 20, banned: true, banReason: "No-show répété (3 commandes non récupérées)" },
     // New (1 order, recent) - 5
     { ordersMin: 1, ordersMax: 1, avgMin: 8,  avgMax: 16, daysAgoFirst: 3, daysAgoLast: 3 },
     { ordersMin: 1, ordersMax: 1, avgMin: 10, avgMax: 20, daysAgoFirst: 2, daysAgoLast: 2 },

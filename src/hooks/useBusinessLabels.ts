@@ -45,7 +45,7 @@ export function getBusinessLabels(businessType?: string, t?: (key: string) => st
   if (t) return buildLabels(t, type);
   // Fallback for non-React contexts (FR only)
   const fallback: Record<string, BusinessLabels> = {
-    restaurant: { menuLabel: "Menu", itemsLabel: "Plats", orderLabel: "Commande", orderVerb: "Commander", categoryDefault: "Specialites", emptyMenu: "Le menu sera bientot disponible", storefrontSubtitle: "Commandez et recuperez sur place" },
+    restaurant: { menuLabel: "Menu", itemsLabel: "Plats", orderLabel: "Commande", orderVerb: "Commander", categoryDefault: "Spécialités", emptyMenu: "Le menu sera bientôt disponible", storefrontSubtitle: "Commandez et récupérez sur place" },
   };
   return fallback[type] ?? fallback.restaurant;
 }

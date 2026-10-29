@@ -667,10 +667,10 @@ export const DashboardOrders = ({ restaurant, isDemo }: Props) => {
               return (
                 <div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                    Ingredients de base
+                    Ingrédients de base
                   </p>
                   <p className="text-xs text-muted-foreground mb-3">
-                    En rupture = les plats concernes deviennent indisponibles
+                    En rupture = les plats concernés deviennent indisponibles
                   </p>
                   <div className="space-y-1.5">
                     {baseIngredients.map((bi: any) => {
