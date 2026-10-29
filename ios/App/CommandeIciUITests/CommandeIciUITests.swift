@@ -377,7 +377,7 @@ final class CommandeIciUITests: XCTestCase {
         }
         XCTAssertTrue(ready, app.debugDescription)
         copy.tap()
-        XCTAssertTrue(app.buttons["Copie !"].firstMatch.waitForExistence(timeout: 3), app.debugDescription)
+        XCTAssertTrue(app.buttons["Copié !"].firstMatch.waitForExistence(timeout: 3), app.debugDescription)
     }
 
 

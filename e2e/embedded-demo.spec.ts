@@ -36,7 +36,7 @@ test('iOS restaurant menu, configuration, checkout and tracking work with every 
   await page.getByPlaceholder('Téléphone', {exact:true}).fill('0612345678');
   await page.getByRole('button',{name:/^Confirmer/}).click();
   await expect(page).toHaveURL(/\/suivi\/demo-local-/);
-  await expect(page.getByText('Recu', {exact:true})).toBeVisible();
+  await expect(page.getByText('Reçu', {exact:true})).toBeVisible();
   expect(businessRequests).toEqual([]);
 });
 

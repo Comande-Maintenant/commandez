@@ -14,7 +14,7 @@ it('respects the merchant choice to hide product photographs',()=>{
 it('keeps the product recognisable and quantity actions accessible without changing its total',()=>{
  render(<MemoryRouter><CartSheet open onOpenChange={()=>{}}/></MemoryRouter>);
  expect(screen.getByRole('img',{name:/Kebab/})).toBeVisible();
- const increase=screen.getByRole('button',{name:'Augmenter quantite'});
+ const increase=screen.getByRole('button',{name:'Augmenter quantité'});
  expect(increase).toHaveClass('min-h-11');
  fireEvent.click(increase);expect(f.update).toHaveBeenCalledWith('cart-1',3);
  expect(screen.getByRole('button',{name:/Commander - 13.00/})).toBeVisible();

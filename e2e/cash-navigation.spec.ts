@@ -8,7 +8,7 @@ test('a ready demo order calls attention to caisse and opens collection without 
  await expect(cash).not.toContainText('1');
  await page.getByRole('button',{name:/Prêt|Prête|Terminer/}).last().click();
  await expect(cash).toContainText('1');await cash.click();
- await expect(page.getByRole('button',{name:/A encaisser/})).toHaveAttribute('aria-pressed','true');
+ await expect(page.getByRole('button',{name:/À encaisser/})).toHaveAttribute('aria-pressed','true');
  await expect(page.getByRole('button',{name:'Encaisse',exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Encaisse',exact:true}).click();await expect(cash).not.toContainText('1');
  await expect(page.getByRole('link',{name:'Créer ma page gratuitement',exact:true})).toBeVisible();expect(writes).toBe(0);

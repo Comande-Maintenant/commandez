@@ -20,7 +20,7 @@ for(const Nav of [AdminBottomNav,AdminSidebar])it(`${Nav.name} shows ready count
 });
 it('opens ready orders on entering caisse instead of hiding them behind order taking',async()=>{
  f.orders=[ready()];render(<DashboardPOS restaurant={restaurant} isDemo/>);await act(async()=>{});
- expect(screen.getByRole('button',{name:/A encaisser/})).toHaveAttribute('aria-pressed','true');expect(screen.getByText('Commande prête')).toBeVisible();expect(screen.queryByText('Nouvelle vente')).toBeNull();
+ expect(screen.getByRole('button',{name:/À encaisser/})).toHaveAttribute('aria-pressed','true');expect(screen.getByText('Commande prête')).toBeVisible();expect(screen.queryByText('Nouvelle vente')).toBeNull();
 });
 it('selects collection after the first snapshot arrives and then leaves a user choice alone',async()=>{
  f.loading=true;const {rerender}=render(<DashboardPOS restaurant={restaurant}/>);await act(async()=>{});
@@ -34,7 +34,7 @@ it('never switches a deliberately chosen order-taking screen when loading finish
 });
 it('keeps order taking when caisse is empty and does not interrupt it for a later ready order',async()=>{
  const {rerender}=render(<DashboardPOS restaurant={restaurant}/>);await act(async()=>{});expect(screen.getByText('Nouvelle vente')).toBeVisible();
- f.orders=[ready()];rerender(<DashboardPOS restaurant={restaurant}/>);expect(screen.getByText('Nouvelle vente')).toBeVisible();expect(screen.getByRole('button',{name:/A encaisser/})).toHaveTextContent('1');
+ f.orders=[ready()];rerender(<DashboardPOS restaurant={restaurant}/>);expect(screen.getByText('Nouvelle vente')).toBeVisible();expect(screen.getByRole('button',{name:/À encaisser/})).toHaveTextContent('1');
 });
 
 for(const scenario of [
@@ -45,7 +45,7 @@ for(const scenario of [
  vi.useFakeTimers();vi.setSystemTime(new Date(2026,9,5,0,18));
  f.orders=[{...ready(),status:'done',created_at:scenario.created.toISOString(),completed_at:scenario.completed?.toISOString()??null}];
  render(<DashboardPOS restaurant={restaurant}/>);await act(async()=>{});
- fireEvent.click(screen.getByRole('button',{name:/A encaisser/}));
+ fireEvent.click(screen.getByRole('button',{name:/À encaisser/}));
  if(scenario.visible)expect(screen.getByText(/^Commande prête/)).toBeVisible();
  else expect(screen.queryByText(/^Commande prête/)).toBeNull();
 });

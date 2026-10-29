@@ -111,7 +111,7 @@ test('cash count stays readable while taking an order',async({page})=>{
   await page.getByRole('button',{name:/Prêt|Prête|Terminer/}).last().click();
   await page.locator('[data-tour="caisse"]:visible').click();
   await page.getByRole('button',{name:/Prise de commande/}).click();
-  const badge=page.getByRole('button',{name:/A encaisser/}).locator('span').last();
+  const badge=page.getByRole('button',{name:/À encaisser/}).locator('span').last();
   await expect(badge).toBeVisible();expect((await contrast(badge,true)).ratio).toBeGreaterThanOrEqual(4.5);
 });
 

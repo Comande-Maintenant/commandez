@@ -53,7 +53,7 @@ test('demo guidance follows preparation and cashing after a refresh with no serv
  await page.reload({waitUntil:'networkidle'});await expect(progress).toHaveAttribute('aria-valuenow','2');
  await page.getByRole('button',{name:/Prêt|Prête|Terminer/}).last().click();await expect(progress).toHaveAttribute('aria-valuenow','3');
  await page.getByRole('button',{name:'Passer en caisse',exact:true}).click();
- await page.getByRole('button',{name:/A encaisser/}).click();await page.getByRole('button',{name:'Encaisse',exact:true}).last().click();
+ await page.getByRole('button',{name:/À encaisser/}).click();await page.getByRole('button',{name:'Encaisse',exact:true}).last().click();
  await expect(progress).toHaveAttribute('aria-valuenow','4');await expect(page.getByRole('link',{name:'Créer ma page gratuitement',exact:true})).toBeVisible();expect(writes).toBe(0);
 });
 test('menu search supports accents and an empty result can be cleared',async({page})=>{

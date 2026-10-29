@@ -20,11 +20,11 @@ test('sample order alert fits iPhone and its state survives polling without a se
  await expect(page.getByRole("button",{name:/Prêt|Prête|Terminer/}).last()).toBeVisible();
  await page.getByRole('button',{name:/Prêt|Prête|Terminer/}).last().click();
  await page.locator('[data-tour="caisse"]:visible').click();
- await page.getByRole('button',{name:/A encaisser/}).click();
+ await page.getByRole('button',{name:/À encaisser/}).click();
  await expect(page.getByText('Client de démonstration',{exact:true}).first()).toBeVisible();
  await page.getByRole('button',{name:'Encaisse',exact:true}).last().click();
  await page.reload({waitUntil:'networkidle'});
- await page.getByRole('button',{name:/A encaisser/}).click();
+ await page.getByRole('button',{name:/À encaisser/}).click();
  await expect(page.getByRole('button',{name:'Encaisse',exact:true})).toHaveCount(0);
  expect(mutations).toBe(0);
 });
